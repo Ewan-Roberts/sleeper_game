@@ -1,1 +1,0 @@
-window.adBlockerEnabled=!1;
