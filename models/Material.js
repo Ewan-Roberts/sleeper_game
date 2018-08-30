@@ -7,19 +7,17 @@ const Weapon = new dynamoose.Schema({
         type:               String,
         hashKey:            true,
         required:           true,
-        trim:               true,
-        validate:           /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        trim:               true
     },
     name: {
         type:               String,
         required:           true,
         trim:               true
     },
-    brand: {
+    thing: {
         type:               String,
         required:           true,
-        trim:               true,
-        validate:           v=> undefined === v || ~['Brand1', 'Brand2'].indexOf(v)
+        trim:               true
     }
 },
 {
@@ -35,4 +33,4 @@ const Weapon = new dynamoose.Schema({
 });
 
 
-module.exports = dynamoose.model("BrandVoucher", Weapon)
+module.exports = dynamoose.model("thing", Weapon)
