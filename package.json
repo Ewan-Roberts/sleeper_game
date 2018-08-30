@@ -1,0 +1,35 @@
+{
+  "name": "mmo",
+  "version": "1.0.0",
+  "description": "Minimal example of multiplayer game using pixi.js as a renderer on top of node.js and socket.io.",
+  "main": "app.js",
+  "scripts": {
+    "watch:html": "pug --pretty -w -o ./ src/",
+    "spritesheet": "spritesheet-js ../sleeper/public/images/rat.png pixi.js",
+    "watch:js": "coffee -c -b -w -o ./ src/",
+    "watch-all": "run-p watch:*"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^16.2.2",
+    "bufferutil": "^4.0.0",
+    "express": "^4.14.0",
+    "intersects": "^2.1.0",
+    "jquery": "^3.3.1",
+    "mongoose": "^5.2.7",
+    "pixi-ease": "^1.1.2",
+    "pixi-layers": "^0.1.9",
+    "pixi-tween": "^0.2.0",
+    "pixi-viewport": "^2.7.2",
+    "require-dir": "^1.0.0",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "utf-8-validate": "^5.0.1",
+    "yy-intersects": "^1.0.8",
+    "yy-renderer": "^2.7.1"
+  },
+  "devDependencies": {
+    "npm-run-all": "^3.1.1"
+  }
+}

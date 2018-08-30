@@ -1,0 +1,75 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="rat_noise2_data" version="1.3.0" audacityversion="2.1.0" sel0="3.6571428571" sel1="3.6571428571" vpos="0" h="2.9837641723" zoom="86.1328125000" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds">
+	<tags>
+		<tag name="ALBUM" value="2e"/>
+		<tag name="TITLE" value="23"/>
+		<tag name="TRACKNUMBER" value="2e"/>
+		<tag name="COMMENTS" value="e2"/>
+		<tag name="ARTIST" value="e2"/>
+		<tag name="YEAR" value="23e"/>
+		<tag name="GENRE" value="3"/>
+	</tags>
+	<wavetrack name="rat_noise" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="24000" gain="0.251189" pan="-1.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="78577">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000aed.au" len="78577" min="-0.11824" max="0.145801" rms="0.007552"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="4">
+				<controlpoint t="1.044897959184" val="1.000000000000"/>
+				<controlpoint t="1.822766439909" val="0.652777791023"/>
+				<controlpoint t="2.728344671202" val="0.444444417953"/>
+				<controlpoint t="3.239183673469" val="0.152777791023"/>
+			</envelope>
+		</waveclip>
+		<waveclip offset="4.05188209">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="137838">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000c5f.au" len="137838" min="-0.154785" max="0.136175" rms="0.008496"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="7">
+				<controlpoint t="0.278639455782" val="0.611111104488"/>
+				<controlpoint t="0.835918367347" val="0.611111104488"/>
+				<controlpoint t="1.613786848073" val="0.625000000000"/>
+				<controlpoint t="3.390113378685" val="0.361111104488"/>
+				<controlpoint t="4.423401360544" val="0.125000000000"/>
+				<controlpoint t="4.667210884354" val="0.111111104488"/>
+				<controlpoint t="4.957460317460" val="0.000000100000"/>
+			</envelope>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="rat_noise" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="24000" gain="0.251189" pan="-1.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="78577">
+				<waveblock start="0">
+					<simpleblockfile filename="e00001e3.au" len="78577" min="-0.114266" max="0.139693" rms="0.006857"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="4">
+				<controlpoint t="1.044897959184" val="1.000000000000"/>
+				<controlpoint t="1.822766439909" val="0.652777791023"/>
+				<controlpoint t="2.728344671202" val="0.444444417953"/>
+				<controlpoint t="3.239183673469" val="0.152777791023"/>
+			</envelope>
+		</waveclip>
+		<waveclip offset="4.05188209">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="137838">
+				<waveblock start="0">
+					<simpleblockfile filename="e000045e.au" len="137838" min="-0.074815" max="0.066812" rms="0.003983"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="7">
+				<controlpoint t="0.278639455782" val="0.611111104488"/>
+				<controlpoint t="0.835918367347" val="0.611111104488"/>
+				<controlpoint t="1.613786848073" val="0.625000000000"/>
+				<controlpoint t="3.390113378685" val="0.361111104488"/>
+				<controlpoint t="4.423401360544" val="0.125000000000"/>
+				<controlpoint t="4.667210884354" val="0.111111104488"/>
+				<controlpoint t="4.957460317460" val="0.000000100000"/>
+			</envelope>
+		</waveclip>
+	</wavetrack>
+</project>

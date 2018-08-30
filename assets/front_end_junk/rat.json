@@ -1,0 +1,20 @@
+{"frames": {
+
+"ratframes.png":
+{
+	"frame": {"x":1,"y":1,"w":370,"h":570},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":370,"h":570},
+	"sourceSize": {"w":370,"h":570}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "rat.png",
+	"format": "RGBA8888",
+	"size": {"w":374,"h":575},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0a14085c630552797bc945f4edc249a4:6cd071310e8c149066ccdedbd9440472:897eb3d5a631cb8958a6b43d97451b25$"
+}
+}
