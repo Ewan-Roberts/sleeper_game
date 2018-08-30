@@ -43,7 +43,7 @@ module.exports.add_floor = () => {
     base_rect.interactive = true
     base_rect.worldVisible = true
     base_rect.rotation = 0.5
-    base_rect.y = 100
+    // base_rect.y = 100
 
     const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png')
     collision_wall.position.set(-1000,600)

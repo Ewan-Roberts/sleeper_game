@@ -5846,6 +5846,8 @@ const linePoint = require('./line-point')
  * @param {number} x of point
  * @param {number} y of point
  */
+let lastAction = "top"
+
 module.exports = function polygonPoint(points, x, y)
 {
     var length = points.length
@@ -5855,13 +5857,17 @@ module.exports = function polygonPoint(points, x, y)
     {
         if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i]))
         {
+            
             c = !c
         }
         j = i
     }
     if (c)
     {
-        return true
+        console.log(lastAction)
+        console.log('catchy')
+        return lastAction
+        
     }
     for (i = 0; i < length; i += 2)
     {
@@ -5870,19 +5876,37 @@ module.exports = function polygonPoint(points, x, y)
         var p2x, p2y
         if (i === length - 2)
         {
+            
             p2x = points[0]
             p2y = points[1]
         }
         else
         {
+            
             p2x = points[i + 2]
             p2y = points[i + 3]
         }
         if (linePoint(p1x, p1y, p2x, p2y, x, y))
         {
+            console.log("x")
+            console.log(p1x)
+            if(p1x === -100){
+                
+                lastAction = "top"
+                return "top"
+                
+            }else{
+                lastAction = "bottom";
+                return "bottom"
+            }
+            console.log(p1x)
+            console.log(p2x)
+            console.log(x)
+            console.log("x")
             return true
         }
     }
+    
     return false
 }
 
@@ -5897,7 +5921,10 @@ module.exports = function polygonPoint(points, x, y)
  * @return {boolean}
  */
 module.exports = function polygonPolygon(points1, points2)
-{
+{   
+    // console.log("points1")
+    console.log(points1)
+    console.log(points2)
     var a = points1
     var b = points2
     var polygons = [a, b]
@@ -5915,10 +5942,12 @@ module.exports = function polygonPolygon(points1, points2)
                 projected = normal.x * a[j] + normal.y * a[j + 1]
                 if (minA === null || projected < minA)
                 {
+                    // console.log("top")
                     minA = projected
                 }
                 if (maxA === null || projected > maxA)
                 {
+                    // console.log("bottom")
                     maxA = projected
                 }
             }
@@ -5928,15 +5957,18 @@ module.exports = function polygonPolygon(points1, points2)
                 projected = normal.x * b[j] + normal.y * b[j + 1]
                 if (minB === null || projected < minB)
                 {
+                    // console.log("top1")
                     minB = projected
                 }
                 if (maxB === null || projected > maxB)
                 {
+                    // console.log("bottom1")
                     maxB = projected
                 }
             }
             if (maxA < minB || maxB < minA)
             {
+                // console.log("poo?")
                 return false
             }
         }
@@ -61562,7 +61594,7 @@ module.exports.add_floor = () => {
     base_rect.interactive = true
     base_rect.worldVisible = true
     base_rect.rotation = 0.5
-    base_rect.y = 100
+    // base_rect.y = 100
 
     const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png')
     collision_wall.position.set(-1000,600)
@@ -61781,9 +61813,38 @@ function add_player_controls() {
       
       if (Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, element.vertexTrimmedData)) {
         console.log("hitting with player")
-        return
+        
       }
       
+    }
+
+
+    
+    for (let i = 0; i < global.doors.children[0].vertexData.length; i++) {
+
+      if(i % 2 === 0){
+        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[0]+global.doors.children[0].x)
+      } else {
+        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[1]+global.doors.children[0].y)
+      }
+  
+    }
+
+    const food = Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, trimmedDoorData);
+
+    console.log(food)
+    console.log("food")
+
+    if (food === "top") {
+      console.log("hitting1")
+      global.doors.children[0].rotation += 0.2
+    } 
+    if (food === "bottom") {
+      console.log("hitting1")
+      global.doors.children[0].rotation -= 0.2
+    } 
+    if (food === "exception") {
+      global.doors.children[0].rotation -= 0.2
     }
 
     // b.hit(global.Player.sprite, global.collisionItems.children,true,true,false,()=>console.log('hit1'))
@@ -61838,20 +61899,7 @@ function add_player_controls() {
       global.Player.sprite._textures = global.Player.sprite.walk._textures
     }
 
-    for (let i = 0; i < global.doors.children[0].vertexData.length; i++) {
 
-      if(i % 2 === 0){
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[0]+global.doors.children[0].x)
-      } else {
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[1]+global.doors.children[0].y)
-      }
-  
-    }
-
-    if (Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, trimmedDoorData)) {
-      console.log("hitting1")
-      global.doors.children[0].rotation += 0.2
-    }
 
     bowHelper.pickUpArrow(global.Player)
 

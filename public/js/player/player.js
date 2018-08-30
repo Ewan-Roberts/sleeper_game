@@ -165,9 +165,38 @@ function add_player_controls() {
       
       if (Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, element.vertexTrimmedData)) {
         console.log("hitting with player")
-        return
+        
       }
       
+    }
+
+
+    
+    for (let i = 0; i < global.doors.children[0].vertexData.length; i++) {
+
+      if(i % 2 === 0){
+        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[0]+global.doors.children[0].x)
+      } else {
+        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[1]+global.doors.children[0].y)
+      }
+  
+    }
+
+    const food = Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, trimmedDoorData);
+
+    console.log(food)
+    console.log("food")
+
+    if (food === "top") {
+      console.log("hitting1")
+      global.doors.children[0].rotation += 0.2
+    } 
+    if (food === "bottom") {
+      console.log("hitting1")
+      global.doors.children[0].rotation -= 0.2
+    } 
+    if (food === "exception") {
+      global.doors.children[0].rotation -= 0.2
     }
 
     // b.hit(global.Player.sprite, global.collisionItems.children,true,true,false,()=>console.log('hit1'))
@@ -222,20 +251,7 @@ function add_player_controls() {
       global.Player.sprite._textures = global.Player.sprite.walk._textures
     }
 
-    for (let i = 0; i < global.doors.children[0].vertexData.length; i++) {
 
-      if(i % 2 === 0){
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[0]+global.doors.children[0].x)
-      } else {
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[1]+global.doors.children[0].y)
-      }
-  
-    }
-
-    if (Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, trimmedDoorData)) {
-      console.log("hitting1")
-      global.doors.children[0].rotation += 0.2
-    }
 
     bowHelper.pickUpArrow(global.Player)
 
