@@ -3,6 +3,7 @@ const PIXI        = require("pixi.js"),
       b           = new Bump(PIXI),
       rat         = require("../animals/rat.js"),
       spriteHelper = require("../utils/spriteHelper.js"),
+      doorHelper = require("../utils/doorHelper.js"),
       bowHelper   = require("../weapons/bow/bowHelper.js"),
       documentHelper = require("../utils/documentHelper.js");
 
@@ -124,8 +125,6 @@ function mouseDown () {
 
 }
 
-
-
 function add_player_controls() {
 
   document.addEventListener("keyup", e=> {
@@ -135,97 +134,11 @@ function add_player_controls() {
 
   document.addEventListener("keydown", e=> {
 
-    let trimmedDoorData = []
-
-    let currentDirection = undefined
-
-    if(!global.Player.moveable) return;
-
-    let poo = b.rectangleCollision(global.movableItems.children[0],global.Player.sprite,true,true,false)
-
-    let foo = undefined;
-    
-    console.log(global.collisionItems.children)
-    const elem = global.collisionItems.children
-    for (let a = 0; a < elem.length; a++) {
-      const element = elem[a];
-
-      element.vertexTrimmedData = []
-
-      for (let i = 0; i < element.vertexData.length; i++) {
-
-        if(i % 2 === 0){
-          element.vertexTrimmedData.push(element.vertexData[i]-element.vertexData[0]+element.x)
-        } else {
-          element.vertexTrimmedData.push(element.vertexData[i]-element.vertexData[1]+element.y)
-        }
-    
-      }
-
-      
-      if (Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, element.vertexTrimmedData)) {
-        console.log("hitting with player")
-        
-      }
-      
-    }
-
-
-    
-    for (let i = 0; i < global.doors.children[0].vertexData.length; i++) {
-
-      if(i % 2 === 0){
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[0]+global.doors.children[0].x)
-      } else {
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[1]+global.doors.children[0].y)
-      }
-  
-    }
-
-    const food = Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, trimmedDoorData);
-
-    console.log(food)
-    console.log("food")
-
-    if (food === "top") {
-      console.log("hitting1")
-      global.doors.children[0].rotation += 0.2
-    } 
-    if (food === "bottom") {
-      console.log("hitting1")
-      global.doors.children[0].rotation -= 0.2
-    } 
-    if (food === "exception") {
-      global.doors.children[0].rotation -= 0.2
-    }
-
-    // b.hit(global.Player.sprite, global.collisionItems.children,true,true,false,()=>console.log('hit1'))
-
-    b.hit(global.Player.sprite, global.critterContainer.children,true,true,false,(collisionSprite, critter)=>{
-      
-      global.Player.inventory.push(critter)
-      PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
-      critter.destroy();
-
-    })
-
-    b.hit(global.movableItems.children[0], global.collisionItems.children,true,true,false,()=>{
-      console.log('hit')
-      foo = "shit"
-    })
-
-    if(poo) {
-      global.Player.movement_speed = 10
-      if(foo && (currentDirection !== poo)) {
-        currentDirection = poo
-        global.Player.movement_speed = 0
-        global.Player.sprite.y -= 20
-      }
-    } else{
-      global.Player.movement_speed = 20
-    }
+    let currentDirection = undefined;
 
     let key = documentHelper.getDirection(e.key)
+
+    if(!global.Player.moveable) return;
 
     if(key === "up"){
       global.Player.sprite.y -= global.Player.movement_speed; 
@@ -251,9 +164,73 @@ function add_player_controls() {
       global.Player.sprite._textures = global.Player.sprite.walk._textures
     }
 
+    doorHelper.hit(global.Player.sprite, global.doors.children[0])
+
+    spriteHelper.hitBoxContainer(global.collisionItems.children, global.Player.sprite)
+    .then(hit => {
+
+      console.log(hit)
+
+      if(hit){
+        // global.Player.movement_speed = -41
+        if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
+        if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
+        if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
+        if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
+        
+      };
+    })
+    
+
+    spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
+    .then(pad => {
+      pad.action()
+    })
+
+    spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
+    .then(critter => {
+      global.Player.inventory.push(critter)
+      PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
+      critter.destroy();
+    })
+
+    
+
+    spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
+    .then(item => {
+
+      if(key === "up") {
+        global.Player.sprite.y +=global.Player.movement_speed -item.weight
+        item.y-=item.weight
+      }
+      if(key === "down") {
+        
+        global.Player.sprite.y -=global.Player.movement_speed-item.weight
+        item.y+=item.weight
+      
+      }
+      if(key === "left") {
+        global.Player.sprite.x +=global.Player.movement_speed-item.weight
+        item.x-=item.weight
+      }
+      if(key === "right") {
+        global.Player.sprite.x -=global.Player.movement_speed-item.weight
+        item.x+=item.weight
+      }
+      return item;
+    })
+    .then(a=>{
+      
+      const b =global.movableItems.children[0]
+      if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
+        console.log('herer')
+      }
+
+    })
 
 
     bowHelper.pickUpArrow(global.Player)
+    
 
   });
 

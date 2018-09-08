@@ -137,9 +137,7 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
 
 
 module.exports.mouseMove = (start,finish) => {
-
-    module.exports.load_rat()
-    .then(()=>{
+    
 
         // Rat.noise.volume = 0.5
         // Rat.noise.play();
@@ -195,8 +193,6 @@ module.exports.mouseMove = (start,finish) => {
         Rat.sprite.moving = animated_rat;
 
         
-
-    })
 
 }
 

@@ -45,21 +45,21 @@ global.bedroom_segments = [
 
 // add the viewport to the stage
 global.app = new PIXI.Application({ 
-    width: window.innerWidth/2,         // default: 800
-    height: window.innerHeight/2,        // default: 600
-    antialias: false,    // default: false
+    width: window.innerWidth,   // default: 800
+    height: window.innerHeight, // default: 600
+    antialias: false,             // default: false
 });
-
+ 
 
 global.app.renderer.backgroundColor = 0xC1C1C1
 global.app.renderer.autoResize = true;
 document.body.appendChild(global.app.view);
 
 global.viewport = new Viewport({
-    screenWidth: window.innerWidth/2,
-    screenHeight: window.innerHeight/2,
-    worldWidth: window.innerWidth/2,
-    worldHeight: window.innerHeight/2
+    screenWidth: window.innerWidth,
+    screenHeight: window.innerHeight,
+    worldWidth: window.innerWidth,
+    worldHeight: window.innerHeight
 });
 
 global.app.stage.addChild(viewport);

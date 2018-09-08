@@ -1,7 +1,7 @@
 {
   "name": "mmo",
   "version": "1.0.0",
-  "description": "Minimal example of multiplayer game using pixi.js as a renderer on top of node.js and socket.io.",
+  "description": "socket game",
   "main": "app.js",
   "scripts": {
     "watch:html": "pug --pretty -w -o ./ src/",
@@ -9,6 +9,7 @@
     "watch:js": "coffee -c -b -w -o ./ src/",
     "watch-all": "run-p watch:*"
   },
+  "eslint.options": { "configFile": "./.eslintrc.json" },
   "author": "",
   "license": "ISC",
   "dependencies": {

@@ -3534,7 +3534,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":13,"component-inherit":9,"debug":20,"engine.io-parser":22,"parseqs":61,"ws":278,"yeast":267}],19:[function(require,module,exports){
+},{"../transport":13,"component-inherit":9,"debug":20,"engine.io-parser":22,"parseqs":61,"ws":280,"yeast":267}],19:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -3774,7 +3774,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":21,"_process":282}],21:[function(require,module,exports){
+},{"./debug":21,"_process":284}],21:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -5272,7 +5272,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":279,"isarray":54}],27:[function(require,module,exports){
+},{"buffer":281,"isarray":54}],27:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -5846,8 +5846,6 @@ const linePoint = require('./line-point')
  * @param {number} x of point
  * @param {number} y of point
  */
-let lastAction = "top"
-
 module.exports = function polygonPoint(points, x, y)
 {
     var length = points.length
@@ -5857,17 +5855,13 @@ module.exports = function polygonPoint(points, x, y)
     {
         if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i]))
         {
-            
             c = !c
         }
         j = i
     }
     if (c)
     {
-        console.log(lastAction)
-        console.log('catchy')
-        return lastAction
-        
+        return true
     }
     for (i = 0; i < length; i += 2)
     {
@@ -5876,37 +5870,19 @@ module.exports = function polygonPoint(points, x, y)
         var p2x, p2y
         if (i === length - 2)
         {
-            
             p2x = points[0]
             p2y = points[1]
         }
         else
         {
-            
             p2x = points[i + 2]
             p2y = points[i + 3]
         }
         if (linePoint(p1x, p1y, p2x, p2y, x, y))
         {
-            console.log("x")
-            console.log(p1x)
-            if(p1x === -100){
-                
-                lastAction = "top"
-                return "top"
-                
-            }else{
-                lastAction = "bottom";
-                return "bottom"
-            }
-            console.log(p1x)
-            console.log(p2x)
-            console.log(x)
-            console.log("x")
             return true
         }
     }
-    
     return false
 }
 
@@ -34350,7 +34326,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":127,"../../../../textures/TextureMatrix":173,"../Filter":143,"path":281}],147:[function(require,module,exports){
+},{"../../../../math":127,"../../../../textures/TextureMatrix":173,"../Filter":143,"path":283}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38126,7 +38102,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":101,"path":281}],165:[function(require,module,exports){
+},{"../../Shader":101,"path":283}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43873,7 +43849,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":287}],182:[function(require,module,exports){
+},{"url":289}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48408,7 +48384,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":122,"../../core/const":103,"path":281}],200:[function(require,module,exports){
+},{"../../core":122,"../../core/const":103,"path":283}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48492,7 +48468,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":122,"path":281}],201:[function(require,module,exports){
+},{"../../core":122,"path":283}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49655,7 +49631,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":122,"path":281}],208:[function(require,module,exports){
+},{"../../core":122,"path":283}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49763,7 +49739,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":122,"path":281}],209:[function(require,module,exports){
+},{"../../core":122,"path":283}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49817,7 +49793,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":122,"path":281}],210:[function(require,module,exports){
+},{"../../core":122,"path":283}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49993,7 +49969,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":122,"path":281}],212:[function(require,module,exports){
+},{"../../core":122,"path":283}],212:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52651,7 +52627,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":198,"path":281,"resource-loader":252}],220:[function(require,module,exports){
+},{"../extras":198,"path":283,"resource-loader":252}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53014,7 +52990,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":122,"resource-loader":252,"url":287}],223:[function(require,module,exports){
+},{"../core":122,"resource-loader":252,"url":289}],223:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54740,7 +54716,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":122,"../Mesh":224,"path":281,"pixi-gl-core":70}],231:[function(require,module,exports){
+},{"../../core":122,"../Mesh":224,"path":283,"pixi-gl-core":70}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60421,7 +60397,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":259,"parseuri":62}],259:[function(require,module,exports){
 arguments[4][20][0].apply(exports,arguments)
-},{"./debug":260,"_process":282,"dup":20}],260:[function(require,module,exports){
+},{"./debug":260,"_process":284,"dup":20}],260:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
 },{"dup":21,"ms":58}],261:[function(require,module,exports){
 (function (global){
@@ -61017,7 +60993,7 @@ function isBuf(obj) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],264:[function(require,module,exports){
 arguments[4][20][0].apply(exports,arguments)
-},{"./debug":265,"_process":282,"dup":20}],265:[function(require,module,exports){
+},{"./debug":265,"_process":284,"dup":20}],265:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
 },{"dup":21,"ms":58}],266:[function(require,module,exports){
 module.exports = toArray
@@ -61245,9 +61221,7 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
 
 
 module.exports.mouseMove = (start,finish) => {
-
-    module.exports.load_rat()
-    .then(()=>{
+    
 
         // Rat.noise.volume = 0.5
         // Rat.noise.play();
@@ -61304,8 +61278,6 @@ module.exports.mouseMove = (start,finish) => {
 
         
 
-    })
-
 }
 
 module.exports.mousePause = () => {
@@ -61349,7 +61321,183 @@ module.exports.mousePause = () => {
     }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":275}],269:[function(require,module,exports){
+},{"../utils/spriteHelper.js":277}],269:[function(require,module,exports){
+(function (global){
+const spriteHelper = require('../utils/spriteHelper.js')
+console.log("Enemy loaded")
+
+global.enemyContainer = new PIXI.Container();
+global.enemyContainer.name = "enemyContainer"
+
+const Enemy = {
+
+    animation: {
+        moving:     [],
+        waiting:    [],
+        eating:     []
+    },
+
+    sprite: {
+        moving:     {},
+        waiting:    {},
+        eating:     {}
+    },
+
+    noise: new Audio('audio/rat_noise_edited.wav')
+
+}
+
+module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
+
+    PIXI.loader        
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_0.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_1.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_2.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_3.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_4.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_5.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_6.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_7.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_8.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_9.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_10.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_11.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_12.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_13.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_14.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_15.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_16.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_17.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_18.png')
+        .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_19.png')
+        // .on("progress", loader=>{})
+        .load(()=>resolve('enemy loaded'))
+
+    })
+    .then(image_load_confirmation=>{
+
+        console.log(image_load_confirmation)
+
+        for (let i = 0; i < 19; i++) {
+        
+            Enemy.animation.waiting.push(PIXI.Texture.fromFrame('images/Top_Down_Survivor/knife/move/survivor-move_knife_' + i + '.png'));
+        }
+
+    })
+    // .then(frame_load_confirmation=>{
+
+    //     return new Promise((resolve,reject)=>{
+
+    //         console.log(frame_load_confirmation)
+    //         // Enemy.noise.volume = 0.5
+    //         // Enemy.noise.play();
+
+    //         //Create a custom path the graphic will follow
+    //         const path_one = new PIXI.tween.TweenPath()
+    //         .moveTo(700, 710)
+    //         .lineTo(90, 720)
+
+    //         //FOR TESTING
+    //         //Create a custom path the graphic will follow
+    //         // const path_one_visual_guide = new PIXI.Graphics()
+    //         // .lineStyle(1, 0xffffff, 1)
+    //         // .drawPath(path_one)
+    //         // viewport.addChild(path_one_visual_guide)
+
+    //         const enemy_test = new PIXI.extras.AnimatedSprite(Enemy.animation.waiting);
+    //         enemy_test.x = 900;
+    //         enemy_test.y = 1000;
+    //         // animated_rat.height = animated_rat.height/2
+    //         // animated_rat.width = animated_rat.width/2
+    //         enemy_test.anchor.set(0.5);
+    //         enemy_test.animationSpeed = 0.5;
+    //         enemy_test.time = 20000
+    //         enemy_test.loop = true
+    //         enemy_test.play();
+    //         viewport.addChild(enemy_test)
+
+    //         // //Tween animation
+    //         // const animated_rat_tween = PIXI.tweenManager.createTween(animated_rat);
+    //         // animated_rat_tween.path = path_one;
+    //         // animated_rat_tween.target.rotation = -1.7
+    //         // animated_rat_tween.time = 3000;
+    //         // animated_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
+    //         // animated_rat_tween.start()
+
+    //         // animated_rat_tween.on("end", function() {
+                
+    //         //     console.log("ended")            
+    //         //     animated_rat.alpha = 0;
+    //         //     path_one_visual_guide.destroy()
+    //         //     resolve()
+
+    //         // })
+
+    //         // Rat.sprite.moving = animated_rat
+
+    //     })
+
+    // })
+
+    module.exports.enemyMove = (start,finish) => {
+    
+        //Create a custom path the graphic will follow
+        const path_one = new PIXI.tween.TweenPath()
+        .moveTo(start.x, start.y)
+        .lineTo(finish.x, finish.y)
+
+        //FOR TESTING
+        //Create a custom path the graphic will follow
+        const path_one_visual_guide = new PIXI.Graphics()
+        .lineStyle(1, 0xffffff, 1)
+        .drawPath(path_one)
+        global.viewport.addChild(path_one_visual_guide)
+
+        const animated_enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.waiting);
+        // animated_rat.x = 900;
+        // animated_rat.y = 1000;
+        
+        animated_enemy.height /= 3
+        animated_enemy.width /= 3
+        console.log(animated_enemy)
+        animated_enemy.texture.width = 100
+        animated_enemy.texture.height = 100
+        animated_enemy.anchor.set(0);
+        animated_enemy.animationSpeed = 0.4;
+        animated_enemy.play();
+        
+        // animated_enemy.mouseDeathSound = mouseDeathSound;
+        // animated_enemy.dead = PIXI.Texture.fromFrame('images/rat_35.png')
+
+        //Tween animation
+        const animated_enemy_tween = PIXI.tweenManager.createTween(animated_enemy);
+        animated_enemy_tween.name = "tween"
+        animated_enemy_tween.path = path_one;
+        animated_enemy_tween.target.rotation = spriteHelper.angle(animated_enemy, path_one._tmpPoint2)
+        animated_enemy_tween.time = 3000;
+        animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
+        animated_enemy_tween.name = "tween path"
+        animated_enemy_tween.start()
+        
+        animated_enemy_tween.on("end", function() {
+            
+            // animated_rat.alpha = 0;
+            // path_one_visual_guide.destroy()
+            // resolve()
+
+        })
+        
+        global.enemyContainer.addChild(animated_enemy)
+        global.viewport.addChild(global.enemyContainer)
+
+        Enemy.sprite.moving = animated_enemy;
+
+        
+
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../utils/spriteHelper.js":277}],270:[function(require,module,exports){
 (function (global){
 const   PIXI = require('pixi.js'),
         io = require('socket.io-client'),
@@ -61398,21 +61546,21 @@ global.bedroom_segments = [
 
 // add the viewport to the stage
 global.app = new PIXI.Application({ 
-    width: window.innerWidth/2,         // default: 800
-    height: window.innerHeight/2,        // default: 600
-    antialias: false,    // default: false
+    width: window.innerWidth,   // default: 800
+    height: window.innerHeight, // default: 600
+    antialias: false,             // default: false
 });
-
+ 
 
 global.app.renderer.backgroundColor = 0xC1C1C1
 global.app.renderer.autoResize = true;
 document.body.appendChild(global.app.view);
 
 global.viewport = new Viewport({
-    screenWidth: window.innerWidth/2,
-    screenHeight: window.innerHeight/2,
-    worldWidth: window.innerWidth/2,
-    worldHeight: window.innerHeight/2
+    screenWidth: window.innerWidth,
+    screenHeight: window.innerHeight,
+    worldWidth: window.innerWidth,
+    worldHeight: window.innerHeight
 });
 
 global.app.stage.addChild(viewport);
@@ -61480,15 +61628,11 @@ app.ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":271,"./player/player.js":272,"pixi-layers":81,"pixi-tween":82,"pixi-viewport":95,"pixi.js":212,"socket.io-client":254}],270:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":272,"./player/player.js":273,"pixi-layers":81,"pixi-tween":82,"pixi-viewport":95,"pixi.js":212,"socket.io-client":254}],271:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
-$ = require('jQuery'),
-
-rat         = require("../../animals/rat.js");
-
-
+$ = require('jQuery')
 module.exports.add_items = () => {
 
 	PIXI.loader
@@ -61521,6 +61665,7 @@ module.exports.add_items = () => {
 		movable_box.rotation = 0.06;
 		movable_box.interactive = true;
 		movable_box.buttonMode = true;
+		movable_box.weight = 10;
 		movable_box.on('pointerdown', ()=> {
 			
 			console.log('movable')
@@ -61538,7 +61683,7 @@ module.exports.add_items = () => {
 		
 		global.movableItems.addChild(movable_box)
 		global.collisionItems.addChild(box_full)
-		rat.mouseMove({x:100,y:300},{x:0,y:400})
+		
 	});
 
 	global.socket.on("container_contents", contents =>{
@@ -61547,17 +61692,19 @@ module.exports.add_items = () => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":268,"jQuery":56,"pixi.js":212}],271:[function(require,module,exports){
+},{"jQuery":56,"pixi.js":212}],272:[function(require,module,exports){
 (function (global){
 
 const $     = require('jQuery'),
 player      = require("../../player/player.js"),
 triggers    = require("../../triggers/triggers.js"),
-items      = require("./debug_items.js")
-
-// Intersects  = require('yy-intersects');
+enemy    = require("../../enemies/enemy.js"),
+items      = require("./debug_items.js"),
+doorHelper      = require("../../utils/doorHelper.js"),
+rat         = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
+global.eventTriggers = new PIXI.Container();
 
 global.bedroom_segments = [
 
@@ -61580,8 +61727,6 @@ const addToSegments = item => {
 
 }
 
-
-
 const b = new Bump(PIXI);
 
 module.exports.add_floor = () => {
@@ -61590,18 +61735,17 @@ module.exports.add_floor = () => {
   .add('black_wall','images/black_wall.png')
   .load((loader,res)=>{
 
-    const base_rect = PIXI.Sprite.fromImage('images/black_wall.png')
-    base_rect.interactive = true
-    base_rect.worldVisible = true
-    base_rect.rotation = 0.5
-    // base_rect.y = 100
+    const slanted_wall = PIXI.Sprite.fromImage('images/black_wall.png')
+    slanted_wall.interactive = true
+    slanted_wall.worldVisible = true
+    slanted_wall.rotation = 0.5
+    slanted_wall.position.set(100,100)
 
-    const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png')
-    collision_wall.position.set(-1000,600)
-    collision_wall.interactive = true
-    collision_wall.worldVisible = true
-    // collision_wall.rotation = 0.8
-
+    const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png');
+    collision_wall.position.set(100,600);
+    collision_wall.name = "collision_wall";
+    collision_wall.interactive = true;
+    collision_wall.worldVisible = true;
 
     const door = PIXI.Sprite.fromImage('images/black_wall.png')
     // door.position.set(-100,-200)
@@ -61612,13 +61756,65 @@ module.exports.add_floor = () => {
     door.worldVisible = true
     // collision_wall.rotation = 0.8
 
+    const rat_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    rat_pad.width = 200;
+    rat_pad.height = 100;
+    rat_pad.position.set(-400,200);
+    rat_pad.fired = false;
+    rat_pad.action = () =>{
+      
+      if(!rat_pad.fired){
+
+        rat_pad.fired = true
+        rat.load_rat()
+        .then(()=>{
+          rat.mouseMove({x:100,y:300},{x:0,y:400})
+        })
+      }
+      
+    }
+ 
+    const enemy_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    enemy_pad.width = 200;
+    enemy_pad.height = 100;
+    enemy_pad.position.set(-800,200);
+    enemy_pad.fired = false;
+    enemy_pad.action = () =>{
+      
+      if(!enemy_pad.fired){
+
+        enemy_pad.fired = true
+        enemy.enemy_frames()
+        .then(()=>{
+          enemy.enemyMove({x:300,y:600},{x:-300,y:700})
+        })
+      }
+      
+    }
+
+    const level_load_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    level_load_pad.width = 200;
+    level_load_pad.height = 100;
+    level_load_pad.position.set(-1500,200);
+    level_load_pad.fired = false;
+    level_load_pad.action = () =>{
+      
+      if(!level_load_pad.fired){
+
+        level_load_pad.fired = true
+      }
+      
+    }
+
+    global.eventTriggers.addChild(rat_pad,enemy_pad,level_load_pad)
+
     global.doors.addChild(door)
 
     // triggers.createTriggerPad(200, 200, 250, 250)
     // .then(pad=>{
         
         
-    //     global.viewport.addChild(pad)
+    //     global.eventTriggers.addChild(pad)
 
     //     pad.on('pointerdown', ()=> {
         
@@ -61628,29 +61824,25 @@ module.exports.add_floor = () => {
         
     // })
 
-    global.collisionItems.addChild(base_rect,collision_wall)
+    global.viewport.addChild(global.eventTriggers)
+
+    global.collisionItems.addChild(slanted_wall,collision_wall);
     
-    player.add_player()
-    items.add_items()
-
-
-    // console.log(wall2)
-
-    // app.ticker.add(delta => {
-
-    // })
+    player.add_player();
+    items.add_items();
 
   })
 
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../player/player.js":272,"../../triggers/triggers.js":273,"./debug_items.js":270,"jQuery":56}],272:[function(require,module,exports){
+},{"../../animals/rat.js":268,"../../enemies/enemy.js":269,"../../player/player.js":273,"../../triggers/triggers.js":274,"../../utils/doorHelper.js":276,"./debug_items.js":271,"jQuery":56}],273:[function(require,module,exports){
 (function (global){
 const PIXI        = require("pixi.js"),
       Intersects  = require('intersects'),
       b           = new Bump(PIXI),
       rat         = require("../animals/rat.js"),
       spriteHelper = require("../utils/spriteHelper.js"),
+      doorHelper = require("../utils/doorHelper.js"),
       bowHelper   = require("../weapons/bow/bowHelper.js"),
       documentHelper = require("../utils/documentHelper.js");
 
@@ -61772,8 +61964,6 @@ function mouseDown () {
 
 }
 
-
-
 function add_player_controls() {
 
   document.addEventListener("keyup", e=> {
@@ -61783,97 +61973,11 @@ function add_player_controls() {
 
   document.addEventListener("keydown", e=> {
 
-    let trimmedDoorData = []
-
-    let currentDirection = undefined
-
-    if(!global.Player.moveable) return;
-
-    let poo = b.rectangleCollision(global.movableItems.children[0],global.Player.sprite,true,true,false)
-
-    let foo = undefined;
-    
-    console.log(global.collisionItems.children)
-    const elem = global.collisionItems.children
-    for (let a = 0; a < elem.length; a++) {
-      const element = elem[a];
-
-      element.vertexTrimmedData = []
-
-      for (let i = 0; i < element.vertexData.length; i++) {
-
-        if(i % 2 === 0){
-          element.vertexTrimmedData.push(element.vertexData[i]-element.vertexData[0]+element.x)
-        } else {
-          element.vertexTrimmedData.push(element.vertexData[i]-element.vertexData[1]+element.y)
-        }
-    
-      }
-
-      
-      if (Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, element.vertexTrimmedData)) {
-        console.log("hitting with player")
-        
-      }
-      
-    }
-
-
-    
-    for (let i = 0; i < global.doors.children[0].vertexData.length; i++) {
-
-      if(i % 2 === 0){
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[0]+global.doors.children[0].x)
-      } else {
-        trimmedDoorData.push(global.doors.children[0].vertexData[i]-global.doors.children[0].vertexData[1]+global.doors.children[0].y)
-      }
-  
-    }
-
-    const food = Intersects.pointPolygon(global.Player.sprite.x, global.Player.sprite.y, trimmedDoorData);
-
-    console.log(food)
-    console.log("food")
-
-    if (food === "top") {
-      console.log("hitting1")
-      global.doors.children[0].rotation += 0.2
-    } 
-    if (food === "bottom") {
-      console.log("hitting1")
-      global.doors.children[0].rotation -= 0.2
-    } 
-    if (food === "exception") {
-      global.doors.children[0].rotation -= 0.2
-    }
-
-    // b.hit(global.Player.sprite, global.collisionItems.children,true,true,false,()=>console.log('hit1'))
-
-    b.hit(global.Player.sprite, global.critterContainer.children,true,true,false,(collisionSprite, critter)=>{
-      
-      global.Player.inventory.push(critter)
-      PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
-      critter.destroy();
-
-    })
-
-    b.hit(global.movableItems.children[0], global.collisionItems.children,true,true,false,()=>{
-      console.log('hit')
-      foo = "shit"
-    })
-
-    if(poo) {
-      global.Player.movement_speed = 10
-      if(foo && (currentDirection !== poo)) {
-        currentDirection = poo
-        global.Player.movement_speed = 0
-        global.Player.sprite.y -= 20
-      }
-    } else{
-      global.Player.movement_speed = 20
-    }
+    let currentDirection = undefined;
 
     let key = documentHelper.getDirection(e.key)
+
+    if(!global.Player.moveable) return;
 
     if(key === "up"){
       global.Player.sprite.y -= global.Player.movement_speed; 
@@ -61899,9 +62003,73 @@ function add_player_controls() {
       global.Player.sprite._textures = global.Player.sprite.walk._textures
     }
 
+    doorHelper.hit(global.Player.sprite, global.doors.children[0])
+
+    spriteHelper.hitBoxContainer(global.collisionItems.children, global.Player.sprite)
+    .then(hit => {
+
+      console.log(hit)
+
+      if(hit){
+        // global.Player.movement_speed = -41
+        if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
+        if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
+        if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
+        if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
+        
+      };
+    })
+    
+
+    spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
+    .then(pad => {
+      pad.action()
+    })
+
+    spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
+    .then(critter => {
+      global.Player.inventory.push(critter)
+      PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
+      critter.destroy();
+    })
+
+    
+
+    spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
+    .then(item => {
+
+      if(key === "up") {
+        global.Player.sprite.y +=global.Player.movement_speed -item.weight
+        item.y-=item.weight
+      }
+      if(key === "down") {
+        
+        global.Player.sprite.y -=global.Player.movement_speed-item.weight
+        item.y+=item.weight
+      
+      }
+      if(key === "left") {
+        global.Player.sprite.x +=global.Player.movement_speed-item.weight
+        item.x-=item.weight
+      }
+      if(key === "right") {
+        global.Player.sprite.x -=global.Player.movement_speed-item.weight
+        item.x+=item.weight
+      }
+      return item;
+    })
+    .then(a=>{
+      
+      const b =global.movableItems.children[0]
+      if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
+        console.log('herer')
+      }
+
+    })
 
 
     bowHelper.pickUpArrow(global.Player)
+    
 
   });
 
@@ -61955,7 +62123,7 @@ module.exports.add_player = () => {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":268,"../utils/documentHelper.js":274,"../utils/spriteHelper.js":275,"../weapons/bow/bowHelper.js":276,"intersects":39,"pixi.js":212}],273:[function(require,module,exports){
+},{"../animals/rat.js":268,"../utils/documentHelper.js":275,"../utils/doorHelper.js":276,"../utils/spriteHelper.js":277,"../weapons/bow/bowHelper.js":278,"intersects":39,"pixi.js":212}],274:[function(require,module,exports){
 const PIXI = require("pixi.js");
 
 module.exports.createTriggerPad = (x, y, width, height) =>{
@@ -61983,7 +62151,7 @@ module.exports.createTriggerPad = (x, y, width, height) =>{
 }
 
 
-},{"pixi.js":212}],274:[function(require,module,exports){
+},{"pixi.js":212}],275:[function(require,module,exports){
 //utils
 
 const keymap = {
@@ -62016,9 +62184,87 @@ module.exports.mousePositionFromScreen = (event, viewport) => {
     }
 
 }
-},{}],275:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
+
+
+const spriteHelper = require("./spriteHelper.js");
+
+module.exports.hit = (player,door) => {
+
+  const trimmedDoorData = spriteHelper.trimVertexData(door)
+
+  const hitDirection = spriteHelper.hitBox(player.x, player.y, trimmedDoorData);
+
+  var tween = PIXI.tweenManager.createTween(door);
+  tween.time = 400;
+  tween.easing = PIXI.tween.Easing.outCubic();
+  tween.expire = true;
+
+  let rotationTarget = door.rotation;
+
+  if (hitDirection === "top") {
+    rotationTarget += 1
+  } 
+  if (hitDirection === "bottom") {
+    rotationTarget -= 1
+  } 
+  if (hitDirection === "exception") {
+    rotationTarget -= 1
+  }
+
+  tween.to({
+    rotation: rotationTarget
+  });
+  tween.start();
+
+}
+},{"./spriteHelper.js":277}],277:[function(require,module,exports){
 (function (global){
 const   PIXI        = require("pixi.js");
+
+
+function distanceSquared(x1, y1, x2, y2)
+{
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+}
+
+
+/**
+ * box-box collision
+ * @param {number} x1 top-left corner of first box
+ * @param {number} y1 top-left corner of first box
+ * @param {number} w1 width of first box
+ * @param {number} h1 height of first box
+ * @param {number} x2 top-left corner of second box
+ * @param {number} y2 top-left corner of second box
+ * @param {number} w2 width of second box
+ * @param {number} h2 height of second box
+ */
+module.exports.boxBox = (x1, y1, w1, h1, x2, y2, w2, h2) =>{
+    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
+}
+
+/**
+ * line-point collision
+ * from https://stackoverflow.com/a/17693146/1955997
+ * @param {number} x1 first point in line
+ * @param {number} y1 first point in line
+ * @param {number} x2 second point in line
+ * @param {number} y2 second point in line
+ * @param {number} xp point
+ * @param {number} yp point
+ * @param {number} [tolerance=1]
+ * @return {boolean}
+ **/
+
+
+
+ function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
+{
+    tolerance = tolerance || 1
+    return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance
+}
+
 
 function _getCenter(o, dimension, axis) {
     if (o.anchor !== undefined) {
@@ -62043,8 +62289,164 @@ module.exports.drawPolygon = (points, color) => {
     polygon.beginFill(color).drawPolygon(points).endFill()
     return polygon
 }
+
+module.exports.trimVertexData = sprite => {
+
+  const trimmedData= [];
+  
+  for (let i = 0; i < sprite.vertexData.length; i++) {
+
+    if(i % 2 === 0){
+      trimmedData.push(sprite.vertexData[i]-sprite.vertexData[0]+sprite.x)
+    } else {
+      trimmedData.push(sprite.vertexData[i]-sprite.vertexData[1]+sprite.y)
+    }
+    
+  }
+
+  return trimmedData;
+
+}
+
+module.exports.hitBox = (x, y, points) => {
+  var length = points.length
+  var c = false
+  var lastAction = "top"
+  var i, j
+  for (i = 0, j = length - 2; i < length; i += 2)
+  {
+      if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i]))
+      {
+          
+          c = !c
+      }
+      j = i
+  }
+  if (c)
+  {
+      return lastAction
+      
+  }
+  for (i = 0; i < length; i += 2)
+  {
+      var p1x = points[i]
+      var p1y = points[i + 1]
+      var p2x, p2y
+      if (i === length - 2)
+      {
+          
+          p2x = points[0]
+          p2y = points[1]
+      }
+      else
+      {
+          
+          p2x = points[i + 2]
+          p2y = points[i + 3]
+      }
+      if (linePoint(p1x, p1y, p2x, p2y, x, y,[1]))
+      {
+          
+          if(p1x === points[0]){
+              
+              lastAction = "top"
+              return "top"
+              
+          }else{
+              lastAction = "bottom";
+              return "bottom"
+          }
+          return true
+      }
+  }
+  
+  return false
+}
+
+
+module.exports.hitBoxContainer = (container, player) => {
+
+  return new Promise((resolve,reject)=>{
+    
+    let hit = false
+
+    for (let a = 0; a < container.length; a++) {
+
+      if (this.hitBox(player.x, player.y, this.trimVertexData(container[a]))) {
+
+        hit = true
+        
+      }
+
+    }
+
+    resolve(hit)
+
+  })
+
+}
+
+module.exports.hitStepForward = (container, player, key) => {
+
+  return new Promise((resolve,reject)=>{
+
+      if(key === "up")    player.y-40
+      if(key === "down")  player.y+40
+      if(key === "left")  player.x-20
+      if(key === "right") player.x+20
+
+    for (let a = 0; a < container.length; a++) {
+
+      const vertexData = this.trimVertexData(container[a])
+
+      if (this.hitBox(player.x, player.y, vertexData)) {
+        resolve(true)
+      } else{
+        resolve(false)
+      }
+    }
+
+  })
+
+}
+
+module.exports.hitBoxContainerObj = (container, player) => {
+
+  return new Promise((resolve,reject)=>{
+
+    for (let a = 0; a < container.length; a++) {
+
+      const vertexData = this.trimVertexData(container[a])
+      
+      if (this.hitBox(player.x, player.y, vertexData)) {
+        resolve(container[a])
+      }
+    }
+
+  })
+
+}
+
+module.exports.hitBoxContainerObjAndBool = (container, player) => {
+
+  return new Promise((resolve,reject)=>{
+
+    for (let a = 0; a < container.length; a++) {
+
+      const vertexData = module.exports.trimVertexData(container[a])
+      
+      if (module.exports.hitBox(player.x, player.y, vertexData)) {
+        resolve(container[a])
+      } else {
+        resolve(false)
+      }
+    }
+
+  })
+
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":212}],276:[function(require,module,exports){
+},{"pixi.js":212}],278:[function(require,module,exports){
 (function (global){
 
 const spriteHelper = require("../../utils/spriteHelper.js"),
@@ -62068,8 +62470,7 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_07.wav')
 ];
 
-let arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
-
+let arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png');
 
 module.exports.pickUpArrow = (Player) => {
 
@@ -62094,12 +62495,13 @@ module.exports.arrowManagement = (Player, mousePosition) => {
   .moveTo(Player.sprite.position.x, Player.sprite.position.y)
   .lineTo(mousePosition.x,mousePosition.y)
 
-  firedArrowGuide.clear().lineStyle(3, 0xffffff,0).drawPath(path_one)
+  firedArrowGuide.clear().lineStyle(3, 0xffffff,0.5).drawPath(path_one)
 
   const arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
-        arrow.anchor.set(0.5)
+        
         arrow.width /=3
         arrow.height /=3
+        arrow.anchor.set(0)
         arrow.rotation = spriteHelper.angle(Player.sprite, mousePosition)
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
@@ -62113,40 +62515,56 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
   arrowTween.on("update", function() {
 
-    let trimmedData = []
+    spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
+    .then(res => {
+        
+      if(res){
 
-    for (let i = 0; i < global.collisionItems.children[0].vertexData.length; i++) {
-
-      if(i % 2 === 0){
-        trimmedData.push(global.collisionItems.children[0].vertexData[i]-global.collisionItems.children[0].gx)
+        console.log("hitting")
+        arrow_hit_register.tint = 0xf00000
+        arrow.pickup = true;
+        arrowTween.stop();
+        arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
       } else {
-        trimmedData.push(global.collisionItems.children[0].vertexData[i]-global.collisionItems.children[0].gy)
+        arrow_hit_register.tint = 0x00ff00
       }
+    })
 
-    }
-
-    if (Intersects.pointPolygon(arrow.x, arrow.y, trimmedData)) {
-      console.log("hitting")
-      arrow_hit_register.tint = 0xf00000
-      arrow.pickup = true;
-      arrowTween.stop();
-      arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
-
-    } else {
-      arrow_hit_register.tint = 0x00ff00
-    }
-
-    b.hit(arrow, global.critterContainer.children,false,false,false,()=>{
-      arrow_hit_register.tint = 0xf00000
-      arrow.pickup = true;
-      arrowTween.stop()
+    spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
+    .then(critter => {
       
-      global.critterContainer.children[0].texture = global.critterContainer.children[0].dead;
-      global.critterContainer.children[0].stop()
-      global.critterContainer.children[0].mouseDeathSound.play()
-      console.log(PIXI.tweenManager.getTweensForTarget( global.critterContainer.children[0])[0])
-      PIXI.tweenManager.getTweensForTarget( global.critterContainer.children[0])[0].active = false;
+      if(critter){
 
+        arrow_hit_register.tint = 0xf00000
+        arrow.pickup = true;
+        arrowTween.stop()
+        
+        critter.texture = critter.dead;
+        critter.stop()
+        critter.mouseDeathSound.play()
+        PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
+
+      } else {
+        arrow_hit_register.tint = 0x00ff00
+      }
+    
+    })
+
+    spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
+    .then(enemy => {
+      console.log(enemy)
+      if(enemy){
+
+        arrow_hit_register.tint = 0xf00000
+        arrow.pickup = true;
+        arrowTween.stop()
+        
+        enemy.stop()
+        PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
+
+      } else {
+        arrow_hit_register.tint = 0x00ff00
+      }
     })
 
   })
@@ -62157,7 +62575,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":275,"intersects":39,"pixi.js":212}],277:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":277,"intersects":39,"pixi.js":212}],279:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -62310,9 +62728,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],278:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 
-},{}],279:[function(require,module,exports){
+},{}],281:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -64091,7 +64509,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":277,"ieee754":280}],280:[function(require,module,exports){
+},{"base64-js":279,"ieee754":282}],282:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -64177,7 +64595,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],281:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -64483,7 +64901,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":282}],282:[function(require,module,exports){
+},{"_process":284}],284:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -64669,7 +65087,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],283:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -65206,7 +65624,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],284:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -65292,7 +65710,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],285:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -65379,13 +65797,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],286:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":284,"./encode":285}],287:[function(require,module,exports){
+},{"./decode":286,"./encode":287}],289:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66119,7 +66537,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":288,"punycode":283,"querystring":286}],288:[function(require,module,exports){
+},{"./util":290,"punycode":285,"querystring":288}],290:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -66137,4 +66555,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[269]);
+},{}]},{},[270]);

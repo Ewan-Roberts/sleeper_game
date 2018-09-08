@@ -1,10 +1,6 @@
 
 const PIXI = require("pixi.js"),
-$ = require('jQuery'),
-
-rat         = require("../../animals/rat.js");
-
-
+$ = require('jQuery')
 module.exports.add_items = () => {
 
 	PIXI.loader
@@ -37,6 +33,7 @@ module.exports.add_items = () => {
 		movable_box.rotation = 0.06;
 		movable_box.interactive = true;
 		movable_box.buttonMode = true;
+		movable_box.weight = 10;
 		movable_box.on('pointerdown', ()=> {
 			
 			console.log('movable')
@@ -54,7 +51,7 @@ module.exports.add_items = () => {
 		
 		global.movableItems.addChild(movable_box)
 		global.collisionItems.addChild(box_full)
-		rat.mouseMove({x:100,y:300},{x:0,y:400})
+		
 	});
 
 	global.socket.on("container_contents", contents =>{
