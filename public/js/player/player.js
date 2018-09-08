@@ -27,7 +27,7 @@ global.Player = {
   movement_speed: 20,
   weapon:         "bow",
   moveable:       true,
-  power:          1000,
+  power:          900,
   ammo:           10,
   inventory:      []
 
@@ -46,10 +46,10 @@ function countDown() {
     global.Player.allowShoot = true
   }
 
-  if(global.Player.power > 400){
+  if(global.Player.power > 300){
     global.Player.power -= 10;
   } 
-  if(global.Player.power < 410) {
+  if(global.Player.power < 310) {
     global.Player.sprite.gotoAndStop(34);
   }
   
@@ -106,7 +106,7 @@ function mouseDown () {
     
   global.viewport.on('mousedown', event => {
     
-    global.Player.power = 1000
+    global.Player.power = 900
     global.Player.moveable = false;
 
     global.app.ticker.add(countDown);
@@ -264,8 +264,10 @@ module.exports.add_player = () => {
     global.Player.sprite.anchor.set(0.5);
     global.Player.sprite.width /= 2
     global.Player.sprite.height /= 2
-    global.Player.sprite.animationSpeed = 0.5;
+    global.Player.sprite.animationSpeed = 0.4;
     global.Player.sprite.play();
+    global.Player.sprite.zIndex = -20;
+
 
     global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
     global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
@@ -273,6 +275,7 @@ module.exports.add_player = () => {
 
     global.viewport.follow(global.Player.sprite)
     global.viewport.addChild(global.Player.sprite);
+    global.viewport.updateLayersOrder();
 
     add_player_controls()
     mouseMove()

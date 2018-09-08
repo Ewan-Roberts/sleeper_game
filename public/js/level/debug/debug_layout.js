@@ -5,6 +5,7 @@ triggers    = require("../../triggers/triggers.js"),
 enemy    = require("../../enemies/enemy.js"),
 items      = require("./debug_items.js"),
 doorHelper      = require("../../utils/doorHelper.js"),
+level_loader      = require("../bedroom/level_layout.js"),
 rat         = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
@@ -99,13 +100,29 @@ module.exports.add_floor = () => {
     const level_load_pad = PIXI.Sprite.fromImage('images/black_wall.png')
     level_load_pad.width = 200;
     level_load_pad.height = 100;
-    level_load_pad.position.set(-1500,200);
+    level_load_pad.position.set(400,400);
     level_load_pad.fired = false;
     level_load_pad.action = () =>{
       
       if(!level_load_pad.fired){
 
         level_load_pad.fired = true
+        level_loader.add_floor()
+      }
+      
+    }
+
+    const cutscene_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    cutscene_pad.width = 200;
+    cutscene_pad.height = 100;
+    cutscene_pad.position.set(100,100);
+    cutscene_pad.fired = false;
+    cutscene_pad.action = () =>{
+      
+      if(!cutscene_pad.fired){
+
+        cutscene_pad.fired = true
+        cutscene.add_floor()
       }
       
     }
@@ -114,24 +131,19 @@ module.exports.add_floor = () => {
 
     global.doors.addChild(door)
 
-    // triggers.createTriggerPad(200, 200, 250, 250)
-    // .then(pad=>{
-        
-        
-    //     global.eventTriggers.addChild(pad)
+    global.viewport.updateLayersOrder = function () {
+      global.viewport.children.sort(function(a,b) {
+          a.zIndex = a.zIndex || 0;
+          b.zIndex = b.zIndex || 0;
+          return b.zIndex - a.zIndex
+      });
+    };
 
-    //     pad.on('pointerdown', ()=> {
-        
-    //         console.log('click')
     
-    //     }); 
-        
-    // })
-
     global.viewport.addChild(global.eventTriggers)
-
+    global.collisionItems.zIndex = 1;
     global.collisionItems.addChild(slanted_wall,collision_wall);
-    
+    global.viewport.updateLayersOrder();
     player.add_player();
     items.add_items();
 

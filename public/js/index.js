@@ -68,6 +68,9 @@ viewport.drag().decelerate();
 global.collisionItems = new PIXI.Container();
 global.movableItems = new PIXI.Container();
 global.doors = new PIXI.Container();
+global.layer = new PIXI.display.Layer();
+global.layer.group.enableSort = true;
+
 global.viewport.addChild(global.collisionItems,global.movableItems,global.doors)
 
 

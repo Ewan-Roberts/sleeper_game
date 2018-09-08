@@ -3534,7 +3534,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":13,"component-inherit":9,"debug":20,"engine.io-parser":22,"parseqs":61,"ws":280,"yeast":267}],19:[function(require,module,exports){
+},{"../transport":13,"component-inherit":9,"debug":20,"engine.io-parser":22,"parseqs":61,"ws":284,"yeast":267}],19:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -3774,7 +3774,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":21,"_process":284}],21:[function(require,module,exports){
+},{"./debug":21,"_process":288}],21:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -5272,7 +5272,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":281,"isarray":54}],27:[function(require,module,exports){
+},{"buffer":285,"isarray":54}],27:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -34326,7 +34326,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":127,"../../../../textures/TextureMatrix":173,"../Filter":143,"path":283}],147:[function(require,module,exports){
+},{"../../../../math":127,"../../../../textures/TextureMatrix":173,"../Filter":143,"path":287}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38102,7 +38102,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":101,"path":283}],165:[function(require,module,exports){
+},{"../../Shader":101,"path":287}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43849,7 +43849,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":289}],182:[function(require,module,exports){
+},{"url":293}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48384,7 +48384,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":122,"../../core/const":103,"path":283}],200:[function(require,module,exports){
+},{"../../core":122,"../../core/const":103,"path":287}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48468,7 +48468,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":122,"path":283}],201:[function(require,module,exports){
+},{"../../core":122,"path":287}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49631,7 +49631,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":122,"path":283}],208:[function(require,module,exports){
+},{"../../core":122,"path":287}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49739,7 +49739,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":122,"path":283}],209:[function(require,module,exports){
+},{"../../core":122,"path":287}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49793,7 +49793,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":122,"path":283}],210:[function(require,module,exports){
+},{"../../core":122,"path":287}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49969,7 +49969,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":122,"path":283}],212:[function(require,module,exports){
+},{"../../core":122,"path":287}],212:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52627,7 +52627,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":198,"path":283,"resource-loader":252}],220:[function(require,module,exports){
+},{"../extras":198,"path":287,"resource-loader":252}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52990,7 +52990,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":122,"resource-loader":252,"url":289}],223:[function(require,module,exports){
+},{"../core":122,"resource-loader":252,"url":293}],223:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54716,7 +54716,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":122,"../Mesh":224,"path":283,"pixi-gl-core":70}],231:[function(require,module,exports){
+},{"../../core":122,"../Mesh":224,"path":287,"pixi-gl-core":70}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60397,7 +60397,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":259,"parseuri":62}],259:[function(require,module,exports){
 arguments[4][20][0].apply(exports,arguments)
-},{"./debug":260,"_process":284,"dup":20}],260:[function(require,module,exports){
+},{"./debug":260,"_process":288,"dup":20}],260:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
 },{"dup":21,"ms":58}],261:[function(require,module,exports){
 (function (global){
@@ -60993,7 +60993,7 @@ function isBuf(obj) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],264:[function(require,module,exports){
 arguments[4][20][0].apply(exports,arguments)
-},{"./debug":265,"_process":284,"dup":20}],265:[function(require,module,exports){
+},{"./debug":265,"_process":288,"dup":20}],265:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
 },{"dup":21,"ms":58}],266:[function(require,module,exports){
 module.exports = toArray
@@ -61321,7 +61321,7 @@ module.exports.mousePause = () => {
     }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":277}],269:[function(require,module,exports){
+},{"../utils/spriteHelper.js":281}],269:[function(require,module,exports){
 (function (global){
 const spriteHelper = require('../utils/spriteHelper.js')
 console.log("Enemy loaded")
@@ -61497,7 +61497,7 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":277}],270:[function(require,module,exports){
+},{"../utils/spriteHelper.js":281}],270:[function(require,module,exports){
 (function (global){
 const   PIXI = require('pixi.js'),
         io = require('socket.io-client'),
@@ -61569,6 +61569,9 @@ viewport.drag().decelerate();
 global.collisionItems = new PIXI.Container();
 global.movableItems = new PIXI.Container();
 global.doors = new PIXI.Container();
+global.layer = new PIXI.display.Layer();
+global.layer.group.enableSort = true;
+
 global.viewport.addChild(global.collisionItems,global.movableItems,global.doors)
 
 
@@ -61628,7 +61631,477 @@ app.ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":272,"./player/player.js":273,"pixi-layers":81,"pixi-tween":82,"pixi-viewport":95,"pixi.js":212,"socket.io-client":254}],271:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":275,"./player/player.js":277,"pixi-layers":81,"pixi-tween":82,"pixi-viewport":95,"pixi.js":212,"socket.io-client":254}],271:[function(require,module,exports){
+(function (global){
+
+
+const PIXI = require("pixi.js"),
+    rat = require("../../animals/rat.js"),
+    level_utls = require("../level_utils.js"),
+    debug_layout = require("../debug/debug_layout.js")
+
+
+
+module.exports.createTriggerPad = (obj) =>{
+
+    const pad = new PIXI.Graphics()
+    .beginFill(0xFF3300)
+    .lineStyle(2, 0xffd900, 1)
+    .moveTo(0,0)
+    .lineTo(250, 0)
+    .lineTo(250, 250)
+    .lineTo(0, 250)
+    .lineTo(0, 0)
+    .endFill()
+    pad.position.set(500,1200)
+    pad.interactive = true
+    pad.buttonMode = true;
+    pad.on('pointerdown', ()=> {
+        
+        console.log('rat click')
+        rat.mouseMove({x:700,y:910},{x:90,y:920})
+
+    }); 
+
+    global.viewport.addChild(pad)
+
+
+}
+
+module.exports.createDebugTrigger = (obj) =>{
+
+    const pad = new PIXI.Graphics()
+    .beginFill(0xFF3300)
+    .lineStyle(2, 0xffd900, 1)
+    .moveTo(0,0)
+    .lineTo(250, 0)
+    .lineTo(250, 250)
+    .lineTo(0, 250)
+    .lineTo(0, 0)
+    .endFill()
+    pad.position.set(1000,1500)
+    pad.interactive = true
+    pad.buttonMode = true;
+    pad.on('pointerdown', ()=> {
+        
+        level_utls.clearViewport()
+        level_utls.clearCollision()
+        debug_layout.add_floor()
+
+    }); 
+
+    global.viewport.addChild(pad)
+
+
+}
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../animals/rat.js":268,"../debug/debug_layout.js":275,"../level_utils.js":276,"pixi.js":212}],272:[function(require,module,exports){
+(function (global){
+
+const PIXI = require("pixi.js"),
+$ = require('jQuery')
+
+function getIntersection(a,b){const c=a.a.x,d=a.a.y,e=a.b.x-a.a.x,f=a.b.y-a.a.y,g=b.a.x,h=b.a.y,i=b.b.x-b.a.x,j=b.b.y-b.a.y,k=Math.sqrt(e*e+f*f),l=Math.sqrt(i*i+j*j);if(e/k==i/l&&f/k==j/l)return null;const m=(e*(h-d)+f*(c-g))/(i*f-j*e),n=(g+i*m-c)/e;return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}}
+
+const addToSegments = item => {
+
+    global.bedroom_segments.push(
+        {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+        {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+    )
+
+}
+
+function createPair(diffuseTex, normalTex, alpha) {
+    
+    const container = new PIXI.Container(),
+    diffuseSprite = new PIXI.Sprite(diffuseTex),
+    normalSprite = new PIXI.Sprite(normalTex);
+    normalSprite.alpha = alpha
+    diffuseSprite.parentGroup = PIXI.lights.diffuseGroup;
+    normalSprite.parentGroup = PIXI.lights.normalGroup;
+    container.addChild(diffuseSprite);
+    container.addChild(normalSprite);
+    // container.addChild(personal_light);
+    return container;
+}
+
+const addLevelRaycasting = () =>{
+
+    const raycast = new PIXI.Graphics();
+    const points = (bedroom_segments=>{const a = [];global.bedroom_segments.forEach(seg=>a.push(seg.a,seg.b));return a;})(bedroom_segments);
+    const uniquePoints = (points=>{const set = {};return points.filter(p=>{const key = p.x+","+p.y;if(key in set){return false;}else{set[key]=true;return true;}});})(points);
+
+    global.app.ticker.add(delta => {
+
+        const uniqueAngles = [];
+        let intersects = [];
+        PIXI.tweenManager.update();
+        $(".fps").html("FPS: "+(app.ticker.FPS).toFixed(1));
+        raycast.clear()
+        raycast.beginFill(0xfffffff,0.14);
+        for(let j=0;j<uniquePoints.length;j++){const uniquePoint = uniquePoints[j];const angle = Math.atan2(uniquePoint.y-Player.sprite.y,uniquePoint.x-Player.sprite.x);uniquePoint.angle = angle;uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);}
+        for(let k=0;k<uniqueAngles.length;k++){const angle = uniqueAngles[k];const dx = Math.cos(angle);const dy = Math.sin(angle);const ray = {a:{x:Player.sprite.x,y:Player.sprite.y},b:{x:Player.sprite.x+dx,y:Player.sprite.y+dy}};let closestIntersect = null;for(let i=0;i<global.bedroom_segments.length;i++){var intersect = getIntersection(ray,global.bedroom_segments[i]);if(!intersect) continue;if(!closestIntersect || intersect.param<closestIntersect.param){closestIntersect=intersect;}}if(!closestIntersect) continue;closestIntersect.angle = angle;intersects.push(closestIntersect);}
+        intersects = intersects.sort((a,b)=>a.angle-b.angle);
+        raycast.moveTo(intersects[0].x,intersects[0].y);
+        raycast.lineStyle(1, 0xffd900, 1);
+        for (let i = 1; i < intersects.length; i++) raycast.lineTo(intersects[i].x,intersects[i].y);
+
+    });
+
+    global.viewport.addChild(raycast)
+
+
+}
+
+
+module.exports.loadItem = (obj,func) => {
+	return new Promise((resolve,reject)=>{
+
+		PIXI.loader
+		.add(obj.name,obj.path)
+		.load((loader,res)=>{
+
+			var item = new PIXI.Sprite(res.texture)
+
+			item.position.set(obj.x,obj.y)
+			item.rotation = obj.rotation
+			item.interactive = obj.interactive || false;
+			item.buttonMode = obj.buttonMode || false;
+			item.on('pointerdown', () => {
+
+				func()
+			})
+			resolve(item)
+		})
+
+	})
+
+}
+
+
+module.exports.add_items = (viewport) => {
+	
+	return new Promise((resolve,reject)=>{
+
+		PIXI.loader
+	    .add('box_full','images/chest_full.png')
+	    // .add('box_full_NORM','images/chest_full_NORM.png')
+	    .add('box_empty','images/chest_empty.png')
+	    .add('dirty_matress','images/dirty_matress.png')
+	    // .add('dirty_matress_NORM','images/dirty_matress_NORM.png')
+	    .add('workbench','images/workbench.png')
+	    // .add('workbench_NORM','images/workbench_NORM.png')
+	    .add('cupboard','images/cupboard.png')
+	    // .add('cupboard_NORM','images/cupboard_NORM.png')
+	    .add('binder','images/binder.png')
+	    .load((loader, res)=>{
+		
+		    const box_full  = new PIXI.Sprite(res.box_full.texture)
+		    dirty_matress   = new PIXI.Sprite(res.dirty_matress.texture),
+		    workbench       = new PIXI.Sprite(res.workbench.texture),
+		    cupboard        = new PIXI.Sprite(res.cupboard.texture),
+		    box_empty       = new PIXI.Sprite(res.box_empty.texture)
+
+		    // socket.emit("get_player_data", ()=>{
+		    //     console.log('sent')
+		    // })
+
+		    box_full.position.set(20,920)
+		    box_full.width *=2
+		    box_full.height *=2
+		    box_full.rotation = 0.06
+		    box_full.interactive = true
+		    box_full.buttonMode = true;
+		    box_full.id = 35
+		    box_full.on('pointerdown', ()=> {
+		        
+		        console.log('box clicked')
+		        socket.emit("get_container_contents", box_full.id)
+		        box_full.children[0].texture = PIXI.utils.TextureCache["box_empty"];
+		        $(".lootMenu").show()
+
+		    }); 
+
+		    dirty_matress.rotation = -0.9
+		    dirty_matress.position.set(1000,1300)
+		    dirty_matress.interactive = true
+		    dirty_matress.buttonMode = true;
+		    dirty_matress.name = "dirty_matress"
+		    dirty_matress.on('pointerdown', () =>{
+		        
+		        console.log('bed clicked')
+		        socket.emit("player_sleep", 8)
+
+		    });
+
+		    workbench.interactive = true;
+		    workbench.buttonMode = true;
+		    workbench.width = workbench.width/2
+		    workbench.height = workbench.height/2
+		    workbench.name = "workbench"
+		    workbench.position.set(240,900)
+		    workbench.on('pointerdown', function () {
+		        
+		    	console.log('workbench clicked')
+
+		    });
+		    addToSegments(workbench)
+
+		    cupboard.interactive = true;
+		    cupboard.buttonMode = true;
+		    cupboard.position.set(5,2200)
+		    cupboard.height *= 1.5
+		    cupboard.width *= 1.35
+		    cupboard.name = "cupboard"
+		    addToSegments(cupboard)
+
+	    	global.collisionItems.addChild(
+	        	workbench,
+	        	cupboard,
+	        	box_full
+	        );
+
+	        global.viewport.addChild(
+	        	dirty_matress,
+	        	global.collisionItems
+	        )
+	        addLevelRaycasting()
+
+	        resolve()
+
+	    });
+
+	})
+
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"jQuery":56,"pixi.js":212}],273:[function(require,module,exports){
+(function (global){
+
+const $     = require('jQuery'),
+player      = require("../../player/player.js"),
+items       = require("./items.js"),
+trigger     = require("./bedroom_triggers.js")
+// Intersects  = require('yy-intersects');
+
+
+
+
+const addToSegments = item => {
+
+    global.bedroom_segments.push(
+        {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+        {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+    )
+
+}
+
+module.exports.add_floor = () => {
+    return new Promise((resolve,reject)=>{
+
+        PIXI.loader
+        .add('floor','images/flat_floor_low_2.jpg')
+        .add('debug_wall','images/black_wall.png')
+        .load((loader,res)=>{
+
+            
+            let floor = new PIXI.Sprite(res.floor.texture)
+            // floor.alpha = 0.5
+            floor.interactive = true;
+            floor.zIndex =1;
+            
+            
+            // global.stage.updateStage();
+            // floor.on('mousemove', event => {
+
+            //     // Create a new Graphics object and add it to the scene
+            //     let myGraph = new PIXI.Graphics();
+            //     myGraph.clear()
+            //     viewport.addChild(myGraph);
+
+            //     // Move it to the beginning of the line
+            //     myGraph.position.set(global.Player.sprite.x, global.Player.sprite.y);
+
+
+            //     // Draw the line (endPoint should be relative to myGraph's position)
+            //     myGraph.lineStyle(1, 0xffffff)
+            //     .moveTo(global.Player.sprite.x, global.Player.sprite.y)
+            //     .lineTo(event.data.global.y, event.data.global.x);
+
+            //     // personal_light.rotation = 200
+            //     // Mouse.x = event.data.global.x
+            //     // Mouse.y = event.data.global.y
+            //     // personal_light.position.x = event.data.global.x +100
+            //     // personal_light.position.y = event.data.global.y +100
+                
+            // });
+            
+            // viewport.addChild(floor)
+            //TOP
+            const   bedroom_top_left = new PIXI.Sprite(res.black_wall.texture);
+            
+            bedroom_top_left.position.set(0,820)
+            bedroom_top_left.height =80
+            bedroom_top_left.width =600
+            addToSegments(bedroom_top_left)
+            
+            // bedroom_top_left.shape = new Intersects.Rectangle(bedroom_top_left)
+            console.log("fwefewfewf")
+            const   collision_door = new PIXI.Sprite(res.black_wall.texture);
+            collision_door.position.set(1050,2125)
+
+            collision_door.height =50
+            collision_door.width =400
+            collision_door.name = "door"
+            addToSegments(collision_door)
+
+
+            const   bedroom_top_right = new PIXI.Sprite(res.black_wall.texture);
+            bedroom_top_right.position.set(970,825)
+            bedroom_top_right.height +=27
+            bedroom_top_right.width =1410
+            
+            addToSegments(bedroom_top_right)
+
+            const   living_room_top_right = new PIXI.Sprite(res.black_wall.texture);
+            living_room_top_right.position.set(2770,825)
+            living_room_top_right.height +=27
+            living_room_top_right.width =800
+            addToSegments(living_room_top_right)
+
+            const   middle_wall = new PIXI.Sprite(res.black_wall.texture);
+            middle_wall.position.set(1647,880)
+            middle_wall.height =2100
+            middle_wall.width =85
+            addToSegments(middle_wall)
+
+            const   hallway_right_wall = new PIXI.Sprite(res.black_wall.texture);
+            hallway_right_wall.position.set(332,2100)
+            hallway_right_wall.height =2570
+            hallway_right_wall.width =81
+            addToSegments(hallway_right_wall)
+
+            const   bathroom_top_left = new PIXI.Sprite(res.black_wall.texture);
+            bathroom_top_left.position.set(400,2100)
+            bathroom_top_left.width = 650
+            bathroom_top_left.height = 90
+            addToSegments(bathroom_top_left)
+
+            const   bathroom_bottom = new PIXI.Sprite(res.black_wall.texture);
+            bathroom_bottom.position.set(410,2760)
+            bathroom_bottom.width = 1240
+            bathroom_bottom.height = 90
+            addToSegments(bathroom_bottom)
+
+            const   bathroom_top_right = new PIXI.Sprite(res.black_wall.texture);
+            bathroom_top_right.position.set(1370,2100)
+            bathroom_top_right.height = 90
+            bathroom_top_right.width = 280
+            addToSegments(bathroom_top_right)
+
+            const   caroline_bottom = new PIXI.Sprite(res.black_wall.texture);
+            caroline_bottom.position.set(410,3630)
+            caroline_bottom.width = 1240
+            caroline_bottom.height = 90
+            addToSegments(caroline_bottom)    
+
+            const   caroline_right = new PIXI.Sprite(res.black_wall.texture);
+            caroline_right.position.set(1647,3380)
+            caroline_right.height =520
+            caroline_right.width =83
+            addToSegments(caroline_right)
+
+            const   ben_bottom = new PIXI.Sprite(res.black_wall.texture);
+            ben_bottom.position.set(410,4580)
+            ben_bottom.width = 1240
+            ben_bottom.height = 90
+            addToSegments(ben_bottom)  
+
+            const   ben_right = new PIXI.Sprite(res.black_wall.texture);
+            ben_right.position.set(1647,4280)
+            ben_right.height =390
+            ben_right.width =85
+            addToSegments(ben_right)
+
+            const   kitchen_left = new PIXI.Sprite(res.black_wall.texture);
+            kitchen_left.position.set(2300,2780)
+            kitchen_left.height =1800
+            kitchen_left.width =80
+            addToSegments(kitchen_left)
+
+            const   main_bathroom_left = new PIXI.Sprite(res.black_wall.texture);
+            main_bathroom_left.position.set(2300,4880)
+            main_bathroom_left.height =125
+            main_bathroom_left.width =80
+            addToSegments(main_bathroom_left)
+
+            const   main_bathroom_top = new PIXI.Sprite(res.black_wall.texture);
+            main_bathroom_top.position.set(2300,4112)
+            main_bathroom_top.height = 78
+            main_bathroom_top.width =1300
+            addToSegments(main_bathroom_top)
+            
+            global.collisionItems.addChild(
+                bedroom_top_left,
+                collision_door,
+                bedroom_top_right,
+                middle_wall,
+                main_bathroom_left,
+                living_room_top_right,
+                main_bathroom_top,
+                hallway_right_wall,
+                bathroom_top_left,
+                bathroom_top_right,
+                bathroom_bottom,
+                caroline_bottom,
+                caroline_right,
+                ben_right,
+                ben_bottom,
+                kitchen_left
+            )
+
+
+            global.collisionItems.zIndex = -1;
+            // console.log(bounds)
+            global.viewport.addChild(floor,global.collisionItems)
+            
+            global.viewport.updateLayersOrder();
+            
+            trigger.createTriggerPad()
+
+            trigger.createDebugTrigger()
+
+            resolve()
+
+        })
+
+    })
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../player/player.js":277,"./bedroom_triggers.js":271,"./items.js":272,"jQuery":56}],274:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
@@ -61692,7 +62165,7 @@ module.exports.add_items = () => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jQuery":56,"pixi.js":212}],272:[function(require,module,exports){
+},{"jQuery":56,"pixi.js":212}],275:[function(require,module,exports){
 (function (global){
 
 const $     = require('jQuery'),
@@ -61701,6 +62174,7 @@ triggers    = require("../../triggers/triggers.js"),
 enemy    = require("../../enemies/enemy.js"),
 items      = require("./debug_items.js"),
 doorHelper      = require("../../utils/doorHelper.js"),
+level_loader      = require("../bedroom/level_layout.js"),
 rat         = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
@@ -61795,13 +62269,29 @@ module.exports.add_floor = () => {
     const level_load_pad = PIXI.Sprite.fromImage('images/black_wall.png')
     level_load_pad.width = 200;
     level_load_pad.height = 100;
-    level_load_pad.position.set(-1500,200);
+    level_load_pad.position.set(400,400);
     level_load_pad.fired = false;
     level_load_pad.action = () =>{
       
       if(!level_load_pad.fired){
 
         level_load_pad.fired = true
+        level_loader.add_floor()
+      }
+      
+    }
+
+    const cutscene_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    cutscene_pad.width = 200;
+    cutscene_pad.height = 100;
+    cutscene_pad.position.set(100,100);
+    cutscene_pad.fired = false;
+    cutscene_pad.action = () =>{
+      
+      if(!cutscene_pad.fired){
+
+        cutscene_pad.fired = true
+        cutscene.add_floor()
       }
       
     }
@@ -61810,24 +62300,19 @@ module.exports.add_floor = () => {
 
     global.doors.addChild(door)
 
-    // triggers.createTriggerPad(200, 200, 250, 250)
-    // .then(pad=>{
-        
-        
-    //     global.eventTriggers.addChild(pad)
+    global.viewport.updateLayersOrder = function () {
+      global.viewport.children.sort(function(a,b) {
+          a.zIndex = a.zIndex || 0;
+          b.zIndex = b.zIndex || 0;
+          return b.zIndex - a.zIndex
+      });
+    };
 
-    //     pad.on('pointerdown', ()=> {
-        
-    //         console.log('click')
     
-    //     }); 
-        
-    // })
-
     global.viewport.addChild(global.eventTriggers)
-
+    global.collisionItems.zIndex = 1;
     global.collisionItems.addChild(slanted_wall,collision_wall);
-    
+    global.viewport.updateLayersOrder();
     player.add_player();
     items.add_items();
 
@@ -61835,7 +62320,22 @@ module.exports.add_floor = () => {
 
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":268,"../../enemies/enemy.js":269,"../../player/player.js":273,"../../triggers/triggers.js":274,"../../utils/doorHelper.js":276,"./debug_items.js":271,"jQuery":56}],273:[function(require,module,exports){
+},{"../../animals/rat.js":268,"../../enemies/enemy.js":269,"../../player/player.js":277,"../../triggers/triggers.js":278,"../../utils/doorHelper.js":280,"../bedroom/level_layout.js":273,"./debug_items.js":274,"jQuery":56}],276:[function(require,module,exports){
+(function (global){
+
+
+
+module.exports.clearViewport = () =>{
+
+    for (var i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
+}
+
+module.exports.clearCollision = () =>{
+
+    for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],277:[function(require,module,exports){
 (function (global){
 const PIXI        = require("pixi.js"),
       Intersects  = require('intersects'),
@@ -61866,7 +62366,7 @@ global.Player = {
   movement_speed: 20,
   weapon:         "bow",
   moveable:       true,
-  power:          1000,
+  power:          900,
   ammo:           10,
   inventory:      []
 
@@ -61885,10 +62385,10 @@ function countDown() {
     global.Player.allowShoot = true
   }
 
-  if(global.Player.power > 400){
+  if(global.Player.power > 300){
     global.Player.power -= 10;
   } 
-  if(global.Player.power < 410) {
+  if(global.Player.power < 310) {
     global.Player.sprite.gotoAndStop(34);
   }
   
@@ -61945,7 +62445,7 @@ function mouseDown () {
     
   global.viewport.on('mousedown', event => {
     
-    global.Player.power = 1000
+    global.Player.power = 900
     global.Player.moveable = false;
 
     global.app.ticker.add(countDown);
@@ -62103,8 +62603,10 @@ module.exports.add_player = () => {
     global.Player.sprite.anchor.set(0.5);
     global.Player.sprite.width /= 2
     global.Player.sprite.height /= 2
-    global.Player.sprite.animationSpeed = 0.5;
+    global.Player.sprite.animationSpeed = 0.4;
     global.Player.sprite.play();
+    global.Player.sprite.zIndex = -20;
+
 
     global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
     global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
@@ -62112,6 +62614,7 @@ module.exports.add_player = () => {
 
     global.viewport.follow(global.Player.sprite)
     global.viewport.addChild(global.Player.sprite);
+    global.viewport.updateLayersOrder();
 
     add_player_controls()
     mouseMove()
@@ -62123,7 +62626,7 @@ module.exports.add_player = () => {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":268,"../utils/documentHelper.js":275,"../utils/doorHelper.js":276,"../utils/spriteHelper.js":277,"../weapons/bow/bowHelper.js":278,"intersects":39,"pixi.js":212}],274:[function(require,module,exports){
+},{"../animals/rat.js":268,"../utils/documentHelper.js":279,"../utils/doorHelper.js":280,"../utils/spriteHelper.js":281,"../weapons/bow/bowHelper.js":282,"intersects":39,"pixi.js":212}],278:[function(require,module,exports){
 const PIXI = require("pixi.js");
 
 module.exports.createTriggerPad = (x, y, width, height) =>{
@@ -62151,7 +62654,7 @@ module.exports.createTriggerPad = (x, y, width, height) =>{
 }
 
 
-},{"pixi.js":212}],275:[function(require,module,exports){
+},{"pixi.js":212}],279:[function(require,module,exports){
 //utils
 
 const keymap = {
@@ -62184,7 +62687,7 @@ module.exports.mousePositionFromScreen = (event, viewport) => {
     }
 
 }
-},{}],276:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 
 
 const spriteHelper = require("./spriteHelper.js");
@@ -62218,7 +62721,7 @@ module.exports.hit = (player,door) => {
   tween.start();
 
 }
-},{"./spriteHelper.js":277}],277:[function(require,module,exports){
+},{"./spriteHelper.js":281}],281:[function(require,module,exports){
 (function (global){
 const   PIXI        = require("pixi.js");
 
@@ -62446,7 +62949,7 @@ module.exports.hitBoxContainerObjAndBool = (container, player) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":212}],278:[function(require,module,exports){
+},{"pixi.js":212}],282:[function(require,module,exports){
 (function (global){
 
 const spriteHelper = require("../../utils/spriteHelper.js"),
@@ -62499,9 +63002,9 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
   const arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
         
-        arrow.width /=3
+        arrow.width /=2
         arrow.height /=3
-        arrow.anchor.set(0)
+        arrow.anchor.set(0.8)
         arrow.rotation = spriteHelper.angle(Player.sprite, mousePosition)
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
@@ -62523,8 +63026,9 @@ module.exports.arrowManagement = (Player, mousePosition) => {
         console.log("hitting")
         arrow_hit_register.tint = 0xf00000
         arrow.pickup = true;
-        arrowTween.stop();
         arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
+        
+        setTimeout(()=>arrowTween.stop(),20)
       } else {
         arrow_hit_register.tint = 0x00ff00
       }
@@ -62575,7 +63079,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":277,"intersects":39,"pixi.js":212}],279:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":281,"intersects":39,"pixi.js":212}],283:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -62728,9 +63232,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],280:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 
-},{}],281:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -64509,7 +65013,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":279,"ieee754":282}],282:[function(require,module,exports){
+},{"base64-js":283,"ieee754":286}],286:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -64595,7 +65099,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],283:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -64901,7 +65405,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":284}],284:[function(require,module,exports){
+},{"_process":288}],288:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -65087,7 +65591,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],285:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -65624,7 +66128,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],286:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -65710,7 +66214,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],287:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -65797,13 +66301,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],288:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":286,"./encode":287}],289:[function(require,module,exports){
+},{"./decode":290,"./encode":291}],293:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66537,7 +67041,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":290,"punycode":285,"querystring":288}],290:[function(require,module,exports){
+},{"./util":294,"punycode":289,"querystring":292}],294:[function(require,module,exports){
 'use strict';
 
 module.exports = {

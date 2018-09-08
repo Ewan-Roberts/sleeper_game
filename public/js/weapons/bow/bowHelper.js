@@ -49,9 +49,9 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
   const arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
         
-        arrow.width /=3
+        arrow.width /=2
         arrow.height /=3
-        arrow.anchor.set(0)
+        arrow.anchor.set(0.8)
         arrow.rotation = spriteHelper.angle(Player.sprite, mousePosition)
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
@@ -73,8 +73,9 @@ module.exports.arrowManagement = (Player, mousePosition) => {
         console.log("hitting")
         arrow_hit_register.tint = 0xf00000
         arrow.pickup = true;
-        arrowTween.stop();
         arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
+        
+        setTimeout(()=>arrowTween.stop(),20)
       } else {
         arrow_hit_register.tint = 0x00ff00
       }

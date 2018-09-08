@@ -24,13 +24,17 @@ module.exports.add_floor = () => {
 
         PIXI.loader
         .add('floor','images/flat_floor_low_2.jpg')
-        .add('black_wall','images/black_wall.png')
+        .add('debug_wall','images/black_wall.png')
         .load((loader,res)=>{
 
             
             let floor = new PIXI.Sprite(res.floor.texture)
             // floor.alpha = 0.5
             floor.interactive = true;
+            floor.zIndex =1;
+            
+            
+            // global.stage.updateStage();
             // floor.on('mousemove', event => {
 
             //     // Create a new Graphics object and add it to the scene
@@ -176,14 +180,15 @@ module.exports.add_floor = () => {
                 caroline_right,
                 ben_right,
                 ben_bottom,
-                kitchen_left,
-
+                kitchen_left
             )
 
 
-
+            global.collisionItems.zIndex = -1;
             // console.log(bounds)
-            viewport.addChild(floor,global.collisionItems)
+            global.viewport.addChild(floor,global.collisionItems)
+            
+            global.viewport.updateLayersOrder();
             
             trigger.createTriggerPad()
 
