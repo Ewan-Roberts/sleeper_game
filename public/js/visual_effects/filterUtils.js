@@ -34,7 +34,6 @@ function countDown() {
   
 }
 
-
 module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
   
   global.overlay.alpha = 0;
@@ -69,7 +68,8 @@ module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
   const godray = new filters.GodrayFilter()
   godray.parallel = false;
   godray.center = [x,y]
-  godray.time =20;
+  godray.gain =0.4
+  godray.time =20.5;
 
   global.viewport.filters = [godray]
 
@@ -86,7 +86,7 @@ module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
   
   global.app.ticker.add(godrayAnimation);
 
-
+  resolve()
   
 })
 

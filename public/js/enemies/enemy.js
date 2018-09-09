@@ -166,7 +166,7 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
         global.viewport.addChild(global.enemyContainer)
 
         Enemy.sprite.moving = animated_enemy;
-
+        
         
 
 }

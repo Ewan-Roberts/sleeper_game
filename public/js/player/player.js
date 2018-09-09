@@ -125,12 +125,14 @@ function mouseDown () {
 
 }
 
+
+
 function add_player_controls() {
 
   document.addEventListener("keyup", e=> {
 
       global.Player.sprite._textures = global.Player.sprite.idle._textures
-  })
+  },true)
 
   document.addEventListener("keydown", e=> {
 
@@ -232,7 +234,7 @@ function add_player_controls() {
     bowHelper.pickUpArrow(global.Player)
     
 
-  });
+  },true);
 
   global.viewport.addChild(aimingLine);
 
@@ -284,4 +286,11 @@ module.exports.add_player = () => {
     
   })
 
+}
+
+module.exports.remove_controls = () =>{
+
+  document.removeEventListener("keyup", e=> {});
+
+  document.removeEventListener("keydown", e=> {});
 }
