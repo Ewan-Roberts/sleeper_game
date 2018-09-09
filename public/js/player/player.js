@@ -264,7 +264,7 @@ module.exports.add_player = () => {
     global.Player.sprite.anchor.set(0.5);
     global.Player.sprite.width /= 2
     global.Player.sprite.height /= 2
-    global.Player.sprite.animationSpeed = 0.4;
+    global.Player.sprite.animationSpeed = 0.6;
     global.Player.sprite.play();
     global.Player.sprite.zIndex = -20;
 

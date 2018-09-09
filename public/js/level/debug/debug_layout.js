@@ -6,6 +6,8 @@ enemy    = require("../../enemies/enemy.js"),
 items      = require("./debug_items.js"),
 doorHelper      = require("../../utils/doorHelper.js"),
 level_loader      = require("../bedroom/level_layout.js"),
+filterUtil      = require("../../visual_effects/filterUtils.js"),
+cutsceneUtil      = require("../../cutscene/cutsceneUtils.js"),
 rat         = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
@@ -64,7 +66,7 @@ module.exports.add_floor = () => {
     const rat_pad = PIXI.Sprite.fromImage('images/black_wall.png')
     rat_pad.width = 200;
     rat_pad.height = 100;
-    rat_pad.position.set(-400,200);
+    rat_pad.position.set(-700,200);
     rat_pad.fired = false;
     rat_pad.action = () =>{
       
@@ -82,7 +84,7 @@ module.exports.add_floor = () => {
     const enemy_pad = PIXI.Sprite.fromImage('images/black_wall.png')
     enemy_pad.width = 200;
     enemy_pad.height = 100;
-    enemy_pad.position.set(-800,200);
+    enemy_pad.position.set(-950,200);
     enemy_pad.fired = false;
     enemy_pad.action = () =>{
       
@@ -100,7 +102,7 @@ module.exports.add_floor = () => {
     const level_load_pad = PIXI.Sprite.fromImage('images/black_wall.png')
     level_load_pad.width = 200;
     level_load_pad.height = 100;
-    level_load_pad.position.set(400,400);
+    level_load_pad.position.set(-450,200);
     level_load_pad.fired = false;
     level_load_pad.action = () =>{
       
@@ -112,30 +114,50 @@ module.exports.add_floor = () => {
       
     }
 
-    const cutscene_pad = PIXI.Sprite.fromImage('images/black_wall.png')
-    cutscene_pad.width = 200;
-    cutscene_pad.height = 100;
-    cutscene_pad.position.set(100,100);
-    cutscene_pad.fired = false;
-    cutscene_pad.action = () =>{
+    const effect_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    effect_pad.width = 200;
+    effect_pad.height = 100;
+    effect_pad.position.set(-200,200);
+    effect_pad.fired = false;
+    effect_pad.action = () =>{
       
-      if(!cutscene_pad.fired){
+      if(!effect_pad.fired){
 
-        cutscene_pad.fired = true
-        cutscene.add_floor()
+        effect_pad.fired = true
+        // filterUtil.glitch()
+        filterUtil.fade_in_black()
+      } else {
+        filterUtil.fade_out_black()
       }
       
     }
 
-    global.eventTriggers.addChild(rat_pad,enemy_pad,level_load_pad)
+    const clear_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    clear_pad.width = 200;
+    clear_pad.height = 100;
+    clear_pad.position.set(-200,50);
+    clear_pad.fired = false;
+    clear_pad.action = () =>{
 
-    global.doors.addChild(door)
+      if(!clear_pad.fired){
+        clear_pad.fired = true;
+        cutsceneUtil.teleport(1000,1000)
+        // filterUtil.godray();
+      } else {
+        filterUtil.clear();
+      }
+
+    }
+
+    global.eventTriggers.addChild(rat_pad,enemy_pad,level_load_pad,effect_pad, clear_pad)
+
+    global.doors.addChild(door);
 
     global.viewport.updateLayersOrder = function () {
       global.viewport.children.sort(function(a,b) {
           a.zIndex = a.zIndex || 0;
           b.zIndex = b.zIndex || 0;
-          return b.zIndex - a.zIndex
+          return b.zIndex - a.zIndex;
       });
     };
 

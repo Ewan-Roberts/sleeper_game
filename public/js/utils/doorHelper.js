@@ -16,13 +16,13 @@ module.exports.hit = (player,door) => {
   let rotationTarget = door.rotation;
 
   if (hitDirection === "top") {
-    rotationTarget += 1
+    rotationTarget += 0.4
   } 
   if (hitDirection === "bottom") {
-    rotationTarget -= 1
+    rotationTarget -= 0.4
   } 
   if (hitDirection === "exception") {
-    rotationTarget -= 1
+    rotationTarget -= 0.4
   }
 
   tween.to({

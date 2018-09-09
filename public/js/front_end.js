@@ -50,7 +50,7 @@ door_test.pivot.y = 25
 door_test.position.set(1050,2150)  
 
 
-module.exports.add_Core = (Bump) =>{    
+module.exports.add_Core = () =>{    
 
     const Mouse = {};
     // socket.on( "get_level_data", data => {

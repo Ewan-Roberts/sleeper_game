@@ -9,7 +9,9 @@
     "watch:js": "coffee -c -b -w -o ./ src/",
     "watch-all": "run-p watch:*"
   },
-  "eslint.options": { "configFile": "./.eslintrc.json" },
+  "eslint.options": {
+    "configFile": "./.eslintrc.json"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -20,6 +22,7 @@
     "jquery": "^3.3.1",
     "mongoose": "^5.2.7",
     "pixi-ease": "^1.1.2",
+    "pixi-filters": "^2.6.1",
     "pixi-layers": "^0.1.9",
     "pixi-tween": "^0.2.0",
     "pixi-viewport": "^2.7.2",
