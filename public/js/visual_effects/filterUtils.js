@@ -34,6 +34,7 @@ function countDown() {
   
 }
 
+
 module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
   
   global.overlay.alpha = 0;
@@ -61,9 +62,31 @@ module.exports.glitch = () => new Promise((resolve,reject)=>{
   
 })
 
-module.exports.godray = () => new Promise((resolve,reject)=>{
+module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
+  
+  this.clear()
 
-  global.viewport.filters = [new filters.GodrayFilter()]
+  const godray = new filters.GodrayFilter()
+  godray.parallel = false;
+  godray.center = [x,y]
+  godray.time =20;
+
+  global.viewport.filters = [godray]
+
+
+  function godrayAnimation() {
+    
+    if(godray.time <= 100) {
+      // console.log(godray.time)
+      godray.time += 0.005;
+  
+    }
+    
+  }
+  
+  global.app.ticker.add(godrayAnimation);
+
+
   
 })
 

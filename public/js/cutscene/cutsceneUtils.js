@@ -8,3 +8,4 @@ module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
 
 })
 
+module.exports.clearScene = () => global.viewport.removeChildren();

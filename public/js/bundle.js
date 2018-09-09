@@ -3875,7 +3875,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":44,"component-inherit":40,"debug":51,"engine.io-parser":53,"parseqs":92,"ws":318,"yeast":299}],50:[function(require,module,exports){
+},{"../transport":44,"component-inherit":40,"debug":51,"engine.io-parser":53,"parseqs":92,"ws":319,"yeast":299}],50:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -4115,7 +4115,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":52,"_process":322}],52:[function(require,module,exports){
+},{"./debug":52,"_process":323}],52:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -5613,7 +5613,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":319,"isarray":85}],58:[function(require,module,exports){
+},{"buffer":320,"isarray":85}],58:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -34678,7 +34678,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":159,"../../../../textures/TextureMatrix":205,"../Filter":175,"path":321}],179:[function(require,module,exports){
+},{"../../../../math":159,"../../../../textures/TextureMatrix":205,"../Filter":175,"path":322}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38454,7 +38454,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":133,"path":321}],197:[function(require,module,exports){
+},{"../../Shader":133,"path":322}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44201,7 +44201,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":327}],214:[function(require,module,exports){
+},{"url":328}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48736,7 +48736,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":154,"../../core/const":135,"path":321}],232:[function(require,module,exports){
+},{"../../core":154,"../../core/const":135,"path":322}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48820,7 +48820,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":154,"path":321}],233:[function(require,module,exports){
+},{"../../core":154,"path":322}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49983,7 +49983,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":154,"path":321}],240:[function(require,module,exports){
+},{"../../core":154,"path":322}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50091,7 +50091,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":154,"path":321}],241:[function(require,module,exports){
+},{"../../core":154,"path":322}],241:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50145,7 +50145,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":154,"path":321}],242:[function(require,module,exports){
+},{"../../core":154,"path":322}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50321,7 +50321,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":154,"path":321}],244:[function(require,module,exports){
+},{"../../core":154,"path":322}],244:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52979,7 +52979,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":230,"path":321,"resource-loader":284}],252:[function(require,module,exports){
+},{"../extras":230,"path":322,"resource-loader":284}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53342,7 +53342,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":154,"resource-loader":284,"url":327}],255:[function(require,module,exports){
+},{"../core":154,"resource-loader":284,"url":328}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55068,7 +55068,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":154,"../Mesh":256,"path":321,"pixi-gl-core":102}],263:[function(require,module,exports){
+},{"../../core":154,"../Mesh":256,"path":322,"pixi-gl-core":102}],263:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60749,7 +60749,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":291,"parseuri":93}],291:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./debug":292,"_process":322,"dup":51}],292:[function(require,module,exports){
+},{"./debug":292,"_process":323,"dup":51}],292:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"dup":52,"ms":89}],293:[function(require,module,exports){
 (function (global){
@@ -61345,7 +61345,7 @@ function isBuf(obj) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],296:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./debug":297,"_process":322,"dup":51}],297:[function(require,module,exports){
+},{"./debug":297,"_process":323,"dup":51}],297:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"dup":52,"ms":89}],298:[function(require,module,exports){
 module.exports = toArray
@@ -61673,7 +61673,7 @@ module.exports.mousePause = () => {
     }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":314}],301:[function(require,module,exports){
+},{"../utils/spriteHelper.js":315}],301:[function(require,module,exports){
 (function (global){
 const filters = require('pixi-filters')
 
@@ -61685,9 +61685,48 @@ module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
 
 })
 
+module.exports.clearScene = () => global.viewport.removeChildren();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"pixi-filters":95}],302:[function(require,module,exports){
+(function (global){
+
+const cutsceneUtil = require('./cutsceneUtils'),
+  filterUtil = require('../visual_effects/filterUtils.js')
+
+const scene = {
+  x: 1000,
+  y: 1000
+}
+
+module.exports.start = () => new Promise((resolve,reject)=>{
+
+  PIXI.loader
+  .add('intro_scene','images/cutscenes/bedroom_floor_cutscene.png')
+  .load((loader, res)=>{
+
+    cutsceneUtil.clearScene()
+
+    cutsceneUtil.teleport(scene.x, scene.y)
+
+    let intro_floor = new PIXI.Sprite(res.intro_scene.texture);
+    intro_floor.width *=2;
+    intro_floor.height *=2;
+    intro_floor.anchor.set(0.5);
+    intro_floor.position.set(scene.x,scene.y);
+
+    global.viewport.addChild(intro_floor);
+    
+    filterUtil.godray(intro_floor.x-100,(scene.y - intro_floor.height-50));
+
+  })
+
+})
+
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../visual_effects/filterUtils.js":316,"./cutsceneUtils":301}],303:[function(require,module,exports){
 (function (global){
 const spriteHelper = require('../utils/spriteHelper.js')
 console.log("Enemy loaded")
@@ -61863,7 +61902,7 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":314}],303:[function(require,module,exports){
+},{"../utils/spriteHelper.js":315}],304:[function(require,module,exports){
 (function (global){
 const   PIXI = require('pixi.js'),
         io = require('socket.io-client'),
@@ -61997,7 +62036,7 @@ app.ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":308,"./player/player.js":310,"pixi-layers":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],304:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":309,"./player/player.js":311,"pixi-layers":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],305:[function(require,module,exports){
 (function (global){
 
 
@@ -62063,7 +62102,7 @@ module.exports.createDebugTrigger = (obj) =>{
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":300,"../debug/debug_layout.js":308,"../level_utils.js":309,"pixi.js":244}],305:[function(require,module,exports){
+},{"../../animals/rat.js":300,"../debug/debug_layout.js":309,"../level_utils.js":310,"pixi.js":244}],306:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
@@ -62246,7 +62285,7 @@ module.exports.add_items = (viewport) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jQuery":87,"pixi.js":244}],306:[function(require,module,exports){
+},{"jQuery":87,"pixi.js":244}],307:[function(require,module,exports){
 (function (global){
 
 const $     = require('jQuery'),
@@ -62467,7 +62506,7 @@ module.exports.add_floor = () => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../player/player.js":310,"./bedroom_triggers.js":304,"./items.js":305,"jQuery":87}],307:[function(require,module,exports){
+},{"../../player/player.js":311,"./bedroom_triggers.js":305,"./items.js":306,"jQuery":87}],308:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
@@ -62531,7 +62570,7 @@ module.exports.add_items = () => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jQuery":87,"pixi.js":244}],308:[function(require,module,exports){
+},{"jQuery":87,"pixi.js":244}],309:[function(require,module,exports){
 (function (global){
 
 const $     = require('jQuery'),
@@ -62542,7 +62581,7 @@ items      = require("./debug_items.js"),
 doorHelper      = require("../../utils/doorHelper.js"),
 level_loader      = require("../bedroom/level_layout.js"),
 filterUtil      = require("../../visual_effects/filterUtils.js"),
-cutsceneUtil      = require("../../cutscene/cutsceneUtils.js"),
+cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
 rat         = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
@@ -62676,7 +62715,12 @@ module.exports.add_floor = () => {
 
       if(!clear_pad.fired){
         clear_pad.fired = true;
-        cutsceneUtil.teleport(1000,1000)
+        
+        
+
+        cutscene_intro.start()
+
+        
         // filterUtil.godray();
       } else {
         filterUtil.clear();
@@ -62708,7 +62752,7 @@ module.exports.add_floor = () => {
 
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":300,"../../cutscene/cutsceneUtils.js":301,"../../enemies/enemy.js":302,"../../player/player.js":310,"../../triggers/triggers.js":311,"../../utils/doorHelper.js":313,"../../visual_effects/filterUtils.js":315,"../bedroom/level_layout.js":306,"./debug_items.js":307,"jQuery":87}],309:[function(require,module,exports){
+},{"../../animals/rat.js":300,"../../cutscene/cutscene_intro.js":302,"../../enemies/enemy.js":303,"../../player/player.js":311,"../../triggers/triggers.js":312,"../../utils/doorHelper.js":314,"../../visual_effects/filterUtils.js":316,"../bedroom/level_layout.js":307,"./debug_items.js":308,"jQuery":87}],310:[function(require,module,exports){
 (function (global){
 
 
@@ -62723,7 +62767,7 @@ module.exports.clearCollision = () =>{
     for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],310:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 (function (global){
 const PIXI        = require("pixi.js"),
       Intersects  = require('intersects'),
@@ -63014,7 +63058,7 @@ module.exports.add_player = () => {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":300,"../utils/documentHelper.js":312,"../utils/doorHelper.js":313,"../utils/spriteHelper.js":314,"../weapons/bow/bowHelper.js":316,"intersects":70,"pixi.js":244}],311:[function(require,module,exports){
+},{"../animals/rat.js":300,"../utils/documentHelper.js":313,"../utils/doorHelper.js":314,"../utils/spriteHelper.js":315,"../weapons/bow/bowHelper.js":317,"intersects":70,"pixi.js":244}],312:[function(require,module,exports){
 const PIXI = require("pixi.js");
 
 module.exports.createTriggerPad = (x, y, width, height) =>{
@@ -63042,7 +63086,7 @@ module.exports.createTriggerPad = (x, y, width, height) =>{
 }
 
 
-},{"pixi.js":244}],312:[function(require,module,exports){
+},{"pixi.js":244}],313:[function(require,module,exports){
 //utils
 
 const keymap = {
@@ -63075,7 +63119,7 @@ module.exports.mousePositionFromScreen = (event, viewport) => {
     }
 
 }
-},{}],313:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 
 
 const spriteHelper = require("./spriteHelper.js");
@@ -63109,7 +63153,7 @@ module.exports.hit = (player,door) => {
   tween.start();
 
 }
-},{"./spriteHelper.js":314}],314:[function(require,module,exports){
+},{"./spriteHelper.js":315}],315:[function(require,module,exports){
 (function (global){
 const   PIXI        = require("pixi.js");
 
@@ -63337,7 +63381,7 @@ module.exports.hitBoxContainerObjAndBool = (container, player) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":244}],315:[function(require,module,exports){
+},{"pixi.js":244}],316:[function(require,module,exports){
 (function (global){
 const filters = require('pixi-filters')
 const padding = 100;
@@ -63375,6 +63419,7 @@ function countDown() {
   
 }
 
+
 module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
   
   global.overlay.alpha = 0;
@@ -63402,9 +63447,31 @@ module.exports.glitch = () => new Promise((resolve,reject)=>{
   
 })
 
-module.exports.godray = () => new Promise((resolve,reject)=>{
+module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
+  
+  this.clear()
 
-  global.viewport.filters = [new filters.GodrayFilter()]
+  const godray = new filters.GodrayFilter()
+  godray.parallel = false;
+  godray.center = [x,y]
+  godray.time =20;
+
+  global.viewport.filters = [godray]
+
+
+  function godrayAnimation() {
+    
+    if(godray.time <= 100) {
+      // console.log(godray.time)
+      godray.time += 0.005;
+  
+    }
+    
+  }
+  
+  global.app.ticker.add(godrayAnimation);
+
+
   
 })
 
@@ -63424,7 +63491,7 @@ module.exports.setCamera = () => new Promise((resolve,reject)=>{
 })
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":95}],316:[function(require,module,exports){
+},{"pixi-filters":95}],317:[function(require,module,exports){
 (function (global){
 
 const spriteHelper = require("../../utils/spriteHelper.js"),
@@ -63554,7 +63621,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":314,"intersects":70,"pixi.js":244}],317:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":315,"intersects":70,"pixi.js":244}],318:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -63707,9 +63774,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],318:[function(require,module,exports){
-
 },{}],319:[function(require,module,exports){
+
+},{}],320:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -65488,7 +65555,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":317,"ieee754":320}],320:[function(require,module,exports){
+},{"base64-js":318,"ieee754":321}],321:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -65574,7 +65641,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],321:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -65880,7 +65947,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":322}],322:[function(require,module,exports){
+},{"_process":323}],323:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -66066,7 +66133,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],323:[function(require,module,exports){
+},{}],324:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -66603,7 +66670,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],324:[function(require,module,exports){
+},{}],325:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66689,7 +66756,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],325:[function(require,module,exports){
+},{}],326:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66776,13 +66843,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],326:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":324,"./encode":325}],327:[function(require,module,exports){
+},{"./decode":325,"./encode":326}],328:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -67516,7 +67583,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":328,"punycode":323,"querystring":326}],328:[function(require,module,exports){
+},{"./util":329,"punycode":324,"querystring":327}],329:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -67534,4 +67601,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[303]);
+},{}]},{},[304]);

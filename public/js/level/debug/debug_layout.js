@@ -7,7 +7,7 @@ items      = require("./debug_items.js"),
 doorHelper      = require("../../utils/doorHelper.js"),
 level_loader      = require("../bedroom/level_layout.js"),
 filterUtil      = require("../../visual_effects/filterUtils.js"),
-cutsceneUtil      = require("../../cutscene/cutsceneUtils.js"),
+cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
 rat         = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
@@ -141,7 +141,12 @@ module.exports.add_floor = () => {
 
       if(!clear_pad.fired){
         clear_pad.fired = true;
-        cutsceneUtil.teleport(1000,1000)
+        
+        
+
+        cutscene_intro.start()
+
+        
         // filterUtil.godray();
       } else {
         filterUtil.clear();
