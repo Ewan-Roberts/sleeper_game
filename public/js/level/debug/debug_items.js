@@ -10,7 +10,7 @@ module.exports.add_items = () => {
 	.load((loader, res)=>{
 	
 		const box_full  = new PIXI.Sprite(res.box_full.texture);
-		box_full.position.set(-600,0);
+		box_full.position.set(-1200,0);
 		box_full.width *=2;
 		box_full.height *=2;
 		box_full.rotation = 0.06;

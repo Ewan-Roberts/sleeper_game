@@ -3875,7 +3875,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":44,"component-inherit":40,"debug":51,"engine.io-parser":53,"parseqs":92,"ws":319,"yeast":299}],50:[function(require,module,exports){
+},{"../transport":44,"component-inherit":40,"debug":51,"engine.io-parser":53,"parseqs":92,"ws":321,"yeast":299}],50:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -4115,7 +4115,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":52,"_process":323}],52:[function(require,module,exports){
+},{"./debug":52,"_process":325}],52:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -5613,7 +5613,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":320,"isarray":85}],58:[function(require,module,exports){
+},{"buffer":322,"isarray":85}],58:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -34678,7 +34678,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":159,"../../../../textures/TextureMatrix":205,"../Filter":175,"path":322}],179:[function(require,module,exports){
+},{"../../../../math":159,"../../../../textures/TextureMatrix":205,"../Filter":175,"path":324}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38454,7 +38454,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":133,"path":322}],197:[function(require,module,exports){
+},{"../../Shader":133,"path":324}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44201,7 +44201,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":328}],214:[function(require,module,exports){
+},{"url":330}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48736,7 +48736,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":154,"../../core/const":135,"path":322}],232:[function(require,module,exports){
+},{"../../core":154,"../../core/const":135,"path":324}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48820,7 +48820,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":154,"path":322}],233:[function(require,module,exports){
+},{"../../core":154,"path":324}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49983,7 +49983,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":154,"path":322}],240:[function(require,module,exports){
+},{"../../core":154,"path":324}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50091,7 +50091,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":154,"path":322}],241:[function(require,module,exports){
+},{"../../core":154,"path":324}],241:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50145,7 +50145,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":154,"path":322}],242:[function(require,module,exports){
+},{"../../core":154,"path":324}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50321,7 +50321,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":154,"path":322}],244:[function(require,module,exports){
+},{"../../core":154,"path":324}],244:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52979,7 +52979,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":230,"path":322,"resource-loader":284}],252:[function(require,module,exports){
+},{"../extras":230,"path":324,"resource-loader":284}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53342,7 +53342,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":154,"resource-loader":284,"url":328}],255:[function(require,module,exports){
+},{"../core":154,"resource-loader":284,"url":330}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55068,7 +55068,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":154,"../Mesh":256,"path":322,"pixi-gl-core":102}],263:[function(require,module,exports){
+},{"../../core":154,"../Mesh":256,"path":324,"pixi-gl-core":102}],263:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60749,7 +60749,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":291,"parseuri":93}],291:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./debug":292,"_process":323,"dup":51}],292:[function(require,module,exports){
+},{"./debug":292,"_process":325,"dup":51}],292:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"dup":52,"ms":89}],293:[function(require,module,exports){
 (function (global){
@@ -61345,7 +61345,7 @@ function isBuf(obj) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],296:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./debug":297,"_process":323,"dup":51}],297:[function(require,module,exports){
+},{"./debug":297,"_process":325,"dup":51}],297:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"dup":52,"ms":89}],298:[function(require,module,exports){
 module.exports = toArray
@@ -61673,7 +61673,7 @@ module.exports.mousePause = () => {
     }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":315}],301:[function(require,module,exports){
+},{"../utils/spriteHelper.js":317}],301:[function(require,module,exports){
 (function (global){
 const filters = require('pixi-filters'),
 spriteHelper = require("../utils/spriteHelper.js");
@@ -61770,7 +61770,7 @@ module.exports.movePlayer = (start,finish) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":315,"pixi-filters":95}],302:[function(require,module,exports){
+},{"../utils/spriteHelper.js":317,"pixi-filters":95}],302:[function(require,module,exports){
 (function (global){
 
 const cutsceneUtil = require('./cutsceneUtils'),
@@ -61809,8 +61809,8 @@ module.exports.start = () => new Promise((resolve,reject)=>{
     })
     .then(()=>{
       console.log('here')
-      
-      cutsceneUtil.movePlayer({x: scene.x+200, y:scene.y-200},{x: scene.x+200, y:scene.y+200})
+      global.Player.moveable = false;
+      cutsceneUtil.movePlayer({x: scene.x+200, y:scene.y-200},{x: scene.x+200, y:scene.y+500})
 
     })
 
@@ -61821,7 +61821,37 @@ module.exports.start = () => new Promise((resolve,reject)=>{
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../player/player.js":311,"../visual_effects/filterUtils.js":316,"./cutsceneUtils":301}],303:[function(require,module,exports){
+},{"../player/player.js":313,"../visual_effects/filterUtils.js":318,"./cutsceneUtils":301}],303:[function(require,module,exports){
+(function (global){
+
+
+
+
+module.exports.renderText = (point, text) => {
+
+  const renderText = new PIXI.Text(text);
+  renderText.x = point.x;
+  renderText.y = point.y-100;
+
+  global.viewport.addChild(renderText)
+
+  function fadeOut() {
+
+    if(renderText.alpha > 0) {
+      renderText.alpha -= 0.01;
+    } else {
+      global.app.ticker.remove(fadeOut)
+    };
+    
+  }
+
+  global.app.ticker.add(fadeOut);
+
+}
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],304:[function(require,module,exports){
 (function (global){
 const spriteHelper = require('../utils/spriteHelper.js')
 console.log("Enemy loaded")
@@ -61997,7 +62027,7 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":315}],304:[function(require,module,exports){
+},{"../utils/spriteHelper.js":317}],305:[function(require,module,exports){
 (function (global){
 const   PIXI = require('pixi.js'),
         io = require('socket.io-client'),
@@ -62048,7 +62078,7 @@ global.bedroom_segments = [
 global.app = new PIXI.Application({ 
     width: window.innerWidth,   // default: 800
     height: window.innerHeight, // default: 600
-    antialias: false,             // default: false
+    antialias: false,           // default: false
 });
  
 
@@ -62131,7 +62161,434 @@ app.ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":309,"./player/player.js":311,"pixi-layers":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],305:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":311,"./player/player.js":313,"pixi-layers":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],306:[function(require,module,exports){
+module.exports={ "columns":0,
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
+ "margin":0,
+ "name":"thing",
+ "spacing":0,
+ "tilecount":2,
+ "tileheight":5000,
+ "tiles":
+    {
+     "1":
+        {
+         "image":"..\/..\/..\/..\/..\/assets\/flooring\/flat_floor\/flat_floor.jpg",
+         "imageheight":5000,
+         "imagewidth":3800,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":63.3237710642322,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":644.586059223977,
+                     "x":74.1548667493006,
+                     "y":636.851039654279
+                    }, 
+                    {
+                     "height":63.3238,
+                     "id":5,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1387.45772541731,
+                     "x":1157.19855062535,
+                     "y":635.309505349446
+                    }, 
+                    {
+                     "height":63.3238,
+                     "id":6,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":796.162343364359,
+                     "x":2933.13037404424,
+                     "y":636.195218167287
+                    }, 
+                    {
+                     "height":84.4591374958713,
+                     "id":7,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":617.04458252423,
+                     "x":558.957504731952,
+                     "y":1916.80299666174
+                    }, 
+                    {
+                     "height":81.5159617482582,
+                     "id":9,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1245.18914307371,
+                     "x":578.496246894501,
+                     "y":2581.26809195696
+                    }, 
+                    {
+                     "height":81.5159617482586,
+                     "id":10,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1247.15171980771,
+                     "x":577.092065514104,
+                     "y":3441.09132015469
+                    }, 
+                    {
+                     "height":80.209843736091,
+                     "id":11,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1317.78843127637,
+                     "x":579.272229299363,
+                     "y":4397.16653401641
+                    }, 
+                    {
+                     "height":2560.97538580061,
+                     "id":12,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133217312693,
+                     "x":499.147078623034,
+                     "y":1916.57999198829
+                    }, 
+                    {
+                     "height":80.4942469849793,
+                     "id":13,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1177.29226321226,
+                     "x":2545.00041786813,
+                     "y":3922.07926277056
+                    }, 
+                    {
+                     "height":4362.08145954652,
+                     "id":14,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133,
+                     "x":0.367771903323188,
+                     "y":636.842135178378
+                    }, 
+                    {
+                     "height":77.5917,
+                     "id":15,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1327.84072243484,
+                     "x":73.4797938804686,
+                     "y":4921.5369541278
+                    }, 
+                    {
+                     "height":79.5538308741297,
+                     "id":16,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1765.36851067203,
+                     "x":1970.66500242441,
+                     "y":4920.29421344889
+                    }, 
+                    {
+                     "height":4362.08,
+                     "id":17,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":82.6754308741292,
+                     "x":3718.74311798144,
+                     "y":636.785986078887
+                    }, 
+                    {
+                     "height":189.464720326102,
+                     "id":18,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133,
+                     "x":2469.67846556847,
+                     "y":4731.16870157978
+                    }, 
+                    {
+                     "height":1772.80487657059,
+                     "id":19,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133,
+                     "x":2466.35144207739,
+                     "y":2619.34324269222
+                    }, 
+                    {
+                     "height":266.097396758531,
+                     "id":20,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133,
+                     "x":1816.93740537648,
+                     "y":4141.32538300599
+                    }, 
+                    {
+                     "height":486.624336693285,
+                     "id":21,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133,
+                     "x":1815.9072588886,
+                     "y":3206.0922039534
+                    }, 
+                    {
+                     "height":2087.75443828208,
+                     "id":22,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":80.7133,
+                     "x":1816.2336505058,
+                     "y":699.443310007121
+                    }, 
+                    {
+                     "height":0,
+                     "id":23,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":2006.79309368808,
+                     "y":1582.22473818285
+                    }, 
+                    {
+                     "height":84.4591,
+                     "id":25,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":262.880377219661,
+                     "x":1562.36928848229,
+                     "y":1914.99599694398
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        },
+     "2":
+        {
+         "image":"..\/..\/..\/..\/..\/assets\/flooring\/flat_floor\/bedroom_floor.jpg",
+         "imageheight":5000,
+         "imagewidth":3800,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":240.588734786301,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":373.620152844608,
+                     "x":1440.70195301444,
+                     "y":2153.97679026323
+                    }, 
+                    {
+                     "height":1239.73959807529,
+                     "id":2,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":166.996886498726,
+                     "x":1902.06623266346,
+                     "y":696.292103028588
+                    }, 
+                    {
+                     "height":325.502405887348,
+                     "id":4,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":962.354939145202,
+                     "x":2278.51684121144,
+                     "y":704.783470138692
+                    }, 
+                    {
+                     "height":215.114633455986,
+                     "id":5,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":251.910557599774,
+                     "x":2666.28927257288,
+                     "y":1033.11633172941
+                    }, 
+                    {
+                     "height":1293.51825643929,
+                     "id":6,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":396.263798471554,
+                     "x":3325.78545145769,
+                     "y":1171.80866119445
+                    }, 
+                    {
+                     "height":696.292103028588,
+                     "id":8,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":348.146051514294,
+                     "x":2977.63939994339,
+                     "y":1766.86527030852
+                    }, 
+                    {
+                     "height":727.427115765639,
+                     "id":9,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":195.301443532409,
+                     "x":2550.24058873479,
+                     "y":3198.41494480611
+                    }, 
+                    {
+                     "height":249.080101896405,
+                     "id":10,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":968.015850551939,
+                     "x":2751.20294367393,
+                     "y":3676.76195867535
+                    }, 
+                    {
+                     "height":1072.74271157656,
+                     "id":11,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":249.080101896405,
+                     "x":3470.13869232947,
+                     "y":2609.68015850552
+                    }, 
+                    {
+                     "height":268.893291819983,
+                     "id":12,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":571.752052080385,
+                     "x":2898.38664024908,
+                     "y":2612.51061420889
+                    }, 
+                    {
+                     "height":229.266911972828,
+                     "id":13,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":999.15086328899,
+                     "x":583.073874893858,
+                     "y":2662.44155108973
+                    }, 
+                    {
+                     "height":554.769317860176,
+                     "id":14,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":435.890178318709,
+                     "x":580.24341919049,
+                     "y":2889.89527313898
+                    }, 
+                    {
+                     "height":877.441268044156,
+                     "id":15,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":263.232380413247,
+                     "x":580.24341919049,
+                     "y":3521.08689499009
+                    }, 
+                    {
+                     "height":181.149165015568,
+                     "id":16,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":215.114633455987,
+                     "x":2686.10246249646,
+                     "y":3999.43390885933
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }
+    },
+ "tilewidth":3800,
+ "type":"tileset"
+}
+},{}],307:[function(require,module,exports){
 (function (global){
 
 
@@ -62197,7 +62654,7 @@ module.exports.createDebugTrigger = (obj) =>{
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":300,"../debug/debug_layout.js":309,"../level_utils.js":310,"pixi.js":244}],306:[function(require,module,exports){
+},{"../../animals/rat.js":300,"../debug/debug_layout.js":311,"../level_utils.js":312,"pixi.js":244}],308:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
@@ -62380,7 +62837,7 @@ module.exports.add_items = (viewport) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jQuery":87,"pixi.js":244}],307:[function(require,module,exports){
+},{"jQuery":87,"pixi.js":244}],309:[function(require,module,exports){
 (function (global){
 
 const $     = require('jQuery'),
@@ -62601,7 +63058,7 @@ module.exports.add_floor = () => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../player/player.js":311,"./bedroom_triggers.js":305,"./items.js":306,"jQuery":87}],308:[function(require,module,exports){
+},{"../../player/player.js":313,"./bedroom_triggers.js":307,"./items.js":308,"jQuery":87}],310:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
@@ -62615,7 +63072,7 @@ module.exports.add_items = () => {
 	.load((loader, res)=>{
 	
 		const box_full  = new PIXI.Sprite(res.box_full.texture);
-		box_full.position.set(-600,0);
+		box_full.position.set(-1200,0);
 		box_full.width *=2;
 		box_full.height *=2;
 		box_full.rotation = 0.06;
@@ -62665,7 +63122,7 @@ module.exports.add_items = () => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jQuery":87,"pixi.js":244}],309:[function(require,module,exports){
+},{"jQuery":87,"pixi.js":244}],311:[function(require,module,exports){
 (function (global){
 
 const $     = require('jQuery'),
@@ -62675,7 +63132,9 @@ enemy    = require("../../enemies/enemy.js"),
 items      = require("./debug_items.js"),
 doorHelper      = require("../../utils/doorHelper.js"),
 level_loader      = require("../bedroom/level_layout.js"),
+level_utils      = require("../level_utils.js"),
 filterUtil      = require("../../visual_effects/filterUtils.js"),
+dialogUtil      = require("../../dialog/dialogUtil.js"),
 cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
 rat         = require("../../animals/rat.js");
 
@@ -62714,7 +63173,7 @@ module.exports.add_floor = () => {
     const slanted_wall = PIXI.Sprite.fromImage('images/black_wall.png')
     slanted_wall.interactive = true
     slanted_wall.worldVisible = true
-    slanted_wall.rotation = 0.5
+    slanted_wall.rotation = 0.4
     slanted_wall.position.set(100,100)
 
     const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png');
@@ -62732,10 +63191,11 @@ module.exports.add_floor = () => {
     door.worldVisible = true
     // collision_wall.rotation = 0.8
 
-    const rat_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    const rat_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     rat_pad.width = 200;
     rat_pad.height = 100;
     rat_pad.position.set(-700,200);
+    rat_pad.alpha = 0.4;
     rat_pad.fired = false;
     rat_pad.action = () =>{
       
@@ -62750,10 +63210,11 @@ module.exports.add_floor = () => {
       
     }
  
-    const enemy_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    const enemy_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     enemy_pad.width = 200;
     enemy_pad.height = 100;
     enemy_pad.position.set(-950,200);
+    enemy_pad.alpha = 0.2;
     enemy_pad.fired = false;
     enemy_pad.action = () =>{
       
@@ -62768,26 +63229,63 @@ module.exports.add_floor = () => {
       
     }
 
-    const level_load_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    const level_load_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     level_load_pad.width = 200;
     level_load_pad.height = 100;
     level_load_pad.position.set(-450,200);
+    level_load_pad.alpha = 0.6;
     level_load_pad.fired = false;
     level_load_pad.action = () =>{
       
       if(!level_load_pad.fired){
 
         level_load_pad.fired = true
-        level_loader.add_floor()
+        level_utils.importBedroomData()
       }
       
     }
 
-    const effect_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    const glitch_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    glitch_pad.width = 200;
+    glitch_pad.height = 100;
+    glitch_pad.position.set(-700,50);
+    glitch_pad.alpha = 0.4;
+    glitch_pad.fired = false;
+    glitch_pad.action = () =>{
+      
+      if(!glitch_pad.fired){
+
+        glitch_pad.fired = true
+        filterUtil.glitch()
+      } else {
+        filterUtil.clear()
+      }
+      
+    }
+
+    const dialog_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    dialog_pad.width = 200;
+    dialog_pad.height = 100;
+    dialog_pad.position.set(-450,50);
+    dialog_pad.alpha = 0.6;
+    dialog_pad.fired = false;
+    dialog_pad.action = () =>{
+      
+      if(!dialog_pad.fired){
+
+        dialog_pad.fired = true
+        
+        dialogUtil.renderText(global.Player.sprite, 'I am some dialog')
+      }
+      
+    }
+
+    const effect_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     effect_pad.width = 200;
     effect_pad.height = 100;
     effect_pad.position.set(-200,200);
     effect_pad.fired = false;
+    effect_pad.alpha = 0.8;
     effect_pad.action = () =>{
       
       if(!effect_pad.fired){
@@ -62801,29 +63299,34 @@ module.exports.add_floor = () => {
       
     }
 
-    const clear_pad = PIXI.Sprite.fromImage('images/black_wall.png')
+    const clear_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     clear_pad.width = 200;
     clear_pad.height = 100;
     clear_pad.position.set(-200,50);
     clear_pad.fired = false;
+    clear_pad.alpha = 0.8;
     clear_pad.action = () =>{
 
       if(!clear_pad.fired){
+
         clear_pad.fired = true;
-        
-        
-
         cutscene_intro.start()
-
         
-        // filterUtil.godray();
       } else {
         filterUtil.clear();
       }
 
     }
 
-    global.eventTriggers.addChild(rat_pad,enemy_pad,level_load_pad,effect_pad, clear_pad)
+    global.eventTriggers.addChild(
+      rat_pad,
+      enemy_pad,
+      level_load_pad,
+      effect_pad,
+      clear_pad,
+      glitch_pad,
+      dialog_pad
+    )
 
     global.doors.addChild(door);
 
@@ -62839,6 +63342,9 @@ module.exports.add_floor = () => {
     global.viewport.addChild(global.eventTriggers)
     global.collisionItems.zIndex = 1;
     global.collisionItems.addChild(slanted_wall,collision_wall);
+
+    
+
     global.viewport.updateLayersOrder();
     player.add_player();
     items.add_items();
@@ -62847,22 +63353,67 @@ module.exports.add_floor = () => {
 
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":300,"../../cutscene/cutscene_intro.js":302,"../../enemies/enemy.js":303,"../../player/player.js":311,"../../triggers/triggers.js":312,"../../utils/doorHelper.js":314,"../../visual_effects/filterUtils.js":316,"../bedroom/level_layout.js":307,"./debug_items.js":308,"jQuery":87}],310:[function(require,module,exports){
+},{"../../animals/rat.js":300,"../../cutscene/cutscene_intro.js":302,"../../dialog/dialogUtil.js":303,"../../enemies/enemy.js":304,"../../player/player.js":313,"../../triggers/triggers.js":314,"../../utils/doorHelper.js":316,"../../visual_effects/filterUtils.js":318,"../bedroom/level_layout.js":309,"../level_utils.js":312,"./debug_items.js":310,"jQuery":87}],312:[function(require,module,exports){
 (function (global){
-
-
+const bedroom_data = require('./bedroom/bedroom_data_3.json')
 
 module.exports.clearViewport = () =>{
 
-    for (var i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
+  for (var i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
 }
 
 module.exports.clearCollision = () =>{
 
-    for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
+  for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
+}
+
+module.exports.importBedroomData = () => {
+
+  console.log(bedroom_data)
+
+  const flat_background = PIXI.Sprite.fromImage('../../images/flat_floor.jpg');
+  flat_background.interactive = true;
+  flat_background.zIndex =1;
+  
+  global.collisionItems.zIndex = -1;
+
+  this.renderWall(bedroom_data.tiles[1].objectgroup.objects)
+  this.hitAreas(bedroom_data.tiles[2].objectgroup.objects)
+  global.viewport.addChild(flat_background)
+            
+  global.viewport.updateLayersOrder();
+}
+
+module.exports.renderWall = wallArray => {
+
+  wallArray.forEach(wallData =>{
+    
+    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+    wall.position.set(wallData.x, wallData.y);
+    wall.width = wallData.width;
+    wall.height = wallData.height;
+    global.collisionItems.addChild(wall)  
+
+  })
+
+}
+
+module.exports.hitAreas = wallArray => {
+
+  wallArray.forEach(wallData =>{
+    
+    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+    wall.position.set(wallData.x, wallData.y);
+    wall.width = wallData.width;
+    wall.height = wallData.height;
+    wall.alpha = 0.1;
+    global.collisionItems.addChild(wall)  
+
+  })
+
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],311:[function(require,module,exports){
+},{"./bedroom/bedroom_data_3.json":306}],313:[function(require,module,exports){
 (function (global){
 const PIXI        = require("pixi.js"),
       Intersects  = require('intersects'),
@@ -62905,17 +63456,17 @@ function countDown() {
 
   global.Player.sprite._textures = global.Player.sprite.ready._textures
 
-  if(global.Player.power > 650) {
+  if(global.Player.power > 750) {
     global.Player.allowShoot = false
   }
   else {
     global.Player.allowShoot = true
   }
 
-  if(global.Player.power > 300){
+  if(global.Player.power > 400){
     global.Player.power -= 10;
   } 
-  if(global.Player.power < 310) {
+  if(global.Player.power < 410) {
     global.Player.sprite.gotoAndStop(34);
   }
   
@@ -62938,7 +63489,7 @@ function mouseUp () {
       const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
       bowHelper.arrowManagement(global.Player, mousePosition);
-        
+
     }
 
   })
@@ -63006,6 +63557,8 @@ function add_player_controls() {
 
     let key = documentHelper.getDirection(e.key)
 
+    console.log(key)
+
     if(!global.Player.moveable) return;
 
     if(key === "up"){
@@ -63037,10 +63590,8 @@ function add_player_controls() {
     spriteHelper.hitBoxContainer(global.collisionItems.children, global.Player.sprite)
     .then(hit => {
 
-      console.log(hit)
-
       if(hit){
-        // global.Player.movement_speed = -41
+        
         if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
         if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
         if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
@@ -63162,7 +63713,7 @@ module.exports.remove_controls = () =>{
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":300,"../utils/documentHelper.js":313,"../utils/doorHelper.js":314,"../utils/spriteHelper.js":315,"../weapons/bow/bowHelper.js":317,"intersects":70,"pixi.js":244}],312:[function(require,module,exports){
+},{"../animals/rat.js":300,"../utils/documentHelper.js":315,"../utils/doorHelper.js":316,"../utils/spriteHelper.js":317,"../weapons/bow/bowHelper.js":319,"intersects":70,"pixi.js":244}],314:[function(require,module,exports){
 const PIXI = require("pixi.js");
 
 module.exports.createTriggerPad = (x, y, width, height) =>{
@@ -63190,7 +63741,7 @@ module.exports.createTriggerPad = (x, y, width, height) =>{
 }
 
 
-},{"pixi.js":244}],313:[function(require,module,exports){
+},{"pixi.js":244}],315:[function(require,module,exports){
 //utils
 
 const keymap = {
@@ -63223,7 +63774,7 @@ module.exports.mousePositionFromScreen = (event, viewport) => {
     }
 
 }
-},{}],314:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 
 
 const spriteHelper = require("./spriteHelper.js");
@@ -63257,7 +63808,7 @@ module.exports.hit = (player,door) => {
   tween.start();
 
 }
-},{"./spriteHelper.js":315}],315:[function(require,module,exports){
+},{"./spriteHelper.js":317}],317:[function(require,module,exports){
 (function (global){
 const   PIXI        = require("pixi.js");
 
@@ -63485,7 +64036,7 @@ module.exports.hitBoxContainerObjAndBool = (container, player) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":244}],316:[function(require,module,exports){
+},{"pixi.js":244}],318:[function(require,module,exports){
 (function (global){
 const filters = require('pixi-filters')
 const padding = 100;
@@ -63595,7 +64146,7 @@ module.exports.setCamera = () => new Promise((resolve,reject)=>{
 })
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":95}],317:[function(require,module,exports){
+},{"pixi-filters":95}],319:[function(require,module,exports){
 (function (global){
 
 const spriteHelper = require("../../utils/spriteHelper.js"),
@@ -63650,7 +64201,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
         
         arrow.width /=2
         arrow.height /=3
-        arrow.anchor.set(0.8)
+        arrow.anchor.set(0.9)
         arrow.rotation = spriteHelper.angle(Player.sprite, mousePosition)
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
@@ -63674,7 +64225,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
         arrow.pickup = true;
         arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
         
-        setTimeout(()=>arrowTween.stop(),20)
+        setTimeout(()=>arrowTween.stop(),15)
       } else {
         arrow_hit_register.tint = 0x00ff00
       }
@@ -63725,7 +64276,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":315,"intersects":70,"pixi.js":244}],318:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":317,"intersects":70,"pixi.js":244}],320:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -63878,9 +64429,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],319:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 
-},{}],320:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -65659,7 +66210,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":318,"ieee754":321}],321:[function(require,module,exports){
+},{"base64-js":320,"ieee754":323}],323:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -65745,7 +66296,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],322:[function(require,module,exports){
+},{}],324:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -66051,7 +66602,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":323}],323:[function(require,module,exports){
+},{"_process":325}],325:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -66237,7 +66788,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],324:[function(require,module,exports){
+},{}],326:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -66774,7 +67325,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],325:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66860,7 +67411,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],326:[function(require,module,exports){
+},{}],328:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -66947,13 +67498,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],327:[function(require,module,exports){
+},{}],329:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":325,"./encode":326}],328:[function(require,module,exports){
+},{"./decode":327,"./encode":328}],330:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -67687,7 +68238,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":329,"punycode":324,"querystring":327}],329:[function(require,module,exports){
+},{"./util":331,"punycode":326,"querystring":329}],331:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -67705,4 +68256,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[304]);
+},{}]},{},[305]);

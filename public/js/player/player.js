@@ -39,17 +39,17 @@ function countDown() {
 
   global.Player.sprite._textures = global.Player.sprite.ready._textures
 
-  if(global.Player.power > 650) {
+  if(global.Player.power > 750) {
     global.Player.allowShoot = false
   }
   else {
     global.Player.allowShoot = true
   }
 
-  if(global.Player.power > 300){
+  if(global.Player.power > 400){
     global.Player.power -= 10;
   } 
-  if(global.Player.power < 310) {
+  if(global.Player.power < 410) {
     global.Player.sprite.gotoAndStop(34);
   }
   
@@ -72,7 +72,7 @@ function mouseUp () {
       const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
       bowHelper.arrowManagement(global.Player, mousePosition);
-        
+
     }
 
   })
@@ -140,6 +140,8 @@ function add_player_controls() {
 
     let key = documentHelper.getDirection(e.key)
 
+    console.log(key)
+
     if(!global.Player.moveable) return;
 
     if(key === "up"){
@@ -171,10 +173,8 @@ function add_player_controls() {
     spriteHelper.hitBoxContainer(global.collisionItems.children, global.Player.sprite)
     .then(hit => {
 
-      console.log(hit)
-
       if(hit){
-        // global.Player.movement_speed = -41
+        
         if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
         if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
         if(key === "left") global.Player.sprite.x +=global.Player.movement_speed

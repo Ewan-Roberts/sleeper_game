@@ -35,8 +35,8 @@ module.exports.start = () => new Promise((resolve,reject)=>{
     })
     .then(()=>{
       console.log('here')
-      
-      cutsceneUtil.movePlayer({x: scene.x+200, y:scene.y-200},{x: scene.x+200, y:scene.y+200})
+      global.Player.moveable = false;
+      cutsceneUtil.movePlayer({x: scene.x+200, y:scene.y-200},{x: scene.x+200, y:scene.y+500})
 
     })
 

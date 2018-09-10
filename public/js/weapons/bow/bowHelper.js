@@ -51,7 +51,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
         
         arrow.width /=2
         arrow.height /=3
-        arrow.anchor.set(0.8)
+        arrow.anchor.set(0.9)
         arrow.rotation = spriteHelper.angle(Player.sprite, mousePosition)
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
@@ -75,7 +75,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
         arrow.pickup = true;
         arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
         
-        setTimeout(()=>arrowTween.stop(),20)
+        setTimeout(()=>arrowTween.stop(),15)
       } else {
         arrow_hit_register.tint = 0x00ff00
       }

@@ -47,7 +47,7 @@ global.bedroom_segments = [
 global.app = new PIXI.Application({ 
     width: window.innerWidth,   // default: 800
     height: window.innerHeight, // default: 600
-    antialias: false,             // default: false
+    antialias: false,           // default: false
 });
  
 
