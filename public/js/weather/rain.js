@@ -1,5 +1,11 @@
 
-const rain_drop = () => new Promise((resolve,reject)=>{
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+module.exports.start_rain = (x1,x2,y1,y2) => {
+    
+  new Promise((resolve,reject)=>{
 
     PIXI.loader        
     .add('images/raindrop_01.png')
@@ -17,53 +23,48 @@ const rain_drop = () => new Promise((resolve,reject)=>{
     .add('images/raindrop_13.png')
     // .on("progress", loader=>{})
     .load(()=>resolve('drop loaded'))
-
-})
-.then(res=>{
+  })
+  .then(res=>{
     let rain_frames = []
     for (let i = 1; i < 13; i++) {
-        // magically works since the spritesheet was loaded with the pixi loader
-        let val = i < 10 ? '0' + i : i;
+      let val = i < 10 ? '0' + i : i;
 
-        rain_frames.push(PIXI.Texture.fromFrame('images/raindrop_' + val + '.png'));
+      rain_frames.push(PIXI.Texture.fromFrame('images/raindrop_' + val + '.png'));
     }
     return rain_frames;
-})
-.then(frames => {
+  })
+  .then(frames => {
 
     const rain_noise = new Audio('audio/light_rain.wav')
 
-    function getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
+    for (let i = 0; i < 150; i++) {
+      const animated_drop = new PIXI.extras.AnimatedSprite(frames);
+      animated_drop.x = getRandomArbitrary(x1,x2);
+      animated_drop.y = getRandomArbitrary(y1,y2);
+      animated_drop.width /= 2.5
+      animated_drop.height /= 2.5
+      animated_drop.alpha = getRandomArbitrary(0.03,0.3)
+      animated_drop.anchor.set(0.5);
+      animated_drop.animationSpeed = getRandomArbitrary(0.1,0.2);
+      setInterval(()=>{
+
+        animated_drop.play();
+
+      },getRandomArbitrary(200,1100))
+      
+      setInterval(()=>{
+
+        animated_drop.gotoAndStop(11);
+
+      },getRandomArbitrary(100,1000))
+
+      rain_noise.volume = 0.05;
+      rain_noise.play()
+
+      global.viewport.addChild(animated_drop)
     }
-
-    for (var i = 0; i < 150; i++) {
-        const animated_drop = new PIXI.extras.AnimatedSprite(frames);
-        animated_drop.x = getRandomArbitrary(0,3400);
-        animated_drop.y = getRandomArbitrary(400,850);
-        animated_drop.width /= 2.5
-        animated_drop.height /= 2.5
-        animated_drop.alpha = getRandomArbitrary(0.03,0.3)
-        animated_drop.anchor.set(0.5);
-        animated_drop.animationSpeed = getRandomArbitrary(0.1,0.2);
-        setInterval(()=>{
-
-            animated_drop.play();
-
-        },getRandomArbitrary(200,1100))
-        
-        setInterval(()=>{
-
-            animated_drop.gotoAndStop(11);
-
-        },getRandomArbitrary(100,1000))
-        rain_noise.volume = 0.05;
-        rain_noise.play()
-
-        viewport.addChild(animated_drop)
-    }
-
-})
+  })
+}
 
     // return new Promise((resolve,reject)=>{
 

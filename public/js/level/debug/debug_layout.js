@@ -9,6 +9,7 @@ level_loader      = require("../bedroom/level_layout.js"),
 level_utils      = require("../level_utils.js"),
 filterUtil      = require("../../visual_effects/filterUtils.js"),
 dialogUtil      = require("../../dialog/dialogUtil.js"),
+rain      = require("../../weather/rain.js"),
 cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
 rat         = require("../../animals/rat.js");
 
@@ -150,6 +151,9 @@ module.exports.add_floor = () => {
         dialog_pad.fired = true
         
         dialogUtil.renderText(global.Player.sprite, 'I am some dialog')
+      } else {
+        console.log('hi')
+        rain.start_rain(0,3400,400,850)
       }
       
     }
