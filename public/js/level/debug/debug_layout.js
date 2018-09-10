@@ -98,7 +98,8 @@ module.exports.add_floor = () => {
         enemy_pad.fired = true
         enemy.enemy_frames()
         .then(()=>{
-          enemy.enemyMove({x:300,y:600},{x:-300,y:700})
+          // enemy.enemyMove({x:300,y:600},{x:-300,y:700})
+          enemy.projectileAttack(global.Player.sprite)
         })
       }
       

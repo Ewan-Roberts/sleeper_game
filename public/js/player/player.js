@@ -71,7 +71,7 @@ function mouseUp () {
 
       const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
-      bowHelper.arrowManagement(global.Player, mousePosition);
+      bowHelper.arrowManagement(global.Player.power,global.Player.sprite, mousePosition);
 
     }
 

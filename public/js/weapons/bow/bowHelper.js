@@ -37,26 +37,25 @@ module.exports.pickUpArrow = (Player) => {
 
 }
 
-module.exports.arrowManagement = (Player, mousePosition) => {
+module.exports.arrowManagement = (power, origin, target) => {
 
   const arrow_hit_register = spriteHelper.drawPolygon([0, 300, 805, 300, 805, 336, 0, 336]);
 
   const path_one = new PIXI.tween.TweenPath()
-  .moveTo(Player.sprite.position.x, Player.sprite.position.y)
-  .lineTo(mousePosition.x,mousePosition.y)
+  .moveTo(origin.position.x, origin.position.y)
+  .lineTo(target.x, target.y);
 
   firedArrowGuide.clear().lineStyle(3, 0xffffff,0.5).drawPath(path_one)
 
   const arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
-        
         arrow.width /=2
         arrow.height /=3
         arrow.anchor.set(0.9)
-        arrow.rotation = spriteHelper.angle(Player.sprite, mousePosition)
+        arrow.rotation = spriteHelper.angle(origin, target)
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
         arrowTween.path = path_one;
-        arrowTween.time = Player.power;
+        arrowTween.time = power;
         arrowTween.easing = PIXI.tween.Easing.linear();
         arrowTween.start()
         arrowTween.on("end", function() {
@@ -120,7 +119,7 @@ module.exports.arrowManagement = (Player, mousePosition) => {
 
   })
 
-  Player.ammo--
+  // Player.ammo--
   arrowContainer.addChild(arrow)
   global.viewport.addChild(firedArrowGuide, arrowContainer)
 
