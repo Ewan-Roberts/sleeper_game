@@ -32,6 +32,33 @@ module.exports.renderWall = wallArray => {
   wallArray.forEach(wallData =>{
     
     const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+          wall.position.set(wallData.x, wallData.y);
+          wall.width = wallData.width;
+          wall.height = wallData.height;
+    
+    global.collisionItems.addChild(wall)  
+
+  })
+
+}
+
+module.exports.importParkData = () => {
+
+  const park_background = PIXI.Sprite.fromImage('../../images/level/park/park_background_2.jpg');
+        park_background.interactive = true;
+        park_background.zIndex =1;
+        park_background.width = 10000
+        park_background.height = 6000
+
+  global.viewport.addChild(park_background)
+  global.viewport.updateLayersOrder();
+}
+
+module.exports.renderWall = wallArray => {
+
+  wallArray.forEach(wallData =>{
+    
+    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
@@ -40,6 +67,9 @@ module.exports.renderWall = wallArray => {
   })
 
 }
+
+
+
 
 module.exports.hitAreas = wallArray => {
 

@@ -29,9 +29,16 @@ global.Player = {
   moveable:       true,
   power:          900,
   ammo:           10,
-  inventory:      []
+  inventory:      [],
+  network_data: {
+    x: 0,
+    y: 0
+  }
 
 }
+
+
+
 
 const aimingLine = new PIXI.Graphics();
 
@@ -134,53 +141,59 @@ function add_player_controls() {
       global.Player.sprite._textures = global.Player.sprite.idle._textures
   },true)
 
-  document.addEventListener("keydown", e=> {
+  document.addEventListener("keydown", e => {
 
     let currentDirection = undefined;
 
     let key = documentHelper.getDirection(e.key)
 
-    console.log(key)
-
     if(!global.Player.moveable) return;
 
-    if(key === "up"){
-      global.Player.sprite.y -= global.Player.movement_speed; 
-      global.Player.sprite.rotation = -2
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+    global.socket.emit('keystroke', key)
 
-    if(key === "down"){
-      global.Player.sprite.y += global.Player.movement_speed; 
-      global.Player.sprite.rotation = 2
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+    global.socket.on('player_move', data => {
 
-    if(key === "left"){
-      global.Player.sprite.x -= global.Player.movement_speed; 
-      global.Player.sprite.rotation = -3
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+      global.Player.sprite.x = data.x
+      global.Player.sprite.y = data.y
+      global.Player.sprite.rotation = data.rotation
 
-    if(key === "right"){
-      global.Player.sprite.x += global.Player.movement_speed;
-      global.Player.sprite.rotation = 0
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+    })
+
+    // if(key === "up"){
+    //   global.Player.sprite.y -= global.Player.movement_speed; 
+    //   global.Player.sprite.rotation = -2
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
+
+    // if(key === "down"){
+    //   console.log('here first')
+    //   global.Player.sprite.y += global.Player.movement_speed; 
+    //   global.Player.sprite.rotation = 2
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
+
+    // if(key === "left"){
+    //   global.Player.sprite.x -= global.Player.movement_speed; 
+    //   global.Player.sprite.rotation = -3
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
+
+    // if(key === "right"){
+    //   global.Player.sprite.x += global.Player.movement_speed;
+    //   global.Player.sprite.rotation = 0
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
 
     doorHelper.hit(global.Player.sprite, global.doors.children[0])
 
-    spriteHelper.hitBoxContainer(global.collisionItems.children, global.Player.sprite)
+    spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
     .then(hit => {
-
-      if(hit){
         
-        if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
-        if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
-        if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
-        if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
-        
-      };
+      if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
+      if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
+      if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
+      if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
+      
     })
     
 
@@ -195,8 +208,6 @@ function add_player_controls() {
       PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
       critter.destroy();
     })
-
-    
 
     spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
     .then(item => {
@@ -223,17 +234,20 @@ function add_player_controls() {
     })
     .then(a=>{
       
-      const b =global.movableItems.children[0]
-      if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
-        console.log('herer')
-      }
+      // const b =global.movableItems.children[0]
+      // if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
+      //   console.log('herer');
+      // }
 
     })
 
+    bowHelper.pickUpArrow(global.Player);
 
-    bowHelper.pickUpArrow(global.Player)
+    global.Player.network_data.x = global.Player.sprite.x
+    global.Player.network_data.y = global.Player.sprite.y
+
+    global.socket.emit('post_player_data', global.Player.network_data)
     
-
   },true);
 
   global.viewport.addChild(aimingLine);

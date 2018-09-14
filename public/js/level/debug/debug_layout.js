@@ -9,6 +9,8 @@ level_loader      = require("../bedroom/level_layout.js"),
 level_utils      = require("../level_utils.js"),
 filterUtil      = require("../../visual_effects/filterUtils.js"),
 dialogUtil      = require("../../dialog/dialogUtil.js"),
+network_players      = require("../../network/network_players.js"),
+sprite_animations      = require("../../visual_effects/sprite_animations.js"),
 rain      = require("../../weather/rain.js"),
 cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
 rat         = require("../../animals/rat.js");
@@ -178,6 +180,62 @@ module.exports.add_floor = () => {
       
     }
 
+    const animation_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    animation_pad.width = 200;
+    animation_pad.height = 100;
+    animation_pad.position.set(-700,-100);
+    animation_pad.fired = false;
+    animation_pad.alpha = 0.6;
+    animation_pad.action = () =>{
+      
+      if(!animation_pad.fired){
+
+        animation_pad.fired = true
+        sprite_animations.load_flag()
+        
+      } else {
+        
+      }
+      
+    }
+
+    const load_park_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    load_park_pad.width = 200;
+    load_park_pad.height = 100;
+    load_park_pad.position.set(-950,-100);
+    load_park_pad.fired = false;
+    load_park_pad.alpha = 0.4;
+    load_park_pad.action = () =>{
+      
+      if(!load_park_pad.fired){
+
+        load_park_pad.fired = true
+        level_utils.importParkData()
+        
+      }
+      
+    }
+
+    const network_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    network_pad.width = 200;
+    network_pad.height = 100;
+    network_pad.position.set(-450,-100);
+    network_pad.fired = false;
+    network_pad.alpha = 0.8;
+    network_pad.action = () =>{
+      
+      if(!network_pad.fired){
+
+        network_pad.fired = true
+
+        network_players.load_network_sprite()
+
+      } else {
+        
+      }
+      
+    }
+
     const clear_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     clear_pad.width = 200;
     clear_pad.height = 100;
@@ -204,7 +262,10 @@ module.exports.add_floor = () => {
       effect_pad,
       clear_pad,
       glitch_pad,
-      dialog_pad
+      dialog_pad,
+      network_pad,
+      animation_pad,
+      load_park_pad
     )
 
     global.doors.addChild(door);

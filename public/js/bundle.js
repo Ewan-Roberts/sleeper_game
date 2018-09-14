@@ -3875,7 +3875,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":44,"component-inherit":40,"debug":51,"engine.io-parser":53,"parseqs":92,"ws":322,"yeast":299}],50:[function(require,module,exports){
+},{"../transport":44,"component-inherit":40,"debug":51,"engine.io-parser":53,"parseqs":92,"ws":324,"yeast":299}],50:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -4115,7 +4115,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":52,"_process":326}],52:[function(require,module,exports){
+},{"./debug":52,"_process":328}],52:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -5613,7 +5613,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":323,"isarray":85}],58:[function(require,module,exports){
+},{"buffer":325,"isarray":85}],58:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -34678,7 +34678,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":159,"../../../../textures/TextureMatrix":205,"../Filter":175,"path":325}],179:[function(require,module,exports){
+},{"../../../../math":159,"../../../../textures/TextureMatrix":205,"../Filter":175,"path":327}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38454,7 +38454,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":133,"path":325}],197:[function(require,module,exports){
+},{"../../Shader":133,"path":327}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44201,7 +44201,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":331}],214:[function(require,module,exports){
+},{"url":333}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48736,7 +48736,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":154,"../../core/const":135,"path":325}],232:[function(require,module,exports){
+},{"../../core":154,"../../core/const":135,"path":327}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48820,7 +48820,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":154,"path":325}],233:[function(require,module,exports){
+},{"../../core":154,"path":327}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49983,7 +49983,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":154,"path":325}],240:[function(require,module,exports){
+},{"../../core":154,"path":327}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50091,7 +50091,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":154,"path":325}],241:[function(require,module,exports){
+},{"../../core":154,"path":327}],241:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50145,7 +50145,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":154,"path":325}],242:[function(require,module,exports){
+},{"../../core":154,"path":327}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50321,7 +50321,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":154,"path":325}],244:[function(require,module,exports){
+},{"../../core":154,"path":327}],244:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52979,7 +52979,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":230,"path":325,"resource-loader":284}],252:[function(require,module,exports){
+},{"../extras":230,"path":327,"resource-loader":284}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53342,7 +53342,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":154,"resource-loader":284,"url":331}],255:[function(require,module,exports){
+},{"../core":154,"resource-loader":284,"url":333}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55068,7 +55068,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":154,"../Mesh":256,"path":325,"pixi-gl-core":102}],263:[function(require,module,exports){
+},{"../../core":154,"../Mesh":256,"path":327,"pixi-gl-core":102}],263:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60749,7 +60749,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":291,"parseuri":93}],291:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./debug":292,"_process":326,"dup":51}],292:[function(require,module,exports){
+},{"./debug":292,"_process":328,"dup":51}],292:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"dup":52,"ms":89}],293:[function(require,module,exports){
 (function (global){
@@ -61345,7 +61345,7 @@ function isBuf(obj) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],296:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./debug":297,"_process":326,"dup":51}],297:[function(require,module,exports){
+},{"./debug":297,"_process":328,"dup":51}],297:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
 },{"dup":52,"ms":89}],298:[function(require,module,exports){
 module.exports = toArray
@@ -61673,7 +61673,7 @@ module.exports.mousePause = () => {
     }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":317}],301:[function(require,module,exports){
+},{"../utils/spriteHelper.js":318}],301:[function(require,module,exports){
 (function (global){
 const filters = require('pixi-filters'),
 spriteHelper = require("../utils/spriteHelper.js");
@@ -61684,6 +61684,8 @@ module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
   global.Player.sprite.y = y;
 
 })
+
+
 
 module.exports.clearScene = () => global.viewport.removeChildren();
 
@@ -61716,8 +61718,6 @@ module.exports.wakePlayer = () => {
   return new Promise((resolve,reject)=>{
 
     const animated_player = new PIXI.extras.AnimatedSprite(Player.animation.wake_up);
-
-
 
   })
 }
@@ -61770,7 +61770,7 @@ module.exports.movePlayer = (start,finish) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":317,"pixi-filters":95}],302:[function(require,module,exports){
+},{"../utils/spriteHelper.js":318,"pixi-filters":95}],302:[function(require,module,exports){
 (function (global){
 
 const cutsceneUtil = require('./cutsceneUtils'),
@@ -61821,7 +61821,7 @@ module.exports.start = () => new Promise((resolve,reject)=>{
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../player/player.js":313,"../visual_effects/filterUtils.js":318,"./cutsceneUtils":301}],303:[function(require,module,exports){
+},{"../player/player.js":314,"../visual_effects/filterUtils.js":319,"./cutsceneUtils":301}],303:[function(require,module,exports){
 (function (global){
 
 
@@ -61976,7 +61976,7 @@ module.exports.projectileAttack = (target) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":317,"../weapons/bow/bowHelper":319}],305:[function(require,module,exports){
+},{"../utils/spriteHelper.js":318,"../weapons/bow/bowHelper":321}],305:[function(require,module,exports){
 (function (global){
 const   PIXI = require('pixi.js'),
         io = require('socket.io-client'),
@@ -62110,7 +62110,7 @@ app.ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":311,"./player/player.js":313,"pixi-layers":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],306:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":311,"./player/player.js":314,"pixi-layers":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],306:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -63007,7 +63007,7 @@ module.exports.add_floor = () => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../player/player.js":313,"./bedroom_triggers.js":307,"./items.js":308,"jQuery":87}],310:[function(require,module,exports){
+},{"../../player/player.js":314,"./bedroom_triggers.js":307,"./items.js":308,"jQuery":87}],310:[function(require,module,exports){
 (function (global){
 
 const PIXI = require("pixi.js"),
@@ -63084,6 +63084,8 @@ level_loader      = require("../bedroom/level_layout.js"),
 level_utils      = require("../level_utils.js"),
 filterUtil      = require("../../visual_effects/filterUtils.js"),
 dialogUtil      = require("../../dialog/dialogUtil.js"),
+network_players      = require("../../network/network_players.js"),
+sprite_animations      = require("../../visual_effects/sprite_animations.js"),
 rain      = require("../../weather/rain.js"),
 cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
 rat         = require("../../animals/rat.js");
@@ -63253,6 +63255,62 @@ module.exports.add_floor = () => {
       
     }
 
+    const animation_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    animation_pad.width = 200;
+    animation_pad.height = 100;
+    animation_pad.position.set(-700,-100);
+    animation_pad.fired = false;
+    animation_pad.alpha = 0.6;
+    animation_pad.action = () =>{
+      
+      if(!animation_pad.fired){
+
+        animation_pad.fired = true
+        sprite_animations.load_flag()
+        
+      } else {
+        
+      }
+      
+    }
+
+    const load_park_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    load_park_pad.width = 200;
+    load_park_pad.height = 100;
+    load_park_pad.position.set(-950,-100);
+    load_park_pad.fired = false;
+    load_park_pad.alpha = 0.4;
+    load_park_pad.action = () =>{
+      
+      if(!load_park_pad.fired){
+
+        load_park_pad.fired = true
+        level_utils.importParkData()
+        
+      }
+      
+    }
+
+    const network_pad = PIXI.Sprite.fromImage('images/black_dot.png')
+    network_pad.width = 200;
+    network_pad.height = 100;
+    network_pad.position.set(-450,-100);
+    network_pad.fired = false;
+    network_pad.alpha = 0.8;
+    network_pad.action = () =>{
+      
+      if(!network_pad.fired){
+
+        network_pad.fired = true
+
+        network_players.load_network_sprite()
+
+      } else {
+        
+      }
+      
+    }
+
     const clear_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     clear_pad.width = 200;
     clear_pad.height = 100;
@@ -63279,7 +63337,10 @@ module.exports.add_floor = () => {
       effect_pad,
       clear_pad,
       glitch_pad,
-      dialog_pad
+      dialog_pad,
+      network_pad,
+      animation_pad,
+      load_park_pad
     )
 
     global.doors.addChild(door);
@@ -63307,7 +63368,7 @@ module.exports.add_floor = () => {
 
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":300,"../../cutscene/cutscene_intro.js":302,"../../dialog/dialogUtil.js":303,"../../enemies/enemy.js":304,"../../player/player.js":313,"../../triggers/triggers.js":314,"../../utils/doorHelper.js":316,"../../visual_effects/filterUtils.js":318,"../../weather/rain.js":320,"../bedroom/level_layout.js":309,"../level_utils.js":312,"./debug_items.js":310,"jQuery":87}],312:[function(require,module,exports){
+},{"../../animals/rat.js":300,"../../cutscene/cutscene_intro.js":302,"../../dialog/dialogUtil.js":303,"../../enemies/enemy.js":304,"../../network/network_players.js":313,"../../player/player.js":314,"../../triggers/triggers.js":315,"../../utils/doorHelper.js":317,"../../visual_effects/filterUtils.js":319,"../../visual_effects/sprite_animations.js":320,"../../weather/rain.js":322,"../bedroom/level_layout.js":309,"../level_utils.js":312,"./debug_items.js":310,"jQuery":87}],312:[function(require,module,exports){
 (function (global){
 const bedroom_data = require('./bedroom/bedroom_data_3.json')
 
@@ -63343,6 +63404,33 @@ module.exports.renderWall = wallArray => {
   wallArray.forEach(wallData =>{
     
     const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+          wall.position.set(wallData.x, wallData.y);
+          wall.width = wallData.width;
+          wall.height = wallData.height;
+    
+    global.collisionItems.addChild(wall)  
+
+  })
+
+}
+
+module.exports.importParkData = () => {
+
+  const park_background = PIXI.Sprite.fromImage('../../images/level/park/park_background_2.jpg');
+        park_background.interactive = true;
+        park_background.zIndex =1;
+        park_background.width = 10000
+        park_background.height = 6000
+
+  global.viewport.addChild(park_background)
+  global.viewport.updateLayersOrder();
+}
+
+module.exports.renderWall = wallArray => {
+
+  wallArray.forEach(wallData =>{
+    
+    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
@@ -63351,6 +63439,9 @@ module.exports.renderWall = wallArray => {
   })
 
 }
+
+
+
 
 module.exports.hitAreas = wallArray => {
 
@@ -63368,6 +63459,37 @@ module.exports.hitAreas = wallArray => {
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./bedroom/bedroom_data_3.json":306}],313:[function(require,module,exports){
+(function (global){
+
+
+
+module.exports.load_network_sprite = () => {
+
+  const bunny = PIXI.Sprite.fromImage('images/bunny.png');
+
+
+  global.viewport.addChild(bunny)
+
+  const playerDets = {
+    x: global.Player.sprite.x,
+    y: global.Player.sprite.y
+  }
+  
+  global.socket.emit("get_network_sprites", ({x: global.Player.sprite.x, y: global.Player.sprite.y}));
+
+  global.socket.on('server_sprite' , server_sprite =>{
+
+    console.log(server_sprite);
+    bunny.x = server_sprite.x;
+    bunny.y = server_sprite.y;
+    
+  })
+
+  
+
+}
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],314:[function(require,module,exports){
 (function (global){
 const PIXI        = require("pixi.js"),
       Intersects  = require('intersects'),
@@ -63400,9 +63522,16 @@ global.Player = {
   moveable:       true,
   power:          900,
   ammo:           10,
-  inventory:      []
+  inventory:      [],
+  network_data: {
+    x: 0,
+    y: 0
+  }
 
 }
+
+
+
 
 const aimingLine = new PIXI.Graphics();
 
@@ -63505,53 +63634,59 @@ function add_player_controls() {
       global.Player.sprite._textures = global.Player.sprite.idle._textures
   },true)
 
-  document.addEventListener("keydown", e=> {
+  document.addEventListener("keydown", e => {
 
     let currentDirection = undefined;
 
     let key = documentHelper.getDirection(e.key)
 
-    console.log(key)
-
     if(!global.Player.moveable) return;
 
-    if(key === "up"){
-      global.Player.sprite.y -= global.Player.movement_speed; 
-      global.Player.sprite.rotation = -2
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+    global.socket.emit('keystroke', key)
 
-    if(key === "down"){
-      global.Player.sprite.y += global.Player.movement_speed; 
-      global.Player.sprite.rotation = 2
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+    global.socket.on('player_move', data => {
 
-    if(key === "left"){
-      global.Player.sprite.x -= global.Player.movement_speed; 
-      global.Player.sprite.rotation = -3
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+      global.Player.sprite.x = data.x
+      global.Player.sprite.y = data.y
+      global.Player.sprite.rotation = data.rotation
 
-    if(key === "right"){
-      global.Player.sprite.x += global.Player.movement_speed;
-      global.Player.sprite.rotation = 0
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
-    }
+    })
+
+    // if(key === "up"){
+    //   global.Player.sprite.y -= global.Player.movement_speed; 
+    //   global.Player.sprite.rotation = -2
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
+
+    // if(key === "down"){
+    //   console.log('here first')
+    //   global.Player.sprite.y += global.Player.movement_speed; 
+    //   global.Player.sprite.rotation = 2
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
+
+    // if(key === "left"){
+    //   global.Player.sprite.x -= global.Player.movement_speed; 
+    //   global.Player.sprite.rotation = -3
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
+
+    // if(key === "right"){
+    //   global.Player.sprite.x += global.Player.movement_speed;
+    //   global.Player.sprite.rotation = 0
+    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
+    // }
 
     doorHelper.hit(global.Player.sprite, global.doors.children[0])
 
-    spriteHelper.hitBoxContainer(global.collisionItems.children, global.Player.sprite)
+    spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
     .then(hit => {
-
-      if(hit){
         
-        if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
-        if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
-        if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
-        if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
-        
-      };
+      if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
+      if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
+      if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
+      if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
+      
     })
     
 
@@ -63566,8 +63701,6 @@ function add_player_controls() {
       PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
       critter.destroy();
     })
-
-    
 
     spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
     .then(item => {
@@ -63594,17 +63727,20 @@ function add_player_controls() {
     })
     .then(a=>{
       
-      const b =global.movableItems.children[0]
-      if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
-        console.log('herer')
-      }
+      // const b =global.movableItems.children[0]
+      // if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
+      //   console.log('herer');
+      // }
 
     })
 
+    bowHelper.pickUpArrow(global.Player);
 
-    bowHelper.pickUpArrow(global.Player)
+    global.Player.network_data.x = global.Player.sprite.x
+    global.Player.network_data.y = global.Player.sprite.y
+
+    global.socket.emit('post_player_data', global.Player.network_data)
     
-
   },true);
 
   global.viewport.addChild(aimingLine);
@@ -63667,7 +63803,7 @@ module.exports.remove_controls = () =>{
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":300,"../utils/documentHelper.js":315,"../utils/doorHelper.js":316,"../utils/spriteHelper.js":317,"../weapons/bow/bowHelper.js":319,"intersects":70,"pixi.js":244}],314:[function(require,module,exports){
+},{"../animals/rat.js":300,"../utils/documentHelper.js":316,"../utils/doorHelper.js":317,"../utils/spriteHelper.js":318,"../weapons/bow/bowHelper.js":321,"intersects":70,"pixi.js":244}],315:[function(require,module,exports){
 const PIXI = require("pixi.js");
 
 module.exports.createTriggerPad = (x, y, width, height) =>{
@@ -63695,7 +63831,7 @@ module.exports.createTriggerPad = (x, y, width, height) =>{
 }
 
 
-},{"pixi.js":244}],315:[function(require,module,exports){
+},{"pixi.js":244}],316:[function(require,module,exports){
 //utils
 
 const keymap = {
@@ -63728,7 +63864,7 @@ module.exports.mousePositionFromScreen = (event, viewport) => {
     }
 
 }
-},{}],316:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 
 
 const spriteHelper = require("./spriteHelper.js");
@@ -63762,7 +63898,7 @@ module.exports.hit = (player,door) => {
   tween.start();
 
 }
-},{"./spriteHelper.js":317}],317:[function(require,module,exports){
+},{"./spriteHelper.js":318}],318:[function(require,module,exports){
 (function (global){
 const   PIXI        = require("pixi.js");
 
@@ -63990,7 +64126,7 @@ module.exports.hitBoxContainerObjAndBool = (container, player) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":244}],318:[function(require,module,exports){
+},{"pixi.js":244}],319:[function(require,module,exports){
 (function (global){
 const filters = require('pixi-filters')
 const padding = 100;
@@ -64100,7 +64236,39 @@ module.exports.setCamera = () => new Promise((resolve,reject)=>{
 })
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":95}],319:[function(require,module,exports){
+},{"pixi-filters":95}],320:[function(require,module,exports){
+(function (global){
+const Flag = [];
+
+
+module.exports.load_flag = () => new Promise((resolve,reject)=>{
+
+  PIXI.loader        
+  .add('images/flag/flag_1.png')
+  .add('images/flag/flag_2.png')
+  .add('images/flag/flag_3.png')
+  // .on("progress", loader=>{})
+  .load(()=>resolve('flag loaded'))
+
+})
+.then(image_load_confirmation=>{
+
+  for (let i = 1; i < 3; i++) {
+    Flag.push(PIXI.Texture.fromFrame('images/flag/flag_' + i + '.png'));
+  }
+
+})
+.then(()=>{
+
+  const animated_flag = new PIXI.extras.AnimatedSprite(Flag);
+  animated_flag.animationSpeed = 0.4;
+  animated_flag.play()
+  global.viewport.addChild(animated_flag);
+  
+
+})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],321:[function(require,module,exports){
 (function (global){
 
 const spriteHelper = require("../../utils/spriteHelper.js"),
@@ -64229,7 +64397,7 @@ module.exports.arrowManagement = (power, origin, target) => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":317,"intersects":70,"pixi.js":244}],320:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":318,"intersects":70,"pixi.js":244}],322:[function(require,module,exports){
 (function (global){
 
 function getRandomArbitrary(min, max) {
@@ -65101,7 +65269,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],321:[function(require,module,exports){
+},{}],323:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -65254,9 +65422,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],322:[function(require,module,exports){
+},{}],324:[function(require,module,exports){
 
-},{}],323:[function(require,module,exports){
+},{}],325:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -67035,7 +67203,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":321,"ieee754":324}],324:[function(require,module,exports){
+},{"base64-js":323,"ieee754":326}],326:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -67121,7 +67289,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],325:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -67427,7 +67595,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":326}],326:[function(require,module,exports){
+},{"_process":328}],328:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -67613,7 +67781,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],327:[function(require,module,exports){
+},{}],329:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -68150,7 +68318,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],328:[function(require,module,exports){
+},{}],330:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -68236,7 +68404,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],329:[function(require,module,exports){
+},{}],331:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -68323,13 +68491,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],330:[function(require,module,exports){
+},{}],332:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":328,"./encode":329}],331:[function(require,module,exports){
+},{"./decode":330,"./encode":331}],333:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -69063,7 +69231,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":332,"punycode":327,"querystring":330}],332:[function(require,module,exports){
+},{"./util":334,"punycode":329,"querystring":332}],334:[function(require,module,exports){
 'use strict';
 
 module.exports = {

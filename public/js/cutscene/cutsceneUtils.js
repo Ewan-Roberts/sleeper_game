@@ -8,6 +8,8 @@ module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
 
 })
 
+
+
 module.exports.clearScene = () => global.viewport.removeChildren();
 
 module.exports.createPlayer = () =>{
@@ -39,8 +41,6 @@ module.exports.wakePlayer = () => {
   return new Promise((resolve,reject)=>{
 
     const animated_player = new PIXI.extras.AnimatedSprite(Player.animation.wake_up);
-
-
 
   })
 }

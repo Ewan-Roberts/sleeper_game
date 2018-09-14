@@ -148,6 +148,64 @@ io.sockets.on("connection", socket => {
 
     })    
 
+    socket.on('get_network_sprites', (player) => {
+      
+      console.log(player)
+      const sprite = {
+        x: player.x + 100,
+        y: player.y+ 100
+      }
+
+      setInterval(()=>{
+        sprite.x += 10;
+        socket.emit('server_sprite', sprite)
+
+      },1000)
+        
+      
+    })
+
+
+    socket.on('post_player_data', player_data => {
+
+      console.log(player_data)
+
+    })
+
+    const Player = {
+      x: 0,
+      y: 0,
+      rotation: 0,
+      movement_speed: 20
+    }
+
+
+    socket.on('keystroke', key => {
+
+      if(key === "up"){
+        Player.y -= Player.movement_speed; 
+        Player.rotation = -2
+      }
+  
+      if(key === "down"){
+        Player.y += Player.movement_speed; 
+        Player.rotation = 2
+      }
+  
+      if(key === "left"){
+        Player.x -= Player.movement_speed; 
+        Player.rotation = -3
+      }
+  
+      if(key === "right"){
+        Player.x += Player.movement_speed; 
+        Player.rotation = 0
+      }
+
+      socket.emit('player_move', Player)
+    })
+
+    
     // socket.on("meter_ticker", shit =>{
 
     //     console.log('ticker')
