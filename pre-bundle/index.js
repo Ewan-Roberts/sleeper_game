@@ -1,58 +1,24 @@
-const   PIXI = require('pixi.js'),
-        io = require('socket.io-client'),
-        Viewport = require('pixi-viewport'),
-        tween = require('pixi-tween'),
-        Layer = require('pixi-layers'),
-        // light = require('./lights/lights.js'),
-        // bedroom = require("./level/bedroom/level_layout.js"),
-        debug = require("./level/debug/debug_layout.js"),
-        // items = require("./level/bedroom/items.js"),
-        player = require("./player/player.js")
-
-        // ,core = require("./front_end.js")
+const PIXI = require('pixi.js'),
+      io = require('socket.io-client'),
+      Viewport = require('pixi-viewport'),
+      tween = require('pixi-tween'),
+      Layer = require('pixi-layers'),
+      debug = require("./level/debug/debug_layout.js"),
+      player = require("./player/player.js");
 
 global.socket = io.connect();
 
 global.socket.on("thing", res => console.log(res))
-
-// global.socket.on("container_contents", items => {
-
-//     // console.log(items)
-
-//     // items.contents[0].img.height = items.contents[0].img.height *2
-//     // items.contents[0].img.width = items.contents[0].img.height*2 
-//     // $("#slot_1").attr("src",items.contents[0].img);
-//     // $("#slot_2").attr("src",items.contents[1].img);
-
-// })
-
-global.socket.on("player_data", res => {
-
-    console.log("HIH2")
-
-})
-
-global.bedroom_segments = [];
-global.bedroom_segments = [
-
-    // Border
-    {a:{x:0,y:0}, b:{x:3550,y:0}},
-    {a:{x:3550,y:0}, b:{x:3550,y:5000}},
-    {a:{x:3550,y:5000}, b:{x:0,y:5000}},
-    {a:{x:0,y:5000}, b:{x:0,y:0}},
-
-];
 
 // add the viewport to the stage
 global.app = new PIXI.Application({ 
     width: window.innerWidth,   // default: 800
     height: window.innerHeight, // default: 600
     antialias: false,           // default: false
+    autoResize: true,
+    backgroundColor: 0xC1C1C1
 });
  
-
-global.app.renderer.backgroundColor = 0xC1C1C1
-global.app.renderer.autoResize = true;
 document.body.appendChild(global.app.view);
 
 global.viewport = new Viewport({
@@ -63,7 +29,7 @@ global.viewport = new Viewport({
 });
 
 global.app.stage.addChild(viewport);
-viewport.drag().decelerate();
+global.viewport.drag().decelerate();
 
 global.collisionItems = new PIXI.Container();
 global.movableItems = new PIXI.Container();

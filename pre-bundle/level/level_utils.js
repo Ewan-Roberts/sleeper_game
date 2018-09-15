@@ -1,4 +1,5 @@
 const bedroom_data = require('./bedroom/bedroom_data_3.json')
+const park_data = require('./park/park_3.json')
 
 module.exports.clearViewport = () =>{
 
@@ -37,6 +38,7 @@ module.exports.importBedroomData = () => {
             
   global.viewport.updateLayersOrder();
 }
+
 
 module.exports.renderWall = wallArray => {
 
@@ -78,8 +80,16 @@ module.exports.importParkData = () => {
   const park_background = PIXI.Sprite.fromImage('../../images/level/park/park_background_2.jpg');
         park_background.interactive = true;
         park_background.zIndex =1;
-        park_background.width = 10000
-        park_background.height = 6000
+        // park_background.width = 10000
+        // park_background.height = 6000
+
+  console.log(park_data)
+
+  for (let i = 0; i < park_data.tiles[1].objectgroup.objects.length; i++) {
+    
+    this.hitAreas(park_data.tiles[1].objectgroup.objects)
+    
+  }
 
   global.viewport.addChild(park_background)
   global.viewport.updateLayersOrder();
@@ -110,7 +120,7 @@ module.exports.hitAreas = wallArray => {
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
-    wall.alpha = 0.1;
+    wall.alpha = 0.01;
     global.collisionItems.addChild(wall)  
 
   })

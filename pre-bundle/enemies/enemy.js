@@ -79,7 +79,7 @@ module.exports.enemy_path = path_data => {
   const influence_box_tween = PIXI.tweenManager.createTween(influence_box);
   influence_box_tween.rotation = -0.5;
   influence_box_tween.path = path;
-  influence_box_tween.time = 10000;
+  influence_box_tween.time = 30000;
   influence_box_tween.easing = PIXI.tween.Easing.inOutQuad();
   influence_box_tween.start();
   influence_box_tween.pingPong = true;
@@ -88,7 +88,7 @@ module.exports.enemy_path = path_data => {
   const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
   animated_enemy_tween.path = path;
   animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2);
-  animated_enemy_tween.time = 10000;
+  animated_enemy_tween.time = 30000;
   animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
   animated_enemy_tween.start();
   animated_enemy_tween.pingPong = true;
