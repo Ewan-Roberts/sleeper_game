@@ -1,6 +1,5 @@
 
-const PIXI = require("pixi.js"),
-$ = require('jQuery')
+const PIXI = require("pixi.js");
 module.exports.add_items = () => {
 
 	PIXI.loader

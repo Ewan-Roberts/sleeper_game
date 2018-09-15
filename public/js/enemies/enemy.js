@@ -77,27 +77,21 @@ module.exports.enemy_path = path_data => {
   influence_box.alpha = 0.3;
 
   const influence_box_tween = PIXI.tweenManager.createTween(influence_box);
-  influence_box_tween.rotation = -0.5
+  influence_box_tween.rotation = -0.5;
   influence_box_tween.path = path;
   influence_box_tween.time = 10000;
   influence_box_tween.easing = PIXI.tween.Easing.inOutQuad();
   influence_box_tween.start();
-  influence_box_tween.pingPong = true
+  influence_box_tween.pingPong = true;
   
   //Tween animation
   const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
   animated_enemy_tween.path = path;
-  animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2)
+  animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2);
   animated_enemy_tween.time = 10000;
   animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_enemy_tween.start()
-  animated_enemy_tween.pingPong = true
-  
-  animated_enemy_tween.on("end", function() {
-      
-    console.log('ending')
-
-  })
+  animated_enemy_tween.start();
+  animated_enemy_tween.pingPong = true;
 
   influence_box_tween.on("update", function() {
     
@@ -105,18 +99,18 @@ module.exports.enemy_path = path_data => {
     influence_box_tween.target.rotation = influence_box_tween.rotation+ spriteHelper.angle(enemy_sprite, path._tmpPoint2)
     spriteHelper.hitBoxSpriteObj(influence_box, global.Player.sprite)
     .then(res => {
+
       console.log("enemy sees you")
-      // console.log(res)
       dialogUtil.renderText(enemy_sprite, dialogUtil.enemySurprised())
       animated_enemy_tween.stop()
       enemy_sprite.stop()
       enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite)
       influence_box_tween.stop()
+      bowHelper.arrowManagement(500, enemy_sprite, global.Player.sprite)
+
     })
 
   })
-
-
   
   global.enemyContainer.addChild(enemy_sprite,influence_box)
   global.viewport.addChild(global.enemyContainer)

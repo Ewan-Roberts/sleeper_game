@@ -10,8 +10,19 @@ module.exports.clearCollision = () =>{
   for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
 }
 
-module.exports.importBedroomData = () => {
+const addToSegments = item => {
 
+  global.collisionItems.push(
+    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+  )
+
+}
+
+module.exports.importBedroomData = () => {
+  
   console.log(bedroom_data)
 
   const flat_background = PIXI.Sprite.fromImage('../../images/flat_floor.jpg');

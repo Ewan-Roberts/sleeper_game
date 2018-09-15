@@ -5,10 +5,11 @@ const enemyDialogOptions = [
   'Dont fucking move',
   'Stop stop stop',
   'No more, not again',
-  'Jimmy? That you?',
+  'Karl? That you?',
   'Are you real?',
   'Ill help you die',
-  'Give me that now'
+  'Give me that now',
+  'Isabella? Is that you?'
 ]
 
 module.exports.renderText = (point, text) => {

@@ -61923,10 +61923,11 @@ const enemyDialogOptions = [
   'Dont fucking move',
   'Stop stop stop',
   'No more, not again',
-  'Jimmy? That you?',
+  'Karl? That you?',
   'Are you real?',
   'Ill help you die',
-  'Give me that now'
+  'Give me that now',
+  'Isabella? Is that you?'
 ]
 
 module.exports.renderText = (point, text) => {
@@ -62040,27 +62041,21 @@ module.exports.enemy_path = path_data => {
   influence_box.alpha = 0.3;
 
   const influence_box_tween = PIXI.tweenManager.createTween(influence_box);
-  influence_box_tween.rotation = -0.5
+  influence_box_tween.rotation = -0.5;
   influence_box_tween.path = path;
   influence_box_tween.time = 10000;
   influence_box_tween.easing = PIXI.tween.Easing.inOutQuad();
   influence_box_tween.start();
-  influence_box_tween.pingPong = true
+  influence_box_tween.pingPong = true;
   
   //Tween animation
   const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
   animated_enemy_tween.path = path;
-  animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2)
+  animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2);
   animated_enemy_tween.time = 10000;
   animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_enemy_tween.start()
-  animated_enemy_tween.pingPong = true
-  
-  animated_enemy_tween.on("end", function() {
-      
-    console.log('ending')
-
-  })
+  animated_enemy_tween.start();
+  animated_enemy_tween.pingPong = true;
 
   influence_box_tween.on("update", function() {
     
@@ -62068,18 +62063,18 @@ module.exports.enemy_path = path_data => {
     influence_box_tween.target.rotation = influence_box_tween.rotation+ spriteHelper.angle(enemy_sprite, path._tmpPoint2)
     spriteHelper.hitBoxSpriteObj(influence_box, global.Player.sprite)
     .then(res => {
+
       console.log("enemy sees you")
-      // console.log(res)
       dialogUtil.renderText(enemy_sprite, dialogUtil.enemySurprised())
       animated_enemy_tween.stop()
       enemy_sprite.stop()
       enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite)
       influence_box_tween.stop()
+      bowHelper.arrowManagement(500, enemy_sprite, global.Player.sprite)
+
     })
 
   })
-
-
   
   global.enemyContainer.addChild(enemy_sprite,influence_box)
   global.viewport.addChild(global.enemyContainer)
@@ -63248,8 +63243,7 @@ module.exports.add_floor = () => {
 },{"../../player/player.js":317,"./bedroom_triggers.js":310,"./items.js":311,"jQuery":87}],313:[function(require,module,exports){
 (function (global){
 
-const PIXI = require("pixi.js"),
-$ = require('jQuery')
+const PIXI = require("pixi.js");
 module.exports.add_items = () => {
 
 	PIXI.loader
@@ -63309,50 +63303,37 @@ module.exports.add_items = () => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jQuery":87,"pixi.js":244}],314:[function(require,module,exports){
+},{"pixi.js":244}],314:[function(require,module,exports){
 (function (global){
+'use strict';
 
-const $     = require('jQuery'),
-player      = require("../../player/player.js"),
-triggers    = require("../../triggers/triggers.js"),
-enemy    = require("../../enemies/enemy.js"),
-items      = require("./debug_items.js"),
-doorHelper      = require("../../utils/doorHelper.js"),
-level_loader      = require("../bedroom/level_layout.js"),
-level_utils      = require("../level_utils.js"),
-filterUtil      = require("../../visual_effects/filterUtils.js"),
-dialogUtil      = require("../../dialog/dialogUtil.js"),
-network_players      = require("../../network/network_players.js"),
-sprite_animations      = require("../../visual_effects/sprite_animations.js"),
-rain      = require("../../weather/rain.js"),
-cutscene_intro      = require("../../cutscene/cutscene_intro.js"),
-rat         = require("../../animals/rat.js");
+const player = require("../../player/player.js"),
+triggers = require("../../triggers/triggers.js"),
+enemy = require("../../enemies/enemy.js"),
+items = require("./debug_items.js"),
+doorHelper = require("../../utils/doorHelper.js"),
+level_loader = require("../bedroom/level_layout.js"),
+level_utils = require("../level_utils.js"),
+filterUtil = require("../../visual_effects/filterUtils.js"),
+dialogUtil = require("../../dialog/dialogUtil.js"),
+network_players = require("../../network/network_players.js"),
+sprite_animations = require("../../visual_effects/sprite_animations.js"),
+rain = require("../../weather/rain.js"),
+cutscene_intro = require("../../cutscene/cutscene_intro.js"),
+rat  = require("../../animals/rat.js");
 
 global.collisionItems = new PIXI.Container();
 global.eventTriggers = new PIXI.Container();
 
-global.bedroom_segments = [
+function createPad(x,y) {
 
-  // Border
-  {a:{x:0,y:0}, b:{x:3550,y:0}},
-  {a:{x:3550,y:0}, b:{x:3550,y:5000}},
-  {a:{x:3550,y:5000}, b:{x:0,y:5000}},
-  {a:{x:0,y:5000}, b:{x:0,y:0}},
-
-];
-
-const addToSegments = item => {
-
-  global.collisionItems.push(
-    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
-  )
-
+  const pad = PIXI.Sprite.fromImage('images/black_dot.png')
+  pad.width = 200;
+  pad.height = 100;
+  pad.position.set(x,y);
+  return pad;
+  
 }
-
-const b = new Bump(PIXI);
 
 module.exports.add_floor = () => {
         
@@ -63361,92 +63342,59 @@ module.exports.add_floor = () => {
   .load((loader,res)=>{
 
     const slanted_wall = PIXI.Sprite.fromImage('images/black_wall.png')
-    slanted_wall.interactive = true
-    slanted_wall.worldVisible = true
     slanted_wall.rotation = 0.4
     slanted_wall.position.set(100,100)
 
     const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png');
     collision_wall.position.set(100,600);
     collision_wall.name = "collision_wall";
-    collision_wall.interactive = true;
-    collision_wall.worldVisible = true;
 
     const door = PIXI.Sprite.fromImage('images/black_wall.png')
-    // door.position.set(-100,-200)
     door.width /=2
-    door.position.x = -100
-    door.position.y = -200
-    door.interactive = true
-    door.worldVisible = true
-    // collision_wall.rotation = 0.8
+    door.position.set(-100,-200)
 
-    const rat_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    rat_pad.width = 200;
-    rat_pad.height = 100;
-    rat_pad.position.set(-700,200);
+    const rat_pad = createPad(-700,200)
     rat_pad.alpha = 0.4;
     rat_pad.fired = false;
     rat_pad.action = () =>{
       
       if(!rat_pad.fired){
-
         rat_pad.fired = true
-        rat.load_rat()
-        .then(()=>{
-          rat.mouseMove({x:100,y:300},{x:0,y:400})
-        })
+        rat.load_rat().then(()=>rat.mouseMove({x:100,y:300},{x:0,y:400}))
       }
       
     }
  
-    const enemy_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    enemy_pad.width = 200;
-    enemy_pad.height = 100;
-    enemy_pad.position.set(-950,200);
+    const enemy_pad = createPad(-950,200)
     enemy_pad.alpha = 0.2;
     enemy_pad.fired = false;
     enemy_pad.action = () =>{
       
       if(!enemy_pad.fired){
-
         enemy_pad.fired = true
-        
-        enemy.enemy_frames()
-        .then(()=>{
-          // enemy.enemyMove({x:300,y:600},{x:-300,y:700})
-          enemy.projectileAttack(global.Player.sprite)
-        })
+        enemy.enemy_frames().then(()=>enemy.projectileAttack(global.Player.sprite))
       }
       
     }
 
-    const level_load_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    level_load_pad.width = 200;
-    level_load_pad.height = 100;
-    level_load_pad.position.set(-450,200);
+    const level_load_pad = createPad(-450,200)
     level_load_pad.alpha = 0.6;
     level_load_pad.fired = false;
     level_load_pad.action = () =>{
       
       if(!level_load_pad.fired){
-
         level_load_pad.fired = true
         level_utils.importBedroomData()
       }
       
     }
 
-    const glitch_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    glitch_pad.width = 200;
-    glitch_pad.height = 100;
-    glitch_pad.position.set(-700,50);
+    const glitch_pad = createPad(-700,50)
     glitch_pad.alpha = 0.4;
     glitch_pad.fired = false;
     glitch_pad.action = () =>{
       
       if(!glitch_pad.fired){
-
         glitch_pad.fired = true
         filterUtil.glitch()
       } else {
@@ -63455,38 +63403,27 @@ module.exports.add_floor = () => {
       
     }
 
-    const dialog_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    dialog_pad.width = 200;
-    dialog_pad.height = 100;
-    dialog_pad.position.set(-450,50);
+    const dialog_pad = createPad(-450,50)
     dialog_pad.alpha = 0.6;
     dialog_pad.fired = false;
     dialog_pad.action = () =>{
       
       if(!dialog_pad.fired){
-
         dialog_pad.fired = true
-        
         dialogUtil.renderText(global.Player.sprite, 'I am some dialog')
       } else {
-        console.log('hi')
         rain.start_rain(0,3400,400,850)
       }
       
     }
 
-    const effect_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    effect_pad.width = 200;
-    effect_pad.height = 100;
-    effect_pad.position.set(-200,200);
+    const effect_pad = createPad(-200,200)
     effect_pad.fired = false;
     effect_pad.alpha = 0.8;
     effect_pad.action = () =>{
       
       if(!effect_pad.fired){
-
         effect_pad.fired = true
-        // filterUtil.glitch()
         filterUtil.fade_in_black()
       } else {
         filterUtil.fade_out_black()
@@ -63494,66 +63431,43 @@ module.exports.add_floor = () => {
       
     }
 
-    const animation_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    animation_pad.width = 200;
-    animation_pad.height = 100;
-    animation_pad.position.set(-700,-100);
+    const animation_pad = createPad(-700,-100)
     animation_pad.fired = false;
     animation_pad.alpha = 0.6;
     animation_pad.action = () =>{
       
       if(!animation_pad.fired){
-
         animation_pad.fired = true
         sprite_animations.load_flag()
-        
-      } else {
-        
       }
       
     }
 
-    const load_park_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    load_park_pad.width = 200;
-    load_park_pad.height = 100;
-    load_park_pad.position.set(-950,-100);
+    const load_park_pad = createPad(-950,-100)
     load_park_pad.fired = false;
     load_park_pad.alpha = 0.4;
     load_park_pad.action = () =>{
       
       if(!load_park_pad.fired){
-
         load_park_pad.fired = true
         level_utils.importParkData()
-        
       }
       
     }
 
-    const network_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    network_pad.width = 200;
-    network_pad.height = 100;
-    network_pad.position.set(-450,-100);
+    const network_pad = createPad(-450,-100)
     network_pad.fired = false;
     network_pad.alpha = 0.8;
     network_pad.action = () =>{
       
       if(!network_pad.fired){
-
         network_pad.fired = true
-
         network_players.load_network_sprite()
-
-      } else {
-        
       }
       
     }
 
-    const enemy_pathing = PIXI.Sprite.fromImage('images/black_dot.png')
-    enemy_pathing.width = 200;
-    enemy_pathing.height = 100;
-    enemy_pathing.position.set(-200,-200);
+    const enemy_pathing =createPad(-200,-200)
     enemy_pathing.fired = false;
     enemy_pathing.alpha = 0.8;
     enemy_pathing.action = () =>{
@@ -63566,16 +63480,12 @@ module.exports.add_floor = () => {
           const level_path_data = level_utils.importEnemyPathData();
           enemy.enemy_path(level_path_data)
         })
-        
 
       }
       
     }
 
-    const clear_pad = PIXI.Sprite.fromImage('images/black_dot.png')
-    clear_pad.width = 200;
-    clear_pad.height = 100;
-    clear_pad.position.set(-200,50);
+    const clear_pad = createPad(-200,50)
     clear_pad.fired = false;
     clear_pad.alpha = 0.8;
     clear_pad.action = () =>{
@@ -63619,8 +63529,6 @@ module.exports.add_floor = () => {
     global.collisionItems.zIndex = 1;
     global.collisionItems.addChild(slanted_wall,collision_wall);
 
-    
-
     global.viewport.updateLayersOrder();
     player.add_player();
     items.add_items();
@@ -63629,7 +63537,7 @@ module.exports.add_floor = () => {
 
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":303,"../../cutscene/cutscene_intro.js":305,"../../dialog/dialogUtil.js":306,"../../enemies/enemy.js":307,"../../network/network_players.js":316,"../../player/player.js":317,"../../triggers/triggers.js":318,"../../utils/doorHelper.js":320,"../../visual_effects/filterUtils.js":322,"../../visual_effects/sprite_animations.js":323,"../../weather/rain.js":325,"../bedroom/level_layout.js":312,"../level_utils.js":315,"./debug_items.js":313,"jQuery":87}],315:[function(require,module,exports){
+},{"../../animals/rat.js":303,"../../cutscene/cutscene_intro.js":305,"../../dialog/dialogUtil.js":306,"../../enemies/enemy.js":307,"../../network/network_players.js":316,"../../player/player.js":317,"../../triggers/triggers.js":318,"../../utils/doorHelper.js":320,"../../visual_effects/filterUtils.js":322,"../../visual_effects/sprite_animations.js":323,"../../weather/rain.js":325,"../bedroom/level_layout.js":312,"../level_utils.js":315,"./debug_items.js":313}],315:[function(require,module,exports){
 (function (global){
 const bedroom_data = require('./bedroom/bedroom_data_3.json')
 
@@ -63643,8 +63551,19 @@ module.exports.clearCollision = () =>{
   for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
 }
 
-module.exports.importBedroomData = () => {
+const addToSegments = item => {
 
+  global.collisionItems.push(
+    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+  )
+
+}
+
+module.exports.importBedroomData = () => {
+  
   console.log(bedroom_data)
 
   const flat_background = PIXI.Sprite.fromImage('../../images/flat_floor.jpg');
