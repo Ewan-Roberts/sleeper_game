@@ -1,6 +1,6 @@
 'use strict';
 
-const bedroom_data = require('./bedroom/bedroom_data_3.json')
+const bedroom_data = require('./bedroom/bedroom_data_4.json')
 const park_data = require('./park/park_3.json')
 
 module.exports.clearViewport = () =>{

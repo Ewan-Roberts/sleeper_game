@@ -1,11 +1,9 @@
 'use strict';
 
 const player = require("../../player/player.js"),
-triggers = require("../../triggers/triggers.js"),
 enemy = require("../../enemies/enemy.js"),
 items = require("./debug_items.js"),
 doorHelper = require("../../utils/doorHelper.js"),
-level_loader = require("../bedroom/level_layout.js"),
 level_utils = require("../level_utils.js"),
 filterUtil = require("../../visual_effects/filterUtils.js"),
 dialogUtil = require("../../dialog/dialogUtil.js"),
