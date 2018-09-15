@@ -1,8 +1,7 @@
 const spriteHelper = require('../utils/spriteHelper.js'),
-  bowHelper = require('../weapons/bow/bowHelper')
-  level_utils = require('../level/level_utils')
-  bedroom_data = require('../level/bedroom/bedroom_data_4.json')
-
+      bowHelper = require('../weapons/bow/bowHelper'),
+      level_utils = require('../level/level_utils'),
+      dialogUtil = require('../dialog/dialogUtil.js')
 
 global.enemyContainer = new PIXI.Container();
 global.enemyContainer.name = "enemyContainer"
@@ -11,14 +10,12 @@ const Enemy = {
 
   animation: {
     moving:     [],
-    waiting:    [],
-    eating:     []
+    waiting:    []
   },
 
   sprite: {
     moving:     {},
-    waiting:    {},
-    eating:     {}
+    waiting:    {}
   },
 
   noise: new Audio('audio/rat_noise_edited.wav')
@@ -55,7 +52,7 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
 .then(image_load_confirmation=>{
 
   for (let i = 0; i < 19; i++) {
-    Enemy.animation.waiting.push(PIXI.Texture.fromFrame('images/Top_Down_Survivor/knife/move/survivor-move_knife_' + i + '.png'));
+    Enemy.animation.moving.push(PIXI.Texture.fromFrame('images/Top_Down_Survivor/knife/move/survivor-move_knife_' + i + '.png'));
   }
 
 })
@@ -63,37 +60,54 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
 module.exports.enemy_path = path_data => {
 
   const path = level_utils.createEnemyPathFrom(path_data)
-
   spriteHelper.drawPathAndShow(path)
 
-  const enemy_sprite = new PIXI.extras.AnimatedSprite(Enemy.animation.waiting);
+  const enemy_sprite = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
   enemy_sprite.height /= 3
   enemy_sprite.width /= 3
   enemy_sprite.anchor.set(0.5);
   enemy_sprite.animationSpeed = 0.4;
-  
+  enemy_sprite.rotation = -0.5
   enemy_sprite.play();
 
   const influence_box = PIXI.Sprite.fromImage('images/black_dot.png')
   influence_box.width = 500;
   influence_box.height = 500;
-  influence_box.anchor.set(0)
+  influence_box.rotation = -0.5
   influence_box.alpha = 0.3;
 
   const influence_box_tween = PIXI.tweenManager.createTween(influence_box);
-  influence_box_tween.loop = true;
+  influence_box_tween.rotation = -0.5
   influence_box_tween.path = path;
-  influence_box_tween.time = 30000;
+  influence_box_tween.time = 10000;
   influence_box_tween.easing = PIXI.tween.Easing.inOutQuad();
   influence_box_tween.start();
+  influence_box_tween.pingPong = true
+  
+  //Tween animation
+  const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
+  animated_enemy_tween.path = path;
+  animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2)
+  animated_enemy_tween.time = 10000;
+  animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
+  animated_enemy_tween.start()
+  animated_enemy_tween.pingPong = true
+  
+  animated_enemy_tween.on("end", function() {
+      
+    console.log('ending')
+
+  })
 
   influence_box_tween.on("update", function() {
-      
+    
+    animated_enemy_tween.target.rotation = animated_enemy_tween.rotation+ spriteHelper.angle(enemy_sprite, path._tmpPoint2)
+    influence_box_tween.target.rotation = influence_box_tween.rotation+ spriteHelper.angle(enemy_sprite, path._tmpPoint2)
     spriteHelper.hitBoxSpriteObj(influence_box, global.Player.sprite)
     .then(res => {
       console.log("enemy sees you")
-      console.log(res)
-      
+      // console.log(res)
+      dialogUtil.renderText(enemy_sprite, dialogUtil.enemySurprised())
       animated_enemy_tween.stop()
       enemy_sprite.stop()
       enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite)
@@ -102,21 +116,7 @@ module.exports.enemy_path = path_data => {
 
   })
 
-  //Tween animation
-  const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
-  
-  animated_enemy_tween.loop = true;
-  animated_enemy_tween.path = path;
-  animated_enemy_tween.target.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2)
-  animated_enemy_tween.time = 30000;
-  animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_enemy_tween.start()
-  
-  animated_enemy_tween.on("end", function() {
-      
-    console.log('ending')
 
-  })
   
   global.enemyContainer.addChild(enemy_sprite,influence_box)
   global.viewport.addChild(global.enemyContainer)
@@ -137,7 +137,7 @@ module.exports.move = (start,finish) => {
   .drawPath(path_one)
   global.viewport.addChild(path_one_visual_guide)
 
-  const animated_enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.waiting);
+  const animated_enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
   // animated_rat.x = 900;
   // animated_rat.y = 1000;
   
@@ -178,7 +178,7 @@ module.exports.move = (start,finish) => {
 
 module.exports.projectileAttack = (target) => {
 
-  const enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.waiting);
+  const enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
   
   bowHelper.arrowManagement(500, enemy, target)
   
