@@ -6,35 +6,9 @@ function distanceSquared(x1, y1, x2, y2)
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 }
 
-
-/**
- * box-box collision
- * @param {number} x1 top-left corner of first box
- * @param {number} y1 top-left corner of first box
- * @param {number} w1 width of first box
- * @param {number} h1 height of first box
- * @param {number} x2 top-left corner of second box
- * @param {number} y2 top-left corner of second box
- * @param {number} w2 width of second box
- * @param {number} h2 height of second box
- */
 module.exports.boxBox = (x1, y1, w1, h1, x2, y2, w2, h2) =>{
     return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
 }
-
-/**
- * line-point collision
- * from https://stackoverflow.com/a/17693146/1955997
- * @param {number} x1 first point in line
- * @param {number} y1 first point in line
- * @param {number} x2 second point in line
- * @param {number} y2 second point in line
- * @param {number} xp point
- * @param {number} yp point
- * @param {number} [tolerance=1]
- * @return {boolean}
- **/
-
 
 
  function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
@@ -103,8 +77,7 @@ module.exports.hitBox = (x, y, points) => {
   for (i = 0, j = length - 2; i < length; i += 2)
   {
       if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i]))
-      {
-          
+      {  
           c = !c
       }
       j = i
@@ -150,90 +123,16 @@ module.exports.hitBox = (x, y, points) => {
   return false
 }
 
-
-module.exports.hitBoxContainer = (container, player) => {
-
-  return new Promise((resolve,reject)=>{
-    
-    let hit = false
-
-    for (let a = 0; a < container.length; a++) {
-
-      if (this.hitBox(player.x, player.y, this.trimVertexData(container[a]))) {
-
-        hit = true
-        
-      }
-
-    }
-
-    resolve(hit)
-
-  })
-
-}
-
-module.exports.hitStepForward = (container, player, key) => {
-
-  return new Promise((resolve,reject)=>{
-
-      if(key === "up")    player.y-40
-      if(key === "down")  player.y+40
-      if(key === "left")  player.x-20
-      if(key === "right") player.x+20
-
-    for (let a = 0; a < container.length; a++) {
-
-      const vertexData = this.trimVertexData(container[a])
-
-      if (this.hitBox(player.x, player.y, vertexData)) {
-        resolve(true)
-      } else{
-        resolve(false)
-      }
-    }
-
-  })
-
-}
-
-module.exports.hitBoxContainerChildernObj = (container, player) => {
-
-  return new Promise((resolve,reject)=>{
-
-    for (let a = 0; a < container.length; a++) {
-      console.log("container[a]")
-      console.log(container[a])
-      container[a].children.forEach(child => {
-
-        
-      
-        if (this.hitBox(player.x, player.y, this.trimVertexData(child))) {
-          resolve(child)
-        }
-
-      })
-
-
-    }
-
-  })
-
-}
-
 module.exports.hitBoxContainerObj = (container, player) => {
 
   return new Promise((resolve,reject)=>{
 
     for (let a = 0; a < container.length; a++) {
-
       const vertexData = this.trimVertexData(container[a])
-      
       if (this.hitBox(player.x, player.y, vertexData)) {
         resolve(container[a])
       }
     }
-
   })
 
 }
@@ -248,25 +147,6 @@ module.exports.hitBoxSpriteObj = (sprite, player) => {
         resolve(sprite)
       }
     
-  })
-
-}
-
-module.exports.hitBoxContainerObjAndBool = (container, player) => {
-
-  return new Promise((resolve,reject)=>{
-
-    for (let a = 0; a < container.length; a++) {
-
-      const vertexData = module.exports.trimVertexData(container[a])
-      
-      if (module.exports.hitBox(player.x, player.y, vertexData)) {
-        resolve(container[a])
-      } else {
-        resolve(false)
-      }
-    }
-
   })
 
 }

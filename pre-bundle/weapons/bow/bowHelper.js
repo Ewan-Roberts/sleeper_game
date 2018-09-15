@@ -1,13 +1,8 @@
+'use strict';
 
-const spriteHelper = require("../../utils/spriteHelper.js"),
-      PIXI        = require("pixi.js"),
-      Intersects  = require('intersects'),
-      b           = new Bump(PIXI);
-
-
-const firedArrowGuide = new PIXI.Graphics();
-const arrowContainer = new PIXI.Container();
-      arrowContainer.name = "arrow container";
+const spriteHelper = require("../../utils/spriteHelper.js");
+global.arrowContainer = new PIXI.Container();
+global.arrowContainer.name = "arrow cont"
 
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
@@ -20,32 +15,14 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_07.wav')
 ];
 
-let arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png');
-
-module.exports.pickUpArrow = (Player) => {
-
-  if(arrowContainer.children === 0) return
-
-  b.hit(Player.sprite, arrowContainer.children,false,false,true,(collisionSprite, arrow)=>{
-
-    if(arrow.pickup) {
-      Player.ammo++;
-      arrow.destroy();
-    }
-
-  })
-
-}
-
+// TODO arrow not rendering on first shot and pick up not working
 module.exports.arrowManagement = (power, origin, target) => {
-
-  const arrow_hit_register = spriteHelper.drawPolygon([0, 300, 805, 300, 805, 336, 0, 336]);
 
   const path_one = new PIXI.tween.TweenPath()
   .moveTo(origin.position.x, origin.position.y)
   .lineTo(target.x, target.y);
 
-  firedArrowGuide.clear().lineStyle(3, 0xffffff,0.5).drawPath(path_one)
+  // spriteHelper.drawPathAndShow(path_one)
 
   const arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
         arrow.width /=2
@@ -58,69 +35,44 @@ module.exports.arrowManagement = (power, origin, target) => {
         arrowTween.time = power;
         arrowTween.easing = PIXI.tween.Easing.linear();
         arrowTween.start()
-        arrowTween.on("end", function() {
-          arrow.pickup = true;
-        })
+        arrowTween.on("end", () => arrow.pickup = true)
 
   arrowTween.on("update", function() {
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
     .then(res => {
-        
-      if(res){
 
-        console.log("hitting")
-        arrow_hit_register.tint = 0xf00000
-        arrow.pickup = true;
-        arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
-        
-        setTimeout(()=>arrowTween.stop(),15)
-      } else {
-        arrow_hit_register.tint = 0x00ff00
-      }
+      arrow.pickup = true;
+      arrowSounds[Math.floor((Math.random() * 7) + 1)].play();  
+      setTimeout(()=>arrowTween.stop(),15)
+      
     })
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
     .then(critter => {
-      
-      if(critter){
 
-        arrow_hit_register.tint = 0xf00000
-        arrow.pickup = true;
-        arrowTween.stop()
-        
-        critter.texture = critter.dead;
-        critter.stop()
-        critter.mouseDeathSound.play()
-        PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-
-      } else {
-        arrow_hit_register.tint = 0x00ff00
-      }
+      arrow.pickup = true;
+      arrowTween.stop()  
+      critter.texture = critter.dead;
+      critter.stop()
+      critter.mouseDeathSound.play()
+      PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
     
     })
 
     spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
     .then(enemy => {
-      console.log(enemy)
-      if(enemy){
 
-        arrow_hit_register.tint = 0xf00000
-        arrow.pickup = true;
-        arrowTween.stop()
-        
-        enemy.stop()
-        PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
+      arrow.pickup = true;
+      arrowTween.stop()
+      enemy.stop()
+      PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
 
-      } else {
-        arrow_hit_register.tint = 0x00ff00
-      }
     })
 
   })
 
-  // Player.ammo--
-  arrowContainer.addChild(arrow)
-  global.viewport.addChild(firedArrowGuide, arrowContainer)
+  global.arrowContainer.addChild(arrow)
+  global.viewport.addChild(global.arrowContainer)
 
 }

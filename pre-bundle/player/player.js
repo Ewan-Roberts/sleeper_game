@@ -157,7 +157,7 @@ function add_player_controls() {
     }
 
 
-    global.socket.emit('keystroke', network_info)
+    // global.socket.emit('keystroke', network_info)
 
     if(key === "up"){
       global.Player.sprite.y -= global.Player.movement_speed; 
@@ -184,6 +184,16 @@ function add_player_controls() {
     }
 
     doorHelper.hit(global.Player.sprite, global.doors.children[0])
+
+    spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
+    .then(arrow => {
+      console.log(arrow)
+      console.log("arrow")
+      if(arrow.pickup) {
+        global.Player.ammo++;
+        arrow.destroy();
+      }
+    })
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
     .then(hit => {
@@ -251,7 +261,6 @@ function add_player_controls() {
 
     })
 
-    bowHelper.pickUpArrow(global.Player);
 
     global.Player.network_data.x = global.Player.sprite.x
     global.Player.network_data.y = global.Player.sprite.y

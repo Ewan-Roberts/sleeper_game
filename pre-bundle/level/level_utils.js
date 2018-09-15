@@ -1,14 +1,16 @@
+'use strict';
+
 const bedroom_data = require('./bedroom/bedroom_data_3.json')
 const park_data = require('./park/park_3.json')
 
 module.exports.clearViewport = () =>{
 
-  for (var i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
+  for (let i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
 }
 
 module.exports.clearCollision = () =>{
 
-  for (var i = global.collisionItems.children.length - 1; i >= 0; i--) {  global.collisionItems.removeChild(global.collisionItems.children[i]);};
+  for (let i = global.collisionItems.children.length - 1; i >= 0; i--) {global.collisionItems.removeChild(global.collisionItems.children[i])}
 }
 
 const addToSegments = item => {
@@ -64,8 +66,7 @@ module.exports.importEnemyPathData = () =>{
 
 module.exports.createEnemyPathFrom = level_data => {
 
-  // console.log(level_data)
-  var path = new PIXI.tween.TweenPath();
+  const path = new PIXI.tween.TweenPath();
   path.moveTo(level_data[0].x,level_data[0].y)
 
   for (let i = 1; i < level_data.length; i++) {
@@ -108,9 +109,6 @@ module.exports.renderWall = wallArray => {
   })
 
 }
-
-
-
 
 module.exports.hitAreas = wallArray => {
 

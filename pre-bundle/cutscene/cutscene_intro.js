@@ -13,9 +13,9 @@ module.exports.start = () => new Promise((resolve,reject)=>{
   PIXI.loader
   .add('intro_scene','images/cutscenes/bedroom_floor_cutscene.png')
   .load((loader, res)=>{
+    
     player.remove_controls()
     cutsceneUtil.clearScene()
-
     cutsceneUtil.teleport(scene.x, scene.y)
 
     let intro_floor = new PIXI.Sprite(res.intro_scene.texture);
@@ -27,14 +27,9 @@ module.exports.start = () => new Promise((resolve,reject)=>{
     global.viewport.addChild(intro_floor);
     
     filterUtil.godray(intro_floor.x+100,(scene.y - intro_floor.height-50))
+    .then(()=>cutsceneUtil.createPlayer())
     .then(()=>{
 
-      return cutsceneUtil.createPlayer()
-
-
-    })
-    .then(()=>{
-      console.log('here')
       global.Player.moveable = false;
       cutsceneUtil.movePlayer({x: scene.x+200, y:scene.y-200},{x: scene.x+200, y:scene.y+500})
 

@@ -17,7 +17,6 @@ module.exports.load_network_sprite = () => {
 
   global.socket.on('server_sprite' , server_sprite =>{
 
-    console.log(server_sprite);
     bunny.x = server_sprite.x;
     bunny.y = server_sprite.y;
     

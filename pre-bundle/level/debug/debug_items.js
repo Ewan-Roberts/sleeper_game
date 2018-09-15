@@ -39,15 +39,6 @@ module.exports.add_items = () => {
 
 		});
 		
-		// triggers.createTriggerPad(0, 0, 250, 250, {x: 200, y:200})
-        // .then(trigger => {
-        //     console.log("trigger")
-        //     console.log(trigger)
-            
-        //     global.collisionItems.addChild(trigger)
-            
-		// })
-		
 		global.movableItems.addChild(movable_box)
 		global.collisionItems.addChild(box_full)
 		

@@ -7,19 +7,19 @@ const mouseDeathSound = new Audio('audio/mouse_death_00.wav');
 
 const Rat = {
 
-    animation: {
-        moving:     [],
-        waiting:    [],
-        eating:     []
-    },
+  animation: {
+    moving:     [],
+    waiting:    [],
+    eating:     []
+  },
 
-    sprite: {
-        moving:     {},
-        waiting:    {},
-        eating:     {}
-    },
+  sprite: {
+    moving:     {},
+    waiting:    {},
+    eating:     {}
+  },
 
-    noise: new Audio('audio/rat_noise_edited.wav')
+  noise: new Audio('audio/rat_noise_edited.wav')
 
 }
 
@@ -84,16 +84,12 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
     .then(image_load_confirmation=>{
 
         for (let i = 1; i < 15; i++) {
-            // magically works since the spritesheet was loaded with the pixi loader
             let val = i < 10 ? '0' + i : i;
-
             Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_' + val + '.png'));
         }
 
         for (let i = 15; i > 0; i--) {
-            // magically works since the spritesheet was loaded with the pixi loader
             let val = i < 10 ? '0' + i : i;
-
             Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_' + val + '.png'));
         }
 
@@ -138,100 +134,76 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
 
 module.exports.mouseMove = (start,finish) => {
     
+  // Rat.noise.volume = 0.5
+  // Rat.noise.play();
 
-        // Rat.noise.volume = 0.5
-        // Rat.noise.play();
+  //Create a custom path the graphic will follow
+  const path_one = new PIXI.tween.TweenPath()
+  .moveTo(start.x, start.y)
+  .lineTo(finish.x, finish.y)
 
-        //Create a custom path the graphic will follow
-        const path_one = new PIXI.tween.TweenPath()
-        .moveTo(start.x, start.y)
-        .lineTo(finish.x, finish.y)
+  spriteHelper.drawPathAndShow(path_one)
 
-        
-        //FOR TESTING
-        //Create a custom path the graphic will follow
-        const path_one_visual_guide = new PIXI.Graphics()
-        .lineStyle(1, 0xffffff, 1)
-        .drawPath(path_one)
-        global.viewport.addChild(path_one_visual_guide)
+  const animated_rat = new PIXI.extras.AnimatedSprite(Rat.animation.moving);
+  animated_rat.height = animated_rat.height/2
+  animated_rat.width = animated_rat.width/2
+  animated_rat.animationSpeed = 0.4;
+  animated_rat.play();
+  animated_rat.mouseDeathSound = mouseDeathSound;
+  animated_rat.dead = PIXI.Texture.fromFrame('images/rat_35.png')
 
-        const animated_rat = new PIXI.extras.AnimatedSprite(Rat.animation.moving);
-        // animated_rat.x = 900;
-        // animated_rat.y = 1000;
-        
-        animated_rat.height = animated_rat.height/2
-        animated_rat.width = animated_rat.width/2
-        // animated_rat.anchor.set(0.5);
-        animated_rat.animationSpeed = 0.4;
-        animated_rat.play();
-        
-        animated_rat.mouseDeathSound = mouseDeathSound;
-        animated_rat.dead = PIXI.Texture.fromFrame('images/rat_35.png')
-        // global.viewport.addChild(animated_rat)
+  const animated_rat_tween = PIXI.tweenManager.createTween(animated_rat);
+  animated_rat_tween.name = "tween"
+  animated_rat_tween.path = path_one;
+  animated_rat_tween.target.rotation = spriteHelper.angle(animated_rat, path_one._tmpPoint2)
+  animated_rat_tween.time = 3000;
+  animated_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
+  animated_rat_tween.name = "tween path"
+  animated_rat_tween.start()
+          
+  global.critterContainer.addChild(animated_rat)
+  global.viewport.addChild(global.critterContainer)
 
-        //Tween animation
-        const animated_rat_tween = PIXI.tweenManager.createTween(animated_rat);
-        animated_rat_tween.name = "tween"
-        animated_rat_tween.path = path_one;
-        animated_rat_tween.target.rotation = spriteHelper.angle(animated_rat, path_one._tmpPoint2)
-        animated_rat_tween.time = 3000;
-        animated_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
-        animated_rat_tween.name = "tween path"
-        animated_rat_tween.start()
-        
-        animated_rat_tween.on("end", function() {
-            
-            // animated_rat.alpha = 0;
-            // path_one_visual_guide.destroy()
-            // resolve()
-
-        })
-        
-        global.critterContainer.addChild(animated_rat)
-        global.viewport.addChild(global.critterContainer)
-
-        Rat.sprite.moving = animated_rat;
-
-        
+  Rat.sprite.moving = animated_rat;
 
 }
 
 module.exports.mousePause = () => {
 
-        return new Promise ((resolve,reject)=>{
+  return new Promise ((resolve,reject)=>{
 
-            const path_waiting = new PIXI.tween.TweenPath()
-            .moveTo(90,720)
-            .lineTo(90, 721)
+    const path_waiting = new PIXI.tween.TweenPath()
+    .moveTo(90,720)
+    .lineTo(90, 721)
 
-            const waiting_rat = new PIXI.extras.AnimatedSprite(Rat.animation.waiting);
-            waiting_rat.alpha = 0;
-            waiting_rat.rotation = 2.1
-            waiting_rat.anchor.set(0.5);
-            waiting_rat.height = waiting_rat.height/2
-            waiting_rat.width = waiting_rat.width/2
-            waiting_rat.animationSpeed = 0.1;
-            waiting_rat.play();
-            viewport.addChild(waiting_rat)
+    const waiting_rat = new PIXI.extras.AnimatedSprite(Rat.animation.waiting);
+    waiting_rat.alpha = 0;
+    waiting_rat.rotation = 2.1
+    waiting_rat.anchor.set(0.5);
+    waiting_rat.height = waiting_rat.height/2
+    waiting_rat.width = waiting_rat.width/2
+    waiting_rat.animationSpeed = 0.1;
+    waiting_rat.play();
+    viewport.addChild(waiting_rat)
 
-            const waiting_rat_tween = PIXI.tweenManager.createTween(waiting_rat);
-            waiting_rat_tween.path = path_waiting;
-            waiting_rat_tween.time = 1000
-            waiting_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
-            waiting_rat_tween.start()
-            
-            waiting_rat_tween.on("start", ()=> waiting_rat.alpha = 1)
+    const waiting_rat_tween = PIXI.tweenManager.createTween(waiting_rat);
+    waiting_rat_tween.path = path_waiting;
+    waiting_rat_tween.time = 1000
+    waiting_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
+    waiting_rat_tween.start()
+    
+    waiting_rat_tween.on("start", ()=> waiting_rat.alpha = 1)
 
-            waiting_rat_tween.on("end", ()=>{
-                
-                waiting_rat.destroy()
-                Rat.sprite.moving.alpha = 1;
-                resolve()
+    waiting_rat_tween.on("end", ()=>{
+        
+        waiting_rat.destroy()
+        Rat.sprite.moving.alpha = 1;
+        resolve()
 
-            })
+    })
 
-            Rat.sprite.waiting = waiting_rat
+    Rat.sprite.waiting = waiting_rat
 
-        })
+  })
 
-    }
+}

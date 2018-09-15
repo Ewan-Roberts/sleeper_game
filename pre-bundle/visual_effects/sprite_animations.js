@@ -1,5 +1,6 @@
-const Flag = [];
+'use strict';
 
+const Flag = [];
 
 module.exports.load_flag = () => new Promise((resolve,reject)=>{
 
@@ -7,7 +8,6 @@ module.exports.load_flag = () => new Promise((resolve,reject)=>{
   .add('images/flag/flag_1.png')
   .add('images/flag/flag_2.png')
   .add('images/flag/flag_3.png')
-  // .on("progress", loader=>{})
   .load(()=>resolve('flag loaded'))
 
 })
@@ -24,6 +24,5 @@ module.exports.load_flag = () => new Promise((resolve,reject)=>{
   animated_flag.animationSpeed = 0.4;
   animated_flag.play()
   global.viewport.addChild(animated_flag);
-  
 
 })
