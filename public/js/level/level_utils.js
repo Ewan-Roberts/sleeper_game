@@ -42,6 +42,26 @@ module.exports.renderWall = wallArray => {
 
 }
 
+module.exports.importEnemyPathData = () =>{
+
+  const pathData = bedroom_data.tiles[4].objectgroup.objects[0].polyline
+  return pathData;
+
+}
+
+module.exports.createEnemyPathFrom = level_data => {
+
+  // console.log(level_data)
+  var path = new PIXI.tween.TweenPath();
+  path.moveTo(level_data[0].x,level_data[0].y)
+
+  for (let i = 1; i < level_data.length; i++) {
+    path.lineTo(level_data[i].x, level_data[i].y)
+  }
+
+  return path;
+}
+
 module.exports.importParkData = () => {
 
   const park_background = PIXI.Sprite.fromImage('../../images/level/park/park_background_2.jpg');

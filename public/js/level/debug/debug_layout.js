@@ -98,6 +98,7 @@ module.exports.add_floor = () => {
       if(!enemy_pad.fired){
 
         enemy_pad.fired = true
+        
         enemy.enemy_frames()
         .then(()=>{
           // enemy.enemyMove({x:300,y:600},{x:-300,y:700})
@@ -236,6 +237,28 @@ module.exports.add_floor = () => {
       
     }
 
+    const enemy_pathing = PIXI.Sprite.fromImage('images/black_dot.png')
+    enemy_pathing.width = 200;
+    enemy_pathing.height = 100;
+    enemy_pathing.position.set(-200,-200);
+    enemy_pathing.fired = false;
+    enemy_pathing.alpha = 0.8;
+    enemy_pathing.action = () =>{
+      
+      if(!enemy_pathing.fired){
+
+        enemy_pathing.fired = true
+        enemy.enemy_frames()
+        .then(()=>{
+          const level_path_data = level_utils.importEnemyPathData();
+          enemy.enemy_path(level_path_data)
+        })
+        
+
+      }
+      
+    }
+
     const clear_pad = PIXI.Sprite.fromImage('images/black_dot.png')
     clear_pad.width = 200;
     clear_pad.height = 100;
@@ -252,7 +275,6 @@ module.exports.add_floor = () => {
       } else {
         filterUtil.clear();
       }
-
     }
 
     global.eventTriggers.addChild(
@@ -265,7 +287,8 @@ module.exports.add_floor = () => {
       dialog_pad,
       network_pad,
       animation_pad,
-      load_park_pad
+      load_park_pad,
+      enemy_pathing
     )
 
     global.doors.addChild(door);

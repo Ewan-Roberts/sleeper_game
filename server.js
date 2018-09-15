@@ -87,7 +87,7 @@ server.listen(port, () => console.log("server is listening on port: " + port));
 
 io = require("socket.io")(server, {});
 
-io.sockets.on("connection", socket => {
+io.on("connection", socket => {
 
     console.log('Client connected.'); 
 
@@ -166,43 +166,50 @@ io.sockets.on("connection", socket => {
     })
 
 
-    socket.on('post_player_data', player_data => {
+    // socket.on('post_player_data', player_data => {
 
-      console.log(player_data)
+    //   console.log(player_data)
+    //   console.log("player_data")
 
-    })
+    // })
 
     const Player = {
       x: 0,
       y: 0,
       rotation: 0,
-      movement_speed: 20
+      movement_speed: 20,
+      id: ""
     }
 
+    let liveKeys = [];
 
-    socket.on('keystroke', key => {
+    socket.on('keystroke', (player_data) => {
 
-      if(key === "up"){
+      console.log(player_data)
+
+      if(player_data.key === "up"){
         Player.y -= Player.movement_speed; 
         Player.rotation = -2
       }
   
-      if(key === "down"){
+      if(player_data.key === "down"){
         Player.y += Player.movement_speed; 
         Player.rotation = 2
       }
   
-      if(key === "left"){
+      if(player_data.key === "left"){
         Player.x -= Player.movement_speed; 
         Player.rotation = -3
       }
   
-      if(key === "right"){
+      if(player_data.key === "right"){
         Player.x += Player.movement_speed; 
         Player.rotation = 0
       }
+      console.log('emit')
+      io.emit('player_move', Player)   
 
-      socket.emit('player_move', Player)
+
     })
 
     
@@ -222,28 +229,28 @@ io.sockets.on("connection", socket => {
 
     // })
 
-    //ticker
-    setInterval(()=>{
+    // //ticker
+    // setInterval(()=>{
 
-        // utils.meters.start("5b43c9bdd9101585e767881d")
+    //     // utils.meters.start("5b43c9bdd9101585e767881d")
 
-        // User.findById("5b43c9bdd9101585e767881d", function (err, foundUser) {
-        //     if (err) throw err
+    //     // User.findById("5b43c9bdd9101585e767881d", function (err, foundUser) {
+    //     //     if (err) throw err
 
-        //     console.log(foundUser.meters.water)
-        //     foundUser.meters.water -= 0.25;
-        //     foundUser.meters.food -= 0.15;
-        //     foundUser.meters.sleep -= 0.1;
+    //     //     console.log(foundUser.meters.water)
+    //     //     foundUser.meters.water -= 0.25;
+    //     //     foundUser.meters.food -= 0.15;
+    //     //     foundUser.meters.sleep -= 0.1;
         
-        //     new User(foundUser).save((err, updatedUser)=> {
-        //         if (err) throw err
-        //         console.log(updatedUser)
-        //     });
+    //     //     new User(foundUser).save((err, updatedUser)=> {
+    //     //         if (err) throw err
+    //     //         console.log(updatedUser)
+    //     //     });
         
-        // });
+    //     // });
 
 
-    },5000)
+    // },5000)
 
 
 })

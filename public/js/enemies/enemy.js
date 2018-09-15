@@ -1,5 +1,7 @@
 const spriteHelper = require('../utils/spriteHelper.js'),
   bowHelper = require('../weapons/bow/bowHelper')
+  level_utils = require('../level/level_utils')
+  bedroom_data = require('../level/bedroom/bedroom_data_4.json')
 
 
 global.enemyContainer = new PIXI.Container();
@@ -57,6 +59,69 @@ module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
   }
 
 })
+
+module.exports.enemy_path = path_data => {
+
+  const path = level_utils.createEnemyPathFrom(path_data)
+
+  spriteHelper.drawPathAndShow(path)
+
+  const enemy_sprite = new PIXI.extras.AnimatedSprite(Enemy.animation.waiting);
+  enemy_sprite.height /= 3
+  enemy_sprite.width /= 3
+  enemy_sprite.anchor.set(0.5);
+  enemy_sprite.animationSpeed = 0.4;
+  
+  enemy_sprite.play();
+
+  const influence_box = PIXI.Sprite.fromImage('images/black_dot.png')
+  influence_box.width = 500;
+  influence_box.height = 500;
+  influence_box.anchor.set(0)
+  influence_box.alpha = 0.3;
+
+  const influence_box_tween = PIXI.tweenManager.createTween(influence_box);
+  influence_box_tween.loop = true;
+  influence_box_tween.path = path;
+  influence_box_tween.time = 30000;
+  influence_box_tween.easing = PIXI.tween.Easing.inOutQuad();
+  influence_box_tween.start();
+
+  influence_box_tween.on("update", function() {
+      
+    spriteHelper.hitBoxSpriteObj(influence_box, global.Player.sprite)
+    .then(res => {
+      console.log("enemy sees you")
+      console.log(res)
+      
+      animated_enemy_tween.stop()
+      enemy_sprite.stop()
+      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite)
+      influence_box_tween.stop()
+    })
+
+  })
+
+  //Tween animation
+  const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
+  
+  animated_enemy_tween.loop = true;
+  animated_enemy_tween.path = path;
+  animated_enemy_tween.target.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2)
+  animated_enemy_tween.time = 30000;
+  animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
+  animated_enemy_tween.start()
+  
+  animated_enemy_tween.on("end", function() {
+      
+    console.log('ending')
+
+  })
+  
+  global.enemyContainer.addChild(enemy_sprite,influence_box)
+  global.viewport.addChild(global.enemyContainer)
+
+}
 
 module.exports.move = (start,finish) => {
 

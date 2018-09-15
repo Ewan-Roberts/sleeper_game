@@ -30,6 +30,7 @@
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "utf-8-validate": "^5.0.1",
+    "uuid": "^3.3.2",
     "yy-intersects": "^1.0.8",
     "yy-renderer": "^2.7.1"
   },

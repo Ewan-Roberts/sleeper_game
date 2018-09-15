@@ -68,6 +68,15 @@ module.exports.drawPolygon = (points, color) => {
     return polygon
 }
 
+module.exports.drawPathAndShow = path => {
+
+  const path_visual_guide = new PIXI.Graphics()
+  .lineStyle(1, 0xffffff, 1)
+  .drawPath(path)
+
+  global.viewport.addChild(path_visual_guide)
+}
+
 module.exports.trimVertexData = sprite => {
 
   const trimmedData= [];
@@ -188,6 +197,30 @@ module.exports.hitStepForward = (container, player, key) => {
 
 }
 
+module.exports.hitBoxContainerChildernObj = (container, player) => {
+
+  return new Promise((resolve,reject)=>{
+
+    for (let a = 0; a < container.length; a++) {
+      console.log("container[a]")
+      console.log(container[a])
+      container[a].children.forEach(child => {
+
+        
+      
+        if (this.hitBox(player.x, player.y, this.trimVertexData(child))) {
+          resolve(child)
+        }
+
+      })
+
+
+    }
+
+  })
+
+}
+
 module.exports.hitBoxContainerObj = (container, player) => {
 
   return new Promise((resolve,reject)=>{
@@ -201,6 +234,20 @@ module.exports.hitBoxContainerObj = (container, player) => {
       }
     }
 
+  })
+
+}
+
+module.exports.hitBoxSpriteObj = (sprite, player) => {
+
+  return new Promise((resolve,reject)=>{
+
+      const vertexData = this.trimVertexData(sprite)
+      
+      if (this.hitBox(player.x, player.y, vertexData)) {
+        resolve(sprite)
+      }
+    
   })
 
 }

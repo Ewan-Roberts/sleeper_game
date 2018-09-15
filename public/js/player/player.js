@@ -5,7 +5,9 @@ const PIXI        = require("pixi.js"),
       spriteHelper = require("../utils/spriteHelper.js"),
       doorHelper = require("../utils/doorHelper.js"),
       bowHelper   = require("../weapons/bow/bowHelper.js"),
-      documentHelper = require("../utils/documentHelper.js");
+      documentHelper = require("../utils/documentHelper.js"),
+      uuidv4 = require('uuid/v4');
+
 
 global.Player = {
 
@@ -37,7 +39,7 @@ global.Player = {
 
 }
 
-
+global.Player.player_id = uuidv4()
 
 
 const aimingLine = new PIXI.Graphics();
@@ -146,43 +148,40 @@ function add_player_controls() {
     let currentDirection = undefined;
 
     let key = documentHelper.getDirection(e.key)
-
+    
     if(!global.Player.moveable) return;
 
-    global.socket.emit('keystroke', key)
+    const network_info = {
+      key: key,
+      player_id: global.Player.player_id
+    }
 
-    global.socket.on('player_move', data => {
 
-      global.Player.sprite.x = data.x
-      global.Player.sprite.y = data.y
-      global.Player.sprite.rotation = data.rotation
+    global.socket.emit('keystroke', network_info)
 
-    })
+    if(key === "up"){
+      global.Player.sprite.y -= global.Player.movement_speed; 
+      global.Player.sprite.rotation = -2
+      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    }
 
-    // if(key === "up"){
-    //   global.Player.sprite.y -= global.Player.movement_speed; 
-    //   global.Player.sprite.rotation = -2
-    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
-    // }
+    if(key === "down"){
+      global.Player.sprite.y += global.Player.movement_speed; 
+      global.Player.sprite.rotation = 2
+      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    }
 
-    // if(key === "down"){
-    //   console.log('here first')
-    //   global.Player.sprite.y += global.Player.movement_speed; 
-    //   global.Player.sprite.rotation = 2
-    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
-    // }
+    if(key === "left"){
+      global.Player.sprite.x -= global.Player.movement_speed; 
+      global.Player.sprite.rotation = -3
+      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    }
 
-    // if(key === "left"){
-    //   global.Player.sprite.x -= global.Player.movement_speed; 
-    //   global.Player.sprite.rotation = -3
-    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
-    // }
-
-    // if(key === "right"){
-    //   global.Player.sprite.x += global.Player.movement_speed;
-    //   global.Player.sprite.rotation = 0
-    //   global.Player.sprite._textures = global.Player.sprite.walk._textures
-    // }
+    if(key === "right"){
+      global.Player.sprite.x += global.Player.movement_speed;
+      global.Player.sprite.rotation = 0
+      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    }
 
     doorHelper.hit(global.Player.sprite, global.doors.children[0])
 
@@ -201,6 +200,17 @@ function add_player_controls() {
     .then(pad => {
       pad.action()
     })
+
+    // spriteHelper.hitBoxContainerObj(global.enemyContainer.children, global.Player.sprite)
+    // .then(enemy => {
+    //   console.log("enemy")
+    //   console.log(enemy)
+    //   // PIXI.tweenManager.getTweensForTarget(enemy).active = false;
+      
+    //   console.log("enemy")
+    //   // console.log(global.enemyContainer)
+      
+    // })
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
     .then(critter => {
@@ -246,7 +256,7 @@ function add_player_controls() {
     global.Player.network_data.x = global.Player.sprite.x
     global.Player.network_data.y = global.Player.sprite.y
 
-    global.socket.emit('post_player_data', global.Player.network_data)
+    // global.socket.emit('post_player_data', global.Player.network_data)
     
   },true);
 
@@ -275,7 +285,7 @@ module.exports.add_player = () => {
     for (var i = 0; i < loader.resources.ready.spritesheet._frameKeys.length; i++) {
       global.Player.animation.ready.push(PIXI.Texture.fromFrame(loader.resources.ready.spritesheet._frameKeys[i]));
     }
-    
+    global.bunny = PIXI.Sprite.fromImage('images/bunny.png')
     global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
     global.Player.sprite.anchor.set(0.5);
     global.Player.sprite.width /= 2
@@ -284,13 +294,23 @@ module.exports.add_player = () => {
     global.Player.sprite.play();
     global.Player.sprite.zIndex = -20;
 
+    // global.socket.on('player_move', data => {
+
+    //   console.log(data)
+
+    //   global.bunny.x = data.x
+    //   global.bunny.y = data.y
+    //   global.bunny.rotation = data.rotation
+
+    // })
+
 
     global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
     global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
     global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
 
     global.viewport.follow(global.Player.sprite)
-    global.viewport.addChild(global.Player.sprite);
+    global.viewport.addChild(global.Player.sprite, global.bunny);
     global.viewport.updateLayersOrder();
 
     add_player_controls()
