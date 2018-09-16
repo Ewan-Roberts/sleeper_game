@@ -53085,6 +53085,8 @@ const PIXI        = require("pixi.js"),
       documentHelper = require("../utils/documentHelper.js"),
       uuidv4 = require('uuid/v4');
 
+const resultOfSpriteSheet = "";
+
 global.Player = {
 
   animation: {
@@ -53307,10 +53309,8 @@ function add_player_controls() {
 module.exports.add_player = () => {
 
   global.loader.load((loader,res)=>{
-    
     const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
-    console.log(res)
-    console.log("resources")
+    
     for (let i = 0; i <= 22; i++) {
 
       let name = "survivor-bow-idle-0" + i;
@@ -53346,20 +53346,13 @@ module.exports.add_player = () => {
     global.Player.sprite.animationSpeed = 0.6;
     global.Player.sprite.play();
     global.Player.sprite.zIndex = -20;
-
     global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
     global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
     global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
     global.Player.sprite._textures = global.Player.sprite.idle._textures;
-    console.log(global.Player.sprite)
-    console.log(global.viewport)
-    console.log("global.Player.sprite")
     
-
     global.viewport.follow(global.Player.sprite)
     global.viewport.addChild(global.Player.sprite);
-    // global.viewport.addChild(global.Player.sprite.idle)
-    // global.viewport.updateLayersOrder();
 
     add_player_controls()
     mouseMove()
