@@ -37,19 +37,12 @@ function countDown() {
 
   global.Player.sprite._textures = global.Player.sprite.ready._textures
 
-  if(global.Player.power > 750) {
-    global.Player.allowShoot = false
-  }
-  else {
-    global.Player.allowShoot = true
-  }
+  if(global.Player.power > 750) global.Player.allowShoot = false;
+  else global.Player.allowShoot = true;
 
-  if(global.Player.power > 400){
-    global.Player.power -= 10;
-  } 
-  if(global.Player.power < 410) {
-    global.Player.sprite.gotoAndStop(34);
-  }
+  if(global.Player.power > 400)global.Player.power -= 10;
+  
+  if(global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
   
 }
 
@@ -70,9 +63,7 @@ function mouseUp () {
       bowHelper.arrowManagement(global.Player.power,global.Player.sprite, mousePosition);
 
     }
-
   })
-
 }
 
 function mouseMove () {
@@ -82,7 +73,6 @@ function mouseMove () {
     if (global.Player.weapon === "bow" && global.Player.ammo > 0) {
 
       const mousePosition = documentHelper.mousePositionFromScreen(event.data.global, global.viewport)
-
       const mousePositionPlayer = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite , global.viewport)
 
       aimingLine.clear()
@@ -93,9 +83,7 @@ function mouseMove () {
       global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePositionPlayer)
 
     }
-
   })
-
 }
 
 function mouseDown () {
@@ -104,7 +92,6 @@ function mouseDown () {
     
     global.Player.power = 900
     global.Player.moveable = false;
-
     global.app.ticker.add(countDown);
     
     if (global.Player.weapon === "bow" && global.Player.ammo > 0) {
@@ -116,12 +103,8 @@ function mouseDown () {
       global.Player.sprite.gotoAndPlay(0);
   
     }
-
   })
-
 }
-
-
 
 function add_player_controls() {
 
@@ -183,16 +166,15 @@ function add_player_controls() {
       
     })
     
-
     spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
-    .then(pad => {
-      pad.action()
-    })
+    .then(pad => pad.action())
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
     .then(critter => {
       global.Player.inventory.push(critter)
+
       PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
+
       critter.destroy();
     })
 
@@ -223,38 +205,36 @@ function add_player_controls() {
   },true);
 
   global.viewport.addChild(aimingLine);
-
 }
 
 module.exports.add_player = () => {
  
   for (let i = 0; i <= 22; i++) {
-
     let name = "survivor-bow-idle-0" + i;
 
     if(i>= 10) name = "survivor-bow-idle-" + i;
+    //TODO: remove from image fiels 
     if(i === 12) continue
 
     global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));
   }
 
   for (let i = 0; i <= 20; i++) {
-
     let name = "survivor-walk_bow_0" + i;
+    
     if(i>= 10) name = "survivor-walk_bow_" + i;
 
     global.Player.animation.walk.push(PIXI.Texture.fromFrame(name));
   }
   
   for (let i = 0; i <= 38; i++) {
-
     let name = "survivor-bow-pull-0" + i;
+
     if(i>= 10) name = "survivor-bow-pull-" + i;
 
     global.Player.animation.ready.push(PIXI.Texture.fromFrame(name));
   }
   
-
   global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.anchor.set(0.5);
   global.Player.sprite.width /= 2
@@ -267,10 +247,6 @@ module.exports.add_player = () => {
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
   global.Player.sprite._textures = global.Player.sprite.idle._textures;
-  console.log(global.Player.sprite)
-  console.log(global.viewport)
-  console.log("global.Player.sprite")
-  
 
   global.viewport.follow(global.Player.sprite)
   global.viewport.addChild(global.Player.sprite);
@@ -282,11 +258,9 @@ module.exports.add_player = () => {
   mouseDown()
   mouseUp()
 
-
 }
 
 module.exports.remove_controls = () =>{
-
   document.removeEventListener("keyup", e=> {});
 
   document.removeEventListener("keydown", e=> {});

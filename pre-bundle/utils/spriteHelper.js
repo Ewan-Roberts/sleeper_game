@@ -1,15 +1,11 @@
-const   PIXI        = require("pixi.js");
+'use strict';
 
+const   PIXI        = require("pixi.js");
 
 function distanceSquared(x1, y1, x2, y2)
 {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 }
-
-module.exports.boxBox = (x1, y1, w1, h1, x2, y2, w2, h2) =>{
-    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-}
-
 
  function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
 {
@@ -30,20 +26,19 @@ function _getCenter(o, dimension, axis) {
 
 module.exports.angle = (sprite, point) =>{
 	return Math.atan2(
-      	(point.y) - (sprite.y + _getCenter(sprite, sprite.height, "y")),
-      	(point.x) - (sprite.x + _getCenter(sprite, sprite.width, "x"))
+    (point.y) - (sprite.y + _getCenter(sprite, sprite.height, "y")),
+    (point.x) - (sprite.x + _getCenter(sprite, sprite.width, "x"))
 	)
 }
 
 module.exports.drawPolygon = (points, color) => {
-    color = typeof color === 'undefined' ? 0xffffff : color
-    const polygon = global.viewport.addChild(new PIXI.Graphics())
-    polygon.beginFill(color).drawPolygon(points).endFill()
-    return polygon
+  color = typeof color === 'undefined' ? 0xffffff : color
+  const polygon = global.viewport.addChild(new PIXI.Graphics())
+  polygon.beginFill(color).drawPolygon(points).endFill()
+  return polygon
 }
 
 module.exports.drawPathAndShow = path => {
-
   const path_visual_guide = new PIXI.Graphics()
   .lineStyle(1, 0xffffff, 1)
   .drawPath(path)
@@ -52,21 +47,16 @@ module.exports.drawPathAndShow = path => {
 }
 
 module.exports.trimVertexData = sprite => {
-
-  const trimmedData= [];
+  const trimmedData = [];
   
   for (let i = 0; i < sprite.vertexData.length; i++) {
 
-    if(i % 2 === 0){
-      trimmedData.push(sprite.vertexData[i]-sprite.vertexData[0]+sprite.x)
-    } else {
-      trimmedData.push(sprite.vertexData[i]-sprite.vertexData[1]+sprite.y)
-    }
+    if(i % 2 === 0) trimmedData.push(sprite.vertexData[i]-sprite.vertexData[0]+sprite.x)
+    else trimmedData.push(sprite.vertexData[i]-sprite.vertexData[1]+sprite.y)
     
   }
 
   return trimmedData;
-
 }
 
 module.exports.hitBox = (x, y, points) => {
@@ -119,7 +109,6 @@ module.exports.hitBox = (x, y, points) => {
           return true
       }
   }
-  
   return false
 }
 

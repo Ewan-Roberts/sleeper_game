@@ -2,11 +2,10 @@ const PIXI = require('pixi.js'),
       io = require('socket.io-client'),
       Viewport = require('pixi-viewport'),
       tween = require('pixi-tween'),
-      Layer = require('pixi-layers');
-
+      Layer = require('pixi-layers'),
       pixiPackerParser = require("pixi-packer-parser");
-global.socket = io.connect();
 
+global.socket = io.connect();
 global.socket.on("thing", res => console.log(res))
 
 // add the viewport to the stage
@@ -43,37 +42,8 @@ global.loader.add("../../images/bedroom_EN_web.json");
 global.loader.load((loader,res) => { 
 
   const debug = require("./level/debug/debug_layout.js");
-  console.log(loader) 
-  console.log(res) 
   debug.add_floor()
 
 });
 
-
-app.ticker.add(delta => {
-
-    PIXI.tweenManager.update();
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.ticker.add(delta => PIXI.tweenManager.update());

@@ -1,12 +1,7 @@
-
-
+'use strict';
 
 module.exports.load_network_sprite = () => {
-
   const bunny = PIXI.Sprite.fromFrame('bunny')
-
-
-  global.viewport.addChild(bunny)
 
   const playerDets = {
     x: global.Player.sprite.x,
@@ -22,6 +17,5 @@ module.exports.load_network_sprite = () => {
     
   })
 
-  
-
+  global.viewport.addChild(bunny)
 }

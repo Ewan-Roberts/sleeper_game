@@ -19,11 +19,12 @@ global.eventTriggers = new PIXI.Container();
 
 function createPad(x,y) {
   const pad = PIXI.Sprite.fromFrame('black_wall');
+  
   pad.width = 200;
   pad.height = 100;
   pad.position.set(x,y);
+
   return pad;
-  
 }
 
 module.exports.add_floor = () => {
@@ -48,8 +49,7 @@ module.exports.add_floor = () => {
     if(!rat_pad.fired){
       rat_pad.fired = true
       rat.load_rat().then(()=>rat.mouseMove({x:100,y:300},{x:0,y:400}))
-    }
-    
+    } 
   }
 
   const enemy_pad = createPad(-950,200)
@@ -61,7 +61,6 @@ module.exports.add_floor = () => {
       enemy_pad.fired = true
       enemy.enemy_frames().then(()=>enemy.projectileAttack(global.Player.sprite))
     }
-    
   }
 
   const level_load_pad = createPad(-450,200)
@@ -73,7 +72,6 @@ module.exports.add_floor = () => {
       level_load_pad.fired = true
       level_utils.importBedroomData()
     }
-    
   }
 
   const glitch_pad = createPad(-700,50)
@@ -84,10 +82,8 @@ module.exports.add_floor = () => {
     if(!glitch_pad.fired){
       glitch_pad.fired = true
       filterUtil.glitch()
-    } else {
-      filterUtil.clear()
-    }
     
+    } else filterUtil.clear();
   }
 
   const dialog_pad = createPad(-450,50)
@@ -98,10 +94,7 @@ module.exports.add_floor = () => {
     if(!dialog_pad.fired){
       dialog_pad.fired = true
       dialogUtil.renderText(global.Player.sprite, 'I am some dialog')
-    } else {
-      rain.start_rain(0,3400,400,850)
-    }
-    
+    } else rain.start_rain(0,3400,400,850);
   }
 
   const effect_pad = createPad(-200,200)
@@ -112,10 +105,7 @@ module.exports.add_floor = () => {
     if(!effect_pad.fired){
       effect_pad.fired = true
       filterUtil.fade_in_black()
-    } else {
-      filterUtil.fade_out_black()
-    }
-    
+    } else filterUtil.fade_out_black();
   }
 
   const animation_pad = createPad(-700,-100)
@@ -127,7 +117,6 @@ module.exports.add_floor = () => {
       animation_pad.fired = true
       sprite_animations.load_flag()
     }
-    
   }
 
   const load_park_pad = createPad(-950,-100)
@@ -146,12 +135,11 @@ module.exports.add_floor = () => {
   network_pad.fired = false;
   network_pad.alpha = 0.8;
   network_pad.action = () =>{
-    
     if(!network_pad.fired){
+
       network_pad.fired = true
       network_players.load_network_sprite()
     }
-    
   }
 
   const enemy_pathing =createPad(-200,-200)
@@ -160,16 +148,14 @@ module.exports.add_floor = () => {
   enemy_pathing.action = () =>{
     
     if(!enemy_pathing.fired){
+      enemy_pathing.fired = true;
 
-      enemy_pathing.fired = true
       enemy.enemy_frames()
       .then(()=>{
         const level_path_data = level_utils.importEnemyPathData();
         enemy.enemy_path(level_path_data)
       })
-
     }
-    
   }
 
   const clear_pad = createPad(-200,50)
@@ -178,13 +164,12 @@ module.exports.add_floor = () => {
   clear_pad.action = () =>{
 
     if(!clear_pad.fired){
-
       clear_pad.fired = true;
+
       cutscene_intro.start()
-      
-    } else {
-      filterUtil.clear();
-    }
+
+    } else filterUtil.clear();
+    
   }
 
   global.eventTriggers.addChild(
@@ -205,22 +190,17 @@ module.exports.add_floor = () => {
 
   global.viewport.updateLayersOrder = function () {
     global.viewport.children.sort(function(a,b) {
-        a.zIndex = a.zIndex || 0;
-        b.zIndex = b.zIndex || 0;
-        return b.zIndex - a.zIndex;
+      a.zIndex = a.zIndex || 0;
+      b.zIndex = b.zIndex || 0;
+      return b.zIndex - a.zIndex;
     });
   };
 
-  
-  
   global.viewport.addChild(global.eventTriggers)
   global.collisionItems.zIndex = 1;
   global.collisionItems.addChild(slanted_wall,collision_wall);
-  
   global.viewport.updateLayersOrder();
+
   player.add_player();
   items.add_items();
-  global.viewport.addChild(global.Player.sprite)
-
-
 }        

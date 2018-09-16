@@ -1,6 +1,7 @@
 'use strict';
 
 const spriteHelper = require("../../utils/spriteHelper.js");
+
 global.arrowContainer = new PIXI.Container();
 global.arrowContainer.name = "arrow cont"
 
@@ -15,7 +16,6 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_07.wav')
 ];
 
-// TODO arrow not rendering on first shot and pick up not working
 module.exports.arrowManagement = (power, origin, target) => {
 
   const path_one = new PIXI.tween.TweenPath()
@@ -41,33 +41,33 @@ module.exports.arrowManagement = (power, origin, target) => {
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
     .then(res => {
-
       arrow.pickup = true;
+
       arrowSounds[Math.floor((Math.random() * 7) + 1)].play();  
-      setTimeout(()=>arrowTween.stop(),15)
       
+      setTimeout(()=>arrowTween.stop(),15)
     })
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
     .then(critter => {
-
       arrow.pickup = true;
+
       arrowTween.stop()  
       critter.texture = critter.dead;
       critter.stop()
       critter.mouseDeathSound.play()
+
       PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-    
     })
 
     spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
     .then(enemy => {
-
       arrow.pickup = true;
+
       arrowTween.stop()
       enemy.stop()
+      
       PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-
     })
 
   })

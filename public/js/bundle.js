@@ -51817,11 +51817,10 @@ const PIXI = require('pixi.js'),
       io = require('socket.io-client'),
       Viewport = require('pixi-viewport'),
       tween = require('pixi-tween'),
-      Layer = require('pixi-layers');
-
+      Layer = require('pixi-layers'),
       pixiPackerParser = require("pixi-packer-parser");
-global.socket = io.connect();
 
+global.socket = io.connect();
 global.socket.on("thing", res => console.log(res))
 
 // add the viewport to the stage
@@ -51858,40 +51857,11 @@ global.loader.add("../../images/bedroom_EN_web.json");
 global.loader.load((loader,res) => { 
 
   const debug = require("./level/debug/debug_layout.js");
-  console.log(loader) 
-  console.log(res) 
   debug.add_floor()
 
 });
 
-
-app.ticker.add(delta => {
-
-    PIXI.tweenManager.update();
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.ticker.add(delta => PIXI.tweenManager.update());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./level/debug/debug_layout.js":311,"pixi-layers":112,"pixi-packer-parser":113,"pixi-tween":114,"pixi-viewport":127,"pixi.js":244,"socket.io-client":286}],309:[function(require,module,exports){
@@ -52458,11 +52428,12 @@ global.eventTriggers = new PIXI.Container();
 
 function createPad(x,y) {
   const pad = PIXI.Sprite.fromFrame('black_wall');
+  
   pad.width = 200;
   pad.height = 100;
   pad.position.set(x,y);
+
   return pad;
-  
 }
 
 module.exports.add_floor = () => {
@@ -52487,8 +52458,7 @@ module.exports.add_floor = () => {
     if(!rat_pad.fired){
       rat_pad.fired = true
       rat.load_rat().then(()=>rat.mouseMove({x:100,y:300},{x:0,y:400}))
-    }
-    
+    } 
   }
 
   const enemy_pad = createPad(-950,200)
@@ -52500,7 +52470,6 @@ module.exports.add_floor = () => {
       enemy_pad.fired = true
       enemy.enemy_frames().then(()=>enemy.projectileAttack(global.Player.sprite))
     }
-    
   }
 
   const level_load_pad = createPad(-450,200)
@@ -52512,7 +52481,6 @@ module.exports.add_floor = () => {
       level_load_pad.fired = true
       level_utils.importBedroomData()
     }
-    
   }
 
   const glitch_pad = createPad(-700,50)
@@ -52523,10 +52491,8 @@ module.exports.add_floor = () => {
     if(!glitch_pad.fired){
       glitch_pad.fired = true
       filterUtil.glitch()
-    } else {
-      filterUtil.clear()
-    }
     
+    } else filterUtil.clear();
   }
 
   const dialog_pad = createPad(-450,50)
@@ -52537,10 +52503,7 @@ module.exports.add_floor = () => {
     if(!dialog_pad.fired){
       dialog_pad.fired = true
       dialogUtil.renderText(global.Player.sprite, 'I am some dialog')
-    } else {
-      rain.start_rain(0,3400,400,850)
-    }
-    
+    } else rain.start_rain(0,3400,400,850);
   }
 
   const effect_pad = createPad(-200,200)
@@ -52551,10 +52514,7 @@ module.exports.add_floor = () => {
     if(!effect_pad.fired){
       effect_pad.fired = true
       filterUtil.fade_in_black()
-    } else {
-      filterUtil.fade_out_black()
-    }
-    
+    } else filterUtil.fade_out_black();
   }
 
   const animation_pad = createPad(-700,-100)
@@ -52566,7 +52526,6 @@ module.exports.add_floor = () => {
       animation_pad.fired = true
       sprite_animations.load_flag()
     }
-    
   }
 
   const load_park_pad = createPad(-950,-100)
@@ -52585,12 +52544,11 @@ module.exports.add_floor = () => {
   network_pad.fired = false;
   network_pad.alpha = 0.8;
   network_pad.action = () =>{
-    
     if(!network_pad.fired){
+
       network_pad.fired = true
       network_players.load_network_sprite()
     }
-    
   }
 
   const enemy_pathing =createPad(-200,-200)
@@ -52599,16 +52557,14 @@ module.exports.add_floor = () => {
   enemy_pathing.action = () =>{
     
     if(!enemy_pathing.fired){
+      enemy_pathing.fired = true;
 
-      enemy_pathing.fired = true
       enemy.enemy_frames()
       .then(()=>{
         const level_path_data = level_utils.importEnemyPathData();
         enemy.enemy_path(level_path_data)
       })
-
     }
-    
   }
 
   const clear_pad = createPad(-200,50)
@@ -52617,13 +52573,12 @@ module.exports.add_floor = () => {
   clear_pad.action = () =>{
 
     if(!clear_pad.fired){
-
       clear_pad.fired = true;
+
       cutscene_intro.start()
-      
-    } else {
-      filterUtil.clear();
-    }
+
+    } else filterUtil.clear();
+    
   }
 
   global.eventTriggers.addChild(
@@ -52644,40 +52599,33 @@ module.exports.add_floor = () => {
 
   global.viewport.updateLayersOrder = function () {
     global.viewport.children.sort(function(a,b) {
-        a.zIndex = a.zIndex || 0;
-        b.zIndex = b.zIndex || 0;
-        return b.zIndex - a.zIndex;
+      a.zIndex = a.zIndex || 0;
+      b.zIndex = b.zIndex || 0;
+      return b.zIndex - a.zIndex;
     });
   };
 
-  
-  
   global.viewport.addChild(global.eventTriggers)
   global.collisionItems.zIndex = 1;
   global.collisionItems.addChild(slanted_wall,collision_wall);
-  
   global.viewport.updateLayersOrder();
+
   player.add_player();
   items.add_items();
-  global.viewport.addChild(global.Player.sprite)
-
-
 }        
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../animals/rat.js":303,"../../cutscene/cutscene_intro.js":305,"../../dialog/dialogUtil.js":306,"../../enemies/enemy.js":307,"../../network/network_players.js":314,"../../player/player.js":315,"../../utils/doorHelper.js":317,"../../visual_effects/filterUtils.js":319,"../../visual_effects/sprite_animations.js":320,"../../weather/rain.js":322,"../level_utils.js":312,"./debug_items.js":310}],312:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const bedroom_data = require('./bedroom/bedroom_data_4.json')
-const park_data = require('./park/park_3.json')
+const bedroom_data = require('./bedroom/bedroom_data_4.json'),
+      park_data = require('./park/park_3.json')
 
 module.exports.clearViewport = () =>{
-
   for (let i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
 }
 
 module.exports.clearCollision = () =>{
-
   for (let i = global.collisionItems.children.length - 1; i >= 0; i--) {global.collisionItems.removeChild(global.collisionItems.children[i])}
 }
 
@@ -52693,8 +52641,6 @@ const addToSegments = item => {
 }
 
 module.exports.importBedroomData = () => {
-  
-  console.log(bedroom_data)
 
   const flat_background = PIXI.Sprite.fromFrame('flat_floor')
   flat_background.interactive = true;
@@ -52722,26 +52668,21 @@ module.exports.renderWall = wallArray => {
           wall.height = wallData.height;
     
     global.collisionItems.addChild(wall)  
-
   })
-
 }
 
 module.exports.importEnemyPathData = () =>{
-
   const pathData = bedroom_data.tiles[4].objectgroup.objects[0].polyline
+  
   return pathData;
-
 }
 
 module.exports.createEnemyPathFrom = level_data => {
-
   const path = new PIXI.tween.TweenPath();
+
   path.moveTo(level_data[0].x,level_data[0].y)
 
-  for (let i = 1; i < level_data.length; i++) {
-    path.lineTo(level_data[i].x, level_data[i].y)
-  }
+  for (let i = 1; i < level_data.length; i++) path.lineTo(level_data[i].x, level_data[i].y)
 
   return path;
 }
@@ -52756,8 +52697,6 @@ module.exports.importParkData = () => {
         // park_background.width = 10000
         // park_background.height = 6000
 
-  console.log(park_data)
-
   for (let i = 0; i < park_data.tiles[1].objectgroup.objects.length; i++) {
     
     this.hitAreas(park_data.tiles[1].objectgroup.objects)
@@ -52771,13 +52710,13 @@ module.exports.importParkData = () => {
 module.exports.renderWall = wallArray => {
 
   wallArray.forEach(wallData =>{
-    
     const wall = PIXI.Sprite.fromFrame('black_dot')
+
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
-    global.collisionItems.addChild(wall)  
 
+    global.collisionItems.addChild(wall)  
   })
 
 }
@@ -52785,16 +52724,15 @@ module.exports.renderWall = wallArray => {
 module.exports.hitAreas = wallArray => {
 
   wallArray.forEach(wallData =>{
-    
     const wall = PIXI.Sprite.fromFrame('black_dot')
+
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
     wall.alpha = 0.01;
+
     global.collisionItems.addChild(wall)  
-
   })
-
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./bedroom/bedroom_data_4.json":309,"./park/park_3.json":313}],313:[function(require,module,exports){
@@ -53033,15 +52971,10 @@ module.exports={ "columns":0,
 }
 },{}],314:[function(require,module,exports){
 (function (global){
-
-
+'use strict';
 
 module.exports.load_network_sprite = () => {
-
   const bunny = PIXI.Sprite.fromFrame('bunny')
-
-
-  global.viewport.addChild(bunny)
 
   const playerDets = {
     x: global.Player.sprite.x,
@@ -53057,8 +52990,7 @@ module.exports.load_network_sprite = () => {
     
   })
 
-  
-
+  global.viewport.addChild(bunny)
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],315:[function(require,module,exports){
@@ -53102,19 +53034,12 @@ function countDown() {
 
   global.Player.sprite._textures = global.Player.sprite.ready._textures
 
-  if(global.Player.power > 750) {
-    global.Player.allowShoot = false
-  }
-  else {
-    global.Player.allowShoot = true
-  }
+  if(global.Player.power > 750) global.Player.allowShoot = false;
+  else global.Player.allowShoot = true;
 
-  if(global.Player.power > 400){
-    global.Player.power -= 10;
-  } 
-  if(global.Player.power < 410) {
-    global.Player.sprite.gotoAndStop(34);
-  }
+  if(global.Player.power > 400)global.Player.power -= 10;
+  
+  if(global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
   
 }
 
@@ -53135,9 +53060,7 @@ function mouseUp () {
       bowHelper.arrowManagement(global.Player.power,global.Player.sprite, mousePosition);
 
     }
-
   })
-
 }
 
 function mouseMove () {
@@ -53147,7 +53070,6 @@ function mouseMove () {
     if (global.Player.weapon === "bow" && global.Player.ammo > 0) {
 
       const mousePosition = documentHelper.mousePositionFromScreen(event.data.global, global.viewport)
-
       const mousePositionPlayer = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite , global.viewport)
 
       aimingLine.clear()
@@ -53158,9 +53080,7 @@ function mouseMove () {
       global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePositionPlayer)
 
     }
-
   })
-
 }
 
 function mouseDown () {
@@ -53169,7 +53089,6 @@ function mouseDown () {
     
     global.Player.power = 900
     global.Player.moveable = false;
-
     global.app.ticker.add(countDown);
     
     if (global.Player.weapon === "bow" && global.Player.ammo > 0) {
@@ -53181,12 +53100,8 @@ function mouseDown () {
       global.Player.sprite.gotoAndPlay(0);
   
     }
-
   })
-
 }
-
-
 
 function add_player_controls() {
 
@@ -53248,16 +53163,15 @@ function add_player_controls() {
       
     })
     
-
     spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
-    .then(pad => {
-      pad.action()
-    })
+    .then(pad => pad.action())
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
     .then(critter => {
       global.Player.inventory.push(critter)
+
       PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
+
       critter.destroy();
     })
 
@@ -53288,38 +53202,36 @@ function add_player_controls() {
   },true);
 
   global.viewport.addChild(aimingLine);
-
 }
 
 module.exports.add_player = () => {
  
   for (let i = 0; i <= 22; i++) {
-
     let name = "survivor-bow-idle-0" + i;
 
     if(i>= 10) name = "survivor-bow-idle-" + i;
+    //TODO: remove from image fiels 
     if(i === 12) continue
 
     global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));
   }
 
   for (let i = 0; i <= 20; i++) {
-
     let name = "survivor-walk_bow_0" + i;
+    
     if(i>= 10) name = "survivor-walk_bow_" + i;
 
     global.Player.animation.walk.push(PIXI.Texture.fromFrame(name));
   }
   
   for (let i = 0; i <= 38; i++) {
-
     let name = "survivor-bow-pull-0" + i;
+
     if(i>= 10) name = "survivor-bow-pull-" + i;
 
     global.Player.animation.ready.push(PIXI.Texture.fromFrame(name));
   }
   
-
   global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.anchor.set(0.5);
   global.Player.sprite.width /= 2
@@ -53332,10 +53244,6 @@ module.exports.add_player = () => {
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
   global.Player.sprite._textures = global.Player.sprite.idle._textures;
-  console.log(global.Player.sprite)
-  console.log(global.viewport)
-  console.log("global.Player.sprite")
-  
 
   global.viewport.follow(global.Player.sprite)
   global.viewport.addChild(global.Player.sprite);
@@ -53347,11 +53255,9 @@ module.exports.add_player = () => {
   mouseDown()
   mouseUp()
 
-
 }
 
 module.exports.remove_controls = () =>{
-
   document.removeEventListener("keyup", e=> {});
 
   document.removeEventListener("keydown", e=> {});
@@ -53362,34 +53268,32 @@ module.exports.remove_controls = () =>{
 //utils
 
 const keymap = {
-    "w": "up",
-    "a": "left",
-    "s": "down",
-    "d": "right",
-    "ArrowUp": "up",
-    "ArrowLeft": "left",
-    "ArrowDown": "down",
-    "ArrowRight": "right"
+  "w": "up",
+  "a": "left",
+  "s": "down",
+  "d": "right",
+  "ArrowUp": "up",
+  "ArrowLeft": "left",
+  "ArrowDown": "down",
+  "ArrowRight": "right"
 };
 
 module.exports.getDirection = key => keymap[key];
 
 module.exports.mousePositionFromPlayer = (event, player, viewport) => {
 
-    return {
-        x:event.x + player.x - viewport.screenWidth/2,
-        y:event.y + player.y - viewport.screenHeight/2
-    }
-
+  return {
+    x:event.x + player.x - viewport.screenWidth/2,
+    y:event.y + player.y - viewport.screenHeight/2
+  }
 }
 
 module.exports.mousePositionFromScreen = (event, viewport) => {
 
-    return {
-        x:event.x - viewport.screenWidth/2,
-        y:event.y - viewport.screenHeight/2
-    }
-
+  return {
+    x:event.x - viewport.screenWidth/2,
+    y:event.y - viewport.screenHeight/2
+  }
 }
 },{}],317:[function(require,module,exports){
 'use strict';
@@ -53398,25 +53302,19 @@ const spriteHelper = require("./spriteHelper.js");
 
 module.exports.hit = (player,door) => {
 
-  const trimmedDoorData = spriteHelper.trimVertexData(door)
+  const trimmedDoorData = spriteHelper.trimVertexData(door);
   const hitDirection = spriteHelper.hitBox(player.x, player.y, trimmedDoorData);
-
-  var tween = PIXI.tweenManager.createTween(door);
+  const movement = 0.4;
+  const tween = PIXI.tweenManager.createTween(door);
   tween.time = 400;
   tween.easing = PIXI.tween.Easing.outCubic();
   tween.expire = true;
 
   let rotationTarget = door.rotation;
 
-  if (hitDirection === "top") {
-    rotationTarget += 0.4
-  } 
-  if (hitDirection === "bottom") {
-    rotationTarget -= 0.4
-  } 
-  if (hitDirection === "exception") {
-    rotationTarget -= 0.4
-  }
+  if (hitDirection === "top") rotationTarget += movement
+  if (hitDirection === "bottom") rotationTarget -= movement
+  if (hitDirection === "exception") rotationTarget -= movement
 
   tween.to({
     rotation: rotationTarget
@@ -53426,18 +53324,14 @@ module.exports.hit = (player,door) => {
 }
 },{"./spriteHelper.js":318}],318:[function(require,module,exports){
 (function (global){
-const   PIXI        = require("pixi.js");
+'use strict';
 
+const   PIXI        = require("pixi.js");
 
 function distanceSquared(x1, y1, x2, y2)
 {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 }
-
-module.exports.boxBox = (x1, y1, w1, h1, x2, y2, w2, h2) =>{
-    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-}
-
 
  function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
 {
@@ -53458,20 +53352,19 @@ function _getCenter(o, dimension, axis) {
 
 module.exports.angle = (sprite, point) =>{
 	return Math.atan2(
-      	(point.y) - (sprite.y + _getCenter(sprite, sprite.height, "y")),
-      	(point.x) - (sprite.x + _getCenter(sprite, sprite.width, "x"))
+    (point.y) - (sprite.y + _getCenter(sprite, sprite.height, "y")),
+    (point.x) - (sprite.x + _getCenter(sprite, sprite.width, "x"))
 	)
 }
 
 module.exports.drawPolygon = (points, color) => {
-    color = typeof color === 'undefined' ? 0xffffff : color
-    const polygon = global.viewport.addChild(new PIXI.Graphics())
-    polygon.beginFill(color).drawPolygon(points).endFill()
-    return polygon
+  color = typeof color === 'undefined' ? 0xffffff : color
+  const polygon = global.viewport.addChild(new PIXI.Graphics())
+  polygon.beginFill(color).drawPolygon(points).endFill()
+  return polygon
 }
 
 module.exports.drawPathAndShow = path => {
-
   const path_visual_guide = new PIXI.Graphics()
   .lineStyle(1, 0xffffff, 1)
   .drawPath(path)
@@ -53480,21 +53373,16 @@ module.exports.drawPathAndShow = path => {
 }
 
 module.exports.trimVertexData = sprite => {
-
-  const trimmedData= [];
+  const trimmedData = [];
   
   for (let i = 0; i < sprite.vertexData.length; i++) {
 
-    if(i % 2 === 0){
-      trimmedData.push(sprite.vertexData[i]-sprite.vertexData[0]+sprite.x)
-    } else {
-      trimmedData.push(sprite.vertexData[i]-sprite.vertexData[1]+sprite.y)
-    }
+    if(i % 2 === 0) trimmedData.push(sprite.vertexData[i]-sprite.vertexData[0]+sprite.x)
+    else trimmedData.push(sprite.vertexData[i]-sprite.vertexData[1]+sprite.y)
     
   }
 
   return trimmedData;
-
 }
 
 module.exports.hitBox = (x, y, points) => {
@@ -53547,7 +53435,6 @@ module.exports.hitBox = (x, y, points) => {
           return true
       }
   }
-  
   return false
 }
 
@@ -53594,11 +53481,15 @@ overlay.anchor.set(0.5)
 function countUp() {
 
   if(overlay.alpha <= 1) {
+    
     overlay.alpha += 0.01;
+
   } else {
+
     global.app.ticker.remove(countUp)
     global.app.ticker.remove(countDown)
     overlay.alpha = 1
+  
   };
   
 }
@@ -53606,7 +53497,9 @@ function countUp() {
 function countDown() {
 
   if(overlay.alpha >= 0) {
+
     overlay.alpha -= 0.01;
+
   } else {
 
     global.app.ticker.remove(countUp);
@@ -53614,13 +53507,10 @@ function countDown() {
     overlay.alpha = 0;
     global.viewport.removeChild(overlay);
 
-  }
-  
+  } 
 }
 
 module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
-  
-
 
   overlay.alpha = 0;
   overlay.width = global.viewport.worldWidth + padding;
@@ -53660,10 +53550,9 @@ module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
   function godrayAnimation() {
     if(godray.time <= 100) godray.time += 0.005;
   }
-  
   global.app.ticker.add(godrayAnimation);
-  resolve()
   
+  resolve()
 })
 
 module.exports.clear = () => new Promise((resolve,reject)=>{
@@ -53671,8 +53560,6 @@ module.exports.clear = () => new Promise((resolve,reject)=>{
   global.viewport.filters = []
   
 })
-
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"pixi-filters":94}],320:[function(require,module,exports){
 (function (global){
@@ -53680,36 +53567,32 @@ module.exports.clear = () => new Promise((resolve,reject)=>{
 
 const Flag = [];
 
-module.exports.load_flag = () => new Promise((resolve,reject)=>{
+module.exports.load_flag = () => {
+  
+  new Promise((resolve,reject)=>{
 
-  PIXI.loader        
-  .add('images/flag/flag_1.png')
-  .add('images/flag/flag_2.png')
-  .add('images/flag/flag_3.png')
-  .load(()=>resolve('flag loaded'))
+    for (let i = 1; i < 3; i++) {
+      Flag.push(PIXI.Texture.fromFrame('flag_' + i));
+    }
 
-})
-.then(image_load_confirmation=>{
+  })
+  .then(()=>{
+    const animated_flag = new PIXI.extras.AnimatedSprite(Flag);
 
-  for (let i = 1; i < 3; i++) {
-    Flag.push(PIXI.Texture.fromFrame('images/flag/flag_' + i + '.png'));
-  }
+    animated_flag.animationSpeed = 0.4;
+    animated_flag.play()
 
-})
-.then(()=>{
-
-  const animated_flag = new PIXI.extras.AnimatedSprite(Flag);
-  animated_flag.animationSpeed = 0.4;
-  animated_flag.play()
-  global.viewport.addChild(animated_flag);
-
-})
+    global.viewport.addChild(animated_flag);
+  })
+  
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],321:[function(require,module,exports){
 (function (global){
 'use strict';
 
 const spriteHelper = require("../../utils/spriteHelper.js");
+
 global.arrowContainer = new PIXI.Container();
 global.arrowContainer.name = "arrow cont"
 
@@ -53724,7 +53607,6 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_07.wav')
 ];
 
-// TODO arrow not rendering on first shot and pick up not working
 module.exports.arrowManagement = (power, origin, target) => {
 
   const path_one = new PIXI.tween.TweenPath()
@@ -53750,33 +53632,33 @@ module.exports.arrowManagement = (power, origin, target) => {
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
     .then(res => {
-
       arrow.pickup = true;
+
       arrowSounds[Math.floor((Math.random() * 7) + 1)].play();  
-      setTimeout(()=>arrowTween.stop(),15)
       
+      setTimeout(()=>arrowTween.stop(),15)
     })
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
     .then(critter => {
-
       arrow.pickup = true;
+
       arrowTween.stop()  
       critter.texture = critter.dead;
       critter.stop()
       critter.mouseDeathSound.play()
+
       PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-    
     })
 
     spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
     .then(enemy => {
-
       arrow.pickup = true;
+
       arrowTween.stop()
       enemy.stop()
+      
       PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-
     })
 
   })
@@ -53796,35 +53678,16 @@ function getRandomArbitrary(min, max) {
 module.exports.start_rain = (x1,x2,y1,y2) => {
     
   new Promise((resolve,reject)=>{
-
-    PIXI.loader        
-    .add('images/raindrop_01.png')
-    .add('images/raindrop_02.png')
-    .add('images/raindrop_03.png')
-    .add('images/raindrop_04.png')
-    .add('images/raindrop_05.png')
-    .add('images/raindrop_06.png')
-    .add('images/raindrop_07.png')
-    .add('images/raindrop_08.png')
-    .add('images/raindrop_09.png')
-    .add('images/raindrop_10.png')
-    .add('images/raindrop_11.png')
-    .add('images/raindrop_12.png')
-    .add('images/raindrop_13.png')
-    // .on("progress", loader=>{})
-    .load(()=>resolve('drop loaded'))
-  })
-  .then(res=>{
     let rain_frames = []
+
     for (let i = 1; i < 13; i++) {
       let val = i < 10 ? '0' + i : i;
-
-      rain_frames.push(PIXI.Texture.fromFrame('images/raindrop_' + val + '.png'));
+      rain_frames.push(PIXI.Texture.fromFrame('raindrop_' + val));
     }
+    
     return rain_frames;
   })
   .then(frames => {
-
     const rain_noise = new Audio('audio/light_rain.wav')
 
     for (let i = 0; i < 150; i++) {
@@ -53836,18 +53699,10 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
       animated_drop.alpha = getRandomArbitrary(0.03,0.3)
       animated_drop.anchor.set(0.5);
       animated_drop.animationSpeed = getRandomArbitrary(0.1,0.2);
-      setInterval(()=>{
-
-        animated_drop.play();
-
-      },getRandomArbitrary(200,1100))
       
-      setInterval(()=>{
-
-        animated_drop.gotoAndStop(11);
-
-      },getRandomArbitrary(100,1000))
-
+      setInterval(()=>animated_drop.play(),getRandomArbitrary(200,1100))
+      setInterval(()=>animated_drop.gotoAndStop(11),getRandomArbitrary(100,1000))
+      
       rain_noise.volume = 0.05;
       rain_noise.play()
 

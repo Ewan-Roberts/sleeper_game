@@ -10,11 +10,15 @@ overlay.anchor.set(0.5)
 function countUp() {
 
   if(overlay.alpha <= 1) {
+    
     overlay.alpha += 0.01;
+
   } else {
+
     global.app.ticker.remove(countUp)
     global.app.ticker.remove(countDown)
     overlay.alpha = 1
+  
   };
   
 }
@@ -22,7 +26,9 @@ function countUp() {
 function countDown() {
 
   if(overlay.alpha >= 0) {
+
     overlay.alpha -= 0.01;
+
   } else {
 
     global.app.ticker.remove(countUp);
@@ -30,13 +36,10 @@ function countDown() {
     overlay.alpha = 0;
     global.viewport.removeChild(overlay);
 
-  }
-  
+  } 
 }
 
 module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
-  
-
 
   overlay.alpha = 0;
   overlay.width = global.viewport.worldWidth + padding;
@@ -76,10 +79,9 @@ module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
   function godrayAnimation() {
     if(godray.time <= 100) godray.time += 0.005;
   }
-  
   global.app.ticker.add(godrayAnimation);
-  resolve()
   
+  resolve()
 })
 
 module.exports.clear = () => new Promise((resolve,reject)=>{
@@ -87,4 +89,3 @@ module.exports.clear = () => new Promise((resolve,reject)=>{
   global.viewport.filters = []
   
 })
-
