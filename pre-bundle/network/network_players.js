@@ -3,7 +3,7 @@
 
 module.exports.load_network_sprite = () => {
 
-  const bunny = PIXI.Sprite.fromImage('images/bunny.png');
+  const bunny = PIXI.Sprite.fromFrame('bunny')
 
 
   global.viewport.addChild(bunny)

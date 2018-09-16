@@ -1,13 +1,11 @@
 const PIXI        = require("pixi.js"),
       Intersects  = require('intersects'),
-      b           = new Bump(PIXI),
       rat         = require("../animals/rat.js"),
       spriteHelper = require("../utils/spriteHelper.js"),
       doorHelper = require("../utils/doorHelper.js"),
       bowHelper   = require("../weapons/bow/bowHelper.js"),
       documentHelper = require("../utils/documentHelper.js"),
       uuidv4 = require('uuid/v4');
-
 
 global.Player = {
 
@@ -22,25 +20,16 @@ global.Player = {
     moving:       {},
     idle:         {},
     walk:         {},
-    pullback:     {},
-    eating:       {}
+    pullback:     {}
   },
-
   movement_speed: 20,
   weapon:         "bow",
   moveable:       true,
   power:          900,
   ammo:           10,
-  inventory:      [],
-  network_data: {
-    x: 0,
-    y: 0
-  }
+  inventory:      []
 
 }
-
-global.Player.player_id = uuidv4()
-
 
 const aimingLine = new PIXI.Graphics();
 
@@ -69,9 +58,7 @@ function mouseUp () {
   global.viewport.on('mouseup', event => {
 
     global.Player.sprite._textures = global.Player.sprite.idle._textures;
-
     global.Player.moveable = true;
-
     global.Player.sprite.play()
 
     global.app.ticker.remove(countDown);
@@ -140,24 +127,15 @@ function add_player_controls() {
 
   document.addEventListener("keyup", e=> {
 
-      global.Player.sprite._textures = global.Player.sprite.idle._textures
+    global.Player.sprite._textures = global.Player.sprite.idle._textures;
+
   },true)
 
   document.addEventListener("keydown", e => {
 
-    let currentDirection = undefined;
-
     let key = documentHelper.getDirection(e.key)
     
     if(!global.Player.moveable) return;
-
-    const network_info = {
-      key: key,
-      player_id: global.Player.player_id
-    }
-
-
-    // global.socket.emit('keystroke', network_info)
 
     if(key === "up"){
       global.Player.sprite.y -= global.Player.movement_speed; 
@@ -211,17 +189,6 @@ function add_player_controls() {
       pad.action()
     })
 
-    // spriteHelper.hitBoxContainerObj(global.enemyContainer.children, global.Player.sprite)
-    // .then(enemy => {
-    //   console.log("enemy")
-    //   console.log(enemy)
-    //   // PIXI.tweenManager.getTweensForTarget(enemy).active = false;
-      
-    //   console.log("enemy")
-    //   // console.log(global.enemyContainer)
-      
-    // })
-
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
     .then(critter => {
       global.Player.inventory.push(critter)
@@ -250,22 +217,8 @@ function add_player_controls() {
         global.Player.sprite.x -=global.Player.movement_speed-item.weight
         item.x+=item.weight
       }
-      return item;
-    })
-    .then(a=>{
       
-      // const b =global.movableItems.children[0]
-      // if(spriteHelper.boxBox(a.x,a.y,a.width,a.height,b.x,b.y,b.width,b.height)){
-      //   console.log('herer');
-      // }
-
     })
-
-
-    global.Player.network_data.x = global.Player.sprite.x
-    global.Player.network_data.y = global.Player.sprite.y
-
-    // global.socket.emit('post_player_data', global.Player.network_data)
     
   },true);
 
@@ -275,26 +228,39 @@ function add_player_controls() {
 
 module.exports.add_player = () => {
 
-  new PIXI.loaders.Loader()
-  // .add("knife",'images/Top_Down_Survivor/knife/move/sprites.json')
-  .add('idle','images/Top_Down_Survivor/bow/idle/survivor-bow-idle.json')
-  .add('walk','images/Top_Down_Survivor/bow/walk/survivor-walk_bow.json')
-  .add('ready','images/Top_Down_Survivor/bow/ready/survivor-ready_bow.json')
-  .load((loader, res) => {
-      
-    let sheet = loader.resources.ready;
+  global.loader.load((loader,res)=>{
+    
+    const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
+    console.log(res)
+    console.log("resources")
+    for (let i = 0; i <= 22; i++) {
 
-    for (var i = 0; i < loader.resources.idle.spritesheet._frameKeys.length; i++) {
-      global.Player.animation.idle.push(PIXI.Texture.fromFrame(loader.resources.idle.spritesheet._frameKeys[i]));
-    }
-    for (var i = 0; i < loader.resources.walk.spritesheet._frameKeys.length; i++) {
-      global.Player.animation.walk.push(PIXI.Texture.fromFrame(loader.resources.walk.spritesheet._frameKeys[i]));
+      let name = "survivor-bow-idle-0" + i;
+
+      if(i>= 10) name = "survivor-bow-idle-" + i;
+      if(i === 12) continue
+      console.log(resources[name])
+
+      global.Player.animation.idle.push(resources[name]);
     }
 
-    for (var i = 0; i < loader.resources.ready.spritesheet._frameKeys.length; i++) {
-      global.Player.animation.ready.push(PIXI.Texture.fromFrame(loader.resources.ready.spritesheet._frameKeys[i]));
+    for (let i = 0; i <= 20; i++) {
+
+      let name = "survivor-walk_bow_0" + i;
+      if(i>= 10) name = "survivor-walk_bow_" + i;
+  
+      global.Player.animation.walk.push(resources[name]);
     }
-    global.bunny = PIXI.Sprite.fromImage('images/bunny.png')
+    
+    for (let i = 0; i <= 38; i++) {
+
+      let name = "survivor-bow-pull-0" + i;
+      if(i>= 10) name = "survivor-bow-pull-" + i;
+  
+      global.Player.animation.ready.push(resources[name]);
+    }
+    
+  
     global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
     global.Player.sprite.anchor.set(0.5);
     global.Player.sprite.width /= 2
@@ -303,24 +269,19 @@ module.exports.add_player = () => {
     global.Player.sprite.play();
     global.Player.sprite.zIndex = -20;
 
-    // global.socket.on('player_move', data => {
-
-    //   console.log(data)
-
-    //   global.bunny.x = data.x
-    //   global.bunny.y = data.y
-    //   global.bunny.rotation = data.rotation
-
-    // })
-
-
     global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
     global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
     global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
+    global.Player.sprite._textures = global.Player.sprite.idle._textures;
+    console.log(global.Player.sprite)
+    console.log(global.viewport)
+    console.log("global.Player.sprite")
+    
 
     global.viewport.follow(global.Player.sprite)
-    global.viewport.addChild(global.Player.sprite, global.bunny);
-    global.viewport.updateLayersOrder();
+    global.viewport.addChild(global.Player.sprite);
+    // global.viewport.addChild(global.Player.sprite.idle)
+    // global.viewport.updateLayersOrder();
 
     add_player_controls()
     mouseMove()

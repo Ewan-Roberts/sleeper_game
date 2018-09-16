@@ -18,35 +18,40 @@ const Enemy = {
     waiting:    {}
   },
 
-  noise: new Audio('audio/rat_noise_edited.wav')
+  // noise: new Audio('audio/rat_noise_edited.wav')
 
 }
 
 module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
-
-  PIXI.loader        
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_0.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_1.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_2.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_3.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_4.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_5.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_6.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_7.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_8.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_9.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_10.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_11.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_12.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_13.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_14.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_15.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_16.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_17.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_18.png')
-  .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_19.png')
-  // .on("progress", loader=>{})
-  .load(()=>resolve('enemy loaded'))
+  global.loader.load((loader,res)=>{
+    console.log(loader)
+    console.log("res")
+    const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
+    console.log(resources.black_wall)
+  })
+  // PIXI.loader        
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_0.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_1.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_2.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_3.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_4.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_5.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_6.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_7.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_8.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_9.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_10.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_11.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_12.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_13.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_14.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_15.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_16.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_17.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_18.png')
+  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_19.png')
+  // // .on("progress", loader=>{})
+  // .load(()=>resolve('enemy loaded'))
 
 })
 .then(image_load_confirmation=>{
@@ -69,8 +74,8 @@ module.exports.enemy_path = path_data => {
   enemy_sprite.animationSpeed = 0.4;
   enemy_sprite.rotation = -0.5
   enemy_sprite.play();
-
-  const influence_box = PIXI.Sprite.fromImage('images/black_dot.png')
+  
+  const influence_box = PIXI.Sprite.fromLoader(resources.black_dot)
   influence_box.width = 500;
   influence_box.height = 500;
   influence_box.rotation = -0.5

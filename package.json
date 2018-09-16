@@ -18,12 +18,15 @@
     "browserify": "^16.2.2",
     "bufferutil": "^4.0.0",
     "express": "^4.14.0",
+    "imagemin-jpegtran": "^5.0.2",
+    "imagemin-pngquant": "^6.0.0",
     "intersects": "^2.1.0",
     "jquery": "^3.3.1",
     "mongoose": "^5.2.7",
     "pixi-ease": "^1.1.2",
     "pixi-filters": "^2.6.1",
     "pixi-layers": "^0.1.9",
+    "pixi-packer-parser": "^2.0.0",
     "pixi-tween": "^0.2.0",
     "pixi-viewport": "^2.7.2",
     "require-dir": "^1.0.0",
@@ -35,6 +38,7 @@
     "yy-renderer": "^2.7.1"
   },
   "devDependencies": {
+    "gulp": "^4.0.0",
     "npm-run-all": "^3.1.1"
   }
 }

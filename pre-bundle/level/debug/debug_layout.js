@@ -13,12 +13,12 @@ rain = require("../../weather/rain.js"),
 cutscene_intro = require("../../cutscene/cutscene_intro.js"),
 rat  = require("../../animals/rat.js");
 
+
 global.collisionItems = new PIXI.Container();
 global.eventTriggers = new PIXI.Container();
 
-function createPad(x,y) {
-
-  const pad = PIXI.Sprite.fromImage('images/black_dot.png')
+function createPad(texture,x,y) {
+  const pad = new PIXI.Sprite(texture)
   pad.width = 200;
   pad.height = 100;
   pad.position.set(x,y);
@@ -27,24 +27,24 @@ function createPad(x,y) {
 }
 
 module.exports.add_floor = () => {
-        
-  PIXI.loader
-  .add('black_wall','images/black_wall.png')
-  .load((loader,res)=>{
+  
+  global.loader.load((loader,res)=>{
+    
+    const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
+    const slanted_wall = new PIXI.Sprite(resources.black_wall);
 
-    const slanted_wall = PIXI.Sprite.fromImage('images/black_wall.png')
     slanted_wall.rotation = 0.4
     slanted_wall.position.set(100,100)
 
-    const collision_wall = PIXI.Sprite.fromImage('images/black_wall.png');
+    const collision_wall = new PIXI.Sprite(resources.black_wall);
     collision_wall.position.set(100,600);
     collision_wall.name = "collision_wall";
 
-    const door = PIXI.Sprite.fromImage('images/black_wall.png')
+    const door = new PIXI.Sprite(resources.black_wall)
     door.width /=2
     door.position.set(-100,-200)
 
-    const rat_pad = createPad(-700,200)
+    const rat_pad = createPad(resources.black_wall,-700,200)
     rat_pad.alpha = 0.4;
     rat_pad.fired = false;
     rat_pad.action = () =>{
@@ -56,7 +56,7 @@ module.exports.add_floor = () => {
       
     }
  
-    const enemy_pad = createPad(-950,200)
+    const enemy_pad = createPad(resources.black_wall,-950,200)
     enemy_pad.alpha = 0.2;
     enemy_pad.fired = false;
     enemy_pad.action = () =>{
@@ -68,7 +68,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const level_load_pad = createPad(-450,200)
+    const level_load_pad = createPad(resources.black_wall,-450,200)
     level_load_pad.alpha = 0.6;
     level_load_pad.fired = false;
     level_load_pad.action = () =>{
@@ -80,7 +80,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const glitch_pad = createPad(-700,50)
+    const glitch_pad = createPad(resources.black_wall,-700,50)
     glitch_pad.alpha = 0.4;
     glitch_pad.fired = false;
     glitch_pad.action = () =>{
@@ -94,7 +94,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const dialog_pad = createPad(-450,50)
+    const dialog_pad = createPad(resources.black_wall,-450,50)
     dialog_pad.alpha = 0.6;
     dialog_pad.fired = false;
     dialog_pad.action = () =>{
@@ -108,7 +108,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const effect_pad = createPad(-200,200)
+    const effect_pad = createPad(resources.black_wall,-200,200)
     effect_pad.fired = false;
     effect_pad.alpha = 0.8;
     effect_pad.action = () =>{
@@ -122,7 +122,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const animation_pad = createPad(-700,-100)
+    const animation_pad = createPad(resources.black_wall,-700,-100)
     animation_pad.fired = false;
     animation_pad.alpha = 0.6;
     animation_pad.action = () =>{
@@ -134,7 +134,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const load_park_pad = createPad(-950,-100)
+    const load_park_pad = createPad(resources.black_wall,-950,-100)
     load_park_pad.fired = false;
     load_park_pad.alpha = 0.4;
     load_park_pad.action = () =>{
@@ -146,7 +146,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const network_pad = createPad(-450,-100)
+    const network_pad = createPad(resources.black_wall,-450,-100)
     network_pad.fired = false;
     network_pad.alpha = 0.8;
     network_pad.action = () =>{
@@ -158,7 +158,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const enemy_pathing =createPad(-200,-200)
+    const enemy_pathing =createPad(resources.black_wall,-200,-200)
     enemy_pathing.fired = false;
     enemy_pathing.alpha = 0.8;
     enemy_pathing.action = () =>{
@@ -176,7 +176,7 @@ module.exports.add_floor = () => {
       
     }
 
-    const clear_pad = createPad(-200,50)
+    const clear_pad = createPad(resources.black_wall,-200,50)
     clear_pad.fired = false;
     clear_pad.alpha = 0.8;
     clear_pad.action = () =>{
@@ -216,14 +216,15 @@ module.exports.add_floor = () => {
     };
 
     
+    
     global.viewport.addChild(global.eventTriggers)
     global.collisionItems.zIndex = 1;
     global.collisionItems.addChild(slanted_wall,collision_wall);
-
+    
     global.viewport.updateLayersOrder();
     player.add_player();
     items.add_items();
-
+    global.viewport.addChild(global.Player.sprite)
   })
 
 }        

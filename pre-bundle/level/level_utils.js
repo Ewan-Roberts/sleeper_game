@@ -28,9 +28,11 @@ module.exports.importBedroomData = () => {
   
   console.log(bedroom_data)
 
-  const flat_background = PIXI.Sprite.fromImage('../../images/flat_floor.jpg');
+  const flat_background = PIXI.Sprite.fromFrame('flat_floor')
   flat_background.interactive = true;
   flat_background.zIndex =1;
+  flat_background.height = bedroom_data.tileheight;
+  flat_background.width = bedroom_data.tilewidth;
   
   global.collisionItems.zIndex = -1;
 
@@ -46,7 +48,7 @@ module.exports.renderWall = wallArray => {
 
   wallArray.forEach(wallData =>{
     
-    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+    const wall = PIXI.Sprite.fromFrame('black_dot')
           wall.position.set(wallData.x, wallData.y);
           wall.width = wallData.width;
           wall.height = wallData.height;
@@ -78,9 +80,11 @@ module.exports.createEnemyPathFrom = level_data => {
 
 module.exports.importParkData = () => {
 
-  const park_background = PIXI.Sprite.fromImage('../../images/level/park/park_background_2.jpg');
+  const park_background = PIXI.Sprite.fromFrame('park');
         park_background.interactive = true;
         park_background.zIndex =1;
+        park_background.height = park_data.tileheight;
+        park_background.width = park_data.tilewidth;
         // park_background.width = 10000
         // park_background.height = 6000
 
@@ -100,7 +104,7 @@ module.exports.renderWall = wallArray => {
 
   wallArray.forEach(wallData =>{
     
-    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+    const wall = PIXI.Sprite.fromFrame('black_dot')
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
@@ -114,7 +118,7 @@ module.exports.hitAreas = wallArray => {
 
   wallArray.forEach(wallData =>{
     
-    const wall = PIXI.Sprite.fromImage('../../images/black_dot.png');
+    const wall = PIXI.Sprite.fromFrame('black_dot')
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;

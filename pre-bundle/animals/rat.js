@@ -1,9 +1,8 @@
 const spriteHelper = require('../utils/spriteHelper.js');
 
 global.critterContainer = new PIXI.Container();
-global.critterContainer.name = "critterContainer"
 
-const mouseDeathSound = new Audio('audio/mouse_death_00.wav');
+
 
 const Rat = {
 
@@ -19,114 +18,60 @@ const Rat = {
     eating:     {}
   },
 
-  noise: new Audio('audio/rat_noise_edited.wav')
+  // noise: new Audio('audio/rat_noise_edited.wav')
 
 }
 
 module.exports.load_rat = () => new Promise((resolve,reject)=>{
 
-    PIXI.loader        
-        .add('images/rat_01.png')
-        .add('images/rat_02.png')
-        .add('images/rat_03.png')
-        .add('images/rat_04.png')
-        .add('images/rat_05.png')
-        .add('images/rat_06.png')
-        .add('images/rat_07.png')
-        .add('images/rat_08.png')
-        .add('images/rat_09.png')
-        .add('images/rat_10.png')
-        .add('images/rat_11.png')
-        .add('images/rat_12.png')
-        .add('images/rat_13.png')
-        .add('images/rat_14.png')
-        .add('images/rat_15.png')
-        .add('images/rat_16.png')
-        .add('images/rat_17.png')
-        .add('images/rat_18.png') 
-        .add('images/rat_19.png')
-        .add('images/rat_20.png')
-        .add('images/rat_21.png')
-        .add('images/rat_22.png')
-        .add('images/rat_23.png')
-        .add('images/rat_24.png')
-        .add('images/rat_25.png')
-        .add('images/rat_26.png')
-        .add('images/rat_27.png')
-        .add('images/rat_28.png')
-        .add('images/rat_29.png')
-        .add('images/rat_30.png')
-        .add('images/rat_31.png')
-        .add('images/rat_32.png')
-        .add('images/rat_33.png')
-        .add('images/rat_34.png')
-        .add('images/rat_35.png')
-        .add('images/rat_36.png')
-        .add('images/rat_37.png')
-        .add('images/rat_38.png')
-        .add('images/rat_39.png')
-        .add('images/rat_40.png')
-        .add('images/rat_41.png')
-        .add('images/rat_42.png')
-        .add('images/rat_43.png')
-        .add('images/rat_44.png')
-        .add('images/rat_45.png')
-        .add('images/rat_46.png')
-        .add('images/rat_47.png')
-        .add('images/rat_48.png')
-        .add('images/rat_49.png')
-        .add('images/rat_50.png')
-        .add('images/rat_51.png')
-        // .on("progress", loader=>{})
-        .load(()=>resolve('rat loaded'))
+  for (let i = 1; i < 15; i++) {
+      let val = i < 10 ? '0' + i : i;
+      console.log(PIXI.Texture.fromFrame('rat_' + val))
+      console.log("rat")
+      Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_' + val));
+  }
 
-    })
-    .then(image_load_confirmation=>{
+  for (let i = 15; i > 0; i--) {
+      let val = i < 10 ? '0' + i : i;
+      Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_' + val));
+  }
 
-        for (let i = 1; i < 15; i++) {
-            let val = i < 10 ? '0' + i : i;
-            Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_' + val + '.png'));
-        }
+  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
+  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_49'));
+  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_50'));
+  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_49'));
+  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
 
-        for (let i = 15; i > 0; i--) {
-            let val = i < 10 ? '0' + i : i;
-            Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_' + val + '.png'));
-        }
+  Rat.animation.waiting = [
+      
+      PIXI.Texture.fromFrame('rat_36'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_51'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_36'),
+      PIXI.Texture.fromFrame('rat_01')
+  ]
 
-        Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_48.png'));
-        Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_49.png'));
-        Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_50.png'));
-        Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_49.png'));
-        Rat.animation.moving.push(PIXI.Texture.fromFrame('images/rat_48.png'));
+  Rat.animation.dead = PIXI.Texture.fromFrame('rat_35')
 
-        Rat.animation.waiting = [
-            
-            PIXI.Texture.fromFrame('images/rat_36.png'),
-            PIXI.Texture.fromFrame('images/rat_37.png'),
-            PIXI.Texture.fromFrame('images/rat_38.png'),
-            PIXI.Texture.fromFrame('images/rat_51.png'),
-            PIXI.Texture.fromFrame('images/rat_37.png'),
-            PIXI.Texture.fromFrame('images/rat_36.png'),
-            PIXI.Texture.fromFrame('images/rat_01.png')
-        ]
+  Rat.animation.eating = [
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_41'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_37')
+  ]
 
-        Rat.animation.dead = PIXI.Texture.fromFrame('images/rat_35.png')
+  resolve()
 
-        Rat.animation.eating = [
-            PIXI.Texture.fromFrame('images/rat_37.png'),
-            PIXI.Texture.fromFrame('images/rat_38.png'),
-            PIXI.Texture.fromFrame('images/rat_39.png'),
-            PIXI.Texture.fromFrame('images/rat_40.png'),
-            PIXI.Texture.fromFrame('images/rat_39.png'),
-            PIXI.Texture.fromFrame('images/rat_40.png'),
-            PIXI.Texture.fromFrame('images/rat_41.png'),
-            PIXI.Texture.fromFrame('images/rat_40.png'),
-            PIXI.Texture.fromFrame('images/rat_39.png'),
-            PIXI.Texture.fromFrame('images/rat_38.png'),
-            PIXI.Texture.fromFrame('images/rat_37.png')
-        ]
-
-    })
+})
 
 // to and from
 
@@ -136,6 +81,7 @@ module.exports.mouseMove = (start,finish) => {
     
   // Rat.noise.volume = 0.5
   // Rat.noise.play();
+  const mouseDeathSound = new Audio('audio/mouse_death_00.wav');
 
   //Create a custom path the graphic will follow
   const path_one = new PIXI.tween.TweenPath()
@@ -150,7 +96,7 @@ module.exports.mouseMove = (start,finish) => {
   animated_rat.animationSpeed = 0.4;
   animated_rat.play();
   animated_rat.mouseDeathSound = mouseDeathSound;
-  animated_rat.dead = PIXI.Texture.fromFrame('images/rat_35.png')
+  animated_rat.dead = PIXI.Texture.fromFrame('rat_35')
 
   const animated_rat_tween = PIXI.tweenManager.createTween(animated_rat);
   animated_rat_tween.name = "tween"

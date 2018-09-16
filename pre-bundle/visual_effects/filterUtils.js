@@ -3,7 +3,7 @@
 const filters = require('pixi-filters')
 const padding = 100;
 
-const overlay = PIXI.Sprite.fromImage('images/black_dot.png')
+const overlay = PIXI.Sprite.fromFrame('black_dot')
 overlay.zIndex = -3;
 overlay.anchor.set(0.5)
 
@@ -36,6 +36,8 @@ function countDown() {
 
 module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
   
+
+
   overlay.alpha = 0;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;

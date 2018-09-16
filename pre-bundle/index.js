@@ -2,10 +2,9 @@ const PIXI = require('pixi.js'),
       io = require('socket.io-client'),
       Viewport = require('pixi-viewport'),
       tween = require('pixi-tween'),
-      Layer = require('pixi-layers'),
-      debug = require("./level/debug/debug_layout.js"),
-      player = require("./player/player.js");
+      Layer = require('pixi-layers');
 
+      pixiPackerParser = require("pixi-packer-parser");
 global.socket = io.connect();
 
 global.socket.on("thing", res => console.log(res))
@@ -38,8 +37,18 @@ global.layer = new PIXI.display.Layer();
 global.layer.group.enableSort = true;
 
 global.viewport.addChild(global.collisionItems,global.movableItems,global.doors)
+global.loader = new PIXI.loaders.Loader();
+global.loader.use(pixiPackerParser(PIXI));
+global.loader.add("../../images/bedroom_EN_web.json");
+global.loader.load((loader,res) => { 
 
-debug.add_floor()
+  const debug = require("./level/debug/debug_layout.js");
+  console.log(loader) 
+  console.log(res) 
+  debug.add_floor()
+
+});
+
 
 app.ticker.add(delta => {
 

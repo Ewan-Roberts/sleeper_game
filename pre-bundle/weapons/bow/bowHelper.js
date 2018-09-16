@@ -24,7 +24,7 @@ module.exports.arrowManagement = (power, origin, target) => {
 
   // spriteHelper.drawPathAndShow(path_one)
 
-  const arrow = PIXI.Sprite.fromImage('images/weapons/ammo/arrow.png')
+  const arrow = PIXI.Sprite.fromFrame('arrow')
         arrow.width /=2
         arrow.height /=3
         arrow.anchor.set(0.9)

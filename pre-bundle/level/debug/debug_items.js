@@ -2,13 +2,12 @@
 const PIXI = require("pixi.js");
 module.exports.add_items = () => {
 
-	PIXI.loader
-	.add('box_full','images/chest_full.png')
-	.add('movable_box','images/chest_full.png')
-	.add('box_empty','images/chest_empty.png')
-	.load((loader, res)=>{
-	
-		const box_full  = new PIXI.Sprite(res.box_full.texture);
+	global.loader.load((loader,res)=>{
+		const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
+    console.log(resources)
+    console.log("resources1")
+    // PIXI.Texture.fromLoader(resources[name])
+		const box_full  = new PIXI.Sprite(resources.chest_empty);
 		box_full.position.set(-1200,0);
 		box_full.width *=2;
 		box_full.height *=2;
@@ -25,7 +24,7 @@ module.exports.add_items = () => {
 		}); 
 
 
-		const movable_box  = new PIXI.Sprite(res.movable_box.texture);
+		const movable_box  = new PIXI.Sprite(resources.chest_full);
 		movable_box.position.set(-600,400);
 		movable_box.width *=2;
 		movable_box.height *=2;
@@ -40,9 +39,14 @@ module.exports.add_items = () => {
 		});
 		
 		global.movableItems.addChild(movable_box)
-		global.collisionItems.addChild(box_full)
-		
-	});
+    global.collisionItems.addChild(box_full)
+    global.viewport.addChild(global.collisionItems)
+    
+	
+	})
+
+	
+	
 
 	global.socket.on("container_contents", contents =>{
 		console.log(contents)
