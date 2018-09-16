@@ -7,6 +7,8 @@ const PIXI        = require("pixi.js"),
       documentHelper = require("../utils/documentHelper.js"),
       uuidv4 = require('uuid/v4');
 
+const resultOfSpriteSheet = "";
+
 global.Player = {
 
   animation: {
@@ -229,10 +231,8 @@ function add_player_controls() {
 module.exports.add_player = () => {
 
   global.loader.load((loader,res)=>{
-    
     const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
-    console.log(res)
-    console.log("resources")
+    
     for (let i = 0; i <= 22; i++) {
 
       let name = "survivor-bow-idle-0" + i;
