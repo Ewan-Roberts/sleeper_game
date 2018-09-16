@@ -3,7 +3,7 @@ const   express = require("express"),
         server  = require("http").Server(app),
         port    = process.env.PORT || 3000,
         mongoose = require("mongoose"),
-        utils = require('require-dir')('./functions'),
+        utils = require('require-dir')('./back-end'),
         User = require("./models/User.js")
 
 // mongoose.connect('mongodb://localhost/test');
@@ -81,7 +81,7 @@ let player_info = {
 
 app.use(express.static("./public"));
 
-app.get("/", (req, res) => res.sendFile(__dirname + "/views/index.html"));
+app.get("/", (req, res) => res.sendFile(__dirname + "/public/index.html"));
 
 server.listen(port, () => console.log("server is listening on port: " + port));
 
