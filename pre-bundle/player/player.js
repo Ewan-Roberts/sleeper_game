@@ -268,20 +268,13 @@ module.exports.add_player = () => {
     global.Player.sprite.animationSpeed = 0.6;
     global.Player.sprite.play();
     global.Player.sprite.zIndex = -20;
-
     global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
     global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
     global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
     global.Player.sprite._textures = global.Player.sprite.idle._textures;
-    console.log(global.Player.sprite)
-    console.log(global.viewport)
-    console.log("global.Player.sprite")
     
-
     global.viewport.follow(global.Player.sprite)
     global.viewport.addChild(global.Player.sprite);
-    // global.viewport.addChild(global.Player.sprite.idle)
-    // global.viewport.updateLayersOrder();
 
     add_player_controls()
     mouseMove()
