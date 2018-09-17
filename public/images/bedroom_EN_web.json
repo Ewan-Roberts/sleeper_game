@@ -11,7 +11,7 @@
     },
     "spritesheets": [
         {
-            "image": "81e4e714ce807738e1a0583e2b7671348c72e274.png",
+            "image": "8057bb6910a8cfaa759d7241bc3e213d41a77e2d.png",
             "filesize": 6570525,
             "sprites": [
                 {
@@ -3719,7 +3719,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-15",
+                    "name": "survivor-bow-idle-14",
                     "position": {
                         "x": 872,
                         "y": 4272
@@ -3736,7 +3736,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-16",
+                    "name": "survivor-bow-idle-15",
                     "position": {
                         "x": 995,
                         "y": 4272
@@ -3753,7 +3753,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-17",
+                    "name": "survivor-bow-idle-16",
                     "position": {
                         "x": 1118,
                         "y": 4272
@@ -3770,7 +3770,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-18",
+                    "name": "survivor-bow-idle-17",
                     "position": {
                         "x": 1241,
                         "y": 4272
@@ -3787,7 +3787,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-19",
+                    "name": "survivor-bow-idle-18",
                     "position": {
                         "x": 1364,
                         "y": 4272
@@ -3804,7 +3804,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-20",
+                    "name": "survivor-bow-idle-19",
                     "position": {
                         "x": 1487,
                         "y": 4272
@@ -3821,7 +3821,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-21",
+                    "name": "survivor-bow-idle-20",
                     "position": {
                         "x": 1610,
                         "y": 4272
@@ -4144,7 +4144,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-14",
+                    "name": "survivor-bow-idle-13",
                     "position": {
                         "x": 2501,
                         "y": 2776
@@ -4229,7 +4229,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-13",
+                    "name": "survivor-bow-idle-12",
                     "position": {
                         "x": 2501,
                         "y": 3162
@@ -4399,7 +4399,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-22",
+                    "name": "survivor-bow-idle-21",
                     "position": {
                         "x": 2345,
                         "y": 4272
@@ -7510,7 +7510,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_0",
+                    "name": "survivor-idle_00",
                     "position": {
                         "x": 2723,
                         "y": 1070

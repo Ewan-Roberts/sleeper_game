@@ -4,8 +4,8 @@ const PIXI        = require("pixi.js"),
       spriteHelper = require("../utils/spriteHelper.js"),
       doorHelper = require("../utils/doorHelper.js"),
       bowHelper   = require("../weapons/bow/bowHelper.js"),
-      documentHelper = require("../utils/documentHelper.js"),
-      uuidv4 = require('uuid/v4');
+      documentHelper = require("../utils/documentHelper.js");
+      // uuidv4 = require('uuid/v4');
 
 global.Player = {
 
@@ -209,12 +209,10 @@ function add_player_controls() {
 
 module.exports.add_player = () => {
  
-  for (let i = 0; i <= 22; i++) {
+  for (let i = 0; i <= 21; i++) {
     let name = "survivor-bow-idle-0" + i;
-
+    
     if(i>= 10) name = "survivor-bow-idle-" + i;
-    //TODO: remove from image fiels 
-    if(i === 12) continue
 
     global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));
   }

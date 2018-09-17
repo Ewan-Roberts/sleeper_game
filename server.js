@@ -3,7 +3,7 @@ const   express = require("express"),
         server  = require("http").Server(app),
         port    = process.env.PORT || 3000,
         mongoose = require("mongoose"),
-        utils = require('require-dir')('./back-end'),
+        utils = require('require-dir')('./back_end'),
         User = require("./models/User.js")
 
 // mongoose.connect('mongodb://localhost/test');
