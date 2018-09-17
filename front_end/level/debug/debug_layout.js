@@ -167,9 +167,7 @@ module.exports.add_floor = () => {
       clear_pad.fired = true;
 
       cutscene_intro.start()
-
     } else filterUtil.clear();
-    
   }
 
   global.eventTriggers.addChild(

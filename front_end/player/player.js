@@ -186,10 +186,8 @@ function add_player_controls() {
         item.y-=item.weight
       }
       if(key === "down") {
-        
         global.Player.sprite.y -=global.Player.movement_speed-item.weight
         item.y+=item.weight
-      
       }
       if(key === "left") {
         global.Player.sprite.x +=global.Player.movement_speed-item.weight
@@ -211,7 +209,7 @@ module.exports.add_player = () => {
  
   for (let i = 0; i <= 21; i++) {
     let name = "survivor-bow-idle-0" + i;
-    
+
     if(i>= 10) name = "survivor-bow-idle-" + i;
 
     global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));

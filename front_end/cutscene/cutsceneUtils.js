@@ -8,32 +8,23 @@ module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
 
 })
 
-
-
 module.exports.clearScene = () => global.viewport.removeChildren();
 
 module.exports.createPlayer = () =>{
 
-  new PIXI.loaders.Loader()
-  .load((loader, res) => {
-    
-    global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-    global.Player.sprite.anchor.set(0.5);
-    global.Player.sprite.width /= 2
-    global.Player.sprite.height /= 2
-    global.Player.sprite.animationSpeed = 0.6;
-    global.Player.sprite.play();
-    global.Player.sprite.zIndex = -20;
-  
-  
-    global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
-    global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-    global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
+  global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
+  global.Player.sprite.anchor.set(0.5);
+  global.Player.sprite.width /= 2
+  global.Player.sprite.height /= 2
+  global.Player.sprite.animationSpeed = 0.6;
+  global.Player.sprite.play();
+  global.Player.sprite.zIndex = -20;
 
-    global.viewport.addChild(global.Player.sprite); 
-    
-  })
+  global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
+  global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
+  global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
 
+  global.viewport.addChild(global.Player.sprite); 
 }
 
 module.exports.wakePlayer = () => {
@@ -59,7 +50,6 @@ module.exports.movePlayer = (start,finish) => {
   const animated_player = new PIXI.extras.AnimatedSprite(Player.animation.idle);
   animated_player.x = start.x;
   animated_player.y = start.y;
-  
   animated_player.height /= 3
   animated_player.width /= 3
   animated_player.texture.width = 100
@@ -67,9 +57,6 @@ module.exports.movePlayer = (start,finish) => {
   animated_player.anchor.set(0);
   animated_player.animationSpeed = 0.4;
   animated_player.play();
-  
-  // animated_enemy.mouseDeathSound = mouseDeathSound;
-  // animated_enemy.dead = PIXI.Texture.fromFrame('images/rat_35.png')
 
   //Tween animation
   const animated_player_tween = PIXI.tweenManager.createTween(animated_player);
@@ -81,14 +68,6 @@ module.exports.movePlayer = (start,finish) => {
   animated_player_tween.name = "tween path"
   animated_player_tween.start()
   
-  animated_player_tween.on("end", function() {
-      
-      // animated_rat.alpha = 0;
-      // path_one_visual_guide.destroy()
-      // resolve()
-
-  })
   
   global.viewport.addChild(animated_player)
-
 }

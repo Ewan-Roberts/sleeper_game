@@ -2,8 +2,6 @@ const spriteHelper = require('../utils/spriteHelper.js');
 
 global.critterContainer = new PIXI.Container();
 
-
-
 const Rat = {
 
   animation: {
@@ -26,8 +24,6 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
 
   for (let i = 1; i < 15; i++) {
       let val = i < 10 ? '0' + i : i;
-      console.log(PIXI.Texture.fromFrame('rat_' + val))
-      console.log("rat")
       Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_' + val));
   }
 
@@ -72,10 +68,6 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
   resolve()
 
 })
-
-// to and from
-
-
 
 module.exports.mouseMove = (start,finish) => {
     

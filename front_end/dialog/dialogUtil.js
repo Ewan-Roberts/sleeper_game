@@ -10,7 +10,7 @@ const enemyDialogOptions = [
   'Ill help you die',
   'Give me that now',
   'Isabella? Is that you?'
-]
+];
 
 module.exports.renderText = (point, text) => {
 
@@ -22,21 +22,12 @@ module.exports.renderText = (point, text) => {
 
   function fadeOut() {
 
-    if(renderText.alpha > 0) {
-      renderText.alpha -= 0.01;
-    } else {
-      global.app.ticker.remove(fadeOut)
-    };
+    if(renderText.alpha > 0) renderText.alpha -= 0.01;
+    else global.app.ticker.remove(fadeOut);
     
   }
 
   global.app.ticker.add(fadeOut);
-
 }
 
-module.exports.enemySurprised = () => {
-
-  return enemyDialogOptions[Math.floor(Math.random()*enemyDialogOptions.length)];
-
-}
-
+module.exports.enemySurprised = () => enemyDialogOptions[Math.floor(Math.random()*enemyDialogOptions.length)];

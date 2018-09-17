@@ -4,8 +4,6 @@ const spriteHelper = require('../utils/spriteHelper.js');
 
 global.critterContainer = new PIXI.Container();
 
-
-
 const Rat = {
 
   animation: {
@@ -28,8 +26,6 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
 
   for (let i = 1; i < 15; i++) {
       let val = i < 10 ? '0' + i : i;
-      console.log(PIXI.Texture.fromFrame('rat_' + val))
-      console.log("rat")
       Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_' + val));
   }
 
@@ -74,10 +70,6 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
   resolve()
 
 })
-
-// to and from
-
-
 
 module.exports.mouseMove = (start,finish) => {
     
@@ -169,32 +161,23 @@ module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
 
 })
 
-
-
 module.exports.clearScene = () => global.viewport.removeChildren();
 
 module.exports.createPlayer = () =>{
 
-  new PIXI.loaders.Loader()
-  .load((loader, res) => {
-    
-    global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-    global.Player.sprite.anchor.set(0.5);
-    global.Player.sprite.width /= 2
-    global.Player.sprite.height /= 2
-    global.Player.sprite.animationSpeed = 0.6;
-    global.Player.sprite.play();
-    global.Player.sprite.zIndex = -20;
-  
-  
-    global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
-    global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-    global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
+  global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
+  global.Player.sprite.anchor.set(0.5);
+  global.Player.sprite.width /= 2
+  global.Player.sprite.height /= 2
+  global.Player.sprite.animationSpeed = 0.6;
+  global.Player.sprite.play();
+  global.Player.sprite.zIndex = -20;
 
-    global.viewport.addChild(global.Player.sprite); 
-    
-  })
+  global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
+  global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
+  global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
 
+  global.viewport.addChild(global.Player.sprite); 
 }
 
 module.exports.wakePlayer = () => {
@@ -220,7 +203,6 @@ module.exports.movePlayer = (start,finish) => {
   const animated_player = new PIXI.extras.AnimatedSprite(Player.animation.idle);
   animated_player.x = start.x;
   animated_player.y = start.y;
-  
   animated_player.height /= 3
   animated_player.width /= 3
   animated_player.texture.width = 100
@@ -228,9 +210,6 @@ module.exports.movePlayer = (start,finish) => {
   animated_player.anchor.set(0);
   animated_player.animationSpeed = 0.4;
   animated_player.play();
-  
-  // animated_enemy.mouseDeathSound = mouseDeathSound;
-  // animated_enemy.dead = PIXI.Texture.fromFrame('images/rat_35.png')
 
   //Tween animation
   const animated_player_tween = PIXI.tweenManager.createTween(animated_player);
@@ -242,16 +221,8 @@ module.exports.movePlayer = (start,finish) => {
   animated_player_tween.name = "tween path"
   animated_player_tween.start()
   
-  animated_player_tween.on("end", function() {
-      
-      // animated_rat.alpha = 0;
-      // path_one_visual_guide.destroy()
-      // resolve()
-
-  })
   
   global.viewport.addChild(animated_player)
-
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../utils/spriteHelper.js":16,"pixi-filters":85}],3:[function(require,module,exports){
@@ -308,7 +279,7 @@ const enemyDialogOptions = [
   'Ill help you die',
   'Give me that now',
   'Isabella? Is that you?'
-]
+];
 
 module.exports.renderText = (point, text) => {
 
@@ -320,24 +291,15 @@ module.exports.renderText = (point, text) => {
 
   function fadeOut() {
 
-    if(renderText.alpha > 0) {
-      renderText.alpha -= 0.01;
-    } else {
-      global.app.ticker.remove(fadeOut)
-    };
+    if(renderText.alpha > 0) renderText.alpha -= 0.01;
+    else global.app.ticker.remove(fadeOut);
     
   }
 
   global.app.ticker.add(fadeOut);
-
 }
 
-module.exports.enemySurprised = () => {
-
-  return enemyDialogOptions[Math.floor(Math.random()*enemyDialogOptions.length)];
-
-}
-
+module.exports.enemySurprised = () => enemyDialogOptions[Math.floor(Math.random()*enemyDialogOptions.length)];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],5:[function(require,module,exports){
@@ -356,53 +318,15 @@ const Enemy = {
     moving:     [],
     waiting:    []
   },
-
   sprite: {
     moving:     {},
     waiting:    {}
-  },
-
-  // noise: new Audio('audio/rat_noise_edited.wav')
-
+  }
 }
 
 module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
-  global.loader.load((loader,res)=>{
-    console.log(loader)
-    console.log("res")
-    const resources = res['81e4e714ce807738e1a0583e2b7671348c72e274.png'].textures
-    console.log(resources.black_wall)
-  })
-  // PIXI.loader        
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_0.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_1.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_2.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_3.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_4.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_5.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_6.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_7.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_8.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_9.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_10.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_11.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_12.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_13.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_14.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_15.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_16.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_17.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_18.png')
-  // .add('images/Top_Down_Survivor/knife/move/survivor-move_knife_19.png')
-  // // .on("progress", loader=>{})
-  // .load(()=>resolve('enemy loaded'))
 
-})
-.then(image_load_confirmation=>{
-
-  for (let i = 0; i < 19; i++) {
-    Enemy.animation.moving.push(PIXI.Texture.fromFrame('images/Top_Down_Survivor/knife/move/survivor-move_knife_' + i + '.png'));
-  }
+  for (let i = 0; i < 19; i++) Enemy.animation.moving.push(PIXI.Texture.fromFrame('survivor-move_knife_'+i));
 
 })
 
@@ -463,27 +387,20 @@ module.exports.enemy_path = path_data => {
   
   global.enemyContainer.addChild(enemy_sprite,influence_box)
   global.viewport.addChild(global.enemyContainer)
-
 }
 
 module.exports.move = (start,finish) => {
 
-  //Create a custom path the graphic will follow
   const path_one = new PIXI.tween.TweenPath()
   .moveTo(start.x, start.y)
   .lineTo(finish.x, finish.y)
 
-  //FOR TESTING
-  //Create a custom path the graphic will follow
   const path_one_visual_guide = new PIXI.Graphics()
   .lineStyle(1, 0xffffff, 1)
   .drawPath(path_one)
   global.viewport.addChild(path_one_visual_guide)
 
   const animated_enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  // animated_rat.x = 900;
-  // animated_rat.y = 1000;
-  
   animated_enemy.height /= 3
   animated_enemy.width /= 3
   animated_enemy.texture.width = 100
@@ -491,11 +408,7 @@ module.exports.move = (start,finish) => {
   animated_enemy.anchor.set(0);
   animated_enemy.animationSpeed = 0.4;
   animated_enemy.play();
-  
-  // animated_enemy.mouseDeathSound = mouseDeathSound;
-  // animated_enemy.dead = PIXI.Texture.fromFrame('images/rat_35.png')
 
-  //Tween animation
   const animated_enemy_tween = PIXI.tweenManager.createTween(animated_enemy);
   animated_enemy_tween.name = "tween"
   animated_enemy_tween.path = path_one;
@@ -504,15 +417,7 @@ module.exports.move = (start,finish) => {
   animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
   animated_enemy_tween.name = "tween path"
   animated_enemy_tween.start()
-  
-  animated_enemy_tween.on("end", function() {
-      
-      // animated_rat.alpha = 0;
-      // path_one_visual_guide.destroy()
-      // resolve()
 
-  })
-  
   global.enemyContainer.addChild(animated_enemy)
   global.viewport.addChild(global.enemyContainer)
 
@@ -520,13 +425,11 @@ module.exports.move = (start,finish) => {
 }
 
 module.exports.projectileAttack = (target) => {
-
   const enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
   
   bowHelper.arrowManagement(500, enemy, target)
   
   global.viewport.addChild(enemy)
-
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../dialog/dialogUtil.js":4,"../level/level_utils":10,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper":19}],6:[function(require,module,exports){
@@ -1080,7 +983,6 @@ module.exports={ "columns":0,
 const PIXI = require("pixi.js");
 module.exports.add_items = () => {
 
-  // PIXI.Texture.fromLoader(resources[name])
   const box_full  = PIXI.Sprite.fromFrame('chest_full')
   box_full.position.set(-1200,0);
   box_full.width *=2;
@@ -1089,14 +991,11 @@ module.exports.add_items = () => {
   box_full.interactive = true;
   box_full.buttonMode = true;
   box_full.id = 35;
-  box_full.on('pointerdown', ()=> {
-    
+  box_full.on('pointerdown', ()=> { 
     box_full.texture = res.box_empty.texture
-    console.log('box clicked')
+    
     global.socket.emit("get_container_contents", box_full.id)
-
   }); 
-
 
   const movable_box  = PIXI.Sprite.fromFrame('chest_full')
   movable_box.position.set(-600,400);
@@ -1106,16 +1005,10 @@ module.exports.add_items = () => {
   movable_box.interactive = true;
   movable_box.buttonMode = true;
   movable_box.weight = 10;
-  movable_box.on('pointerdown', ()=> {
-    
-    console.log('movable')
-
-  });
   
   global.movableItems.addChild(movable_box)
   global.collisionItems.addChild(box_full)
   global.viewport.addChild(global.collisionItems)
-
 
 	global.socket.on("container_contents", contents =>{
 		console.log(contents)
@@ -1294,9 +1187,7 @@ module.exports.add_floor = () => {
       clear_pad.fired = true;
 
       cutscene_intro.start()
-
     } else filterUtil.clear();
-    
   }
 
   global.eventTriggers.addChild(
@@ -1702,10 +1593,8 @@ module.exports.load_network_sprite = () => {
   global.socket.emit("get_network_sprites", ({x: global.Player.sprite.x, y: global.Player.sprite.y}));
 
   global.socket.on('server_sprite' , server_sprite =>{
-
     bunny.x = server_sprite.x;
     bunny.y = server_sprite.y;
-    
   })
 
   global.viewport.addChild(bunny)
@@ -1901,10 +1790,8 @@ function add_player_controls() {
         item.y-=item.weight
       }
       if(key === "down") {
-        
         global.Player.sprite.y -=global.Player.movement_speed-item.weight
         item.y+=item.weight
-      
       }
       if(key === "left") {
         global.Player.sprite.x +=global.Player.movement_speed-item.weight
@@ -1926,7 +1813,7 @@ module.exports.add_player = () => {
  
   for (let i = 0; i <= 21; i++) {
     let name = "survivor-bow-idle-0" + i;
-    
+
     if(i>= 10) name = "survivor-bow-idle-" + i;
 
     global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));
