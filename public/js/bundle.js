@@ -225,7 +225,7 @@ module.exports.movePlayer = (start,finish) => {
   global.viewport.addChild(animated_player)
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":16,"pixi-filters":85}],3:[function(require,module,exports){
+},{"../utils/spriteHelper.js":16,"pixi-filters":114}],3:[function(require,module,exports){
 (function (global){
 
 const cutsceneUtil = require('./cutsceneUtils'),
@@ -445,35 +445,38 @@ module.exports.projectileAttack = (target) => {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../dialog/dialogUtil.js":4,"../level/level_utils":10,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper":19}],6:[function(require,module,exports){
 (function (global){
-const PIXI = require('pixi.js'),
-      io = require('socket.io-client'),
-      Viewport = require('pixi-viewport'),
-      tween = require('pixi-tween'),
-      Layer = require('pixi-layers'),
-      pixiPackerParser = require("pixi-packer-parser");
+const PIXI = require('pixi.js');
+const io = require('socket.io-client');
+const Viewport = require('pixi-viewport');
+const tween = require('pixi-tween');
+const Layer = require('pixi-layers');
+const pixiPackerParser = require('pixi-packer-parser');
+
 
 global.socket = io.connect();
-global.socket.on("thing", res => console.log(res))
+// global.socket.on('thing', (res) => {
+//   console.log(res);
+// });
 
 // add the viewport to the stage
-global.app = new PIXI.Application({ 
-    width: window.innerWidth,   // default: 800
-    height: window.innerHeight, // default: 600
-    antialias: false,           // default: false
-    autoResize: true,
-    backgroundColor: 0xC1C1C1
+global.app = new PIXI.Application({
+  width: global.window.innerWidth,
+  height: global.window.innerHeight,
+  antialias: false,
+  autoResize: true,
+  backgroundColor: 0xC1C1C1,
 });
- 
-document.body.appendChild(global.app.view);
+
+global.document.body.appendChild(global.app.view);
 
 global.viewport = new Viewport({
-    screenWidth: window.innerWidth,
-    screenHeight: window.innerHeight,
-    worldWidth: window.innerWidth,
-    worldHeight: window.innerHeight
+  screenWidth: global.window.innerWidth,
+  screenHeight: global.window.innerHeight,
+  worldWidth: global.window.innerWidth,
+  worldHeight: global.window.innerHeight,
 });
 
-global.app.stage.addChild(viewport);
+global.app.stage.addChild(global.viewport);
 global.viewport.drag().decelerate();
 
 global.collisionItems = new PIXI.Container();
@@ -482,21 +485,19 @@ global.doors = new PIXI.Container();
 global.layer = new PIXI.display.Layer();
 global.layer.group.enableSort = true;
 
-global.viewport.addChild(global.collisionItems,global.movableItems,global.doors)
+global.viewport.addChild(global.collisionItems, global.movableItems, global.doors);
 global.loader = new PIXI.loaders.Loader();
 global.loader.use(pixiPackerParser(PIXI));
-global.loader.add("../../images/bedroom_EN_web.json");
-global.loader.load((loader,res) => { 
-
-  const debug = require("./level/debug/debug_layout.js");
-  debug.add_floor()
-
+global.loader.add('../../images/bedroom_EN_web.json');
+global.loader.load(() => {
+  const debug = require('./level/debug/debug_layout.js');
+  debug.add_floor();
 });
 
-app.ticker.add(delta => PIXI.tweenManager.update());
+global.app.ticker.add(() => PIXI.tweenManager.update());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":9,"pixi-layers":103,"pixi-packer-parser":104,"pixi-tween":105,"pixi-viewport":118,"pixi.js":235,"socket.io-client":308}],7:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":9,"pixi-layers":132,"pixi-packer-parser":133,"pixi-tween":134,"pixi-viewport":147,"pixi.js":264,"socket.io-client":306}],7:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -1027,7 +1028,7 @@ module.exports.add_items = () => {
 
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":235}],9:[function(require,module,exports){
+},{"pixi.js":264}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1880,7 +1881,7 @@ module.exports.remove_controls = () =>{
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":1,"../utils/documentHelper.js":14,"../utils/doorHelper.js":15,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper.js":19,"intersects":65,"pixi.js":235}],14:[function(require,module,exports){
+},{"../animals/rat.js":1,"../utils/documentHelper.js":14,"../utils/doorHelper.js":15,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper.js":19,"intersects":91,"pixi.js":264}],14:[function(require,module,exports){
 //utils
 
 const keymap = {
@@ -2083,7 +2084,7 @@ module.exports.hitBoxSpriteObj = (sprite, player) => {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":235}],17:[function(require,module,exports){
+},{"pixi.js":264}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2177,7 +2178,7 @@ module.exports.clear = () => new Promise((resolve,reject)=>{
   
 })
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":85}],18:[function(require,module,exports){
+},{"pixi-filters":114}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2286,48 +2287,47 @@ module.exports.arrowManagement = (power, origin, target) => {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/spriteHelper.js":16}],20:[function(require,module,exports){
 (function (global){
+'use sctrict';
+
+const PIXI = require('pixi.js');
 
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-module.exports.start_rain = (x1,x2,y1,y2) => {
-    
-  new Promise((resolve,reject)=>{
-    let rain_frames = []
+module.exports.start_rain = (x1, x2, y1, y2) => {
+  const rainFrames = [];
 
-    for (let i = 1; i < 13; i++) {
-      let val = i < 10 ? '0' + i : i;
-      rain_frames.push(PIXI.Texture.fromFrame('raindrop_' + val));
-    }
-    
-    return rain_frames;
-  })
-  .then(frames => {
-    const rain_noise = new Audio('audio/light_rain.wav')
+  for (let i = 1; i < 13; i += 1) {
+    const val = i < 10 ? `0${i}` : i;
 
-    for (let i = 0; i < 150; i++) {
-      const animated_drop = new PIXI.extras.AnimatedSprite(frames);
-      animated_drop.x = getRandomArbitrary(x1,x2);
-      animated_drop.y = getRandomArbitrary(y1,y2);
-      animated_drop.width /= 2.5
-      animated_drop.height /= 2.5
-      animated_drop.alpha = getRandomArbitrary(0.03,0.3)
-      animated_drop.anchor.set(0.5);
-      animated_drop.animationSpeed = getRandomArbitrary(0.1,0.2);
-      
-      setInterval(()=>animated_drop.play(),getRandomArbitrary(200,1100))
-      setInterval(()=>animated_drop.gotoAndStop(11),getRandomArbitrary(100,1000))
-      
-      rain_noise.volume = 0.05;
-      rain_noise.play()
+    rainFrames.push(PIXI.Texture.fromFrame(`raindrop_${val}`));
+  }
 
-      global.viewport.addChild(animated_drop)
-    }
-  })
-}
+  const rainNoise = new Audio('audio/light_rain.wav');
+
+  for (let i = 0; i < 150; i += 1) {
+    const animatedDrop = new PIXI.extras.AnimatedSprite(rainFrames);
+    animatedDrop.x = getRandomArbitrary(x1, x2);
+    animatedDrop.y = getRandomArbitrary(y1, y2);
+    animatedDrop.width /= 2.5;
+    animatedDrop.height /= 2.5;
+    animatedDrop.alpha = getRandomArbitrary(0.03, 0.3);
+    animatedDrop.anchor.set(0.5);
+    animatedDrop.animationSpeed = getRandomArbitrary(0.1, 0.2);
+
+    setInterval(() => animatedDrop.play(), getRandomArbitrary(200, 1100));
+    setInterval(() => animatedDrop.gotoAndStop(11), getRandomArbitrary(100, 1000));
+
+    rainNoise.volume = 0.05;
+    rainNoise.play();
+
+    global.viewport.addChild(animatedDrop);
+  }
+};
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{"pixi.js":264}],21:[function(require,module,exports){
 /*!
  * @pixi/filter-adjustment - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2338,7 +2338,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(t.__filters={},t.PIXI)}(this,function(t,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float gamma;\nuniform float contrast;\nuniform float saturation;\nuniform float brightness;\nuniform float red;\nuniform float green;\nuniform float blue;\nuniform float alpha;\n\nvoid main(void)\n{\n    vec4 c = texture2D(uSampler, vTextureCoord);\n\n    if (c.a > 0.0) {\n        c.rgb /= c.a;\n\n        vec3 rgb = pow(c.rgb, vec3(1. / gamma));\n        rgb = mix(vec3(.5), mix(vec3(dot(vec3(.2125, .7154, .0721), rgb)), rgb, saturation), contrast);\n        rgb.r *= red;\n        rgb.g *= green;\n        rgb.b *= blue;\n        c.rgb = rgb * brightness;\n\n        c.rgb *= c.a;\n    }\n\n    gl_FragColor = c * alpha;\n}\n",i=function(t){function n(n){t.call(this,r,e),Object.assign(this,{gamma:1,saturation:1,contrast:1,brightness:1,red:1,green:1,blue:1,alpha:1},n)}return t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n,n.prototype.apply=function(t,n,r,e){this.uniforms.gamma=Math.max(this.gamma,1e-4),this.uniforms.saturation=this.saturation,this.uniforms.contrast=this.contrast,this.uniforms.brightness=this.brightness,this.uniforms.red=this.red,this.uniforms.green=this.green,this.uniforms.blue=this.blue,this.uniforms.alpha=this.alpha,t.applyFilter(this,n,r,e)},n}(n.Filter);t.AdjustmentFilter=i,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],22:[function(require,module,exports){
+},{"pixi.js":264}],22:[function(require,module,exports){
 /*!
  * @pixi/filter-advanced-bloom - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2349,7 +2349,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js"),require("@pixi/filter-kawase-blur")):"function"==typeof define&&define.amd?define(["exports","pixi.js","@pixi/filter-kawase-blur"],t):t(e.__filters={},e.PIXI,e.PIXI.filters)}(this,function(e,t,r){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform float threshold;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    // A simple & fast algorithm for getting brightness.\n    // It's inaccuracy , but good enought for this feature.\n    float _max = max(max(color.r, color.g), color.b);\n    float _min = min(min(color.r, color.g), color.b);\n    float brightness = (_max + _min) * 0.5;\n\n    if(brightness > threshold) {\n        gl_FragColor = color;\n    } else {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\n    }\n}\n",n=function(e){function t(t){void 0===t&&(t=.5),e.call(this,o,i),this.threshold=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var r={threshold:{configurable:!0}};return r.threshold.get=function(){return this.uniforms.threshold},r.threshold.set=function(e){this.uniforms.threshold=e},Object.defineProperties(t.prototype,r),t}(t.Filter),l="uniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform sampler2D bloomTexture;\nuniform float bloomScale;\nuniform float brightness;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    color.rgb *= brightness;\n    vec4 bloomColor = vec4(texture2D(bloomTexture, vTextureCoord).rgb, 0.0);\n    bloomColor.rgb *= bloomScale;\n    gl_FragColor = color + bloomColor;\n}\n",s=function(e){function i(i){e.call(this,o,l),"number"==typeof i&&(i={threshold:i}),i=Object.assign({threshold:.5,bloomScale:1,brightness:1,kernels:null,blur:8,quality:4,pixelSize:1,resolution:t.settings.RESOLUTION},i),this.bloomScale=i.bloomScale,this.brightness=i.brightness;var s=i.kernels,u=i.blur,a=i.quality,c=i.pixelSize,h=i.resolution;this._extractFilter=new n(i.threshold),this._extractFilter.resolution=h,this._blurFilter=s?new r.KawaseBlurFilter(s):new r.KawaseBlurFilter(u,a),this.pixelSize=c,this.resolution=h}e&&(i.__proto__=e),i.prototype=Object.create(e&&e.prototype),i.prototype.constructor=i;var s={resolution:{configurable:!0},threshold:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return i.prototype.apply=function(e,t,r,o,i){var n=e.getRenderTarget(!0);this._extractFilter.apply(e,t,n,!0,i);var l=e.getRenderTarget(!0);this._blurFilter.apply(e,n,l,!0,i),this.uniforms.bloomScale=this.bloomScale,this.uniforms.brightness=this.brightness,this.uniforms.bloomTexture=l,e.applyFilter(this,t,r,o),e.returnRenderTarget(l),e.returnRenderTarget(n)},s.resolution.get=function(){return this._resolution},s.resolution.set=function(e){this._resolution=e,this._extractFilter&&(this._extractFilter.resolution=e),this._blurFilter&&(this._blurFilter.resolution=e)},s.threshold.get=function(){return this._extractFilter.threshold},s.threshold.set=function(e){this._extractFilter.threshold=e},s.kernels.get=function(){return this._blurFilter.kernels},s.kernels.set=function(e){this._blurFilter.kernels=e},s.blur.get=function(){return this._blurFilter.blur},s.blur.set=function(e){this._blurFilter.blur=e},s.quality.get=function(){return this._blurFilter.quality},s.quality.set=function(e){this._blurFilter.quality=e},s.pixelSize.get=function(){return this._blurFilter.pixelSize},s.pixelSize.set=function(e){this._blurFilter.pixelSize=e},Object.defineProperties(i.prototype,s),i}(t.Filter);e.AdvancedBloomFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":38,"pixi.js":235}],23:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":38,"pixi.js":264}],23:[function(require,module,exports){
 /*!
  * @pixi/filter-ascii - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2360,7 +2360,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform float pixelSize;\nuniform sampler2D uSampler;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n    return floor( coord / size ) * size;\n}\n\nvec2 getMod(vec2 coord, vec2 size)\n{\n    return mod( coord , size) / size;\n}\n\nfloat character(float n, vec2 p)\n{\n    p = floor(p*vec2(4.0, -4.0) + 2.5);\n    if (clamp(p.x, 0.0, 4.0) == p.x && clamp(p.y, 0.0, 4.0) == p.y)\n    {\n        if (int(mod(n/exp2(p.x + 5.0*p.y), 2.0)) == 1) return 1.0;\n    }\n    return 0.0;\n}\n\nvoid main()\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    // get the rounded color..\n    vec2 pixCoord = pixelate(coord, vec2(pixelSize));\n    pixCoord = unmapCoord(pixCoord);\n\n    vec4 color = texture2D(uSampler, pixCoord);\n\n    // determine the character to use\n    float gray = (color.r + color.g + color.b) / 3.0;\n\n    float n =  65536.0;             // .\n    if (gray > 0.2) n = 65600.0;    // :\n    if (gray > 0.3) n = 332772.0;   // *\n    if (gray > 0.4) n = 15255086.0; // o\n    if (gray > 0.5) n = 23385164.0; // &\n    if (gray > 0.6) n = 15252014.0; // 8\n    if (gray > 0.7) n = 13199452.0; // @\n    if (gray > 0.8) n = 11512810.0; // #\n\n    // get the mod..\n    vec2 modd = getMod(coord, vec2(pixelSize));\n\n    gl_FragColor = color * character( n, vec2(-1.0) + modd * 2.0);\n\n}",t=function(e){function n(n){void 0===n&&(n=8),e.call(this,o,r),this.size=n}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.pixelSize},t.size.set=function(e){this.uniforms.pixelSize=e},Object.defineProperties(n.prototype,t),n}(n.Filter);e.AsciiFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],24:[function(require,module,exports){
+},{"pixi.js":264}],24:[function(require,module,exports){
 /*!
  * @pixi/filter-bevel - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2371,7 +2371,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float transformX;\nuniform float transformY;\nuniform vec3 lightColor;\nuniform float lightAlpha;\nuniform vec3 shadowColor;\nuniform float shadowAlpha;\n\nvoid main(void) {\n    vec2 transform = vec2(1.0 / filterArea) * vec2(transformX, transformY);\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    float light = texture2D(uSampler, vTextureCoord - transform).a;\n    float shadow = texture2D(uSampler, vTextureCoord + transform).a;\n\n    color.rgb = mix(color.rgb, lightColor, clamp((color.a - light) * lightAlpha, 0.0, 1.0));\n    color.rgb = mix(color.rgb, shadowColor, clamp((color.a - shadow) * shadowAlpha, 0.0, 1.0));\n    gl_FragColor = vec4(color.rgb * color.a, color.a);\n}\n",n=function(o){function n(t){void 0===t&&(t={}),o.call(this,r,i),this.uniforms.lightColor=new Float32Array(3),this.uniforms.shadowColor=new Float32Array(3),t=Object.assign({rotation:45,thickness:2,lightColor:16777215,lightAlpha:.7,shadowColor:0,shadowAlpha:.7},t),this.rotation=t.rotation,this.thickness=t.thickness,this.lightColor=t.lightColor,this.lightAlpha=t.lightAlpha,this.shadowColor=t.shadowColor,this.shadowAlpha=t.shadowAlpha}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var e={rotation:{configurable:!0},thickness:{configurable:!0},lightColor:{configurable:!0},lightAlpha:{configurable:!0},shadowColor:{configurable:!0},shadowAlpha:{configurable:!0}};return n.prototype._updateTransform=function(){this.uniforms.transformX=this._thickness*Math.cos(this._angle),this.uniforms.transformY=this._thickness*Math.sin(this._angle)},e.rotation.get=function(){return this._angle/t.DEG_TO_RAD},e.rotation.set=function(o){this._angle=o*t.DEG_TO_RAD,this._updateTransform()},e.thickness.get=function(){return this._thickness},e.thickness.set=function(o){this._thickness=o,this._updateTransform()},e.lightColor.get=function(){return t.utils.rgb2hex(this.uniforms.lightColor)},e.lightColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.lightColor)},e.lightAlpha.get=function(){return this.uniforms.lightAlpha},e.lightAlpha.set=function(o){this.uniforms.lightAlpha=o},e.shadowColor.get=function(){return t.utils.rgb2hex(this.uniforms.shadowColor)},e.shadowColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.shadowColor)},e.shadowAlpha.get=function(){return this.uniforms.shadowAlpha},e.shadowAlpha.set=function(o){this.uniforms.shadowAlpha=o},Object.defineProperties(n.prototype,e),n}(t.Filter);o.BevelFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],25:[function(require,module,exports){
+},{"pixi.js":264}],25:[function(require,module,exports){
 /*!
  * @pixi/filter-bloom - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2382,7 +2382,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(t,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(t.__filters={},t.PIXI)}(this,function(t,r){"use strict";var e=r.filters,i=e.BlurXFilter,l=e.BlurYFilter,u=e.AlphaFilter,n=function(t){function e(e,n,o,s){var b,f;void 0===e&&(e=2),void 0===n&&(n=4),void 0===o&&(o=r.settings.RESOLUTION),void 0===s&&(s=5),t.call(this),"number"==typeof e?(b=e,f=e):e instanceof r.Point?(b=e.x,f=e.y):Array.isArray(e)&&(b=e[0],f=e[1]),this.blurXFilter=new i(b,n,o,s),this.blurYFilter=new l(f,n,o,s),this.blurYFilter.blendMode=r.BLEND_MODES.SCREEN,this.defaultFilter=new u}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var n={blur:{configurable:!0},blurX:{configurable:!0},blurY:{configurable:!0}};return e.prototype.apply=function(t,r,e){var i=t.getRenderTarget(!0);this.defaultFilter.apply(t,r,e),this.blurXFilter.apply(t,r,i),this.blurYFilter.apply(t,i,e),t.returnRenderTarget(i)},n.blur.get=function(){return this.blurXFilter.blur},n.blur.set=function(t){this.blurXFilter.blur=this.blurYFilter.blur=t},n.blurX.get=function(){return this.blurXFilter.blur},n.blurX.set=function(t){this.blurXFilter.blur=t},n.blurY.get=function(){return this.blurYFilter.blur},n.blurY.set=function(t){this.blurYFilter.blur=t},Object.defineProperties(e.prototype,n),e}(r.Filter);t.BloomFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],26:[function(require,module,exports){
+},{"pixi.js":264}],26:[function(require,module,exports){
 /*!
  * @pixi/filter-bulge-pinch - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2393,7 +2393,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="uniform float radius;\nuniform float strength;\nuniform vec2 center;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nvoid main()\n{\n    vec2 coord = vTextureCoord * filterArea.xy;\n    coord -= center * dimensions.xy;\n    float distance = length(coord);\n    if (distance < radius) {\n        float percent = distance / radius;\n        if (strength > 0.0) {\n            coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\n        } else {\n            coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\n        }\n    }\n    coord += center * dimensions.xy;\n    coord /= filterArea.xy;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    gl_FragColor = color;\n}\n",o=function(e){function n(n,o,i){e.call(this,t,r),this.uniforms.dimensions=new Float32Array(2),this.center=n||[.5,.5],this.radius=o||100,this.strength=i||1}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={radius:{configurable:!0},strength:{configurable:!0},center:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,e.applyFilter(this,n,t,r)},o.radius.get=function(){return this.uniforms.radius},o.radius.set=function(e){this.uniforms.radius=e},o.strength.get=function(){return this.uniforms.strength},o.strength.set=function(e){this.uniforms.strength=e},o.center.get=function(){return this.uniforms.center},o.center.set=function(e){this.uniforms.center=e},Object.defineProperties(n.prototype,o),n}(n.Filter);e.BulgePinchFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],27:[function(require,module,exports){
+},{"pixi.js":264}],27:[function(require,module,exports){
 /*!
  * @pixi/filter-color-map - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2404,7 +2404,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform sampler2D colorMap;\n\nuniform float _mix;\nuniform float _size;\nuniform float _sliceSize;\nuniform float _slicePixelSize;\nuniform float _sliceInnerSize;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord.xy);\n\n    float sliceIndex = color.b * (_size - 1.0);\n    float zSlice0 = floor(sliceIndex);\n    float zSlice1 = ceil(sliceIndex);\n\n    float xOffset = _slicePixelSize * 0.5 + color.r * _sliceInnerSize;\n    float s0 = xOffset + zSlice0 * _sliceSize;\n    float s1 = xOffset + zSlice1 * _sliceSize;\n    vec4 slice0Color = texture2D(colorMap, vec2(s0, color.g));\n    vec4 slice1Color = texture2D(colorMap, vec2(s1, color.g));\n    vec4 adjusted = mix(slice0Color, slice1Color, fract(sliceIndex));\n\n    gl_FragColor = mix(color, adjusted, _mix);\n}\n",s=function(e){function s(i,s,r){void 0===s&&(s=!1),void 0===r&&(r=1),e.call(this,t,o),this._size=0,this._sliceSize=0,this._slicePixelSize=0,this._sliceInnerSize=0,this._scaleMode=null,this._nearest=!1,this.nearest=s,this.mix=r,this.colorMap=i}e&&(s.__proto__=e),s.prototype=Object.create(e&&e.prototype),s.prototype.constructor=s;var r={colorSize:{configurable:!0},colorMap:{configurable:!0},nearest:{configurable:!0}};return s.prototype.apply=function(e,i,t,o){this.uniforms._mix=this.mix,e.applyFilter(this,i,t,o)},r.colorSize.get=function(){return this._size},r.colorMap.get=function(){return this._colorMap},r.colorMap.set=function(e){e instanceof i.Texture||(e=i.Texture.from(e)),e&&e.baseTexture&&(e.baseTexture.scaleMode=this._scaleMode,e.baseTexture.mipmap=!1,this._size=e.height,this._sliceSize=1/this._size,this._slicePixelSize=this._sliceSize/this._size,this._sliceInnerSize=this._slicePixelSize*(this._size-1),this.uniforms._size=this._size,this.uniforms._sliceSize=this._sliceSize,this.uniforms._slicePixelSize=this._slicePixelSize,this.uniforms._sliceInnerSize=this._sliceInnerSize,this.uniforms.colorMap=e),this._colorMap=e},r.nearest.get=function(){return this._nearest},r.nearest.set=function(e){this._nearest=e,this._scaleMode=e?i.SCALE_MODES.NEAREST:i.SCALE_MODES.LINEAR;var t=this._colorMap;t&&t.baseTexture&&(t.baseTexture._glTextures={},t.baseTexture.scaleMode=this._scaleMode,t.baseTexture.mipmap=!1,t._updateID++,t.baseTexture.emit("update",t.baseTexture))},s.prototype.updateColorMap=function(){var e=this._colorMap;e&&e.baseTexture&&(e._updateID++,e.baseTexture.emit("update",e.baseTexture),this.colorMap=e)},s.prototype.destroy=function(i){this._colorMap&&this._colorMap.destroy(i),e.prototype.destroy.call(this)},Object.defineProperties(s.prototype,r),s}(i.Filter);e.ColorMapFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],28:[function(require,module,exports){
+},{"pixi.js":264}],28:[function(require,module,exports){
 /*!
  * @pixi/filter-color-replace - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2415,7 +2415,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(o,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(o.__filters={},o.PIXI)}(this,function(o,r){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec3 originalColor;\nuniform vec3 newColor;\nuniform float epsilon;\nvoid main(void) {\n    vec4 currentColor = texture2D(uSampler, vTextureCoord);\n    vec3 colorDiff = originalColor - (currentColor.rgb / max(currentColor.a, 0.0000000001));\n    float colorDistance = length(colorDiff);\n    float doReplace = step(colorDistance, epsilon);\n    gl_FragColor = vec4(mix(currentColor.rgb, (newColor + colorDiff) * currentColor.a, doReplace), currentColor.a);\n}\n",n=function(o){function n(r,n,t){void 0===r&&(r=16711680),void 0===n&&(n=0),void 0===t&&(t=.4),o.call(this,e,i),this.uniforms.originalColor=new Float32Array(3),this.uniforms.newColor=new Float32Array(3),this.originalColor=r,this.newColor=n,this.epsilon=t}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={originalColor:{configurable:!0},newColor:{configurable:!0},epsilon:{configurable:!0}};return t.originalColor.set=function(o){var e=this.uniforms.originalColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._originalColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._originalColor=r.utils.rgb2hex(e))},t.originalColor.get=function(){return this._originalColor},t.newColor.set=function(o){var e=this.uniforms.newColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._newColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._newColor=r.utils.rgb2hex(e))},t.newColor.get=function(){return this._newColor},t.epsilon.set=function(o){this.uniforms.epsilon=o},t.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(n.prototype,t),n}(r.Filter);o.ColorReplaceFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],29:[function(require,module,exports){
+},{"pixi.js":264}],29:[function(require,module,exports){
 /*!
  * @pixi/filter-convolution - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2426,7 +2426,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying mediump vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec2 texelSize;\nuniform float matrix[9];\n\nvoid main(void)\n{\n   vec4 c11 = texture2D(uSampler, vTextureCoord - texelSize); // top left\n   vec4 c12 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - texelSize.y)); // top center\n   vec4 c13 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y - texelSize.y)); // top right\n\n   vec4 c21 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y)); // mid left\n   vec4 c22 = texture2D(uSampler, vTextureCoord); // mid center\n   vec4 c23 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y)); // mid right\n\n   vec4 c31 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y + texelSize.y)); // bottom left\n   vec4 c32 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + texelSize.y)); // bottom center\n   vec4 c33 = texture2D(uSampler, vTextureCoord + texelSize); // bottom right\n\n   gl_FragColor =\n       c11 * matrix[0] + c12 * matrix[1] + c13 * matrix[2] +\n       c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +\n       c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];\n\n   gl_FragColor.a = c22.a;\n}\n",o=function(e){function t(t,o,n){e.call(this,r,i),this.uniforms.texelSize=new Float32Array(9),this.matrix=t,this.width=o,this.height=n}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var o={matrix:{configurable:!0},width:{configurable:!0},height:{configurable:!0}};return o.matrix.get=function(){return this.uniforms.matrix},o.matrix.set=function(e){this.uniforms.matrix=new Float32Array(e)},o.width.get=function(){return 1/this.uniforms.texelSize[0]},o.width.set=function(e){this.uniforms.texelSize[0]=1/e},o.height.get=function(){return 1/this.uniforms.texelSize[1]},o.height.set=function(e){this.uniforms.texelSize[1]=1/e},Object.defineProperties(t.prototype,o),t}(t.Filter);e.ConvolutionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],30:[function(require,module,exports){
+},{"pixi.js":264}],30:[function(require,module,exports){
 /*!
  * @pixi/filter-cross-hatch - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2437,7 +2437,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(n,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(n.__filters={},n.PIXI)}(this,function(n,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void)\n{\n    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);\n\n    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n\n    if (lum < 1.00)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.75)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.50)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.3)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n}\n",t=function(n){function o(){n.call(this,r,e)}return n&&(o.__proto__=n),o.prototype=Object.create(n&&n.prototype),o.prototype.constructor=o,o}(o.Filter);n.CrossHatchFilter=t,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],31:[function(require,module,exports){
+},{"pixi.js":264}],31:[function(require,module,exports){
 /*!
  * @pixi/filter-crt - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2448,7 +2448,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(n,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(n.__filters={},n.PIXI)}(this,function(n,i){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nconst float SQRT_2 = 1.414213;\n\nconst float light = 1.0;\n\nuniform float curvature;\nuniform float lineWidth;\nuniform float lineContrast;\nuniform bool verticalLine;\nuniform float noise;\nuniform float noiseSize;\n\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\n\nuniform float seed;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    vec2 dir = vec2(coord - vec2(0.5, 0.5));\n\n    float _c = curvature > 0. ? curvature : 1.;\n    float k = curvature > 0. ?(length(dir * dir) * 0.25 * _c * _c + 0.935 * _c) : 1.;\n    vec2 uv = dir * k;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 rgb = gl_FragColor.rgb;\n\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        rgb += _noise * noise;\n    }\n\n    if (lineWidth > 0.0) {\n        float v = (verticalLine ? uv.x * dimensions.x : uv.y * dimensions.y) * min(1.0, 2.0 / lineWidth ) / _c;\n        float j = 1. + cos(v * 1.2 - time) * 0.5 * lineContrast;\n        rgb *= j;\n        float segment = verticalLine ? mod((dir.x + .5) * dimensions.x, 4.) : mod((dir.y + .5) * dimensions.y, 4.);\n        rgb *= 0.99 + ceil(segment) * 0.015;\n    }\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    gl_FragColor.rgb = rgb;\n}\n",o=function(n){function i(i){n.call(this,e,t),this.uniforms.dimensions=new Float32Array(2),this.time=0,this.seed=0,Object.assign(this,{curvature:1,lineWidth:1,lineContrast:.25,verticalLine:!1,noise:0,noiseSize:1,seed:0,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3,time:0},i)}n&&(i.__proto__=n),i.prototype=Object.create(n&&n.prototype),i.prototype.constructor=i;var o={curvature:{configurable:!0},lineWidth:{configurable:!0},lineContrast:{configurable:!0},verticalLine:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return i.prototype.apply=function(n,i,e,t){this.uniforms.dimensions[0]=i.sourceFrame.width,this.uniforms.dimensions[1]=i.sourceFrame.height,this.uniforms.seed=this.seed,this.uniforms.time=this.time,n.applyFilter(this,i,e,t)},o.curvature.set=function(n){this.uniforms.curvature=n},o.curvature.get=function(){return this.uniforms.curvature},o.lineWidth.set=function(n){this.uniforms.lineWidth=n},o.lineWidth.get=function(){return this.uniforms.lineWidth},o.lineContrast.set=function(n){this.uniforms.lineContrast=n},o.lineContrast.get=function(){return this.uniforms.lineContrast},o.verticalLine.set=function(n){this.uniforms.verticalLine=n},o.verticalLine.get=function(){return this.uniforms.verticalLine},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(i.prototype,o),i}(i.Filter);n.CRTFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],32:[function(require,module,exports){
+},{"pixi.js":264}],32:[function(require,module,exports){
 /*!
  * @pixi/filter-dot - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2459,7 +2459,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform vec4 filterArea;\nuniform sampler2D uSampler;\n\nuniform float angle;\nuniform float scale;\n\nfloat pattern()\n{\n   float s = sin(angle), c = cos(angle);\n   vec2 tex = vTextureCoord * filterArea.xy;\n   vec2 point = vec2(\n       c * tex.x - s * tex.y,\n       s * tex.x + c * tex.y\n   ) * scale;\n   return (sin(point.x) * sin(point.y)) * 4.0;\n}\n\nvoid main()\n{\n   vec4 color = texture2D(uSampler, vTextureCoord);\n   float average = (color.r + color.g + color.b) / 3.0;\n   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);\n}\n",r=function(e){function n(n,r){void 0===n&&(n=1),void 0===r&&(r=5),e.call(this,t,o),this.scale=n,this.angle=r}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={scale:{configurable:!0},angle:{configurable:!0}};return r.scale.get=function(){return this.uniforms.scale},r.scale.set=function(e){this.uniforms.scale=e},r.angle.get=function(){return this.uniforms.angle},r.angle.set=function(e){this.uniforms.angle=e},Object.defineProperties(n.prototype,r),n}(n.Filter);e.DotFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],33:[function(require,module,exports){
+},{"pixi.js":264}],33:[function(require,module,exports){
 /*!
  * @pixi/filter-drop-shadow - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2470,7 +2470,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(t,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("@pixi/filter-kawase-blur"),require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","@pixi/filter-kawase-blur","pixi.js"],i):i(t.__filters={},t.PIXI.filters,t.PIXI)}(this,function(t,i,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float alpha;\nuniform vec3 color;\nvoid main(void){\n    vec4 sample = texture2D(uSampler, vTextureCoord);\n\n    // Un-premultiply alpha before applying the color\n    if (sample.a > 0.0) {\n        sample.rgb /= sample.a;\n    }\n\n    // Premultiply alpha again\n    sample.rgb = color.rgb * sample.a;\n\n    // alpha user alpha\n    sample *= alpha;\n\n    gl_FragColor = sample;\n}",o=function(t){function o(o){o&&o.constructor!==Object&&(console.warn("DropShadowFilter now uses options instead of (rotation, distance, blur, color, alpha)"),o={rotation:o},void 0!==arguments[1]&&(o.distance=arguments[1]),void 0!==arguments[2]&&(o.blur=arguments[2]),void 0!==arguments[3]&&(o.color=arguments[3]),void 0!==arguments[4]&&(o.alpha=arguments[4])),o=Object.assign({rotation:45,distance:5,color:0,alpha:.5,shadowOnly:!1,kernels:null,blur:2,quality:3,pixelSize:1,resolution:e.settings.RESOLUTION},o),t.call(this);var l=o.kernels,a=o.blur,s=o.quality,u=o.pixelSize,c=o.resolution;this._tintFilter=new e.Filter(r,n),this._tintFilter.uniforms.color=new Float32Array(4),this._tintFilter.resolution=c,this._blurFilter=l?new i.KawaseBlurFilter(l):new i.KawaseBlurFilter(a,s),this.pixelSize=u,this.resolution=c,this.targetTransform=new e.Matrix;var p=o.shadowOnly,h=o.rotation,f=o.distance,d=o.alpha,g=o.color;this.shadowOnly=p,this.rotation=h,this.distance=f,this.alpha=d,this.color=g,this._updatePadding()}t&&(o.__proto__=t),o.prototype=Object.create(t&&t.prototype),o.prototype.constructor=o;var l={resolution:{configurable:!0},distance:{configurable:!0},rotation:{configurable:!0},alpha:{configurable:!0},color:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return o.prototype.apply=function(t,i,e,r){var n=t.getRenderTarget();n.transform=this.targetTransform,this._tintFilter.apply(t,i,n,!0),n.transform=null,this._blurFilter.apply(t,n,e),!0!==this.shadowOnly&&t.applyFilter(this,i,e,r),t.returnRenderTarget(n)},o.prototype._updatePadding=function(){this.padding=this.distance+2*this.blur},o.prototype._updateTargetTransform=function(){this.targetTransform.tx=this.distance*Math.cos(this.angle),this.targetTransform.ty=this.distance*Math.sin(this.angle)},l.resolution.get=function(){return this._resolution},l.resolution.set=function(t){this._resolution=t,this._tintFilter&&(this._tintFilter.resolution=t),this._blurFilter&&(this._blurFilter.resolution=t)},l.distance.get=function(){return this._distance},l.distance.set=function(t){this._distance=t,this._updatePadding(),this._updateTargetTransform()},l.rotation.get=function(){return this.angle/e.DEG_TO_RAD},l.rotation.set=function(t){this.angle=t*e.DEG_TO_RAD,this._updateTargetTransform()},l.alpha.get=function(){return this._tintFilter.uniforms.alpha},l.alpha.set=function(t){this._tintFilter.uniforms.alpha=t},l.color.get=function(){return e.utils.rgb2hex(this._tintFilter.uniforms.color)},l.color.set=function(t){e.utils.hex2rgb(t,this._tintFilter.uniforms.color)},l.kernels.get=function(){return this._blurFilter.kernels},l.kernels.set=function(t){this._blurFilter.kernels=t},l.blur.get=function(){return this._blurFilter.blur},l.blur.set=function(t){this._blurFilter.blur=t,this._updatePadding()},l.quality.get=function(){return this._blurFilter.quality},l.quality.set=function(t){this._blurFilter.quality=t},l.pixelSize.get=function(){return this._blurFilter.pixelSize},l.pixelSize.set=function(t){this._blurFilter.pixelSize=t},Object.defineProperties(o.prototype,l),o}(e.Filter);t.DropShadowFilter=o,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":38,"pixi.js":235}],34:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":38,"pixi.js":264}],34:[function(require,module,exports){
 /*!
  * @pixi/filter-emboss - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2481,7 +2481,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float strength;\nuniform vec4 filterArea;\n\n\nvoid main(void)\n{\n\tvec2 onePixel = vec2(1.0 / filterArea);\n\n\tvec4 color;\n\n\tcolor.rgb = vec3(0.5);\n\n\tcolor -= texture2D(uSampler, vTextureCoord - onePixel) * strength;\n\tcolor += texture2D(uSampler, vTextureCoord + onePixel) * strength;\n\n\tcolor.rgb = vec3((color.r + color.g + color.b) / 3.0);\n\n\tfloat alpha = texture2D(uSampler, vTextureCoord).a;\n\n\tgl_FragColor = vec4(color.rgb * alpha, alpha);\n}\n",n=function(e){function t(t){void 0===t&&(t=5),e.call(this,r,o),this.strength=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var n={strength:{configurable:!0}};return n.strength.get=function(){return this.uniforms.strength},n.strength.set=function(e){this.uniforms.strength=e},Object.defineProperties(t.prototype,n),t}(t.Filter);e.EmbossFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],35:[function(require,module,exports){
+},{"pixi.js":264}],35:[function(require,module,exports){
 /*!
  * @pixi/filter-glitch - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -2492,7 +2492,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="// precision highp float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\nuniform float aspect;\n\nuniform sampler2D displacementMap;\nuniform float offset;\nuniform float sinDir;\nuniform float cosDir;\nuniform int fillMode;\n\nuniform float seed;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nconst int TRANSPARENT = 0;\nconst int ORIGINAL = 1;\nconst int LOOP = 2;\nconst int CLAMP = 3;\nconst int MIRROR = 4;\n\nvoid main(void)\n{\n    vec2 coord = (vTextureCoord * filterArea.xy) / dimensions;\n\n    if (coord.x > 1.0 || coord.y > 1.0) {\n        return;\n    }\n\n    float cx = coord.x - 0.5;\n    float cy = (coord.y - 0.5) * aspect;\n    float ny = (-sinDir * cx + cosDir * cy) / aspect + 0.5;\n\n    // displacementMap: repeat\n    // ny = ny > 1.0 ? ny - 1.0 : (ny < 0.0 ? 1.0 + ny : ny);\n\n    // displacementMap: mirror\n    ny = ny > 1.0 ? 2.0 - ny : (ny < 0.0 ? -ny : ny);\n\n    vec4 dc = texture2D(displacementMap, vec2(0.5, ny));\n\n    float displacement = (dc.r - dc.g) * (offset / filterArea.x);\n\n    coord = vTextureCoord + vec2(cosDir * displacement, sinDir * displacement * aspect);\n\n    if (fillMode == CLAMP) {\n        coord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    } else {\n        if( coord.x > filterClamp.z ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x -= filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x = filterClamp.z * 2.0 - coord.x;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.x < filterClamp.x ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x += filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x *= -filterClamp.z;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n\n        if( coord.y > filterClamp.w ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y -= filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y = filterClamp.w * 2.0 - coord.y;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.y < filterClamp.y ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y += filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y *= -filterClamp.w;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n    }\n\n    gl_FragColor.r = texture2D(uSampler, coord + red * (1.0 - seed * 0.4) / filterArea.xy).r;\n    gl_FragColor.g = texture2D(uSampler, coord + green * (1.0 - seed * 0.3) / filterArea.xy).g;\n    gl_FragColor.b = texture2D(uSampler, coord + blue * (1.0 - seed * 0.2) / filterArea.xy).b;\n    gl_FragColor.a = texture2D(uSampler, coord).a;\n}\n",r=function(e){function r(r){void 0===r&&(r={}),e.call(this,t,n),this.uniforms.dimensions=new Float32Array(2),r=Object.assign({slices:5,offset:100,direction:0,fillMode:0,average:!1,seed:0,red:[0,0],green:[0,0],blue:[0,0],minSize:8,sampleSize:512},r),this.direction=r.direction,this.red=r.red,this.green=r.green,this.blue=r.blue,this.offset=r.offset,this.fillMode=r.fillMode,this.average=r.average,this.seed=r.seed,this.minSize=r.minSize,this.sampleSize=r.sampleSize,this._canvas=document.createElement("canvas"),this._canvas.width=4,this._canvas.height=this.sampleSize,this.texture=i.Texture.fromCanvas(this._canvas,i.SCALE_MODES.NEAREST),this._slices=0,this.slices=r.slices}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var s={sizes:{configurable:!0},offsets:{configurable:!0},slices:{configurable:!0},direction:{configurable:!0},red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return r.prototype.apply=function(e,i,t,n){var r=i.sourceFrame.width,s=i.sourceFrame.height;this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=s,this.uniforms.aspect=s/r,this.uniforms.seed=this.seed,this.uniforms.offset=this.offset,this.uniforms.fillMode=this.fillMode,e.applyFilter(this,i,t,n)},r.prototype._randomizeSizes=function(){var e=this._sizes,i=this._slices-1,t=this.sampleSize,n=Math.min(this.minSize/t,.9/this._slices);if(this.average){for(var r=this._slices,s=1,o=0;o<i;o++){var l=s/(r-o),f=Math.max(l*(1-.6*Math.random()),n);e[o]=f,s-=f}e[i]=s}else{for(var a=1,c=Math.sqrt(1/this._slices),u=0;u<i;u++){var d=Math.max(c*a*Math.random(),n);e[u]=d,a-=d}e[i]=a}this.shuffle()},r.prototype.shuffle=function(){for(var e=this._sizes,i=this._slices-1;i>0;i--){var t=Math.random()*i>>0,n=e[i];e[i]=e[t],e[t]=n}},r.prototype._randomizeOffsets=function(){for(var e=0;e<this._slices;e++)this._offsets[e]=Math.random()*(Math.random()<.5?-1:1)},r.prototype.refresh=function(){this._randomizeSizes(),this._randomizeOffsets(),this.redraw()},r.prototype.redraw=function(){var e,i=this.sampleSize,t=this.texture,n=this._canvas.getContext("2d");n.clearRect(0,0,8,i);for(var r=0,s=0;s<this._slices;s++){e=Math.floor(256*this._offsets[s]);var o=this._sizes[s]*i,l=e>0?e:0,f=e<0?-e:0;n.fillStyle="rgba("+l+", "+f+", 0, 1)",n.fillRect(0,r>>0,i,o+1>>0),r+=o}t.baseTexture.emit("update",t.baseTexture),this.uniforms.displacementMap=t},s.sizes.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._sizes[t]=e[t]},s.sizes.get=function(){return this._sizes},s.offsets.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._offsets[t]=e[t]},s.offsets.get=function(){return this._offsets},s.slices.get=function(){return this._slices},s.slices.set=function(e){this._slices!==e&&(this._slices=e,this.uniforms.slices=e,this._sizes=this.uniforms.slicesWidth=new Float32Array(e),this._offsets=this.uniforms.slicesOffset=new Float32Array(e),this.refresh())},s.direction.get=function(){return this._direction},s.direction.set=function(e){if(this._direction!==e){this._direction=e;var t=e*i.DEG_TO_RAD;this.uniforms.sinDir=Math.sin(t),this.uniforms.cosDir=Math.cos(t)}},s.red.get=function(){return this.uniforms.red},s.red.set=function(e){this.uniforms.red=e},s.green.get=function(){return this.uniforms.green},s.green.set=function(e){this.uniforms.green=e},s.blue.get=function(){return this.uniforms.blue},s.blue.set=function(e){this.uniforms.blue=e},r.prototype.destroy=function(){this.texture.destroy(!0),this.texture=null,this._canvas=null,this.red=null,this.green=null,this.blue=null,this._sizes=null,this._offsets=null},Object.defineProperties(r.prototype,s),r}(i.Filter);r.TRANSPARENT=0,r.ORIGINAL=1,r.LOOP=2,r.CLAMP=3,r.MIRROR=4,e.GlitchFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":235}],36:[function(require,module,exports){
+},{"pixi.js":264}],36:[function(require,module,exports){
 /*!
  * @pixi/filter-glow - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2503,7 +2503,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform sampler2D uSampler;\n\nuniform float distance;\nuniform float outerStrength;\nuniform float innerStrength;\nuniform vec4 glowColor;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nconst float PI = 3.14159265358979323846264;\n\nvoid main(void) {\n    vec2 px = vec2(1.0 / filterArea.x, 1.0 / filterArea.y);\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float cosAngle;\n    float sinAngle;\n    vec2 displaced;\n    for (float angle = 0.0; angle <= PI * 2.0; angle += %QUALITY_DIST%) {\n       cosAngle = cos(angle);\n       sinAngle = sin(angle);\n       for (float curDistance = 1.0; curDistance <= %DIST%; curDistance++) {\n           displaced.x = vTextureCoord.x + cosAngle * curDistance * px.x;\n           displaced.y = vTextureCoord.y + sinAngle * curDistance * px.y;\n           curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n           totalAlpha += (distance - curDistance) * curColor.a;\n           maxTotalAlpha += (distance - curDistance);\n       }\n    }\n    maxTotalAlpha = max(maxTotalAlpha, 0.0001);\n\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * outerStrength * (1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * innerStrength * ownColor.a;\n    float resultAlpha = (ownColor.a + outerGlowAlpha);\n    gl_FragColor = vec4(mix(mix(ownColor.rgb, glowColor.rgb, innerGlowAlpha / ownColor.a), glowColor.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);\n}\n",r=function(o){function r(t,r,i,l,a){void 0===t&&(t=10),void 0===r&&(r=4),void 0===i&&(i=0),void 0===l&&(l=16777215),void 0===a&&(a=.1),o.call(this,n,e.replace(/%QUALITY_DIST%/gi,""+(1/a/t).toFixed(7)).replace(/%DIST%/gi,""+t.toFixed(7))),this.uniforms.glowColor=new Float32Array([0,0,0,1]),this.distance=t,this.color=l,this.outerStrength=r,this.innerStrength=i}o&&(r.__proto__=o),r.prototype=Object.create(o&&o.prototype),r.prototype.constructor=r;var i={color:{configurable:!0},distance:{configurable:!0},outerStrength:{configurable:!0},innerStrength:{configurable:!0}};return i.color.get=function(){return t.utils.rgb2hex(this.uniforms.glowColor)},i.color.set=function(o){t.utils.hex2rgb(o,this.uniforms.glowColor)},i.distance.get=function(){return this.uniforms.distance},i.distance.set=function(o){this.uniforms.distance=o},i.outerStrength.get=function(){return this.uniforms.outerStrength},i.outerStrength.set=function(o){this.uniforms.outerStrength=o},i.innerStrength.get=function(){return this.uniforms.innerStrength},i.innerStrength.set=function(o){this.uniforms.innerStrength=o},Object.defineProperties(r.prototype,i),r}(t.Filter);o.GlowFilter=r,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],37:[function(require,module,exports){
+},{"pixi.js":264}],37:[function(require,module,exports){
 /*!
  * @pixi/filter-godray - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2514,7 +2514,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="vec3 mod289(vec3 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 mod289(vec4 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 permute(vec4 x)\n{\n    return mod289(((x * 34.0) + 1.0) * x);\n}\nvec4 taylorInvSqrt(vec4 r)\n{\n    return 1.79284291400159 - 0.85373472095314 * r;\n}\nvec3 fade(vec3 t)\n{\n    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);\n}\n// Classic Perlin noise, periodic variant\nfloat pnoise(vec3 P, vec3 rep)\n{\n    vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period\n    vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period\n    Pi0 = mod289(Pi0);\n    Pi1 = mod289(Pi1);\n    vec3 Pf0 = fract(P); // Fractional part for interpolation\n    vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0\n    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);\n    vec4 iy = vec4(Pi0.yy, Pi1.yy);\n    vec4 iz0 = Pi0.zzzz;\n    vec4 iz1 = Pi1.zzzz;\n    vec4 ixy = permute(permute(ix) + iy);\n    vec4 ixy0 = permute(ixy + iz0);\n    vec4 ixy1 = permute(ixy + iz1);\n    vec4 gx0 = ixy0 * (1.0 / 7.0);\n    vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;\n    gx0 = fract(gx0);\n    vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);\n    vec4 sz0 = step(gz0, vec4(0.0));\n    gx0 -= sz0 * (step(0.0, gx0) - 0.5);\n    gy0 -= sz0 * (step(0.0, gy0) - 0.5);\n    vec4 gx1 = ixy1 * (1.0 / 7.0);\n    vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;\n    gx1 = fract(gx1);\n    vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);\n    vec4 sz1 = step(gz1, vec4(0.0));\n    gx1 -= sz1 * (step(0.0, gx1) - 0.5);\n    gy1 -= sz1 * (step(0.0, gy1) - 0.5);\n    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);\n    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);\n    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);\n    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);\n    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);\n    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);\n    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);\n    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);\n    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));\n    g000 *= norm0.x;\n    g010 *= norm0.y;\n    g100 *= norm0.z;\n    g110 *= norm0.w;\n    vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));\n    g001 *= norm1.x;\n    g011 *= norm1.y;\n    g101 *= norm1.z;\n    g111 *= norm1.w;\n    float n000 = dot(g000, Pf0);\n    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));\n    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));\n    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));\n    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));\n    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));\n    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));\n    float n111 = dot(g111, Pf1);\n    vec3 fade_xyz = fade(Pf0);\n    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);\n    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);\n    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);\n    return 2.2 * n_xyz;\n}\nfloat turb(vec3 P, vec3 rep, float lacunarity, float gain)\n{\n    float sum = 0.0;\n    float sc = 1.0;\n    float totalgain = 1.0;\n    for (float i = 0.0; i < 6.0; i++)\n    {\n        sum += totalgain * pnoise(P * sc, rep);\n        sc *= lacunarity;\n        totalgain *= gain;\n    }\n    return abs(sum);\n}\n",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform vec2 light;\nuniform bool parallel;\nuniform float aspect;\n\nuniform float gain;\nuniform float lacunarity;\nuniform float time;\n\n${perlin}\n\nvoid main(void) {\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    float d;\n\n    if (parallel) {\n        float _cos = light.x;\n        float _sin = light.y;\n        d = (_cos * coord.x) + (_sin * coord.y * aspect);\n    } else {\n        float dx = coord.x - light.x / dimensions.x;\n        float dy = (coord.y - light.y / dimensions.y) * aspect;\n        float dis = sqrt(dx * dx + dy * dy) + 0.00001;\n        d = dy / dis;\n    }\n\n    vec3 dir = vec3(d, d, 0.0);\n\n    float noise = turb(dir + vec3(time, 0.0, 62.1 + time) * 0.05, vec3(480.0, 320.0, 480.0), lacunarity, gain);\n    noise = mix(noise, 0.0, 0.3);\n    //fade vertically.\n    vec4 mist = vec4(noise, noise, noise, 1.0) * (1.0 - coord.y);\n    mist.a = 1.0;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord) + mist;\n}\n",r=function(n){function r(r){n.call(this,t,o.replace("${perlin}",i)),this.uniforms.dimensions=new Float32Array(2),"number"==typeof r&&(console.warn("GodrayFilter now uses options instead of (angle, gain, lacunarity, time)"),r={angle:r},void 0!==arguments[1]&&(r.gain=arguments[1]),void 0!==arguments[2]&&(r.lacunarity=arguments[2]),void 0!==arguments[3]&&(r.time=arguments[3])),r=Object.assign({angle:30,gain:.5,lacunarity:2.5,time:0,parallel:!0,center:[0,0]},r),this._angleLight=new e.Point,this.angle=r.angle,this.gain=r.gain,this.lacunarity=r.lacunarity,this.parallel=r.parallel,this.center=r.center,this.time=r.time}n&&(r.__proto__=n),r.prototype=Object.create(n&&n.prototype),r.prototype.constructor=r;var a={angle:{configurable:!0},gain:{configurable:!0},lacunarity:{configurable:!0}};return r.prototype.apply=function(n,e,t,i){var o=e.sourceFrame,r=o.width,a=o.height;this.uniforms.light=this.parallel?this._angleLight:this.center,this.uniforms.parallel=this.parallel,this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=a,this.uniforms.aspect=a/r,this.uniforms.time=this.time,n.applyFilter(this,e,t,i)},a.angle.get=function(){return this._angle},a.angle.set=function(n){this._angle=n;var t=n*e.DEG_TO_RAD;this._angleLight.x=Math.cos(t),this._angleLight.y=Math.sin(t)},a.gain.get=function(){return this.uniforms.gain},a.gain.set=function(n){this.uniforms.gain=n},a.lacunarity.get=function(){return this.uniforms.lacunarity},a.lacunarity.set=function(n){this.uniforms.lacunarity=n},Object.defineProperties(r.prototype,a),r}(e.Filter);n.GodrayFilter=r,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],38:[function(require,module,exports){
+},{"pixi.js":264}],38:[function(require,module,exports){
 /*!
  * @pixi/filter-kawase-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2525,7 +2525,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\nuniform vec4 filterClamp;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}\n",n=function(e){function n(n,l,u){void 0===n&&(n=4),void 0===l&&(l=3),void 0===u&&(u=!1),e.call(this,r,u?o:i),this.uniforms.uOffset=new Float32Array(2),this._pixelSize=new t.Point,this.pixelSize=1,this._clamp=u,this._kernels=null,Array.isArray(n)?this.kernels=n:(this._blur=n,this.quality=l)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var l={kernels:{configurable:!0},clamp:{configurable:!0},pixelSize:{configurable:!0},quality:{configurable:!0},blur:{configurable:!0}};return n.prototype.apply=function(e,t,r,i){var o,n=this.pixelSize.x/t.size.width,l=this.pixelSize.y/t.size.height;if(1===this._quality||0===this._blur)o=this._kernels[0]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,t,r,i);else{for(var u,s=e.getRenderTarget(!0),f=t,a=s,p=this._quality-1,x=0;x<p;x++)o=this._kernels[x]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,a,!0),u=f,f=a,a=u;o=this._kernels[p]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,r,i),e.returnRenderTarget(s)}},n.prototype._generateKernels=function(){var e=this._blur,t=this._quality,r=[e];if(e>0)for(var i=e,o=e/t,n=1;n<t;n++)i-=o,r.push(i);this._kernels=r},l.kernels.get=function(){return this._kernels},l.kernels.set=function(e){Array.isArray(e)&&e.length>0?(this._kernels=e,this._quality=e.length,this._blur=Math.max.apply(Math,e)):(this._kernels=[0],this._quality=1)},l.clamp.get=function(){return this._clamp},l.pixelSize.set=function(e){"number"==typeof e?(this._pixelSize.x=e,this._pixelSize.y=e):Array.isArray(e)?(this._pixelSize.x=e[0],this._pixelSize.y=e[1]):e instanceof t.Point?(this._pixelSize.x=e.x,this._pixelSize.y=e.y):(this._pixelSize.x=1,this._pixelSize.y=1)},l.pixelSize.get=function(){return this._pixelSize},l.quality.get=function(){return this._quality},l.quality.set=function(e){this._quality=Math.max(1,Math.round(e)),this._generateKernels()},l.blur.get=function(){return this._blur},l.blur.set=function(e){this._blur=e,this._generateKernels()},Object.defineProperties(n.prototype,l),n}(t.Filter);e.KawaseBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],39:[function(require,module,exports){
+},{"pixi.js":264}],39:[function(require,module,exports){
 /*!
  * @pixi/filter-motion-blur - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -2536,7 +2536,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uVelocity;\nuniform int uKernelSize;\nuniform float uOffset;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\n// Notice:\n// the perfect way:\n//    int kernelSize = min(uKernelSize, MAX_KERNELSIZE);\n// BUT in real use-case , uKernelSize < MAX_KERNELSIZE almost always.\n// So use uKernelSize directly.\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    vec2 velocity = uVelocity / filterArea.xy;\n    float offset = -uOffset / length(uVelocity) - 0.5;\n    int k = uKernelSize - 1;\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n        vec2 bias = velocity * (float(i) / float(k) + offset);\n        color += texture2D(uSampler, vTextureCoord + bias);\n    }\n    gl_FragColor = color / float(uKernelSize);\n}\n",n=function(e){function n(n,r,l){void 0===n&&(n=[0,0]),void 0===r&&(r=5),void 0===l&&(l=0),e.call(this,i,o),this.uniforms.uVelocity=new Float32Array(2),this._velocity=new t.ObservablePoint(this.velocityChanged,this),this.velocity=n,this.kernelSize=r,this.offset=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={velocity:{configurable:!0},offset:{configurable:!0}};return n.prototype.apply=function(e,t,i,o){var n=this.velocity,r=n.x,l=n.y;this.uniforms.uKernelSize=0!==r||0!==l?this.kernelSize:0,e.applyFilter(this,t,i,o)},r.velocity.set=function(e){Array.isArray(e)?this._velocity.set(e[0],e[1]):(e instanceof t.Point||e instanceof t.ObservablePoint)&&this._velocity.copy(e)},r.velocity.get=function(){return this._velocity},n.prototype.velocityChanged=function(){this.uniforms.uVelocity[0]=this._velocity.x,this.uniforms.uVelocity[1]=this._velocity.y},r.offset.set=function(e){this.uniforms.uOffset=e},r.offset.get=function(){return this.uniforms.uOffset},Object.defineProperties(n.prototype,r),n}(t.Filter);e.MotionBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":235}],40:[function(require,module,exports){
+},{"pixi.js":264}],40:[function(require,module,exports){
 /*!
  * @pixi/filter-multi-color-replace - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2547,7 +2547,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(o,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(o.__filters={},o.PIXI)}(this,function(o,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float epsilon;\n\nconst int MAX_COLORS = %maxColors%;\n\nuniform vec3 originalColors[MAX_COLORS];\nuniform vec3 targetColors[MAX_COLORS];\n\nvoid main(void)\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n\n    float alpha = gl_FragColor.a;\n    if (alpha < 0.0001)\n    {\n      return;\n    }\n\n    vec3 color = gl_FragColor.rgb / alpha;\n\n    for(int i = 0; i < MAX_COLORS; i++)\n    {\n      vec3 origColor = originalColors[i];\n      if (origColor.r < 0.0)\n      {\n        break;\n      }\n      vec3 colorDiff = origColor - color;\n      if (length(colorDiff) < epsilon)\n      {\n        vec3 targetColor = targetColors[i];\n        gl_FragColor = vec4((targetColor + colorDiff) * alpha, alpha);\n        return;\n      }\n    }\n}\n",t=function(o){function t(e,t,i){void 0===t&&(t=.05),void 0===i&&(i=null),i=i||e.length,o.call(this,r,n.replace(/%maxColors%/g,i)),this.epsilon=t,this._maxColors=i,this._replacements=null,this.uniforms.originalColors=new Float32Array(3*i),this.uniforms.targetColors=new Float32Array(3*i),this.replacements=e}o&&(t.__proto__=o),t.prototype=Object.create(o&&o.prototype),t.prototype.constructor=t;var i={replacements:{configurable:!0},maxColors:{configurable:!0},epsilon:{configurable:!0}};return i.replacements.set=function(o){var r=this.uniforms.originalColors,n=this.uniforms.targetColors,t=o.length;if(t>this._maxColors)throw"Length of replacements ("+t+") exceeds the maximum colors length ("+this._maxColors+")";r[3*t]=-1;for(var i=0;i<t;i++){var l=o[i],s=l[0];"number"==typeof s?s=e.utils.hex2rgb(s):l[0]=e.utils.rgb2hex(s),r[3*i]=s[0],r[3*i+1]=s[1],r[3*i+2]=s[2];var a=l[1];"number"==typeof a?a=e.utils.hex2rgb(a):l[1]=e.utils.rgb2hex(a),n[3*i]=a[0],n[3*i+1]=a[1],n[3*i+2]=a[2]}this._replacements=o},i.replacements.get=function(){return this._replacements},t.prototype.refresh=function(){this.replacements=this._replacements},i.maxColors.get=function(){return this._maxColors},i.epsilon.set=function(o){this.uniforms.epsilon=o},i.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(t.prototype,i),t}(e.Filter);o.MultiColorReplaceFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],41:[function(require,module,exports){
+},{"pixi.js":264}],41:[function(require,module,exports){
 /*!
  * @pixi/filter-old-film - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2558,7 +2558,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(n,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(n.__filters={},n.PIXI)}(this,function(n,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform float sepia;\nuniform float noise;\nuniform float noiseSize;\nuniform float scratch;\nuniform float scratchDensity;\nuniform float scratchWidth;\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\nuniform float seed;\n\nconst float SQRT_2 = 1.414213;\nconst vec3 SEPIA_RGB = vec3(112.0 / 255.0, 66.0 / 255.0, 20.0 / 255.0);\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvec3 Overlay(vec3 src, vec3 dst)\n{\n    // if (dst <= 0.5) then: 2 * src * dst\n    // if (dst > 0.5) then: 1 - 2 * (1 - dst) * (1 - src)\n    return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),\n                (dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),\n                (dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));\n}\n\n\nvoid main()\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 color = gl_FragColor.rgb;\n\n    if (sepia > 0.0)\n    {\n        float gray = (color.x + color.y + color.z) / 3.0;\n        vec3 grayscale = vec3(gray);\n\n        color = Overlay(SEPIA_RGB, grayscale);\n\n        color = grayscale + sepia * (color - grayscale);\n    }\n\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        vec2 dir = vec2(vec2(0.5, 0.5) - coord);\n        dir.y *= dimensions.y / dimensions.x;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        color.rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    if (scratchDensity > seed && scratch != 0.0)\n    {\n        float phase = seed * 256.0;\n        float s = mod(floor(phase), 2.0);\n        float dist = 1.0 / scratchDensity;\n        float d = distance(coord, vec2(seed * dist, abs(s - seed * dist)));\n        if (d < seed * 0.6 + 0.4)\n        {\n            highp float period = scratchDensity * 10.0;\n\n            float xx = coord.x * period + phase;\n            float aa = abs(mod(xx, 0.5) * 4.0);\n            float bb = mod(floor(xx / 0.5), 2.0);\n            float yy = (1.0 - bb) * aa + bb * (2.0 - aa);\n\n            float kk = 2.0 * period;\n            float dw = scratchWidth / dimensions.x * (0.75 + seed);\n            float dh = dw * kk;\n\n            float tine = (yy - (2.0 - dh));\n\n            if (tine > 0.0) {\n                float _sign = sign(scratch);\n\n                tine = s * tine / period + scratch + 0.1;\n                tine = clamp(tine + 1.0, 0.5 + _sign * 0.5, 1.5 + _sign * 0.5);\n\n                color.rgb *= tine;\n            }\n        }\n    }\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        // vec2 d = pixelCoord * noiseSize * vec2(1024.0 + seed * 512.0, 1024.0 - seed * 512.0);\n        // float _noise = snoise(d) * 0.5;\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        color += _noise * noise;\n    }\n\n    gl_FragColor.rgb = color;\n}\n",o=function(n){function t(t,o){void 0===o&&(o=0),n.call(this,i,e),this.uniforms.dimensions=new Float32Array(2),"number"==typeof t?(this.seed=t,t=null):this.seed=o,Object.assign(this,{sepia:.3,noise:.3,noiseSize:1,scratch:.5,scratchDensity:.3,scratchWidth:1,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3},t)}n&&(t.__proto__=n),t.prototype=Object.create(n&&n.prototype),t.prototype.constructor=t;var o={sepia:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},scratch:{configurable:!0},scratchDensity:{configurable:!0},scratchWidth:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return t.prototype.apply=function(n,t,i,e){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,this.uniforms.seed=this.seed,n.applyFilter(this,t,i,e)},o.sepia.set=function(n){this.uniforms.sepia=n},o.sepia.get=function(){return this.uniforms.sepia},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.scratch.set=function(n){this.uniforms.scratch=n},o.scratch.get=function(){return this.uniforms.scratch},o.scratchDensity.set=function(n){this.uniforms.scratchDensity=n},o.scratchDensity.get=function(){return this.uniforms.scratchDensity},o.scratchWidth.set=function(n){this.uniforms.scratchWidth=n},o.scratchWidth.get=function(){return this.uniforms.scratchWidth},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(t.prototype,o),t}(t.Filter);n.OldFilmFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],42:[function(require,module,exports){
+},{"pixi.js":264}],42:[function(require,module,exports){
 /*!
  * @pixi/filter-outline - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2569,7 +2569,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 thickness;\nuniform vec4 outlineColor;\nuniform vec4 filterClamp;\n\nconst float DOUBLE_PI = 3.14159265358979323846264 * 2.;\n\nvoid main(void) {\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float maxAlpha = 0.;\n    vec2 displaced;\n    for (float angle = 0.; angle <= DOUBLE_PI; angle += ${angleStep}) {\n        displaced.x = vTextureCoord.x + thickness.x * cos(angle);\n        displaced.y = vTextureCoord.y + thickness.y * sin(angle);\n        curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n        maxAlpha = max(maxAlpha, curColor.a);\n    }\n    float resultAlpha = max(maxAlpha, ownColor.a);\n    gl_FragColor = vec4((ownColor.rgb + outlineColor.rgb * (1. - ownColor.a)) * resultAlpha, resultAlpha);\n}\n",n=function(e){function n(o,i,l){void 0===o&&(o=1),void 0===i&&(i=0),void 0===l&&(l=.1);var a=Math.max(l*n.MAX_SAMPLES,n.MIN_SAMPLES),s=(2*Math.PI/a).toFixed(7);e.call(this,t,r.replace(/\$\{angleStep\}/,s)),this.uniforms.thickness=new Float32Array([0,0]),this.thickness=o,this.uniforms.outlineColor=new Float32Array([0,0,0,1]),this.color=i,this.quality=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={color:{configurable:!0}};return n.prototype.apply=function(e,o,t,r){this.uniforms.thickness[0]=this.thickness/o.size.width,this.uniforms.thickness[1]=this.thickness/o.size.height,e.applyFilter(this,o,t,r)},i.color.get=function(){return o.utils.rgb2hex(this.uniforms.outlineColor)},i.color.set=function(e){o.utils.hex2rgb(e,this.uniforms.outlineColor)},Object.defineProperties(n.prototype,i),n}(o.Filter);n.MIN_SAMPLES=1,n.MAX_SAMPLES=100,e.OutlineFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],43:[function(require,module,exports){
+},{"pixi.js":264}],43:[function(require,module,exports){
 /*!
  * @pixi/filter-pixelate - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2580,7 +2580,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform vec2 size;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n\treturn floor( coord / size ) * size;\n}\n\nvoid main(void)\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = pixelate(coord, size);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord);\n}\n",t=function(e){function o(o){void 0===o&&(o=10),e.call(this,r,n),this.size=o}e&&(o.__proto__=e),o.prototype=Object.create(e&&e.prototype),o.prototype.constructor=o;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.size},t.size.set=function(e){"number"==typeof e&&(e=[e,e]),this.uniforms.size=e},Object.defineProperties(o.prototype,t),o}(o.Filter);e.PixelateFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],44:[function(require,module,exports){
+},{"pixi.js":264}],44:[function(require,module,exports){
 /*!
  * @pixi/filter-radial-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2591,7 +2591,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float uRadian;\nuniform vec2 uCenter;\nuniform float uRadius;\nuniform int uKernelSize;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    float aspect = filterArea.y / filterArea.x;\n    vec2 center = uCenter.xy / filterArea.xy;\n    float gradient = uRadius / filterArea.x * 0.3;\n    float radius = uRadius / filterArea.x - gradient * 0.5;\n    int k = uKernelSize - 1;\n\n    vec2 coord = vTextureCoord;\n    vec2 dir = vec2(center - coord);\n    float dist = length(vec2(dir.x, dir.y * aspect));\n\n    float radianStep = uRadian;\n    if (radius >= 0.0 && dist > radius) {\n        float delta = dist - radius;\n        float gap = gradient;\n        float scale = 1.0 - abs(delta / gap);\n        if (scale <= 0.0) {\n            gl_FragColor = color;\n            return;\n        }\n        radianStep *= scale;\n    }\n    radianStep /= float(k);\n\n    float s = sin(radianStep);\n    float c = cos(radianStep);\n    mat2 rotationMatrix = mat2(vec2(c, -s), vec2(s, c));\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n\n        coord -= center;\n        coord.y *= aspect;\n        coord = rotationMatrix * coord;\n        coord.y /= aspect;\n        coord += center;\n\n        vec4 sample = texture2D(uSampler, coord);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample;\n    }\n\n    gl_FragColor = color / float(uKernelSize);\n}\n",i=function(e){function n(n,i,o,a){void 0===n&&(n=0),void 0===i&&(i=[0,0]),void 0===o&&(o=5),void 0===a&&(a=-1),e.call(this,t,r),this._angle=0,this.angle=n,this.center=i,this.kernelSize=o,this.radius=a}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={angle:{configurable:!0},center:{configurable:!0},radius:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.uKernelSize=0!==this._angle?this.kernelSize:0,e.applyFilter(this,n,t,r)},i.angle.set=function(e){this._angle=e,this.uniforms.uRadian=e*Math.PI/180},i.angle.get=function(){return this._angle},i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(e){this.uniforms.uCenter=e},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(e){(e<0||e===1/0)&&(e=-1),this.uniforms.uRadius=e},Object.defineProperties(n.prototype,i),n}(n.Filter);e.RadialBlurFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],45:[function(require,module,exports){
+},{"pixi.js":264}],45:[function(require,module,exports){
 /*!
  * @pixi/filter-reflection - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2602,7 +2602,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nuniform bool mirror;\nuniform float boundary;\nuniform vec2 amplitude;\nuniform vec2 waveLength;\nuniform vec2 alpha;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    if (coord.y < boundary) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    float k = (coord.y - boundary) / (1. - boundary + 0.0001);\n    float areaY = boundary * dimensions.y / filterArea.y;\n    float v = areaY + areaY - vTextureCoord.y;\n    float y = mirror ? v : vTextureCoord.y;\n\n    float _amplitude = ((amplitude.y - amplitude.x) * k + amplitude.x ) / filterArea.x;\n    float _waveLength = ((waveLength.y - waveLength.x) * k + waveLength.x) / filterArea.y;\n    float _alpha = (alpha.y - alpha.x) * k + alpha.x;\n\n    float x = vTextureCoord.x + cos(v * 6.28 / _waveLength - time) * _amplitude;\n    x = clamp(x, filterClamp.x, filterClamp.z);\n\n    vec4 color = texture2D(uSampler, vec2(x, y));\n\n    gl_FragColor = color * _alpha;\n}\n",o=function(e){function n(n){e.call(this,r,t),this.uniforms.amplitude=new Float32Array(2),this.uniforms.waveLength=new Float32Array(2),this.uniforms.alpha=new Float32Array(2),this.uniforms.dimensions=new Float32Array(2),Object.assign(this,{mirror:!0,boundary:.5,amplitude:[0,20],waveLength:[30,100],alpha:[1,1],time:0},n)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={mirror:{configurable:!0},boundary:{configurable:!0},amplitude:{configurable:!0},waveLength:{configurable:!0},alpha:{configurable:!0}};return n.prototype.apply=function(e,n,r,t){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,this.uniforms.time=this.time,e.applyFilter(this,n,r,t)},o.mirror.set=function(e){this.uniforms.mirror=e},o.mirror.get=function(){return this.uniforms.mirror},o.boundary.set=function(e){this.uniforms.boundary=e},o.boundary.get=function(){return this.uniforms.boundary},o.amplitude.set=function(e){this.uniforms.amplitude[0]=e[0],this.uniforms.amplitude[1]=e[1]},o.amplitude.get=function(){return this.uniforms.amplitude},o.waveLength.set=function(e){this.uniforms.waveLength[0]=e[0],this.uniforms.waveLength[1]=e[1]},o.waveLength.get=function(){return this.uniforms.waveLength},o.alpha.set=function(e){this.uniforms.alpha[0]=e[0],this.uniforms.alpha[1]=e[1]},o.alpha.get=function(){return this.uniforms.alpha},Object.defineProperties(n.prototype,o),n}(n.Filter);e.ReflectionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],46:[function(require,module,exports){
+},{"pixi.js":264}],46:[function(require,module,exports){
 /*!
  * @pixi/filter-rgb-split - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2613,7 +2613,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(e.__filters={},e.PIXI)}(this,function(e,r){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nvoid main(void)\n{\n   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/filterArea.xy).r;\n   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/filterArea.xy).g;\n   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/filterArea.xy).b;\n   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;\n}\n",o=function(e){function r(r,o,i){void 0===r&&(r=[-10,0]),void 0===o&&(o=[0,10]),void 0===i&&(i=[0,0]),e.call(this,t,n),this.red=r,this.green=o,this.blue=i}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var o={red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return o.red.get=function(){return this.uniforms.red},o.red.set=function(e){this.uniforms.red=e},o.green.get=function(){return this.uniforms.green},o.green.set=function(e){this.uniforms.green=e},o.blue.get=function(){return this.uniforms.blue},o.blue.set=function(e){this.uniforms.blue=e},Object.defineProperties(r.prototype,o),r}(r.Filter);e.RGBSplitFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],47:[function(require,module,exports){
+},{"pixi.js":264}],47:[function(require,module,exports){
 /*!
  * @pixi/filter-shockwave - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -2624,7 +2624,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\n\nuniform vec2 center;\n\nuniform float amplitude;\nuniform float wavelength;\n// uniform float power;\nuniform float brightness;\nuniform float speed;\nuniform float radius;\n\nuniform float time;\n\nconst float PI = 3.14159;\n\nvoid main()\n{\n    float halfWavelength = wavelength * 0.5 / filterArea.x;\n    float maxRadius = radius / filterArea.x;\n    float currentRadius = time * speed / filterArea.x;\n\n    float fade = 1.0;\n\n    if (maxRadius > 0.0) {\n        if (currentRadius > maxRadius) {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n        fade = 1.0 - pow(currentRadius / maxRadius, 2.0);\n    }\n\n    vec2 dir = vec2(vTextureCoord - center / filterArea.xy);\n    dir.y *= filterArea.y / filterArea.x;\n    float dist = length(dir);\n\n    if (dist <= 0.0 || dist < currentRadius - halfWavelength || dist > currentRadius + halfWavelength) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    vec2 diffUV = normalize(dir);\n\n    float diff = (dist - currentRadius) / halfWavelength;\n\n    float p = 1.0 - pow(abs(diff), 2.0);\n\n    // float powDiff = diff * pow(p, 2.0) * ( amplitude * fade );\n    float powDiff = 1.25 * sin(diff * PI) * p * ( amplitude * fade );\n\n    vec2 offset = diffUV * powDiff / filterArea.xy;\n\n    // Do clamp :\n    vec2 coord = vTextureCoord + offset;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    // No clamp :\n    // gl_FragColor = texture2D(uSampler, vTextureCoord + offset);\n\n    color.rgb *= 1.0 + (brightness - 1.0) * p * fade;\n\n    gl_FragColor = color;\n}\n",i=function(e){function t(t,i,o){void 0===t&&(t=[0,0]),void 0===i&&(i={}),void 0===o&&(o=0),e.call(this,n,r),this.center=t,Array.isArray(i)&&(console.warn("Deprecated Warning: ShockwaveFilter params Array has been changed to options Object."),i={}),i=Object.assign({amplitude:30,wavelength:160,brightness:1,speed:500,radius:-1},i),this.amplitude=i.amplitude,this.wavelength=i.wavelength,this.brightness=i.brightness,this.speed=i.speed,this.radius=i.radius,this.time=o}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var i={center:{configurable:!0},amplitude:{configurable:!0},wavelength:{configurable:!0},brightness:{configurable:!0},speed:{configurable:!0},radius:{configurable:!0}};return t.prototype.apply=function(e,t,n,r){this.uniforms.time=this.time,e.applyFilter(this,t,n,r)},i.center.get=function(){return this.uniforms.center},i.center.set=function(e){this.uniforms.center=e},i.amplitude.get=function(){return this.uniforms.amplitude},i.amplitude.set=function(e){this.uniforms.amplitude=e},i.wavelength.get=function(){return this.uniforms.wavelength},i.wavelength.set=function(e){this.uniforms.wavelength=e},i.brightness.get=function(){return this.uniforms.brightness},i.brightness.set=function(e){this.uniforms.brightness=e},i.speed.get=function(){return this.uniforms.speed},i.speed.set=function(e){this.uniforms.speed=e},i.radius.get=function(){return this.uniforms.radius},i.radius.set=function(e){this.uniforms.radius=e},Object.defineProperties(t.prototype,i),t}(t.Filter);e.ShockwaveFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":235}],48:[function(require,module,exports){
+},{"pixi.js":264}],48:[function(require,module,exports){
 /*!
  * @pixi/filter-simple-lightmap - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2635,7 +2635,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform sampler2D uLightmap;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\nuniform vec4 ambientColor;\nvoid main() {\n    vec4 diffuseColor = texture2D(uSampler, vTextureCoord);\n    vec2 lightCoord = (vTextureCoord * filterArea.xy) / dimensions;\n    vec4 light = texture2D(uLightmap, lightCoord);\n    vec3 ambient = ambientColor.rgb * ambientColor.a;\n    vec3 intensity = ambient + light.rgb;\n    vec3 finalColor = diffuseColor.rgb * intensity;\n    gl_FragColor = vec4(finalColor, diffuseColor.a);\n}\n",r=function(e){function r(t,r,n){void 0===r&&(r=0),void 0===n&&(n=1),e.call(this,o,i),this.uniforms.dimensions=new Float32Array(2),this.uniforms.ambientColor=new Float32Array([0,0,0,n]),this.texture=t,this.color=r}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var n={texture:{configurable:!0},color:{configurable:!0},alpha:{configurable:!0}};return r.prototype.apply=function(e,t,o,i){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,e.applyFilter(this,t,o,i)},n.texture.get=function(){return this.uniforms.uLightmap},n.texture.set=function(e){this.uniforms.uLightmap=e},n.color.set=function(e){var o=this.uniforms.ambientColor;"number"==typeof e?(t.utils.hex2rgb(e,o),this._color=e):(o[0]=e[0],o[1]=e[1],o[2]=e[2],o[3]=e[3],this._color=t.utils.rgb2hex(o))},n.color.get=function(){return this._color},n.alpha.get=function(){return this.uniforms.ambientColor[3]},n.alpha.set=function(e){this.uniforms.ambientColor[3]=e},Object.defineProperties(r.prototype,n),r}(t.Filter);e.SimpleLightmapFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],49:[function(require,module,exports){
+},{"pixi.js":264}],49:[function(require,module,exports){
 /*!
  * @pixi/filter-tilt-shift - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2646,7 +2646,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(t.__filters={},t.PIXI)}(this,function(t,e){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float blur;\nuniform float gradientBlur;\nuniform vec2 start;\nuniform vec2 end;\nuniform vec2 delta;\nuniform vec2 texSize;\n\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n    float total = 0.0;\n\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n    float radius = smoothstep(0.0, 1.0, abs(dot(vTextureCoord * texSize - start, normal)) / gradientBlur) * blur;\n\n    for (float t = -30.0; t <= 30.0; t++)\n    {\n        float percent = (t + offset - 0.5) / 30.0;\n        float weight = 1.0 - abs(percent);\n        vec4 sample = texture2D(uSampler, vTextureCoord + delta / texSize * percent * radius);\n        sample.rgb *= sample.a;\n        color += sample * weight;\n        total += weight;\n    }\n\n    color /= total;\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",n=function(t){function n(n,o,s,l){void 0===n&&(n=100),void 0===o&&(o=600),void 0===s&&(s=null),void 0===l&&(l=null),t.call(this,i,r),this.uniforms.blur=n,this.uniforms.gradientBlur=o,this.uniforms.start=s||new e.Point(0,window.innerHeight/2),this.uniforms.end=l||new e.Point(600,window.innerHeight/2),this.uniforms.delta=new e.Point(30,30),this.uniforms.texSize=new e.Point(window.innerWidth,window.innerHeight),this.updateDelta()}t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n;var o={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return n.prototype.updateDelta=function(){this.uniforms.delta.x=0,this.uniforms.delta.y=0},o.blur.get=function(){return this.uniforms.blur},o.blur.set=function(t){this.uniforms.blur=t},o.gradientBlur.get=function(){return this.uniforms.gradientBlur},o.gradientBlur.set=function(t){this.uniforms.gradientBlur=t},o.start.get=function(){return this.uniforms.start},o.start.set=function(t){this.uniforms.start=t,this.updateDelta()},o.end.get=function(){return this.uniforms.end},o.end.set=function(t){this.uniforms.end=t,this.updateDelta()},Object.defineProperties(n.prototype,o),n}(e.Filter),o=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=t/i,this.uniforms.delta.y=e/i},e}(n),s=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=-e/i,this.uniforms.delta.y=t/i},e}(n),l=function(t){function e(e,i,r,n){void 0===e&&(e=100),void 0===i&&(i=600),void 0===r&&(r=null),void 0===n&&(n=null),t.call(this),this.tiltShiftXFilter=new o(e,i,r,n),this.tiltShiftYFilter=new s(e,i,r,n)}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var i={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return e.prototype.apply=function(t,e,i){var r=t.getRenderTarget(!0);this.tiltShiftXFilter.apply(t,e,r),this.tiltShiftYFilter.apply(t,r,i),t.returnRenderTarget(r)},i.blur.get=function(){return this.tiltShiftXFilter.blur},i.blur.set=function(t){this.tiltShiftXFilter.blur=this.tiltShiftYFilter.blur=t},i.gradientBlur.get=function(){return this.tiltShiftXFilter.gradientBlur},i.gradientBlur.set=function(t){this.tiltShiftXFilter.gradientBlur=this.tiltShiftYFilter.gradientBlur=t},i.start.get=function(){return this.tiltShiftXFilter.start},i.start.set=function(t){this.tiltShiftXFilter.start=this.tiltShiftYFilter.start=t},i.end.get=function(){return this.tiltShiftXFilter.end},i.end.set=function(t){this.tiltShiftXFilter.end=this.tiltShiftYFilter.end=t},Object.defineProperties(e.prototype,i),e}(e.Filter);t.TiltShiftFilter=l,t.TiltShiftXFilter=o,t.TiltShiftYFilter=s,t.TiltShiftAxisFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],50:[function(require,module,exports){
+},{"pixi.js":264}],50:[function(require,module,exports){
 /*!
  * @pixi/filter-twist - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2657,7 +2657,7 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(o,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(o.__filters={},o.PIXI)}(this,function(o,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float radius;\nuniform float angle;\nuniform vec2 offset;\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 twist(vec2 coord)\n{\n    coord -= offset;\n\n    float dist = length(coord);\n\n    if (dist < radius)\n    {\n        float ratioDist = (radius - dist) / radius;\n        float angleMod = ratioDist * ratioDist * angle;\n        float s = sin(angleMod);\n        float c = cos(angleMod);\n        coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);\n    }\n\n    coord += offset;\n\n    return coord;\n}\n\nvoid main(void)\n{\n\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = twist(coord);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord );\n\n}\n",t=function(o){function n(n,t,i){void 0===n&&(n=200),void 0===t&&(t=4),void 0===i&&(i=20),o.call(this,r,e),this.radius=n,this.angle=t,this.padding=i}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={offset:{configurable:!0},radius:{configurable:!0},angle:{configurable:!0}};return t.offset.get=function(){return this.uniforms.offset},t.offset.set=function(o){this.uniforms.offset=o},t.radius.get=function(){return this.uniforms.radius},t.radius.set=function(o){this.uniforms.radius=o},t.angle.get=function(){return this.uniforms.angle},t.angle.set=function(o){this.uniforms.angle=o},Object.defineProperties(n.prototype,t),n}(n.Filter);o.TwistFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],51:[function(require,module,exports){
+},{"pixi.js":264}],51:[function(require,module,exports){
 /*!
  * @pixi/filter-zoom-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2668,7 +2668,224 @@ module.exports.start_rain = (x1,x2,y1,y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uCenter;\nuniform float uStrength;\nuniform float uInnerRadius;\nuniform float uRadius;\n\nconst float MAX_KERNEL_SIZE = 32.0;\n\nfloat random(vec3 scale, float seed) {\n    // use the fragment position for a different seed per-pixel\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main() {\n\n    float minGradient = uInnerRadius * 0.3;\n    float innerRadius = (uInnerRadius + minGradient * 0.5) / filterArea.x;\n\n    float gradient = uRadius * 0.3;\n    float radius = (uRadius - gradient * 0.5) / filterArea.x;\n\n    float countLimit = MAX_KERNEL_SIZE;\n\n    vec2 dir = vec2(uCenter.xy / filterArea.xy - vTextureCoord);\n    float dist = length(vec2(dir.x, dir.y * filterArea.y / filterArea.x));\n\n    float strength = uStrength;\n\n    float delta = 0.0;\n    float gap;\n    if (dist < innerRadius) {\n        delta = innerRadius - dist;\n        gap = minGradient;\n    } else if (radius >= 0.0 && dist > radius) { // radius < 0 means it's infinity\n        delta = dist - radius;\n        gap = gradient;\n    }\n\n    if (delta > 0.0) {\n        float normalCount = gap / filterArea.x;\n        delta = (normalCount - delta) / normalCount;\n        countLimit *= delta;\n        strength *= delta;\n        if (countLimit < 1.0)\n        {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n    }\n\n    // randomize the lookup values to hide the fixed number of samples\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n    float total = 0.0;\n    vec4 color = vec4(0.0);\n\n    dir *= strength;\n\n    for (float t = 0.0; t < MAX_KERNEL_SIZE; t++) {\n        float percent = (t + offset) / MAX_KERNEL_SIZE;\n        float weight = 4.0 * (percent - percent * percent);\n        vec2 p = vTextureCoord + dir * percent;\n        vec4 sample = texture2D(uSampler, p);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample * weight;\n        total += weight;\n\n        if (t > countLimit){\n            break;\n        }\n    }\n\n    color /= total;\n    // switch back from pre-multiplied alpha\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",i=function(n){function e(e,i,o,a){void 0===e&&(e=.1),void 0===i&&(i=[0,0]),void 0===o&&(o=0),void 0===a&&(a=-1),n.call(this,t,r),this.center=i,this.strength=e,this.innerRadius=o,this.radius=a}n&&(e.__proto__=n),e.prototype=Object.create(n&&n.prototype),e.prototype.constructor=e;var i={center:{configurable:!0},strength:{configurable:!0},innerRadius:{configurable:!0},radius:{configurable:!0}};return i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(n){this.uniforms.uCenter=n},i.strength.get=function(){return this.uniforms.uStrength},i.strength.set=function(n){this.uniforms.uStrength=n},i.innerRadius.get=function(){return this.uniforms.uInnerRadius},i.innerRadius.set=function(n){this.uniforms.uInnerRadius=n},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(n){(n<0||n===1/0)&&(n=-1),this.uniforms.uRadius=n},Object.defineProperties(e.prototype,i),e}(e.Filter);n.ZoomBlurFilter=i,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":235}],52:[function(require,module,exports){
+},{"pixi.js":264}],52:[function(require,module,exports){
+module.exports = after
+
+function after(count, callback, err_cb) {
+    var bail = false
+    err_cb = err_cb || noop
+    proxy.count = count
+
+    return (count === 0) ? callback() : proxy
+
+    function proxy(err, result) {
+        if (proxy.count <= 0) {
+            throw new Error('after called too many times')
+        }
+        --proxy.count
+
+        // after first error, rest are passed to err_cb
+        if (err) {
+            bail = true
+            callback(err)
+            // future error callbacks will go to error handler
+            callback = err_cb
+        } else if (proxy.count === 0 && !bail) {
+            callback(null, result)
+        }
+    }
+}
+
+function noop() {}
+
+},{}],53:[function(require,module,exports){
+/**
+ * An abstraction for slicing an arraybuffer even when
+ * ArrayBuffer.prototype.slice is not supported
+ *
+ * @api public
+ */
+
+module.exports = function(arraybuffer, start, end) {
+  var bytes = arraybuffer.byteLength;
+  start = start || 0;
+  end = end || bytes;
+
+  if (arraybuffer.slice) { return arraybuffer.slice(start, end); }
+
+  if (start < 0) { start += bytes; }
+  if (end < 0) { end += bytes; }
+  if (end > bytes) { end = bytes; }
+
+  if (start >= bytes || start >= end || bytes === 0) {
+    return new ArrayBuffer(0);
+  }
+
+  var abv = new Uint8Array(arraybuffer);
+  var result = new Uint8Array(end - start);
+  for (var i = start, ii = 0; i < end; i++, ii++) {
+    result[ii] = abv[i];
+  }
+  return result.buffer;
+};
+
+},{}],54:[function(require,module,exports){
+
+/**
+ * Expose `Backoff`.
+ */
+
+module.exports = Backoff;
+
+/**
+ * Initialize backoff timer with `opts`.
+ *
+ * - `min` initial timeout in milliseconds [100]
+ * - `max` max timeout [10000]
+ * - `jitter` [0]
+ * - `factor` [2]
+ *
+ * @param {Object} opts
+ * @api public
+ */
+
+function Backoff(opts) {
+  opts = opts || {};
+  this.ms = opts.min || 100;
+  this.max = opts.max || 10000;
+  this.factor = opts.factor || 2;
+  this.jitter = opts.jitter > 0 && opts.jitter <= 1 ? opts.jitter : 0;
+  this.attempts = 0;
+}
+
+/**
+ * Return the backoff duration.
+ *
+ * @return {Number}
+ * @api public
+ */
+
+Backoff.prototype.duration = function(){
+  var ms = this.ms * Math.pow(this.factor, this.attempts++);
+  if (this.jitter) {
+    var rand =  Math.random();
+    var deviation = Math.floor(rand * this.jitter * ms);
+    ms = (Math.floor(rand * 10) & 1) == 0  ? ms - deviation : ms + deviation;
+  }
+  return Math.min(ms, this.max) | 0;
+};
+
+/**
+ * Reset the number of attempts.
+ *
+ * @api public
+ */
+
+Backoff.prototype.reset = function(){
+  this.attempts = 0;
+};
+
+/**
+ * Set the minimum duration
+ *
+ * @api public
+ */
+
+Backoff.prototype.setMin = function(min){
+  this.ms = min;
+};
+
+/**
+ * Set the maximum duration
+ *
+ * @api public
+ */
+
+Backoff.prototype.setMax = function(max){
+  this.max = max;
+};
+
+/**
+ * Set the jitter
+ *
+ * @api public
+ */
+
+Backoff.prototype.setJitter = function(jitter){
+  this.jitter = jitter;
+};
+
+
+},{}],55:[function(require,module,exports){
+/*
+ * base64-arraybuffer
+ * https://github.com/niklasvh/base64-arraybuffer
+ *
+ * Copyright (c) 2012 Niklas von Hertzen
+ * Licensed under the MIT license.
+ */
+(function(){
+  "use strict";
+
+  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+  // Use a lookup table to find the index.
+  var lookup = new Uint8Array(256);
+  for (var i = 0; i < chars.length; i++) {
+    lookup[chars.charCodeAt(i)] = i;
+  }
+
+  exports.encode = function(arraybuffer) {
+    var bytes = new Uint8Array(arraybuffer),
+    i, len = bytes.length, base64 = "";
+
+    for (i = 0; i < len; i+=3) {
+      base64 += chars[bytes[i] >> 2];
+      base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+      base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+      base64 += chars[bytes[i + 2] & 63];
+    }
+
+    if ((len % 3) === 2) {
+      base64 = base64.substring(0, base64.length - 1) + "=";
+    } else if (len % 3 === 1) {
+      base64 = base64.substring(0, base64.length - 2) + "==";
+    }
+
+    return base64;
+  };
+
+  exports.decode =  function(base64) {
+    var bufferLength = base64.length * 0.75,
+    len = base64.length, i, p = 0,
+    encoded1, encoded2, encoded3, encoded4;
+
+    if (base64[base64.length - 1] === "=") {
+      bufferLength--;
+      if (base64[base64.length - 2] === "=") {
+        bufferLength--;
+      }
+    }
+
+    var arraybuffer = new ArrayBuffer(bufferLength),
+    bytes = new Uint8Array(arraybuffer);
+
+    for (i = 0; i < len; i+=4) {
+      encoded1 = lookup[base64.charCodeAt(i)];
+      encoded2 = lookup[base64.charCodeAt(i+1)];
+      encoded3 = lookup[base64.charCodeAt(i+2)];
+      encoded4 = lookup[base64.charCodeAt(i+3)];
+
+      bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+      bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+      bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+    }
+
+    return arraybuffer;
+  };
+})();
+
+},{}],56:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -2874,7 +3091,305 @@ exports.nextCombination = function(v) {
 }
 
 
-},{}],53:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
+(function (global){
+/**
+ * Create a blob builder even when vendor prefixes exist
+ */
+
+var BlobBuilder = global.BlobBuilder
+  || global.WebKitBlobBuilder
+  || global.MSBlobBuilder
+  || global.MozBlobBuilder;
+
+/**
+ * Check if Blob constructor is supported
+ */
+
+var blobSupported = (function() {
+  try {
+    var a = new Blob(['hi']);
+    return a.size === 2;
+  } catch(e) {
+    return false;
+  }
+})();
+
+/**
+ * Check if Blob constructor supports ArrayBufferViews
+ * Fails in Safari 6, so we need to map to ArrayBuffers there.
+ */
+
+var blobSupportsArrayBufferView = blobSupported && (function() {
+  try {
+    var b = new Blob([new Uint8Array([1,2])]);
+    return b.size === 2;
+  } catch(e) {
+    return false;
+  }
+})();
+
+/**
+ * Check if BlobBuilder is supported
+ */
+
+var blobBuilderSupported = BlobBuilder
+  && BlobBuilder.prototype.append
+  && BlobBuilder.prototype.getBlob;
+
+/**
+ * Helper function that maps ArrayBufferViews to ArrayBuffers
+ * Used by BlobBuilder constructor and old browsers that didn't
+ * support it in the Blob constructor.
+ */
+
+function mapArrayBufferViews(ary) {
+  for (var i = 0; i < ary.length; i++) {
+    var chunk = ary[i];
+    if (chunk.buffer instanceof ArrayBuffer) {
+      var buf = chunk.buffer;
+
+      // if this is a subarray, make a copy so we only
+      // include the subarray region from the underlying buffer
+      if (chunk.byteLength !== buf.byteLength) {
+        var copy = new Uint8Array(chunk.byteLength);
+        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
+        buf = copy.buffer;
+      }
+
+      ary[i] = buf;
+    }
+  }
+}
+
+function BlobBuilderConstructor(ary, options) {
+  options = options || {};
+
+  var bb = new BlobBuilder();
+  mapArrayBufferViews(ary);
+
+  for (var i = 0; i < ary.length; i++) {
+    bb.append(ary[i]);
+  }
+
+  return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
+};
+
+function BlobConstructor(ary, options) {
+  mapArrayBufferViews(ary);
+  return new Blob(ary, options || {});
+};
+
+module.exports = (function() {
+  if (blobSupported) {
+    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
+  } else if (blobBuilderSupported) {
+    return BlobBuilderConstructor;
+  } else {
+    return undefined;
+  }
+})();
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],58:[function(require,module,exports){
+/**
+ * Slice reference.
+ */
+
+var slice = [].slice;
+
+/**
+ * Bind `obj` to `fn`.
+ *
+ * @param {Object} obj
+ * @param {Function|String} fn or string
+ * @return {Function}
+ * @api public
+ */
+
+module.exports = function(obj, fn){
+  if ('string' == typeof fn) fn = obj[fn];
+  if ('function' != typeof fn) throw new Error('bind() requires a function');
+  var args = slice.call(arguments, 2);
+  return function(){
+    return fn.apply(obj, args.concat(slice.call(arguments)));
+  }
+};
+
+},{}],59:[function(require,module,exports){
+
+/**
+ * Expose `Emitter`.
+ */
+
+if (typeof module !== 'undefined') {
+  module.exports = Emitter;
+}
+
+/**
+ * Initialize a new `Emitter`.
+ *
+ * @api public
+ */
+
+function Emitter(obj) {
+  if (obj) return mixin(obj);
+};
+
+/**
+ * Mixin the emitter properties.
+ *
+ * @param {Object} obj
+ * @return {Object}
+ * @api private
+ */
+
+function mixin(obj) {
+  for (var key in Emitter.prototype) {
+    obj[key] = Emitter.prototype[key];
+  }
+  return obj;
+}
+
+/**
+ * Listen on the given `event` with `fn`.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.on =
+Emitter.prototype.addEventListener = function(event, fn){
+  this._callbacks = this._callbacks || {};
+  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
+    .push(fn);
+  return this;
+};
+
+/**
+ * Adds an `event` listener that will be invoked a single
+ * time then automatically removed.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.once = function(event, fn){
+  function on() {
+    this.off(event, on);
+    fn.apply(this, arguments);
+  }
+
+  on.fn = fn;
+  this.on(event, on);
+  return this;
+};
+
+/**
+ * Remove the given callback for `event` or all
+ * registered callbacks.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.off =
+Emitter.prototype.removeListener =
+Emitter.prototype.removeAllListeners =
+Emitter.prototype.removeEventListener = function(event, fn){
+  this._callbacks = this._callbacks || {};
+
+  // all
+  if (0 == arguments.length) {
+    this._callbacks = {};
+    return this;
+  }
+
+  // specific event
+  var callbacks = this._callbacks['$' + event];
+  if (!callbacks) return this;
+
+  // remove all handlers
+  if (1 == arguments.length) {
+    delete this._callbacks['$' + event];
+    return this;
+  }
+
+  // remove specific handler
+  var cb;
+  for (var i = 0; i < callbacks.length; i++) {
+    cb = callbacks[i];
+    if (cb === fn || cb.fn === fn) {
+      callbacks.splice(i, 1);
+      break;
+    }
+  }
+  return this;
+};
+
+/**
+ * Emit `event` with the given args.
+ *
+ * @param {String} event
+ * @param {Mixed} ...
+ * @return {Emitter}
+ */
+
+Emitter.prototype.emit = function(event){
+  this._callbacks = this._callbacks || {};
+  var args = [].slice.call(arguments, 1)
+    , callbacks = this._callbacks['$' + event];
+
+  if (callbacks) {
+    callbacks = callbacks.slice(0);
+    for (var i = 0, len = callbacks.length; i < len; ++i) {
+      callbacks[i].apply(this, args);
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Return array of callbacks for `event`.
+ *
+ * @param {String} event
+ * @return {Array}
+ * @api public
+ */
+
+Emitter.prototype.listeners = function(event){
+  this._callbacks = this._callbacks || {};
+  return this._callbacks['$' + event] || [];
+};
+
+/**
+ * Check if this emitter has `event` handlers.
+ *
+ * @param {String} event
+ * @return {Boolean}
+ * @api public
+ */
+
+Emitter.prototype.hasListeners = function(event){
+  return !! this.listeners(event).length;
+};
+
+},{}],60:[function(require,module,exports){
+
+module.exports = function(a, b){
+  var fn = function(){};
+  fn.prototype = b.prototype;
+  a.prototype = new fn;
+  a.prototype.constructor = a;
+};
+},{}],61:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -3526,7 +4041,3527 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],54:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
+
+module.exports = require('./socket');
+
+/**
+ * Exports parser
+ *
+ * @api public
+ *
+ */
+module.exports.parser = require('engine.io-parser');
+
+},{"./socket":63,"engine.io-parser":73}],63:[function(require,module,exports){
+(function (global){
+/**
+ * Module dependencies.
+ */
+
+var transports = require('./transports/index');
+var Emitter = require('component-emitter');
+var debug = require('debug')('engine.io-client:socket');
+var index = require('indexof');
+var parser = require('engine.io-parser');
+var parseuri = require('parseuri');
+var parseqs = require('parseqs');
+
+/**
+ * Module exports.
+ */
+
+module.exports = Socket;
+
+/**
+ * Socket constructor.
+ *
+ * @param {String|Object} uri or options
+ * @param {Object} options
+ * @api public
+ */
+
+function Socket (uri, opts) {
+  if (!(this instanceof Socket)) return new Socket(uri, opts);
+
+  opts = opts || {};
+
+  if (uri && 'object' === typeof uri) {
+    opts = uri;
+    uri = null;
+  }
+
+  if (uri) {
+    uri = parseuri(uri);
+    opts.hostname = uri.host;
+    opts.secure = uri.protocol === 'https' || uri.protocol === 'wss';
+    opts.port = uri.port;
+    if (uri.query) opts.query = uri.query;
+  } else if (opts.host) {
+    opts.hostname = parseuri(opts.host).host;
+  }
+
+  this.secure = null != opts.secure ? opts.secure
+    : (global.location && 'https:' === location.protocol);
+
+  if (opts.hostname && !opts.port) {
+    // if no port is specified manually, use the protocol default
+    opts.port = this.secure ? '443' : '80';
+  }
+
+  this.agent = opts.agent || false;
+  this.hostname = opts.hostname ||
+    (global.location ? location.hostname : 'localhost');
+  this.port = opts.port || (global.location && location.port
+      ? location.port
+      : (this.secure ? 443 : 80));
+  this.query = opts.query || {};
+  if ('string' === typeof this.query) this.query = parseqs.decode(this.query);
+  this.upgrade = false !== opts.upgrade;
+  this.path = (opts.path || '/engine.io').replace(/\/$/, '') + '/';
+  this.forceJSONP = !!opts.forceJSONP;
+  this.jsonp = false !== opts.jsonp;
+  this.forceBase64 = !!opts.forceBase64;
+  this.enablesXDR = !!opts.enablesXDR;
+  this.timestampParam = opts.timestampParam || 't';
+  this.timestampRequests = opts.timestampRequests;
+  this.transports = opts.transports || ['polling', 'websocket'];
+  this.transportOptions = opts.transportOptions || {};
+  this.readyState = '';
+  this.writeBuffer = [];
+  this.prevBufferLen = 0;
+  this.policyPort = opts.policyPort || 843;
+  this.rememberUpgrade = opts.rememberUpgrade || false;
+  this.binaryType = null;
+  this.onlyBinaryUpgrades = opts.onlyBinaryUpgrades;
+  this.perMessageDeflate = false !== opts.perMessageDeflate ? (opts.perMessageDeflate || {}) : false;
+
+  if (true === this.perMessageDeflate) this.perMessageDeflate = {};
+  if (this.perMessageDeflate && null == this.perMessageDeflate.threshold) {
+    this.perMessageDeflate.threshold = 1024;
+  }
+
+  // SSL options for Node.js client
+  this.pfx = opts.pfx || null;
+  this.key = opts.key || null;
+  this.passphrase = opts.passphrase || null;
+  this.cert = opts.cert || null;
+  this.ca = opts.ca || null;
+  this.ciphers = opts.ciphers || null;
+  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? true : opts.rejectUnauthorized;
+  this.forceNode = !!opts.forceNode;
+
+  // other options for Node.js client
+  var freeGlobal = typeof global === 'object' && global;
+  if (freeGlobal.global === freeGlobal) {
+    if (opts.extraHeaders && Object.keys(opts.extraHeaders).length > 0) {
+      this.extraHeaders = opts.extraHeaders;
+    }
+
+    if (opts.localAddress) {
+      this.localAddress = opts.localAddress;
+    }
+  }
+
+  // set on handshake
+  this.id = null;
+  this.upgrades = null;
+  this.pingInterval = null;
+  this.pingTimeout = null;
+
+  // set on heartbeat
+  this.pingIntervalTimer = null;
+  this.pingTimeoutTimer = null;
+
+  this.open();
+}
+
+Socket.priorWebsocketSuccess = false;
+
+/**
+ * Mix in `Emitter`.
+ */
+
+Emitter(Socket.prototype);
+
+/**
+ * Protocol version.
+ *
+ * @api public
+ */
+
+Socket.protocol = parser.protocol; // this is an int
+
+/**
+ * Expose deps for legacy compatibility
+ * and standalone browser access.
+ */
+
+Socket.Socket = Socket;
+Socket.Transport = require('./transport');
+Socket.transports = require('./transports/index');
+Socket.parser = require('engine.io-parser');
+
+/**
+ * Creates transport of the given type.
+ *
+ * @param {String} transport name
+ * @return {Transport}
+ * @api private
+ */
+
+Socket.prototype.createTransport = function (name) {
+  debug('creating transport "%s"', name);
+  var query = clone(this.query);
+
+  // append engine.io protocol identifier
+  query.EIO = parser.protocol;
+
+  // transport name
+  query.transport = name;
+
+  // per-transport options
+  var options = this.transportOptions[name] || {};
+
+  // session id if we already have one
+  if (this.id) query.sid = this.id;
+
+  var transport = new transports[name]({
+    query: query,
+    socket: this,
+    agent: options.agent || this.agent,
+    hostname: options.hostname || this.hostname,
+    port: options.port || this.port,
+    secure: options.secure || this.secure,
+    path: options.path || this.path,
+    forceJSONP: options.forceJSONP || this.forceJSONP,
+    jsonp: options.jsonp || this.jsonp,
+    forceBase64: options.forceBase64 || this.forceBase64,
+    enablesXDR: options.enablesXDR || this.enablesXDR,
+    timestampRequests: options.timestampRequests || this.timestampRequests,
+    timestampParam: options.timestampParam || this.timestampParam,
+    policyPort: options.policyPort || this.policyPort,
+    pfx: options.pfx || this.pfx,
+    key: options.key || this.key,
+    passphrase: options.passphrase || this.passphrase,
+    cert: options.cert || this.cert,
+    ca: options.ca || this.ca,
+    ciphers: options.ciphers || this.ciphers,
+    rejectUnauthorized: options.rejectUnauthorized || this.rejectUnauthorized,
+    perMessageDeflate: options.perMessageDeflate || this.perMessageDeflate,
+    extraHeaders: options.extraHeaders || this.extraHeaders,
+    forceNode: options.forceNode || this.forceNode,
+    localAddress: options.localAddress || this.localAddress,
+    requestTimeout: options.requestTimeout || this.requestTimeout,
+    protocols: options.protocols || void (0)
+  });
+
+  return transport;
+};
+
+function clone (obj) {
+  var o = {};
+  for (var i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      o[i] = obj[i];
+    }
+  }
+  return o;
+}
+
+/**
+ * Initializes transport to use and starts probe.
+ *
+ * @api private
+ */
+Socket.prototype.open = function () {
+  var transport;
+  if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') !== -1) {
+    transport = 'websocket';
+  } else if (0 === this.transports.length) {
+    // Emit error on next tick so it can be listened to
+    var self = this;
+    setTimeout(function () {
+      self.emit('error', 'No transports available');
+    }, 0);
+    return;
+  } else {
+    transport = this.transports[0];
+  }
+  this.readyState = 'opening';
+
+  // Retry with the next transport if the transport is disabled (jsonp: false)
+  try {
+    transport = this.createTransport(transport);
+  } catch (e) {
+    this.transports.shift();
+    this.open();
+    return;
+  }
+
+  transport.open();
+  this.setTransport(transport);
+};
+
+/**
+ * Sets the current transport. Disables the existing one (if any).
+ *
+ * @api private
+ */
+
+Socket.prototype.setTransport = function (transport) {
+  debug('setting transport %s', transport.name);
+  var self = this;
+
+  if (this.transport) {
+    debug('clearing existing transport %s', this.transport.name);
+    this.transport.removeAllListeners();
+  }
+
+  // set up transport
+  this.transport = transport;
+
+  // set up transport listeners
+  transport
+  .on('drain', function () {
+    self.onDrain();
+  })
+  .on('packet', function (packet) {
+    self.onPacket(packet);
+  })
+  .on('error', function (e) {
+    self.onError(e);
+  })
+  .on('close', function () {
+    self.onClose('transport close');
+  });
+};
+
+/**
+ * Probes a transport.
+ *
+ * @param {String} transport name
+ * @api private
+ */
+
+Socket.prototype.probe = function (name) {
+  debug('probing transport "%s"', name);
+  var transport = this.createTransport(name, { probe: 1 });
+  var failed = false;
+  var self = this;
+
+  Socket.priorWebsocketSuccess = false;
+
+  function onTransportOpen () {
+    if (self.onlyBinaryUpgrades) {
+      var upgradeLosesBinary = !this.supportsBinary && self.transport.supportsBinary;
+      failed = failed || upgradeLosesBinary;
+    }
+    if (failed) return;
+
+    debug('probe transport "%s" opened', name);
+    transport.send([{ type: 'ping', data: 'probe' }]);
+    transport.once('packet', function (msg) {
+      if (failed) return;
+      if ('pong' === msg.type && 'probe' === msg.data) {
+        debug('probe transport "%s" pong', name);
+        self.upgrading = true;
+        self.emit('upgrading', transport);
+        if (!transport) return;
+        Socket.priorWebsocketSuccess = 'websocket' === transport.name;
+
+        debug('pausing current transport "%s"', self.transport.name);
+        self.transport.pause(function () {
+          if (failed) return;
+          if ('closed' === self.readyState) return;
+          debug('changing transport and sending upgrade packet');
+
+          cleanup();
+
+          self.setTransport(transport);
+          transport.send([{ type: 'upgrade' }]);
+          self.emit('upgrade', transport);
+          transport = null;
+          self.upgrading = false;
+          self.flush();
+        });
+      } else {
+        debug('probe transport "%s" failed', name);
+        var err = new Error('probe error');
+        err.transport = transport.name;
+        self.emit('upgradeError', err);
+      }
+    });
+  }
+
+  function freezeTransport () {
+    if (failed) return;
+
+    // Any callback called by transport should be ignored since now
+    failed = true;
+
+    cleanup();
+
+    transport.close();
+    transport = null;
+  }
+
+  // Handle any error that happens while probing
+  function onerror (err) {
+    var error = new Error('probe error: ' + err);
+    error.transport = transport.name;
+
+    freezeTransport();
+
+    debug('probe transport "%s" failed because of error: %s', name, err);
+
+    self.emit('upgradeError', error);
+  }
+
+  function onTransportClose () {
+    onerror('transport closed');
+  }
+
+  // When the socket is closed while we're probing
+  function onclose () {
+    onerror('socket closed');
+  }
+
+  // When the socket is upgraded while we're probing
+  function onupgrade (to) {
+    if (transport && to.name !== transport.name) {
+      debug('"%s" works - aborting "%s"', to.name, transport.name);
+      freezeTransport();
+    }
+  }
+
+  // Remove all listeners on the transport and on self
+  function cleanup () {
+    transport.removeListener('open', onTransportOpen);
+    transport.removeListener('error', onerror);
+    transport.removeListener('close', onTransportClose);
+    self.removeListener('close', onclose);
+    self.removeListener('upgrading', onupgrade);
+  }
+
+  transport.once('open', onTransportOpen);
+  transport.once('error', onerror);
+  transport.once('close', onTransportClose);
+
+  this.once('close', onclose);
+  this.once('upgrading', onupgrade);
+
+  transport.open();
+};
+
+/**
+ * Called when connection is deemed open.
+ *
+ * @api public
+ */
+
+Socket.prototype.onOpen = function () {
+  debug('socket open');
+  this.readyState = 'open';
+  Socket.priorWebsocketSuccess = 'websocket' === this.transport.name;
+  this.emit('open');
+  this.flush();
+
+  // we check for `readyState` in case an `open`
+  // listener already closed the socket
+  if ('open' === this.readyState && this.upgrade && this.transport.pause) {
+    debug('starting upgrade probes');
+    for (var i = 0, l = this.upgrades.length; i < l; i++) {
+      this.probe(this.upgrades[i]);
+    }
+  }
+};
+
+/**
+ * Handles a packet.
+ *
+ * @api private
+ */
+
+Socket.prototype.onPacket = function (packet) {
+  if ('opening' === this.readyState || 'open' === this.readyState ||
+      'closing' === this.readyState) {
+    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
+
+    this.emit('packet', packet);
+
+    // Socket is live - any packet counts
+    this.emit('heartbeat');
+
+    switch (packet.type) {
+      case 'open':
+        this.onHandshake(JSON.parse(packet.data));
+        break;
+
+      case 'pong':
+        this.setPing();
+        this.emit('pong');
+        break;
+
+      case 'error':
+        var err = new Error('server error');
+        err.code = packet.data;
+        this.onError(err);
+        break;
+
+      case 'message':
+        this.emit('data', packet.data);
+        this.emit('message', packet.data);
+        break;
+    }
+  } else {
+    debug('packet received with socket readyState "%s"', this.readyState);
+  }
+};
+
+/**
+ * Called upon handshake completion.
+ *
+ * @param {Object} handshake obj
+ * @api private
+ */
+
+Socket.prototype.onHandshake = function (data) {
+  this.emit('handshake', data);
+  this.id = data.sid;
+  this.transport.query.sid = data.sid;
+  this.upgrades = this.filterUpgrades(data.upgrades);
+  this.pingInterval = data.pingInterval;
+  this.pingTimeout = data.pingTimeout;
+  this.onOpen();
+  // In case open handler closes socket
+  if ('closed' === this.readyState) return;
+  this.setPing();
+
+  // Prolong liveness of socket on heartbeat
+  this.removeListener('heartbeat', this.onHeartbeat);
+  this.on('heartbeat', this.onHeartbeat);
+};
+
+/**
+ * Resets ping timeout.
+ *
+ * @api private
+ */
+
+Socket.prototype.onHeartbeat = function (timeout) {
+  clearTimeout(this.pingTimeoutTimer);
+  var self = this;
+  self.pingTimeoutTimer = setTimeout(function () {
+    if ('closed' === self.readyState) return;
+    self.onClose('ping timeout');
+  }, timeout || (self.pingInterval + self.pingTimeout));
+};
+
+/**
+ * Pings server every `this.pingInterval` and expects response
+ * within `this.pingTimeout` or closes connection.
+ *
+ * @api private
+ */
+
+Socket.prototype.setPing = function () {
+  var self = this;
+  clearTimeout(self.pingIntervalTimer);
+  self.pingIntervalTimer = setTimeout(function () {
+    debug('writing ping packet - expecting pong within %sms', self.pingTimeout);
+    self.ping();
+    self.onHeartbeat(self.pingTimeout);
+  }, self.pingInterval);
+};
+
+/**
+* Sends a ping packet.
+*
+* @api private
+*/
+
+Socket.prototype.ping = function () {
+  var self = this;
+  this.sendPacket('ping', function () {
+    self.emit('ping');
+  });
+};
+
+/**
+ * Called on `drain` event
+ *
+ * @api private
+ */
+
+Socket.prototype.onDrain = function () {
+  this.writeBuffer.splice(0, this.prevBufferLen);
+
+  // setting prevBufferLen = 0 is very important
+  // for example, when upgrading, upgrade packet is sent over,
+  // and a nonzero prevBufferLen could cause problems on `drain`
+  this.prevBufferLen = 0;
+
+  if (0 === this.writeBuffer.length) {
+    this.emit('drain');
+  } else {
+    this.flush();
+  }
+};
+
+/**
+ * Flush write buffers.
+ *
+ * @api private
+ */
+
+Socket.prototype.flush = function () {
+  if ('closed' !== this.readyState && this.transport.writable &&
+    !this.upgrading && this.writeBuffer.length) {
+    debug('flushing %d packets in socket', this.writeBuffer.length);
+    this.transport.send(this.writeBuffer);
+    // keep track of current length of writeBuffer
+    // splice writeBuffer and callbackBuffer on `drain`
+    this.prevBufferLen = this.writeBuffer.length;
+    this.emit('flush');
+  }
+};
+
+/**
+ * Sends a message.
+ *
+ * @param {String} message.
+ * @param {Function} callback function.
+ * @param {Object} options.
+ * @return {Socket} for chaining.
+ * @api public
+ */
+
+Socket.prototype.write =
+Socket.prototype.send = function (msg, options, fn) {
+  this.sendPacket('message', msg, options, fn);
+  return this;
+};
+
+/**
+ * Sends a packet.
+ *
+ * @param {String} packet type.
+ * @param {String} data.
+ * @param {Object} options.
+ * @param {Function} callback function.
+ * @api private
+ */
+
+Socket.prototype.sendPacket = function (type, data, options, fn) {
+  if ('function' === typeof data) {
+    fn = data;
+    data = undefined;
+  }
+
+  if ('function' === typeof options) {
+    fn = options;
+    options = null;
+  }
+
+  if ('closing' === this.readyState || 'closed' === this.readyState) {
+    return;
+  }
+
+  options = options || {};
+  options.compress = false !== options.compress;
+
+  var packet = {
+    type: type,
+    data: data,
+    options: options
+  };
+  this.emit('packetCreate', packet);
+  this.writeBuffer.push(packet);
+  if (fn) this.once('flush', fn);
+  this.flush();
+};
+
+/**
+ * Closes the connection.
+ *
+ * @api private
+ */
+
+Socket.prototype.close = function () {
+  if ('opening' === this.readyState || 'open' === this.readyState) {
+    this.readyState = 'closing';
+
+    var self = this;
+
+    if (this.writeBuffer.length) {
+      this.once('drain', function () {
+        if (this.upgrading) {
+          waitForUpgrade();
+        } else {
+          close();
+        }
+      });
+    } else if (this.upgrading) {
+      waitForUpgrade();
+    } else {
+      close();
+    }
+  }
+
+  function close () {
+    self.onClose('forced close');
+    debug('socket closing - telling transport to close');
+    self.transport.close();
+  }
+
+  function cleanupAndClose () {
+    self.removeListener('upgrade', cleanupAndClose);
+    self.removeListener('upgradeError', cleanupAndClose);
+    close();
+  }
+
+  function waitForUpgrade () {
+    // wait for upgrade to finish since we can't send packets while pausing a transport
+    self.once('upgrade', cleanupAndClose);
+    self.once('upgradeError', cleanupAndClose);
+  }
+
+  return this;
+};
+
+/**
+ * Called upon transport error
+ *
+ * @api private
+ */
+
+Socket.prototype.onError = function (err) {
+  debug('socket error %j', err);
+  Socket.priorWebsocketSuccess = false;
+  this.emit('error', err);
+  this.onClose('transport error', err);
+};
+
+/**
+ * Called upon transport close.
+ *
+ * @api private
+ */
+
+Socket.prototype.onClose = function (reason, desc) {
+  if ('opening' === this.readyState || 'open' === this.readyState || 'closing' === this.readyState) {
+    debug('socket close with reason: "%s"', reason);
+    var self = this;
+
+    // clear timers
+    clearTimeout(this.pingIntervalTimer);
+    clearTimeout(this.pingTimeoutTimer);
+
+    // stop event from firing again for transport
+    this.transport.removeAllListeners('close');
+
+    // ensure transport won't stay open
+    this.transport.close();
+
+    // ignore further transport communication
+    this.transport.removeAllListeners();
+
+    // set ready state
+    this.readyState = 'closed';
+
+    // clear session id
+    this.id = null;
+
+    // emit close event
+    this.emit('close', reason, desc);
+
+    // clean buffers after, so users can still
+    // grab the buffers on `close` event
+    self.writeBuffer = [];
+    self.prevBufferLen = 0;
+  }
+};
+
+/**
+ * Filters upgrades, returning only those matching client transports.
+ *
+ * @param {Array} server upgrades
+ * @api private
+ *
+ */
+
+Socket.prototype.filterUpgrades = function (upgrades) {
+  var filteredUpgrades = [];
+  for (var i = 0, j = upgrades.length; i < j; i++) {
+    if (~index(this.transports, upgrades[i])) filteredUpgrades.push(upgrades[i]);
+  }
+  return filteredUpgrades;
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./transport":64,"./transports/index":65,"component-emitter":59,"debug":71,"engine.io-parser":73,"indexof":80,"parseqs":111,"parseuri":112}],64:[function(require,module,exports){
+/**
+ * Module dependencies.
+ */
+
+var parser = require('engine.io-parser');
+var Emitter = require('component-emitter');
+
+/**
+ * Module exports.
+ */
+
+module.exports = Transport;
+
+/**
+ * Transport abstract constructor.
+ *
+ * @param {Object} options.
+ * @api private
+ */
+
+function Transport (opts) {
+  this.path = opts.path;
+  this.hostname = opts.hostname;
+  this.port = opts.port;
+  this.secure = opts.secure;
+  this.query = opts.query;
+  this.timestampParam = opts.timestampParam;
+  this.timestampRequests = opts.timestampRequests;
+  this.readyState = '';
+  this.agent = opts.agent || false;
+  this.socket = opts.socket;
+  this.enablesXDR = opts.enablesXDR;
+
+  // SSL options for Node.js client
+  this.pfx = opts.pfx;
+  this.key = opts.key;
+  this.passphrase = opts.passphrase;
+  this.cert = opts.cert;
+  this.ca = opts.ca;
+  this.ciphers = opts.ciphers;
+  this.rejectUnauthorized = opts.rejectUnauthorized;
+  this.forceNode = opts.forceNode;
+
+  // other options for Node.js client
+  this.extraHeaders = opts.extraHeaders;
+  this.localAddress = opts.localAddress;
+}
+
+/**
+ * Mix in `Emitter`.
+ */
+
+Emitter(Transport.prototype);
+
+/**
+ * Emits an error.
+ *
+ * @param {String} str
+ * @return {Transport} for chaining
+ * @api public
+ */
+
+Transport.prototype.onError = function (msg, desc) {
+  var err = new Error(msg);
+  err.type = 'TransportError';
+  err.description = desc;
+  this.emit('error', err);
+  return this;
+};
+
+/**
+ * Opens the transport.
+ *
+ * @api public
+ */
+
+Transport.prototype.open = function () {
+  if ('closed' === this.readyState || '' === this.readyState) {
+    this.readyState = 'opening';
+    this.doOpen();
+  }
+
+  return this;
+};
+
+/**
+ * Closes the transport.
+ *
+ * @api private
+ */
+
+Transport.prototype.close = function () {
+  if ('opening' === this.readyState || 'open' === this.readyState) {
+    this.doClose();
+    this.onClose();
+  }
+
+  return this;
+};
+
+/**
+ * Sends multiple packets.
+ *
+ * @param {Array} packets
+ * @api private
+ */
+
+Transport.prototype.send = function (packets) {
+  if ('open' === this.readyState) {
+    this.write(packets);
+  } else {
+    throw new Error('Transport not open');
+  }
+};
+
+/**
+ * Called upon open
+ *
+ * @api private
+ */
+
+Transport.prototype.onOpen = function () {
+  this.readyState = 'open';
+  this.writable = true;
+  this.emit('open');
+};
+
+/**
+ * Called with data.
+ *
+ * @param {String} data
+ * @api private
+ */
+
+Transport.prototype.onData = function (data) {
+  var packet = parser.decodePacket(data, this.socket.binaryType);
+  this.onPacket(packet);
+};
+
+/**
+ * Called with a decoded packet.
+ */
+
+Transport.prototype.onPacket = function (packet) {
+  this.emit('packet', packet);
+};
+
+/**
+ * Called upon close.
+ *
+ * @api private
+ */
+
+Transport.prototype.onClose = function () {
+  this.readyState = 'closed';
+  this.emit('close');
+};
+
+},{"component-emitter":59,"engine.io-parser":73}],65:[function(require,module,exports){
+(function (global){
+/**
+ * Module dependencies
+ */
+
+var XMLHttpRequest = require('xmlhttprequest-ssl');
+var XHR = require('./polling-xhr');
+var JSONP = require('./polling-jsonp');
+var websocket = require('./websocket');
+
+/**
+ * Export transports.
+ */
+
+exports.polling = polling;
+exports.websocket = websocket;
+
+/**
+ * Polling transport polymorphic constructor.
+ * Decides on xhr vs jsonp based on feature detection.
+ *
+ * @api private
+ */
+
+function polling (opts) {
+  var xhr;
+  var xd = false;
+  var xs = false;
+  var jsonp = false !== opts.jsonp;
+
+  if (global.location) {
+    var isSSL = 'https:' === location.protocol;
+    var port = location.port;
+
+    // some user agents have empty `location.port`
+    if (!port) {
+      port = isSSL ? 443 : 80;
+    }
+
+    xd = opts.hostname !== location.hostname || port !== opts.port;
+    xs = opts.secure !== isSSL;
+  }
+
+  opts.xdomain = xd;
+  opts.xscheme = xs;
+  xhr = new XMLHttpRequest(opts);
+
+  if ('open' in xhr && !opts.forceJSONP) {
+    return new XHR(opts);
+  } else {
+    if (!jsonp) throw new Error('JSONP disabled');
+    return new JSONP(opts);
+  }
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./polling-jsonp":66,"./polling-xhr":67,"./websocket":69,"xmlhttprequest-ssl":70}],66:[function(require,module,exports){
+(function (global){
+
+/**
+ * Module requirements.
+ */
+
+var Polling = require('./polling');
+var inherit = require('component-inherit');
+
+/**
+ * Module exports.
+ */
+
+module.exports = JSONPPolling;
+
+/**
+ * Cached regular expressions.
+ */
+
+var rNewline = /\n/g;
+var rEscapedNewline = /\\n/g;
+
+/**
+ * Global JSONP callbacks.
+ */
+
+var callbacks;
+
+/**
+ * Noop.
+ */
+
+function empty () { }
+
+/**
+ * JSONP Polling constructor.
+ *
+ * @param {Object} opts.
+ * @api public
+ */
+
+function JSONPPolling (opts) {
+  Polling.call(this, opts);
+
+  this.query = this.query || {};
+
+  // define global callbacks array if not present
+  // we do this here (lazily) to avoid unneeded global pollution
+  if (!callbacks) {
+    // we need to consider multiple engines in the same page
+    if (!global.___eio) global.___eio = [];
+    callbacks = global.___eio;
+  }
+
+  // callback identifier
+  this.index = callbacks.length;
+
+  // add callback to jsonp global
+  var self = this;
+  callbacks.push(function (msg) {
+    self.onData(msg);
+  });
+
+  // append to query string
+  this.query.j = this.index;
+
+  // prevent spurious errors from being emitted when the window is unloaded
+  if (global.document && global.addEventListener) {
+    global.addEventListener('beforeunload', function () {
+      if (self.script) self.script.onerror = empty;
+    }, false);
+  }
+}
+
+/**
+ * Inherits from Polling.
+ */
+
+inherit(JSONPPolling, Polling);
+
+/*
+ * JSONP only supports binary as base64 encoded strings
+ */
+
+JSONPPolling.prototype.supportsBinary = false;
+
+/**
+ * Closes the socket.
+ *
+ * @api private
+ */
+
+JSONPPolling.prototype.doClose = function () {
+  if (this.script) {
+    this.script.parentNode.removeChild(this.script);
+    this.script = null;
+  }
+
+  if (this.form) {
+    this.form.parentNode.removeChild(this.form);
+    this.form = null;
+    this.iframe = null;
+  }
+
+  Polling.prototype.doClose.call(this);
+};
+
+/**
+ * Starts a poll cycle.
+ *
+ * @api private
+ */
+
+JSONPPolling.prototype.doPoll = function () {
+  var self = this;
+  var script = document.createElement('script');
+
+  if (this.script) {
+    this.script.parentNode.removeChild(this.script);
+    this.script = null;
+  }
+
+  script.async = true;
+  script.src = this.uri();
+  script.onerror = function (e) {
+    self.onError('jsonp poll error', e);
+  };
+
+  var insertAt = document.getElementsByTagName('script')[0];
+  if (insertAt) {
+    insertAt.parentNode.insertBefore(script, insertAt);
+  } else {
+    (document.head || document.body).appendChild(script);
+  }
+  this.script = script;
+
+  var isUAgecko = 'undefined' !== typeof navigator && /gecko/i.test(navigator.userAgent);
+
+  if (isUAgecko) {
+    setTimeout(function () {
+      var iframe = document.createElement('iframe');
+      document.body.appendChild(iframe);
+      document.body.removeChild(iframe);
+    }, 100);
+  }
+};
+
+/**
+ * Writes with a hidden iframe.
+ *
+ * @param {String} data to send
+ * @param {Function} called upon flush.
+ * @api private
+ */
+
+JSONPPolling.prototype.doWrite = function (data, fn) {
+  var self = this;
+
+  if (!this.form) {
+    var form = document.createElement('form');
+    var area = document.createElement('textarea');
+    var id = this.iframeId = 'eio_iframe_' + this.index;
+    var iframe;
+
+    form.className = 'socketio';
+    form.style.position = 'absolute';
+    form.style.top = '-1000px';
+    form.style.left = '-1000px';
+    form.target = id;
+    form.method = 'POST';
+    form.setAttribute('accept-charset', 'utf-8');
+    area.name = 'd';
+    form.appendChild(area);
+    document.body.appendChild(form);
+
+    this.form = form;
+    this.area = area;
+  }
+
+  this.form.action = this.uri();
+
+  function complete () {
+    initIframe();
+    fn();
+  }
+
+  function initIframe () {
+    if (self.iframe) {
+      try {
+        self.form.removeChild(self.iframe);
+      } catch (e) {
+        self.onError('jsonp polling iframe removal error', e);
+      }
+    }
+
+    try {
+      // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
+      var html = '<iframe src="javascript:0" name="' + self.iframeId + '">';
+      iframe = document.createElement(html);
+    } catch (e) {
+      iframe = document.createElement('iframe');
+      iframe.name = self.iframeId;
+      iframe.src = 'javascript:0';
+    }
+
+    iframe.id = self.iframeId;
+
+    self.form.appendChild(iframe);
+    self.iframe = iframe;
+  }
+
+  initIframe();
+
+  // escape \n to prevent it from being converted into \r\n by some UAs
+  // double escaping is required for escaped new lines because unescaping of new lines can be done safely on server-side
+  data = data.replace(rEscapedNewline, '\\\n');
+  this.area.value = data.replace(rNewline, '\\n');
+
+  try {
+    this.form.submit();
+  } catch (e) {}
+
+  if (this.iframe.attachEvent) {
+    this.iframe.onreadystatechange = function () {
+      if (self.iframe.readyState === 'complete') {
+        complete();
+      }
+    };
+  } else {
+    this.iframe.onload = complete;
+  }
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./polling":68,"component-inherit":60}],67:[function(require,module,exports){
+(function (global){
+/**
+ * Module requirements.
+ */
+
+var XMLHttpRequest = require('xmlhttprequest-ssl');
+var Polling = require('./polling');
+var Emitter = require('component-emitter');
+var inherit = require('component-inherit');
+var debug = require('debug')('engine.io-client:polling-xhr');
+
+/**
+ * Module exports.
+ */
+
+module.exports = XHR;
+module.exports.Request = Request;
+
+/**
+ * Empty function
+ */
+
+function empty () {}
+
+/**
+ * XHR Polling constructor.
+ *
+ * @param {Object} opts
+ * @api public
+ */
+
+function XHR (opts) {
+  Polling.call(this, opts);
+  this.requestTimeout = opts.requestTimeout;
+  this.extraHeaders = opts.extraHeaders;
+
+  if (global.location) {
+    var isSSL = 'https:' === location.protocol;
+    var port = location.port;
+
+    // some user agents have empty `location.port`
+    if (!port) {
+      port = isSSL ? 443 : 80;
+    }
+
+    this.xd = opts.hostname !== global.location.hostname ||
+      port !== opts.port;
+    this.xs = opts.secure !== isSSL;
+  }
+}
+
+/**
+ * Inherits from Polling.
+ */
+
+inherit(XHR, Polling);
+
+/**
+ * XHR supports binary
+ */
+
+XHR.prototype.supportsBinary = true;
+
+/**
+ * Creates a request.
+ *
+ * @param {String} method
+ * @api private
+ */
+
+XHR.prototype.request = function (opts) {
+  opts = opts || {};
+  opts.uri = this.uri();
+  opts.xd = this.xd;
+  opts.xs = this.xs;
+  opts.agent = this.agent || false;
+  opts.supportsBinary = this.supportsBinary;
+  opts.enablesXDR = this.enablesXDR;
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
+  opts.requestTimeout = this.requestTimeout;
+
+  // other options for Node.js client
+  opts.extraHeaders = this.extraHeaders;
+
+  return new Request(opts);
+};
+
+/**
+ * Sends data.
+ *
+ * @param {String} data to send.
+ * @param {Function} called upon flush.
+ * @api private
+ */
+
+XHR.prototype.doWrite = function (data, fn) {
+  var isBinary = typeof data !== 'string' && data !== undefined;
+  var req = this.request({ method: 'POST', data: data, isBinary: isBinary });
+  var self = this;
+  req.on('success', fn);
+  req.on('error', function (err) {
+    self.onError('xhr post error', err);
+  });
+  this.sendXhr = req;
+};
+
+/**
+ * Starts a poll cycle.
+ *
+ * @api private
+ */
+
+XHR.prototype.doPoll = function () {
+  debug('xhr poll');
+  var req = this.request();
+  var self = this;
+  req.on('data', function (data) {
+    self.onData(data);
+  });
+  req.on('error', function (err) {
+    self.onError('xhr poll error', err);
+  });
+  this.pollXhr = req;
+};
+
+/**
+ * Request constructor
+ *
+ * @param {Object} options
+ * @api public
+ */
+
+function Request (opts) {
+  this.method = opts.method || 'GET';
+  this.uri = opts.uri;
+  this.xd = !!opts.xd;
+  this.xs = !!opts.xs;
+  this.async = false !== opts.async;
+  this.data = undefined !== opts.data ? opts.data : null;
+  this.agent = opts.agent;
+  this.isBinary = opts.isBinary;
+  this.supportsBinary = opts.supportsBinary;
+  this.enablesXDR = opts.enablesXDR;
+  this.requestTimeout = opts.requestTimeout;
+
+  // SSL options for Node.js client
+  this.pfx = opts.pfx;
+  this.key = opts.key;
+  this.passphrase = opts.passphrase;
+  this.cert = opts.cert;
+  this.ca = opts.ca;
+  this.ciphers = opts.ciphers;
+  this.rejectUnauthorized = opts.rejectUnauthorized;
+
+  // other options for Node.js client
+  this.extraHeaders = opts.extraHeaders;
+
+  this.create();
+}
+
+/**
+ * Mix in `Emitter`.
+ */
+
+Emitter(Request.prototype);
+
+/**
+ * Creates the XHR object and sends the request.
+ *
+ * @api private
+ */
+
+Request.prototype.create = function () {
+  var opts = { agent: this.agent, xdomain: this.xd, xscheme: this.xs, enablesXDR: this.enablesXDR };
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
+
+  var xhr = this.xhr = new XMLHttpRequest(opts);
+  var self = this;
+
+  try {
+    debug('xhr open %s: %s', this.method, this.uri);
+    xhr.open(this.method, this.uri, this.async);
+    try {
+      if (this.extraHeaders) {
+        xhr.setDisableHeaderCheck && xhr.setDisableHeaderCheck(true);
+        for (var i in this.extraHeaders) {
+          if (this.extraHeaders.hasOwnProperty(i)) {
+            xhr.setRequestHeader(i, this.extraHeaders[i]);
+          }
+        }
+      }
+    } catch (e) {}
+
+    if ('POST' === this.method) {
+      try {
+        if (this.isBinary) {
+          xhr.setRequestHeader('Content-type', 'application/octet-stream');
+        } else {
+          xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
+        }
+      } catch (e) {}
+    }
+
+    try {
+      xhr.setRequestHeader('Accept', '*/*');
+    } catch (e) {}
+
+    // ie6 check
+    if ('withCredentials' in xhr) {
+      xhr.withCredentials = true;
+    }
+
+    if (this.requestTimeout) {
+      xhr.timeout = this.requestTimeout;
+    }
+
+    if (this.hasXDR()) {
+      xhr.onload = function () {
+        self.onLoad();
+      };
+      xhr.onerror = function () {
+        self.onError(xhr.responseText);
+      };
+    } else {
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 2) {
+          try {
+            var contentType = xhr.getResponseHeader('Content-Type');
+            if (self.supportsBinary && contentType === 'application/octet-stream') {
+              xhr.responseType = 'arraybuffer';
+            }
+          } catch (e) {}
+        }
+        if (4 !== xhr.readyState) return;
+        if (200 === xhr.status || 1223 === xhr.status) {
+          self.onLoad();
+        } else {
+          // make sure the `error` event handler that's user-set
+          // does not throw in the same tick and gets caught here
+          setTimeout(function () {
+            self.onError(xhr.status);
+          }, 0);
+        }
+      };
+    }
+
+    debug('xhr data %s', this.data);
+    xhr.send(this.data);
+  } catch (e) {
+    // Need to defer since .create() is called directly fhrom the constructor
+    // and thus the 'error' event can only be only bound *after* this exception
+    // occurs.  Therefore, also, we cannot throw here at all.
+    setTimeout(function () {
+      self.onError(e);
+    }, 0);
+    return;
+  }
+
+  if (global.document) {
+    this.index = Request.requestsCount++;
+    Request.requests[this.index] = this;
+  }
+};
+
+/**
+ * Called upon successful response.
+ *
+ * @api private
+ */
+
+Request.prototype.onSuccess = function () {
+  this.emit('success');
+  this.cleanup();
+};
+
+/**
+ * Called if we have data.
+ *
+ * @api private
+ */
+
+Request.prototype.onData = function (data) {
+  this.emit('data', data);
+  this.onSuccess();
+};
+
+/**
+ * Called upon error.
+ *
+ * @api private
+ */
+
+Request.prototype.onError = function (err) {
+  this.emit('error', err);
+  this.cleanup(true);
+};
+
+/**
+ * Cleans up house.
+ *
+ * @api private
+ */
+
+Request.prototype.cleanup = function (fromError) {
+  if ('undefined' === typeof this.xhr || null === this.xhr) {
+    return;
+  }
+  // xmlhttprequest
+  if (this.hasXDR()) {
+    this.xhr.onload = this.xhr.onerror = empty;
+  } else {
+    this.xhr.onreadystatechange = empty;
+  }
+
+  if (fromError) {
+    try {
+      this.xhr.abort();
+    } catch (e) {}
+  }
+
+  if (global.document) {
+    delete Request.requests[this.index];
+  }
+
+  this.xhr = null;
+};
+
+/**
+ * Called upon load.
+ *
+ * @api private
+ */
+
+Request.prototype.onLoad = function () {
+  var data;
+  try {
+    var contentType;
+    try {
+      contentType = this.xhr.getResponseHeader('Content-Type');
+    } catch (e) {}
+    if (contentType === 'application/octet-stream') {
+      data = this.xhr.response || this.xhr.responseText;
+    } else {
+      data = this.xhr.responseText;
+    }
+  } catch (e) {
+    this.onError(e);
+  }
+  if (null != data) {
+    this.onData(data);
+  }
+};
+
+/**
+ * Check if it has XDomainRequest.
+ *
+ * @api private
+ */
+
+Request.prototype.hasXDR = function () {
+  return 'undefined' !== typeof global.XDomainRequest && !this.xs && this.enablesXDR;
+};
+
+/**
+ * Aborts the request.
+ *
+ * @api public
+ */
+
+Request.prototype.abort = function () {
+  this.cleanup();
+};
+
+/**
+ * Aborts pending requests when unloading the window. This is needed to prevent
+ * memory leaks (e.g. when using IE) and to ensure that no spurious error is
+ * emitted.
+ */
+
+Request.requestsCount = 0;
+Request.requests = {};
+
+if (global.document) {
+  if (global.attachEvent) {
+    global.attachEvent('onunload', unloadHandler);
+  } else if (global.addEventListener) {
+    global.addEventListener('beforeunload', unloadHandler, false);
+  }
+}
+
+function unloadHandler () {
+  for (var i in Request.requests) {
+    if (Request.requests.hasOwnProperty(i)) {
+      Request.requests[i].abort();
+    }
+  }
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./polling":68,"component-emitter":59,"component-inherit":60,"debug":71,"xmlhttprequest-ssl":70}],68:[function(require,module,exports){
+/**
+ * Module dependencies.
+ */
+
+var Transport = require('../transport');
+var parseqs = require('parseqs');
+var parser = require('engine.io-parser');
+var inherit = require('component-inherit');
+var yeast = require('yeast');
+var debug = require('debug')('engine.io-client:polling');
+
+/**
+ * Module exports.
+ */
+
+module.exports = Polling;
+
+/**
+ * Is XHR2 supported?
+ */
+
+var hasXHR2 = (function () {
+  var XMLHttpRequest = require('xmlhttprequest-ssl');
+  var xhr = new XMLHttpRequest({ xdomain: false });
+  return null != xhr.responseType;
+})();
+
+/**
+ * Polling interface.
+ *
+ * @param {Object} opts
+ * @api private
+ */
+
+function Polling (opts) {
+  var forceBase64 = (opts && opts.forceBase64);
+  if (!hasXHR2 || forceBase64) {
+    this.supportsBinary = false;
+  }
+  Transport.call(this, opts);
+}
+
+/**
+ * Inherits from Transport.
+ */
+
+inherit(Polling, Transport);
+
+/**
+ * Transport name.
+ */
+
+Polling.prototype.name = 'polling';
+
+/**
+ * Opens the socket (triggers polling). We write a PING message to determine
+ * when the transport is open.
+ *
+ * @api private
+ */
+
+Polling.prototype.doOpen = function () {
+  this.poll();
+};
+
+/**
+ * Pauses polling.
+ *
+ * @param {Function} callback upon buffers are flushed and transport is paused
+ * @api private
+ */
+
+Polling.prototype.pause = function (onPause) {
+  var self = this;
+
+  this.readyState = 'pausing';
+
+  function pause () {
+    debug('paused');
+    self.readyState = 'paused';
+    onPause();
+  }
+
+  if (this.polling || !this.writable) {
+    var total = 0;
+
+    if (this.polling) {
+      debug('we are currently polling - waiting to pause');
+      total++;
+      this.once('pollComplete', function () {
+        debug('pre-pause polling complete');
+        --total || pause();
+      });
+    }
+
+    if (!this.writable) {
+      debug('we are currently writing - waiting to pause');
+      total++;
+      this.once('drain', function () {
+        debug('pre-pause writing complete');
+        --total || pause();
+      });
+    }
+  } else {
+    pause();
+  }
+};
+
+/**
+ * Starts polling cycle.
+ *
+ * @api public
+ */
+
+Polling.prototype.poll = function () {
+  debug('polling');
+  this.polling = true;
+  this.doPoll();
+  this.emit('poll');
+};
+
+/**
+ * Overloads onData to detect payloads.
+ *
+ * @api private
+ */
+
+Polling.prototype.onData = function (data) {
+  var self = this;
+  debug('polling got data %s', data);
+  var callback = function (packet, index, total) {
+    // if its the first message we consider the transport open
+    if ('opening' === self.readyState) {
+      self.onOpen();
+    }
+
+    // if its a close packet, we close the ongoing requests
+    if ('close' === packet.type) {
+      self.onClose();
+      return false;
+    }
+
+    // otherwise bypass onData and handle the message
+    self.onPacket(packet);
+  };
+
+  // decode payload
+  parser.decodePayload(data, this.socket.binaryType, callback);
+
+  // if an event did not trigger closing
+  if ('closed' !== this.readyState) {
+    // if we got data we're not polling
+    this.polling = false;
+    this.emit('pollComplete');
+
+    if ('open' === this.readyState) {
+      this.poll();
+    } else {
+      debug('ignoring poll - transport state "%s"', this.readyState);
+    }
+  }
+};
+
+/**
+ * For polling, send a close packet.
+ *
+ * @api private
+ */
+
+Polling.prototype.doClose = function () {
+  var self = this;
+
+  function close () {
+    debug('writing close packet');
+    self.write([{ type: 'close' }]);
+  }
+
+  if ('open' === this.readyState) {
+    debug('transport open - closing');
+    close();
+  } else {
+    // in case we're trying to close while
+    // handshaking is in progress (GH-164)
+    debug('transport not open - deferring close');
+    this.once('open', close);
+  }
+};
+
+/**
+ * Writes a packets payload.
+ *
+ * @param {Array} data packets
+ * @param {Function} drain callback
+ * @api private
+ */
+
+Polling.prototype.write = function (packets) {
+  var self = this;
+  this.writable = false;
+  var callbackfn = function () {
+    self.writable = true;
+    self.emit('drain');
+  };
+
+  parser.encodePayload(packets, this.supportsBinary, function (data) {
+    self.doWrite(data, callbackfn);
+  });
+};
+
+/**
+ * Generates uri for connection.
+ *
+ * @api private
+ */
+
+Polling.prototype.uri = function () {
+  var query = this.query || {};
+  var schema = this.secure ? 'https' : 'http';
+  var port = '';
+
+  // cache busting is forced
+  if (false !== this.timestampRequests) {
+    query[this.timestampParam] = yeast();
+  }
+
+  if (!this.supportsBinary && !query.sid) {
+    query.b64 = 1;
+  }
+
+  query = parseqs.encode(query);
+
+  // avoid port if default for schema
+  if (this.port && (('https' === schema && Number(this.port) !== 443) ||
+     ('http' === schema && Number(this.port) !== 80))) {
+    port = ':' + this.port;
+  }
+
+  // prepend ? to query
+  if (query.length) {
+    query = '?' + query;
+  }
+
+  var ipv6 = this.hostname.indexOf(':') !== -1;
+  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+};
+
+},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":111,"xmlhttprequest-ssl":70,"yeast":320}],69:[function(require,module,exports){
+(function (global){
+/**
+ * Module dependencies.
+ */
+
+var Transport = require('../transport');
+var parser = require('engine.io-parser');
+var parseqs = require('parseqs');
+var inherit = require('component-inherit');
+var yeast = require('yeast');
+var debug = require('debug')('engine.io-client:websocket');
+var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
+var NodeWebSocket;
+if (typeof window === 'undefined') {
+  try {
+    NodeWebSocket = require('ws');
+  } catch (e) { }
+}
+
+/**
+ * Get either the `WebSocket` or `MozWebSocket` globals
+ * in the browser or try to resolve WebSocket-compatible
+ * interface exposed by `ws` for Node-like environment.
+ */
+
+var WebSocket = BrowserWebSocket;
+if (!WebSocket && typeof window === 'undefined') {
+  WebSocket = NodeWebSocket;
+}
+
+/**
+ * Module exports.
+ */
+
+module.exports = WS;
+
+/**
+ * WebSocket transport constructor.
+ *
+ * @api {Object} connection options
+ * @api public
+ */
+
+function WS (opts) {
+  var forceBase64 = (opts && opts.forceBase64);
+  if (forceBase64) {
+    this.supportsBinary = false;
+  }
+  this.perMessageDeflate = opts.perMessageDeflate;
+  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
+  this.protocols = opts.protocols;
+  if (!this.usingBrowserWebSocket) {
+    WebSocket = NodeWebSocket;
+  }
+  Transport.call(this, opts);
+}
+
+/**
+ * Inherits from Transport.
+ */
+
+inherit(WS, Transport);
+
+/**
+ * Transport name.
+ *
+ * @api public
+ */
+
+WS.prototype.name = 'websocket';
+
+/*
+ * WebSockets support binary
+ */
+
+WS.prototype.supportsBinary = true;
+
+/**
+ * Opens socket.
+ *
+ * @api private
+ */
+
+WS.prototype.doOpen = function () {
+  if (!this.check()) {
+    // let probe timeout
+    return;
+  }
+
+  var uri = this.uri();
+  var protocols = this.protocols;
+  var opts = {
+    agent: this.agent,
+    perMessageDeflate: this.perMessageDeflate
+  };
+
+  // SSL options for Node.js client
+  opts.pfx = this.pfx;
+  opts.key = this.key;
+  opts.passphrase = this.passphrase;
+  opts.cert = this.cert;
+  opts.ca = this.ca;
+  opts.ciphers = this.ciphers;
+  opts.rejectUnauthorized = this.rejectUnauthorized;
+  if (this.extraHeaders) {
+    opts.headers = this.extraHeaders;
+  }
+  if (this.localAddress) {
+    opts.localAddress = this.localAddress;
+  }
+
+  try {
+    this.ws = this.usingBrowserWebSocket ? (protocols ? new WebSocket(uri, protocols) : new WebSocket(uri)) : new WebSocket(uri, protocols, opts);
+  } catch (err) {
+    return this.emit('error', err);
+  }
+
+  if (this.ws.binaryType === undefined) {
+    this.supportsBinary = false;
+  }
+
+  if (this.ws.supports && this.ws.supports.binary) {
+    this.supportsBinary = true;
+    this.ws.binaryType = 'nodebuffer';
+  } else {
+    this.ws.binaryType = 'arraybuffer';
+  }
+
+  this.addEventListeners();
+};
+
+/**
+ * Adds event listeners to the socket
+ *
+ * @api private
+ */
+
+WS.prototype.addEventListeners = function () {
+  var self = this;
+
+  this.ws.onopen = function () {
+    self.onOpen();
+  };
+  this.ws.onclose = function () {
+    self.onClose();
+  };
+  this.ws.onmessage = function (ev) {
+    self.onData(ev.data);
+  };
+  this.ws.onerror = function (e) {
+    self.onError('websocket error', e);
+  };
+};
+
+/**
+ * Writes data to socket.
+ *
+ * @param {Array} array of packets.
+ * @api private
+ */
+
+WS.prototype.write = function (packets) {
+  var self = this;
+  this.writable = false;
+
+  // encodePacket efficient as it uses WS framing
+  // no need for encodePayload
+  var total = packets.length;
+  for (var i = 0, l = total; i < l; i++) {
+    (function (packet) {
+      parser.encodePacket(packet, self.supportsBinary, function (data) {
+        if (!self.usingBrowserWebSocket) {
+          // always create a new object (GH-437)
+          var opts = {};
+          if (packet.options) {
+            opts.compress = packet.options.compress;
+          }
+
+          if (self.perMessageDeflate) {
+            var len = 'string' === typeof data ? global.Buffer.byteLength(data) : data.length;
+            if (len < self.perMessageDeflate.threshold) {
+              opts.compress = false;
+            }
+          }
+        }
+
+        // Sometimes the websocket has already been closed but the browser didn't
+        // have a chance of informing us about it yet, in that case send will
+        // throw an error
+        try {
+          if (self.usingBrowserWebSocket) {
+            // TypeError is thrown when passing the second argument on Safari
+            self.ws.send(data);
+          } else {
+            self.ws.send(data, opts);
+          }
+        } catch (e) {
+          debug('websocket closed before onclose event');
+        }
+
+        --total || done();
+      });
+    })(packets[i]);
+  }
+
+  function done () {
+    self.emit('flush');
+
+    // fake drain
+    // defer to next tick to allow Socket to clear writeBuffer
+    setTimeout(function () {
+      self.writable = true;
+      self.emit('drain');
+    }, 0);
+  }
+};
+
+/**
+ * Called upon close
+ *
+ * @api private
+ */
+
+WS.prototype.onClose = function () {
+  Transport.prototype.onClose.call(this);
+};
+
+/**
+ * Closes socket.
+ *
+ * @api private
+ */
+
+WS.prototype.doClose = function () {
+  if (typeof this.ws !== 'undefined') {
+    this.ws.close();
+  }
+};
+
+/**
+ * Generates uri for connection.
+ *
+ * @api private
+ */
+
+WS.prototype.uri = function () {
+  var query = this.query || {};
+  var schema = this.secure ? 'wss' : 'ws';
+  var port = '';
+
+  // avoid port if default for schema
+  if (this.port && (('wss' === schema && Number(this.port) !== 443) ||
+    ('ws' === schema && Number(this.port) !== 80))) {
+    port = ':' + this.port;
+  }
+
+  // append timestamp to URI
+  if (this.timestampRequests) {
+    query[this.timestampParam] = yeast();
+  }
+
+  // communicate binary support capabilities
+  if (!this.supportsBinary) {
+    query.b64 = 1;
+  }
+
+  query = parseqs.encode(query);
+
+  // prepend ? to query
+  if (query.length) {
+    query = '?' + query;
+  }
+
+  var ipv6 = this.hostname.indexOf(':') !== -1;
+  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
+};
+
+/**
+ * Feature detection for WebSocket.
+ *
+ * @return {Boolean} whether this transport is available.
+ * @api public
+ */
+
+WS.prototype.check = function () {
+  return !!WebSocket && !('__initialize' in WebSocket && this.name === WS.prototype.name);
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":111,"ws":322,"yeast":320}],70:[function(require,module,exports){
+(function (global){
+// browser shim for xmlhttprequest module
+
+var hasCORS = require('has-cors');
+
+module.exports = function (opts) {
+  var xdomain = opts.xdomain;
+
+  // scheme must be same when usign XDomainRequest
+  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+  var xscheme = opts.xscheme;
+
+  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
+  // https://github.com/Automattic/engine.io-client/pull/217
+  var enablesXDR = opts.enablesXDR;
+
+  // XMLHttpRequest can be disabled on IE
+  try {
+    if ('undefined' !== typeof XMLHttpRequest && (!xdomain || hasCORS)) {
+      return new XMLHttpRequest();
+    }
+  } catch (e) { }
+
+  // Use XDomainRequest for IE8 if enablesXDR is true
+  // because loading bar keeps flashing when using jsonp-polling
+  // https://github.com/yujiosaka/socke.io-ie8-loading-example
+  try {
+    if ('undefined' !== typeof XDomainRequest && !xscheme && enablesXDR) {
+      return new XDomainRequest();
+    }
+  } catch (e) { }
+
+  if (!xdomain) {
+    try {
+      return new global[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
+    } catch (e) { }
+  }
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"has-cors":79}],71:[function(require,module,exports){
+(function (process){
+/**
+ * This is the web browser implementation of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = require('./debug');
+exports.log = log;
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.storage = 'undefined' != typeof chrome
+               && 'undefined' != typeof chrome.storage
+                  ? chrome.storage.local
+                  : localstorage();
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+  '#0000CC', '#0000FF', '#0033CC', '#0033FF', '#0066CC', '#0066FF', '#0099CC',
+  '#0099FF', '#00CC00', '#00CC33', '#00CC66', '#00CC99', '#00CCCC', '#00CCFF',
+  '#3300CC', '#3300FF', '#3333CC', '#3333FF', '#3366CC', '#3366FF', '#3399CC',
+  '#3399FF', '#33CC00', '#33CC33', '#33CC66', '#33CC99', '#33CCCC', '#33CCFF',
+  '#6600CC', '#6600FF', '#6633CC', '#6633FF', '#66CC00', '#66CC33', '#9900CC',
+  '#9900FF', '#9933CC', '#9933FF', '#99CC00', '#99CC33', '#CC0000', '#CC0033',
+  '#CC0066', '#CC0099', '#CC00CC', '#CC00FF', '#CC3300', '#CC3333', '#CC3366',
+  '#CC3399', '#CC33CC', '#CC33FF', '#CC6600', '#CC6633', '#CC9900', '#CC9933',
+  '#CCCC00', '#CCCC33', '#FF0000', '#FF0033', '#FF0066', '#FF0099', '#FF00CC',
+  '#FF00FF', '#FF3300', '#FF3333', '#FF3366', '#FF3399', '#FF33CC', '#FF33FF',
+  '#FF6600', '#FF6633', '#FF9900', '#FF9933', '#FFCC00', '#FFCC33'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+function useColors() {
+  // NB: In an Electron preload script, document will be defined but not fully
+  // initialized. Since we know we're in Chrome, we'll just detect this case
+  // explicitly
+  if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
+    return true;
+  }
+
+  // Internet Explorer and Edge do not support colors.
+  if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
+    return false;
+  }
+
+  // is webkit? http://stackoverflow.com/a/16459606/376773
+  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
+  return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+    // is firebug? http://stackoverflow.com/a/398120/376773
+    (typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
+    // is firefox >= v31?
+    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+    // double check webkit in userAgent just in case we are in a worker
+    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+}
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+exports.formatters.j = function(v) {
+  try {
+    return JSON.stringify(v);
+  } catch (err) {
+    return '[UnexpectedJSONParseError]: ' + err.message;
+  }
+};
+
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs(args) {
+  var useColors = this.useColors;
+
+  args[0] = (useColors ? '%c' : '')
+    + this.namespace
+    + (useColors ? ' %c' : ' ')
+    + args[0]
+    + (useColors ? '%c ' : ' ')
+    + '+' + exports.humanize(this.diff);
+
+  if (!useColors) return;
+
+  var c = 'color: ' + this.color;
+  args.splice(1, 0, c, 'color: inherit')
+
+  // the final "%c" is somewhat tricky, because there could be other
+  // arguments passed either before or after the %c, so we need to
+  // figure out the correct index to insert the CSS into
+  var index = 0;
+  var lastC = 0;
+  args[0].replace(/%[a-zA-Z%]/g, function(match) {
+    if ('%%' === match) return;
+    index++;
+    if ('%c' === match) {
+      // we only are interested in the *last* %c
+      // (the user may have provided their own)
+      lastC = index;
+    }
+  });
+
+  args.splice(lastC, 0, c);
+}
+
+/**
+ * Invokes `console.log()` when available.
+ * No-op when `console.log` is not a "function".
+ *
+ * @api public
+ */
+
+function log() {
+  // this hackery is required for IE8/9, where
+  // the `console.log` function doesn't have 'apply'
+  return 'object' === typeof console
+    && console.log
+    && Function.prototype.apply.call(console.log, console, arguments);
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+
+function save(namespaces) {
+  try {
+    if (null == namespaces) {
+      exports.storage.removeItem('debug');
+    } else {
+      exports.storage.debug = namespaces;
+    }
+  } catch(e) {}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function load() {
+  var r;
+  try {
+    r = exports.storage.debug;
+  } catch(e) {}
+
+  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+  if (!r && typeof process !== 'undefined' && 'env' in process) {
+    r = process.env.DEBUG;
+  }
+
+  return r;
+}
+
+/**
+ * Enable namespaces listed in `localStorage.debug` initially.
+ */
+
+exports.enable(load());
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage() {
+  try {
+    return window.localStorage;
+  } catch (e) {}
+}
+
+}).call(this,require('_process'))
+},{"./debug":72,"_process":326}],72:[function(require,module,exports){
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = createDebug.debug = createDebug['default'] = createDebug;
+exports.coerce = coerce;
+exports.disable = disable;
+exports.enable = enable;
+exports.enabled = enabled;
+exports.humanize = require('ms');
+
+/**
+ * Active `debug` instances.
+ */
+exports.instances = [];
+
+/**
+ * The currently active debug mode names, and names to skip.
+ */
+
+exports.names = [];
+exports.skips = [];
+
+/**
+ * Map of special "%n" handling functions, for the debug "format" argument.
+ *
+ * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+ */
+
+exports.formatters = {};
+
+/**
+ * Select a color.
+ * @param {String} namespace
+ * @return {Number}
+ * @api private
+ */
+
+function selectColor(namespace) {
+  var hash = 0, i;
+
+  for (i in namespace) {
+    hash  = ((hash << 5) - hash) + namespace.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+
+  return exports.colors[Math.abs(hash) % exports.colors.length];
+}
+
+/**
+ * Create a debugger with the given `namespace`.
+ *
+ * @param {String} namespace
+ * @return {Function}
+ * @api public
+ */
+
+function createDebug(namespace) {
+
+  var prevTime;
+
+  function debug() {
+    // disabled?
+    if (!debug.enabled) return;
+
+    var self = debug;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (prevTime || curr);
+    self.diff = ms;
+    self.prev = prevTime;
+    self.curr = curr;
+    prevTime = curr;
+
+    // turn the `arguments` into a proper Array
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i];
+    }
+
+    args[0] = exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
+      // anything else let's inspect with %O
+      args.unshift('%O');
+    }
+
+    // apply any `formatters` transformations
+    var index = 0;
+    args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
+      index++;
+      var formatter = exports.formatters[format];
+      if ('function' === typeof formatter) {
+        var val = args[index];
+        match = formatter.call(self, val);
+
+        // now we need to remove `args[index]` since it's inlined in the `format`
+        args.splice(index, 1);
+        index--;
+      }
+      return match;
+    });
+
+    // apply env-specific formatting (colors, etc.)
+    exports.formatArgs.call(self, args);
+
+    var logFn = debug.log || exports.log || console.log.bind(console);
+    logFn.apply(self, args);
+  }
+
+  debug.namespace = namespace;
+  debug.enabled = exports.enabled(namespace);
+  debug.useColors = exports.useColors();
+  debug.color = selectColor(namespace);
+  debug.destroy = destroy;
+
+  // env-specific initialization logic for debug instances
+  if ('function' === typeof exports.init) {
+    exports.init(debug);
+  }
+
+  exports.instances.push(debug);
+
+  return debug;
+}
+
+function destroy () {
+  var index = exports.instances.indexOf(this);
+  if (index !== -1) {
+    exports.instances.splice(index, 1);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Enables a debug mode by namespaces. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} namespaces
+ * @api public
+ */
+
+function enable(namespaces) {
+  exports.save(namespaces);
+
+  exports.names = [];
+  exports.skips = [];
+
+  var i;
+  var split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+  var len = split.length;
+
+  for (i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
+    namespaces = split[i].replace(/\*/g, '.*?');
+    if (namespaces[0] === '-') {
+      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+    } else {
+      exports.names.push(new RegExp('^' + namespaces + '$'));
+    }
+  }
+
+  for (i = 0; i < exports.instances.length; i++) {
+    var instance = exports.instances[i];
+    instance.enabled = exports.enabled(instance.namespace);
+  }
+}
+
+/**
+ * Disable debug output.
+ *
+ * @api public
+ */
+
+function disable() {
+  exports.enable('');
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+function enabled(name) {
+  if (name[name.length - 1] === '*') {
+    return true;
+  }
+  var i, len;
+  for (i = 0, len = exports.skips.length; i < len; i++) {
+    if (exports.skips[i].test(name)) {
+      return false;
+    }
+  }
+  for (i = 0, len = exports.names.length; i < len; i++) {
+    if (exports.names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Coerce `val`.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function coerce(val) {
+  if (val instanceof Error) return val.stack || val.message;
+  return val;
+}
+
+},{"ms":108}],73:[function(require,module,exports){
+(function (global){
+/**
+ * Module dependencies.
+ */
+
+var keys = require('./keys');
+var hasBinary = require('has-binary2');
+var sliceBuffer = require('arraybuffer.slice');
+var after = require('after');
+var utf8 = require('./utf8');
+
+var base64encoder;
+if (global && global.ArrayBuffer) {
+  base64encoder = require('base64-arraybuffer');
+}
+
+/**
+ * Check if we are running an android browser. That requires us to use
+ * ArrayBuffer with polling transports...
+ *
+ * http://ghinda.net/jpeg-blob-ajax-android/
+ */
+
+var isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+
+/**
+ * Check if we are running in PhantomJS.
+ * Uploading a Blob with PhantomJS does not work correctly, as reported here:
+ * https://github.com/ariya/phantomjs/issues/11395
+ * @type boolean
+ */
+var isPhantomJS = typeof navigator !== 'undefined' && /PhantomJS/i.test(navigator.userAgent);
+
+/**
+ * When true, avoids using Blobs to encode payloads.
+ * @type boolean
+ */
+var dontSendBlobs = isAndroid || isPhantomJS;
+
+/**
+ * Current protocol version.
+ */
+
+exports.protocol = 3;
+
+/**
+ * Packet types.
+ */
+
+var packets = exports.packets = {
+    open:     0    // non-ws
+  , close:    1    // non-ws
+  , ping:     2
+  , pong:     3
+  , message:  4
+  , upgrade:  5
+  , noop:     6
+};
+
+var packetslist = keys(packets);
+
+/**
+ * Premade error packet.
+ */
+
+var err = { type: 'error', data: 'parser error' };
+
+/**
+ * Create a blob api even for blob builder when vendor prefixes exist
+ */
+
+var Blob = require('blob');
+
+/**
+ * Encodes a packet.
+ *
+ *     <packet type id> [ <data> ]
+ *
+ * Example:
+ *
+ *     5hello world
+ *     3
+ *     4
+ *
+ * Binary is encoded in an identical principle
+ *
+ * @api private
+ */
+
+exports.encodePacket = function (packet, supportsBinary, utf8encode, callback) {
+  if (typeof supportsBinary === 'function') {
+    callback = supportsBinary;
+    supportsBinary = false;
+  }
+
+  if (typeof utf8encode === 'function') {
+    callback = utf8encode;
+    utf8encode = null;
+  }
+
+  var data = (packet.data === undefined)
+    ? undefined
+    : packet.data.buffer || packet.data;
+
+  if (global.ArrayBuffer && data instanceof ArrayBuffer) {
+    return encodeArrayBuffer(packet, supportsBinary, callback);
+  } else if (Blob && data instanceof global.Blob) {
+    return encodeBlob(packet, supportsBinary, callback);
+  }
+
+  // might be an object with { base64: true, data: dataAsBase64String }
+  if (data && data.base64) {
+    return encodeBase64Object(packet, callback);
+  }
+
+  // Sending data as a utf-8 string
+  var encoded = packets[packet.type];
+
+  // data fragment is optional
+  if (undefined !== packet.data) {
+    encoded += utf8encode ? utf8.encode(String(packet.data), { strict: false }) : String(packet.data);
+  }
+
+  return callback('' + encoded);
+
+};
+
+function encodeBase64Object(packet, callback) {
+  // packet data is an object { base64: true, data: dataAsBase64String }
+  var message = 'b' + exports.packets[packet.type] + packet.data.data;
+  return callback(message);
+}
+
+/**
+ * Encode packet helpers for binary types
+ */
+
+function encodeArrayBuffer(packet, supportsBinary, callback) {
+  if (!supportsBinary) {
+    return exports.encodeBase64Packet(packet, callback);
+  }
+
+  var data = packet.data;
+  var contentArray = new Uint8Array(data);
+  var resultBuffer = new Uint8Array(1 + data.byteLength);
+
+  resultBuffer[0] = packets[packet.type];
+  for (var i = 0; i < contentArray.length; i++) {
+    resultBuffer[i+1] = contentArray[i];
+  }
+
+  return callback(resultBuffer.buffer);
+}
+
+function encodeBlobAsArrayBuffer(packet, supportsBinary, callback) {
+  if (!supportsBinary) {
+    return exports.encodeBase64Packet(packet, callback);
+  }
+
+  var fr = new FileReader();
+  fr.onload = function() {
+    packet.data = fr.result;
+    exports.encodePacket(packet, supportsBinary, true, callback);
+  };
+  return fr.readAsArrayBuffer(packet.data);
+}
+
+function encodeBlob(packet, supportsBinary, callback) {
+  if (!supportsBinary) {
+    return exports.encodeBase64Packet(packet, callback);
+  }
+
+  if (dontSendBlobs) {
+    return encodeBlobAsArrayBuffer(packet, supportsBinary, callback);
+  }
+
+  var length = new Uint8Array(1);
+  length[0] = packets[packet.type];
+  var blob = new Blob([length.buffer, packet.data]);
+
+  return callback(blob);
+}
+
+/**
+ * Encodes a packet with binary data in a base64 string
+ *
+ * @param {Object} packet, has `type` and `data`
+ * @return {String} base64 encoded message
+ */
+
+exports.encodeBase64Packet = function(packet, callback) {
+  var message = 'b' + exports.packets[packet.type];
+  if (Blob && packet.data instanceof global.Blob) {
+    var fr = new FileReader();
+    fr.onload = function() {
+      var b64 = fr.result.split(',')[1];
+      callback(message + b64);
+    };
+    return fr.readAsDataURL(packet.data);
+  }
+
+  var b64data;
+  try {
+    b64data = String.fromCharCode.apply(null, new Uint8Array(packet.data));
+  } catch (e) {
+    // iPhone Safari doesn't let you apply with typed arrays
+    var typed = new Uint8Array(packet.data);
+    var basic = new Array(typed.length);
+    for (var i = 0; i < typed.length; i++) {
+      basic[i] = typed[i];
+    }
+    b64data = String.fromCharCode.apply(null, basic);
+  }
+  message += global.btoa(b64data);
+  return callback(message);
+};
+
+/**
+ * Decodes a packet. Changes format to Blob if requested.
+ *
+ * @return {Object} with `type` and `data` (if any)
+ * @api private
+ */
+
+exports.decodePacket = function (data, binaryType, utf8decode) {
+  if (data === undefined) {
+    return err;
+  }
+  // String data
+  if (typeof data === 'string') {
+    if (data.charAt(0) === 'b') {
+      return exports.decodeBase64Packet(data.substr(1), binaryType);
+    }
+
+    if (utf8decode) {
+      data = tryDecode(data);
+      if (data === false) {
+        return err;
+      }
+    }
+    var type = data.charAt(0);
+
+    if (Number(type) != type || !packetslist[type]) {
+      return err;
+    }
+
+    if (data.length > 1) {
+      return { type: packetslist[type], data: data.substring(1) };
+    } else {
+      return { type: packetslist[type] };
+    }
+  }
+
+  var asArray = new Uint8Array(data);
+  var type = asArray[0];
+  var rest = sliceBuffer(data, 1);
+  if (Blob && binaryType === 'blob') {
+    rest = new Blob([rest]);
+  }
+  return { type: packetslist[type], data: rest };
+};
+
+function tryDecode(data) {
+  try {
+    data = utf8.decode(data, { strict: false });
+  } catch (e) {
+    return false;
+  }
+  return data;
+}
+
+/**
+ * Decodes a packet encoded in a base64 string
+ *
+ * @param {String} base64 encoded message
+ * @return {Object} with `type` and `data` (if any)
+ */
+
+exports.decodeBase64Packet = function(msg, binaryType) {
+  var type = packetslist[msg.charAt(0)];
+  if (!base64encoder) {
+    return { type: type, data: { base64: true, data: msg.substr(1) } };
+  }
+
+  var data = base64encoder.decode(msg.substr(1));
+
+  if (binaryType === 'blob' && Blob) {
+    data = new Blob([data]);
+  }
+
+  return { type: type, data: data };
+};
+
+/**
+ * Encodes multiple messages (payload).
+ *
+ *     <length>:data
+ *
+ * Example:
+ *
+ *     11:hello world2:hi
+ *
+ * If any contents are binary, they will be encoded as base64 strings. Base64
+ * encoded strings are marked with a b before the length specifier
+ *
+ * @param {Array} packets
+ * @api private
+ */
+
+exports.encodePayload = function (packets, supportsBinary, callback) {
+  if (typeof supportsBinary === 'function') {
+    callback = supportsBinary;
+    supportsBinary = null;
+  }
+
+  var isBinary = hasBinary(packets);
+
+  if (supportsBinary && isBinary) {
+    if (Blob && !dontSendBlobs) {
+      return exports.encodePayloadAsBlob(packets, callback);
+    }
+
+    return exports.encodePayloadAsArrayBuffer(packets, callback);
+  }
+
+  if (!packets.length) {
+    return callback('0:');
+  }
+
+  function setLengthHeader(message) {
+    return message.length + ':' + message;
+  }
+
+  function encodeOne(packet, doneCallback) {
+    exports.encodePacket(packet, !isBinary ? false : supportsBinary, false, function(message) {
+      doneCallback(null, setLengthHeader(message));
+    });
+  }
+
+  map(packets, encodeOne, function(err, results) {
+    return callback(results.join(''));
+  });
+};
+
+/**
+ * Async array map using after
+ */
+
+function map(ary, each, done) {
+  var result = new Array(ary.length);
+  var next = after(ary.length, done);
+
+  var eachWithIndex = function(i, el, cb) {
+    each(el, function(error, msg) {
+      result[i] = msg;
+      cb(error, result);
+    });
+  };
+
+  for (var i = 0; i < ary.length; i++) {
+    eachWithIndex(i, ary[i], next);
+  }
+}
+
+/*
+ * Decodes data when a payload is maybe expected. Possible binary contents are
+ * decoded from their base64 representation
+ *
+ * @param {String} data, callback method
+ * @api public
+ */
+
+exports.decodePayload = function (data, binaryType, callback) {
+  if (typeof data !== 'string') {
+    return exports.decodePayloadAsBinary(data, binaryType, callback);
+  }
+
+  if (typeof binaryType === 'function') {
+    callback = binaryType;
+    binaryType = null;
+  }
+
+  var packet;
+  if (data === '') {
+    // parser error - ignoring payload
+    return callback(err, 0, 1);
+  }
+
+  var length = '', n, msg;
+
+  for (var i = 0, l = data.length; i < l; i++) {
+    var chr = data.charAt(i);
+
+    if (chr !== ':') {
+      length += chr;
+      continue;
+    }
+
+    if (length === '' || (length != (n = Number(length)))) {
+      // parser error - ignoring payload
+      return callback(err, 0, 1);
+    }
+
+    msg = data.substr(i + 1, n);
+
+    if (length != msg.length) {
+      // parser error - ignoring payload
+      return callback(err, 0, 1);
+    }
+
+    if (msg.length) {
+      packet = exports.decodePacket(msg, binaryType, false);
+
+      if (err.type === packet.type && err.data === packet.data) {
+        // parser error in individual packet - ignoring payload
+        return callback(err, 0, 1);
+      }
+
+      var ret = callback(packet, i + n, l);
+      if (false === ret) return;
+    }
+
+    // advance cursor
+    i += n;
+    length = '';
+  }
+
+  if (length !== '') {
+    // parser error - ignoring payload
+    return callback(err, 0, 1);
+  }
+
+};
+
+/**
+ * Encodes multiple messages (payload) as binary.
+ *
+ * <1 = binary, 0 = string><number from 0-9><number from 0-9>[...]<number
+ * 255><data>
+ *
+ * Example:
+ * 1 3 255 1 2 3, if the binary contents are interpreted as 8 bit integers
+ *
+ * @param {Array} packets
+ * @return {ArrayBuffer} encoded payload
+ * @api private
+ */
+
+exports.encodePayloadAsArrayBuffer = function(packets, callback) {
+  if (!packets.length) {
+    return callback(new ArrayBuffer(0));
+  }
+
+  function encodeOne(packet, doneCallback) {
+    exports.encodePacket(packet, true, true, function(data) {
+      return doneCallback(null, data);
+    });
+  }
+
+  map(packets, encodeOne, function(err, encodedPackets) {
+    var totalLength = encodedPackets.reduce(function(acc, p) {
+      var len;
+      if (typeof p === 'string'){
+        len = p.length;
+      } else {
+        len = p.byteLength;
+      }
+      return acc + len.toString().length + len + 2; // string/binary identifier + separator = 2
+    }, 0);
+
+    var resultArray = new Uint8Array(totalLength);
+
+    var bufferIndex = 0;
+    encodedPackets.forEach(function(p) {
+      var isString = typeof p === 'string';
+      var ab = p;
+      if (isString) {
+        var view = new Uint8Array(p.length);
+        for (var i = 0; i < p.length; i++) {
+          view[i] = p.charCodeAt(i);
+        }
+        ab = view.buffer;
+      }
+
+      if (isString) { // not true binary
+        resultArray[bufferIndex++] = 0;
+      } else { // true binary
+        resultArray[bufferIndex++] = 1;
+      }
+
+      var lenStr = ab.byteLength.toString();
+      for (var i = 0; i < lenStr.length; i++) {
+        resultArray[bufferIndex++] = parseInt(lenStr[i]);
+      }
+      resultArray[bufferIndex++] = 255;
+
+      var view = new Uint8Array(ab);
+      for (var i = 0; i < view.length; i++) {
+        resultArray[bufferIndex++] = view[i];
+      }
+    });
+
+    return callback(resultArray.buffer);
+  });
+};
+
+/**
+ * Encode as Blob
+ */
+
+exports.encodePayloadAsBlob = function(packets, callback) {
+  function encodeOne(packet, doneCallback) {
+    exports.encodePacket(packet, true, true, function(encoded) {
+      var binaryIdentifier = new Uint8Array(1);
+      binaryIdentifier[0] = 1;
+      if (typeof encoded === 'string') {
+        var view = new Uint8Array(encoded.length);
+        for (var i = 0; i < encoded.length; i++) {
+          view[i] = encoded.charCodeAt(i);
+        }
+        encoded = view.buffer;
+        binaryIdentifier[0] = 0;
+      }
+
+      var len = (encoded instanceof ArrayBuffer)
+        ? encoded.byteLength
+        : encoded.size;
+
+      var lenStr = len.toString();
+      var lengthAry = new Uint8Array(lenStr.length + 1);
+      for (var i = 0; i < lenStr.length; i++) {
+        lengthAry[i] = parseInt(lenStr[i]);
+      }
+      lengthAry[lenStr.length] = 255;
+
+      if (Blob) {
+        var blob = new Blob([binaryIdentifier.buffer, lengthAry.buffer, encoded]);
+        doneCallback(null, blob);
+      }
+    });
+  }
+
+  map(packets, encodeOne, function(err, results) {
+    return callback(new Blob(results));
+  });
+};
+
+/*
+ * Decodes data when a payload is maybe expected. Strings are decoded by
+ * interpreting each byte as a key code for entries marked to start with 0. See
+ * description of encodePayloadAsBinary
+ *
+ * @param {ArrayBuffer} data, callback method
+ * @api public
+ */
+
+exports.decodePayloadAsBinary = function (data, binaryType, callback) {
+  if (typeof binaryType === 'function') {
+    callback = binaryType;
+    binaryType = null;
+  }
+
+  var bufferTail = data;
+  var buffers = [];
+
+  while (bufferTail.byteLength > 0) {
+    var tailArray = new Uint8Array(bufferTail);
+    var isString = tailArray[0] === 0;
+    var msgLength = '';
+
+    for (var i = 1; ; i++) {
+      if (tailArray[i] === 255) break;
+
+      // 310 = char length of Number.MAX_VALUE
+      if (msgLength.length > 310) {
+        return callback(err, 0, 1);
+      }
+
+      msgLength += tailArray[i];
+    }
+
+    bufferTail = sliceBuffer(bufferTail, 2 + msgLength.length);
+    msgLength = parseInt(msgLength);
+
+    var msg = sliceBuffer(bufferTail, 0, msgLength);
+    if (isString) {
+      try {
+        msg = String.fromCharCode.apply(null, new Uint8Array(msg));
+      } catch (e) {
+        // iPhone Safari doesn't let you apply to typed arrays
+        var typed = new Uint8Array(msg);
+        msg = '';
+        for (var i = 0; i < typed.length; i++) {
+          msg += String.fromCharCode(typed[i]);
+        }
+      }
+    }
+
+    buffers.push(msg);
+    bufferTail = sliceBuffer(bufferTail, msgLength);
+  }
+
+  var total = buffers.length;
+  buffers.forEach(function(buffer, i) {
+    callback(exports.decodePacket(buffer, binaryType, true), i, total);
+  });
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./keys":74,"./utf8":75,"after":52,"arraybuffer.slice":53,"base64-arraybuffer":55,"blob":57,"has-binary2":77}],74:[function(require,module,exports){
+
+/**
+ * Gets the keys for an object.
+ *
+ * @return {Array} keys
+ * @api private
+ */
+
+module.exports = Object.keys || function keys (obj){
+  var arr = [];
+  var has = Object.prototype.hasOwnProperty;
+
+  for (var i in obj) {
+    if (has.call(obj, i)) {
+      arr.push(i);
+    }
+  }
+  return arr;
+};
+
+},{}],75:[function(require,module,exports){
+(function (global){
+/*! https://mths.be/utf8js v2.1.2 by @mathias */
+;(function(root) {
+
+	// Detect free variables `exports`
+	var freeExports = typeof exports == 'object' && exports;
+
+	// Detect free variable `module`
+	var freeModule = typeof module == 'object' && module &&
+		module.exports == freeExports && module;
+
+	// Detect free variable `global`, from Node.js or Browserified code,
+	// and use it as `root`
+	var freeGlobal = typeof global == 'object' && global;
+	if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
+		root = freeGlobal;
+	}
+
+	/*--------------------------------------------------------------------------*/
+
+	var stringFromCharCode = String.fromCharCode;
+
+	// Taken from https://mths.be/punycode
+	function ucs2decode(string) {
+		var output = [];
+		var counter = 0;
+		var length = string.length;
+		var value;
+		var extra;
+		while (counter < length) {
+			value = string.charCodeAt(counter++);
+			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+				// high surrogate, and there is a next character
+				extra = string.charCodeAt(counter++);
+				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+				} else {
+					// unmatched surrogate; only append this code unit, in case the next
+					// code unit is the high surrogate of a surrogate pair
+					output.push(value);
+					counter--;
+				}
+			} else {
+				output.push(value);
+			}
+		}
+		return output;
+	}
+
+	// Taken from https://mths.be/punycode
+	function ucs2encode(array) {
+		var length = array.length;
+		var index = -1;
+		var value;
+		var output = '';
+		while (++index < length) {
+			value = array[index];
+			if (value > 0xFFFF) {
+				value -= 0x10000;
+				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+				value = 0xDC00 | value & 0x3FF;
+			}
+			output += stringFromCharCode(value);
+		}
+		return output;
+	}
+
+	function checkScalarValue(codePoint, strict) {
+		if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
+			if (strict) {
+				throw Error(
+					'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
+					' is not a scalar value'
+				);
+			}
+			return false;
+		}
+		return true;
+	}
+	/*--------------------------------------------------------------------------*/
+
+	function createByte(codePoint, shift) {
+		return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
+	}
+
+	function encodeCodePoint(codePoint, strict) {
+		if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
+			return stringFromCharCode(codePoint);
+		}
+		var symbol = '';
+		if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
+			symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
+		}
+		else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
+			if (!checkScalarValue(codePoint, strict)) {
+				codePoint = 0xFFFD;
+			}
+			symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
+			symbol += createByte(codePoint, 6);
+		}
+		else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
+			symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
+			symbol += createByte(codePoint, 12);
+			symbol += createByte(codePoint, 6);
+		}
+		symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
+		return symbol;
+	}
+
+	function utf8encode(string, opts) {
+		opts = opts || {};
+		var strict = false !== opts.strict;
+
+		var codePoints = ucs2decode(string);
+		var length = codePoints.length;
+		var index = -1;
+		var codePoint;
+		var byteString = '';
+		while (++index < length) {
+			codePoint = codePoints[index];
+			byteString += encodeCodePoint(codePoint, strict);
+		}
+		return byteString;
+	}
+
+	/*--------------------------------------------------------------------------*/
+
+	function readContinuationByte() {
+		if (byteIndex >= byteCount) {
+			throw Error('Invalid byte index');
+		}
+
+		var continuationByte = byteArray[byteIndex] & 0xFF;
+		byteIndex++;
+
+		if ((continuationByte & 0xC0) == 0x80) {
+			return continuationByte & 0x3F;
+		}
+
+		// If we end up here, it’s not a continuation byte
+		throw Error('Invalid continuation byte');
+	}
+
+	function decodeSymbol(strict) {
+		var byte1;
+		var byte2;
+		var byte3;
+		var byte4;
+		var codePoint;
+
+		if (byteIndex > byteCount) {
+			throw Error('Invalid byte index');
+		}
+
+		if (byteIndex == byteCount) {
+			return false;
+		}
+
+		// Read first byte
+		byte1 = byteArray[byteIndex] & 0xFF;
+		byteIndex++;
+
+		// 1-byte sequence (no continuation bytes)
+		if ((byte1 & 0x80) == 0) {
+			return byte1;
+		}
+
+		// 2-byte sequence
+		if ((byte1 & 0xE0) == 0xC0) {
+			byte2 = readContinuationByte();
+			codePoint = ((byte1 & 0x1F) << 6) | byte2;
+			if (codePoint >= 0x80) {
+				return codePoint;
+			} else {
+				throw Error('Invalid continuation byte');
+			}
+		}
+
+		// 3-byte sequence (may include unpaired surrogates)
+		if ((byte1 & 0xF0) == 0xE0) {
+			byte2 = readContinuationByte();
+			byte3 = readContinuationByte();
+			codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
+			if (codePoint >= 0x0800) {
+				return checkScalarValue(codePoint, strict) ? codePoint : 0xFFFD;
+			} else {
+				throw Error('Invalid continuation byte');
+			}
+		}
+
+		// 4-byte sequence
+		if ((byte1 & 0xF8) == 0xF0) {
+			byte2 = readContinuationByte();
+			byte3 = readContinuationByte();
+			byte4 = readContinuationByte();
+			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
+				(byte3 << 0x06) | byte4;
+			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
+				return codePoint;
+			}
+		}
+
+		throw Error('Invalid UTF-8 detected');
+	}
+
+	var byteArray;
+	var byteCount;
+	var byteIndex;
+	function utf8decode(byteString, opts) {
+		opts = opts || {};
+		var strict = false !== opts.strict;
+
+		byteArray = ucs2decode(byteString);
+		byteCount = byteArray.length;
+		byteIndex = 0;
+		var codePoints = [];
+		var tmp;
+		while ((tmp = decodeSymbol(strict)) !== false) {
+			codePoints.push(tmp);
+		}
+		return ucs2encode(codePoints);
+	}
+
+	/*--------------------------------------------------------------------------*/
+
+	var utf8 = {
+		'version': '2.1.2',
+		'encode': utf8encode,
+		'decode': utf8decode
+	};
+
+	// Some AMD build optimizers, like r.js, check for specific condition patterns
+	// like the following:
+	if (
+		typeof define == 'function' &&
+		typeof define.amd == 'object' &&
+		define.amd
+	) {
+		define(function() {
+			return utf8;
+		});
+	}	else if (freeExports && !freeExports.nodeType) {
+		if (freeModule) { // in Node.js or RingoJS v0.8.0+
+			freeModule.exports = utf8;
+		} else { // in Narwhal or RingoJS v0.7.0-
+			var object = {};
+			var hasOwnProperty = object.hasOwnProperty;
+			for (var key in utf8) {
+				hasOwnProperty.call(utf8, key) && (freeExports[key] = utf8[key]);
+			}
+		}
+	} else { // in Rhino or a web browser
+		root.utf8 = utf8;
+	}
+
+}(this));
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],76:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -3839,7 +7874,112 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],55:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
+(function (Buffer){
+/* global Blob File */
+
+/*
+ * Module requirements.
+ */
+
+var isArray = require('isarray');
+
+var toString = Object.prototype.toString;
+var withNativeBlob = typeof Blob === 'function' ||
+                        typeof Blob !== 'undefined' && toString.call(Blob) === '[object BlobConstructor]';
+var withNativeFile = typeof File === 'function' ||
+                        typeof File !== 'undefined' && toString.call(File) === '[object FileConstructor]';
+
+/**
+ * Module exports.
+ */
+
+module.exports = hasBinary;
+
+/**
+ * Checks for binary data.
+ *
+ * Supports Buffer, ArrayBuffer, Blob and File.
+ *
+ * @param {Object} anything
+ * @api public
+ */
+
+function hasBinary (obj) {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  }
+
+  if (isArray(obj)) {
+    for (var i = 0, l = obj.length; i < l; i++) {
+      if (hasBinary(obj[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  if ((typeof Buffer === 'function' && Buffer.isBuffer && Buffer.isBuffer(obj)) ||
+    (typeof ArrayBuffer === 'function' && obj instanceof ArrayBuffer) ||
+    (withNativeBlob && obj instanceof Blob) ||
+    (withNativeFile && obj instanceof File)
+  ) {
+    return true;
+  }
+
+  // see: https://github.com/Automattic/has-binary/pull/4
+  if (obj.toJSON && typeof obj.toJSON === 'function' && arguments.length === 1) {
+    return hasBinary(obj.toJSON(), true);
+  }
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":323,"isarray":78}],78:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],79:[function(require,module,exports){
+
+/**
+ * Module exports.
+ *
+ * Logic borrowed from Modernizr:
+ *
+ *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
+ */
+
+try {
+  module.exports = typeof XMLHttpRequest !== 'undefined' &&
+    'withCredentials' in new XMLHttpRequest();
+} catch (err) {
+  // if XMLHttp support is disabled in IE then it will throw
+  // when trying to create
+  module.exports = false;
+}
+
+},{}],80:[function(require,module,exports){
+
+var indexOf = [].indexOf;
+
+module.exports = function(arr, obj){
+  if (indexOf) return arr.indexOf(obj);
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) return i;
+  }
+  return -1;
+};
+},{}],81:[function(require,module,exports){
 'use strict'
 
 /**
@@ -3858,7 +7998,7 @@ module.exports = function boxBox(x1, y1, w1, h1, x2, y2, w2, h2)
     return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
 }
 
-},{}],56:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 'use strict'
 
 /**
@@ -3893,7 +8033,7 @@ module.exports = function boxCircle(xb, yb, wb, hb, xc, yc, rc)
     return x * x + y * y <= rc * rc
 }
 
-},{}],57:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict'
 
 var lineBox = require('./line-box')
@@ -3914,7 +8054,7 @@ module.exports = function boxLine(xb, yb, wb, hb, x1, y1, x2, y2)
     return lineBox(x1, y1, x2, y2, xb, yb, wb, hb)
 }
 
-},{"./line-box":66}],58:[function(require,module,exports){
+},{"./line-box":92}],84:[function(require,module,exports){
 'use strict'
 
 /**
@@ -3932,7 +8072,7 @@ module.exports = function boxPoint(x1, y1, w1, h1, x2, y2)
     return x2 >= x1 && x2 <= x1 + w1 && y2 >= y1 && y2 <= y1 + h1
 }
 
-},{}],59:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict'
 
 var polygonBox = require('./polygon-box')
@@ -3950,7 +8090,7 @@ module.exports = function boxPolygon(xb, yb, wb, hb, points)
     return polygonBox(points, xb, yb, wb, hb)
 }
 
-},{"./polygon-box":75}],60:[function(require,module,exports){
+},{"./polygon-box":101}],86:[function(require,module,exports){
 'use strict'
 
 var boxCircle = require('./box-circle')
@@ -3971,7 +8111,7 @@ module.exports = function circleBox(xc, yc, rc, xb, yb, wb, hb)
     return boxCircle(xb, yb, wb, hb, xc, yc, rc)
 }
 
-},{"./box-circle":56}],61:[function(require,module,exports){
+},{"./box-circle":82}],87:[function(require,module,exports){
 'use strict'
 
 
@@ -3993,7 +8133,7 @@ module.exports = function circleCircle(x1, y1, r1, x2, y2, r2)
     return x * x + y * y <= radii * radii
 }
 
-},{}],62:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 'use strict'
 
 var lineCircle = require('./line-circle')
@@ -4015,7 +8155,7 @@ module.exports = function circleLine(xc, yc, rc, x1, y1, x2, y2)
     return lineCircle(x1, y1, x2, y2, xc, yc, rc)
 }
 
-},{"./line-circle":67}],63:[function(require,module,exports){
+},{"./line-circle":93}],89:[function(require,module,exports){
 'use strict'
 
 /**
@@ -4034,7 +8174,7 @@ module.exports = function circlePoint(x1, y1, r1, x2, y2)
     return x * x + y * y <= r1 * r1
 }
 
-},{}],64:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict'
 
 var polygonCircle = require('./polygon-circle')
@@ -4052,7 +8192,7 @@ module.exports = function circlePolygon(xc, yc, rc, points)
     return polygonCircle(points, xc, yc, rc)
 }
 
-},{"./polygon-circle":76}],65:[function(require,module,exports){
+},{"./polygon-circle":102}],91:[function(require,module,exports){
 'use strict'
 
 module.exports = {
@@ -4086,7 +8226,7 @@ module.exports = {
     linePoint: require('./line-point')
 }
 
-},{"./box-box":55,"./box-circle":56,"./box-line":57,"./box-point":58,"./box-polygon":59,"./circle-box":60,"./circle-circle":61,"./circle-line":62,"./circle-point":63,"./circle-polygon":64,"./line-box":66,"./line-circle":67,"./line-line":68,"./line-point":69,"./line-polygon":70,"./point-box":71,"./point-circle":72,"./point-line":73,"./point-polygon":74,"./polygon-box":75,"./polygon-circle":76,"./polygon-line":77,"./polygon-point":78,"./polygon-polygon":79}],66:[function(require,module,exports){
+},{"./box-box":81,"./box-circle":82,"./box-line":83,"./box-point":84,"./box-polygon":85,"./circle-box":86,"./circle-circle":87,"./circle-line":88,"./circle-point":89,"./circle-polygon":90,"./line-box":92,"./line-circle":93,"./line-line":94,"./line-point":95,"./line-polygon":96,"./point-box":97,"./point-circle":98,"./point-line":99,"./point-polygon":100,"./polygon-box":101,"./polygon-circle":102,"./polygon-line":103,"./polygon-point":104,"./polygon-polygon":105}],92:[function(require,module,exports){
 'use strict'
 
 var boxPoint = require('./box-point')
@@ -4115,7 +8255,7 @@ module.exports = function lineBox(x1, y1, x2, y2, xb, yb, wb, hb)
         lineLine(x1, y1, x2, y2, xb, yb, xb, yb + hb)
 }
 
-},{"./box-point":58,"./line-line":68}],67:[function(require,module,exports){
+},{"./box-point":84,"./line-line":94}],93:[function(require,module,exports){
 'use strict'
 
 /**
@@ -4147,7 +8287,7 @@ function dot(v1, v2)
     return (v1[0] * v2[0]) + (v1[1] * v2[1])
 }
 
-},{}],68:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 'use strict'
 
 /**
@@ -4174,7 +8314,7 @@ module.exports = function lineLine(x1, y1, x2, y2, x3, y3, x4, y4)
     return s >= 0 && s <= 1 && t >= 0 && t <= 1
 }
 
-},{}],69:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 'use strict'
 
 function distanceSquared(x1, y1, x2, y2)
@@ -4199,7 +8339,7 @@ module.exports = function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
     tolerance = tolerance || 1
     return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance
 }
-},{}],70:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 'use strict'
 
 var polygonPoint = require('./polygon-point')
@@ -4235,7 +8375,7 @@ module.exports = function linePolygon(x1, y1, x2, y2, points)
     return false
 }
 
-},{"./line-line":68,"./polygon-point":78}],71:[function(require,module,exports){
+},{"./line-line":94,"./polygon-point":104}],97:[function(require,module,exports){
 'use strict'
 
 var boxPoint = require('./box-point')
@@ -4255,7 +8395,7 @@ module.exports = function pointBox(x1, y1, xb, yb, wb, hb)
     return boxPoint(xb, yb, wb, hb, x1, y1)
 }
 
-},{"./box-point":58}],72:[function(require,module,exports){
+},{"./box-point":84}],98:[function(require,module,exports){
 'use strict'
 
 var circlePoint = require('./circle-point')
@@ -4265,7 +8405,7 @@ module.exports = function pointCircle(x1, y1, xc, yc, rc)
     return circlePoint(xc, yc, rc, x1, y1)
 }
 
-},{"./circle-point":63}],73:[function(require,module,exports){
+},{"./circle-point":89}],99:[function(require,module,exports){
 'use strict'
 
 var linePoint = require('./line-point')
@@ -4285,7 +8425,7 @@ module.exports = function pointLine(xp, yp, x1, y1, x2, y2)
     return linePoint(x1, y1, x2, y2, xp, yp)
 }
 
-},{"./line-point":69}],74:[function(require,module,exports){
+},{"./line-point":95}],100:[function(require,module,exports){
 'use strict'
 
 var polygonPoint = require('./polygon-point')
@@ -4302,7 +8442,7 @@ module.exports = function pointPolygon(x1, y1, points)
     return polygonPoint(points, x1, y1)
 }
 
-},{"./polygon-point":78}],75:[function(require,module,exports){
+},{"./polygon-point":104}],101:[function(require,module,exports){
 'use strict'
 
 var polygonPolygon = require('./polygon-polygon')
@@ -4321,7 +8461,7 @@ module.exports = function polygonBox(points, x, y, w, h)
     return polygonPolygon(points, points2)
 }
 
-},{"./polygon-polygon":79}],76:[function(require,module,exports){
+},{"./polygon-polygon":105}],102:[function(require,module,exports){
 'use strict'
 
 var polygonPoint = require('./polygon-point')
@@ -4352,7 +8492,7 @@ module.exports = function polygonCircle(points, xc, yc, rc)
     return lineCircle(points[0], points[1], points[count - 2], points[count - 1], xc, yc, rc)
 }
 
-},{"./line-circle":67,"./polygon-point":78}],77:[function(require,module,exports){
+},{"./line-circle":93,"./polygon-point":104}],103:[function(require,module,exports){
 'use strict'
 
 var linePolygon = require('./line-polygon')
@@ -4371,7 +8511,7 @@ module.exports = function polygonLine(points, x1, y1, x2, y2)
     return linePolygon(x1, y1, x2, y2, points)
 }
 
-},{"./line-polygon":70}],78:[function(require,module,exports){
+},{"./line-polygon":96}],104:[function(require,module,exports){
 'use strict'
 
 const linePoint = require('./line-point')
@@ -4423,7 +8563,7 @@ module.exports = function polygonPoint(points, x, y)
     return false
 }
 
-},{"./line-point":69}],79:[function(require,module,exports){
+},{"./line-point":95}],105:[function(require,module,exports){
 'use strict'
 
 /**
@@ -4481,7 +8621,7 @@ module.exports = function polygonPolygon(points1, points2)
     return true
 }
 
-},{}],80:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 /**
  * isMobile.js v0.4.1
  *
@@ -4620,7 +8760,7 @@ module.exports = function polygonPolygon(points1, points2)
 
 })(this);
 
-},{}],81:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4787,7 +8927,161 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],82:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return parse(val);
+  } else if (type === 'number' && isNaN(val) === false) {
+    return options.long ? fmtLong(val) : fmtShort(val);
+  }
+  throw new Error(
+    'val is not a non-empty string or a valid number. val=' +
+      JSON.stringify(val)
+  );
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = String(str);
+  if (str.length > 100) {
+    return;
+  }
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(
+    str
+  );
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtShort(ms) {
+  if (ms >= d) {
+    return Math.round(ms / d) + 'd';
+  }
+  if (ms >= h) {
+    return Math.round(ms / h) + 'h';
+  }
+  if (ms >= m) {
+    return Math.round(ms / m) + 'm';
+  }
+  if (ms >= s) {
+    return Math.round(ms / s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtLong(ms) {
+  return plural(ms, d, 'day') ||
+    plural(ms, h, 'hour') ||
+    plural(ms, m, 'minute') ||
+    plural(ms, s, 'second') ||
+    ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, n, name) {
+  if (ms < n) {
+    return;
+  }
+  if (ms < n * 1.5) {
+    return Math.floor(ms / n) + ' ' + name;
+  }
+  return Math.ceil(ms / n) + ' ' + name + 's';
+}
+
+},{}],109:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -4879,7 +9173,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],83:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -4911,7 +9205,87 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],84:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
+/**
+ * Compiles a querystring
+ * Returns string representation of the object
+ *
+ * @param {Object}
+ * @api private
+ */
+
+exports.encode = function (obj) {
+  var str = '';
+
+  for (var i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      if (str.length) str += '&';
+      str += encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]);
+    }
+  }
+
+  return str;
+};
+
+/**
+ * Parses a simple querystring into an object
+ *
+ * @param {String} qs
+ * @api private
+ */
+
+exports.decode = function(qs){
+  var qry = {};
+  var pairs = qs.split('&');
+  for (var i = 0, l = pairs.length; i < l; i++) {
+    var pair = pairs[i].split('=');
+    qry[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+  }
+  return qry;
+};
+
+},{}],112:[function(require,module,exports){
+/**
+ * Parses an URI
+ *
+ * @author Steven Levithan <stevenlevithan.com> (MIT license)
+ * @api private
+ */
+
+var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+
+var parts = [
+    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+];
+
+module.exports = function parseuri(str) {
+    var src = str,
+        b = str.indexOf('['),
+        e = str.indexOf(']');
+
+    if (b != -1 && e != -1) {
+        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
+    }
+
+    var m = re.exec(str || ''),
+        uri = {},
+        i = 14;
+
+    while (i--) {
+        uri[parts[i]] = m[i] || '';
+    }
+
+    if (b != -1 && e != -1) {
+        uri.source = src;
+        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
+        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
+        uri.ipv6uri = true;
+    }
+
+    return uri;
+};
+
+},{}],113:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -5179,7 +9553,7 @@ module.exports = function parseURI (str, opts) {
 
 }).call(this);
 
-},{}],85:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 /*!
  * pixi-filters - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -5190,7 +9564,7 @@ module.exports = function parseURI (str, opts) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});var filterAdjustment=require("@pixi/filter-adjustment"),filterAdvancedBloom=require("@pixi/filter-advanced-bloom"),filterAscii=require("@pixi/filter-ascii"),filterBevel=require("@pixi/filter-bevel"),filterBloom=require("@pixi/filter-bloom"),filterBulgePinch=require("@pixi/filter-bulge-pinch"),filterColorMap=require("@pixi/filter-color-map"),filterColorReplace=require("@pixi/filter-color-replace"),filterConvolution=require("@pixi/filter-convolution"),filterCrossHatch=require("@pixi/filter-cross-hatch"),filterCrt=require("@pixi/filter-crt"),filterDot=require("@pixi/filter-dot"),filterDropShadow=require("@pixi/filter-drop-shadow"),filterEmboss=require("@pixi/filter-emboss"),filterGlitch=require("@pixi/filter-glitch"),filterGlow=require("@pixi/filter-glow"),filterGodray=require("@pixi/filter-godray"),filterKawaseBlur=require("@pixi/filter-kawase-blur"),filterMotionBlur=require("@pixi/filter-motion-blur"),filterMultiColorReplace=require("@pixi/filter-multi-color-replace"),filterOldFilm=require("@pixi/filter-old-film"),filterOutline=require("@pixi/filter-outline"),filterPixelate=require("@pixi/filter-pixelate"),filterRadialBlur=require("@pixi/filter-radial-blur"),filterReflection=require("@pixi/filter-reflection"),filterRgbSplit=require("@pixi/filter-rgb-split"),filterShockwave=require("@pixi/filter-shockwave"),filterSimpleLightmap=require("@pixi/filter-simple-lightmap"),filterTiltShift=require("@pixi/filter-tilt-shift"),filterTwist=require("@pixi/filter-twist"),filterZoomBlur=require("@pixi/filter-zoom-blur");exports.AdjustmentFilter=filterAdjustment.AdjustmentFilter,exports.AdvancedBloomFilter=filterAdvancedBloom.AdvancedBloomFilter,exports.AsciiFilter=filterAscii.AsciiFilter,exports.BevelFilter=filterBevel.BevelFilter,exports.BloomFilter=filterBloom.BloomFilter,exports.BulgePinchFilter=filterBulgePinch.BulgePinchFilter,exports.ColorMapFilter=filterColorMap.ColorMapFilter,exports.ColorReplaceFilter=filterColorReplace.ColorReplaceFilter,exports.ConvolutionFilter=filterConvolution.ConvolutionFilter,exports.CrossHatchFilter=filterCrossHatch.CrossHatchFilter,exports.CRTFilter=filterCrt.CRTFilter,exports.DotFilter=filterDot.DotFilter,exports.DropShadowFilter=filterDropShadow.DropShadowFilter,exports.EmbossFilter=filterEmboss.EmbossFilter,exports.GlitchFilter=filterGlitch.GlitchFilter,exports.GlowFilter=filterGlow.GlowFilter,exports.GodrayFilter=filterGodray.GodrayFilter,exports.KawaseBlurFilter=filterKawaseBlur.KawaseBlurFilter,exports.MotionBlurFilter=filterMotionBlur.MotionBlurFilter,exports.MultiColorReplaceFilter=filterMultiColorReplace.MultiColorReplaceFilter,exports.OldFilmFilter=filterOldFilm.OldFilmFilter,exports.OutlineFilter=filterOutline.OutlineFilter,exports.PixelateFilter=filterPixelate.PixelateFilter,exports.RadialBlurFilter=filterRadialBlur.RadialBlurFilter,exports.ReflectionFilter=filterReflection.ReflectionFilter,exports.RGBSplitFilter=filterRgbSplit.RGBSplitFilter,exports.ShockwaveFilter=filterShockwave.ShockwaveFilter,exports.SimpleLightmapFilter=filterSimpleLightmap.SimpleLightmapFilter,exports.TiltShiftFilter=filterTiltShift.TiltShiftFilter,exports.TiltShiftAxisFilter=filterTiltShift.TiltShiftAxisFilter,exports.TiltShiftXFilter=filterTiltShift.TiltShiftXFilter,exports.TiltShiftYFilter=filterTiltShift.TiltShiftYFilter,exports.TwistFilter=filterTwist.TwistFilter,exports.ZoomBlurFilter=filterZoomBlur.ZoomBlurFilter;
 
 
-},{"@pixi/filter-adjustment":21,"@pixi/filter-advanced-bloom":22,"@pixi/filter-ascii":23,"@pixi/filter-bevel":24,"@pixi/filter-bloom":25,"@pixi/filter-bulge-pinch":26,"@pixi/filter-color-map":27,"@pixi/filter-color-replace":28,"@pixi/filter-convolution":29,"@pixi/filter-cross-hatch":30,"@pixi/filter-crt":31,"@pixi/filter-dot":32,"@pixi/filter-drop-shadow":33,"@pixi/filter-emboss":34,"@pixi/filter-glitch":35,"@pixi/filter-glow":36,"@pixi/filter-godray":37,"@pixi/filter-kawase-blur":38,"@pixi/filter-motion-blur":39,"@pixi/filter-multi-color-replace":40,"@pixi/filter-old-film":41,"@pixi/filter-outline":42,"@pixi/filter-pixelate":43,"@pixi/filter-radial-blur":44,"@pixi/filter-reflection":45,"@pixi/filter-rgb-split":46,"@pixi/filter-shockwave":47,"@pixi/filter-simple-lightmap":48,"@pixi/filter-tilt-shift":49,"@pixi/filter-twist":50,"@pixi/filter-zoom-blur":51}],86:[function(require,module,exports){
+},{"@pixi/filter-adjustment":21,"@pixi/filter-advanced-bloom":22,"@pixi/filter-ascii":23,"@pixi/filter-bevel":24,"@pixi/filter-bloom":25,"@pixi/filter-bulge-pinch":26,"@pixi/filter-color-map":27,"@pixi/filter-color-replace":28,"@pixi/filter-convolution":29,"@pixi/filter-cross-hatch":30,"@pixi/filter-crt":31,"@pixi/filter-dot":32,"@pixi/filter-drop-shadow":33,"@pixi/filter-emboss":34,"@pixi/filter-glitch":35,"@pixi/filter-glow":36,"@pixi/filter-godray":37,"@pixi/filter-kawase-blur":38,"@pixi/filter-motion-blur":39,"@pixi/filter-multi-color-replace":40,"@pixi/filter-old-film":41,"@pixi/filter-outline":42,"@pixi/filter-pixelate":43,"@pixi/filter-radial-blur":44,"@pixi/filter-reflection":45,"@pixi/filter-rgb-split":46,"@pixi/filter-shockwave":47,"@pixi/filter-simple-lightmap":48,"@pixi/filter-tilt-shift":49,"@pixi/filter-twist":50,"@pixi/filter-zoom-blur":51}],115:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -5311,7 +9685,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],87:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -5539,7 +9913,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":89}],88:[function(require,module,exports){
+},{"./GLTexture":118}],117:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -5635,7 +10009,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":94,"./shader/extractAttributes":96,"./shader/extractUniforms":97,"./shader/generateUniformAccessObject":98,"./shader/setPrecision":102}],89:[function(require,module,exports){
+},{"./shader/compileProgram":123,"./shader/extractAttributes":125,"./shader/extractUniforms":126,"./shader/generateUniformAccessObject":127,"./shader/setPrecision":131}],118:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -5970,7 +10344,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],90:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -6238,7 +10612,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":93}],91:[function(require,module,exports){
+},{"./setVertexAttribArrays":122}],120:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -6266,7 +10640,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],92:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -6293,7 +10667,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":86,"./GLFramebuffer":87,"./GLShader":88,"./GLTexture":89,"./VertexArrayObject":90,"./createContext":91,"./setVertexAttribArrays":93,"./shader":99}],93:[function(require,module,exports){
+},{"./GLBuffer":115,"./GLFramebuffer":116,"./GLShader":117,"./GLTexture":118,"./VertexArrayObject":119,"./createContext":120,"./setVertexAttribArrays":122,"./shader":128}],122:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -6350,7 +10724,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],94:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 
 /**
  * @class
@@ -6432,7 +10806,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],95:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -6512,7 +10886,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],96:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -6555,7 +10929,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":100,"./mapType":101}],97:[function(require,module,exports){
+},{"./mapSize":129,"./mapType":130}],126:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -6592,7 +10966,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":95,"./mapType":101}],98:[function(require,module,exports){
+},{"./defaultValue":124,"./mapType":130}],127:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -6715,7 +11089,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],99:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -6726,7 +11100,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":94,"./defaultValue":95,"./extractAttributes":96,"./extractUniforms":97,"./generateUniformAccessObject":98,"./mapSize":100,"./mapType":101,"./setPrecision":102}],100:[function(require,module,exports){
+},{"./compileProgram":123,"./defaultValue":124,"./extractAttributes":125,"./extractUniforms":126,"./generateUniformAccessObject":127,"./mapSize":129,"./mapType":130,"./setPrecision":131}],129:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -6764,7 +11138,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],101:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -6812,7 +11186,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],102:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -6832,7 +11206,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],103:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 var pixi_display;
 (function (pixi_display) {
     Object.assign(PIXI.Container.prototype, {
@@ -7559,7 +11933,7 @@ var pixi_display;
     PIXI.display = pixi_display;
 })(pixi_display || (pixi_display = {}));
 
-},{}],104:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -7680,10 +12054,10 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":275}],105:[function(require,module,exports){
+},{"resource-loader":304}],134:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],106:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7892,7 +12266,7 @@ module.exports = function (_Plugin) {
     return Bounce;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],107:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],136:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -7970,7 +12344,7 @@ module.exports = function (_Plugin) {
     return ClampZoom;
 }(Plugin);
 
-},{"./plugin":114}],108:[function(require,module,exports){
+},{"./plugin":143}],137:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8135,7 +12509,7 @@ module.exports = function (_Plugin) {
     return clamp;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],109:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],138:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8290,7 +12664,7 @@ module.exports = function (_Plugin) {
     return Decelerate;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],110:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],139:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8504,7 +12878,7 @@ module.exports = function (_Plugin) {
     return Drag;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],111:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],140:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8582,7 +12956,7 @@ module.exports = function (_Plugin) {
     return Follow;
 }(Plugin);
 
-},{"./plugin":114}],112:[function(require,module,exports){
+},{"./plugin":143}],141:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8756,7 +13130,7 @@ module.exports = function (_Plugin) {
     return MouseEdges;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],113:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],142:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8875,7 +13249,7 @@ module.exports = function (_Plugin) {
     return Pinch;
 }(Plugin);
 
-},{"./plugin":114}],114:[function(require,module,exports){
+},{"./plugin":143}],143:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -8926,7 +13300,7 @@ module.exports = function () {
     return Plugin;
 }();
 
-},{}],115:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -9102,7 +13476,7 @@ module.exports = function (_Plugin) {
     return SnapZoom;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],116:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],145:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -9247,7 +13621,7 @@ module.exports = function (_Plugin) {
     return Snap;
 }(Plugin);
 
-},{"./plugin":114,"./utils":117}],117:[function(require,module,exports){
+},{"./plugin":143,"./utils":146}],146:[function(require,module,exports){
 'use strict';
 
 var Penner = require('penner');
@@ -9282,7 +13656,7 @@ module.exports = {
     ease: ease
 };
 
-},{"penner":84}],118:[function(require,module,exports){
+},{"penner":113}],147:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -10817,7 +15191,7 @@ PIXI.extras.Viewport = Viewport;
 
 module.exports = Viewport;
 
-},{"./bounce":106,"./clamp":108,"./clamp-zoom":107,"./decelerate":109,"./drag":110,"./follow":111,"./mouse-edges":112,"./pinch":113,"./snap":116,"./snap-zoom":115,"./utils":117,"./wheel":119}],119:[function(require,module,exports){
+},{"./bounce":135,"./clamp":137,"./clamp-zoom":136,"./decelerate":138,"./drag":139,"./follow":140,"./mouse-edges":141,"./pinch":142,"./snap":145,"./snap-zoom":144,"./utils":146,"./wheel":148}],148:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -10947,7 +15321,7 @@ module.exports = function (_Plugin) {
     return Wheel;
 }(Plugin);
 
-},{"./plugin":114}],120:[function(require,module,exports){
+},{"./plugin":143}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11476,7 +15850,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":145,"./accessibleTarget":121,"ismobilejs":80}],121:[function(require,module,exports){
+},{"../core":174,"./accessibleTarget":150,"ismobilejs":106}],150:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -11534,7 +15908,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],122:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11559,7 +15933,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":120,"./accessibleTarget":121}],123:[function(require,module,exports){
+},{"./AccessibilityManager":149,"./accessibleTarget":150}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11791,7 +16165,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":125,"./const":126,"./display/Container":128,"./settings":181,"./ticker":201}],124:[function(require,module,exports){
+},{"./autoDetectRenderer":154,"./const":155,"./display/Container":157,"./settings":210,"./ticker":230}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11858,7 +16232,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":181,"pixi-gl-core":92}],125:[function(require,module,exports){
+},{"./settings":210,"pixi-gl-core":121}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11927,7 +16301,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":157,"./renderers/webgl/WebGLRenderer":164,"./utils":205}],126:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":186,"./renderers/webgl/WebGLRenderer":193,"./utils":234}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12270,7 +16644,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],127:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12613,7 +16987,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":150}],128:[function(require,module,exports){
+},{"../math":179}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13231,7 +17605,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":205,"./DisplayObject":129}],129:[function(require,module,exports){
+},{"../utils":234,"./DisplayObject":158}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13925,7 +18299,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":126,"../math":150,"../settings":181,"./Bounds":127,"./Transform":130,"./TransformStatic":132,"eventemitter3":54}],130:[function(require,module,exports){
+},{"../const":155,"../math":179,"../settings":210,"./Bounds":156,"./Transform":159,"./TransformStatic":161,"eventemitter3":76}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -14106,7 +18480,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":150,"./TransformBase":131}],131:[function(require,module,exports){
+},{"../math":179,"./TransformBase":160}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -14193,7 +18567,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":150}],132:[function(require,module,exports){
+},{"../math":179}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -14403,7 +18777,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":150,"./TransformBase":131}],133:[function(require,module,exports){
+},{"../math":179,"./TransformBase":160}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15780,7 +20154,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":126,"../display/Bounds":127,"../display/Container":128,"../math":150,"../renderers/canvas/CanvasRenderer":157,"../sprites/Sprite":182,"../textures/RenderTexture":193,"../textures/Texture":195,"../utils":205,"./GraphicsData":134,"./utils/bezierCurveTo":136}],134:[function(require,module,exports){
+},{"../const":155,"../display/Bounds":156,"../display/Container":157,"../math":179,"../renderers/canvas/CanvasRenderer":186,"../sprites/Sprite":211,"../textures/RenderTexture":222,"../textures/Texture":224,"../utils":234,"./GraphicsData":163,"./utils/bezierCurveTo":165}],163:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -15925,7 +20299,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],135:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16190,7 +20564,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":126,"../../renderers/canvas/CanvasRenderer":157}],136:[function(require,module,exports){
+},{"../../const":155,"../../renderers/canvas/CanvasRenderer":186}],165:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -16240,7 +20614,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],137:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16505,7 +20879,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":126,"../../renderers/webgl/WebGLRenderer":164,"../../renderers/webgl/utils/ObjectRenderer":174,"../../utils":205,"./WebGLGraphicsData":138,"./shaders/PrimitiveShader":139,"./utils/buildCircle":140,"./utils/buildPoly":142,"./utils/buildRectangle":143,"./utils/buildRoundedRectangle":144}],138:[function(require,module,exports){
+},{"../../const":155,"../../renderers/webgl/WebGLRenderer":193,"../../renderers/webgl/utils/ObjectRenderer":203,"../../utils":234,"./WebGLGraphicsData":167,"./shaders/PrimitiveShader":168,"./utils/buildCircle":169,"./utils/buildPoly":171,"./utils/buildRectangle":172,"./utils/buildRoundedRectangle":173}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16648,7 +21022,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":92}],139:[function(require,module,exports){
+},{"pixi-gl-core":121}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16693,7 +21067,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":124}],140:[function(require,module,exports){
+},{"../../../Shader":153}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16788,7 +21162,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":126,"../../../utils":205,"./buildLine":141}],141:[function(require,module,exports){
+},{"../../../const":155,"../../../utils":234,"./buildLine":170}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17062,7 +21436,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":150,"../../../utils":205}],142:[function(require,module,exports){
+},{"../../../math":179,"../../../utils":234}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17148,7 +21522,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":205,"./buildLine":141,"earcut":53}],143:[function(require,module,exports){
+},{"../../../utils":234,"./buildLine":170,"earcut":61}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17224,7 +21598,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":205,"./buildLine":141}],144:[function(require,module,exports){
+},{"../../../utils":234,"./buildLine":170}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17380,7 +21754,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":205,"./buildLine":141,"earcut":53}],145:[function(require,module,exports){
+},{"../../../utils":234,"./buildLine":170,"earcut":61}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17766,7 +22140,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":123,"./Shader":124,"./autoDetectRenderer":125,"./const":126,"./display/Bounds":127,"./display/Container":128,"./display/DisplayObject":129,"./display/Transform":130,"./display/TransformBase":131,"./display/TransformStatic":132,"./graphics/Graphics":133,"./graphics/GraphicsData":134,"./graphics/canvas/CanvasGraphicsRenderer":135,"./graphics/webgl/GraphicsRenderer":137,"./math":150,"./renderers/canvas/CanvasRenderer":157,"./renderers/canvas/utils/CanvasRenderTarget":159,"./renderers/webgl/WebGLRenderer":164,"./renderers/webgl/filters/Filter":166,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":169,"./renderers/webgl/managers/WebGLManager":173,"./renderers/webgl/utils/ObjectRenderer":174,"./renderers/webgl/utils/Quad":175,"./renderers/webgl/utils/RenderTarget":176,"./settings":181,"./sprites/Sprite":182,"./sprites/canvas/CanvasSpriteRenderer":183,"./sprites/canvas/CanvasTinter":184,"./sprites/webgl/SpriteRenderer":186,"./text/Text":188,"./text/TextMetrics":189,"./text/TextStyle":190,"./textures/BaseRenderTexture":191,"./textures/BaseTexture":192,"./textures/RenderTexture":193,"./textures/Spritesheet":194,"./textures/Texture":195,"./textures/TextureMatrix":196,"./textures/TextureUvs":197,"./textures/VideoBaseTexture":198,"./ticker":201,"./utils":205,"pixi-gl-core":92}],146:[function(require,module,exports){
+},{"./Application":152,"./Shader":153,"./autoDetectRenderer":154,"./const":155,"./display/Bounds":156,"./display/Container":157,"./display/DisplayObject":158,"./display/Transform":159,"./display/TransformBase":160,"./display/TransformStatic":161,"./graphics/Graphics":162,"./graphics/GraphicsData":163,"./graphics/canvas/CanvasGraphicsRenderer":164,"./graphics/webgl/GraphicsRenderer":166,"./math":179,"./renderers/canvas/CanvasRenderer":186,"./renderers/canvas/utils/CanvasRenderTarget":188,"./renderers/webgl/WebGLRenderer":193,"./renderers/webgl/filters/Filter":195,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":198,"./renderers/webgl/managers/WebGLManager":202,"./renderers/webgl/utils/ObjectRenderer":203,"./renderers/webgl/utils/Quad":204,"./renderers/webgl/utils/RenderTarget":205,"./settings":210,"./sprites/Sprite":211,"./sprites/canvas/CanvasSpriteRenderer":212,"./sprites/canvas/CanvasTinter":213,"./sprites/webgl/SpriteRenderer":215,"./text/Text":217,"./text/TextMetrics":218,"./text/TextStyle":219,"./textures/BaseRenderTexture":220,"./textures/BaseTexture":221,"./textures/RenderTexture":222,"./textures/Spritesheet":223,"./textures/Texture":224,"./textures/TextureMatrix":225,"./textures/TextureUvs":226,"./textures/VideoBaseTexture":227,"./ticker":230,"./utils":234,"pixi-gl-core":121}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17959,7 +22333,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":147}],147:[function(require,module,exports){
+},{"./Matrix":176}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18481,7 +22855,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":126,"./Point":149}],148:[function(require,module,exports){
+},{"../const":155,"./Point":178}],177:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -18632,7 +23006,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],149:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -18723,7 +23097,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],150:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18811,7 +23185,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":146,"./Matrix":147,"./ObservablePoint":148,"./Point":149,"./shapes/Circle":151,"./shapes/Ellipse":152,"./shapes/Polygon":153,"./shapes/Rectangle":154,"./shapes/RoundedRectangle":155}],151:[function(require,module,exports){
+},{"./GroupD8":175,"./Matrix":176,"./ObservablePoint":177,"./Point":178,"./shapes/Circle":180,"./shapes/Ellipse":181,"./shapes/Polygon":182,"./shapes/Rectangle":183,"./shapes/RoundedRectangle":184}],180:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18925,7 +23299,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":126,"./Rectangle":154}],152:[function(require,module,exports){
+},{"../../const":155,"./Rectangle":183}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19047,7 +23421,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":126,"./Rectangle":154}],153:[function(require,module,exports){
+},{"../../const":155,"./Rectangle":183}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19178,7 +23552,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":126,"../Point":149}],154:[function(require,module,exports){
+},{"../../const":155,"../Point":178}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19441,7 +23815,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":126}],155:[function(require,module,exports){
+},{"../../const":155}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19574,7 +23948,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":126}],156:[function(require,module,exports){
+},{"../../const":155}],185:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19939,7 +24313,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":126,"../display/Container":128,"../math":150,"../settings":181,"../textures/RenderTexture":193,"../utils":205,"eventemitter3":54}],157:[function(require,module,exports){
+},{"../const":155,"../display/Container":157,"../math":179,"../settings":210,"../textures/RenderTexture":222,"../utils":234,"eventemitter3":76}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20304,7 +24678,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":126,"../../settings":181,"../../utils":205,"../SystemRenderer":156,"./utils/CanvasMaskManager":158,"./utils/CanvasRenderTarget":159,"./utils/mapCanvasBlendModesToPixi":161}],158:[function(require,module,exports){
+},{"../../const":155,"../../settings":210,"../../utils":234,"../SystemRenderer":185,"./utils/CanvasMaskManager":187,"./utils/CanvasRenderTarget":188,"./utils/mapCanvasBlendModesToPixi":190}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20473,7 +24847,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":126}],159:[function(require,module,exports){
+},{"../../../const":155}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20597,7 +24971,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":181}],160:[function(require,module,exports){
+},{"../../../settings":210}],189:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20658,7 +25032,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],161:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20730,7 +25104,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":126,"./canUseNewCanvasBlendModes":160}],162:[function(require,module,exports){
+},{"../../../const":155,"./canUseNewCanvasBlendModes":189}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20850,7 +25224,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":126,"../../settings":181}],163:[function(require,module,exports){
+},{"../../const":155,"../../settings":210}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21106,7 +25480,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":126,"../../utils":205,"./utils/RenderTarget":176,"pixi-gl-core":92}],164:[function(require,module,exports){
+},{"../../const":155,"../../utils":234,"./utils/RenderTarget":205,"pixi-gl-core":121}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21923,7 +26297,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":126,"../../textures/BaseTexture":192,"../../utils":205,"../SystemRenderer":156,"./TextureGarbageCollector":162,"./TextureManager":163,"./WebGLState":165,"./managers/FilterManager":170,"./managers/MaskManager":171,"./managers/StencilManager":172,"./utils/ObjectRenderer":174,"./utils/RenderTarget":176,"./utils/mapWebGLDrawModesToPixi":179,"./utils/validateContext":180,"pixi-gl-core":92}],165:[function(require,module,exports){
+},{"../../const":155,"../../textures/BaseTexture":221,"../../utils":234,"../SystemRenderer":185,"./TextureGarbageCollector":191,"./TextureManager":192,"./WebGLState":194,"./managers/FilterManager":199,"./managers/MaskManager":200,"./managers/StencilManager":201,"./utils/ObjectRenderer":203,"./utils/RenderTarget":205,"./utils/mapWebGLDrawModesToPixi":208,"./utils/validateContext":209,"pixi-gl-core":121}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22203,7 +26577,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":178}],166:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":207}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22399,7 +26773,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":126,"../../../settings":181,"../../../utils":205,"./extractUniformsFromSrc":167}],167:[function(require,module,exports){
+},{"../../../const":155,"../../../settings":210,"../../../utils":234,"./extractUniformsFromSrc":196}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22461,7 +26835,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":92}],168:[function(require,module,exports){
+},{"pixi-gl-core":121}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22521,7 +26895,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":150}],169:[function(require,module,exports){
+},{"../../../math":179}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22609,7 +26983,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":150,"../../../../textures/TextureMatrix":196,"../Filter":166,"path":320}],170:[function(require,module,exports){
+},{"../../../../math":179,"../../../../textures/TextureMatrix":225,"../Filter":195,"path":325}],199:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23259,7 +27633,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":124,"../../../math":150,"../filters/filterTransforms":168,"../utils/Quad":175,"../utils/RenderTarget":176,"./WebGLManager":173,"bit-twiddle":52}],171:[function(require,module,exports){
+},{"../../../Shader":153,"../../../math":179,"../filters/filterTransforms":197,"../utils/Quad":204,"../utils/RenderTarget":205,"./WebGLManager":202,"bit-twiddle":56}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23469,7 +27843,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":169,"./WebGLManager":173}],172:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":198,"./WebGLManager":202}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23622,7 +27996,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":173}],173:[function(require,module,exports){
+},{"./WebGLManager":202}],202:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23677,7 +28051,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],174:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23755,7 +28129,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":173}],175:[function(require,module,exports){
+},{"../managers/WebGLManager":202}],204:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23936,7 +28310,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":203,"pixi-gl-core":92}],176:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":232,"pixi-gl-core":121}],205:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24270,7 +28644,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":126,"../../../math":150,"../../../settings":181,"pixi-gl-core":92}],177:[function(require,module,exports){
+},{"../../../const":155,"../../../math":179,"../../../settings":210,"pixi-gl-core":121}],206:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24345,7 +28719,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":92}],178:[function(require,module,exports){
+},{"pixi-gl-core":121}],207:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24394,7 +28768,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":126}],179:[function(require,module,exports){
+},{"../../../const":155}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24426,7 +28800,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":126}],180:[function(require,module,exports){
+},{"../../../const":155}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24442,7 +28816,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],181:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24687,7 +29061,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":202,"./utils/maxRecommendedTextures":207}],182:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":231,"./utils/maxRecommendedTextures":236}],211:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25328,7 +29702,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":126,"../display/Container":128,"../math":150,"../textures/Texture":195,"../utils":205}],183:[function(require,module,exports){
+},{"../const":155,"../display/Container":157,"../math":179,"../textures/Texture":224,"../utils":234}],212:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25481,7 +29855,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":126,"../../math":150,"../../renderers/canvas/CanvasRenderer":157,"./CanvasTinter":184}],184:[function(require,module,exports){
+},{"../../const":155,"../../math":179,"../../renderers/canvas/CanvasRenderer":186,"./CanvasTinter":213}],213:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25732,7 +30106,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":160,"../../utils":205}],185:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":189,"../../utils":234}],214:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -25785,7 +30159,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],186:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26338,7 +30712,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":164,"../../renderers/webgl/utils/ObjectRenderer":174,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":177,"../../settings":181,"../../utils":205,"../../utils/createIndicesForQuads":203,"./BatchBuffer":185,"./generateMultiTextureShader":187,"bit-twiddle":52,"pixi-gl-core":92}],187:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":193,"../../renderers/webgl/utils/ObjectRenderer":203,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":206,"../../settings":210,"../../utils":234,"../../utils/createIndicesForQuads":232,"./BatchBuffer":214,"./generateMultiTextureShader":216,"bit-twiddle":56,"pixi-gl-core":121}],216:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26401,7 +30775,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":124,"path":320}],188:[function(require,module,exports){
+},{"../../Shader":153,"path":325}],217:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27059,7 +31433,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":126,"../math":150,"../settings":181,"../sprites/Sprite":182,"../textures/Texture":195,"../utils":205,"../utils/trimCanvas":210,"./TextMetrics":189,"./TextStyle":190}],189:[function(require,module,exports){
+},{"../const":155,"../math":179,"../settings":210,"../sprites/Sprite":211,"../textures/Texture":224,"../utils":234,"../utils/trimCanvas":239,"./TextMetrics":218,"./TextStyle":219}],218:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27759,7 +32133,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],190:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28593,7 +32967,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":126,"../utils":205}],191:[function(require,module,exports){
+},{"../const":155,"../utils":234}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28755,7 +33129,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":181,"./BaseTexture":192}],192:[function(require,module,exports){
+},{"../settings":210,"./BaseTexture":221}],221:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29601,7 +33975,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":181,"../utils":205,"../utils/determineCrossOrigin":204,"bit-twiddle":52,"eventemitter3":54}],193:[function(require,module,exports){
+},{"../settings":210,"../utils":234,"../utils/determineCrossOrigin":233,"bit-twiddle":56,"eventemitter3":76}],222:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29755,7 +34129,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":191,"./Texture":195}],194:[function(require,module,exports){
+},{"./BaseRenderTexture":220,"./Texture":224}],223:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30084,7 +34458,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":145,"../utils":205}],195:[function(require,module,exports){
+},{"../":174,"../utils":234}],224:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30785,7 +35159,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":150,"../settings":181,"../utils":205,"./BaseTexture":192,"./TextureUvs":197,"./VideoBaseTexture":198,"eventemitter3":54}],196:[function(require,module,exports){
+},{"../math":179,"../settings":210,"../utils":234,"./BaseTexture":221,"./TextureUvs":226,"./VideoBaseTexture":227,"eventemitter3":76}],225:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30949,7 +35323,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":147}],197:[function(require,module,exports){
+},{"../math/Matrix":176}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31054,7 +35428,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":146}],198:[function(require,module,exports){
+},{"../math/GroupD8":175}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31397,7 +35771,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":126,"../ticker":201,"../utils":205,"../utils/determineCrossOrigin":204,"./BaseTexture":192}],199:[function(require,module,exports){
+},{"../const":155,"../ticker":230,"../utils":234,"../utils/determineCrossOrigin":233,"./BaseTexture":221}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31870,7 +36244,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":126,"../settings":181,"./TickerListener":200}],200:[function(require,module,exports){
+},{"../const":155,"../settings":210,"./TickerListener":229}],229:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -32044,7 +36418,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],201:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32124,7 +36498,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":199}],202:[function(require,module,exports){
+},{"./Ticker":228}],231:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -32138,7 +36512,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],203:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -32172,7 +36546,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],204:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32228,7 +36602,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":326}],205:[function(require,module,exports){
+},{"url":331}],234:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32711,7 +37085,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":126,"../settings":181,"./mapPremultipliedBlendModes":206,"./mixin":208,"./pluginTarget":209,"earcut":53,"eventemitter3":54,"ismobilejs":80,"remove-array-items":270}],206:[function(require,module,exports){
+},{"../const":155,"../settings":210,"./mapPremultipliedBlendModes":235,"./mixin":237,"./pluginTarget":238,"earcut":61,"eventemitter3":76,"ismobilejs":106,"remove-array-items":299}],235:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32754,7 +37128,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":126}],207:[function(require,module,exports){
+},{"../const":155}],236:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32776,7 +37150,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":80}],208:[function(require,module,exports){
+},{"ismobilejs":106}],237:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -32838,7 +37212,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],209:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -32904,7 +37278,7 @@ exports.default = {
     }
 };
 
-},{}],210:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32982,7 +37356,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],211:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34138,7 +38512,7 @@ function deprecation(core) {
     }
 }
 
-},{}],212:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34318,7 +38692,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":145}],213:[function(require,module,exports){
+},{"../../core":174}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34343,7 +38717,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":212,"./webgl/WebGLExtract":214}],214:[function(require,module,exports){
+},{"./canvas/CanvasExtract":241,"./webgl/WebGLExtract":243}],243:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34578,7 +38952,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":145}],215:[function(require,module,exports){
+},{"../../core":174}],244:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35000,7 +39374,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":145}],216:[function(require,module,exports){
+},{"../core":174}],245:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35645,7 +40019,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":145,"../core/math/ObservablePoint":148,"../core/settings":181,"../core/utils":205}],217:[function(require,module,exports){
+},{"../core":174,"../core/math/ObservablePoint":177,"../core/settings":210,"../core/utils":234}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36091,7 +40465,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":145,"../core/sprites/canvas/CanvasTinter":184}],218:[function(require,module,exports){
+},{"../core":174,"../core/sprites/canvas/CanvasTinter":213}],247:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -36495,7 +40869,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":145,"../core/textures/BaseTexture":192,"../core/textures/Texture":195,"../core/utils":205}],219:[function(require,module,exports){
+},{"../core":174,"../core/textures/BaseTexture":221,"../core/textures/Texture":224,"../core/utils":234}],248:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -36530,7 +40904,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":145}],220:[function(require,module,exports){
+},{"../core":174}],249:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -36564,7 +40938,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":145}],221:[function(require,module,exports){
+},{"../core":174}],250:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36616,7 +40990,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":215,"./BitmapText":216,"./TilingSprite":217,"./cacheAsBitmap":218,"./getChildByName":219,"./getGlobalPosition":220,"./webgl/TilingSpriteRenderer":222}],222:[function(require,module,exports){
+},{"./AnimatedSprite":244,"./BitmapText":245,"./TilingSprite":246,"./cacheAsBitmap":247,"./getChildByName":248,"./getGlobalPosition":249,"./webgl/TilingSpriteRenderer":251}],251:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36778,7 +41152,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":145,"../../core/const":126,"path":320}],223:[function(require,module,exports){
+},{"../../core":174,"../../core/const":155,"path":325}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36862,7 +41236,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":145,"path":320}],224:[function(require,module,exports){
+},{"../../core":174,"path":325}],253:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37036,7 +41410,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":145,"./BlurXFilter":225,"./BlurYFilter":226}],225:[function(require,module,exports){
+},{"../../core":174,"./BlurXFilter":254,"./BlurYFilter":255}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37202,7 +41576,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":145,"./generateBlurFragSource":227,"./generateBlurVertSource":228,"./getMaxBlurKernelSize":229}],226:[function(require,module,exports){
+},{"../../core":174,"./generateBlurFragSource":256,"./generateBlurVertSource":257,"./getMaxBlurKernelSize":258}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37367,7 +41741,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":145,"./generateBlurFragSource":227,"./generateBlurVertSource":228,"./getMaxBlurKernelSize":229}],227:[function(require,module,exports){
+},{"../../core":174,"./generateBlurFragSource":256,"./generateBlurVertSource":257,"./getMaxBlurKernelSize":258}],256:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37414,7 +41788,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],228:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37458,7 +41832,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],229:[function(require,module,exports){
+},{}],258:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37474,7 +41848,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],230:[function(require,module,exports){
+},{}],259:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38025,7 +42399,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":145,"path":320}],231:[function(require,module,exports){
+},{"../../core":174,"path":325}],260:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38133,7 +42507,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":145,"path":320}],232:[function(require,module,exports){
+},{"../../core":174,"path":325}],261:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38187,7 +42561,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":145,"path":320}],233:[function(require,module,exports){
+},{"../../core":174,"path":325}],262:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38266,7 +42640,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":223,"./blur/BlurFilter":224,"./blur/BlurXFilter":225,"./blur/BlurYFilter":226,"./colormatrix/ColorMatrixFilter":230,"./displacement/DisplacementFilter":231,"./fxaa/FXAAFilter":232,"./noise/NoiseFilter":234}],234:[function(require,module,exports){
+},{"./alpha/AlphaFilter":252,"./blur/BlurFilter":253,"./blur/BlurXFilter":254,"./blur/BlurYFilter":255,"./colormatrix/ColorMatrixFilter":259,"./displacement/DisplacementFilter":260,"./fxaa/FXAAFilter":261,"./noise/NoiseFilter":263}],263:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38363,7 +42737,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":145,"path":320}],235:[function(require,module,exports){
+},{"../../core":174,"path":325}],264:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -38477,7 +42851,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":122,"./core":145,"./deprecation":211,"./extract":213,"./extras":221,"./filters":233,"./interaction":240,"./loaders":243,"./mesh":252,"./particles":255,"./polyfill":262,"./prepare":266}],236:[function(require,module,exports){
+},{"./accessibility":151,"./core":174,"./deprecation":240,"./extract":242,"./extras":250,"./filters":262,"./interaction":269,"./loaders":272,"./mesh":281,"./particles":284,"./polyfill":291,"./prepare":295}],265:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38700,7 +43074,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":145}],237:[function(require,module,exports){
+},{"../core":174}],266:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -38783,7 +43157,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],238:[function(require,module,exports){
+},{}],267:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40565,7 +44939,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":145,"./InteractionData":236,"./InteractionEvent":237,"./InteractionTrackingData":239,"./interactiveTarget":241,"eventemitter3":54}],239:[function(require,module,exports){
+},{"../core":174,"./InteractionData":265,"./InteractionEvent":266,"./InteractionTrackingData":268,"./interactiveTarget":270,"eventemitter3":76}],268:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -40741,7 +45115,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],240:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40793,7 +45167,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":236,"./InteractionEvent":237,"./InteractionManager":238,"./InteractionTrackingData":239,"./interactiveTarget":241}],241:[function(require,module,exports){
+},{"./InteractionData":265,"./InteractionEvent":266,"./InteractionManager":267,"./InteractionTrackingData":268,"./interactiveTarget":270}],270:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40910,7 +45284,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],242:[function(require,module,exports){
+},{}],271:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41030,7 +45404,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":221,"path":320,"resource-loader":275}],243:[function(require,module,exports){
+},{"../extras":250,"path":325,"resource-loader":304}],272:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41158,7 +45532,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":123,"./bitmapFontParser":242,"./loader":244,"./spritesheetParser":245,"./textureParser":246,"resource-loader":275}],244:[function(require,module,exports){
+},{"../core/Application":152,"./bitmapFontParser":271,"./loader":273,"./spritesheetParser":274,"./textureParser":275,"resource-loader":304}],273:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41329,7 +45703,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":242,"./spritesheetParser":245,"./textureParser":246,"eventemitter3":54,"resource-loader":275,"resource-loader/lib/middlewares/parsing/blob":276}],245:[function(require,module,exports){
+},{"./bitmapFontParser":271,"./spritesheetParser":274,"./textureParser":275,"eventemitter3":76,"resource-loader":304,"resource-loader/lib/middlewares/parsing/blob":305}],274:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41393,7 +45767,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":145,"resource-loader":275,"url":326}],246:[function(require,module,exports){
+},{"../core":174,"resource-loader":304,"url":331}],275:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41416,7 +45790,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":195,"resource-loader":275}],247:[function(require,module,exports){
+},{"../core/textures/Texture":224,"resource-loader":304}],276:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41847,7 +46221,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":145,"../core/textures/Texture":195}],248:[function(require,module,exports){
+},{"../core":174,"../core/textures/Texture":224}],277:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42240,7 +46614,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":249}],249:[function(require,module,exports){
+},{"./Plane":278}],278:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42381,7 +46755,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":247}],250:[function(require,module,exports){
+},{"./Mesh":276}],279:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42617,7 +46991,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":247}],251:[function(require,module,exports){
+},{"./Mesh":276}],280:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42903,7 +47277,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":145,"../Mesh":247}],252:[function(require,module,exports){
+},{"../../core":174,"../Mesh":276}],281:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42964,7 +47338,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":247,"./NineSlicePlane":248,"./Plane":249,"./Rope":250,"./canvas/CanvasMeshRenderer":251,"./webgl/MeshRenderer":253}],253:[function(require,module,exports){
+},{"./Mesh":276,"./NineSlicePlane":277,"./Plane":278,"./Rope":279,"./canvas/CanvasMeshRenderer":280,"./webgl/MeshRenderer":282}],282:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43119,7 +47493,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":145,"../Mesh":247,"path":320,"pixi-gl-core":92}],254:[function(require,module,exports){
+},{"../../core":174,"../Mesh":276,"path":325,"pixi-gl-core":121}],283:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43509,7 +47883,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":145,"../core/utils":205}],255:[function(require,module,exports){
+},{"../core":174,"../core/utils":234}],284:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43534,7 +47908,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":254,"./webgl/ParticleRenderer":257}],256:[function(require,module,exports){
+},{"./ParticleContainer":283,"./webgl/ParticleRenderer":286}],285:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43783,7 +48157,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":203,"pixi-gl-core":92}],257:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":232,"pixi-gl-core":121}],286:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44264,7 +48638,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":145,"../../core/utils":205,"./ParticleBuffer":256,"./ParticleShader":258}],258:[function(require,module,exports){
+},{"../../core":174,"../../core/utils":234,"./ParticleBuffer":285,"./ParticleShader":287}],287:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44307,7 +48681,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":124}],259:[function(require,module,exports){
+},{"../../core/Shader":153}],288:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -44325,7 +48699,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],260:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -44337,7 +48711,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],261:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -44352,7 +48726,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":82}],262:[function(require,module,exports){
+},{"object-assign":109}],291:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -44379,7 +48753,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":259,"./Number.isInteger":260,"./Object.assign":261,"./requestAnimationFrame":263}],263:[function(require,module,exports){
+},{"./Math.sign":288,"./Number.isInteger":289,"./Object.assign":290,"./requestAnimationFrame":292}],292:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -44456,7 +48830,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],264:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44944,7 +49318,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":145,"./limiters/CountLimiter":267}],265:[function(require,module,exports){
+},{"../core":174,"./limiters/CountLimiter":296}],294:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45064,7 +49438,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":145,"../BasePrepare":264}],266:[function(require,module,exports){
+},{"../../core":174,"../BasePrepare":293}],295:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45116,7 +49490,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":264,"./canvas/CanvasPrepare":265,"./limiters/CountLimiter":267,"./limiters/TimeLimiter":268,"./webgl/WebGLPrepare":269}],267:[function(require,module,exports){
+},{"./BasePrepare":293,"./canvas/CanvasPrepare":294,"./limiters/CountLimiter":296,"./limiters/TimeLimiter":297,"./webgl/WebGLPrepare":298}],296:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -45174,7 +49548,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],268:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -45232,7 +49606,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],269:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45354,7 +49728,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":145,"../BasePrepare":264}],270:[function(require,module,exports){
+},{"../../core":174,"../BasePrepare":293}],299:[function(require,module,exports){
 'use strict'
 
 /**
@@ -45384,7 +49758,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],271:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46037,7 +50411,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":272,"./async":273,"mini-signals":81,"parse-uri":83}],272:[function(require,module,exports){
+},{"./Resource":301,"./async":302,"mini-signals":107,"parse-uri":110}],301:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47193,7 +51567,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":81,"parse-uri":83}],273:[function(require,module,exports){
+},{"mini-signals":107,"parse-uri":110}],302:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47402,7 +51776,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],274:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47470,7 +51844,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],275:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -47494,7 +51868,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":271,"./Resource":272,"./async":273,"./b64":274}],276:[function(require,module,exports){
+},{"./Loader":300,"./Resource":301,"./async":302,"./b64":303}],305:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47582,4387 +51956,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":272,"../../b64":274}],277:[function(require,module,exports){
-module.exports = after
-
-function after(count, callback, err_cb) {
-    var bail = false
-    err_cb = err_cb || noop
-    proxy.count = count
-
-    return (count === 0) ? callback() : proxy
-
-    function proxy(err, result) {
-        if (proxy.count <= 0) {
-            throw new Error('after called too many times')
-        }
-        --proxy.count
-
-        // after first error, rest are passed to err_cb
-        if (err) {
-            bail = true
-            callback(err)
-            // future error callbacks will go to error handler
-            callback = err_cb
-        } else if (proxy.count === 0 && !bail) {
-            callback(null, result)
-        }
-    }
-}
-
-function noop() {}
-
-},{}],278:[function(require,module,exports){
-/**
- * An abstraction for slicing an arraybuffer even when
- * ArrayBuffer.prototype.slice is not supported
- *
- * @api public
- */
-
-module.exports = function(arraybuffer, start, end) {
-  var bytes = arraybuffer.byteLength;
-  start = start || 0;
-  end = end || bytes;
-
-  if (arraybuffer.slice) { return arraybuffer.slice(start, end); }
-
-  if (start < 0) { start += bytes; }
-  if (end < 0) { end += bytes; }
-  if (end > bytes) { end = bytes; }
-
-  if (start >= bytes || start >= end || bytes === 0) {
-    return new ArrayBuffer(0);
-  }
-
-  var abv = new Uint8Array(arraybuffer);
-  var result = new Uint8Array(end - start);
-  for (var i = start, ii = 0; i < end; i++, ii++) {
-    result[ii] = abv[i];
-  }
-  return result.buffer;
-};
-
-},{}],279:[function(require,module,exports){
-
-/**
- * Expose `Backoff`.
- */
-
-module.exports = Backoff;
-
-/**
- * Initialize backoff timer with `opts`.
- *
- * - `min` initial timeout in milliseconds [100]
- * - `max` max timeout [10000]
- * - `jitter` [0]
- * - `factor` [2]
- *
- * @param {Object} opts
- * @api public
- */
-
-function Backoff(opts) {
-  opts = opts || {};
-  this.ms = opts.min || 100;
-  this.max = opts.max || 10000;
-  this.factor = opts.factor || 2;
-  this.jitter = opts.jitter > 0 && opts.jitter <= 1 ? opts.jitter : 0;
-  this.attempts = 0;
-}
-
-/**
- * Return the backoff duration.
- *
- * @return {Number}
- * @api public
- */
-
-Backoff.prototype.duration = function(){
-  var ms = this.ms * Math.pow(this.factor, this.attempts++);
-  if (this.jitter) {
-    var rand =  Math.random();
-    var deviation = Math.floor(rand * this.jitter * ms);
-    ms = (Math.floor(rand * 10) & 1) == 0  ? ms - deviation : ms + deviation;
-  }
-  return Math.min(ms, this.max) | 0;
-};
-
-/**
- * Reset the number of attempts.
- *
- * @api public
- */
-
-Backoff.prototype.reset = function(){
-  this.attempts = 0;
-};
-
-/**
- * Set the minimum duration
- *
- * @api public
- */
-
-Backoff.prototype.setMin = function(min){
-  this.ms = min;
-};
-
-/**
- * Set the maximum duration
- *
- * @api public
- */
-
-Backoff.prototype.setMax = function(max){
-  this.max = max;
-};
-
-/**
- * Set the jitter
- *
- * @api public
- */
-
-Backoff.prototype.setJitter = function(jitter){
-  this.jitter = jitter;
-};
-
-
-},{}],280:[function(require,module,exports){
-/*
- * base64-arraybuffer
- * https://github.com/niklasvh/base64-arraybuffer
- *
- * Copyright (c) 2012 Niklas von Hertzen
- * Licensed under the MIT license.
- */
-(function(){
-  "use strict";
-
-  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-  // Use a lookup table to find the index.
-  var lookup = new Uint8Array(256);
-  for (var i = 0; i < chars.length; i++) {
-    lookup[chars.charCodeAt(i)] = i;
-  }
-
-  exports.encode = function(arraybuffer) {
-    var bytes = new Uint8Array(arraybuffer),
-    i, len = bytes.length, base64 = "";
-
-    for (i = 0; i < len; i+=3) {
-      base64 += chars[bytes[i] >> 2];
-      base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
-      base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
-      base64 += chars[bytes[i + 2] & 63];
-    }
-
-    if ((len % 3) === 2) {
-      base64 = base64.substring(0, base64.length - 1) + "=";
-    } else if (len % 3 === 1) {
-      base64 = base64.substring(0, base64.length - 2) + "==";
-    }
-
-    return base64;
-  };
-
-  exports.decode =  function(base64) {
-    var bufferLength = base64.length * 0.75,
-    len = base64.length, i, p = 0,
-    encoded1, encoded2, encoded3, encoded4;
-
-    if (base64[base64.length - 1] === "=") {
-      bufferLength--;
-      if (base64[base64.length - 2] === "=") {
-        bufferLength--;
-      }
-    }
-
-    var arraybuffer = new ArrayBuffer(bufferLength),
-    bytes = new Uint8Array(arraybuffer);
-
-    for (i = 0; i < len; i+=4) {
-      encoded1 = lookup[base64.charCodeAt(i)];
-      encoded2 = lookup[base64.charCodeAt(i+1)];
-      encoded3 = lookup[base64.charCodeAt(i+2)];
-      encoded4 = lookup[base64.charCodeAt(i+3)];
-
-      bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
-      bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
-      bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
-    }
-
-    return arraybuffer;
-  };
-})();
-
-},{}],281:[function(require,module,exports){
-(function (global){
-/**
- * Create a blob builder even when vendor prefixes exist
- */
-
-var BlobBuilder = global.BlobBuilder
-  || global.WebKitBlobBuilder
-  || global.MSBlobBuilder
-  || global.MozBlobBuilder;
-
-/**
- * Check if Blob constructor is supported
- */
-
-var blobSupported = (function() {
-  try {
-    var a = new Blob(['hi']);
-    return a.size === 2;
-  } catch(e) {
-    return false;
-  }
-})();
-
-/**
- * Check if Blob constructor supports ArrayBufferViews
- * Fails in Safari 6, so we need to map to ArrayBuffers there.
- */
-
-var blobSupportsArrayBufferView = blobSupported && (function() {
-  try {
-    var b = new Blob([new Uint8Array([1,2])]);
-    return b.size === 2;
-  } catch(e) {
-    return false;
-  }
-})();
-
-/**
- * Check if BlobBuilder is supported
- */
-
-var blobBuilderSupported = BlobBuilder
-  && BlobBuilder.prototype.append
-  && BlobBuilder.prototype.getBlob;
-
-/**
- * Helper function that maps ArrayBufferViews to ArrayBuffers
- * Used by BlobBuilder constructor and old browsers that didn't
- * support it in the Blob constructor.
- */
-
-function mapArrayBufferViews(ary) {
-  for (var i = 0; i < ary.length; i++) {
-    var chunk = ary[i];
-    if (chunk.buffer instanceof ArrayBuffer) {
-      var buf = chunk.buffer;
-
-      // if this is a subarray, make a copy so we only
-      // include the subarray region from the underlying buffer
-      if (chunk.byteLength !== buf.byteLength) {
-        var copy = new Uint8Array(chunk.byteLength);
-        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
-        buf = copy.buffer;
-      }
-
-      ary[i] = buf;
-    }
-  }
-}
-
-function BlobBuilderConstructor(ary, options) {
-  options = options || {};
-
-  var bb = new BlobBuilder();
-  mapArrayBufferViews(ary);
-
-  for (var i = 0; i < ary.length; i++) {
-    bb.append(ary[i]);
-  }
-
-  return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
-};
-
-function BlobConstructor(ary, options) {
-  mapArrayBufferViews(ary);
-  return new Blob(ary, options || {});
-};
-
-module.exports = (function() {
-  if (blobSupported) {
-    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
-  } else if (blobBuilderSupported) {
-    return BlobBuilderConstructor;
-  } else {
-    return undefined;
-  }
-})();
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],282:[function(require,module,exports){
-/**
- * Slice reference.
- */
-
-var slice = [].slice;
-
-/**
- * Bind `obj` to `fn`.
- *
- * @param {Object} obj
- * @param {Function|String} fn or string
- * @return {Function}
- * @api public
- */
-
-module.exports = function(obj, fn){
-  if ('string' == typeof fn) fn = obj[fn];
-  if ('function' != typeof fn) throw new Error('bind() requires a function');
-  var args = slice.call(arguments, 2);
-  return function(){
-    return fn.apply(obj, args.concat(slice.call(arguments)));
-  }
-};
-
-},{}],283:[function(require,module,exports){
-
-/**
- * Expose `Emitter`.
- */
-
-if (typeof module !== 'undefined') {
-  module.exports = Emitter;
-}
-
-/**
- * Initialize a new `Emitter`.
- *
- * @api public
- */
-
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
-  }
-  return obj;
-}
-
-/**
- * Listen on the given `event` with `fn`.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.on =
-Emitter.prototype.addEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
-    .push(fn);
-  return this;
-};
-
-/**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.once = function(event, fn){
-  function on() {
-    this.off(event, on);
-    fn.apply(this, arguments);
-  }
-
-  on.fn = fn;
-  this.on(event, on);
-  return this;
-};
-
-/**
- * Remove the given callback for `event` or all
- * registered callbacks.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners =
-Emitter.prototype.removeEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
-  // all
-  if (0 == arguments.length) {
-    this._callbacks = {};
-    return this;
-  }
-
-  // specific event
-  var callbacks = this._callbacks['$' + event];
-  if (!callbacks) return this;
-
-  // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks['$' + event];
-    return this;
-  }
-
-  // remove specific handler
-  var cb;
-  for (var i = 0; i < callbacks.length; i++) {
-    cb = callbacks[i];
-    if (cb === fn || cb.fn === fn) {
-      callbacks.splice(i, 1);
-      break;
-    }
-  }
-  return this;
-};
-
-/**
- * Emit `event` with the given args.
- *
- * @param {String} event
- * @param {Mixed} ...
- * @return {Emitter}
- */
-
-Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks['$' + event];
-
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return array of callbacks for `event`.
- *
- * @param {String} event
- * @return {Array}
- * @api public
- */
-
-Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
-  return this._callbacks['$' + event] || [];
-};
-
-/**
- * Check if this emitter has `event` handlers.
- *
- * @param {String} event
- * @return {Boolean}
- * @api public
- */
-
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
-};
-
-},{}],284:[function(require,module,exports){
-
-module.exports = function(a, b){
-  var fn = function(){};
-  fn.prototype = b.prototype;
-  a.prototype = new fn;
-  a.prototype.constructor = a;
-};
-},{}],285:[function(require,module,exports){
-(function (process){
-/**
- * This is the web browser implementation of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-exports = module.exports = require('./debug');
-exports.log = log;
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.storage = 'undefined' != typeof chrome
-               && 'undefined' != typeof chrome.storage
-                  ? chrome.storage.local
-                  : localstorage();
-
-/**
- * Colors.
- */
-
-exports.colors = [
-  'lightseagreen',
-  'forestgreen',
-  'goldenrod',
-  'dodgerblue',
-  'darkorchid',
-  'crimson'
-];
-
-/**
- * Currently only WebKit-based Web Inspectors, Firefox >= v31,
- * and the Firebug extension (any Firefox version) are known
- * to support "%c" CSS customizations.
- *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
- */
-
-function useColors() {
-  // NB: In an Electron preload script, document will be defined but not fully
-  // initialized. Since we know we're in Chrome, we'll just detect this case
-  // explicitly
-  if (window && window.process && window.process.type === 'renderer') {
-    return true;
-  }
-
-  // is webkit? http://stackoverflow.com/a/16459606/376773
-  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return (document && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
-    // is firebug? http://stackoverflow.com/a/398120/376773
-    (window && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
-    // is firefox >= v31?
-    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
-    // double check webkit in userAgent just in case we are in a worker
-    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
-}
-
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
-
-exports.formatters.j = function(v) {
-  try {
-    return JSON.stringify(v);
-  } catch (err) {
-    return '[UnexpectedJSONParseError]: ' + err.message;
-  }
-};
-
-
-/**
- * Colorize log arguments if enabled.
- *
- * @api public
- */
-
-function formatArgs(args) {
-  var useColors = this.useColors;
-
-  args[0] = (useColors ? '%c' : '')
-    + this.namespace
-    + (useColors ? ' %c' : ' ')
-    + args[0]
-    + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(this.diff);
-
-  if (!useColors) return;
-
-  var c = 'color: ' + this.color;
-  args.splice(1, 0, c, 'color: inherit')
-
-  // the final "%c" is somewhat tricky, because there could be other
-  // arguments passed either before or after the %c, so we need to
-  // figure out the correct index to insert the CSS into
-  var index = 0;
-  var lastC = 0;
-  args[0].replace(/%[a-zA-Z%]/g, function(match) {
-    if ('%%' === match) return;
-    index++;
-    if ('%c' === match) {
-      // we only are interested in the *last* %c
-      // (the user may have provided their own)
-      lastC = index;
-    }
-  });
-
-  args.splice(lastC, 0, c);
-}
-
-/**
- * Invokes `console.log()` when available.
- * No-op when `console.log` is not a "function".
- *
- * @api public
- */
-
-function log() {
-  // this hackery is required for IE8/9, where
-  // the `console.log` function doesn't have 'apply'
-  return 'object' === typeof console
-    && console.log
-    && Function.prototype.apply.call(console.log, console, arguments);
-}
-
-/**
- * Save `namespaces`.
- *
- * @param {String} namespaces
- * @api private
- */
-
-function save(namespaces) {
-  try {
-    if (null == namespaces) {
-      exports.storage.removeItem('debug');
-    } else {
-      exports.storage.debug = namespaces;
-    }
-  } catch(e) {}
-}
-
-/**
- * Load `namespaces`.
- *
- * @return {String} returns the previously persisted debug modes
- * @api private
- */
-
-function load() {
-  var r;
-  try {
-    r = exports.storage.debug;
-  } catch(e) {}
-
-  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (!r && typeof process !== 'undefined' && 'env' in process) {
-    r = process.env.DEBUG;
-  }
-
-  return r;
-}
-
-/**
- * Enable namespaces listed in `localStorage.debug` initially.
- */
-
-exports.enable(load());
-
-/**
- * Localstorage attempts to return the localstorage.
- *
- * This is necessary because safari throws
- * when a user disables cookies/localstorage
- * and you attempt to access it.
- *
- * @return {LocalStorage}
- * @api private
- */
-
-function localstorage() {
-  try {
-    return window.localStorage;
-  } catch (e) {}
-}
-
-}).call(this,require('_process'))
-},{"./debug":286,"_process":321}],286:[function(require,module,exports){
-
-/**
- * This is the common logic for both the Node.js and web browser
- * implementations of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-exports = module.exports = createDebug.debug = createDebug['default'] = createDebug;
-exports.coerce = coerce;
-exports.disable = disable;
-exports.enable = enable;
-exports.enabled = enabled;
-exports.humanize = require('ms');
-
-/**
- * The currently active debug mode names, and names to skip.
- */
-
-exports.names = [];
-exports.skips = [];
-
-/**
- * Map of special "%n" handling functions, for the debug "format" argument.
- *
- * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
- */
-
-exports.formatters = {};
-
-/**
- * Previous log timestamp.
- */
-
-var prevTime;
-
-/**
- * Select a color.
- * @param {String} namespace
- * @return {Number}
- * @api private
- */
-
-function selectColor(namespace) {
-  var hash = 0, i;
-
-  for (i in namespace) {
-    hash  = ((hash << 5) - hash) + namespace.charCodeAt(i);
-    hash |= 0; // Convert to 32bit integer
-  }
-
-  return exports.colors[Math.abs(hash) % exports.colors.length];
-}
-
-/**
- * Create a debugger with the given `namespace`.
- *
- * @param {String} namespace
- * @return {Function}
- * @api public
- */
-
-function createDebug(namespace) {
-
-  function debug() {
-    // disabled?
-    if (!debug.enabled) return;
-
-    var self = debug;
-
-    // set `diff` timestamp
-    var curr = +new Date();
-    var ms = curr - (prevTime || curr);
-    self.diff = ms;
-    self.prev = prevTime;
-    self.curr = curr;
-    prevTime = curr;
-
-    // turn the `arguments` into a proper Array
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-
-    args[0] = exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %O
-      args.unshift('%O');
-    }
-
-    // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
-
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
-
-    // apply env-specific formatting (colors, etc.)
-    exports.formatArgs.call(self, args);
-
-    var logFn = debug.log || exports.log || console.log.bind(console);
-    logFn.apply(self, args);
-  }
-
-  debug.namespace = namespace;
-  debug.enabled = exports.enabled(namespace);
-  debug.useColors = exports.useColors();
-  debug.color = selectColor(namespace);
-
-  // env-specific initialization logic for debug instances
-  if ('function' === typeof exports.init) {
-    exports.init(debug);
-  }
-
-  return debug;
-}
-
-/**
- * Enables a debug mode by namespaces. This can include modes
- * separated by a colon and wildcards.
- *
- * @param {String} namespaces
- * @api public
- */
-
-function enable(namespaces) {
-  exports.save(namespaces);
-
-  exports.names = [];
-  exports.skips = [];
-
-  var split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-  var len = split.length;
-
-  for (var i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      exports.names.push(new RegExp('^' + namespaces + '$'));
-    }
-  }
-}
-
-/**
- * Disable debug output.
- *
- * @api public
- */
-
-function disable() {
-  exports.enable('');
-}
-
-/**
- * Returns true if the given mode name is enabled, false otherwise.
- *
- * @param {String} name
- * @return {Boolean}
- * @api public
- */
-
-function enabled(name) {
-  var i, len;
-  for (i = 0, len = exports.skips.length; i < len; i++) {
-    if (exports.skips[i].test(name)) {
-      return false;
-    }
-  }
-  for (i = 0, len = exports.names.length; i < len; i++) {
-    if (exports.names[i].test(name)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Coerce `val`.
- *
- * @param {Mixed} val
- * @return {Mixed}
- * @api private
- */
-
-function coerce(val) {
-  if (val instanceof Error) return val.stack || val.message;
-  return val;
-}
-
-},{"ms":304}],287:[function(require,module,exports){
-
-module.exports = require('./lib/index');
-
-},{"./lib/index":288}],288:[function(require,module,exports){
-
-module.exports = require('./socket');
-
-/**
- * Exports parser
- *
- * @api public
- *
- */
-module.exports.parser = require('engine.io-parser');
-
-},{"./socket":289,"engine.io-parser":297}],289:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies.
- */
-
-var transports = require('./transports/index');
-var Emitter = require('component-emitter');
-var debug = require('debug')('engine.io-client:socket');
-var index = require('indexof');
-var parser = require('engine.io-parser');
-var parseuri = require('parseuri');
-var parsejson = require('parsejson');
-var parseqs = require('parseqs');
-
-/**
- * Module exports.
- */
-
-module.exports = Socket;
-
-/**
- * Socket constructor.
- *
- * @param {String|Object} uri or options
- * @param {Object} options
- * @api public
- */
-
-function Socket (uri, opts) {
-  if (!(this instanceof Socket)) return new Socket(uri, opts);
-
-  opts = opts || {};
-
-  if (uri && 'object' === typeof uri) {
-    opts = uri;
-    uri = null;
-  }
-
-  if (uri) {
-    uri = parseuri(uri);
-    opts.hostname = uri.host;
-    opts.secure = uri.protocol === 'https' || uri.protocol === 'wss';
-    opts.port = uri.port;
-    if (uri.query) opts.query = uri.query;
-  } else if (opts.host) {
-    opts.hostname = parseuri(opts.host).host;
-  }
-
-  this.secure = null != opts.secure ? opts.secure
-    : (global.location && 'https:' === location.protocol);
-
-  if (opts.hostname && !opts.port) {
-    // if no port is specified manually, use the protocol default
-    opts.port = this.secure ? '443' : '80';
-  }
-
-  this.agent = opts.agent || false;
-  this.hostname = opts.hostname ||
-    (global.location ? location.hostname : 'localhost');
-  this.port = opts.port || (global.location && location.port
-      ? location.port
-      : (this.secure ? 443 : 80));
-  this.query = opts.query || {};
-  if ('string' === typeof this.query) this.query = parseqs.decode(this.query);
-  this.upgrade = false !== opts.upgrade;
-  this.path = (opts.path || '/engine.io').replace(/\/$/, '') + '/';
-  this.forceJSONP = !!opts.forceJSONP;
-  this.jsonp = false !== opts.jsonp;
-  this.forceBase64 = !!opts.forceBase64;
-  this.enablesXDR = !!opts.enablesXDR;
-  this.timestampParam = opts.timestampParam || 't';
-  this.timestampRequests = opts.timestampRequests;
-  this.transports = opts.transports || ['polling', 'websocket'];
-  this.transportOptions = opts.transportOptions || {};
-  this.readyState = '';
-  this.writeBuffer = [];
-  this.prevBufferLen = 0;
-  this.policyPort = opts.policyPort || 843;
-  this.rememberUpgrade = opts.rememberUpgrade || false;
-  this.binaryType = null;
-  this.onlyBinaryUpgrades = opts.onlyBinaryUpgrades;
-  this.perMessageDeflate = false !== opts.perMessageDeflate ? (opts.perMessageDeflate || {}) : false;
-
-  if (true === this.perMessageDeflate) this.perMessageDeflate = {};
-  if (this.perMessageDeflate && null == this.perMessageDeflate.threshold) {
-    this.perMessageDeflate.threshold = 1024;
-  }
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx || null;
-  this.key = opts.key || null;
-  this.passphrase = opts.passphrase || null;
-  this.cert = opts.cert || null;
-  this.ca = opts.ca || null;
-  this.ciphers = opts.ciphers || null;
-  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? true : opts.rejectUnauthorized;
-  this.forceNode = !!opts.forceNode;
-
-  // other options for Node.js client
-  var freeGlobal = typeof global === 'object' && global;
-  if (freeGlobal.global === freeGlobal) {
-    if (opts.extraHeaders && Object.keys(opts.extraHeaders).length > 0) {
-      this.extraHeaders = opts.extraHeaders;
-    }
-
-    if (opts.localAddress) {
-      this.localAddress = opts.localAddress;
-    }
-  }
-
-  // set on handshake
-  this.id = null;
-  this.upgrades = null;
-  this.pingInterval = null;
-  this.pingTimeout = null;
-
-  // set on heartbeat
-  this.pingIntervalTimer = null;
-  this.pingTimeoutTimer = null;
-
-  this.open();
-}
-
-Socket.priorWebsocketSuccess = false;
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Socket.prototype);
-
-/**
- * Protocol version.
- *
- * @api public
- */
-
-Socket.protocol = parser.protocol; // this is an int
-
-/**
- * Expose deps for legacy compatibility
- * and standalone browser access.
- */
-
-Socket.Socket = Socket;
-Socket.Transport = require('./transport');
-Socket.transports = require('./transports/index');
-Socket.parser = require('engine.io-parser');
-
-/**
- * Creates transport of the given type.
- *
- * @param {String} transport name
- * @return {Transport}
- * @api private
- */
-
-Socket.prototype.createTransport = function (name) {
-  debug('creating transport "%s"', name);
-  var query = clone(this.query);
-
-  // append engine.io protocol identifier
-  query.EIO = parser.protocol;
-
-  // transport name
-  query.transport = name;
-
-  // per-transport options
-  var options = this.transportOptions[name] || {};
-
-  // session id if we already have one
-  if (this.id) query.sid = this.id;
-
-  var transport = new transports[name]({
-    query: query,
-    socket: this,
-    agent: options.agent || this.agent,
-    hostname: options.hostname || this.hostname,
-    port: options.port || this.port,
-    secure: options.secure || this.secure,
-    path: options.path || this.path,
-    forceJSONP: options.forceJSONP || this.forceJSONP,
-    jsonp: options.jsonp || this.jsonp,
-    forceBase64: options.forceBase64 || this.forceBase64,
-    enablesXDR: options.enablesXDR || this.enablesXDR,
-    timestampRequests: options.timestampRequests || this.timestampRequests,
-    timestampParam: options.timestampParam || this.timestampParam,
-    policyPort: options.policyPort || this.policyPort,
-    pfx: options.pfx || this.pfx,
-    key: options.key || this.key,
-    passphrase: options.passphrase || this.passphrase,
-    cert: options.cert || this.cert,
-    ca: options.ca || this.ca,
-    ciphers: options.ciphers || this.ciphers,
-    rejectUnauthorized: options.rejectUnauthorized || this.rejectUnauthorized,
-    perMessageDeflate: options.perMessageDeflate || this.perMessageDeflate,
-    extraHeaders: options.extraHeaders || this.extraHeaders,
-    forceNode: options.forceNode || this.forceNode,
-    localAddress: options.localAddress || this.localAddress,
-    requestTimeout: options.requestTimeout || this.requestTimeout,
-    protocols: options.protocols || void (0)
-  });
-
-  return transport;
-};
-
-function clone (obj) {
-  var o = {};
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      o[i] = obj[i];
-    }
-  }
-  return o;
-}
-
-/**
- * Initializes transport to use and starts probe.
- *
- * @api private
- */
-Socket.prototype.open = function () {
-  var transport;
-  if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') !== -1) {
-    transport = 'websocket';
-  } else if (0 === this.transports.length) {
-    // Emit error on next tick so it can be listened to
-    var self = this;
-    setTimeout(function () {
-      self.emit('error', 'No transports available');
-    }, 0);
-    return;
-  } else {
-    transport = this.transports[0];
-  }
-  this.readyState = 'opening';
-
-  // Retry with the next transport if the transport is disabled (jsonp: false)
-  try {
-    transport = this.createTransport(transport);
-  } catch (e) {
-    this.transports.shift();
-    this.open();
-    return;
-  }
-
-  transport.open();
-  this.setTransport(transport);
-};
-
-/**
- * Sets the current transport. Disables the existing one (if any).
- *
- * @api private
- */
-
-Socket.prototype.setTransport = function (transport) {
-  debug('setting transport %s', transport.name);
-  var self = this;
-
-  if (this.transport) {
-    debug('clearing existing transport %s', this.transport.name);
-    this.transport.removeAllListeners();
-  }
-
-  // set up transport
-  this.transport = transport;
-
-  // set up transport listeners
-  transport
-  .on('drain', function () {
-    self.onDrain();
-  })
-  .on('packet', function (packet) {
-    self.onPacket(packet);
-  })
-  .on('error', function (e) {
-    self.onError(e);
-  })
-  .on('close', function () {
-    self.onClose('transport close');
-  });
-};
-
-/**
- * Probes a transport.
- *
- * @param {String} transport name
- * @api private
- */
-
-Socket.prototype.probe = function (name) {
-  debug('probing transport "%s"', name);
-  var transport = this.createTransport(name, { probe: 1 });
-  var failed = false;
-  var self = this;
-
-  Socket.priorWebsocketSuccess = false;
-
-  function onTransportOpen () {
-    if (self.onlyBinaryUpgrades) {
-      var upgradeLosesBinary = !this.supportsBinary && self.transport.supportsBinary;
-      failed = failed || upgradeLosesBinary;
-    }
-    if (failed) return;
-
-    debug('probe transport "%s" opened', name);
-    transport.send([{ type: 'ping', data: 'probe' }]);
-    transport.once('packet', function (msg) {
-      if (failed) return;
-      if ('pong' === msg.type && 'probe' === msg.data) {
-        debug('probe transport "%s" pong', name);
-        self.upgrading = true;
-        self.emit('upgrading', transport);
-        if (!transport) return;
-        Socket.priorWebsocketSuccess = 'websocket' === transport.name;
-
-        debug('pausing current transport "%s"', self.transport.name);
-        self.transport.pause(function () {
-          if (failed) return;
-          if ('closed' === self.readyState) return;
-          debug('changing transport and sending upgrade packet');
-
-          cleanup();
-
-          self.setTransport(transport);
-          transport.send([{ type: 'upgrade' }]);
-          self.emit('upgrade', transport);
-          transport = null;
-          self.upgrading = false;
-          self.flush();
-        });
-      } else {
-        debug('probe transport "%s" failed', name);
-        var err = new Error('probe error');
-        err.transport = transport.name;
-        self.emit('upgradeError', err);
-      }
-    });
-  }
-
-  function freezeTransport () {
-    if (failed) return;
-
-    // Any callback called by transport should be ignored since now
-    failed = true;
-
-    cleanup();
-
-    transport.close();
-    transport = null;
-  }
-
-  // Handle any error that happens while probing
-  function onerror (err) {
-    var error = new Error('probe error: ' + err);
-    error.transport = transport.name;
-
-    freezeTransport();
-
-    debug('probe transport "%s" failed because of error: %s', name, err);
-
-    self.emit('upgradeError', error);
-  }
-
-  function onTransportClose () {
-    onerror('transport closed');
-  }
-
-  // When the socket is closed while we're probing
-  function onclose () {
-    onerror('socket closed');
-  }
-
-  // When the socket is upgraded while we're probing
-  function onupgrade (to) {
-    if (transport && to.name !== transport.name) {
-      debug('"%s" works - aborting "%s"', to.name, transport.name);
-      freezeTransport();
-    }
-  }
-
-  // Remove all listeners on the transport and on self
-  function cleanup () {
-    transport.removeListener('open', onTransportOpen);
-    transport.removeListener('error', onerror);
-    transport.removeListener('close', onTransportClose);
-    self.removeListener('close', onclose);
-    self.removeListener('upgrading', onupgrade);
-  }
-
-  transport.once('open', onTransportOpen);
-  transport.once('error', onerror);
-  transport.once('close', onTransportClose);
-
-  this.once('close', onclose);
-  this.once('upgrading', onupgrade);
-
-  transport.open();
-};
-
-/**
- * Called when connection is deemed open.
- *
- * @api public
- */
-
-Socket.prototype.onOpen = function () {
-  debug('socket open');
-  this.readyState = 'open';
-  Socket.priorWebsocketSuccess = 'websocket' === this.transport.name;
-  this.emit('open');
-  this.flush();
-
-  // we check for `readyState` in case an `open`
-  // listener already closed the socket
-  if ('open' === this.readyState && this.upgrade && this.transport.pause) {
-    debug('starting upgrade probes');
-    for (var i = 0, l = this.upgrades.length; i < l; i++) {
-      this.probe(this.upgrades[i]);
-    }
-  }
-};
-
-/**
- * Handles a packet.
- *
- * @api private
- */
-
-Socket.prototype.onPacket = function (packet) {
-  if ('opening' === this.readyState || 'open' === this.readyState ||
-      'closing' === this.readyState) {
-    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
-
-    this.emit('packet', packet);
-
-    // Socket is live - any packet counts
-    this.emit('heartbeat');
-
-    switch (packet.type) {
-      case 'open':
-        this.onHandshake(parsejson(packet.data));
-        break;
-
-      case 'pong':
-        this.setPing();
-        this.emit('pong');
-        break;
-
-      case 'error':
-        var err = new Error('server error');
-        err.code = packet.data;
-        this.onError(err);
-        break;
-
-      case 'message':
-        this.emit('data', packet.data);
-        this.emit('message', packet.data);
-        break;
-    }
-  } else {
-    debug('packet received with socket readyState "%s"', this.readyState);
-  }
-};
-
-/**
- * Called upon handshake completion.
- *
- * @param {Object} handshake obj
- * @api private
- */
-
-Socket.prototype.onHandshake = function (data) {
-  this.emit('handshake', data);
-  this.id = data.sid;
-  this.transport.query.sid = data.sid;
-  this.upgrades = this.filterUpgrades(data.upgrades);
-  this.pingInterval = data.pingInterval;
-  this.pingTimeout = data.pingTimeout;
-  this.onOpen();
-  // In case open handler closes socket
-  if ('closed' === this.readyState) return;
-  this.setPing();
-
-  // Prolong liveness of socket on heartbeat
-  this.removeListener('heartbeat', this.onHeartbeat);
-  this.on('heartbeat', this.onHeartbeat);
-};
-
-/**
- * Resets ping timeout.
- *
- * @api private
- */
-
-Socket.prototype.onHeartbeat = function (timeout) {
-  clearTimeout(this.pingTimeoutTimer);
-  var self = this;
-  self.pingTimeoutTimer = setTimeout(function () {
-    if ('closed' === self.readyState) return;
-    self.onClose('ping timeout');
-  }, timeout || (self.pingInterval + self.pingTimeout));
-};
-
-/**
- * Pings server every `this.pingInterval` and expects response
- * within `this.pingTimeout` or closes connection.
- *
- * @api private
- */
-
-Socket.prototype.setPing = function () {
-  var self = this;
-  clearTimeout(self.pingIntervalTimer);
-  self.pingIntervalTimer = setTimeout(function () {
-    debug('writing ping packet - expecting pong within %sms', self.pingTimeout);
-    self.ping();
-    self.onHeartbeat(self.pingTimeout);
-  }, self.pingInterval);
-};
-
-/**
-* Sends a ping packet.
-*
-* @api private
-*/
-
-Socket.prototype.ping = function () {
-  var self = this;
-  this.sendPacket('ping', function () {
-    self.emit('ping');
-  });
-};
-
-/**
- * Called on `drain` event
- *
- * @api private
- */
-
-Socket.prototype.onDrain = function () {
-  this.writeBuffer.splice(0, this.prevBufferLen);
-
-  // setting prevBufferLen = 0 is very important
-  // for example, when upgrading, upgrade packet is sent over,
-  // and a nonzero prevBufferLen could cause problems on `drain`
-  this.prevBufferLen = 0;
-
-  if (0 === this.writeBuffer.length) {
-    this.emit('drain');
-  } else {
-    this.flush();
-  }
-};
-
-/**
- * Flush write buffers.
- *
- * @api private
- */
-
-Socket.prototype.flush = function () {
-  if ('closed' !== this.readyState && this.transport.writable &&
-    !this.upgrading && this.writeBuffer.length) {
-    debug('flushing %d packets in socket', this.writeBuffer.length);
-    this.transport.send(this.writeBuffer);
-    // keep track of current length of writeBuffer
-    // splice writeBuffer and callbackBuffer on `drain`
-    this.prevBufferLen = this.writeBuffer.length;
-    this.emit('flush');
-  }
-};
-
-/**
- * Sends a message.
- *
- * @param {String} message.
- * @param {Function} callback function.
- * @param {Object} options.
- * @return {Socket} for chaining.
- * @api public
- */
-
-Socket.prototype.write =
-Socket.prototype.send = function (msg, options, fn) {
-  this.sendPacket('message', msg, options, fn);
-  return this;
-};
-
-/**
- * Sends a packet.
- *
- * @param {String} packet type.
- * @param {String} data.
- * @param {Object} options.
- * @param {Function} callback function.
- * @api private
- */
-
-Socket.prototype.sendPacket = function (type, data, options, fn) {
-  if ('function' === typeof data) {
-    fn = data;
-    data = undefined;
-  }
-
-  if ('function' === typeof options) {
-    fn = options;
-    options = null;
-  }
-
-  if ('closing' === this.readyState || 'closed' === this.readyState) {
-    return;
-  }
-
-  options = options || {};
-  options.compress = false !== options.compress;
-
-  var packet = {
-    type: type,
-    data: data,
-    options: options
-  };
-  this.emit('packetCreate', packet);
-  this.writeBuffer.push(packet);
-  if (fn) this.once('flush', fn);
-  this.flush();
-};
-
-/**
- * Closes the connection.
- *
- * @api private
- */
-
-Socket.prototype.close = function () {
-  if ('opening' === this.readyState || 'open' === this.readyState) {
-    this.readyState = 'closing';
-
-    var self = this;
-
-    if (this.writeBuffer.length) {
-      this.once('drain', function () {
-        if (this.upgrading) {
-          waitForUpgrade();
-        } else {
-          close();
-        }
-      });
-    } else if (this.upgrading) {
-      waitForUpgrade();
-    } else {
-      close();
-    }
-  }
-
-  function close () {
-    self.onClose('forced close');
-    debug('socket closing - telling transport to close');
-    self.transport.close();
-  }
-
-  function cleanupAndClose () {
-    self.removeListener('upgrade', cleanupAndClose);
-    self.removeListener('upgradeError', cleanupAndClose);
-    close();
-  }
-
-  function waitForUpgrade () {
-    // wait for upgrade to finish since we can't send packets while pausing a transport
-    self.once('upgrade', cleanupAndClose);
-    self.once('upgradeError', cleanupAndClose);
-  }
-
-  return this;
-};
-
-/**
- * Called upon transport error
- *
- * @api private
- */
-
-Socket.prototype.onError = function (err) {
-  debug('socket error %j', err);
-  Socket.priorWebsocketSuccess = false;
-  this.emit('error', err);
-  this.onClose('transport error', err);
-};
-
-/**
- * Called upon transport close.
- *
- * @api private
- */
-
-Socket.prototype.onClose = function (reason, desc) {
-  if ('opening' === this.readyState || 'open' === this.readyState || 'closing' === this.readyState) {
-    debug('socket close with reason: "%s"', reason);
-    var self = this;
-
-    // clear timers
-    clearTimeout(this.pingIntervalTimer);
-    clearTimeout(this.pingTimeoutTimer);
-
-    // stop event from firing again for transport
-    this.transport.removeAllListeners('close');
-
-    // ensure transport won't stay open
-    this.transport.close();
-
-    // ignore further transport communication
-    this.transport.removeAllListeners();
-
-    // set ready state
-    this.readyState = 'closed';
-
-    // clear session id
-    this.id = null;
-
-    // emit close event
-    this.emit('close', reason, desc);
-
-    // clean buffers after, so users can still
-    // grab the buffers on `close` event
-    self.writeBuffer = [];
-    self.prevBufferLen = 0;
-  }
-};
-
-/**
- * Filters upgrades, returning only those matching client transports.
- *
- * @param {Array} server upgrades
- * @api private
- *
- */
-
-Socket.prototype.filterUpgrades = function (upgrades) {
-  var filteredUpgrades = [];
-  for (var i = 0, j = upgrades.length; i < j; i++) {
-    if (~index(this.transports, upgrades[i])) filteredUpgrades.push(upgrades[i]);
-  }
-  return filteredUpgrades;
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":290,"./transports/index":291,"component-emitter":283,"debug":285,"engine.io-parser":297,"indexof":303,"parsejson":305,"parseqs":306,"parseuri":307}],290:[function(require,module,exports){
-/**
- * Module dependencies.
- */
-
-var parser = require('engine.io-parser');
-var Emitter = require('component-emitter');
-
-/**
- * Module exports.
- */
-
-module.exports = Transport;
-
-/**
- * Transport abstract constructor.
- *
- * @param {Object} options.
- * @api private
- */
-
-function Transport (opts) {
-  this.path = opts.path;
-  this.hostname = opts.hostname;
-  this.port = opts.port;
-  this.secure = opts.secure;
-  this.query = opts.query;
-  this.timestampParam = opts.timestampParam;
-  this.timestampRequests = opts.timestampRequests;
-  this.readyState = '';
-  this.agent = opts.agent || false;
-  this.socket = opts.socket;
-  this.enablesXDR = opts.enablesXDR;
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx;
-  this.key = opts.key;
-  this.passphrase = opts.passphrase;
-  this.cert = opts.cert;
-  this.ca = opts.ca;
-  this.ciphers = opts.ciphers;
-  this.rejectUnauthorized = opts.rejectUnauthorized;
-  this.forceNode = opts.forceNode;
-
-  // other options for Node.js client
-  this.extraHeaders = opts.extraHeaders;
-  this.localAddress = opts.localAddress;
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Transport.prototype);
-
-/**
- * Emits an error.
- *
- * @param {String} str
- * @return {Transport} for chaining
- * @api public
- */
-
-Transport.prototype.onError = function (msg, desc) {
-  var err = new Error(msg);
-  err.type = 'TransportError';
-  err.description = desc;
-  this.emit('error', err);
-  return this;
-};
-
-/**
- * Opens the transport.
- *
- * @api public
- */
-
-Transport.prototype.open = function () {
-  if ('closed' === this.readyState || '' === this.readyState) {
-    this.readyState = 'opening';
-    this.doOpen();
-  }
-
-  return this;
-};
-
-/**
- * Closes the transport.
- *
- * @api private
- */
-
-Transport.prototype.close = function () {
-  if ('opening' === this.readyState || 'open' === this.readyState) {
-    this.doClose();
-    this.onClose();
-  }
-
-  return this;
-};
-
-/**
- * Sends multiple packets.
- *
- * @param {Array} packets
- * @api private
- */
-
-Transport.prototype.send = function (packets) {
-  if ('open' === this.readyState) {
-    this.write(packets);
-  } else {
-    throw new Error('Transport not open');
-  }
-};
-
-/**
- * Called upon open
- *
- * @api private
- */
-
-Transport.prototype.onOpen = function () {
-  this.readyState = 'open';
-  this.writable = true;
-  this.emit('open');
-};
-
-/**
- * Called with data.
- *
- * @param {String} data
- * @api private
- */
-
-Transport.prototype.onData = function (data) {
-  var packet = parser.decodePacket(data, this.socket.binaryType);
-  this.onPacket(packet);
-};
-
-/**
- * Called with a decoded packet.
- */
-
-Transport.prototype.onPacket = function (packet) {
-  this.emit('packet', packet);
-};
-
-/**
- * Called upon close.
- *
- * @api private
- */
-
-Transport.prototype.onClose = function () {
-  this.readyState = 'closed';
-  this.emit('close');
-};
-
-},{"component-emitter":283,"engine.io-parser":297}],291:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies
- */
-
-var XMLHttpRequest = require('xmlhttprequest-ssl');
-var XHR = require('./polling-xhr');
-var JSONP = require('./polling-jsonp');
-var websocket = require('./websocket');
-
-/**
- * Export transports.
- */
-
-exports.polling = polling;
-exports.websocket = websocket;
-
-/**
- * Polling transport polymorphic constructor.
- * Decides on xhr vs jsonp based on feature detection.
- *
- * @api private
- */
-
-function polling (opts) {
-  var xhr;
-  var xd = false;
-  var xs = false;
-  var jsonp = false !== opts.jsonp;
-
-  if (global.location) {
-    var isSSL = 'https:' === location.protocol;
-    var port = location.port;
-
-    // some user agents have empty `location.port`
-    if (!port) {
-      port = isSSL ? 443 : 80;
-    }
-
-    xd = opts.hostname !== location.hostname || port !== opts.port;
-    xs = opts.secure !== isSSL;
-  }
-
-  opts.xdomain = xd;
-  opts.xscheme = xs;
-  xhr = new XMLHttpRequest(opts);
-
-  if ('open' in xhr && !opts.forceJSONP) {
-    return new XHR(opts);
-  } else {
-    if (!jsonp) throw new Error('JSONP disabled');
-    return new JSONP(opts);
-  }
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":292,"./polling-xhr":293,"./websocket":295,"xmlhttprequest-ssl":296}],292:[function(require,module,exports){
-(function (global){
-
-/**
- * Module requirements.
- */
-
-var Polling = require('./polling');
-var inherit = require('component-inherit');
-
-/**
- * Module exports.
- */
-
-module.exports = JSONPPolling;
-
-/**
- * Cached regular expressions.
- */
-
-var rNewline = /\n/g;
-var rEscapedNewline = /\\n/g;
-
-/**
- * Global JSONP callbacks.
- */
-
-var callbacks;
-
-/**
- * Noop.
- */
-
-function empty () { }
-
-/**
- * JSONP Polling constructor.
- *
- * @param {Object} opts.
- * @api public
- */
-
-function JSONPPolling (opts) {
-  Polling.call(this, opts);
-
-  this.query = this.query || {};
-
-  // define global callbacks array if not present
-  // we do this here (lazily) to avoid unneeded global pollution
-  if (!callbacks) {
-    // we need to consider multiple engines in the same page
-    if (!global.___eio) global.___eio = [];
-    callbacks = global.___eio;
-  }
-
-  // callback identifier
-  this.index = callbacks.length;
-
-  // add callback to jsonp global
-  var self = this;
-  callbacks.push(function (msg) {
-    self.onData(msg);
-  });
-
-  // append to query string
-  this.query.j = this.index;
-
-  // prevent spurious errors from being emitted when the window is unloaded
-  if (global.document && global.addEventListener) {
-    global.addEventListener('beforeunload', function () {
-      if (self.script) self.script.onerror = empty;
-    }, false);
-  }
-}
-
-/**
- * Inherits from Polling.
- */
-
-inherit(JSONPPolling, Polling);
-
-/*
- * JSONP only supports binary as base64 encoded strings
- */
-
-JSONPPolling.prototype.supportsBinary = false;
-
-/**
- * Closes the socket.
- *
- * @api private
- */
-
-JSONPPolling.prototype.doClose = function () {
-  if (this.script) {
-    this.script.parentNode.removeChild(this.script);
-    this.script = null;
-  }
-
-  if (this.form) {
-    this.form.parentNode.removeChild(this.form);
-    this.form = null;
-    this.iframe = null;
-  }
-
-  Polling.prototype.doClose.call(this);
-};
-
-/**
- * Starts a poll cycle.
- *
- * @api private
- */
-
-JSONPPolling.prototype.doPoll = function () {
-  var self = this;
-  var script = document.createElement('script');
-
-  if (this.script) {
-    this.script.parentNode.removeChild(this.script);
-    this.script = null;
-  }
-
-  script.async = true;
-  script.src = this.uri();
-  script.onerror = function (e) {
-    self.onError('jsonp poll error', e);
-  };
-
-  var insertAt = document.getElementsByTagName('script')[0];
-  if (insertAt) {
-    insertAt.parentNode.insertBefore(script, insertAt);
-  } else {
-    (document.head || document.body).appendChild(script);
-  }
-  this.script = script;
-
-  var isUAgecko = 'undefined' !== typeof navigator && /gecko/i.test(navigator.userAgent);
-
-  if (isUAgecko) {
-    setTimeout(function () {
-      var iframe = document.createElement('iframe');
-      document.body.appendChild(iframe);
-      document.body.removeChild(iframe);
-    }, 100);
-  }
-};
-
-/**
- * Writes with a hidden iframe.
- *
- * @param {String} data to send
- * @param {Function} called upon flush.
- * @api private
- */
-
-JSONPPolling.prototype.doWrite = function (data, fn) {
-  var self = this;
-
-  if (!this.form) {
-    var form = document.createElement('form');
-    var area = document.createElement('textarea');
-    var id = this.iframeId = 'eio_iframe_' + this.index;
-    var iframe;
-
-    form.className = 'socketio';
-    form.style.position = 'absolute';
-    form.style.top = '-1000px';
-    form.style.left = '-1000px';
-    form.target = id;
-    form.method = 'POST';
-    form.setAttribute('accept-charset', 'utf-8');
-    area.name = 'd';
-    form.appendChild(area);
-    document.body.appendChild(form);
-
-    this.form = form;
-    this.area = area;
-  }
-
-  this.form.action = this.uri();
-
-  function complete () {
-    initIframe();
-    fn();
-  }
-
-  function initIframe () {
-    if (self.iframe) {
-      try {
-        self.form.removeChild(self.iframe);
-      } catch (e) {
-        self.onError('jsonp polling iframe removal error', e);
-      }
-    }
-
-    try {
-      // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
-      var html = '<iframe src="javascript:0" name="' + self.iframeId + '">';
-      iframe = document.createElement(html);
-    } catch (e) {
-      iframe = document.createElement('iframe');
-      iframe.name = self.iframeId;
-      iframe.src = 'javascript:0';
-    }
-
-    iframe.id = self.iframeId;
-
-    self.form.appendChild(iframe);
-    self.iframe = iframe;
-  }
-
-  initIframe();
-
-  // escape \n to prevent it from being converted into \r\n by some UAs
-  // double escaping is required for escaped new lines because unescaping of new lines can be done safely on server-side
-  data = data.replace(rEscapedNewline, '\\\n');
-  this.area.value = data.replace(rNewline, '\\n');
-
-  try {
-    this.form.submit();
-  } catch (e) {}
-
-  if (this.iframe.attachEvent) {
-    this.iframe.onreadystatechange = function () {
-      if (self.iframe.readyState === 'complete') {
-        complete();
-      }
-    };
-  } else {
-    this.iframe.onload = complete;
-  }
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":294,"component-inherit":284}],293:[function(require,module,exports){
-(function (global){
-/**
- * Module requirements.
- */
-
-var XMLHttpRequest = require('xmlhttprequest-ssl');
-var Polling = require('./polling');
-var Emitter = require('component-emitter');
-var inherit = require('component-inherit');
-var debug = require('debug')('engine.io-client:polling-xhr');
-
-/**
- * Module exports.
- */
-
-module.exports = XHR;
-module.exports.Request = Request;
-
-/**
- * Empty function
- */
-
-function empty () {}
-
-/**
- * XHR Polling constructor.
- *
- * @param {Object} opts
- * @api public
- */
-
-function XHR (opts) {
-  Polling.call(this, opts);
-  this.requestTimeout = opts.requestTimeout;
-  this.extraHeaders = opts.extraHeaders;
-
-  if (global.location) {
-    var isSSL = 'https:' === location.protocol;
-    var port = location.port;
-
-    // some user agents have empty `location.port`
-    if (!port) {
-      port = isSSL ? 443 : 80;
-    }
-
-    this.xd = opts.hostname !== global.location.hostname ||
-      port !== opts.port;
-    this.xs = opts.secure !== isSSL;
-  }
-}
-
-/**
- * Inherits from Polling.
- */
-
-inherit(XHR, Polling);
-
-/**
- * XHR supports binary
- */
-
-XHR.prototype.supportsBinary = true;
-
-/**
- * Creates a request.
- *
- * @param {String} method
- * @api private
- */
-
-XHR.prototype.request = function (opts) {
-  opts = opts || {};
-  opts.uri = this.uri();
-  opts.xd = this.xd;
-  opts.xs = this.xs;
-  opts.agent = this.agent || false;
-  opts.supportsBinary = this.supportsBinary;
-  opts.enablesXDR = this.enablesXDR;
-
-  // SSL options for Node.js client
-  opts.pfx = this.pfx;
-  opts.key = this.key;
-  opts.passphrase = this.passphrase;
-  opts.cert = this.cert;
-  opts.ca = this.ca;
-  opts.ciphers = this.ciphers;
-  opts.rejectUnauthorized = this.rejectUnauthorized;
-  opts.requestTimeout = this.requestTimeout;
-
-  // other options for Node.js client
-  opts.extraHeaders = this.extraHeaders;
-
-  return new Request(opts);
-};
-
-/**
- * Sends data.
- *
- * @param {String} data to send.
- * @param {Function} called upon flush.
- * @api private
- */
-
-XHR.prototype.doWrite = function (data, fn) {
-  var isBinary = typeof data !== 'string' && data !== undefined;
-  var req = this.request({ method: 'POST', data: data, isBinary: isBinary });
-  var self = this;
-  req.on('success', fn);
-  req.on('error', function (err) {
-    self.onError('xhr post error', err);
-  });
-  this.sendXhr = req;
-};
-
-/**
- * Starts a poll cycle.
- *
- * @api private
- */
-
-XHR.prototype.doPoll = function () {
-  debug('xhr poll');
-  var req = this.request();
-  var self = this;
-  req.on('data', function (data) {
-    self.onData(data);
-  });
-  req.on('error', function (err) {
-    self.onError('xhr poll error', err);
-  });
-  this.pollXhr = req;
-};
-
-/**
- * Request constructor
- *
- * @param {Object} options
- * @api public
- */
-
-function Request (opts) {
-  this.method = opts.method || 'GET';
-  this.uri = opts.uri;
-  this.xd = !!opts.xd;
-  this.xs = !!opts.xs;
-  this.async = false !== opts.async;
-  this.data = undefined !== opts.data ? opts.data : null;
-  this.agent = opts.agent;
-  this.isBinary = opts.isBinary;
-  this.supportsBinary = opts.supportsBinary;
-  this.enablesXDR = opts.enablesXDR;
-  this.requestTimeout = opts.requestTimeout;
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx;
-  this.key = opts.key;
-  this.passphrase = opts.passphrase;
-  this.cert = opts.cert;
-  this.ca = opts.ca;
-  this.ciphers = opts.ciphers;
-  this.rejectUnauthorized = opts.rejectUnauthorized;
-
-  // other options for Node.js client
-  this.extraHeaders = opts.extraHeaders;
-
-  this.create();
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Request.prototype);
-
-/**
- * Creates the XHR object and sends the request.
- *
- * @api private
- */
-
-Request.prototype.create = function () {
-  var opts = { agent: this.agent, xdomain: this.xd, xscheme: this.xs, enablesXDR: this.enablesXDR };
-
-  // SSL options for Node.js client
-  opts.pfx = this.pfx;
-  opts.key = this.key;
-  opts.passphrase = this.passphrase;
-  opts.cert = this.cert;
-  opts.ca = this.ca;
-  opts.ciphers = this.ciphers;
-  opts.rejectUnauthorized = this.rejectUnauthorized;
-
-  var xhr = this.xhr = new XMLHttpRequest(opts);
-  var self = this;
-
-  try {
-    debug('xhr open %s: %s', this.method, this.uri);
-    xhr.open(this.method, this.uri, this.async);
-    try {
-      if (this.extraHeaders) {
-        xhr.setDisableHeaderCheck && xhr.setDisableHeaderCheck(true);
-        for (var i in this.extraHeaders) {
-          if (this.extraHeaders.hasOwnProperty(i)) {
-            xhr.setRequestHeader(i, this.extraHeaders[i]);
-          }
-        }
-      }
-    } catch (e) {}
-
-    if ('POST' === this.method) {
-      try {
-        if (this.isBinary) {
-          xhr.setRequestHeader('Content-type', 'application/octet-stream');
-        } else {
-          xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
-        }
-      } catch (e) {}
-    }
-
-    try {
-      xhr.setRequestHeader('Accept', '*/*');
-    } catch (e) {}
-
-    // ie6 check
-    if ('withCredentials' in xhr) {
-      xhr.withCredentials = true;
-    }
-
-    if (this.requestTimeout) {
-      xhr.timeout = this.requestTimeout;
-    }
-
-    if (this.hasXDR()) {
-      xhr.onload = function () {
-        self.onLoad();
-      };
-      xhr.onerror = function () {
-        self.onError(xhr.responseText);
-      };
-    } else {
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 2) {
-          var contentType;
-          try {
-            contentType = xhr.getResponseHeader('Content-Type');
-          } catch (e) {}
-          if (contentType === 'application/octet-stream') {
-            xhr.responseType = 'arraybuffer';
-          }
-        }
-        if (4 !== xhr.readyState) return;
-        if (200 === xhr.status || 1223 === xhr.status) {
-          self.onLoad();
-        } else {
-          // make sure the `error` event handler that's user-set
-          // does not throw in the same tick and gets caught here
-          setTimeout(function () {
-            self.onError(xhr.status);
-          }, 0);
-        }
-      };
-    }
-
-    debug('xhr data %s', this.data);
-    xhr.send(this.data);
-  } catch (e) {
-    // Need to defer since .create() is called directly fhrom the constructor
-    // and thus the 'error' event can only be only bound *after* this exception
-    // occurs.  Therefore, also, we cannot throw here at all.
-    setTimeout(function () {
-      self.onError(e);
-    }, 0);
-    return;
-  }
-
-  if (global.document) {
-    this.index = Request.requestsCount++;
-    Request.requests[this.index] = this;
-  }
-};
-
-/**
- * Called upon successful response.
- *
- * @api private
- */
-
-Request.prototype.onSuccess = function () {
-  this.emit('success');
-  this.cleanup();
-};
-
-/**
- * Called if we have data.
- *
- * @api private
- */
-
-Request.prototype.onData = function (data) {
-  this.emit('data', data);
-  this.onSuccess();
-};
-
-/**
- * Called upon error.
- *
- * @api private
- */
-
-Request.prototype.onError = function (err) {
-  this.emit('error', err);
-  this.cleanup(true);
-};
-
-/**
- * Cleans up house.
- *
- * @api private
- */
-
-Request.prototype.cleanup = function (fromError) {
-  if ('undefined' === typeof this.xhr || null === this.xhr) {
-    return;
-  }
-  // xmlhttprequest
-  if (this.hasXDR()) {
-    this.xhr.onload = this.xhr.onerror = empty;
-  } else {
-    this.xhr.onreadystatechange = empty;
-  }
-
-  if (fromError) {
-    try {
-      this.xhr.abort();
-    } catch (e) {}
-  }
-
-  if (global.document) {
-    delete Request.requests[this.index];
-  }
-
-  this.xhr = null;
-};
-
-/**
- * Called upon load.
- *
- * @api private
- */
-
-Request.prototype.onLoad = function () {
-  var data;
-  try {
-    var contentType;
-    try {
-      contentType = this.xhr.getResponseHeader('Content-Type');
-    } catch (e) {}
-    if (contentType === 'application/octet-stream') {
-      data = this.xhr.response || this.xhr.responseText;
-    } else {
-      data = this.xhr.responseText;
-    }
-  } catch (e) {
-    this.onError(e);
-  }
-  if (null != data) {
-    this.onData(data);
-  }
-};
-
-/**
- * Check if it has XDomainRequest.
- *
- * @api private
- */
-
-Request.prototype.hasXDR = function () {
-  return 'undefined' !== typeof global.XDomainRequest && !this.xs && this.enablesXDR;
-};
-
-/**
- * Aborts the request.
- *
- * @api public
- */
-
-Request.prototype.abort = function () {
-  this.cleanup();
-};
-
-/**
- * Aborts pending requests when unloading the window. This is needed to prevent
- * memory leaks (e.g. when using IE) and to ensure that no spurious error is
- * emitted.
- */
-
-Request.requestsCount = 0;
-Request.requests = {};
-
-if (global.document) {
-  if (global.attachEvent) {
-    global.attachEvent('onunload', unloadHandler);
-  } else if (global.addEventListener) {
-    global.addEventListener('beforeunload', unloadHandler, false);
-  }
-}
-
-function unloadHandler () {
-  for (var i in Request.requests) {
-    if (Request.requests.hasOwnProperty(i)) {
-      Request.requests[i].abort();
-    }
-  }
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":294,"component-emitter":283,"component-inherit":284,"debug":285,"xmlhttprequest-ssl":296}],294:[function(require,module,exports){
-/**
- * Module dependencies.
- */
-
-var Transport = require('../transport');
-var parseqs = require('parseqs');
-var parser = require('engine.io-parser');
-var inherit = require('component-inherit');
-var yeast = require('yeast');
-var debug = require('debug')('engine.io-client:polling');
-
-/**
- * Module exports.
- */
-
-module.exports = Polling;
-
-/**
- * Is XHR2 supported?
- */
-
-var hasXHR2 = (function () {
-  var XMLHttpRequest = require('xmlhttprequest-ssl');
-  var xhr = new XMLHttpRequest({ xdomain: false });
-  return null != xhr.responseType;
-})();
-
-/**
- * Polling interface.
- *
- * @param {Object} opts
- * @api private
- */
-
-function Polling (opts) {
-  var forceBase64 = (opts && opts.forceBase64);
-  if (!hasXHR2 || forceBase64) {
-    this.supportsBinary = false;
-  }
-  Transport.call(this, opts);
-}
-
-/**
- * Inherits from Transport.
- */
-
-inherit(Polling, Transport);
-
-/**
- * Transport name.
- */
-
-Polling.prototype.name = 'polling';
-
-/**
- * Opens the socket (triggers polling). We write a PING message to determine
- * when the transport is open.
- *
- * @api private
- */
-
-Polling.prototype.doOpen = function () {
-  this.poll();
-};
-
-/**
- * Pauses polling.
- *
- * @param {Function} callback upon buffers are flushed and transport is paused
- * @api private
- */
-
-Polling.prototype.pause = function (onPause) {
-  var self = this;
-
-  this.readyState = 'pausing';
-
-  function pause () {
-    debug('paused');
-    self.readyState = 'paused';
-    onPause();
-  }
-
-  if (this.polling || !this.writable) {
-    var total = 0;
-
-    if (this.polling) {
-      debug('we are currently polling - waiting to pause');
-      total++;
-      this.once('pollComplete', function () {
-        debug('pre-pause polling complete');
-        --total || pause();
-      });
-    }
-
-    if (!this.writable) {
-      debug('we are currently writing - waiting to pause');
-      total++;
-      this.once('drain', function () {
-        debug('pre-pause writing complete');
-        --total || pause();
-      });
-    }
-  } else {
-    pause();
-  }
-};
-
-/**
- * Starts polling cycle.
- *
- * @api public
- */
-
-Polling.prototype.poll = function () {
-  debug('polling');
-  this.polling = true;
-  this.doPoll();
-  this.emit('poll');
-};
-
-/**
- * Overloads onData to detect payloads.
- *
- * @api private
- */
-
-Polling.prototype.onData = function (data) {
-  var self = this;
-  debug('polling got data %s', data);
-  var callback = function (packet, index, total) {
-    // if its the first message we consider the transport open
-    if ('opening' === self.readyState) {
-      self.onOpen();
-    }
-
-    // if its a close packet, we close the ongoing requests
-    if ('close' === packet.type) {
-      self.onClose();
-      return false;
-    }
-
-    // otherwise bypass onData and handle the message
-    self.onPacket(packet);
-  };
-
-  // decode payload
-  parser.decodePayload(data, this.socket.binaryType, callback);
-
-  // if an event did not trigger closing
-  if ('closed' !== this.readyState) {
-    // if we got data we're not polling
-    this.polling = false;
-    this.emit('pollComplete');
-
-    if ('open' === this.readyState) {
-      this.poll();
-    } else {
-      debug('ignoring poll - transport state "%s"', this.readyState);
-    }
-  }
-};
-
-/**
- * For polling, send a close packet.
- *
- * @api private
- */
-
-Polling.prototype.doClose = function () {
-  var self = this;
-
-  function close () {
-    debug('writing close packet');
-    self.write([{ type: 'close' }]);
-  }
-
-  if ('open' === this.readyState) {
-    debug('transport open - closing');
-    close();
-  } else {
-    // in case we're trying to close while
-    // handshaking is in progress (GH-164)
-    debug('transport not open - deferring close');
-    this.once('open', close);
-  }
-};
-
-/**
- * Writes a packets payload.
- *
- * @param {Array} data packets
- * @param {Function} drain callback
- * @api private
- */
-
-Polling.prototype.write = function (packets) {
-  var self = this;
-  this.writable = false;
-  var callbackfn = function () {
-    self.writable = true;
-    self.emit('drain');
-  };
-
-  parser.encodePayload(packets, this.supportsBinary, function (data) {
-    self.doWrite(data, callbackfn);
-  });
-};
-
-/**
- * Generates uri for connection.
- *
- * @api private
- */
-
-Polling.prototype.uri = function () {
-  var query = this.query || {};
-  var schema = this.secure ? 'https' : 'http';
-  var port = '';
-
-  // cache busting is forced
-  if (false !== this.timestampRequests) {
-    query[this.timestampParam] = yeast();
-  }
-
-  if (!this.supportsBinary && !query.sid) {
-    query.b64 = 1;
-  }
-
-  query = parseqs.encode(query);
-
-  // avoid port if default for schema
-  if (this.port && (('https' === schema && Number(this.port) !== 443) ||
-     ('http' === schema && Number(this.port) !== 80))) {
-    port = ':' + this.port;
-  }
-
-  // prepend ? to query
-  if (query.length) {
-    query = '?' + query;
-  }
-
-  var ipv6 = this.hostname.indexOf(':') !== -1;
-  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-};
-
-},{"../transport":290,"component-inherit":284,"debug":285,"engine.io-parser":297,"parseqs":306,"xmlhttprequest-ssl":296,"yeast":318}],295:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies.
- */
-
-var Transport = require('../transport');
-var parser = require('engine.io-parser');
-var parseqs = require('parseqs');
-var inherit = require('component-inherit');
-var yeast = require('yeast');
-var debug = require('debug')('engine.io-client:websocket');
-var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
-var NodeWebSocket;
-if (typeof window === 'undefined') {
-  try {
-    NodeWebSocket = require('ws');
-  } catch (e) { }
-}
-
-/**
- * Get either the `WebSocket` or `MozWebSocket` globals
- * in the browser or try to resolve WebSocket-compatible
- * interface exposed by `ws` for Node-like environment.
- */
-
-var WebSocket = BrowserWebSocket;
-if (!WebSocket && typeof window === 'undefined') {
-  WebSocket = NodeWebSocket;
-}
-
-/**
- * Module exports.
- */
-
-module.exports = WS;
-
-/**
- * WebSocket transport constructor.
- *
- * @api {Object} connection options
- * @api public
- */
-
-function WS (opts) {
-  var forceBase64 = (opts && opts.forceBase64);
-  if (forceBase64) {
-    this.supportsBinary = false;
-  }
-  this.perMessageDeflate = opts.perMessageDeflate;
-  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
-  this.protocols = opts.protocols;
-  if (!this.usingBrowserWebSocket) {
-    WebSocket = NodeWebSocket;
-  }
-  Transport.call(this, opts);
-}
-
-/**
- * Inherits from Transport.
- */
-
-inherit(WS, Transport);
-
-/**
- * Transport name.
- *
- * @api public
- */
-
-WS.prototype.name = 'websocket';
-
-/*
- * WebSockets support binary
- */
-
-WS.prototype.supportsBinary = true;
-
-/**
- * Opens socket.
- *
- * @api private
- */
-
-WS.prototype.doOpen = function () {
-  if (!this.check()) {
-    // let probe timeout
-    return;
-  }
-
-  var uri = this.uri();
-  var protocols = this.protocols;
-  var opts = {
-    agent: this.agent,
-    perMessageDeflate: this.perMessageDeflate
-  };
-
-  // SSL options for Node.js client
-  opts.pfx = this.pfx;
-  opts.key = this.key;
-  opts.passphrase = this.passphrase;
-  opts.cert = this.cert;
-  opts.ca = this.ca;
-  opts.ciphers = this.ciphers;
-  opts.rejectUnauthorized = this.rejectUnauthorized;
-  if (this.extraHeaders) {
-    opts.headers = this.extraHeaders;
-  }
-  if (this.localAddress) {
-    opts.localAddress = this.localAddress;
-  }
-
-  try {
-    this.ws = this.usingBrowserWebSocket ? (protocols ? new WebSocket(uri, protocols) : new WebSocket(uri)) : new WebSocket(uri, protocols, opts);
-  } catch (err) {
-    return this.emit('error', err);
-  }
-
-  if (this.ws.binaryType === undefined) {
-    this.supportsBinary = false;
-  }
-
-  if (this.ws.supports && this.ws.supports.binary) {
-    this.supportsBinary = true;
-    this.ws.binaryType = 'nodebuffer';
-  } else {
-    this.ws.binaryType = 'arraybuffer';
-  }
-
-  this.addEventListeners();
-};
-
-/**
- * Adds event listeners to the socket
- *
- * @api private
- */
-
-WS.prototype.addEventListeners = function () {
-  var self = this;
-
-  this.ws.onopen = function () {
-    self.onOpen();
-  };
-  this.ws.onclose = function () {
-    self.onClose();
-  };
-  this.ws.onmessage = function (ev) {
-    self.onData(ev.data);
-  };
-  this.ws.onerror = function (e) {
-    self.onError('websocket error', e);
-  };
-};
-
-/**
- * Writes data to socket.
- *
- * @param {Array} array of packets.
- * @api private
- */
-
-WS.prototype.write = function (packets) {
-  var self = this;
-  this.writable = false;
-
-  // encodePacket efficient as it uses WS framing
-  // no need for encodePayload
-  var total = packets.length;
-  for (var i = 0, l = total; i < l; i++) {
-    (function (packet) {
-      parser.encodePacket(packet, self.supportsBinary, function (data) {
-        if (!self.usingBrowserWebSocket) {
-          // always create a new object (GH-437)
-          var opts = {};
-          if (packet.options) {
-            opts.compress = packet.options.compress;
-          }
-
-          if (self.perMessageDeflate) {
-            var len = 'string' === typeof data ? global.Buffer.byteLength(data) : data.length;
-            if (len < self.perMessageDeflate.threshold) {
-              opts.compress = false;
-            }
-          }
-        }
-
-        // Sometimes the websocket has already been closed but the browser didn't
-        // have a chance of informing us about it yet, in that case send will
-        // throw an error
-        try {
-          if (self.usingBrowserWebSocket) {
-            // TypeError is thrown when passing the second argument on Safari
-            self.ws.send(data);
-          } else {
-            self.ws.send(data, opts);
-          }
-        } catch (e) {
-          debug('websocket closed before onclose event');
-        }
-
-        --total || done();
-      });
-    })(packets[i]);
-  }
-
-  function done () {
-    self.emit('flush');
-
-    // fake drain
-    // defer to next tick to allow Socket to clear writeBuffer
-    setTimeout(function () {
-      self.writable = true;
-      self.emit('drain');
-    }, 0);
-  }
-};
-
-/**
- * Called upon close
- *
- * @api private
- */
-
-WS.prototype.onClose = function () {
-  Transport.prototype.onClose.call(this);
-};
-
-/**
- * Closes socket.
- *
- * @api private
- */
-
-WS.prototype.doClose = function () {
-  if (typeof this.ws !== 'undefined') {
-    this.ws.close();
-  }
-};
-
-/**
- * Generates uri for connection.
- *
- * @api private
- */
-
-WS.prototype.uri = function () {
-  var query = this.query || {};
-  var schema = this.secure ? 'wss' : 'ws';
-  var port = '';
-
-  // avoid port if default for schema
-  if (this.port && (('wss' === schema && Number(this.port) !== 443) ||
-    ('ws' === schema && Number(this.port) !== 80))) {
-    port = ':' + this.port;
-  }
-
-  // append timestamp to URI
-  if (this.timestampRequests) {
-    query[this.timestampParam] = yeast();
-  }
-
-  // communicate binary support capabilities
-  if (!this.supportsBinary) {
-    query.b64 = 1;
-  }
-
-  query = parseqs.encode(query);
-
-  // prepend ? to query
-  if (query.length) {
-    query = '?' + query;
-  }
-
-  var ipv6 = this.hostname.indexOf(':') !== -1;
-  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-};
-
-/**
- * Feature detection for WebSocket.
- *
- * @return {Boolean} whether this transport is available.
- * @api public
- */
-
-WS.prototype.check = function () {
-  return !!WebSocket && !('__initialize' in WebSocket && this.name === WS.prototype.name);
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":290,"component-inherit":284,"debug":285,"engine.io-parser":297,"parseqs":306,"ws":319,"yeast":318}],296:[function(require,module,exports){
-(function (global){
-// browser shim for xmlhttprequest module
-
-var hasCORS = require('has-cors');
-
-module.exports = function (opts) {
-  var xdomain = opts.xdomain;
-
-  // scheme must be same when usign XDomainRequest
-  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
-  var xscheme = opts.xscheme;
-
-  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
-  // https://github.com/Automattic/engine.io-client/pull/217
-  var enablesXDR = opts.enablesXDR;
-
-  // XMLHttpRequest can be disabled on IE
-  try {
-    if ('undefined' !== typeof XMLHttpRequest && (!xdomain || hasCORS)) {
-      return new XMLHttpRequest();
-    }
-  } catch (e) { }
-
-  // Use XDomainRequest for IE8 if enablesXDR is true
-  // because loading bar keeps flashing when using jsonp-polling
-  // https://github.com/yujiosaka/socke.io-ie8-loading-example
-  try {
-    if ('undefined' !== typeof XDomainRequest && !xscheme && enablesXDR) {
-      return new XDomainRequest();
-    }
-  } catch (e) { }
-
-  if (!xdomain) {
-    try {
-      return new global[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
-    } catch (e) { }
-  }
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":302}],297:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies.
- */
-
-var keys = require('./keys');
-var hasBinary = require('has-binary2');
-var sliceBuffer = require('arraybuffer.slice');
-var after = require('after');
-var utf8 = require('./utf8');
-
-var base64encoder;
-if (global && global.ArrayBuffer) {
-  base64encoder = require('base64-arraybuffer');
-}
-
-/**
- * Check if we are running an android browser. That requires us to use
- * ArrayBuffer with polling transports...
- *
- * http://ghinda.net/jpeg-blob-ajax-android/
- */
-
-var isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
-
-/**
- * Check if we are running in PhantomJS.
- * Uploading a Blob with PhantomJS does not work correctly, as reported here:
- * https://github.com/ariya/phantomjs/issues/11395
- * @type boolean
- */
-var isPhantomJS = typeof navigator !== 'undefined' && /PhantomJS/i.test(navigator.userAgent);
-
-/**
- * When true, avoids using Blobs to encode payloads.
- * @type boolean
- */
-var dontSendBlobs = isAndroid || isPhantomJS;
-
-/**
- * Current protocol version.
- */
-
-exports.protocol = 3;
-
-/**
- * Packet types.
- */
-
-var packets = exports.packets = {
-    open:     0    // non-ws
-  , close:    1    // non-ws
-  , ping:     2
-  , pong:     3
-  , message:  4
-  , upgrade:  5
-  , noop:     6
-};
-
-var packetslist = keys(packets);
-
-/**
- * Premade error packet.
- */
-
-var err = { type: 'error', data: 'parser error' };
-
-/**
- * Create a blob api even for blob builder when vendor prefixes exist
- */
-
-var Blob = require('blob');
-
-/**
- * Encodes a packet.
- *
- *     <packet type id> [ <data> ]
- *
- * Example:
- *
- *     5hello world
- *     3
- *     4
- *
- * Binary is encoded in an identical principle
- *
- * @api private
- */
-
-exports.encodePacket = function (packet, supportsBinary, utf8encode, callback) {
-  if (typeof supportsBinary === 'function') {
-    callback = supportsBinary;
-    supportsBinary = false;
-  }
-
-  if (typeof utf8encode === 'function') {
-    callback = utf8encode;
-    utf8encode = null;
-  }
-
-  var data = (packet.data === undefined)
-    ? undefined
-    : packet.data.buffer || packet.data;
-
-  if (global.ArrayBuffer && data instanceof ArrayBuffer) {
-    return encodeArrayBuffer(packet, supportsBinary, callback);
-  } else if (Blob && data instanceof global.Blob) {
-    return encodeBlob(packet, supportsBinary, callback);
-  }
-
-  // might be an object with { base64: true, data: dataAsBase64String }
-  if (data && data.base64) {
-    return encodeBase64Object(packet, callback);
-  }
-
-  // Sending data as a utf-8 string
-  var encoded = packets[packet.type];
-
-  // data fragment is optional
-  if (undefined !== packet.data) {
-    encoded += utf8encode ? utf8.encode(String(packet.data), { strict: false }) : String(packet.data);
-  }
-
-  return callback('' + encoded);
-
-};
-
-function encodeBase64Object(packet, callback) {
-  // packet data is an object { base64: true, data: dataAsBase64String }
-  var message = 'b' + exports.packets[packet.type] + packet.data.data;
-  return callback(message);
-}
-
-/**
- * Encode packet helpers for binary types
- */
-
-function encodeArrayBuffer(packet, supportsBinary, callback) {
-  if (!supportsBinary) {
-    return exports.encodeBase64Packet(packet, callback);
-  }
-
-  var data = packet.data;
-  var contentArray = new Uint8Array(data);
-  var resultBuffer = new Uint8Array(1 + data.byteLength);
-
-  resultBuffer[0] = packets[packet.type];
-  for (var i = 0; i < contentArray.length; i++) {
-    resultBuffer[i+1] = contentArray[i];
-  }
-
-  return callback(resultBuffer.buffer);
-}
-
-function encodeBlobAsArrayBuffer(packet, supportsBinary, callback) {
-  if (!supportsBinary) {
-    return exports.encodeBase64Packet(packet, callback);
-  }
-
-  var fr = new FileReader();
-  fr.onload = function() {
-    packet.data = fr.result;
-    exports.encodePacket(packet, supportsBinary, true, callback);
-  };
-  return fr.readAsArrayBuffer(packet.data);
-}
-
-function encodeBlob(packet, supportsBinary, callback) {
-  if (!supportsBinary) {
-    return exports.encodeBase64Packet(packet, callback);
-  }
-
-  if (dontSendBlobs) {
-    return encodeBlobAsArrayBuffer(packet, supportsBinary, callback);
-  }
-
-  var length = new Uint8Array(1);
-  length[0] = packets[packet.type];
-  var blob = new Blob([length.buffer, packet.data]);
-
-  return callback(blob);
-}
-
-/**
- * Encodes a packet with binary data in a base64 string
- *
- * @param {Object} packet, has `type` and `data`
- * @return {String} base64 encoded message
- */
-
-exports.encodeBase64Packet = function(packet, callback) {
-  var message = 'b' + exports.packets[packet.type];
-  if (Blob && packet.data instanceof global.Blob) {
-    var fr = new FileReader();
-    fr.onload = function() {
-      var b64 = fr.result.split(',')[1];
-      callback(message + b64);
-    };
-    return fr.readAsDataURL(packet.data);
-  }
-
-  var b64data;
-  try {
-    b64data = String.fromCharCode.apply(null, new Uint8Array(packet.data));
-  } catch (e) {
-    // iPhone Safari doesn't let you apply with typed arrays
-    var typed = new Uint8Array(packet.data);
-    var basic = new Array(typed.length);
-    for (var i = 0; i < typed.length; i++) {
-      basic[i] = typed[i];
-    }
-    b64data = String.fromCharCode.apply(null, basic);
-  }
-  message += global.btoa(b64data);
-  return callback(message);
-};
-
-/**
- * Decodes a packet. Changes format to Blob if requested.
- *
- * @return {Object} with `type` and `data` (if any)
- * @api private
- */
-
-exports.decodePacket = function (data, binaryType, utf8decode) {
-  if (data === undefined) {
-    return err;
-  }
-  // String data
-  if (typeof data === 'string') {
-    if (data.charAt(0) === 'b') {
-      return exports.decodeBase64Packet(data.substr(1), binaryType);
-    }
-
-    if (utf8decode) {
-      data = tryDecode(data);
-      if (data === false) {
-        return err;
-      }
-    }
-    var type = data.charAt(0);
-
-    if (Number(type) != type || !packetslist[type]) {
-      return err;
-    }
-
-    if (data.length > 1) {
-      return { type: packetslist[type], data: data.substring(1) };
-    } else {
-      return { type: packetslist[type] };
-    }
-  }
-
-  var asArray = new Uint8Array(data);
-  var type = asArray[0];
-  var rest = sliceBuffer(data, 1);
-  if (Blob && binaryType === 'blob') {
-    rest = new Blob([rest]);
-  }
-  return { type: packetslist[type], data: rest };
-};
-
-function tryDecode(data) {
-  try {
-    data = utf8.decode(data, { strict: false });
-  } catch (e) {
-    return false;
-  }
-  return data;
-}
-
-/**
- * Decodes a packet encoded in a base64 string
- *
- * @param {String} base64 encoded message
- * @return {Object} with `type` and `data` (if any)
- */
-
-exports.decodeBase64Packet = function(msg, binaryType) {
-  var type = packetslist[msg.charAt(0)];
-  if (!base64encoder) {
-    return { type: type, data: { base64: true, data: msg.substr(1) } };
-  }
-
-  var data = base64encoder.decode(msg.substr(1));
-
-  if (binaryType === 'blob' && Blob) {
-    data = new Blob([data]);
-  }
-
-  return { type: type, data: data };
-};
-
-/**
- * Encodes multiple messages (payload).
- *
- *     <length>:data
- *
- * Example:
- *
- *     11:hello world2:hi
- *
- * If any contents are binary, they will be encoded as base64 strings. Base64
- * encoded strings are marked with a b before the length specifier
- *
- * @param {Array} packets
- * @api private
- */
-
-exports.encodePayload = function (packets, supportsBinary, callback) {
-  if (typeof supportsBinary === 'function') {
-    callback = supportsBinary;
-    supportsBinary = null;
-  }
-
-  var isBinary = hasBinary(packets);
-
-  if (supportsBinary && isBinary) {
-    if (Blob && !dontSendBlobs) {
-      return exports.encodePayloadAsBlob(packets, callback);
-    }
-
-    return exports.encodePayloadAsArrayBuffer(packets, callback);
-  }
-
-  if (!packets.length) {
-    return callback('0:');
-  }
-
-  function setLengthHeader(message) {
-    return message.length + ':' + message;
-  }
-
-  function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, !isBinary ? false : supportsBinary, false, function(message) {
-      doneCallback(null, setLengthHeader(message));
-    });
-  }
-
-  map(packets, encodeOne, function(err, results) {
-    return callback(results.join(''));
-  });
-};
-
-/**
- * Async array map using after
- */
-
-function map(ary, each, done) {
-  var result = new Array(ary.length);
-  var next = after(ary.length, done);
-
-  var eachWithIndex = function(i, el, cb) {
-    each(el, function(error, msg) {
-      result[i] = msg;
-      cb(error, result);
-    });
-  };
-
-  for (var i = 0; i < ary.length; i++) {
-    eachWithIndex(i, ary[i], next);
-  }
-}
-
-/*
- * Decodes data when a payload is maybe expected. Possible binary contents are
- * decoded from their base64 representation
- *
- * @param {String} data, callback method
- * @api public
- */
-
-exports.decodePayload = function (data, binaryType, callback) {
-  if (typeof data !== 'string') {
-    return exports.decodePayloadAsBinary(data, binaryType, callback);
-  }
-
-  if (typeof binaryType === 'function') {
-    callback = binaryType;
-    binaryType = null;
-  }
-
-  var packet;
-  if (data === '') {
-    // parser error - ignoring payload
-    return callback(err, 0, 1);
-  }
-
-  var length = '', n, msg;
-
-  for (var i = 0, l = data.length; i < l; i++) {
-    var chr = data.charAt(i);
-
-    if (chr !== ':') {
-      length += chr;
-      continue;
-    }
-
-    if (length === '' || (length != (n = Number(length)))) {
-      // parser error - ignoring payload
-      return callback(err, 0, 1);
-    }
-
-    msg = data.substr(i + 1, n);
-
-    if (length != msg.length) {
-      // parser error - ignoring payload
-      return callback(err, 0, 1);
-    }
-
-    if (msg.length) {
-      packet = exports.decodePacket(msg, binaryType, false);
-
-      if (err.type === packet.type && err.data === packet.data) {
-        // parser error in individual packet - ignoring payload
-        return callback(err, 0, 1);
-      }
-
-      var ret = callback(packet, i + n, l);
-      if (false === ret) return;
-    }
-
-    // advance cursor
-    i += n;
-    length = '';
-  }
-
-  if (length !== '') {
-    // parser error - ignoring payload
-    return callback(err, 0, 1);
-  }
-
-};
-
-/**
- * Encodes multiple messages (payload) as binary.
- *
- * <1 = binary, 0 = string><number from 0-9><number from 0-9>[...]<number
- * 255><data>
- *
- * Example:
- * 1 3 255 1 2 3, if the binary contents are interpreted as 8 bit integers
- *
- * @param {Array} packets
- * @return {ArrayBuffer} encoded payload
- * @api private
- */
-
-exports.encodePayloadAsArrayBuffer = function(packets, callback) {
-  if (!packets.length) {
-    return callback(new ArrayBuffer(0));
-  }
-
-  function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, true, true, function(data) {
-      return doneCallback(null, data);
-    });
-  }
-
-  map(packets, encodeOne, function(err, encodedPackets) {
-    var totalLength = encodedPackets.reduce(function(acc, p) {
-      var len;
-      if (typeof p === 'string'){
-        len = p.length;
-      } else {
-        len = p.byteLength;
-      }
-      return acc + len.toString().length + len + 2; // string/binary identifier + separator = 2
-    }, 0);
-
-    var resultArray = new Uint8Array(totalLength);
-
-    var bufferIndex = 0;
-    encodedPackets.forEach(function(p) {
-      var isString = typeof p === 'string';
-      var ab = p;
-      if (isString) {
-        var view = new Uint8Array(p.length);
-        for (var i = 0; i < p.length; i++) {
-          view[i] = p.charCodeAt(i);
-        }
-        ab = view.buffer;
-      }
-
-      if (isString) { // not true binary
-        resultArray[bufferIndex++] = 0;
-      } else { // true binary
-        resultArray[bufferIndex++] = 1;
-      }
-
-      var lenStr = ab.byteLength.toString();
-      for (var i = 0; i < lenStr.length; i++) {
-        resultArray[bufferIndex++] = parseInt(lenStr[i]);
-      }
-      resultArray[bufferIndex++] = 255;
-
-      var view = new Uint8Array(ab);
-      for (var i = 0; i < view.length; i++) {
-        resultArray[bufferIndex++] = view[i];
-      }
-    });
-
-    return callback(resultArray.buffer);
-  });
-};
-
-/**
- * Encode as Blob
- */
-
-exports.encodePayloadAsBlob = function(packets, callback) {
-  function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, true, true, function(encoded) {
-      var binaryIdentifier = new Uint8Array(1);
-      binaryIdentifier[0] = 1;
-      if (typeof encoded === 'string') {
-        var view = new Uint8Array(encoded.length);
-        for (var i = 0; i < encoded.length; i++) {
-          view[i] = encoded.charCodeAt(i);
-        }
-        encoded = view.buffer;
-        binaryIdentifier[0] = 0;
-      }
-
-      var len = (encoded instanceof ArrayBuffer)
-        ? encoded.byteLength
-        : encoded.size;
-
-      var lenStr = len.toString();
-      var lengthAry = new Uint8Array(lenStr.length + 1);
-      for (var i = 0; i < lenStr.length; i++) {
-        lengthAry[i] = parseInt(lenStr[i]);
-      }
-      lengthAry[lenStr.length] = 255;
-
-      if (Blob) {
-        var blob = new Blob([binaryIdentifier.buffer, lengthAry.buffer, encoded]);
-        doneCallback(null, blob);
-      }
-    });
-  }
-
-  map(packets, encodeOne, function(err, results) {
-    return callback(new Blob(results));
-  });
-};
-
-/*
- * Decodes data when a payload is maybe expected. Strings are decoded by
- * interpreting each byte as a key code for entries marked to start with 0. See
- * description of encodePayloadAsBinary
- *
- * @param {ArrayBuffer} data, callback method
- * @api public
- */
-
-exports.decodePayloadAsBinary = function (data, binaryType, callback) {
-  if (typeof binaryType === 'function') {
-    callback = binaryType;
-    binaryType = null;
-  }
-
-  var bufferTail = data;
-  var buffers = [];
-
-  while (bufferTail.byteLength > 0) {
-    var tailArray = new Uint8Array(bufferTail);
-    var isString = tailArray[0] === 0;
-    var msgLength = '';
-
-    for (var i = 1; ; i++) {
-      if (tailArray[i] === 255) break;
-
-      // 310 = char length of Number.MAX_VALUE
-      if (msgLength.length > 310) {
-        return callback(err, 0, 1);
-      }
-
-      msgLength += tailArray[i];
-    }
-
-    bufferTail = sliceBuffer(bufferTail, 2 + msgLength.length);
-    msgLength = parseInt(msgLength);
-
-    var msg = sliceBuffer(bufferTail, 0, msgLength);
-    if (isString) {
-      try {
-        msg = String.fromCharCode.apply(null, new Uint8Array(msg));
-      } catch (e) {
-        // iPhone Safari doesn't let you apply to typed arrays
-        var typed = new Uint8Array(msg);
-        msg = '';
-        for (var i = 0; i < typed.length; i++) {
-          msg += String.fromCharCode(typed[i]);
-        }
-      }
-    }
-
-    buffers.push(msg);
-    bufferTail = sliceBuffer(bufferTail, msgLength);
-  }
-
-  var total = buffers.length;
-  buffers.forEach(function(buffer, i) {
-    callback(exports.decodePacket(buffer, binaryType, true), i, total);
-  });
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":298,"./utf8":299,"after":277,"arraybuffer.slice":278,"base64-arraybuffer":280,"blob":281,"has-binary2":300}],298:[function(require,module,exports){
-
-/**
- * Gets the keys for an object.
- *
- * @return {Array} keys
- * @api private
- */
-
-module.exports = Object.keys || function keys (obj){
-  var arr = [];
-  var has = Object.prototype.hasOwnProperty;
-
-  for (var i in obj) {
-    if (has.call(obj, i)) {
-      arr.push(i);
-    }
-  }
-  return arr;
-};
-
-},{}],299:[function(require,module,exports){
-(function (global){
-/*! https://mths.be/utf8js v2.1.2 by @mathias */
-;(function(root) {
-
-	// Detect free variables `exports`
-	var freeExports = typeof exports == 'object' && exports;
-
-	// Detect free variable `module`
-	var freeModule = typeof module == 'object' && module &&
-		module.exports == freeExports && module;
-
-	// Detect free variable `global`, from Node.js or Browserified code,
-	// and use it as `root`
-	var freeGlobal = typeof global == 'object' && global;
-	if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
-		root = freeGlobal;
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	var stringFromCharCode = String.fromCharCode;
-
-	// Taken from https://mths.be/punycode
-	function ucs2decode(string) {
-		var output = [];
-		var counter = 0;
-		var length = string.length;
-		var value;
-		var extra;
-		while (counter < length) {
-			value = string.charCodeAt(counter++);
-			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-				// high surrogate, and there is a next character
-				extra = string.charCodeAt(counter++);
-				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-				} else {
-					// unmatched surrogate; only append this code unit, in case the next
-					// code unit is the high surrogate of a surrogate pair
-					output.push(value);
-					counter--;
-				}
-			} else {
-				output.push(value);
-			}
-		}
-		return output;
-	}
-
-	// Taken from https://mths.be/punycode
-	function ucs2encode(array) {
-		var length = array.length;
-		var index = -1;
-		var value;
-		var output = '';
-		while (++index < length) {
-			value = array[index];
-			if (value > 0xFFFF) {
-				value -= 0x10000;
-				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-				value = 0xDC00 | value & 0x3FF;
-			}
-			output += stringFromCharCode(value);
-		}
-		return output;
-	}
-
-	function checkScalarValue(codePoint, strict) {
-		if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
-			if (strict) {
-				throw Error(
-					'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
-					' is not a scalar value'
-				);
-			}
-			return false;
-		}
-		return true;
-	}
-	/*--------------------------------------------------------------------------*/
-
-	function createByte(codePoint, shift) {
-		return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
-	}
-
-	function encodeCodePoint(codePoint, strict) {
-		if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
-			return stringFromCharCode(codePoint);
-		}
-		var symbol = '';
-		if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
-			symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
-		}
-		else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
-			if (!checkScalarValue(codePoint, strict)) {
-				codePoint = 0xFFFD;
-			}
-			symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
-			symbol += createByte(codePoint, 6);
-		}
-		else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
-			symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
-			symbol += createByte(codePoint, 12);
-			symbol += createByte(codePoint, 6);
-		}
-		symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
-		return symbol;
-	}
-
-	function utf8encode(string, opts) {
-		opts = opts || {};
-		var strict = false !== opts.strict;
-
-		var codePoints = ucs2decode(string);
-		var length = codePoints.length;
-		var index = -1;
-		var codePoint;
-		var byteString = '';
-		while (++index < length) {
-			codePoint = codePoints[index];
-			byteString += encodeCodePoint(codePoint, strict);
-		}
-		return byteString;
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	function readContinuationByte() {
-		if (byteIndex >= byteCount) {
-			throw Error('Invalid byte index');
-		}
-
-		var continuationByte = byteArray[byteIndex] & 0xFF;
-		byteIndex++;
-
-		if ((continuationByte & 0xC0) == 0x80) {
-			return continuationByte & 0x3F;
-		}
-
-		// If we end up here, it’s not a continuation byte
-		throw Error('Invalid continuation byte');
-	}
-
-	function decodeSymbol(strict) {
-		var byte1;
-		var byte2;
-		var byte3;
-		var byte4;
-		var codePoint;
-
-		if (byteIndex > byteCount) {
-			throw Error('Invalid byte index');
-		}
-
-		if (byteIndex == byteCount) {
-			return false;
-		}
-
-		// Read first byte
-		byte1 = byteArray[byteIndex] & 0xFF;
-		byteIndex++;
-
-		// 1-byte sequence (no continuation bytes)
-		if ((byte1 & 0x80) == 0) {
-			return byte1;
-		}
-
-		// 2-byte sequence
-		if ((byte1 & 0xE0) == 0xC0) {
-			byte2 = readContinuationByte();
-			codePoint = ((byte1 & 0x1F) << 6) | byte2;
-			if (codePoint >= 0x80) {
-				return codePoint;
-			} else {
-				throw Error('Invalid continuation byte');
-			}
-		}
-
-		// 3-byte sequence (may include unpaired surrogates)
-		if ((byte1 & 0xF0) == 0xE0) {
-			byte2 = readContinuationByte();
-			byte3 = readContinuationByte();
-			codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
-			if (codePoint >= 0x0800) {
-				return checkScalarValue(codePoint, strict) ? codePoint : 0xFFFD;
-			} else {
-				throw Error('Invalid continuation byte');
-			}
-		}
-
-		// 4-byte sequence
-		if ((byte1 & 0xF8) == 0xF0) {
-			byte2 = readContinuationByte();
-			byte3 = readContinuationByte();
-			byte4 = readContinuationByte();
-			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
-				(byte3 << 0x06) | byte4;
-			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
-				return codePoint;
-			}
-		}
-
-		throw Error('Invalid UTF-8 detected');
-	}
-
-	var byteArray;
-	var byteCount;
-	var byteIndex;
-	function utf8decode(byteString, opts) {
-		opts = opts || {};
-		var strict = false !== opts.strict;
-
-		byteArray = ucs2decode(byteString);
-		byteCount = byteArray.length;
-		byteIndex = 0;
-		var codePoints = [];
-		var tmp;
-		while ((tmp = decodeSymbol(strict)) !== false) {
-			codePoints.push(tmp);
-		}
-		return ucs2encode(codePoints);
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	var utf8 = {
-		'version': '2.1.2',
-		'encode': utf8encode,
-		'decode': utf8decode
-	};
-
-	// Some AMD build optimizers, like r.js, check for specific condition patterns
-	// like the following:
-	if (
-		typeof define == 'function' &&
-		typeof define.amd == 'object' &&
-		define.amd
-	) {
-		define(function() {
-			return utf8;
-		});
-	}	else if (freeExports && !freeExports.nodeType) {
-		if (freeModule) { // in Node.js or RingoJS v0.8.0+
-			freeModule.exports = utf8;
-		} else { // in Narwhal or RingoJS v0.7.0-
-			var object = {};
-			var hasOwnProperty = object.hasOwnProperty;
-			for (var key in utf8) {
-				hasOwnProperty.call(utf8, key) && (freeExports[key] = utf8[key]);
-			}
-		}
-	} else { // in Rhino or a web browser
-		root.utf8 = utf8;
-	}
-
-}(this));
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],300:[function(require,module,exports){
-(function (global){
-/* global Blob File */
-
-/*
- * Module requirements.
- */
-
-var isArray = require('isarray');
-
-var toString = Object.prototype.toString;
-var withNativeBlob = typeof global.Blob === 'function' || toString.call(global.Blob) === '[object BlobConstructor]';
-var withNativeFile = typeof global.File === 'function' || toString.call(global.File) === '[object FileConstructor]';
-
-/**
- * Module exports.
- */
-
-module.exports = hasBinary;
-
-/**
- * Checks for binary data.
- *
- * Supports Buffer, ArrayBuffer, Blob and File.
- *
- * @param {Object} anything
- * @api public
- */
-
-function hasBinary (obj) {
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-
-  if (isArray(obj)) {
-    for (var i = 0, l = obj.length; i < l; i++) {
-      if (hasBinary(obj[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  if ((typeof global.Buffer === 'function' && global.Buffer.isBuffer && global.Buffer.isBuffer(obj)) ||
-     (typeof global.ArrayBuffer === 'function' && obj instanceof ArrayBuffer) ||
-     (withNativeBlob && obj instanceof Blob) ||
-     (withNativeFile && obj instanceof File)
-    ) {
-    return true;
-  }
-
-  // see: https://github.com/Automattic/has-binary/pull/4
-  if (obj.toJSON && typeof obj.toJSON === 'function' && arguments.length === 1) {
-    return hasBinary(obj.toJSON(), true);
-  }
-
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"isarray":301}],301:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-},{}],302:[function(require,module,exports){
-
-/**
- * Module exports.
- *
- * Logic borrowed from Modernizr:
- *
- *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
- */
-
-try {
-  module.exports = typeof XMLHttpRequest !== 'undefined' &&
-    'withCredentials' in new XMLHttpRequest();
-} catch (err) {
-  // if XMLHttp support is disabled in IE then it will throw
-  // when trying to create
-  module.exports = false;
-}
-
-},{}],303:[function(require,module,exports){
-
-var indexOf = [].indexOf;
-
-module.exports = function(arr, obj){
-  if (indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-},{}],304:[function(require,module,exports){
-/**
- * Helpers.
- */
-
-var s = 1000;
-var m = s * 60;
-var h = m * 60;
-var d = h * 24;
-var y = d * 365.25;
-
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} [options]
- * @throws {Error} throw an error if val is not a non-empty string or a number
- * @return {String|Number}
- * @api public
- */
-
-module.exports = function(val, options) {
-  options = options || {};
-  var type = typeof val;
-  if (type === 'string' && val.length > 0) {
-    return parse(val);
-  } else if (type === 'number' && isNaN(val) === false) {
-    return options.long ? fmtLong(val) : fmtShort(val);
-  }
-  throw new Error(
-    'val is not a non-empty string or a valid number. val=' +
-      JSON.stringify(val)
-  );
-};
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function parse(str) {
-  str = String(str);
-  if (str.length > 100) {
-    return;
-  }
-  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(
-    str
-  );
-  if (!match) {
-    return;
-  }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * y;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * d;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * s;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtShort(ms) {
-  if (ms >= d) {
-    return Math.round(ms / d) + 'd';
-  }
-  if (ms >= h) {
-    return Math.round(ms / h) + 'h';
-  }
-  if (ms >= m) {
-    return Math.round(ms / m) + 'm';
-  }
-  if (ms >= s) {
-    return Math.round(ms / s) + 's';
-  }
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtLong(ms) {
-  return plural(ms, d, 'day') ||
-    plural(ms, h, 'hour') ||
-    plural(ms, m, 'minute') ||
-    plural(ms, s, 'second') ||
-    ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function plural(ms, n, name) {
-  if (ms < n) {
-    return;
-  }
-  if (ms < n * 1.5) {
-    return Math.floor(ms / n) + ' ' + name;
-  }
-  return Math.ceil(ms / n) + ' ' + name + 's';
-}
-
-},{}],305:[function(require,module,exports){
-(function (global){
-/**
- * JSON parse.
- *
- * @see Based on jQuery#parseJSON (MIT) and JSON2
- * @api private
- */
-
-var rvalidchars = /^[\],:{}\s]*$/;
-var rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
-var rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
-var rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g;
-var rtrimLeft = /^\s+/;
-var rtrimRight = /\s+$/;
-
-module.exports = function parsejson(data) {
-  if ('string' != typeof data || !data) {
-    return null;
-  }
-
-  data = data.replace(rtrimLeft, '').replace(rtrimRight, '');
-
-  // Attempt to parse using the native JSON parser first
-  if (global.JSON && JSON.parse) {
-    return JSON.parse(data);
-  }
-
-  if (rvalidchars.test(data.replace(rvalidescape, '@')
-      .replace(rvalidtokens, ']')
-      .replace(rvalidbraces, ''))) {
-    return (new Function('return ' + data))();
-  }
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],306:[function(require,module,exports){
-/**
- * Compiles a querystring
- * Returns string representation of the object
- *
- * @param {Object}
- * @api private
- */
-
-exports.encode = function (obj) {
-  var str = '';
-
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      if (str.length) str += '&';
-      str += encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]);
-    }
-  }
-
-  return str;
-};
-
-/**
- * Parses a simple querystring into an object
- *
- * @param {String} qs
- * @api private
- */
-
-exports.decode = function(qs){
-  var qry = {};
-  var pairs = qs.split('&');
-  for (var i = 0, l = pairs.length; i < l; i++) {
-    var pair = pairs[i].split('=');
-    qry[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
-  }
-  return qry;
-};
-
-},{}],307:[function(require,module,exports){
-/**
- * Parses an URI
- *
- * @author Steven Levithan <stevenlevithan.com> (MIT license)
- * @api private
- */
-
-var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
-
-var parts = [
-    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
-];
-
-module.exports = function parseuri(str) {
-    var src = str,
-        b = str.indexOf('['),
-        e = str.indexOf(']');
-
-    if (b != -1 && e != -1) {
-        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
-    }
-
-    var m = re.exec(str || ''),
-        uri = {},
-        i = 14;
-
-    while (i--) {
-        uri[parts[i]] = m[i] || '';
-    }
-
-    if (b != -1 && e != -1) {
-        uri.source = src;
-        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
-        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
-        uri.ipv6uri = true;
-    }
-
-    return uri;
-};
-
-},{}],308:[function(require,module,exports){
+},{"../../Resource":301,"../../b64":303}],306:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -52058,7 +52052,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":309,"./socket":311,"./url":312,"debug":285,"socket.io-parser":314}],309:[function(require,module,exports){
+},{"./manager":307,"./socket":309,"./url":310,"debug":311,"socket.io-parser":314}],307:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -52633,7 +52627,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":310,"./socket":311,"backo2":279,"component-bind":282,"component-emitter":283,"debug":285,"engine.io-client":287,"indexof":303,"socket.io-parser":314}],310:[function(require,module,exports){
+},{"./on":308,"./socket":309,"backo2":54,"component-bind":58,"component-emitter":59,"debug":311,"engine.io-client":62,"indexof":80,"socket.io-parser":314}],308:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -52659,7 +52653,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],311:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -52672,6 +52666,7 @@ var on = require('./on');
 var bind = require('component-bind');
 var debug = require('debug')('socket.io-client:socket');
 var parseqs = require('parseqs');
+var hasBin = require('has-binary2');
 
 /**
  * Module exports.
@@ -52724,6 +52719,7 @@ function Socket (io, nsp, opts) {
   this.sendBuffer = [];
   this.connected = false;
   this.disconnected = true;
+  this.flags = {};
   if (opts && opts.query) {
     this.query = opts.query;
   }
@@ -52800,7 +52796,10 @@ Socket.prototype.emit = function (ev) {
   }
 
   var args = toArray(arguments);
-  var packet = { type: parser.EVENT, data: args };
+  var packet = {
+    type: (this.flags.binary !== undefined ? this.flags.binary : hasBin(args)) ? parser.BINARY_EVENT : parser.EVENT,
+    data: args
+  };
 
   packet.options = {};
   packet.options.compress = !this.flags || false !== this.flags.compress;
@@ -52818,7 +52817,7 @@ Socket.prototype.emit = function (ev) {
     this.sendBuffer.push(packet);
   }
 
-  delete this.flags;
+  this.flags = {};
 
   return this;
 };
@@ -52879,7 +52878,10 @@ Socket.prototype.onclose = function (reason) {
  */
 
 Socket.prototype.onpacket = function (packet) {
-  if (packet.nsp !== this.nsp) return;
+  var sameNamespace = packet.nsp === this.nsp;
+  var rootNamespaceError = packet.type === parser.ERROR && packet.nsp === '/';
+
+  if (!sameNamespace && !rootNamespaceError) return;
 
   switch (packet.type) {
     case parser.CONNECT:
@@ -52952,7 +52954,7 @@ Socket.prototype.ack = function (id) {
     debug('sending ack %j', args);
 
     self.packet({
-      type: parser.ACK,
+      type: hasBin(args) ? parser.BINARY_ACK : parser.ACK,
       id: id,
       data: args
     });
@@ -53074,12 +53076,24 @@ Socket.prototype.disconnect = function () {
  */
 
 Socket.prototype.compress = function (compress) {
-  this.flags = this.flags || {};
   this.flags.compress = compress;
   return this;
 };
 
-},{"./on":310,"component-bind":282,"component-emitter":283,"debug":285,"parseqs":306,"socket.io-parser":314,"to-array":317}],312:[function(require,module,exports){
+/**
+ * Sets the binary flag
+ *
+ * @param {Boolean} whether the emitted data contains binary
+ * @return {Socket} self
+ * @api public
+ */
+
+Socket.prototype.binary = function (binary) {
+  this.flags.binary = binary;
+  return this;
+};
+
+},{"./on":308,"component-bind":58,"component-emitter":59,"debug":311,"has-binary2":77,"parseqs":111,"socket.io-parser":314,"to-array":319}],310:[function(require,module,exports){
 (function (global){
 
 /**
@@ -53158,7 +53172,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":285,"parseuri":307}],313:[function(require,module,exports){
+},{"debug":311,"parseuri":112}],311:[function(require,module,exports){
+arguments[4][71][0].apply(exports,arguments)
+},{"./debug":312,"_process":326,"dup":71}],312:[function(require,module,exports){
+arguments[4][72][0].apply(exports,arguments)
+},{"dup":72,"ms":108}],313:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -53303,7 +53321,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":315,"isarray":316}],314:[function(require,module,exports){
+},{"./is-buffer":315,"isarray":318}],314:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -53311,8 +53329,8 @@ exports.removeBlobs = function(data, callback) {
 
 var debug = require('debug')('socket.io-parser');
 var Emitter = require('component-emitter');
-var hasBin = require('has-binary2');
 var binary = require('./binary');
+var isArray = require('isarray');
 var isBuf = require('./is-buffer');
 
 /**
@@ -53419,6 +53437,8 @@ exports.Decoder = Decoder;
 
 function Encoder() {}
 
+var ERROR_PACKET = exports.ERROR + '"encode error"';
+
 /**
  * Encode a packet as a single string if non-binary, or as a
  * buffer sequence, depending on packet type.
@@ -53430,16 +53450,11 @@ function Encoder() {}
  */
 
 Encoder.prototype.encode = function(obj, callback){
-  if ((obj.type === exports.EVENT || obj.type === exports.ACK) && hasBin(obj.data)) {
-    obj.type = obj.type === exports.EVENT ? exports.BINARY_EVENT : exports.BINARY_ACK;
-  }
-
   debug('encoding packet %j', obj);
 
   if (exports.BINARY_EVENT === obj.type || exports.BINARY_ACK === obj.type) {
     encodeAsBinary(obj, callback);
-  }
-  else {
+  } else {
     var encoding = encodeAsString(obj);
     callback([encoding]);
   }
@@ -53476,11 +53491,24 @@ function encodeAsString(obj) {
 
   // json data
   if (null != obj.data) {
-    str += JSON.stringify(obj.data);
+    var payload = tryStringify(obj.data);
+    if (payload !== false) {
+      str += payload;
+    } else {
+      return ERROR_PACKET;
+    }
   }
 
   debug('encoded %j as %s', obj, str);
   return str;
+}
+
+function tryStringify(str) {
+  try {
+    return JSON.stringify(str);
+  } catch(e){
+    return false;
+  }
 }
 
 /**
@@ -53578,7 +53606,9 @@ function decodeString(str) {
     type: Number(str.charAt(0))
   };
 
-  if (null == exports.types[p.type]) return error();
+  if (null == exports.types[p.type]) {
+    return error('unknown packet type ' + p.type);
+  }
 
   // look up attachments if type binary
   if (exports.BINARY_EVENT === p.type || exports.BINARY_ACK === p.type) {
@@ -53624,20 +53654,25 @@ function decodeString(str) {
 
   // look up json data
   if (str.charAt(++i)) {
-    p = tryParse(p, str.substr(i));
+    var payload = tryParse(str.substr(i));
+    var isPayloadValid = payload !== false && (p.type === exports.ERROR || isArray(payload));
+    if (isPayloadValid) {
+      p.data = payload;
+    } else {
+      return error('invalid payload');
+    }
   }
 
   debug('decoded %s as %j', str, p);
   return p;
 }
 
-function tryParse(p, str) {
+function tryParse(str) {
   try {
-    p.data = JSON.parse(str);
+    return JSON.parse(str);
   } catch(e){
-    return error();
+    return false;
   }
-  return p; 
 }
 
 /**
@@ -53698,17 +53733,28 @@ BinaryReconstructor.prototype.finishedReconstruction = function() {
   this.buffers = [];
 };
 
-function error() {
+function error(msg) {
   return {
     type: exports.ERROR,
-    data: 'parser error'
+    data: 'parser error: ' + msg
   };
 }
 
-},{"./binary":313,"./is-buffer":315,"component-emitter":283,"debug":285,"has-binary2":300}],315:[function(require,module,exports){
+},{"./binary":313,"./is-buffer":315,"component-emitter":59,"debug":316,"isarray":318}],315:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
+
+var withNativeBuffer = typeof global.Buffer === 'function' && typeof global.Buffer.isBuffer === 'function';
+var withNativeArrayBuffer = typeof global.ArrayBuffer === 'function';
+
+var isView = (function () {
+  if (withNativeArrayBuffer && typeof global.ArrayBuffer.isView === 'function') {
+    return global.ArrayBuffer.isView;
+  } else {
+    return function (obj) { return obj.buffer instanceof global.ArrayBuffer; };
+  }
+})();
 
 /**
  * Returns true if obj is a buffer or an arraybuffer.
@@ -53717,14 +53763,18 @@ module.exports = isBuf;
  */
 
 function isBuf(obj) {
-  return (global.Buffer && global.Buffer.isBuffer(obj)) ||
-         (global.ArrayBuffer && obj instanceof ArrayBuffer);
+  return (withNativeBuffer && global.Buffer.isBuffer(obj)) ||
+          (withNativeArrayBuffer && (obj instanceof global.ArrayBuffer || isView(obj)));
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],316:[function(require,module,exports){
-arguments[4][301][0].apply(exports,arguments)
-},{"dup":301}],317:[function(require,module,exports){
+arguments[4][71][0].apply(exports,arguments)
+},{"./debug":317,"_process":326,"dup":71}],317:[function(require,module,exports){
+arguments[4][72][0].apply(exports,arguments)
+},{"dup":72,"ms":108}],318:[function(require,module,exports){
+arguments[4][78][0].apply(exports,arguments)
+},{"dup":78}],319:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -53739,7 +53789,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],318:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -53809,9 +53859,2027 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],319:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
+'use strict'
 
-},{}],320:[function(require,module,exports){
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function getLens (b64) {
+  var len = b64.length
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // Trim off extra bytes after placeholder bytes are found
+  // See: https://github.com/beatgammit/base64-js/issues/42
+  var validLen = b64.indexOf('=')
+  if (validLen === -1) validLen = len
+
+  var placeHoldersLen = validLen === len
+    ? 0
+    : 4 - (validLen % 4)
+
+  return [validLen, placeHoldersLen]
+}
+
+// base64 is 4/3 + up to two characters of the original data
+function byteLength (b64) {
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function _byteLength (b64, validLen, placeHoldersLen) {
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function toByteArray (b64) {
+  var tmp
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+
+  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
+
+  var curByte = 0
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  var len = placeHoldersLen > 0
+    ? validLen - 4
+    : validLen
+
+  for (var i = 0; i < len; i += 4) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 18) |
+      (revLookup[b64.charCodeAt(i + 1)] << 12) |
+      (revLookup[b64.charCodeAt(i + 2)] << 6) |
+      revLookup[b64.charCodeAt(i + 3)]
+    arr[curByte++] = (tmp >> 16) & 0xFF
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 2) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 2) |
+      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 1) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 10) |
+      (revLookup[b64.charCodeAt(i + 1)] << 4) |
+      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] +
+    lookup[num >> 12 & 0x3F] +
+    lookup[num >> 6 & 0x3F] +
+    lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp =
+      ((uint8[i] << 16) & 0xFF0000) +
+      ((uint8[i + 1] << 8) & 0xFF00) +
+      (uint8[i + 2] & 0xFF)
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(
+      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
+    ))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 2] +
+      lookup[(tmp << 4) & 0x3F] +
+      '=='
+    )
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 10] +
+      lookup[(tmp >> 4) & 0x3F] +
+      lookup[(tmp << 2) & 0x3F] +
+      '='
+    )
+  }
+
+  return parts.join('')
+}
+
+},{}],322:[function(require,module,exports){
+
+},{}],323:[function(require,module,exports){
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+
+'use strict'
+
+var base64 = require('base64-js')
+var ieee754 = require('ieee754')
+
+exports.Buffer = Buffer
+exports.SlowBuffer = SlowBuffer
+exports.INSPECT_MAX_BYTES = 50
+
+var K_MAX_LENGTH = 0x7fffffff
+exports.kMaxLength = K_MAX_LENGTH
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Print warning and recommend using `buffer` v4.x which has an Object
+ *               implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * We report that the browser does not support typed arrays if the are not subclassable
+ * using __proto__. Firefox 4-29 lacks support for adding new properties to `Uint8Array`
+ * (See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438). IE 10 lacks support
+ * for __proto__ and has a buggy typed array implementation.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = typedArraySupport()
+
+if (!Buffer.TYPED_ARRAY_SUPPORT && typeof console !== 'undefined' &&
+    typeof console.error === 'function') {
+  console.error(
+    'This browser lacks typed array (Uint8Array) support which is required by ' +
+    '`buffer` v5.x. Use `buffer` v4.x if you require old browser support.'
+  )
+}
+
+function typedArraySupport () {
+  // Can typed array instances can be augmented?
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42
+  } catch (e) {
+    return false
+  }
+}
+
+Object.defineProperty(Buffer.prototype, 'parent', {
+  enumerable: true,
+  get: function () {
+    if (!Buffer.isBuffer(this)) return undefined
+    return this.buffer
+  }
+})
+
+Object.defineProperty(Buffer.prototype, 'offset', {
+  enumerable: true,
+  get: function () {
+    if (!Buffer.isBuffer(this)) return undefined
+    return this.byteOffset
+  }
+})
+
+function createBuffer (length) {
+  if (length > K_MAX_LENGTH) {
+    throw new RangeError('The value "' + length + '" is invalid for option "size"')
+  }
+  // Return an augmented `Uint8Array` instance
+  var buf = new Uint8Array(length)
+  buf.__proto__ = Buffer.prototype
+  return buf
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer (arg, encodingOrOffset, length) {
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new TypeError(
+        'The "string" argument must be of type string. Received type number'
+      )
+    }
+    return allocUnsafe(arg)
+  }
+  return from(arg, encodingOrOffset, length)
+}
+
+// Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+if (typeof Symbol !== 'undefined' && Symbol.species != null &&
+    Buffer[Symbol.species] === Buffer) {
+  Object.defineProperty(Buffer, Symbol.species, {
+    value: null,
+    configurable: true,
+    enumerable: false,
+    writable: false
+  })
+}
+
+Buffer.poolSize = 8192 // not used by this implementation
+
+function from (value, encodingOrOffset, length) {
+  if (typeof value === 'string') {
+    return fromString(value, encodingOrOffset)
+  }
+
+  if (ArrayBuffer.isView(value)) {
+    return fromArrayLike(value)
+  }
+
+  if (value == null) {
+    throw TypeError(
+      'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
+      'or Array-like Object. Received type ' + (typeof value)
+    )
+  }
+
+  if (isInstance(value, ArrayBuffer) ||
+      (value && isInstance(value.buffer, ArrayBuffer))) {
+    return fromArrayBuffer(value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'number') {
+    throw new TypeError(
+      'The "value" argument must not be of type number. Received type number'
+    )
+  }
+
+  var valueOf = value.valueOf && value.valueOf()
+  if (valueOf != null && valueOf !== value) {
+    return Buffer.from(valueOf, encodingOrOffset, length)
+  }
+
+  var b = fromObject(value)
+  if (b) return b
+
+  if (typeof Symbol !== 'undefined' && Symbol.toPrimitive != null &&
+      typeof value[Symbol.toPrimitive] === 'function') {
+    return Buffer.from(
+      value[Symbol.toPrimitive]('string'), encodingOrOffset, length
+    )
+  }
+
+  throw new TypeError(
+    'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
+    'or Array-like Object. Received type ' + (typeof value)
+  )
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer.from = function (value, encodingOrOffset, length) {
+  return from(value, encodingOrOffset, length)
+}
+
+// Note: Change prototype *after* Buffer.from is defined to workaround Chrome bug:
+// https://github.com/feross/buffer/pull/148
+Buffer.prototype.__proto__ = Uint8Array.prototype
+Buffer.__proto__ = Uint8Array
+
+function assertSize (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be of type number')
+  } else if (size < 0) {
+    throw new RangeError('The value "' + size + '" is invalid for option "size"')
+  }
+}
+
+function alloc (size, fill, encoding) {
+  assertSize(size)
+  if (size <= 0) {
+    return createBuffer(size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer(size).fill(fill, encoding)
+      : createBuffer(size).fill(fill)
+  }
+  return createBuffer(size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer.alloc = function (size, fill, encoding) {
+  return alloc(size, fill, encoding)
+}
+
+function allocUnsafe (size) {
+  assertSize(size)
+  return createBuffer(size < 0 ? 0 : checked(size) | 0)
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer.allocUnsafe = function (size) {
+  return allocUnsafe(size)
+}
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer.allocUnsafeSlow = function (size) {
+  return allocUnsafe(size)
+}
+
+function fromString (string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8'
+  }
+
+  if (!Buffer.isEncoding(encoding)) {
+    throw new TypeError('Unknown encoding: ' + encoding)
+  }
+
+  var length = byteLength(string, encoding) | 0
+  var buf = createBuffer(length)
+
+  var actual = buf.write(string, encoding)
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    buf = buf.slice(0, actual)
+  }
+
+  return buf
+}
+
+function fromArrayLike (array) {
+  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  var buf = createBuffer(length)
+  for (var i = 0; i < length; i += 1) {
+    buf[i] = array[i] & 255
+  }
+  return buf
+}
+
+function fromArrayBuffer (array, byteOffset, length) {
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('"offset" is outside of buffer bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('"length" is outside of buffer bounds')
+  }
+
+  var buf
+  if (byteOffset === undefined && length === undefined) {
+    buf = new Uint8Array(array)
+  } else if (length === undefined) {
+    buf = new Uint8Array(array, byteOffset)
+  } else {
+    buf = new Uint8Array(array, byteOffset, length)
+  }
+
+  // Return an augmented `Uint8Array` instance
+  buf.__proto__ = Buffer.prototype
+  return buf
+}
+
+function fromObject (obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    var buf = createBuffer(len)
+
+    if (buf.length === 0) {
+      return buf
+    }
+
+    obj.copy(buf, 0, 0, len)
+    return buf
+  }
+
+  if (obj.length !== undefined) {
+    if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
+      return createBuffer(0)
+    }
+    return fromArrayLike(obj)
+  }
+
+  if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
+    return fromArrayLike(obj.data)
+  }
+}
+
+function checked (length) {
+  // Note: cannot use `length < K_MAX_LENGTH` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= K_MAX_LENGTH) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + K_MAX_LENGTH.toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
+  return b != null && b._isBuffer === true &&
+    b !== Buffer.prototype // so Buffer.isBuffer(Buffer.prototype) will be false
+}
+
+Buffer.compare = function compare (a, b) {
+  if (isInstance(a, Uint8Array)) a = Buffer.from(a, a.offset, a.byteLength)
+  if (isInstance(b, Uint8Array)) b = Buffer.from(b, b.offset, b.byteLength)
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+    throw new TypeError(
+      'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
+    )
+  }
+
+  if (a === b) return 0
+
+  var x = a.length
+  var y = b.length
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i]
+      y = b[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'latin1':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!Array.isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer.alloc(0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = Buffer.allocUnsafe(length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (isInstance(buf, Uint8Array)) {
+      buf = Buffer.from(buf)
+    }
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+function byteLength (string, encoding) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (ArrayBuffer.isView(string) || isInstance(string, ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    throw new TypeError(
+      'The "string" argument must be one of type string, Buffer, or ArrayBuffer. ' +
+      'Received type ' + typeof string
+    )
+  }
+
+  var len = string.length
+  var mustMatch = (arguments.length > 2 && arguments[2] === true)
+  if (!mustMatch && len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+      case 'binary':
+        return len
+      case 'utf8':
+      case 'utf-8':
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) {
+          return mustMatch ? -1 : utf8ToBytes(string).length // assume utf8
+        }
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+Buffer.byteLength = byteLength
+
+function slowToString (encoding, start, end) {
+  var loweredCase = false
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0
+  start >>>= 0
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Slice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+// This property is used by `Buffer.isBuffer` (and the `is-buffer` npm package)
+// to detect a Buffer instance. It's not possible to use `instanceof Buffer`
+// reliably in a browserify context because there could be multiple different
+// copies of the 'buffer' package in use. This method works even for Buffer
+// instances that were created from another copy of the `buffer` package.
+// See: https://github.com/feross/buffer/issues/154
+Buffer.prototype._isBuffer = true
+
+function swap (b, n, m) {
+  var i = b[n]
+  b[n] = b[m]
+  b[m] = i
+}
+
+Buffer.prototype.swap16 = function swap16 () {
+  var len = this.length
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap(this, i, i + 1)
+  }
+  return this
+}
+
+Buffer.prototype.swap32 = function swap32 () {
+  var len = this.length
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap(this, i, i + 3)
+    swap(this, i + 1, i + 2)
+  }
+  return this
+}
+
+Buffer.prototype.swap64 = function swap64 () {
+  var len = this.length
+  if (len % 8 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 64-bits')
+  }
+  for (var i = 0; i < len; i += 8) {
+    swap(this, i, i + 7)
+    swap(this, i + 1, i + 6)
+    swap(this, i + 2, i + 5)
+    swap(this, i + 3, i + 4)
+  }
+  return this
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
+}
+
+Buffer.prototype.toLocaleString = Buffer.prototype.toString
+
+Buffer.prototype.equals = function equals (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function inspect () {
+  var str = ''
+  var max = exports.INSPECT_MAX_BYTES
+  str = this.toString('hex', 0, max).replace(/(.{2})/g, '$1 ').trim()
+  if (this.length > max) str += ' ... '
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (isInstance(target, Uint8Array)) {
+    target = Buffer.from(target, target.offset, target.byteLength)
+  }
+  if (!Buffer.isBuffer(target)) {
+    throw new TypeError(
+      'The "target" argument must be one of type Buffer or Uint8Array. ' +
+      'Received type ' + (typeof target)
+    )
+  }
+
+  if (start === undefined) {
+    start = 0
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0
+  }
+  if (thisStart === undefined) {
+    thisStart = 0
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0
+  end >>>= 0
+  thisStart >>>= 0
+  thisEnd >>>= 0
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart
+  var y = end - start
+  var len = Math.min(x, y)
+
+  var thisCopy = this.slice(thisStart, thisEnd)
+  var targetCopy = target.slice(start, end)
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i]
+      y = targetCopy[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+//
+// Arguments:
+// - buffer - a Buffer to search
+// - val - a string, Buffer, or number
+// - byteOffset - an index into `buffer`; will be clamped to an int32
+// - encoding - an optional encoding, relevant is val is a string
+// - dir - true for indexOf, false for lastIndexOf
+function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+  // Empty buffer means no match
+  if (buffer.length === 0) return -1
+
+  // Normalize byteOffset
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset = +byteOffset // Coerce to Number.
+  if (numberIsNaN(byteOffset)) {
+    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+    byteOffset = dir ? 0 : (buffer.length - 1)
+  }
+
+  // Normalize byteOffset: negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+  if (byteOffset >= buffer.length) {
+    if (dir) return -1
+    else byteOffset = buffer.length - 1
+  } else if (byteOffset < 0) {
+    if (dir) byteOffset = 0
+    else return -1
+  }
+
+  // Normalize val
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  // Finally, search either indexOf (if dir is true) or lastIndexOf
+  if (Buffer.isBuffer(val)) {
+    // Special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+  } else if (typeof val === 'number') {
+    val = val & 0xFF // Search for a byte value [0-255]
+    if (typeof Uint8Array.prototype.indexOf === 'function') {
+      if (dir) {
+        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
+      } else {
+        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
+      }
+    }
+    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+  var indexSize = 1
+  var arrLength = arr.length
+  var valLength = val.length
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase()
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2
+      arrLength /= 2
+      valLength /= 2
+      byteOffset /= 2
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var i
+  if (dir) {
+    var foundIndex = -1
+    for (i = byteOffset; i < arrLength; i++) {
+      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+        if (foundIndex === -1) foundIndex = i
+        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+      } else {
+        if (foundIndex !== -1) i -= i - foundIndex
+        foundIndex = -1
+      }
+    }
+  } else {
+    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+    for (i = byteOffset; i >= 0; i--) {
+      var found = true
+      for (var j = 0; j < valLength; j++) {
+        if (read(arr, i + j) !== read(val, j)) {
+          found = false
+          break
+        }
+      }
+      if (found) return i
+    }
+  }
+
+  return -1
+}
+
+Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+}
+
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+}
+
+Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  var strLen = string.length
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16)
+    if (numberIsNaN(parsed)) return i
+    buf[offset + i] = parsed
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite (buf, string, offset, length) {
+  return blitBuffer(asciiToBytes(string), buf, offset, length)
+}
+
+function latin1Write (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  return blitBuffer(base64ToBytes(string), buf, offset, length)
+}
+
+function ucs2Write (buf, string, offset, length) {
+  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8'
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset >>> 0
+    if (isFinite(length)) {
+      length = length >>> 0
+      if (encoding === undefined) encoding = 'utf8'
+    } else {
+      encoding = length
+      length = undefined
+    }
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite(this, string, offset, length)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Write(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  end = Math.min(buf.length, end)
+  var res = []
+
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+        : (firstByte > 0xBF) ? 2
+          : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
+  }
+
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F)
+  }
+  return ret
+}
+
+function latin1Slice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; ++i) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + (bytes[i + 1] * 256))
+  }
+  return res
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf = this.subarray(start, end)
+  // Return an augmented `Uint8Array` instance
+  newBuf.__proto__ = Buffer.prototype
+  return newBuf
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset >>> 0
+  byteLength = byteLength >>> 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset >>> 0
+  byteLength = byteLength >>> 0
+  if (!noAssert) {
+    checkOffset(offset, byteLength, this.length)
+  }
+
+  var val = this[offset + --byteLength]
+  var mul = 1
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+}
+
+Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset >>> 0
+  byteLength = byteLength >>> 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset >>> 0
+  byteLength = byteLength >>> 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var i = byteLength
+  var mul = 1
+  var val = this[offset + --i]
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  offset = offset >>> 0
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  byteLength = byteLength >>> 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var mul = 1
+  var i = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  byteLength = byteLength >>> 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  this[offset] = (value & 0xff)
+  this[offset + 1] = (value >>> 8)
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  this[offset] = (value >>> 8)
+  this[offset + 1] = (value & 0xff)
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  this[offset + 3] = (value >>> 24)
+  this[offset + 2] = (value >>> 16)
+  this[offset + 1] = (value >>> 8)
+  this[offset] = (value & 0xff)
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  this[offset] = (value >>> 24)
+  this[offset + 1] = (value >>> 16)
+  this[offset + 2] = (value >>> 8)
+  this[offset + 3] = (value & 0xff)
+  return offset + 4
+}
+
+Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) {
+    var limit = Math.pow(2, (8 * byteLength) - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = 0
+  var mul = 1
+  var sub = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) {
+    var limit = Math.pow(2, (8 * byteLength) - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  var sub = 0
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  this[offset] = (value & 0xff)
+  this[offset + 1] = (value >>> 8)
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  this[offset] = (value >>> 8)
+  this[offset + 1] = (value & 0xff)
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  this[offset] = (value & 0xff)
+  this[offset + 1] = (value >>> 8)
+  this[offset + 2] = (value >>> 16)
+  this[offset + 3] = (value >>> 24)
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  this[offset] = (value >>> 24)
+  this[offset + 1] = (value >>> 16)
+  this[offset + 2] = (value >>> 8)
+  this[offset + 3] = (value & 0xff)
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  value = +value
+  offset = offset >>> 0
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!Buffer.isBuffer(target)) throw new TypeError('argument should be a Buffer')
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('Index out of range')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+
+  if (this === target && typeof Uint8Array.prototype.copyWithin === 'function') {
+    // Use built-in when available, missing from IE11
+    this.copyWithin(targetStart, start, end)
+  } else if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (var i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, end),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      encoding = end
+      end = this.length
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if ((encoding === 'utf8' && code < 128) ||
+          encoding === 'latin1') {
+        // Fast path: If `val` fits into a single byte, use that numeric value.
+        val = code
+      }
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : Buffer.from(val, encoding)
+    var len = bytes.length
+    if (len === 0) {
+      throw new TypeError('The value "' + val +
+        '" is invalid for argument "value"')
+    }
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g
+
+function base64clean (str) {
+  // Node takes equal signs as end of the Base64 encoding
+  str = str.split('=')[0]
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = str.trim().replace(INVALID_BASE64_RE, '')
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+// ArrayBuffer or Uint8Array objects from other contexts (i.e. iframes) do not pass
+// the `instanceof` check but they should be treated as of that type.
+// See: https://github.com/feross/buffer/issues/166
+function isInstance (obj, type) {
+  return obj instanceof type ||
+    (obj != null && obj.constructor != null && obj.constructor.name != null &&
+      obj.constructor.name === type.name)
+}
+function numberIsNaN (obj) {
+  // For IE11 support
+  return obj !== obj // eslint-disable-line no-self-compare
+}
+
+},{"base64-js":321,"ieee754":324}],324:[function(require,module,exports){
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+},{}],325:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -54117,7 +56185,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":321}],321:[function(require,module,exports){
+},{"_process":326}],326:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -54303,7 +56371,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],322:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -54840,7 +56908,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],323:[function(require,module,exports){
+},{}],328:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -54926,7 +56994,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],324:[function(require,module,exports){
+},{}],329:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -55013,13 +57081,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],325:[function(require,module,exports){
+},{}],330:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":323,"./encode":324}],326:[function(require,module,exports){
+},{"./decode":328,"./encode":329}],331:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -55753,7 +57821,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":327,"punycode":322,"querystring":325}],327:[function(require,module,exports){
+},{"./util":332,"punycode":327,"querystring":330}],332:[function(require,module,exports){
 'use strict';
 
 module.exports = {
