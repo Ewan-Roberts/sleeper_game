@@ -19,13 +19,24 @@ const Enemy = {
 }
 
 module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
+  
+  // global.loader.load((loader,res) => {
+  //   console.log(loader)
+  //   console.log(res)
+    
 
-  for (let i = 0; i < 19; i++) Enemy.animation.moving.push(PIXI.Texture.fromFrame('survivor-move_knife_'+i));
-
+  // }) 
+  // console.log(PIXI)
+  for (let i = 0; i < 19; i++) {
+    
+    Enemy.animation.moving.push(PIXI.Texture.fromFrame('survivor-move_knife_'+i));
+  }
+  resolve()
 })
 
 module.exports.enemy_path = path_data => {
-
+  console.log(path_data)
+  console.log("path_data")
   const path = level_utils.createEnemyPathFrom(path_data)
   spriteHelper.drawPathAndShow(path)
 
@@ -37,7 +48,7 @@ module.exports.enemy_path = path_data => {
   enemy_sprite.rotation = -0.5
   enemy_sprite.play();
   
-  const influence_box = PIXI.Sprite.fromLoader(resources.black_dot)
+  const influence_box = PIXI.Sprite.fromFrame('black_dot')
   influence_box.width = 500;
   influence_box.height = 500;
   influence_box.rotation = -0.5

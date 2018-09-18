@@ -149,10 +149,12 @@ module.exports.add_floor = () => {
     
     if(!enemy_pathing.fired){
       enemy_pathing.fired = true;
-
+      console.log("iherre")
       enemy.enemy_frames()
       .then(()=>{
         const level_path_data = level_utils.importEnemyPathData();
+        console.log(level_path_data)
+        console.log("level_path_data")
         enemy.enemy_path(level_path_data)
       })
     }
