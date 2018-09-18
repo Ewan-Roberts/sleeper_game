@@ -1,36 +1,35 @@
 
-const PIXI = require("pixi.js");
+const PIXI = require('pixi.js');
+
 module.exports.add_items = () => {
+  const boxFull = PIXI.Sprite.fromFrame('chest_full');
+  boxFull.position.set(-1200, 0);
+  boxFull.width *= 2;
+  boxFull.height *= 2;
+  boxFull.rotation = 0.06;
+  boxFull.interactive = true;
+  boxFull.buttonMode = true;
+  boxFull.id = 35;
+  boxFull.on('pointerdown', () => {
+    boxFull.texture = PIXI.Sprite.fromFrame('chest_empty');
 
-  const box_full  = PIXI.Sprite.fromFrame('chest_full')
-  box_full.position.set(-1200,0);
-  box_full.width *=2;
-  box_full.height *=2;
-  box_full.rotation = 0.06;
-  box_full.interactive = true;
-  box_full.buttonMode = true;
-  box_full.id = 35;
-  box_full.on('pointerdown', ()=> { 
-    box_full.texture = res.box_empty.texture
-    
-    global.socket.emit("get_container_contents", box_full.id)
-  }); 
+    global.socket.emit('get_container_contents', boxFull.id);
+  });
 
-  const movable_box  = PIXI.Sprite.fromFrame('chest_full')
-  movable_box.position.set(-600,400);
-  movable_box.width *=2;
-  movable_box.height *=2;
-  movable_box.rotation = 0.06;
-  movable_box.interactive = true;
-  movable_box.buttonMode = true;
-  movable_box.weight = 10;
-  
-  global.movableItems.addChild(movable_box)
-  global.collisionItems.addChild(box_full)
-  global.viewport.addChild(global.collisionItems)
+  const movableBox = PIXI.Sprite.fromFrame('chest_full');
+  movableBox.position.set(-600, 400);
+  movableBox.width *= 2;
+  movableBox.height *= 2;
+  movableBox.rotation = 0.06;
+  movableBox.interactive = true;
+  movableBox.buttonMode = true;
+  movableBox.weight = 10;
 
-	global.socket.on("container_contents", contents =>{
-		console.log(contents)
-	})
+  global.movableItems.addChild(movableBox);
+  global.collisionItems.addChild(boxFull);
+  global.viewport.addChild(global.collisionItems);
 
-}
+  // global.socket.on('container_contents', (contents) => {
+  //   console.log(contents)
+  // })
+};

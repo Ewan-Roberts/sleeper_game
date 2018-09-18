@@ -1,9 +1,8 @@
-'use strict';
 
-const spriteHelper = require("./spriteHelper.js");
+const PIXI = require('pixi.js');
+const spriteHelper = require('./spriteHelper.js');
 
-module.exports.hit = (player,door) => {
-
+module.exports.hit = (player, door) => {
   const trimmedDoorData = spriteHelper.trimVertexData(door);
   const hitDirection = spriteHelper.hitBox(player.x, player.y, trimmedDoorData);
   const movement = 0.4;
@@ -14,13 +13,12 @@ module.exports.hit = (player,door) => {
 
   let rotationTarget = door.rotation;
 
-  if (hitDirection === "top") rotationTarget += movement
-  if (hitDirection === "bottom") rotationTarget -= movement
-  if (hitDirection === "exception") rotationTarget -= movement
+  if (hitDirection === 'top') rotationTarget += movement;
+  if (hitDirection === 'bottom') rotationTarget -= movement;
+  if (hitDirection === 'exception') rotationTarget -= movement;
 
   tween.to({
-    rotation: rotationTarget
+    rotation: rotationTarget,
   });
   tween.start();
-
-}
+};

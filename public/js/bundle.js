@@ -1,5 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){
+const PIXI = require('pixi.js');
 const spriteHelper = require('../utils/spriteHelper.js');
 
 global.critterContainer = new PIXI.Container();
@@ -7,31 +8,28 @@ global.critterContainer = new PIXI.Container();
 const Rat = {
 
   animation: {
-    moving:     [],
-    waiting:    [],
-    eating:     []
+    moving: [],
+    waiting: [],
+    eating: [],
   },
-
   sprite: {
-    moving:     {},
-    waiting:    {},
-    eating:     {}
+    moving: {},
+    waiting: {},
+    eating: {},
   },
-
   // noise: new Audio('audio/rat_noise_edited.wav')
 
-}
+};
 
-module.exports.load_rat = () => new Promise((resolve,reject)=>{
-
-  for (let i = 1; i < 15; i++) {
-      let val = i < 10 ? '0' + i : i;
-      Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_' + val));
+module.exports.load_rat = () => new Promise((resolve) => {
+  for (let i = 1; i < 15; i += 1) {
+    const val = i < 10 ? `0${i}` : i;
+    Rat.animation.moving.push(PIXI.Texture.fromFrame(`rat_${val}`));
   }
 
-  for (let i = 15; i > 0; i--) {
-      let val = i < 10 ? '0' + i : i;
-      Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_' + val));
+  for (let i = 15; i > 0; i -= 1) {
+    const val = i < 10 ? `0${i}` : i;
+    Rat.animation.moving.push(PIXI.Texture.fromFrame(`rat_${val}`));
   }
 
   Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
@@ -41,134 +39,120 @@ module.exports.load_rat = () => new Promise((resolve,reject)=>{
   Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
 
   Rat.animation.waiting = [
-      
-      PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_51'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_01')
-  ]
 
-  Rat.animation.dead = PIXI.Texture.fromFrame('rat_35')
+    PIXI.Texture.fromFrame('rat_36'),
+    PIXI.Texture.fromFrame('rat_37'),
+    PIXI.Texture.fromFrame('rat_38'),
+    PIXI.Texture.fromFrame('rat_51'),
+    PIXI.Texture.fromFrame('rat_37'),
+    PIXI.Texture.fromFrame('rat_36'),
+    PIXI.Texture.fromFrame('rat_01'),
+  ];
+
+  Rat.animation.dead = PIXI.Texture.fromFrame('rat_35');
 
   Rat.animation.eating = [
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_41'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_37')
-  ]
+    PIXI.Texture.fromFrame('rat_37'),
+    PIXI.Texture.fromFrame('rat_38'),
+    PIXI.Texture.fromFrame('rat_39'),
+    PIXI.Texture.fromFrame('rat_40'),
+    PIXI.Texture.fromFrame('rat_39'),
+    PIXI.Texture.fromFrame('rat_40'),
+    PIXI.Texture.fromFrame('rat_41'),
+    PIXI.Texture.fromFrame('rat_40'),
+    PIXI.Texture.fromFrame('rat_39'),
+    PIXI.Texture.fromFrame('rat_38'),
+    PIXI.Texture.fromFrame('rat_37'),
+  ];
+  resolve();
+});
 
-  resolve()
-
-})
-
-module.exports.mouseMove = (start,finish) => {
-    
+module.exports.mouseMove = (start, finish) => {
   // Rat.noise.volume = 0.5
   // Rat.noise.play();
   const mouseDeathSound = new Audio('audio/mouse_death_00.wav');
+  // Create a custom path the graphic will follow
+  const pathOne = new PIXI.tween.TweenPath()
+    .moveTo(start.x, start.y)
+    .lineTo(finish.x, finish.y);
 
-  //Create a custom path the graphic will follow
-  const path_one = new PIXI.tween.TweenPath()
-  .moveTo(start.x, start.y)
-  .lineTo(finish.x, finish.y)
+  spriteHelper.drawPathAndShow(pathOne);
 
-  spriteHelper.drawPathAndShow(path_one)
+  const animatedRat = new PIXI.extras.AnimatedSprite(Rat.animation.moving);
+  animatedRat.height /= 2;
+  animatedRat.width /= 2;
+  animatedRat.animationSpeed = 0.4;
+  animatedRat.play();
+  animatedRat.mouseDeathSound = mouseDeathSound;
+  animatedRat.dead = PIXI.Texture.fromFrame('rat_35');
 
-  const animated_rat = new PIXI.extras.AnimatedSprite(Rat.animation.moving);
-  animated_rat.height = animated_rat.height/2
-  animated_rat.width = animated_rat.width/2
-  animated_rat.animationSpeed = 0.4;
-  animated_rat.play();
-  animated_rat.mouseDeathSound = mouseDeathSound;
-  animated_rat.dead = PIXI.Texture.fromFrame('rat_35')
+  const animatedRatTween = PIXI.tweenManager.createTween(animatedRat);
+  animatedRatTween.name = 'tween';
+  animatedRatTween.path = pathOne;
+  animatedRatTween.target.rotation = spriteHelper.angle(animatedRat, pathOne._tmpPoint2);
+  animatedRatTween.time = 3000;
+  animatedRatTween.easing = PIXI.tween.Easing.inOutQuad();
+  animatedRatTween.name = 'tween path';
+  animatedRatTween.start();
 
-  const animated_rat_tween = PIXI.tweenManager.createTween(animated_rat);
-  animated_rat_tween.name = "tween"
-  animated_rat_tween.path = path_one;
-  animated_rat_tween.target.rotation = spriteHelper.angle(animated_rat, path_one._tmpPoint2)
-  animated_rat_tween.time = 3000;
-  animated_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_rat_tween.name = "tween path"
-  animated_rat_tween.start()
-          
-  global.critterContainer.addChild(animated_rat)
-  global.viewport.addChild(global.critterContainer)
+  global.critterContainer.addChild(animatedRat);
+  global.viewport.addChild(global.critterContainer);
 
-  Rat.sprite.moving = animated_rat;
+  Rat.sprite.moving = animatedRat;
+};
 
-}
+module.exports.mousePause = () => new Promise((resolve) => {
+  const pathWaiting = new PIXI.tween.TweenPath()
+    .moveTo(90, 720)
+    .lineTo(90, 721);
 
-module.exports.mousePause = () => {
+  const waitingRat = new PIXI.extras.AnimatedSprite(Rat.animation.waiting);
+  waitingRat.alpha = 0;
+  waitingRat.rotation = 2.1;
+  waitingRat.anchor.set(0.5);
+  waitingRat.height /= 2;
+  waitingRat.width /= 2;
+  waitingRat.animationSpeed = 0.1;
+  waitingRat.play();
+  global.viewport.addChild(waitingRat);
 
-  return new Promise ((resolve,reject)=>{
+  const waitingRatTween = PIXI.tweenManager.createTween(waitingRat);
+  waitingRatTween.path = pathWaiting;
+  waitingRatTween.time = 1000;
+  waitingRatTween.easing = PIXI.tween.Easing.inOutQuad();
+  waitingRatTween.start();
 
-    const path_waiting = new PIXI.tween.TweenPath()
-    .moveTo(90,720)
-    .lineTo(90, 721)
+  waitingRatTween.on('start', () => {
+    waitingRat.alpha = 1;
+  });
 
-    const waiting_rat = new PIXI.extras.AnimatedSprite(Rat.animation.waiting);
-    waiting_rat.alpha = 0;
-    waiting_rat.rotation = 2.1
-    waiting_rat.anchor.set(0.5);
-    waiting_rat.height = waiting_rat.height/2
-    waiting_rat.width = waiting_rat.width/2
-    waiting_rat.animationSpeed = 0.1;
-    waiting_rat.play();
-    viewport.addChild(waiting_rat)
+  waitingRatTween.on('end', () => {
+    waitingRat.destroy();
+    Rat.sprite.moving.alpha = 1;
+    resolve();
+  });
 
-    const waiting_rat_tween = PIXI.tweenManager.createTween(waiting_rat);
-    waiting_rat_tween.path = path_waiting;
-    waiting_rat_tween.time = 1000
-    waiting_rat_tween.easing = PIXI.tween.Easing.inOutQuad();
-    waiting_rat_tween.start()
-    
-    waiting_rat_tween.on("start", ()=> waiting_rat.alpha = 1)
-
-    waiting_rat_tween.on("end", ()=>{
-        
-        waiting_rat.destroy()
-        Rat.sprite.moving.alpha = 1;
-        resolve()
-
-    })
-
-    Rat.sprite.waiting = waiting_rat
-
-  })
-
-}
+  Rat.sprite.waiting = waitingRat;
+});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":16}],2:[function(require,module,exports){
+},{"../utils/spriteHelper.js":16,"pixi.js":239}],2:[function(require,module,exports){
 (function (global){
-const filters = require('pixi-filters'),
-spriteHelper = require("../utils/spriteHelper.js");
+const PIXI = require('pixi.js');
+const spriteHelper = require('../utils/spriteHelper.js');
 
-module.exports.teleport = (x,y) => new Promise((resolve,reject)=>{
-
+module.exports.teleport = (x, y) => {
   global.Player.sprite.x = x;
   global.Player.sprite.y = y;
-
-})
+};
 
 module.exports.clearScene = () => global.viewport.removeChildren();
 
-module.exports.createPlayer = () =>{
-
+module.exports.createPlayer = () => {
   global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.anchor.set(0.5);
-  global.Player.sprite.width /= 2
-  global.Player.sprite.height /= 2
+  global.Player.sprite.width /= 2;
+  global.Player.sprite.height /= 2;
   global.Player.sprite.animationSpeed = 0.6;
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
@@ -177,96 +161,84 @@ module.exports.createPlayer = () =>{
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
 
-  global.viewport.addChild(global.Player.sprite); 
-}
+  global.viewport.addChild(global.Player.sprite);
+};
 
-module.exports.wakePlayer = () => {
-  
-  return new Promise((resolve,reject)=>{
+module.exports.movePlayer = (start, finish) => {
+  const pathOne = new PIXI.tween.TweenPath()
+    .moveTo(start.x, start.y)
+    .lineTo(finish.x, finish.y);
 
-    const animated_player = new PIXI.extras.AnimatedSprite(Player.animation.wake_up);
+  const pathOneVisualGuide = new PIXI.Graphics()
+    .lineStyle(1, 0xffffff, 1)
+    .drawPath(pathOne);
+  global.viewport.addChild(pathOneVisualGuide);
 
-  })
-}
+  const animatedPlayer = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
+  animatedPlayer.x = start.x;
+  animatedPlayer.y = start.y;
+  animatedPlayer.height /= 3;
+  animatedPlayer.width /= 3;
+  animatedPlayer.texture.width = 100;
+  animatedPlayer.texture.height = 100;
+  animatedPlayer.anchor.set(0);
+  animatedPlayer.animationSpeed = 0.4;
+  animatedPlayer.play();
 
-module.exports.movePlayer = (start,finish) => {
-    
-  const path_one = new PIXI.tween.TweenPath()
-  .moveTo(start.x, start.y)
-  .lineTo(finish.x, finish.y)
+  const animatedPlayerTween = PIXI.tweenManager.createTween(animatedPlayer);
+  animatedPlayerTween.name = 'tween';
+  animatedPlayerTween.path = pathOne;
+  animatedPlayerTween.target.rotation = spriteHelper.angle(animatedPlayer, pathOne.tmpPoint2);
+  animatedPlayerTween.time = 3000;
+  animatedPlayerTween.easing = PIXI.tween.Easing.inOutQuad();
+  animatedPlayerTween.name = 'tween path';
+  animatedPlayerTween.start();
 
-  const path_one_visual_guide = new PIXI.Graphics()
-  .lineStyle(1, 0xffffff, 1)
-  .drawPath(path_one)
-  global.viewport.addChild(path_one_visual_guide)
+  global.viewport.addChild(animatedPlayer);
+};
 
-  const animated_player = new PIXI.extras.AnimatedSprite(Player.animation.idle);
-  animated_player.x = start.x;
-  animated_player.y = start.y;
-  animated_player.height /= 3
-  animated_player.width /= 3
-  animated_player.texture.width = 100
-  animated_player.texture.height = 100
-  animated_player.anchor.set(0);
-  animated_player.animationSpeed = 0.4;
-  animated_player.play();
-
-  //Tween animation
-  const animated_player_tween = PIXI.tweenManager.createTween(animated_player);
-  animated_player_tween.name = "tween"
-  animated_player_tween.path = path_one;
-  animated_player_tween.target.rotation = spriteHelper.angle(animated_player, path_one._tmpPoint2)
-  animated_player_tween.time = 3000;
-  animated_player_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_player_tween.name = "tween path"
-  animated_player_tween.start()
-  
-  
-  global.viewport.addChild(animated_player)
-}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":16,"pixi-filters":114}],3:[function(require,module,exports){
+},{"../utils/spriteHelper.js":16,"pixi.js":239}],3:[function(require,module,exports){
 (function (global){
-
-const cutsceneUtil = require('./cutsceneUtils'),
-  filterUtil = require('../visual_effects/filterUtils.js'),
-  player = require('../player/player.js')
+const PIXI = require('pixi.js');
+const cutsceneUtil = require('./cutsceneUtils');
+const filterUtil = require('../visual_effects/filterUtils.js');
+const player = require('../player/player.js');
 
 const scene = {
   x: 1000,
-  y: 1000
-}
+  y: 1000,
+};
 
-module.exports.start = () => new Promise((resolve,reject)=>{
+module.exports.start = () => {
+  player.remove_controls();
+  cutsceneUtil.clearScene();
+  cutsceneUtil.teleport(scene.x, scene.y);
 
-  player.remove_controls()
-  cutsceneUtil.clearScene()
-  cutsceneUtil.teleport(scene.x, scene.y)
+  const introFloor = PIXI.Sprite.fromFrame('bedroom_floor_cutscene');
+  introFloor.width *= 2;
+  introFloor.height *= 2;
+  introFloor.anchor.set(0.5);
+  introFloor.position.set(scene.x - 300, scene.y);
 
-  let intro_floor = PIXI.Sprite.fromFrame('bedroom_floor_cutscene');
-  intro_floor.width *=2;
-  intro_floor.height *=2;
-  intro_floor.anchor.set(0.5);
-  intro_floor.position.set(scene.x-300,scene.y);
+  global.viewport.addChild(introFloor);
 
-  global.viewport.addChild(intro_floor);
-  
-  filterUtil.godray(intro_floor.x+100,(scene.y - intro_floor.height-50))
-  .then(()=>cutsceneUtil.createPlayer())
-  .then(()=>{
-
-    global.Player.moveable = false;
-    cutsceneUtil.movePlayer({x: scene.x+200, y:scene.y-200},{x: scene.x+200, y:scene.y+500})
-
-  })
-
-})
-
-
+  filterUtil.godray(introFloor.x + 100, (scene.y - introFloor.height - 50))
+    .then(() => cutsceneUtil.createPlayer())
+    .then(() => {
+      global.Player.moveable = false;
+      cutsceneUtil.movePlayer(
+        { x: scene.x + 200, y: scene.y - 200 },
+        { x: scene.x + 200, y: scene.y + 500 },
+      );
+    });
+};
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../player/player.js":13,"../visual_effects/filterUtils.js":17,"./cutsceneUtils":2}],4:[function(require,module,exports){
+},{"../player/player.js":13,"../visual_effects/filterUtils.js":17,"./cutsceneUtils":2,"pixi.js":239}],4:[function(require,module,exports){
 (function (global){
+
+const PIXI = require('pixi.js');
 
 const enemyDialogOptions = [
   'Oh shit, there he is',
@@ -278,172 +250,153 @@ const enemyDialogOptions = [
   'Are you real?',
   'Ill help you die',
   'Give me that now',
-  'Isabella? Is that you?'
+  'Isabella? Is that you?',
 ];
 
 module.exports.renderText = (point, text) => {
-
   const renderText = new PIXI.Text(text);
-  renderText.x = point.x-100;
-  renderText.y = point.y-80;
+  renderText.x = point.x - 100;
+  renderText.y = point.y - 80;
 
-  global.viewport.addChild(renderText)
+  global.viewport.addChild(renderText);
 
   function fadeOut() {
-
-    if(renderText.alpha > 0) renderText.alpha -= 0.01;
+    if (renderText.alpha > 0) renderText.alpha -= 0.01;
     else global.app.ticker.remove(fadeOut);
-    
   }
 
   global.app.ticker.add(fadeOut);
-}
+};
 
-module.exports.enemySurprised = () => enemyDialogOptions[Math.floor(Math.random()*enemyDialogOptions.length)];
+module.exports.enemySurprised = () => enemyDialogOptions[
+  Math.floor(Math.random() * enemyDialogOptions.length)
+];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{"pixi.js":239}],5:[function(require,module,exports){
 (function (global){
-const spriteHelper = require('../utils/spriteHelper.js'),
-      bowHelper = require('../weapons/bow/bowHelper'),
-      level_utils = require('../level/level_utils'),
-      dialogUtil = require('../dialog/dialogUtil.js')
+const PIXI = require('pixi.js');
+const spriteHelper = require('../utils/spriteHelper.js');
+const bowHelper = require('../weapons/bow/bowHelper');
+const levelUtils = require('../level/level_utils');
+const dialogUtil = require('../dialog/dialogUtil.js');
 
 global.enemyContainer = new PIXI.Container();
-global.enemyContainer.name = "enemyContainer"
+global.enemyContainer.name = 'enemyContainer';
 
 const Enemy = {
 
   animation: {
-    moving:     [],
-    waiting:    []
+    moving: [],
+    waiting: [],
   },
   sprite: {
-    moving:     {},
-    waiting:    {}
+    moving: {},
+    waiting: {},
+  },
+};
+
+module.exports.enemy_frames = () => new Promise((resolve) => {
+  for (let i = 0; i < 19; i += 1) {
+    Enemy.animation.moving.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
   }
-}
+  resolve();
+});
 
-module.exports.enemy_frames = () => new Promise((resolve,reject)=>{
-  
-  // global.loader.load((loader,res) => {
-  //   console.log(loader)
-  //   console.log(res)
-    
+module.exports.enemy_path = (pathData) => {
+  const path = levelUtils.createEnemyPathFrom(pathData);
+  spriteHelper.drawPathAndShow(path);
 
-  // }) 
-  // console.log(PIXI)
-  for (let i = 0; i < 19; i++) {
-    
-    Enemy.animation.moving.push(PIXI.Texture.fromFrame('survivor-move_knife_'+i));
-  }
-  resolve()
-})
+  const enemySprite = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
+  enemySprite.height /= 3;
+  enemySprite.width /= 3;
+  enemySprite.anchor.set(0.5);
+  enemySprite.animationSpeed = 0.4;
+  enemySprite.rotation = -0.5;
+  enemySprite.play();
 
-module.exports.enemy_path = path_data => {
-  console.log(path_data)
-  console.log("path_data")
-  const path = level_utils.createEnemyPathFrom(path_data)
-  spriteHelper.drawPathAndShow(path)
+  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
+  influenceBox.width = 500;
+  influenceBox.height = 500;
+  influenceBox.rotation = -0.5;
+  influenceBox.alpha = 0.3;
 
-  const enemy_sprite = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  enemy_sprite.height /= 3
-  enemy_sprite.width /= 3
-  enemy_sprite.anchor.set(0.5);
-  enemy_sprite.animationSpeed = 0.4;
-  enemy_sprite.rotation = -0.5
-  enemy_sprite.play();
-  
-  const influence_box = PIXI.Sprite.fromFrame('black_dot')
-  influence_box.width = 500;
-  influence_box.height = 500;
-  influence_box.rotation = -0.5
-  influence_box.alpha = 0.3;
+  const influenceBoxTween = PIXI.tweenManager.createTween(influenceBox);
+  influenceBoxTween.rotation = -0.5;
+  influenceBoxTween.path = path;
+  influenceBoxTween.time = 30000;
+  influenceBoxTween.easing = PIXI.tween.Easing.inOutQuad();
+  influenceBoxTween.start();
+  influenceBoxTween.pingPong = true;
 
-  const influence_box_tween = PIXI.tweenManager.createTween(influence_box);
-  influence_box_tween.rotation = -0.5;
-  influence_box_tween.path = path;
-  influence_box_tween.time = 30000;
-  influence_box_tween.easing = PIXI.tween.Easing.inOutQuad();
-  influence_box_tween.start();
-  influence_box_tween.pingPong = true;
-  
-  //Tween animation
-  const animated_enemy_tween = PIXI.tweenManager.createTween(enemy_sprite);
-  animated_enemy_tween.path = path;
-  animated_enemy_tween.rotation = spriteHelper.angle(enemy_sprite, path._tmpPoint2);
-  animated_enemy_tween.time = 30000;
-  animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_enemy_tween.start();
-  animated_enemy_tween.pingPong = true;
+  const animatedEnemyTween = PIXI.tweenManager.createTween(enemySprite);
+  animatedEnemyTween.path = path;
+  animatedEnemyTween.rotation = spriteHelper.angle(enemySprite, path._tmpPoint2);
+  animatedEnemyTween.time = 30000;
+  animatedEnemyTween.easing = PIXI.tween.Easing.inOutQuad();
+  animatedEnemyTween.start();
+  animatedEnemyTween.pingPong = true;
 
-  influence_box_tween.on("update", function() {
-    
-    animated_enemy_tween.target.rotation = animated_enemy_tween.rotation+ spriteHelper.angle(enemy_sprite, path._tmpPoint2)
-    influence_box_tween.target.rotation = influence_box_tween.rotation+ spriteHelper.angle(enemy_sprite, path._tmpPoint2)
-    spriteHelper.hitBoxSpriteObj(influence_box, global.Player.sprite)
-    .then(res => {
+  influenceBoxTween.on('update', () => {
+    animatedEnemyTween.target.rotation = animatedEnemyTween.rotation + spriteHelper.angle(enemySprite, path._tmpPoint2);
+    influenceBoxTween.target.rotation = influenceBoxTween.rotation + spriteHelper.angle(enemySprite, path._tmpPoint2);
+    spriteHelper.hitBoxSpriteObj(influenceBox, global.Player.sprite)
+      .then(() => {
+        dialogUtil.renderText(enemySprite, dialogUtil.enemySurprised());
+        animatedEnemyTween.stop();
+        enemySprite.stop();
+        enemySprite.rotation = spriteHelper.angle(enemySprite, global.Player.sprite);
+        influenceBoxTween.stop();
+        bowHelper.arrowManagement(500, enemySprite, global.Player.sprite);
+      });
+  });
 
-      console.log("enemy sees you")
-      dialogUtil.renderText(enemy_sprite, dialogUtil.enemySurprised())
-      animated_enemy_tween.stop()
-      enemy_sprite.stop()
-      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite)
-      influence_box_tween.stop()
-      bowHelper.arrowManagement(500, enemy_sprite, global.Player.sprite)
+  global.enemyContainer.addChild(enemySprite, influenceBox);
+  global.viewport.addChild(global.enemyContainer);
+};
 
-    })
+module.exports.move = (start, finish) => {
+  const pathOne = new PIXI.tween.TweenPath()
+    .moveTo(start.x, start.y)
+    .lineTo(finish.x, finish.y);
 
-  })
-  
-  global.enemyContainer.addChild(enemy_sprite,influence_box)
-  global.viewport.addChild(global.enemyContainer)
-}
+  const pathOneVisualGuide = new PIXI.Graphics()
+    .lineStyle(1, 0xffffff, 1)
+    .drawPath(pathOne);
 
-module.exports.move = (start,finish) => {
+  global.viewport.addChild(pathOneVisualGuide);
 
-  const path_one = new PIXI.tween.TweenPath()
-  .moveTo(start.x, start.y)
-  .lineTo(finish.x, finish.y)
+  const animatedEnemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
+  animatedEnemy.height /= 3;
+  animatedEnemy.width /= 3;
+  animatedEnemy.texture.width = 100;
+  animatedEnemy.texture.height = 100;
+  animatedEnemy.anchor.set(0);
+  animatedEnemy.animationSpeed = 0.4;
+  animatedEnemy.play();
 
-  const path_one_visual_guide = new PIXI.Graphics()
-  .lineStyle(1, 0xffffff, 1)
-  .drawPath(path_one)
-  global.viewport.addChild(path_one_visual_guide)
+  const animatedEnemyTween = PIXI.tweenManager.createTween(animatedEnemy);
+  animatedEnemyTween.path = pathOne;
+  animatedEnemyTween.target.rotation = spriteHelper.angle(animatedEnemy, pathOne._tmpPoint2);
+  animatedEnemyTween.time = 3000;
+  animatedEnemyTween.easing = PIXI.tween.Easing.inOutQuad();
+  animatedEnemyTween.start();
 
-  const animated_enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  animated_enemy.height /= 3
-  animated_enemy.width /= 3
-  animated_enemy.texture.width = 100
-  animated_enemy.texture.height = 100
-  animated_enemy.anchor.set(0);
-  animated_enemy.animationSpeed = 0.4;
-  animated_enemy.play();
+  global.enemyContainer.addChild(animatedEnemy);
+  global.viewport.addChild(global.enemyContainer);
 
-  const animated_enemy_tween = PIXI.tweenManager.createTween(animated_enemy);
-  animated_enemy_tween.name = "tween"
-  animated_enemy_tween.path = path_one;
-  animated_enemy_tween.target.rotation = spriteHelper.angle(animated_enemy, path_one._tmpPoint2)
-  animated_enemy_tween.time = 3000;
-  animated_enemy_tween.easing = PIXI.tween.Easing.inOutQuad();
-  animated_enemy_tween.name = "tween path"
-  animated_enemy_tween.start()
-
-  global.enemyContainer.addChild(animated_enemy)
-  global.viewport.addChild(global.enemyContainer)
-
-  Enemy.sprite.moving = animated_enemy;
-}
+  Enemy.sprite.moving = animatedEnemy;
+};
 
 module.exports.projectileAttack = (target) => {
   const enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  
-  bowHelper.arrowManagement(500, enemy, target)
-  
-  global.viewport.addChild(enemy)
-}
+
+  bowHelper.arrowManagement(500, enemy, target);
+
+  global.viewport.addChild(enemy);
+};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialogUtil.js":4,"../level/level_utils":10,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper":19}],6:[function(require,module,exports){
+},{"../dialog/dialogUtil.js":4,"../level/level_utils":10,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper":19,"pixi.js":239}],6:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -497,7 +450,7 @@ global.loader.load(() => {
 global.app.ticker.add(() => PIXI.tweenManager.update());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":9,"pixi-layers":132,"pixi-packer-parser":133,"pixi-tween":134,"pixi-viewport":147,"pixi.js":264,"socket.io-client":306}],7:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":9,"pixi-layers":107,"pixi-packer-parser":108,"pixi-tween":109,"pixi-viewport":122,"pixi.js":239,"socket.io-client":281}],7:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -992,373 +945,349 @@ module.exports={ "columns":0,
 },{}],8:[function(require,module,exports){
 (function (global){
 
-const PIXI = require("pixi.js");
+const PIXI = require('pixi.js');
+
 module.exports.add_items = () => {
+  const boxFull = PIXI.Sprite.fromFrame('chest_full');
+  boxFull.position.set(-1200, 0);
+  boxFull.width *= 2;
+  boxFull.height *= 2;
+  boxFull.rotation = 0.06;
+  boxFull.interactive = true;
+  boxFull.buttonMode = true;
+  boxFull.id = 35;
+  boxFull.on('pointerdown', () => {
+    boxFull.texture = PIXI.Sprite.fromFrame('chest_empty');
 
-  const box_full  = PIXI.Sprite.fromFrame('chest_full')
-  box_full.position.set(-1200,0);
-  box_full.width *=2;
-  box_full.height *=2;
-  box_full.rotation = 0.06;
-  box_full.interactive = true;
-  box_full.buttonMode = true;
-  box_full.id = 35;
-  box_full.on('pointerdown', ()=> { 
-    box_full.texture = res.box_empty.texture
-    
-    global.socket.emit("get_container_contents", box_full.id)
-  }); 
+    global.socket.emit('get_container_contents', boxFull.id);
+  });
 
-  const movable_box  = PIXI.Sprite.fromFrame('chest_full')
-  movable_box.position.set(-600,400);
-  movable_box.width *=2;
-  movable_box.height *=2;
-  movable_box.rotation = 0.06;
-  movable_box.interactive = true;
-  movable_box.buttonMode = true;
-  movable_box.weight = 10;
-  
-  global.movableItems.addChild(movable_box)
-  global.collisionItems.addChild(box_full)
-  global.viewport.addChild(global.collisionItems)
+  const movableBox = PIXI.Sprite.fromFrame('chest_full');
+  movableBox.position.set(-600, 400);
+  movableBox.width *= 2;
+  movableBox.height *= 2;
+  movableBox.rotation = 0.06;
+  movableBox.interactive = true;
+  movableBox.buttonMode = true;
+  movableBox.weight = 10;
 
-	global.socket.on("container_contents", contents =>{
-		console.log(contents)
-	})
+  global.movableItems.addChild(movableBox);
+  global.collisionItems.addChild(boxFull);
+  global.viewport.addChild(global.collisionItems);
 
-}
+  // global.socket.on('container_contents', (contents) => {
+  //   console.log(contents)
+  // })
+};
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":264}],9:[function(require,module,exports){
+},{"pixi.js":239}],9:[function(require,module,exports){
 (function (global){
-'use strict';
 
-const player = require("../../player/player.js"),
-enemy = require("../../enemies/enemy.js"),
-items = require("./debug_items.js"),
-doorHelper = require("../../utils/doorHelper.js"),
-level_utils = require("../level_utils.js"),
-filterUtil = require("../../visual_effects/filterUtils.js"),
-dialogUtil = require("../../dialog/dialogUtil.js"),
-network_players = require("../../network/network_players.js"),
-sprite_animations = require("../../visual_effects/sprite_animations.js"),
-rain = require("../../weather/rain.js"),
-cutscene_intro = require("../../cutscene/cutscene_intro.js"),
-rat  = require("../../animals/rat.js");
+const PIXI = require('pixi.js');
+const player = require('../../player/player.js');
+const enemy = require('../../enemies/enemy.js');
+const items = require('./debug_items.js');
+// const doorHelper = require('../../utils/doorHelper.js');
+const levelUtils = require('../level_utils.js');
+const filterUtil = require('../../visual_effects/filterUtils.js');
+const dialogUtil = require('../../dialog/dialogUtil.js');
+const networkPlayers = require('../../network/network_players.js');
+const spriteAnimations = require('../../visual_effects/sprite_animations.js');
+const rain = require('../../weather/rain.js');
+const cutsceneIntro = require('../../cutscene/cutscene_intro.js');
+const rat = require('../../animals/rat.js');
 
 
 global.collisionItems = new PIXI.Container();
 global.eventTriggers = new PIXI.Container();
 
-function createPad(x,y) {
+function createPad(x, y) {
   const pad = PIXI.Sprite.fromFrame('black_wall');
-  
+
   pad.width = 200;
   pad.height = 100;
-  pad.position.set(x,y);
+  pad.position.set(x, y);
 
   return pad;
 }
 
 module.exports.add_floor = () => {
-    
-  const slanted_wall = PIXI.Sprite.fromFrame('black_wall')
-  slanted_wall.rotation = 0.4
-  slanted_wall.position.set(100,100)
+  const slantedWall = PIXI.Sprite.fromFrame('black_wall');
+  slantedWall.rotation = 0.4;
+  slantedWall.position.set(100, 100);
 
-  const collision_wall = PIXI.Sprite.fromFrame('black_wall')
-  collision_wall.position.set(100,600);
-  collision_wall.name = "collision_wall";
+  const collisionWall = PIXI.Sprite.fromFrame('black_wall');
+  collisionWall.position.set(100, 600);
 
-  const door = PIXI.Sprite.fromFrame('black_wall')
-  door.width /=2
-  door.position.set(-100,-200)
+  const door = PIXI.Sprite.fromFrame('black_wall');
+  door.width /= 2;
+  door.position.set(-100, -200);
 
-  const rat_pad = createPad(-700,200)
-  rat_pad.alpha = 0.4;
-  rat_pad.fired = false;
-  rat_pad.action = () =>{
-    
-    if(!rat_pad.fired){
-      rat_pad.fired = true
-      rat.load_rat().then(()=>rat.mouseMove({x:100,y:300},{x:0,y:400}))
-    } 
-  }
-
-  const enemy_pad = createPad(-950,200)
-  enemy_pad.alpha = 0.2;
-  enemy_pad.fired = false;
-  enemy_pad.action = () =>{
-    
-    if(!enemy_pad.fired){
-      enemy_pad.fired = true
-      enemy.enemy_frames().then(()=>enemy.projectileAttack(global.Player.sprite))
+  const ratPad = createPad(-700, 200);
+  ratPad.alpha = 0.4;
+  ratPad.fired = false;
+  ratPad.action = () => {
+    if (!ratPad.fired) {
+      ratPad.fired = true;
+      rat.load_rat().then(() => rat.mouseMove({ x: 100, y: 300 }, { x: 0, y: 400 }));
     }
-  }
+  };
 
-  const level_load_pad = createPad(-450,200)
-  level_load_pad.alpha = 0.6;
-  level_load_pad.fired = false;
-  level_load_pad.action = () =>{
-    
-    if(!level_load_pad.fired){
-      level_load_pad.fired = true
-      level_utils.importBedroomData()
+  const enemyPad = createPad(-950, 200);
+  enemyPad.alpha = 0.2;
+  enemyPad.fired = false;
+  enemyPad.action = () => {
+    if (!enemyPad.fired) {
+      enemyPad.fired = true;
+      enemy.enemy_frames().then(() => enemy.projectileAttack(global.Player.sprite));
     }
-  }
+  };
 
-  const glitch_pad = createPad(-700,50)
-  glitch_pad.alpha = 0.4;
-  glitch_pad.fired = false;
-  glitch_pad.action = () =>{
-    
-    if(!glitch_pad.fired){
-      glitch_pad.fired = true
-      filterUtil.glitch()
-    
+  const levelLoadPad = createPad(-450, 200);
+  levelLoadPad.alpha = 0.6;
+  levelLoadPad.fired = false;
+  levelLoadPad.action = () => {
+    if (!levelLoadPad.fired) {
+      levelLoadPad.fired = true;
+      levelUtils.importBedroomData();
+    }
+  };
+
+  const glitchPad = createPad(-700, 50);
+  glitchPad.alpha = 0.4;
+  glitchPad.fired = false;
+  glitchPad.action = () => {
+    if (!glitchPad.fired) {
+      glitchPad.fired = true;
+      filterUtil.glitch();
     } else filterUtil.clear();
-  }
+  };
 
-  const dialog_pad = createPad(-450,50)
-  dialog_pad.alpha = 0.6;
-  dialog_pad.fired = false;
-  dialog_pad.action = () =>{
-    
-    if(!dialog_pad.fired){
-      dialog_pad.fired = true
-      dialogUtil.renderText(global.Player.sprite, 'I am some dialog')
-    } else rain.start_rain(0,3400,400,850);
-  }
+  const dialogPad = createPad(-450, 50);
+  dialogPad.alpha = 0.6;
+  dialogPad.fired = false;
+  dialogPad.action = () => {
+    if (!dialogPad.fired) {
+      dialogPad.fired = true;
+      dialogUtil.renderText(global.Player.sprite, 'I am some dialog');
+    } else rain.start_rain(0, 3400, 400, 850);
+  };
 
-  const effect_pad = createPad(-200,200)
-  effect_pad.fired = false;
-  effect_pad.alpha = 0.8;
-  effect_pad.action = () =>{
-    
-    if(!effect_pad.fired){
-      effect_pad.fired = true
-      filterUtil.fade_in_black()
+  const effectPad = createPad(-200, 200);
+  effectPad.fired = false;
+  effectPad.alpha = 0.8;
+  effectPad.action = () => {
+    if (!effectPad.fired) {
+      effectPad.fired = true;
+      filterUtil.fade_in_black();
     } else filterUtil.fade_out_black();
-  }
+  };
 
-  const animation_pad = createPad(-700,-100)
-  animation_pad.fired = false;
-  animation_pad.alpha = 0.6;
-  animation_pad.action = () =>{
-    
-    if(!animation_pad.fired){
-      animation_pad.fired = true
-      sprite_animations.load_flag()
+  const animationPad = createPad(-700, -100);
+  animationPad.fired = false;
+  animationPad.alpha = 0.6;
+  animationPad.action = () => {
+    if (!animationPad.fired) {
+      animationPad.fired = true;
+      spriteAnimations.load_flag();
     }
-  }
+  };
 
-  const load_park_pad = createPad(-950,-100)
-  load_park_pad.fired = false;
-  load_park_pad.alpha = 0.4;
-  load_park_pad.action = () =>{
-    
-    if(!load_park_pad.fired){
-      load_park_pad.fired = true
-      level_utils.importParkData()
+  const loadParkPad = createPad(-950, -100);
+  loadParkPad.fired = false;
+  loadParkPad.alpha = 0.4;
+  loadParkPad.action = () => {
+    if (!loadParkPad.fired) {
+      loadParkPad.fired = true;
+      levelUtils.importParkData();
     }
-    
-  }
+  };
 
-  const network_pad = createPad(-450,-100)
-  network_pad.fired = false;
-  network_pad.alpha = 0.8;
-  network_pad.action = () =>{
-    if(!network_pad.fired){
-
-      network_pad.fired = true
-      network_players.load_network_sprite()
+  const networkPad = createPad(-450, -100);
+  networkPad.fired = false;
+  networkPad.alpha = 0.8;
+  networkPad.action = () => {
+    if (!networkPad.fired) {
+      networkPad.fired = true;
+      networkPlayers.load_network_sprite();
     }
-  }
+  };
 
-  const enemy_pathing =createPad(-200,-200)
-  enemy_pathing.fired = false;
-  enemy_pathing.alpha = 0.8;
-  enemy_pathing.action = () =>{
-    
-    if(!enemy_pathing.fired){
-      enemy_pathing.fired = true;
-      console.log("iherre")
+  const enemyPathing = createPad(-200, -200);
+  enemyPathing.fired = false;
+  enemyPathing.alpha = 0.8;
+  enemyPathing.action = () => {
+    if (!enemyPathing.fired) {
+      enemyPathing.fired = true;
       enemy.enemy_frames()
-      .then(()=>{
-        const level_path_data = level_utils.importEnemyPathData();
-        console.log(level_path_data)
-        console.log("level_path_data")
-        enemy.enemy_path(level_path_data)
-      })
+        .then(() => {
+          const levelPathData = levelUtils.importEnemyPathData();
+          enemy.enemy_path(levelPathData);
+        });
     }
-  }
+  };
 
-  const clear_pad = createPad(-200,50)
-  clear_pad.fired = false;
-  clear_pad.alpha = 0.8;
-  clear_pad.action = () =>{
+  const clearPad = createPad(-200, 50);
+  clearPad.fired = false;
+  clearPad.alpha = 0.8;
+  clearPad.action = () => {
+    if (!clearPad.fired) {
+      clearPad.fired = true;
 
-    if(!clear_pad.fired){
-      clear_pad.fired = true;
-
-      cutscene_intro.start()
+      cutsceneIntro.start();
     } else filterUtil.clear();
-  }
+  };
 
   global.eventTriggers.addChild(
-    rat_pad,
-    enemy_pad,
-    level_load_pad,
-    effect_pad,
-    clear_pad,
-    glitch_pad,
-    dialog_pad,
-    network_pad,
-    animation_pad,
-    load_park_pad,
-    enemy_pathing
-  )
+    ratPad,
+    enemyPad,
+    levelLoadPad,
+    effectPad,
+    clearPad,
+    glitchPad,
+    dialogPad,
+    networkPad,
+    animationPad,
+    loadParkPad,
+    enemyPathing,
+  );
 
   global.doors.addChild(door);
 
-  global.viewport.updateLayersOrder = function () {
-    global.viewport.children.sort(function(a,b) {
+  global.viewport.updateLayersOrder = () => {
+    global.viewport.children.sort((a, b) => {
       a.zIndex = a.zIndex || 0;
       b.zIndex = b.zIndex || 0;
       return b.zIndex - a.zIndex;
     });
   };
 
-  global.viewport.addChild(global.eventTriggers)
+  global.viewport.addChild(global.eventTriggers);
   global.collisionItems.zIndex = 1;
-  global.collisionItems.addChild(slanted_wall,collision_wall);
+  global.collisionItems.addChild(slantedWall, collisionWall);
   global.viewport.updateLayersOrder();
 
   player.add_player();
   items.add_items();
-}        
+};
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":1,"../../cutscene/cutscene_intro.js":3,"../../dialog/dialogUtil.js":4,"../../enemies/enemy.js":5,"../../network/network_players.js":12,"../../player/player.js":13,"../../utils/doorHelper.js":15,"../../visual_effects/filterUtils.js":17,"../../visual_effects/sprite_animations.js":18,"../../weather/rain.js":20,"../level_utils.js":10,"./debug_items.js":8}],10:[function(require,module,exports){
+},{"../../animals/rat.js":1,"../../cutscene/cutscene_intro.js":3,"../../dialog/dialogUtil.js":4,"../../enemies/enemy.js":5,"../../network/network_players.js":12,"../../player/player.js":13,"../../visual_effects/filterUtils.js":17,"../../visual_effects/sprite_animations.js":18,"../../weather/rain.js":20,"../level_utils.js":10,"./debug_items.js":8,"pixi.js":239}],10:[function(require,module,exports){
 (function (global){
-'use strict';
+const PIXI = require('pixi.js');
+const bedroomData = require('./bedroom/bedroom_data_4.json');
+const parkData = require('./park/park_3.json');
 
-const bedroom_data = require('./bedroom/bedroom_data_4.json'),
-      park_data = require('./park/park_3.json')
+module.exports.clearViewport = () => {
+  for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
+    global.viewport.removeChild(global.viewport.children[i]);
+  }
+};
 
-module.exports.clearViewport = () =>{
-  for (let i = global.viewport.children.length - 1; i >= 0; i--) {  global.viewport.removeChild(global.viewport.children[i]);};
-}
+module.exports.clearCollision = () => {
+  for (let i = global.collisionItems.children.length - 1; i >= 0; i -= 1) {
+    global.collisionItems.removeChild(global.collisionItems.children[i]);
+  }
+};
 
-module.exports.clearCollision = () =>{
-  for (let i = global.collisionItems.children.length - 1; i >= 0; i--) {global.collisionItems.removeChild(global.collisionItems.children[i])}
-}
-
-const addToSegments = item => {
-
-  global.collisionItems.push(
-    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
-  )
-
-}
+// const addToSegments = (item) => {
+//   global.collisionItems.push(
+//     { a: { x: item.x, y: item.y + item.height }, b: { x: item.x, y: item.y } },
+//     { a: { x: item.x, y: item.y }, b: { x: item.x + item.width, y: item.y } },
+//     { a: { x: item.x + item.width, y: item.y + item.height }, b: { x: item.x, y: item.y + item.height } },
+//     { a: { x: item.x + item.width, y: item.y + item.height }, b: { x: item.x + item.width, y: item.y } },
+//   );
+// };
 
 module.exports.importBedroomData = () => {
+  const flatBackground = PIXI.Sprite.fromFrame('flat_floor');
+  flatBackground.interactive = true;
+  flatBackground.zIndex = 1;
+  flatBackground.height = bedroomData.tileheight;
+  flatBackground.width = bedroomData.tilewidth;
 
-  const flat_background = PIXI.Sprite.fromFrame('flat_floor')
-  flat_background.interactive = true;
-  flat_background.zIndex =1;
-  flat_background.height = bedroom_data.tileheight;
-  flat_background.width = bedroom_data.tilewidth;
-  
   global.collisionItems.zIndex = -1;
 
-  this.renderWall(bedroom_data.tiles[1].objectgroup.objects)
-  this.hitAreas(bedroom_data.tiles[2].objectgroup.objects)
-  global.viewport.addChild(flat_background)
-            
+  this.renderWall(bedroomData.tiles[1].objectgroup.objects);
+  this.hitAreas(bedroomData.tiles[2].objectgroup.objects);
+  global.viewport.addChild(flatBackground);
+
   global.viewport.updateLayersOrder();
-}
+};
 
 
-module.exports.renderWall = wallArray => {
+module.exports.renderWall = (wallArray) => {
+  wallArray.forEach((wallData) => {
+    const wall = PIXI.Sprite.fromFrame('black_dot');
+    wall.position.set(wallData.x, wallData.y);
+    wall.width = wallData.width;
+    wall.height = wallData.height;
 
-  wallArray.forEach(wallData =>{
-    
-    const wall = PIXI.Sprite.fromFrame('black_dot')
-          wall.position.set(wallData.x, wallData.y);
-          wall.width = wallData.width;
-          wall.height = wallData.height;
-    
-    global.collisionItems.addChild(wall)  
-  })
-}
+    global.collisionItems.addChild(wall);
+  });
+};
 
-module.exports.importEnemyPathData = () =>{
-  const pathData = bedroom_data.tiles[4].objectgroup.objects[0].polyline
-  
+module.exports.importEnemyPathData = () => {
+  const pathData = bedroomData.tiles[4].objectgroup.objects[0].polyline;
+
   return pathData;
-}
+};
 
-module.exports.createEnemyPathFrom = level_data => {
+module.exports.createEnemyPathFrom = (levelData) => {
   const path = new PIXI.tween.TweenPath();
 
-  path.moveTo(level_data[0].x,level_data[0].y)
+  path.moveTo(levelData[0].x, levelData[0].y);
 
-  for (let i = 1; i < level_data.length; i++) path.lineTo(level_data[i].x, level_data[i].y)
+  for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y);
 
   return path;
-}
+};
 
 module.exports.importParkData = () => {
+  const parkBackground = PIXI.Sprite.fromFrame('park');
+  parkBackground.interactive = true;
+  parkBackground.zIndex = 1;
+  parkBackground.height = parkData.tileheight;
+  parkBackground.width = parkData.tilewidth;
+  // parkBackground.width = 10000
+  // parkBackground.height = 6000
 
-  const park_background = PIXI.Sprite.fromFrame('park');
-        park_background.interactive = true;
-        park_background.zIndex =1;
-        park_background.height = park_data.tileheight;
-        park_background.width = park_data.tilewidth;
-        // park_background.width = 10000
-        // park_background.height = 6000
-
-  for (let i = 0; i < park_data.tiles[1].objectgroup.objects.length; i++) {
-    
-    this.hitAreas(park_data.tiles[1].objectgroup.objects)
-    
+  for (let i = 0; i < parkData.tiles[1].objectgroup.objects.length; i += 1) {
+    this.hitAreas(parkData.tiles[1].objectgroup.objects);
   }
 
-  global.viewport.addChild(park_background)
+  global.viewport.addChild(parkBackground);
   global.viewport.updateLayersOrder();
-}
+};
 
-module.exports.renderWall = wallArray => {
-
-  wallArray.forEach(wallData =>{
-    const wall = PIXI.Sprite.fromFrame('black_dot')
+module.exports.renderWall = (wallArray) => {
+  wallArray.forEach((wallData) => {
+    const wall = PIXI.Sprite.fromFrame('black_dot');
 
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
 
-    global.collisionItems.addChild(wall)  
-  })
+    global.collisionItems.addChild(wall);
+  });
+};
 
-}
-
-module.exports.hitAreas = wallArray => {
-
-  wallArray.forEach(wallData =>{
-    const wall = PIXI.Sprite.fromFrame('black_dot')
+module.exports.hitAreas = (wallArray) => {
+  wallArray.forEach((wallData) => {
+    const wall = PIXI.Sprite.fromFrame('black_dot');
 
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
     wall.alpha = 0.01;
 
-    global.collisionItems.addChild(wall)  
-  })
-}
+    global.collisionItems.addChild(wall);
+  });
+};
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./bedroom/bedroom_data_4.json":7,"./park/park_3.json":11}],11:[function(require,module,exports){
+},{"./bedroom/bedroom_data_4.json":7,"./park/park_3.json":11,"pixi.js":239}],11:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -1594,265 +1523,235 @@ module.exports={ "columns":0,
 }
 },{}],12:[function(require,module,exports){
 (function (global){
-'use strict';
+const PIXI = require('pixi.js');
 
 module.exports.load_network_sprite = () => {
-  const bunny = PIXI.Sprite.fromFrame('bunny')
+  const bunny = PIXI.Sprite.fromFrame('bunny');
 
-  const playerDets = {
-    x: global.Player.sprite.x,
-    y: global.Player.sprite.y
-  }
-  
-  global.socket.emit("get_network_sprites", ({x: global.Player.sprite.x, y: global.Player.sprite.y}));
+  global.socket.emit('get_network_sprites', ({ x: global.Player.sprite.x, y: global.Player.sprite.y }));
 
-  global.socket.on('server_sprite' , server_sprite =>{
-    bunny.x = server_sprite.x;
-    bunny.y = server_sprite.y;
-  })
+  global.socket.on('server_sprite', (serverSprite) => {
+    bunny.x = serverSprite.x;
+    bunny.y = serverSprite.y;
+  });
 
-  global.viewport.addChild(bunny)
-}
+  global.viewport.addChild(bunny);
+};
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],13:[function(require,module,exports){
+},{"pixi.js":239}],13:[function(require,module,exports){
 (function (global){
-const PIXI        = require("pixi.js"),
-      Intersects  = require('intersects'),
-      rat         = require("../animals/rat.js"),
-      spriteHelper = require("../utils/spriteHelper.js"),
-      doorHelper = require("../utils/doorHelper.js"),
-      bowHelper   = require("../weapons/bow/bowHelper.js"),
-      documentHelper = require("../utils/documentHelper.js");
-      // uuidv4 = require('uuid/v4');
+const PIXI = require('pixi.js');
+// const Intersects = require('intersects');
+// const rat = require('../animals/rat.js');
+const spriteHelper = require('../utils/spriteHelper.js');
+const doorHelper = require('../utils/doorHelper.js');
+const bowHelper = require('../weapons/bow/bowHelper.js');
+const documentHelper = require('../utils/documentHelper.js');
+// uuidv4 = require('uuid/v4');
 
 global.Player = {
 
   animation: {
-    walk:         [],
-    idle:         [],
-    pullback:     [],
-    ready:        []
+    walk: [],
+    idle: [],
+    pullback: [],
+    ready: [],
   },
 
-  sprite: {  
-    moving:       {},
-    idle:         {},
-    walk:         {},
-    pullback:     {}
+  sprite: {
+    moving: {},
+    idle: {},
+    walk: {},
+    pullback: {},
   },
   movement_speed: 20,
-  weapon:         "bow",
-  moveable:       true,
-  power:          900,
-  ammo:           10,
-  inventory:      []
+  weapon: 'bow',
+  moveable: true,
+  power: 900,
+  ammo: 10,
+  inventory: [],
 
-}
+};
 
 const aimingLine = new PIXI.Graphics();
 
 function countDown() {
+  global.Player.sprite._textures = global.Player.sprite.ready._textures;
 
-  global.Player.sprite._textures = global.Player.sprite.ready._textures
-
-  if(global.Player.power > 750) global.Player.allowShoot = false;
+  if (global.Player.power > 750) global.Player.allowShoot = false;
   else global.Player.allowShoot = true;
 
-  if(global.Player.power > 400)global.Player.power -= 10;
-  
-  if(global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
-  
+  if (global.Player.power > 400)global.Player.power -= 10;
+
+  if (global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
 }
 
-function mouseUp () {
-    
-  global.viewport.on('mouseup', event => {
-
+function mouseUp() {
+  global.viewport.on('mouseup', (event) => {
     global.Player.sprite._textures = global.Player.sprite.idle._textures;
     global.Player.moveable = true;
-    global.Player.sprite.play()
+    global.Player.sprite.play();
 
     global.app.ticker.remove(countDown);
 
-    if (global.Player.weapon === "bow" && global.Player.ammo > 0 && global.Player.allowShoot) {
-
+    if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
       const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
-      bowHelper.arrowManagement(global.Player.power,global.Player.sprite, mousePosition);
-
+      bowHelper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
     }
-  })
+  });
 }
 
-function mouseMove () {
+function mouseMove() {
+  global.viewport.on('mousemove', (event) => {
+    if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
+      const mousePosition = documentHelper.mousePositionFromScreen(event.data.global, global.viewport);
+      const mousePositionPlayer = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite, global.viewport);
 
-  global.viewport.on('mousemove', event => {
-    
-    if (global.Player.weapon === "bow" && global.Player.ammo > 0) {
-
-      const mousePosition = documentHelper.mousePositionFromScreen(event.data.global, global.viewport)
-      const mousePositionPlayer = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite , global.viewport)
-
-      aimingLine.clear()
-      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y)
+      aimingLine.clear();
+      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
       aimingLine.lineStyle(3, 0xffffff, 0)
-      .moveTo(0, 0)
-      .lineTo(mousePosition.x, mousePosition.y);  
-      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePositionPlayer)
-
+        .moveTo(0, 0)
+        .lineTo(mousePosition.x, mousePosition.y);
+      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePositionPlayer);
     }
-  })
+  });
 }
 
-function mouseDown () {
-    
-  global.viewport.on('mousedown', event => {
-    
-    global.Player.power = 900
+function mouseDown() {
+  global.viewport.on('mousedown', (event) => {
+    global.Player.power = 900;
     global.Player.moveable = false;
     global.app.ticker.add(countDown);
-    
-    if (global.Player.weapon === "bow" && global.Player.ammo > 0) {
-      
-      const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport)  
-    
-      global.Player.sprite._textures = global.Player.sprite.ready._textures
-      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePosition)
+
+    if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
+      const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+
+      global.Player.sprite._textures = global.Player.sprite.ready._textures;
+      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePosition);
       global.Player.sprite.gotoAndPlay(0);
-  
     }
-  })
+  });
 }
 
-function add_player_controls() {
-
-  document.addEventListener("keyup", e=> {
-
+function addPlayerControls() {
+  global.document.addEventListener('keyup', () => {
     global.Player.sprite._textures = global.Player.sprite.idle._textures;
+  }, true);
 
-  },true)
+  global.document.addEventListener('keydown', (e) => {
+    const key = documentHelper.getDirection(e.key);
 
-  document.addEventListener("keydown", e => {
+    if (!global.Player.moveable) return;
 
-    let key = documentHelper.getDirection(e.key)
-    
-    if(!global.Player.moveable) return;
-
-    if(key === "up"){
-      global.Player.sprite.y -= global.Player.movement_speed; 
-      global.Player.sprite.rotation = -2
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    if (key === 'up') {
+      global.Player.sprite.y -= global.Player.movement_speed;
+      global.Player.sprite.rotation = -2;
+      global.Player.sprite._textures = global.Player.sprite.walk._textures;
     }
 
-    if(key === "down"){
-      global.Player.sprite.y += global.Player.movement_speed; 
-      global.Player.sprite.rotation = 2
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    if (key === 'down') {
+      global.Player.sprite.y += global.Player.movement_speed;
+      global.Player.sprite.rotation = 2;
+      global.Player.sprite._textures = global.Player.sprite.walk._textures;
     }
 
-    if(key === "left"){
-      global.Player.sprite.x -= global.Player.movement_speed; 
-      global.Player.sprite.rotation = -3
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
+    if (key === 'left') {
+      global.Player.sprite.x -= global.Player.movement_speed;
+      global.Player.sprite.rotation = -3;
+      global.Player.sprite._textures = global.Player.sprite.walk._textures;
     }
 
-    if(key === "right"){
+    if (key === 'right') {
       global.Player.sprite.x += global.Player.movement_speed;
-      global.Player.sprite.rotation = 0
-      global.Player.sprite._textures = global.Player.sprite.walk._textures
+      global.Player.sprite.rotation = 0;
+      global.Player.sprite._textures = global.Player.sprite.walk._textures;
     }
 
-    doorHelper.hit(global.Player.sprite, global.doors.children[0])
+    doorHelper.hit(global.Player.sprite, global.doors.children[0]);
 
     spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
-    .then(arrow => {
-      console.log(arrow)
-      console.log("arrow")
-      if(arrow.pickup) {
-        global.Player.ammo++;
-        arrow.destroy();
-      }
-    })
+      .then((arrow) => {
+        if (arrow.pickup) {
+          global.Player.ammo += 1;
+          arrow.destroy();
+        }
+      });
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
-    .then(hit => {
-        
-      if(key === "up") global.Player.sprite.y +=global.Player.movement_speed
-      if(key === "down") global.Player.sprite.y -=global.Player.movement_speed
-      if(key === "left") global.Player.sprite.x +=global.Player.movement_speed
-      if(key === "right") global.Player.sprite.x -=global.Player.movement_speed
-      
-    })
-    
+      .then(() => {
+        if (key === 'up') global.Player.sprite.y += global.Player.movement_speed;
+        if (key === 'down') global.Player.sprite.y -= global.Player.movement_speed;
+        if (key === 'left') global.Player.sprite.x += global.Player.movement_speed;
+        if (key === 'right') global.Player.sprite.x -= global.Player.movement_speed;
+      });
+
     spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
-    .then(pad => pad.action())
+      .then(pad => pad.action());
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
-    .then(critter => {
-      global.Player.inventory.push(critter)
+      .then((critter) => {
+        global.Player.inventory.push(critter);
 
-      PIXI.tweenManager.getTweensForTarget(critter)[0].clear()
+        PIXI.tweenManager.getTweensForTarget(critter)[0].clear();
 
-      critter.destroy();
-    })
+        critter.destroy();
+      });
 
     spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
-    .then(item => {
-
-      if(key === "up") {
-        global.Player.sprite.y +=global.Player.movement_speed -item.weight
-        item.y-=item.weight
-      }
-      if(key === "down") {
-        global.Player.sprite.y -=global.Player.movement_speed-item.weight
-        item.y+=item.weight
-      }
-      if(key === "left") {
-        global.Player.sprite.x +=global.Player.movement_speed-item.weight
-        item.x-=item.weight
-      }
-      if(key === "right") {
-        global.Player.sprite.x -=global.Player.movement_speed-item.weight
-        item.x+=item.weight
-      }
-      
-    })
-    
-  },true);
+      .then((item) => {
+        if (key === 'up') {
+          global.Player.sprite.y += global.Player.movement_speed - item.weight;
+          item.y -= item.weight;
+        }
+        if (key === 'down') {
+          global.Player.sprite.y -= global.Player.movement_speed - item.weight;
+          item.y += item.weight;
+        }
+        if (key === 'left') {
+          global.Player.sprite.x += global.Player.movement_speed - item.weight;
+          item.x -= item.weight;
+        }
+        if (key === 'right') {
+          global.Player.sprite.x -= global.Player.movement_speed - item.weight;
+          item.x += item.weight;
+        }
+      });
+  }, true);
 
   global.viewport.addChild(aimingLine);
 }
 
 module.exports.add_player = () => {
- 
-  for (let i = 0; i <= 21; i++) {
-    let name = "survivor-bow-idle-0" + i;
+  for (let i = 0; i <= 21; i += 1) {
+    let name = `survivor-bow-idle-0${i}`;
 
-    if(i>= 10) name = "survivor-bow-idle-" + i;
+    if (i >= 10) name = `survivor-bow-idle-${i}`;
 
     global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));
   }
 
-  for (let i = 0; i <= 20; i++) {
-    let name = "survivor-walk_bow_0" + i;
-    
-    if(i>= 10) name = "survivor-walk_bow_" + i;
+  for (let i = 0; i <= 20; i += 1) {
+    let name = `survivor-walk_bow_0${i}`;
+
+    if (i >= 10) name = `survivor-walk_bow_${i}`;
 
     global.Player.animation.walk.push(PIXI.Texture.fromFrame(name));
   }
-  
-  for (let i = 0; i <= 38; i++) {
-    let name = "survivor-bow-pull-0" + i;
 
-    if(i>= 10) name = "survivor-bow-pull-" + i;
+  for (let i = 0; i <= 38; i += 1) {
+    let name = `survivor-bow-pull-0${i}`;
+
+    if (i >= 10) name = `survivor-bow-pull-${i}`;
 
     global.Player.animation.ready.push(PIXI.Texture.fromFrame(name));
   }
-  
+
   global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
   global.Player.sprite.anchor.set(0.5);
-  global.Player.sprite.width /= 2
-  global.Player.sprite.height /= 2
+  global.Player.sprite.width /= 2;
+  global.Player.sprite.height /= 2;
   global.Player.sprite.animationSpeed = 0.6;
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
@@ -1862,63 +1761,55 @@ module.exports.add_player = () => {
   global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
   global.Player.sprite._textures = global.Player.sprite.idle._textures;
 
-  global.viewport.follow(global.Player.sprite)
+  global.viewport.follow(global.Player.sprite);
   global.viewport.addChild(global.Player.sprite);
   // global.viewport.addChild(global.Player.sprite.idle)
   // global.viewport.updateLayersOrder();
 
-  add_player_controls()
-  mouseMove()
-  mouseDown()
-  mouseUp()
+  addPlayerControls();
+  mouseMove();
+  mouseDown();
+  mouseUp();
+};
 
-}
+module.exports.remove_controls = () => {
+  global.document.removeEventListener('keyup', () => {});
 
-module.exports.remove_controls = () =>{
-  document.removeEventListener("keyup", e=> {});
-
-  document.removeEventListener("keydown", e=> {});
-}
+  global.document.removeEventListener('keydown', () => {});
+};
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat.js":1,"../utils/documentHelper.js":14,"../utils/doorHelper.js":15,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper.js":19,"intersects":91,"pixi.js":264}],14:[function(require,module,exports){
-//utils
+},{"../utils/documentHelper.js":14,"../utils/doorHelper.js":15,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper.js":19,"pixi.js":239}],14:[function(require,module,exports){
 
 const keymap = {
-  "w": "up",
-  "a": "left",
-  "s": "down",
-  "d": "right",
-  "ArrowUp": "up",
-  "ArrowLeft": "left",
-  "ArrowDown": "down",
-  "ArrowRight": "right"
+  w: 'up',
+  a: 'left',
+  s: 'down',
+  d: 'right',
+  ArrowUp: 'up',
+  ArrowLeft: 'left',
+  ArrowDown: 'down',
+  ArrowRight: 'right',
 };
 
 module.exports.getDirection = key => keymap[key];
 
-module.exports.mousePositionFromPlayer = (event, player, viewport) => {
+module.exports.mousePositionFromPlayer = (event, player, viewport) => ({
+  x: event.x + player.x - viewport.screenWidth / 2,
+  y: event.y + player.y - viewport.screenHeight / 2,
+});
 
-  return {
-    x:event.x + player.x - viewport.screenWidth/2,
-    y:event.y + player.y - viewport.screenHeight/2
-  }
-}
+module.exports.mousePositionFromScreen = (event, viewport) => ({
+  x: event.x - viewport.screenWidth / 2,
+  y: event.y - viewport.screenHeight / 2,
+});
 
-module.exports.mousePositionFromScreen = (event, viewport) => {
-
-  return {
-    x:event.x - viewport.screenWidth/2,
-    y:event.y - viewport.screenHeight/2
-  }
-}
 },{}],15:[function(require,module,exports){
-'use strict';
 
-const spriteHelper = require("./spriteHelper.js");
+const PIXI = require('pixi.js');
+const spriteHelper = require('./spriteHelper.js');
 
-module.exports.hit = (player,door) => {
-
+module.exports.hit = (player, door) => {
   const trimmedDoorData = spriteHelper.trimVertexData(door);
   const hitDirection = spriteHelper.hitBox(player.x, player.y, trimmedDoorData);
   const movement = 0.4;
@@ -1929,289 +1820,231 @@ module.exports.hit = (player,door) => {
 
   let rotationTarget = door.rotation;
 
-  if (hitDirection === "top") rotationTarget += movement
-  if (hitDirection === "bottom") rotationTarget -= movement
-  if (hitDirection === "exception") rotationTarget -= movement
+  if (hitDirection === 'top') rotationTarget += movement;
+  if (hitDirection === 'bottom') rotationTarget -= movement;
+  if (hitDirection === 'exception') rotationTarget -= movement;
 
   tween.to({
-    rotation: rotationTarget
+    rotation: rotationTarget,
   });
   tween.start();
+};
 
-}
-},{"./spriteHelper.js":16}],16:[function(require,module,exports){
+},{"./spriteHelper.js":16,"pixi.js":239}],16:[function(require,module,exports){
 (function (global){
-'use strict';
 
-const   PIXI        = require("pixi.js");
 
-function distanceSquared(x1, y1, x2, y2)
-{
-    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+const PIXI = require('pixi.js');
+
+function distanceSquared(x1, y1, x2, y2) {
+  return Math.sqrt(Math.pow((x1 - x2)) + Math.pow(y1 - y2, 2));
 }
 
- function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
-{
-    tolerance = tolerance || 1
-    return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance
+function linePoint(x1, y1, x2, y2, xp, yp, tolerance) {
+  tolerance = tolerance || 1;
+  return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance;
 }
 
 
-function _getCenter(o, dimension, axis) {
-    if (o.anchor !== undefined) {
-        if (o.anchor[axis] !== 0) {
-            return 0
-        }
-        return dimension / 2
+function getCenter(o, dimension, axis) {
+  if (o.anchor !== undefined) {
+    if (o.anchor[axis] !== 0) {
+      return 0;
     }
-    return dimension
+    return dimension / 2;
+  }
+  return dimension;
 }
 
-module.exports.angle = (sprite, point) =>{
-	return Math.atan2(
-    (point.y) - (sprite.y + _getCenter(sprite, sprite.height, "y")),
-    (point.x) - (sprite.x + _getCenter(sprite, sprite.width, "x"))
-	)
-}
+module.exports.angle = (sprite, point) => Math.atan2(
+  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
+  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x')),
+);
 
 module.exports.drawPolygon = (points, color) => {
-  color = typeof color === 'undefined' ? 0xffffff : color
-  const polygon = global.viewport.addChild(new PIXI.Graphics())
-  polygon.beginFill(color).drawPolygon(points).endFill()
-  return polygon
-}
+  color = typeof color === 'undefined' ? 0xffffff : color;
+  const polygon = global.viewport.addChild(new PIXI.Graphics());
+  polygon.beginFill(color).drawPolygon(points).endFill();
+  return polygon;
+};
 
-module.exports.drawPathAndShow = path => {
-  const path_visual_guide = new PIXI.Graphics()
-  .lineStyle(1, 0xffffff, 1)
-  .drawPath(path)
+module.exports.drawPathAndShow = (path) => {
+  const pathVisualGuide = new PIXI.Graphics()
+    .lineStyle(1, 0xffffff, 1)
+    .drawPath(path);
 
-  global.viewport.addChild(path_visual_guide)
-}
+  global.viewport.addChild(pathVisualGuide);
+};
 
-module.exports.trimVertexData = sprite => {
+module.exports.trimVertexData = (sprite) => {
   const trimmedData = [];
-  
-  for (let i = 0; i < sprite.vertexData.length; i++) {
 
-    if(i % 2 === 0) trimmedData.push(sprite.vertexData[i]-sprite.vertexData[0]+sprite.x)
-    else trimmedData.push(sprite.vertexData[i]-sprite.vertexData[1]+sprite.y)
-    
+  for (let i = 0; i < sprite.vertexData.length; i += 1) {
+    if (i % 2 === 0) trimmedData.push(sprite.vertexData[i] - sprite.vertexData[0] + sprite.x);
+    else trimmedData.push(sprite.vertexData[i] - sprite.vertexData[1] + sprite.y);
   }
 
   return trimmedData;
-}
+};
 
 module.exports.hitBox = (x, y, points) => {
-  var length = points.length
-  var c = false
-  var lastAction = "top"
-  var i, j
-  for (i = 0, j = length - 2; i < length; i += 2)
-  {
-      if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i]))
-      {  
-          c = !c
-      }
-      j = i
-  }
-  if (c)
-  {
-      return lastAction
-      
-  }
-  for (i = 0; i < length; i += 2)
-  {
-      var p1x = points[i]
-      var p1y = points[i + 1]
-      var p2x, p2y
-      if (i === length - 2)
-      {
-          
-          p2x = points[0]
-          p2y = points[1]
-      }
-      else
-      {
-          
-          p2x = points[i + 2]
-          p2y = points[i + 3]
-      }
-      if (linePoint(p1x, p1y, p2x, p2y, x, y,[1]))
-      {
-          
-          if(p1x === points[0]){
-              
-              lastAction = "top"
-              return "top"
-              
-          }else{
-              lastAction = "bottom";
-              return "bottom"
-          }
-          return true
-      }
-  }
-  return false
-}
-
-module.exports.hitBoxContainerObj = (container, player) => {
-
-  return new Promise((resolve,reject)=>{
-
-    for (let a = 0; a < container.length; a++) {
-      const vertexData = this.trimVertexData(container[a])
-      if (this.hitBox(player.x, player.y, vertexData)) {
-        resolve(container[a])
-      }
+  const length = points.length;
+  let c = false;
+  let lastAction = 'top';
+  let i;
+  let j;
+  for (i = 0, j = length - 2; i < length; i += 2) {
+    if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i])) {
+      c = !c;
     }
-  })
-
-}
-
-module.exports.hitBoxSpriteObj = (sprite, player) => {
-
-  return new Promise((resolve,reject)=>{
-
-      const vertexData = this.trimVertexData(sprite)
-      
-      if (this.hitBox(player.x, player.y, vertexData)) {
-        resolve(sprite)
+    j = i;
+  }
+  if (c) {
+    return lastAction;
+  }
+  for (i = 0; i < length; i += 2) {
+    const p1x = points[i];
+    const p1y = points[i + 1];
+    let p2x;
+    let p2y;
+    if (i === length - 2) {
+      p2x = points[0];
+      p2y = points[1];
+    } else {
+      p2x = points[i + 2];
+      p2y = points[i + 3];
+    }
+    if (linePoint(p1x, p1y, p2x, p2y, x, y, [1])) {
+      if (p1x === points[0]) {
+        lastAction = 'top';
+        return 'top';
       }
-    
-  })
+      lastAction = 'bottom';
+      return 'bottom';
+    }
+  }
+  return false;
+};
 
-}
+module.exports.hitBoxContainerObj = (container, player) => new Promise((resolve) => {
+  for (let a = 0; a < container.length; a += 1) {
+    const vertexData = this.trimVertexData(container[a]);
+    if (this.hitBox(player.x, player.y, vertexData)) {
+      resolve(container[a]);
+    }
+  }
+});
+
+module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
+  const vertexData = this.trimVertexData(sprite);
+
+  if (this.hitBox(player.x, player.y, vertexData)) {
+    resolve(sprite);
+  }
+});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":264}],17:[function(require,module,exports){
+},{"pixi.js":239}],17:[function(require,module,exports){
 (function (global){
-'use strict';
+const filters = require('pixi-filters');
+const PIXI = require('pixi.js');
 
-const filters = require('pixi-filters')
 const padding = 100;
 
-const overlay = PIXI.Sprite.fromFrame('black_dot')
+const overlay = PIXI.Sprite.fromFrame('black_dot');
 overlay.zIndex = -3;
-overlay.anchor.set(0.5)
+overlay.anchor.set(0.5);
 
 function countUp() {
-
-  if(overlay.alpha <= 1) {
-    
+  if (overlay.alpha <= 1) {
     overlay.alpha += 0.01;
-
   } else {
-
-    global.app.ticker.remove(countUp)
-    global.app.ticker.remove(countDown)
-    overlay.alpha = 1
-  
-  };
-  
+    global.app.ticker.remove(countUp);
+    overlay.alpha = 1;
+  }
 }
 
 function countDown() {
-
-  if(overlay.alpha >= 0) {
-
+  if (overlay.alpha >= 0) {
     overlay.alpha -= 0.01;
-
   } else {
-
-    global.app.ticker.remove(countUp);
     global.app.ticker.remove(countDown);
     overlay.alpha = 0;
     global.viewport.removeChild(overlay);
-
-  } 
+  }
 }
 
-module.exports.fade_in_black = speed => new Promise((resolve,reject)=>{
-
+module.exports.fade_in_black = () => {
   overlay.alpha = 0;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;
-  overlay.position.set(global.viewport.center.x,global.viewport.center.y);  
+  overlay.position.set(global.viewport.center.x, global.viewport.center.y);
   global.app.ticker.add(countUp);
-  global.viewport.addChild(overlay)
-  
-})
+  global.viewport.addChild(overlay);
+};
 
-module.exports.fade_out_black = () => new Promise((resolve,reject)=>{
-  
+module.exports.fade_out_black = () => {
   overlay.alpha = 1;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;
-  overlay.position.set(global.viewport.center.x,global.viewport.center.y);  
+  overlay.position.set(global.viewport.center.x, global.viewport.center.y);
   global.app.ticker.add(countDown);
+};
 
-})
+module.exports.glitch = () => {
+  global.viewport.filters = [new filters.GlitchFilter()];
+};
 
-module.exports.glitch = () => new Promise((resolve,reject)=>{
-
-  global.viewport.filters = [new filters.GlitchFilter()]
-  
-})
-
-module.exports.godray = (x,y) => new Promise((resolve,reject)=>{
-  
-  this.clear()
-  const godray = new filters.GodrayFilter()
+module.exports.godray = (x, y) => new Promise((resolve) => {
+  this.clear();
+  const godray = new filters.GodrayFilter();
   godray.parallel = false;
-  godray.center = [x,y]
-  godray.gain = 0.4
+  godray.center = [x, y];
+  godray.gain = 0.4;
   godray.time = 20.5;
-  global.viewport.filters = [godray]
+  global.viewport.filters = [godray];
 
   function godrayAnimation() {
-    if(godray.time <= 100) godray.time += 0.005;
+    if (godray.time <= 100) godray.time += 0.005;
   }
   global.app.ticker.add(godrayAnimation);
-  
-  resolve()
-})
+  resolve();
+});
 
-module.exports.clear = () => new Promise((resolve,reject)=>{
+module.exports.clear = () => {
+  global.viewport.filters = [];
+};
 
-  global.viewport.filters = []
-  
-})
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":114}],18:[function(require,module,exports){
+},{"pixi-filters":89,"pixi.js":239}],18:[function(require,module,exports){
 (function (global){
-'use strict';
-
 const Flag = [];
+const PIXI = require('pixi.js');
 
 module.exports.load_flag = () => {
-  
-  new Promise((resolve,reject)=>{
+  for (let i = 1; i < 3; i += 1) {
+    Flag.push(PIXI.Texture.fromFrame(`flag_${i}`));
+  }
+  const animatedFlag = new PIXI.extras.AnimatedSprite(Flag);
 
-    for (let i = 1; i < 3; i++) {
-      Flag.push(PIXI.Texture.fromFrame('flag_' + i));
-    }
+  animatedFlag.animationSpeed = 0.4;
+  animatedFlag.play();
 
-  })
-  .then(()=>{
-    const animated_flag = new PIXI.extras.AnimatedSprite(Flag);
+  global.viewport.addChild(animatedFlag);
+};
 
-    animated_flag.animationSpeed = 0.4;
-    animated_flag.play()
-
-    global.viewport.addChild(animated_flag);
-  })
-  
-}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],19:[function(require,module,exports){
+},{"pixi.js":239}],19:[function(require,module,exports){
 (function (global){
-'use strict';
 
-const spriteHelper = require("../../utils/spriteHelper.js");
+const PIXI = require('pixi.js');
+const spriteHelper = require('../../utils/spriteHelper.js');
 
 global.arrowContainer = new PIXI.Container();
-global.arrowContainer.name = "arrow cont"
+global.arrowContainer.name = 'arrow containter';
+
+// const c = global.document.createElement('audio');
+// c.play();
 
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
@@ -2221,71 +2054,72 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_04.wav'),
   new Audio('audio/arrow_hit_05.wav'),
   new Audio('audio/arrow_hit_06.wav'),
-  new Audio('audio/arrow_hit_07.wav')
+  new Audio('audio/arrow_hit_07.wav'),
 ];
 
 module.exports.arrowManagement = (power, origin, target) => {
+  const pathOne = new PIXI.tween.TweenPath()
+    .moveTo(origin.position.x, origin.position.y)
+    .lineTo(target.x, target.y);
 
-  const path_one = new PIXI.tween.TweenPath()
-  .moveTo(origin.position.x, origin.position.y)
-  .lineTo(target.x, target.y);
+  // spriteHelper.drawPathAndShow(pathOne)
 
-  // spriteHelper.drawPathAndShow(path_one)
-
-  const arrow = PIXI.Sprite.fromFrame('arrow')
-        arrow.width /=2
-        arrow.height /=3
-        arrow.anchor.set(0.9)
-        arrow.rotation = spriteHelper.angle(origin, target)
+  const arrow = PIXI.Sprite.fromFrame('arrow');
+  arrow.width /= 2;
+  arrow.height /= 3;
+  arrow.anchor.set(0.9);
+  arrow.rotation = spriteHelper.angle(origin, target);
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
-        arrowTween.path = path_one;
-        arrowTween.time = power;
-        arrowTween.easing = PIXI.tween.Easing.linear();
-        arrowTween.start()
-        arrowTween.on("end", () => arrow.pickup = true)
+  arrowTween.path = pathOne;
+  arrowTween.time = power;
+  arrowTween.easing = PIXI.tween.Easing.linear();
+  arrowTween.start();
+  arrowTween.on('end', () => {
+    arrow.pickup = true;
+  });
 
-  arrowTween.on("update", function() {
-
+  arrowTween.on('update', () => {
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
-    .then(res => {
-      arrow.pickup = true;
+      .then(() => {
+        arrow.pickup = true;
+        arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
 
-      arrowSounds[Math.floor((Math.random() * 7) + 1)].play();  
-      
-      setTimeout(()=>arrowTween.stop(),15)
-    })
+        setTimeout(() => {
+          arrowTween.stop();
+        }, 15);
+      });
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
-    .then(critter => {
-      arrow.pickup = true;
+      .then((critter) => {
+        arrow.pickup = true;
+        arrowTween.stop();
 
-      arrowTween.stop()  
-      critter.texture = critter.dead;
-      critter.stop()
-      critter.mouseDeathSound.play()
+        const currentCritter = critter;
+        currentCritter.texture = critter.dead;
+        currentCritter.stop();
+        currentCritter.mouseDeathSound.play();
 
-      PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-    })
+        PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
+      });
 
     spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
-    .then(enemy => {
-      arrow.pickup = true;
+      .then((enemy) => {
+        arrow.pickup = true;
 
-      arrowTween.stop()
-      enemy.stop()
-      
-      PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-    })
+        arrowTween.stop();
+        enemy.stop();
 
-  })
+        PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
+      });
+  });
 
-  global.arrowContainer.addChild(arrow)
-  global.viewport.addChild(global.arrowContainer)
+  global.arrowContainer.addChild(arrow);
+  global.viewport.addChild(global.arrowContainer);
+};
 
-}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":16}],20:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":16,"pixi.js":239}],20:[function(require,module,exports){
 (function (global){
 'use sctrict';
 
@@ -2327,7 +2161,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":264}],21:[function(require,module,exports){
+},{"pixi.js":239}],21:[function(require,module,exports){
 /*!
  * @pixi/filter-adjustment - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2338,7 +2172,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(t.__filters={},t.PIXI)}(this,function(t,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float gamma;\nuniform float contrast;\nuniform float saturation;\nuniform float brightness;\nuniform float red;\nuniform float green;\nuniform float blue;\nuniform float alpha;\n\nvoid main(void)\n{\n    vec4 c = texture2D(uSampler, vTextureCoord);\n\n    if (c.a > 0.0) {\n        c.rgb /= c.a;\n\n        vec3 rgb = pow(c.rgb, vec3(1. / gamma));\n        rgb = mix(vec3(.5), mix(vec3(dot(vec3(.2125, .7154, .0721), rgb)), rgb, saturation), contrast);\n        rgb.r *= red;\n        rgb.g *= green;\n        rgb.b *= blue;\n        c.rgb = rgb * brightness;\n\n        c.rgb *= c.a;\n    }\n\n    gl_FragColor = c * alpha;\n}\n",i=function(t){function n(n){t.call(this,r,e),Object.assign(this,{gamma:1,saturation:1,contrast:1,brightness:1,red:1,green:1,blue:1,alpha:1},n)}return t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n,n.prototype.apply=function(t,n,r,e){this.uniforms.gamma=Math.max(this.gamma,1e-4),this.uniforms.saturation=this.saturation,this.uniforms.contrast=this.contrast,this.uniforms.brightness=this.brightness,this.uniforms.red=this.red,this.uniforms.green=this.green,this.uniforms.blue=this.blue,this.uniforms.alpha=this.alpha,t.applyFilter(this,n,r,e)},n}(n.Filter);t.AdjustmentFilter=i,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],22:[function(require,module,exports){
+},{"pixi.js":239}],22:[function(require,module,exports){
 /*!
  * @pixi/filter-advanced-bloom - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2349,7 +2183,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js"),require("@pixi/filter-kawase-blur")):"function"==typeof define&&define.amd?define(["exports","pixi.js","@pixi/filter-kawase-blur"],t):t(e.__filters={},e.PIXI,e.PIXI.filters)}(this,function(e,t,r){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform float threshold;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    // A simple & fast algorithm for getting brightness.\n    // It's inaccuracy , but good enought for this feature.\n    float _max = max(max(color.r, color.g), color.b);\n    float _min = min(min(color.r, color.g), color.b);\n    float brightness = (_max + _min) * 0.5;\n\n    if(brightness > threshold) {\n        gl_FragColor = color;\n    } else {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\n    }\n}\n",n=function(e){function t(t){void 0===t&&(t=.5),e.call(this,o,i),this.threshold=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var r={threshold:{configurable:!0}};return r.threshold.get=function(){return this.uniforms.threshold},r.threshold.set=function(e){this.uniforms.threshold=e},Object.defineProperties(t.prototype,r),t}(t.Filter),l="uniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform sampler2D bloomTexture;\nuniform float bloomScale;\nuniform float brightness;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    color.rgb *= brightness;\n    vec4 bloomColor = vec4(texture2D(bloomTexture, vTextureCoord).rgb, 0.0);\n    bloomColor.rgb *= bloomScale;\n    gl_FragColor = color + bloomColor;\n}\n",s=function(e){function i(i){e.call(this,o,l),"number"==typeof i&&(i={threshold:i}),i=Object.assign({threshold:.5,bloomScale:1,brightness:1,kernels:null,blur:8,quality:4,pixelSize:1,resolution:t.settings.RESOLUTION},i),this.bloomScale=i.bloomScale,this.brightness=i.brightness;var s=i.kernels,u=i.blur,a=i.quality,c=i.pixelSize,h=i.resolution;this._extractFilter=new n(i.threshold),this._extractFilter.resolution=h,this._blurFilter=s?new r.KawaseBlurFilter(s):new r.KawaseBlurFilter(u,a),this.pixelSize=c,this.resolution=h}e&&(i.__proto__=e),i.prototype=Object.create(e&&e.prototype),i.prototype.constructor=i;var s={resolution:{configurable:!0},threshold:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return i.prototype.apply=function(e,t,r,o,i){var n=e.getRenderTarget(!0);this._extractFilter.apply(e,t,n,!0,i);var l=e.getRenderTarget(!0);this._blurFilter.apply(e,n,l,!0,i),this.uniforms.bloomScale=this.bloomScale,this.uniforms.brightness=this.brightness,this.uniforms.bloomTexture=l,e.applyFilter(this,t,r,o),e.returnRenderTarget(l),e.returnRenderTarget(n)},s.resolution.get=function(){return this._resolution},s.resolution.set=function(e){this._resolution=e,this._extractFilter&&(this._extractFilter.resolution=e),this._blurFilter&&(this._blurFilter.resolution=e)},s.threshold.get=function(){return this._extractFilter.threshold},s.threshold.set=function(e){this._extractFilter.threshold=e},s.kernels.get=function(){return this._blurFilter.kernels},s.kernels.set=function(e){this._blurFilter.kernels=e},s.blur.get=function(){return this._blurFilter.blur},s.blur.set=function(e){this._blurFilter.blur=e},s.quality.get=function(){return this._blurFilter.quality},s.quality.set=function(e){this._blurFilter.quality=e},s.pixelSize.get=function(){return this._blurFilter.pixelSize},s.pixelSize.set=function(e){this._blurFilter.pixelSize=e},Object.defineProperties(i.prototype,s),i}(t.Filter);e.AdvancedBloomFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":38,"pixi.js":264}],23:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":38,"pixi.js":239}],23:[function(require,module,exports){
 /*!
  * @pixi/filter-ascii - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2360,7 +2194,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform float pixelSize;\nuniform sampler2D uSampler;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n    return floor( coord / size ) * size;\n}\n\nvec2 getMod(vec2 coord, vec2 size)\n{\n    return mod( coord , size) / size;\n}\n\nfloat character(float n, vec2 p)\n{\n    p = floor(p*vec2(4.0, -4.0) + 2.5);\n    if (clamp(p.x, 0.0, 4.0) == p.x && clamp(p.y, 0.0, 4.0) == p.y)\n    {\n        if (int(mod(n/exp2(p.x + 5.0*p.y), 2.0)) == 1) return 1.0;\n    }\n    return 0.0;\n}\n\nvoid main()\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    // get the rounded color..\n    vec2 pixCoord = pixelate(coord, vec2(pixelSize));\n    pixCoord = unmapCoord(pixCoord);\n\n    vec4 color = texture2D(uSampler, pixCoord);\n\n    // determine the character to use\n    float gray = (color.r + color.g + color.b) / 3.0;\n\n    float n =  65536.0;             // .\n    if (gray > 0.2) n = 65600.0;    // :\n    if (gray > 0.3) n = 332772.0;   // *\n    if (gray > 0.4) n = 15255086.0; // o\n    if (gray > 0.5) n = 23385164.0; // &\n    if (gray > 0.6) n = 15252014.0; // 8\n    if (gray > 0.7) n = 13199452.0; // @\n    if (gray > 0.8) n = 11512810.0; // #\n\n    // get the mod..\n    vec2 modd = getMod(coord, vec2(pixelSize));\n\n    gl_FragColor = color * character( n, vec2(-1.0) + modd * 2.0);\n\n}",t=function(e){function n(n){void 0===n&&(n=8),e.call(this,o,r),this.size=n}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.pixelSize},t.size.set=function(e){this.uniforms.pixelSize=e},Object.defineProperties(n.prototype,t),n}(n.Filter);e.AsciiFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],24:[function(require,module,exports){
+},{"pixi.js":239}],24:[function(require,module,exports){
 /*!
  * @pixi/filter-bevel - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2371,7 +2205,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float transformX;\nuniform float transformY;\nuniform vec3 lightColor;\nuniform float lightAlpha;\nuniform vec3 shadowColor;\nuniform float shadowAlpha;\n\nvoid main(void) {\n    vec2 transform = vec2(1.0 / filterArea) * vec2(transformX, transformY);\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    float light = texture2D(uSampler, vTextureCoord - transform).a;\n    float shadow = texture2D(uSampler, vTextureCoord + transform).a;\n\n    color.rgb = mix(color.rgb, lightColor, clamp((color.a - light) * lightAlpha, 0.0, 1.0));\n    color.rgb = mix(color.rgb, shadowColor, clamp((color.a - shadow) * shadowAlpha, 0.0, 1.0));\n    gl_FragColor = vec4(color.rgb * color.a, color.a);\n}\n",n=function(o){function n(t){void 0===t&&(t={}),o.call(this,r,i),this.uniforms.lightColor=new Float32Array(3),this.uniforms.shadowColor=new Float32Array(3),t=Object.assign({rotation:45,thickness:2,lightColor:16777215,lightAlpha:.7,shadowColor:0,shadowAlpha:.7},t),this.rotation=t.rotation,this.thickness=t.thickness,this.lightColor=t.lightColor,this.lightAlpha=t.lightAlpha,this.shadowColor=t.shadowColor,this.shadowAlpha=t.shadowAlpha}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var e={rotation:{configurable:!0},thickness:{configurable:!0},lightColor:{configurable:!0},lightAlpha:{configurable:!0},shadowColor:{configurable:!0},shadowAlpha:{configurable:!0}};return n.prototype._updateTransform=function(){this.uniforms.transformX=this._thickness*Math.cos(this._angle),this.uniforms.transformY=this._thickness*Math.sin(this._angle)},e.rotation.get=function(){return this._angle/t.DEG_TO_RAD},e.rotation.set=function(o){this._angle=o*t.DEG_TO_RAD,this._updateTransform()},e.thickness.get=function(){return this._thickness},e.thickness.set=function(o){this._thickness=o,this._updateTransform()},e.lightColor.get=function(){return t.utils.rgb2hex(this.uniforms.lightColor)},e.lightColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.lightColor)},e.lightAlpha.get=function(){return this.uniforms.lightAlpha},e.lightAlpha.set=function(o){this.uniforms.lightAlpha=o},e.shadowColor.get=function(){return t.utils.rgb2hex(this.uniforms.shadowColor)},e.shadowColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.shadowColor)},e.shadowAlpha.get=function(){return this.uniforms.shadowAlpha},e.shadowAlpha.set=function(o){this.uniforms.shadowAlpha=o},Object.defineProperties(n.prototype,e),n}(t.Filter);o.BevelFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],25:[function(require,module,exports){
+},{"pixi.js":239}],25:[function(require,module,exports){
 /*!
  * @pixi/filter-bloom - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2382,7 +2216,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(t.__filters={},t.PIXI)}(this,function(t,r){"use strict";var e=r.filters,i=e.BlurXFilter,l=e.BlurYFilter,u=e.AlphaFilter,n=function(t){function e(e,n,o,s){var b,f;void 0===e&&(e=2),void 0===n&&(n=4),void 0===o&&(o=r.settings.RESOLUTION),void 0===s&&(s=5),t.call(this),"number"==typeof e?(b=e,f=e):e instanceof r.Point?(b=e.x,f=e.y):Array.isArray(e)&&(b=e[0],f=e[1]),this.blurXFilter=new i(b,n,o,s),this.blurYFilter=new l(f,n,o,s),this.blurYFilter.blendMode=r.BLEND_MODES.SCREEN,this.defaultFilter=new u}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var n={blur:{configurable:!0},blurX:{configurable:!0},blurY:{configurable:!0}};return e.prototype.apply=function(t,r,e){var i=t.getRenderTarget(!0);this.defaultFilter.apply(t,r,e),this.blurXFilter.apply(t,r,i),this.blurYFilter.apply(t,i,e),t.returnRenderTarget(i)},n.blur.get=function(){return this.blurXFilter.blur},n.blur.set=function(t){this.blurXFilter.blur=this.blurYFilter.blur=t},n.blurX.get=function(){return this.blurXFilter.blur},n.blurX.set=function(t){this.blurXFilter.blur=t},n.blurY.get=function(){return this.blurYFilter.blur},n.blurY.set=function(t){this.blurYFilter.blur=t},Object.defineProperties(e.prototype,n),e}(r.Filter);t.BloomFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],26:[function(require,module,exports){
+},{"pixi.js":239}],26:[function(require,module,exports){
 /*!
  * @pixi/filter-bulge-pinch - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2393,7 +2227,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="uniform float radius;\nuniform float strength;\nuniform vec2 center;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nvoid main()\n{\n    vec2 coord = vTextureCoord * filterArea.xy;\n    coord -= center * dimensions.xy;\n    float distance = length(coord);\n    if (distance < radius) {\n        float percent = distance / radius;\n        if (strength > 0.0) {\n            coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\n        } else {\n            coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\n        }\n    }\n    coord += center * dimensions.xy;\n    coord /= filterArea.xy;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    gl_FragColor = color;\n}\n",o=function(e){function n(n,o,i){e.call(this,t,r),this.uniforms.dimensions=new Float32Array(2),this.center=n||[.5,.5],this.radius=o||100,this.strength=i||1}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={radius:{configurable:!0},strength:{configurable:!0},center:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,e.applyFilter(this,n,t,r)},o.radius.get=function(){return this.uniforms.radius},o.radius.set=function(e){this.uniforms.radius=e},o.strength.get=function(){return this.uniforms.strength},o.strength.set=function(e){this.uniforms.strength=e},o.center.get=function(){return this.uniforms.center},o.center.set=function(e){this.uniforms.center=e},Object.defineProperties(n.prototype,o),n}(n.Filter);e.BulgePinchFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],27:[function(require,module,exports){
+},{"pixi.js":239}],27:[function(require,module,exports){
 /*!
  * @pixi/filter-color-map - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2404,7 +2238,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform sampler2D colorMap;\n\nuniform float _mix;\nuniform float _size;\nuniform float _sliceSize;\nuniform float _slicePixelSize;\nuniform float _sliceInnerSize;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord.xy);\n\n    float sliceIndex = color.b * (_size - 1.0);\n    float zSlice0 = floor(sliceIndex);\n    float zSlice1 = ceil(sliceIndex);\n\n    float xOffset = _slicePixelSize * 0.5 + color.r * _sliceInnerSize;\n    float s0 = xOffset + zSlice0 * _sliceSize;\n    float s1 = xOffset + zSlice1 * _sliceSize;\n    vec4 slice0Color = texture2D(colorMap, vec2(s0, color.g));\n    vec4 slice1Color = texture2D(colorMap, vec2(s1, color.g));\n    vec4 adjusted = mix(slice0Color, slice1Color, fract(sliceIndex));\n\n    gl_FragColor = mix(color, adjusted, _mix);\n}\n",s=function(e){function s(i,s,r){void 0===s&&(s=!1),void 0===r&&(r=1),e.call(this,t,o),this._size=0,this._sliceSize=0,this._slicePixelSize=0,this._sliceInnerSize=0,this._scaleMode=null,this._nearest=!1,this.nearest=s,this.mix=r,this.colorMap=i}e&&(s.__proto__=e),s.prototype=Object.create(e&&e.prototype),s.prototype.constructor=s;var r={colorSize:{configurable:!0},colorMap:{configurable:!0},nearest:{configurable:!0}};return s.prototype.apply=function(e,i,t,o){this.uniforms._mix=this.mix,e.applyFilter(this,i,t,o)},r.colorSize.get=function(){return this._size},r.colorMap.get=function(){return this._colorMap},r.colorMap.set=function(e){e instanceof i.Texture||(e=i.Texture.from(e)),e&&e.baseTexture&&(e.baseTexture.scaleMode=this._scaleMode,e.baseTexture.mipmap=!1,this._size=e.height,this._sliceSize=1/this._size,this._slicePixelSize=this._sliceSize/this._size,this._sliceInnerSize=this._slicePixelSize*(this._size-1),this.uniforms._size=this._size,this.uniforms._sliceSize=this._sliceSize,this.uniforms._slicePixelSize=this._slicePixelSize,this.uniforms._sliceInnerSize=this._sliceInnerSize,this.uniforms.colorMap=e),this._colorMap=e},r.nearest.get=function(){return this._nearest},r.nearest.set=function(e){this._nearest=e,this._scaleMode=e?i.SCALE_MODES.NEAREST:i.SCALE_MODES.LINEAR;var t=this._colorMap;t&&t.baseTexture&&(t.baseTexture._glTextures={},t.baseTexture.scaleMode=this._scaleMode,t.baseTexture.mipmap=!1,t._updateID++,t.baseTexture.emit("update",t.baseTexture))},s.prototype.updateColorMap=function(){var e=this._colorMap;e&&e.baseTexture&&(e._updateID++,e.baseTexture.emit("update",e.baseTexture),this.colorMap=e)},s.prototype.destroy=function(i){this._colorMap&&this._colorMap.destroy(i),e.prototype.destroy.call(this)},Object.defineProperties(s.prototype,r),s}(i.Filter);e.ColorMapFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],28:[function(require,module,exports){
+},{"pixi.js":239}],28:[function(require,module,exports){
 /*!
  * @pixi/filter-color-replace - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2415,7 +2249,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(o.__filters={},o.PIXI)}(this,function(o,r){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec3 originalColor;\nuniform vec3 newColor;\nuniform float epsilon;\nvoid main(void) {\n    vec4 currentColor = texture2D(uSampler, vTextureCoord);\n    vec3 colorDiff = originalColor - (currentColor.rgb / max(currentColor.a, 0.0000000001));\n    float colorDistance = length(colorDiff);\n    float doReplace = step(colorDistance, epsilon);\n    gl_FragColor = vec4(mix(currentColor.rgb, (newColor + colorDiff) * currentColor.a, doReplace), currentColor.a);\n}\n",n=function(o){function n(r,n,t){void 0===r&&(r=16711680),void 0===n&&(n=0),void 0===t&&(t=.4),o.call(this,e,i),this.uniforms.originalColor=new Float32Array(3),this.uniforms.newColor=new Float32Array(3),this.originalColor=r,this.newColor=n,this.epsilon=t}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={originalColor:{configurable:!0},newColor:{configurable:!0},epsilon:{configurable:!0}};return t.originalColor.set=function(o){var e=this.uniforms.originalColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._originalColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._originalColor=r.utils.rgb2hex(e))},t.originalColor.get=function(){return this._originalColor},t.newColor.set=function(o){var e=this.uniforms.newColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._newColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._newColor=r.utils.rgb2hex(e))},t.newColor.get=function(){return this._newColor},t.epsilon.set=function(o){this.uniforms.epsilon=o},t.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(n.prototype,t),n}(r.Filter);o.ColorReplaceFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],29:[function(require,module,exports){
+},{"pixi.js":239}],29:[function(require,module,exports){
 /*!
  * @pixi/filter-convolution - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2426,7 +2260,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying mediump vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec2 texelSize;\nuniform float matrix[9];\n\nvoid main(void)\n{\n   vec4 c11 = texture2D(uSampler, vTextureCoord - texelSize); // top left\n   vec4 c12 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - texelSize.y)); // top center\n   vec4 c13 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y - texelSize.y)); // top right\n\n   vec4 c21 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y)); // mid left\n   vec4 c22 = texture2D(uSampler, vTextureCoord); // mid center\n   vec4 c23 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y)); // mid right\n\n   vec4 c31 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y + texelSize.y)); // bottom left\n   vec4 c32 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + texelSize.y)); // bottom center\n   vec4 c33 = texture2D(uSampler, vTextureCoord + texelSize); // bottom right\n\n   gl_FragColor =\n       c11 * matrix[0] + c12 * matrix[1] + c13 * matrix[2] +\n       c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +\n       c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];\n\n   gl_FragColor.a = c22.a;\n}\n",o=function(e){function t(t,o,n){e.call(this,r,i),this.uniforms.texelSize=new Float32Array(9),this.matrix=t,this.width=o,this.height=n}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var o={matrix:{configurable:!0},width:{configurable:!0},height:{configurable:!0}};return o.matrix.get=function(){return this.uniforms.matrix},o.matrix.set=function(e){this.uniforms.matrix=new Float32Array(e)},o.width.get=function(){return 1/this.uniforms.texelSize[0]},o.width.set=function(e){this.uniforms.texelSize[0]=1/e},o.height.get=function(){return 1/this.uniforms.texelSize[1]},o.height.set=function(e){this.uniforms.texelSize[1]=1/e},Object.defineProperties(t.prototype,o),t}(t.Filter);e.ConvolutionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],30:[function(require,module,exports){
+},{"pixi.js":239}],30:[function(require,module,exports){
 /*!
  * @pixi/filter-cross-hatch - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2437,7 +2271,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(n.__filters={},n.PIXI)}(this,function(n,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void)\n{\n    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);\n\n    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n\n    if (lum < 1.00)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.75)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.50)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.3)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n}\n",t=function(n){function o(){n.call(this,r,e)}return n&&(o.__proto__=n),o.prototype=Object.create(n&&n.prototype),o.prototype.constructor=o,o}(o.Filter);n.CrossHatchFilter=t,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],31:[function(require,module,exports){
+},{"pixi.js":239}],31:[function(require,module,exports){
 /*!
  * @pixi/filter-crt - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2448,7 +2282,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(n.__filters={},n.PIXI)}(this,function(n,i){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nconst float SQRT_2 = 1.414213;\n\nconst float light = 1.0;\n\nuniform float curvature;\nuniform float lineWidth;\nuniform float lineContrast;\nuniform bool verticalLine;\nuniform float noise;\nuniform float noiseSize;\n\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\n\nuniform float seed;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    vec2 dir = vec2(coord - vec2(0.5, 0.5));\n\n    float _c = curvature > 0. ? curvature : 1.;\n    float k = curvature > 0. ?(length(dir * dir) * 0.25 * _c * _c + 0.935 * _c) : 1.;\n    vec2 uv = dir * k;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 rgb = gl_FragColor.rgb;\n\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        rgb += _noise * noise;\n    }\n\n    if (lineWidth > 0.0) {\n        float v = (verticalLine ? uv.x * dimensions.x : uv.y * dimensions.y) * min(1.0, 2.0 / lineWidth ) / _c;\n        float j = 1. + cos(v * 1.2 - time) * 0.5 * lineContrast;\n        rgb *= j;\n        float segment = verticalLine ? mod((dir.x + .5) * dimensions.x, 4.) : mod((dir.y + .5) * dimensions.y, 4.);\n        rgb *= 0.99 + ceil(segment) * 0.015;\n    }\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    gl_FragColor.rgb = rgb;\n}\n",o=function(n){function i(i){n.call(this,e,t),this.uniforms.dimensions=new Float32Array(2),this.time=0,this.seed=0,Object.assign(this,{curvature:1,lineWidth:1,lineContrast:.25,verticalLine:!1,noise:0,noiseSize:1,seed:0,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3,time:0},i)}n&&(i.__proto__=n),i.prototype=Object.create(n&&n.prototype),i.prototype.constructor=i;var o={curvature:{configurable:!0},lineWidth:{configurable:!0},lineContrast:{configurable:!0},verticalLine:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return i.prototype.apply=function(n,i,e,t){this.uniforms.dimensions[0]=i.sourceFrame.width,this.uniforms.dimensions[1]=i.sourceFrame.height,this.uniforms.seed=this.seed,this.uniforms.time=this.time,n.applyFilter(this,i,e,t)},o.curvature.set=function(n){this.uniforms.curvature=n},o.curvature.get=function(){return this.uniforms.curvature},o.lineWidth.set=function(n){this.uniforms.lineWidth=n},o.lineWidth.get=function(){return this.uniforms.lineWidth},o.lineContrast.set=function(n){this.uniforms.lineContrast=n},o.lineContrast.get=function(){return this.uniforms.lineContrast},o.verticalLine.set=function(n){this.uniforms.verticalLine=n},o.verticalLine.get=function(){return this.uniforms.verticalLine},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(i.prototype,o),i}(i.Filter);n.CRTFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],32:[function(require,module,exports){
+},{"pixi.js":239}],32:[function(require,module,exports){
 /*!
  * @pixi/filter-dot - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2459,7 +2293,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform vec4 filterArea;\nuniform sampler2D uSampler;\n\nuniform float angle;\nuniform float scale;\n\nfloat pattern()\n{\n   float s = sin(angle), c = cos(angle);\n   vec2 tex = vTextureCoord * filterArea.xy;\n   vec2 point = vec2(\n       c * tex.x - s * tex.y,\n       s * tex.x + c * tex.y\n   ) * scale;\n   return (sin(point.x) * sin(point.y)) * 4.0;\n}\n\nvoid main()\n{\n   vec4 color = texture2D(uSampler, vTextureCoord);\n   float average = (color.r + color.g + color.b) / 3.0;\n   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);\n}\n",r=function(e){function n(n,r){void 0===n&&(n=1),void 0===r&&(r=5),e.call(this,t,o),this.scale=n,this.angle=r}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={scale:{configurable:!0},angle:{configurable:!0}};return r.scale.get=function(){return this.uniforms.scale},r.scale.set=function(e){this.uniforms.scale=e},r.angle.get=function(){return this.uniforms.angle},r.angle.set=function(e){this.uniforms.angle=e},Object.defineProperties(n.prototype,r),n}(n.Filter);e.DotFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],33:[function(require,module,exports){
+},{"pixi.js":239}],33:[function(require,module,exports){
 /*!
  * @pixi/filter-drop-shadow - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2470,7 +2304,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("@pixi/filter-kawase-blur"),require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","@pixi/filter-kawase-blur","pixi.js"],i):i(t.__filters={},t.PIXI.filters,t.PIXI)}(this,function(t,i,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float alpha;\nuniform vec3 color;\nvoid main(void){\n    vec4 sample = texture2D(uSampler, vTextureCoord);\n\n    // Un-premultiply alpha before applying the color\n    if (sample.a > 0.0) {\n        sample.rgb /= sample.a;\n    }\n\n    // Premultiply alpha again\n    sample.rgb = color.rgb * sample.a;\n\n    // alpha user alpha\n    sample *= alpha;\n\n    gl_FragColor = sample;\n}",o=function(t){function o(o){o&&o.constructor!==Object&&(console.warn("DropShadowFilter now uses options instead of (rotation, distance, blur, color, alpha)"),o={rotation:o},void 0!==arguments[1]&&(o.distance=arguments[1]),void 0!==arguments[2]&&(o.blur=arguments[2]),void 0!==arguments[3]&&(o.color=arguments[3]),void 0!==arguments[4]&&(o.alpha=arguments[4])),o=Object.assign({rotation:45,distance:5,color:0,alpha:.5,shadowOnly:!1,kernels:null,blur:2,quality:3,pixelSize:1,resolution:e.settings.RESOLUTION},o),t.call(this);var l=o.kernels,a=o.blur,s=o.quality,u=o.pixelSize,c=o.resolution;this._tintFilter=new e.Filter(r,n),this._tintFilter.uniforms.color=new Float32Array(4),this._tintFilter.resolution=c,this._blurFilter=l?new i.KawaseBlurFilter(l):new i.KawaseBlurFilter(a,s),this.pixelSize=u,this.resolution=c,this.targetTransform=new e.Matrix;var p=o.shadowOnly,h=o.rotation,f=o.distance,d=o.alpha,g=o.color;this.shadowOnly=p,this.rotation=h,this.distance=f,this.alpha=d,this.color=g,this._updatePadding()}t&&(o.__proto__=t),o.prototype=Object.create(t&&t.prototype),o.prototype.constructor=o;var l={resolution:{configurable:!0},distance:{configurable:!0},rotation:{configurable:!0},alpha:{configurable:!0},color:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return o.prototype.apply=function(t,i,e,r){var n=t.getRenderTarget();n.transform=this.targetTransform,this._tintFilter.apply(t,i,n,!0),n.transform=null,this._blurFilter.apply(t,n,e),!0!==this.shadowOnly&&t.applyFilter(this,i,e,r),t.returnRenderTarget(n)},o.prototype._updatePadding=function(){this.padding=this.distance+2*this.blur},o.prototype._updateTargetTransform=function(){this.targetTransform.tx=this.distance*Math.cos(this.angle),this.targetTransform.ty=this.distance*Math.sin(this.angle)},l.resolution.get=function(){return this._resolution},l.resolution.set=function(t){this._resolution=t,this._tintFilter&&(this._tintFilter.resolution=t),this._blurFilter&&(this._blurFilter.resolution=t)},l.distance.get=function(){return this._distance},l.distance.set=function(t){this._distance=t,this._updatePadding(),this._updateTargetTransform()},l.rotation.get=function(){return this.angle/e.DEG_TO_RAD},l.rotation.set=function(t){this.angle=t*e.DEG_TO_RAD,this._updateTargetTransform()},l.alpha.get=function(){return this._tintFilter.uniforms.alpha},l.alpha.set=function(t){this._tintFilter.uniforms.alpha=t},l.color.get=function(){return e.utils.rgb2hex(this._tintFilter.uniforms.color)},l.color.set=function(t){e.utils.hex2rgb(t,this._tintFilter.uniforms.color)},l.kernels.get=function(){return this._blurFilter.kernels},l.kernels.set=function(t){this._blurFilter.kernels=t},l.blur.get=function(){return this._blurFilter.blur},l.blur.set=function(t){this._blurFilter.blur=t,this._updatePadding()},l.quality.get=function(){return this._blurFilter.quality},l.quality.set=function(t){this._blurFilter.quality=t},l.pixelSize.get=function(){return this._blurFilter.pixelSize},l.pixelSize.set=function(t){this._blurFilter.pixelSize=t},Object.defineProperties(o.prototype,l),o}(e.Filter);t.DropShadowFilter=o,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":38,"pixi.js":264}],34:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":38,"pixi.js":239}],34:[function(require,module,exports){
 /*!
  * @pixi/filter-emboss - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2481,7 +2315,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float strength;\nuniform vec4 filterArea;\n\n\nvoid main(void)\n{\n\tvec2 onePixel = vec2(1.0 / filterArea);\n\n\tvec4 color;\n\n\tcolor.rgb = vec3(0.5);\n\n\tcolor -= texture2D(uSampler, vTextureCoord - onePixel) * strength;\n\tcolor += texture2D(uSampler, vTextureCoord + onePixel) * strength;\n\n\tcolor.rgb = vec3((color.r + color.g + color.b) / 3.0);\n\n\tfloat alpha = texture2D(uSampler, vTextureCoord).a;\n\n\tgl_FragColor = vec4(color.rgb * alpha, alpha);\n}\n",n=function(e){function t(t){void 0===t&&(t=5),e.call(this,r,o),this.strength=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var n={strength:{configurable:!0}};return n.strength.get=function(){return this.uniforms.strength},n.strength.set=function(e){this.uniforms.strength=e},Object.defineProperties(t.prototype,n),t}(t.Filter);e.EmbossFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],35:[function(require,module,exports){
+},{"pixi.js":239}],35:[function(require,module,exports){
 /*!
  * @pixi/filter-glitch - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -2492,7 +2326,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="// precision highp float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\nuniform float aspect;\n\nuniform sampler2D displacementMap;\nuniform float offset;\nuniform float sinDir;\nuniform float cosDir;\nuniform int fillMode;\n\nuniform float seed;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nconst int TRANSPARENT = 0;\nconst int ORIGINAL = 1;\nconst int LOOP = 2;\nconst int CLAMP = 3;\nconst int MIRROR = 4;\n\nvoid main(void)\n{\n    vec2 coord = (vTextureCoord * filterArea.xy) / dimensions;\n\n    if (coord.x > 1.0 || coord.y > 1.0) {\n        return;\n    }\n\n    float cx = coord.x - 0.5;\n    float cy = (coord.y - 0.5) * aspect;\n    float ny = (-sinDir * cx + cosDir * cy) / aspect + 0.5;\n\n    // displacementMap: repeat\n    // ny = ny > 1.0 ? ny - 1.0 : (ny < 0.0 ? 1.0 + ny : ny);\n\n    // displacementMap: mirror\n    ny = ny > 1.0 ? 2.0 - ny : (ny < 0.0 ? -ny : ny);\n\n    vec4 dc = texture2D(displacementMap, vec2(0.5, ny));\n\n    float displacement = (dc.r - dc.g) * (offset / filterArea.x);\n\n    coord = vTextureCoord + vec2(cosDir * displacement, sinDir * displacement * aspect);\n\n    if (fillMode == CLAMP) {\n        coord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    } else {\n        if( coord.x > filterClamp.z ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x -= filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x = filterClamp.z * 2.0 - coord.x;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.x < filterClamp.x ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x += filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x *= -filterClamp.z;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n\n        if( coord.y > filterClamp.w ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y -= filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y = filterClamp.w * 2.0 - coord.y;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.y < filterClamp.y ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y += filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y *= -filterClamp.w;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n    }\n\n    gl_FragColor.r = texture2D(uSampler, coord + red * (1.0 - seed * 0.4) / filterArea.xy).r;\n    gl_FragColor.g = texture2D(uSampler, coord + green * (1.0 - seed * 0.3) / filterArea.xy).g;\n    gl_FragColor.b = texture2D(uSampler, coord + blue * (1.0 - seed * 0.2) / filterArea.xy).b;\n    gl_FragColor.a = texture2D(uSampler, coord).a;\n}\n",r=function(e){function r(r){void 0===r&&(r={}),e.call(this,t,n),this.uniforms.dimensions=new Float32Array(2),r=Object.assign({slices:5,offset:100,direction:0,fillMode:0,average:!1,seed:0,red:[0,0],green:[0,0],blue:[0,0],minSize:8,sampleSize:512},r),this.direction=r.direction,this.red=r.red,this.green=r.green,this.blue=r.blue,this.offset=r.offset,this.fillMode=r.fillMode,this.average=r.average,this.seed=r.seed,this.minSize=r.minSize,this.sampleSize=r.sampleSize,this._canvas=document.createElement("canvas"),this._canvas.width=4,this._canvas.height=this.sampleSize,this.texture=i.Texture.fromCanvas(this._canvas,i.SCALE_MODES.NEAREST),this._slices=0,this.slices=r.slices}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var s={sizes:{configurable:!0},offsets:{configurable:!0},slices:{configurable:!0},direction:{configurable:!0},red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return r.prototype.apply=function(e,i,t,n){var r=i.sourceFrame.width,s=i.sourceFrame.height;this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=s,this.uniforms.aspect=s/r,this.uniforms.seed=this.seed,this.uniforms.offset=this.offset,this.uniforms.fillMode=this.fillMode,e.applyFilter(this,i,t,n)},r.prototype._randomizeSizes=function(){var e=this._sizes,i=this._slices-1,t=this.sampleSize,n=Math.min(this.minSize/t,.9/this._slices);if(this.average){for(var r=this._slices,s=1,o=0;o<i;o++){var l=s/(r-o),f=Math.max(l*(1-.6*Math.random()),n);e[o]=f,s-=f}e[i]=s}else{for(var a=1,c=Math.sqrt(1/this._slices),u=0;u<i;u++){var d=Math.max(c*a*Math.random(),n);e[u]=d,a-=d}e[i]=a}this.shuffle()},r.prototype.shuffle=function(){for(var e=this._sizes,i=this._slices-1;i>0;i--){var t=Math.random()*i>>0,n=e[i];e[i]=e[t],e[t]=n}},r.prototype._randomizeOffsets=function(){for(var e=0;e<this._slices;e++)this._offsets[e]=Math.random()*(Math.random()<.5?-1:1)},r.prototype.refresh=function(){this._randomizeSizes(),this._randomizeOffsets(),this.redraw()},r.prototype.redraw=function(){var e,i=this.sampleSize,t=this.texture,n=this._canvas.getContext("2d");n.clearRect(0,0,8,i);for(var r=0,s=0;s<this._slices;s++){e=Math.floor(256*this._offsets[s]);var o=this._sizes[s]*i,l=e>0?e:0,f=e<0?-e:0;n.fillStyle="rgba("+l+", "+f+", 0, 1)",n.fillRect(0,r>>0,i,o+1>>0),r+=o}t.baseTexture.emit("update",t.baseTexture),this.uniforms.displacementMap=t},s.sizes.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._sizes[t]=e[t]},s.sizes.get=function(){return this._sizes},s.offsets.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._offsets[t]=e[t]},s.offsets.get=function(){return this._offsets},s.slices.get=function(){return this._slices},s.slices.set=function(e){this._slices!==e&&(this._slices=e,this.uniforms.slices=e,this._sizes=this.uniforms.slicesWidth=new Float32Array(e),this._offsets=this.uniforms.slicesOffset=new Float32Array(e),this.refresh())},s.direction.get=function(){return this._direction},s.direction.set=function(e){if(this._direction!==e){this._direction=e;var t=e*i.DEG_TO_RAD;this.uniforms.sinDir=Math.sin(t),this.uniforms.cosDir=Math.cos(t)}},s.red.get=function(){return this.uniforms.red},s.red.set=function(e){this.uniforms.red=e},s.green.get=function(){return this.uniforms.green},s.green.set=function(e){this.uniforms.green=e},s.blue.get=function(){return this.uniforms.blue},s.blue.set=function(e){this.uniforms.blue=e},r.prototype.destroy=function(){this.texture.destroy(!0),this.texture=null,this._canvas=null,this.red=null,this.green=null,this.blue=null,this._sizes=null,this._offsets=null},Object.defineProperties(r.prototype,s),r}(i.Filter);r.TRANSPARENT=0,r.ORIGINAL=1,r.LOOP=2,r.CLAMP=3,r.MIRROR=4,e.GlitchFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":264}],36:[function(require,module,exports){
+},{"pixi.js":239}],36:[function(require,module,exports){
 /*!
  * @pixi/filter-glow - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2503,7 +2337,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform sampler2D uSampler;\n\nuniform float distance;\nuniform float outerStrength;\nuniform float innerStrength;\nuniform vec4 glowColor;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nconst float PI = 3.14159265358979323846264;\n\nvoid main(void) {\n    vec2 px = vec2(1.0 / filterArea.x, 1.0 / filterArea.y);\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float cosAngle;\n    float sinAngle;\n    vec2 displaced;\n    for (float angle = 0.0; angle <= PI * 2.0; angle += %QUALITY_DIST%) {\n       cosAngle = cos(angle);\n       sinAngle = sin(angle);\n       for (float curDistance = 1.0; curDistance <= %DIST%; curDistance++) {\n           displaced.x = vTextureCoord.x + cosAngle * curDistance * px.x;\n           displaced.y = vTextureCoord.y + sinAngle * curDistance * px.y;\n           curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n           totalAlpha += (distance - curDistance) * curColor.a;\n           maxTotalAlpha += (distance - curDistance);\n       }\n    }\n    maxTotalAlpha = max(maxTotalAlpha, 0.0001);\n\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * outerStrength * (1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * innerStrength * ownColor.a;\n    float resultAlpha = (ownColor.a + outerGlowAlpha);\n    gl_FragColor = vec4(mix(mix(ownColor.rgb, glowColor.rgb, innerGlowAlpha / ownColor.a), glowColor.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);\n}\n",r=function(o){function r(t,r,i,l,a){void 0===t&&(t=10),void 0===r&&(r=4),void 0===i&&(i=0),void 0===l&&(l=16777215),void 0===a&&(a=.1),o.call(this,n,e.replace(/%QUALITY_DIST%/gi,""+(1/a/t).toFixed(7)).replace(/%DIST%/gi,""+t.toFixed(7))),this.uniforms.glowColor=new Float32Array([0,0,0,1]),this.distance=t,this.color=l,this.outerStrength=r,this.innerStrength=i}o&&(r.__proto__=o),r.prototype=Object.create(o&&o.prototype),r.prototype.constructor=r;var i={color:{configurable:!0},distance:{configurable:!0},outerStrength:{configurable:!0},innerStrength:{configurable:!0}};return i.color.get=function(){return t.utils.rgb2hex(this.uniforms.glowColor)},i.color.set=function(o){t.utils.hex2rgb(o,this.uniforms.glowColor)},i.distance.get=function(){return this.uniforms.distance},i.distance.set=function(o){this.uniforms.distance=o},i.outerStrength.get=function(){return this.uniforms.outerStrength},i.outerStrength.set=function(o){this.uniforms.outerStrength=o},i.innerStrength.get=function(){return this.uniforms.innerStrength},i.innerStrength.set=function(o){this.uniforms.innerStrength=o},Object.defineProperties(r.prototype,i),r}(t.Filter);o.GlowFilter=r,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],37:[function(require,module,exports){
+},{"pixi.js":239}],37:[function(require,module,exports){
 /*!
  * @pixi/filter-godray - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2514,7 +2348,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="vec3 mod289(vec3 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 mod289(vec4 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 permute(vec4 x)\n{\n    return mod289(((x * 34.0) + 1.0) * x);\n}\nvec4 taylorInvSqrt(vec4 r)\n{\n    return 1.79284291400159 - 0.85373472095314 * r;\n}\nvec3 fade(vec3 t)\n{\n    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);\n}\n// Classic Perlin noise, periodic variant\nfloat pnoise(vec3 P, vec3 rep)\n{\n    vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period\n    vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period\n    Pi0 = mod289(Pi0);\n    Pi1 = mod289(Pi1);\n    vec3 Pf0 = fract(P); // Fractional part for interpolation\n    vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0\n    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);\n    vec4 iy = vec4(Pi0.yy, Pi1.yy);\n    vec4 iz0 = Pi0.zzzz;\n    vec4 iz1 = Pi1.zzzz;\n    vec4 ixy = permute(permute(ix) + iy);\n    vec4 ixy0 = permute(ixy + iz0);\n    vec4 ixy1 = permute(ixy + iz1);\n    vec4 gx0 = ixy0 * (1.0 / 7.0);\n    vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;\n    gx0 = fract(gx0);\n    vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);\n    vec4 sz0 = step(gz0, vec4(0.0));\n    gx0 -= sz0 * (step(0.0, gx0) - 0.5);\n    gy0 -= sz0 * (step(0.0, gy0) - 0.5);\n    vec4 gx1 = ixy1 * (1.0 / 7.0);\n    vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;\n    gx1 = fract(gx1);\n    vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);\n    vec4 sz1 = step(gz1, vec4(0.0));\n    gx1 -= sz1 * (step(0.0, gx1) - 0.5);\n    gy1 -= sz1 * (step(0.0, gy1) - 0.5);\n    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);\n    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);\n    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);\n    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);\n    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);\n    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);\n    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);\n    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);\n    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));\n    g000 *= norm0.x;\n    g010 *= norm0.y;\n    g100 *= norm0.z;\n    g110 *= norm0.w;\n    vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));\n    g001 *= norm1.x;\n    g011 *= norm1.y;\n    g101 *= norm1.z;\n    g111 *= norm1.w;\n    float n000 = dot(g000, Pf0);\n    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));\n    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));\n    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));\n    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));\n    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));\n    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));\n    float n111 = dot(g111, Pf1);\n    vec3 fade_xyz = fade(Pf0);\n    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);\n    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);\n    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);\n    return 2.2 * n_xyz;\n}\nfloat turb(vec3 P, vec3 rep, float lacunarity, float gain)\n{\n    float sum = 0.0;\n    float sc = 1.0;\n    float totalgain = 1.0;\n    for (float i = 0.0; i < 6.0; i++)\n    {\n        sum += totalgain * pnoise(P * sc, rep);\n        sc *= lacunarity;\n        totalgain *= gain;\n    }\n    return abs(sum);\n}\n",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform vec2 light;\nuniform bool parallel;\nuniform float aspect;\n\nuniform float gain;\nuniform float lacunarity;\nuniform float time;\n\n${perlin}\n\nvoid main(void) {\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    float d;\n\n    if (parallel) {\n        float _cos = light.x;\n        float _sin = light.y;\n        d = (_cos * coord.x) + (_sin * coord.y * aspect);\n    } else {\n        float dx = coord.x - light.x / dimensions.x;\n        float dy = (coord.y - light.y / dimensions.y) * aspect;\n        float dis = sqrt(dx * dx + dy * dy) + 0.00001;\n        d = dy / dis;\n    }\n\n    vec3 dir = vec3(d, d, 0.0);\n\n    float noise = turb(dir + vec3(time, 0.0, 62.1 + time) * 0.05, vec3(480.0, 320.0, 480.0), lacunarity, gain);\n    noise = mix(noise, 0.0, 0.3);\n    //fade vertically.\n    vec4 mist = vec4(noise, noise, noise, 1.0) * (1.0 - coord.y);\n    mist.a = 1.0;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord) + mist;\n}\n",r=function(n){function r(r){n.call(this,t,o.replace("${perlin}",i)),this.uniforms.dimensions=new Float32Array(2),"number"==typeof r&&(console.warn("GodrayFilter now uses options instead of (angle, gain, lacunarity, time)"),r={angle:r},void 0!==arguments[1]&&(r.gain=arguments[1]),void 0!==arguments[2]&&(r.lacunarity=arguments[2]),void 0!==arguments[3]&&(r.time=arguments[3])),r=Object.assign({angle:30,gain:.5,lacunarity:2.5,time:0,parallel:!0,center:[0,0]},r),this._angleLight=new e.Point,this.angle=r.angle,this.gain=r.gain,this.lacunarity=r.lacunarity,this.parallel=r.parallel,this.center=r.center,this.time=r.time}n&&(r.__proto__=n),r.prototype=Object.create(n&&n.prototype),r.prototype.constructor=r;var a={angle:{configurable:!0},gain:{configurable:!0},lacunarity:{configurable:!0}};return r.prototype.apply=function(n,e,t,i){var o=e.sourceFrame,r=o.width,a=o.height;this.uniforms.light=this.parallel?this._angleLight:this.center,this.uniforms.parallel=this.parallel,this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=a,this.uniforms.aspect=a/r,this.uniforms.time=this.time,n.applyFilter(this,e,t,i)},a.angle.get=function(){return this._angle},a.angle.set=function(n){this._angle=n;var t=n*e.DEG_TO_RAD;this._angleLight.x=Math.cos(t),this._angleLight.y=Math.sin(t)},a.gain.get=function(){return this.uniforms.gain},a.gain.set=function(n){this.uniforms.gain=n},a.lacunarity.get=function(){return this.uniforms.lacunarity},a.lacunarity.set=function(n){this.uniforms.lacunarity=n},Object.defineProperties(r.prototype,a),r}(e.Filter);n.GodrayFilter=r,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],38:[function(require,module,exports){
+},{"pixi.js":239}],38:[function(require,module,exports){
 /*!
  * @pixi/filter-kawase-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2525,7 +2359,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\nuniform vec4 filterClamp;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}\n",n=function(e){function n(n,l,u){void 0===n&&(n=4),void 0===l&&(l=3),void 0===u&&(u=!1),e.call(this,r,u?o:i),this.uniforms.uOffset=new Float32Array(2),this._pixelSize=new t.Point,this.pixelSize=1,this._clamp=u,this._kernels=null,Array.isArray(n)?this.kernels=n:(this._blur=n,this.quality=l)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var l={kernels:{configurable:!0},clamp:{configurable:!0},pixelSize:{configurable:!0},quality:{configurable:!0},blur:{configurable:!0}};return n.prototype.apply=function(e,t,r,i){var o,n=this.pixelSize.x/t.size.width,l=this.pixelSize.y/t.size.height;if(1===this._quality||0===this._blur)o=this._kernels[0]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,t,r,i);else{for(var u,s=e.getRenderTarget(!0),f=t,a=s,p=this._quality-1,x=0;x<p;x++)o=this._kernels[x]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,a,!0),u=f,f=a,a=u;o=this._kernels[p]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,r,i),e.returnRenderTarget(s)}},n.prototype._generateKernels=function(){var e=this._blur,t=this._quality,r=[e];if(e>0)for(var i=e,o=e/t,n=1;n<t;n++)i-=o,r.push(i);this._kernels=r},l.kernels.get=function(){return this._kernels},l.kernels.set=function(e){Array.isArray(e)&&e.length>0?(this._kernels=e,this._quality=e.length,this._blur=Math.max.apply(Math,e)):(this._kernels=[0],this._quality=1)},l.clamp.get=function(){return this._clamp},l.pixelSize.set=function(e){"number"==typeof e?(this._pixelSize.x=e,this._pixelSize.y=e):Array.isArray(e)?(this._pixelSize.x=e[0],this._pixelSize.y=e[1]):e instanceof t.Point?(this._pixelSize.x=e.x,this._pixelSize.y=e.y):(this._pixelSize.x=1,this._pixelSize.y=1)},l.pixelSize.get=function(){return this._pixelSize},l.quality.get=function(){return this._quality},l.quality.set=function(e){this._quality=Math.max(1,Math.round(e)),this._generateKernels()},l.blur.get=function(){return this._blur},l.blur.set=function(e){this._blur=e,this._generateKernels()},Object.defineProperties(n.prototype,l),n}(t.Filter);e.KawaseBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],39:[function(require,module,exports){
+},{"pixi.js":239}],39:[function(require,module,exports){
 /*!
  * @pixi/filter-motion-blur - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -2536,7 +2370,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uVelocity;\nuniform int uKernelSize;\nuniform float uOffset;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\n// Notice:\n// the perfect way:\n//    int kernelSize = min(uKernelSize, MAX_KERNELSIZE);\n// BUT in real use-case , uKernelSize < MAX_KERNELSIZE almost always.\n// So use uKernelSize directly.\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    vec2 velocity = uVelocity / filterArea.xy;\n    float offset = -uOffset / length(uVelocity) - 0.5;\n    int k = uKernelSize - 1;\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n        vec2 bias = velocity * (float(i) / float(k) + offset);\n        color += texture2D(uSampler, vTextureCoord + bias);\n    }\n    gl_FragColor = color / float(uKernelSize);\n}\n",n=function(e){function n(n,r,l){void 0===n&&(n=[0,0]),void 0===r&&(r=5),void 0===l&&(l=0),e.call(this,i,o),this.uniforms.uVelocity=new Float32Array(2),this._velocity=new t.ObservablePoint(this.velocityChanged,this),this.velocity=n,this.kernelSize=r,this.offset=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={velocity:{configurable:!0},offset:{configurable:!0}};return n.prototype.apply=function(e,t,i,o){var n=this.velocity,r=n.x,l=n.y;this.uniforms.uKernelSize=0!==r||0!==l?this.kernelSize:0,e.applyFilter(this,t,i,o)},r.velocity.set=function(e){Array.isArray(e)?this._velocity.set(e[0],e[1]):(e instanceof t.Point||e instanceof t.ObservablePoint)&&this._velocity.copy(e)},r.velocity.get=function(){return this._velocity},n.prototype.velocityChanged=function(){this.uniforms.uVelocity[0]=this._velocity.x,this.uniforms.uVelocity[1]=this._velocity.y},r.offset.set=function(e){this.uniforms.uOffset=e},r.offset.get=function(){return this.uniforms.uOffset},Object.defineProperties(n.prototype,r),n}(t.Filter);e.MotionBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":264}],40:[function(require,module,exports){
+},{"pixi.js":239}],40:[function(require,module,exports){
 /*!
  * @pixi/filter-multi-color-replace - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2547,7 +2381,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(o.__filters={},o.PIXI)}(this,function(o,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float epsilon;\n\nconst int MAX_COLORS = %maxColors%;\n\nuniform vec3 originalColors[MAX_COLORS];\nuniform vec3 targetColors[MAX_COLORS];\n\nvoid main(void)\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n\n    float alpha = gl_FragColor.a;\n    if (alpha < 0.0001)\n    {\n      return;\n    }\n\n    vec3 color = gl_FragColor.rgb / alpha;\n\n    for(int i = 0; i < MAX_COLORS; i++)\n    {\n      vec3 origColor = originalColors[i];\n      if (origColor.r < 0.0)\n      {\n        break;\n      }\n      vec3 colorDiff = origColor - color;\n      if (length(colorDiff) < epsilon)\n      {\n        vec3 targetColor = targetColors[i];\n        gl_FragColor = vec4((targetColor + colorDiff) * alpha, alpha);\n        return;\n      }\n    }\n}\n",t=function(o){function t(e,t,i){void 0===t&&(t=.05),void 0===i&&(i=null),i=i||e.length,o.call(this,r,n.replace(/%maxColors%/g,i)),this.epsilon=t,this._maxColors=i,this._replacements=null,this.uniforms.originalColors=new Float32Array(3*i),this.uniforms.targetColors=new Float32Array(3*i),this.replacements=e}o&&(t.__proto__=o),t.prototype=Object.create(o&&o.prototype),t.prototype.constructor=t;var i={replacements:{configurable:!0},maxColors:{configurable:!0},epsilon:{configurable:!0}};return i.replacements.set=function(o){var r=this.uniforms.originalColors,n=this.uniforms.targetColors,t=o.length;if(t>this._maxColors)throw"Length of replacements ("+t+") exceeds the maximum colors length ("+this._maxColors+")";r[3*t]=-1;for(var i=0;i<t;i++){var l=o[i],s=l[0];"number"==typeof s?s=e.utils.hex2rgb(s):l[0]=e.utils.rgb2hex(s),r[3*i]=s[0],r[3*i+1]=s[1],r[3*i+2]=s[2];var a=l[1];"number"==typeof a?a=e.utils.hex2rgb(a):l[1]=e.utils.rgb2hex(a),n[3*i]=a[0],n[3*i+1]=a[1],n[3*i+2]=a[2]}this._replacements=o},i.replacements.get=function(){return this._replacements},t.prototype.refresh=function(){this.replacements=this._replacements},i.maxColors.get=function(){return this._maxColors},i.epsilon.set=function(o){this.uniforms.epsilon=o},i.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(t.prototype,i),t}(e.Filter);o.MultiColorReplaceFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],41:[function(require,module,exports){
+},{"pixi.js":239}],41:[function(require,module,exports){
 /*!
  * @pixi/filter-old-film - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2558,7 +2392,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(n.__filters={},n.PIXI)}(this,function(n,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform float sepia;\nuniform float noise;\nuniform float noiseSize;\nuniform float scratch;\nuniform float scratchDensity;\nuniform float scratchWidth;\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\nuniform float seed;\n\nconst float SQRT_2 = 1.414213;\nconst vec3 SEPIA_RGB = vec3(112.0 / 255.0, 66.0 / 255.0, 20.0 / 255.0);\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvec3 Overlay(vec3 src, vec3 dst)\n{\n    // if (dst <= 0.5) then: 2 * src * dst\n    // if (dst > 0.5) then: 1 - 2 * (1 - dst) * (1 - src)\n    return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),\n                (dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),\n                (dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));\n}\n\n\nvoid main()\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 color = gl_FragColor.rgb;\n\n    if (sepia > 0.0)\n    {\n        float gray = (color.x + color.y + color.z) / 3.0;\n        vec3 grayscale = vec3(gray);\n\n        color = Overlay(SEPIA_RGB, grayscale);\n\n        color = grayscale + sepia * (color - grayscale);\n    }\n\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        vec2 dir = vec2(vec2(0.5, 0.5) - coord);\n        dir.y *= dimensions.y / dimensions.x;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        color.rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    if (scratchDensity > seed && scratch != 0.0)\n    {\n        float phase = seed * 256.0;\n        float s = mod(floor(phase), 2.0);\n        float dist = 1.0 / scratchDensity;\n        float d = distance(coord, vec2(seed * dist, abs(s - seed * dist)));\n        if (d < seed * 0.6 + 0.4)\n        {\n            highp float period = scratchDensity * 10.0;\n\n            float xx = coord.x * period + phase;\n            float aa = abs(mod(xx, 0.5) * 4.0);\n            float bb = mod(floor(xx / 0.5), 2.0);\n            float yy = (1.0 - bb) * aa + bb * (2.0 - aa);\n\n            float kk = 2.0 * period;\n            float dw = scratchWidth / dimensions.x * (0.75 + seed);\n            float dh = dw * kk;\n\n            float tine = (yy - (2.0 - dh));\n\n            if (tine > 0.0) {\n                float _sign = sign(scratch);\n\n                tine = s * tine / period + scratch + 0.1;\n                tine = clamp(tine + 1.0, 0.5 + _sign * 0.5, 1.5 + _sign * 0.5);\n\n                color.rgb *= tine;\n            }\n        }\n    }\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        // vec2 d = pixelCoord * noiseSize * vec2(1024.0 + seed * 512.0, 1024.0 - seed * 512.0);\n        // float _noise = snoise(d) * 0.5;\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        color += _noise * noise;\n    }\n\n    gl_FragColor.rgb = color;\n}\n",o=function(n){function t(t,o){void 0===o&&(o=0),n.call(this,i,e),this.uniforms.dimensions=new Float32Array(2),"number"==typeof t?(this.seed=t,t=null):this.seed=o,Object.assign(this,{sepia:.3,noise:.3,noiseSize:1,scratch:.5,scratchDensity:.3,scratchWidth:1,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3},t)}n&&(t.__proto__=n),t.prototype=Object.create(n&&n.prototype),t.prototype.constructor=t;var o={sepia:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},scratch:{configurable:!0},scratchDensity:{configurable:!0},scratchWidth:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return t.prototype.apply=function(n,t,i,e){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,this.uniforms.seed=this.seed,n.applyFilter(this,t,i,e)},o.sepia.set=function(n){this.uniforms.sepia=n},o.sepia.get=function(){return this.uniforms.sepia},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.scratch.set=function(n){this.uniforms.scratch=n},o.scratch.get=function(){return this.uniforms.scratch},o.scratchDensity.set=function(n){this.uniforms.scratchDensity=n},o.scratchDensity.get=function(){return this.uniforms.scratchDensity},o.scratchWidth.set=function(n){this.uniforms.scratchWidth=n},o.scratchWidth.get=function(){return this.uniforms.scratchWidth},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(t.prototype,o),t}(t.Filter);n.OldFilmFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],42:[function(require,module,exports){
+},{"pixi.js":239}],42:[function(require,module,exports){
 /*!
  * @pixi/filter-outline - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2569,7 +2403,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 thickness;\nuniform vec4 outlineColor;\nuniform vec4 filterClamp;\n\nconst float DOUBLE_PI = 3.14159265358979323846264 * 2.;\n\nvoid main(void) {\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float maxAlpha = 0.;\n    vec2 displaced;\n    for (float angle = 0.; angle <= DOUBLE_PI; angle += ${angleStep}) {\n        displaced.x = vTextureCoord.x + thickness.x * cos(angle);\n        displaced.y = vTextureCoord.y + thickness.y * sin(angle);\n        curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n        maxAlpha = max(maxAlpha, curColor.a);\n    }\n    float resultAlpha = max(maxAlpha, ownColor.a);\n    gl_FragColor = vec4((ownColor.rgb + outlineColor.rgb * (1. - ownColor.a)) * resultAlpha, resultAlpha);\n}\n",n=function(e){function n(o,i,l){void 0===o&&(o=1),void 0===i&&(i=0),void 0===l&&(l=.1);var a=Math.max(l*n.MAX_SAMPLES,n.MIN_SAMPLES),s=(2*Math.PI/a).toFixed(7);e.call(this,t,r.replace(/\$\{angleStep\}/,s)),this.uniforms.thickness=new Float32Array([0,0]),this.thickness=o,this.uniforms.outlineColor=new Float32Array([0,0,0,1]),this.color=i,this.quality=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={color:{configurable:!0}};return n.prototype.apply=function(e,o,t,r){this.uniforms.thickness[0]=this.thickness/o.size.width,this.uniforms.thickness[1]=this.thickness/o.size.height,e.applyFilter(this,o,t,r)},i.color.get=function(){return o.utils.rgb2hex(this.uniforms.outlineColor)},i.color.set=function(e){o.utils.hex2rgb(e,this.uniforms.outlineColor)},Object.defineProperties(n.prototype,i),n}(o.Filter);n.MIN_SAMPLES=1,n.MAX_SAMPLES=100,e.OutlineFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],43:[function(require,module,exports){
+},{"pixi.js":239}],43:[function(require,module,exports){
 /*!
  * @pixi/filter-pixelate - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2580,7 +2414,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform vec2 size;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n\treturn floor( coord / size ) * size;\n}\n\nvoid main(void)\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = pixelate(coord, size);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord);\n}\n",t=function(e){function o(o){void 0===o&&(o=10),e.call(this,r,n),this.size=o}e&&(o.__proto__=e),o.prototype=Object.create(e&&e.prototype),o.prototype.constructor=o;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.size},t.size.set=function(e){"number"==typeof e&&(e=[e,e]),this.uniforms.size=e},Object.defineProperties(o.prototype,t),o}(o.Filter);e.PixelateFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],44:[function(require,module,exports){
+},{"pixi.js":239}],44:[function(require,module,exports){
 /*!
  * @pixi/filter-radial-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2591,7 +2425,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float uRadian;\nuniform vec2 uCenter;\nuniform float uRadius;\nuniform int uKernelSize;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    float aspect = filterArea.y / filterArea.x;\n    vec2 center = uCenter.xy / filterArea.xy;\n    float gradient = uRadius / filterArea.x * 0.3;\n    float radius = uRadius / filterArea.x - gradient * 0.5;\n    int k = uKernelSize - 1;\n\n    vec2 coord = vTextureCoord;\n    vec2 dir = vec2(center - coord);\n    float dist = length(vec2(dir.x, dir.y * aspect));\n\n    float radianStep = uRadian;\n    if (radius >= 0.0 && dist > radius) {\n        float delta = dist - radius;\n        float gap = gradient;\n        float scale = 1.0 - abs(delta / gap);\n        if (scale <= 0.0) {\n            gl_FragColor = color;\n            return;\n        }\n        radianStep *= scale;\n    }\n    radianStep /= float(k);\n\n    float s = sin(radianStep);\n    float c = cos(radianStep);\n    mat2 rotationMatrix = mat2(vec2(c, -s), vec2(s, c));\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n\n        coord -= center;\n        coord.y *= aspect;\n        coord = rotationMatrix * coord;\n        coord.y /= aspect;\n        coord += center;\n\n        vec4 sample = texture2D(uSampler, coord);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample;\n    }\n\n    gl_FragColor = color / float(uKernelSize);\n}\n",i=function(e){function n(n,i,o,a){void 0===n&&(n=0),void 0===i&&(i=[0,0]),void 0===o&&(o=5),void 0===a&&(a=-1),e.call(this,t,r),this._angle=0,this.angle=n,this.center=i,this.kernelSize=o,this.radius=a}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={angle:{configurable:!0},center:{configurable:!0},radius:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.uKernelSize=0!==this._angle?this.kernelSize:0,e.applyFilter(this,n,t,r)},i.angle.set=function(e){this._angle=e,this.uniforms.uRadian=e*Math.PI/180},i.angle.get=function(){return this._angle},i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(e){this.uniforms.uCenter=e},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(e){(e<0||e===1/0)&&(e=-1),this.uniforms.uRadius=e},Object.defineProperties(n.prototype,i),n}(n.Filter);e.RadialBlurFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],45:[function(require,module,exports){
+},{"pixi.js":239}],45:[function(require,module,exports){
 /*!
  * @pixi/filter-reflection - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2602,7 +2436,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nuniform bool mirror;\nuniform float boundary;\nuniform vec2 amplitude;\nuniform vec2 waveLength;\nuniform vec2 alpha;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    if (coord.y < boundary) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    float k = (coord.y - boundary) / (1. - boundary + 0.0001);\n    float areaY = boundary * dimensions.y / filterArea.y;\n    float v = areaY + areaY - vTextureCoord.y;\n    float y = mirror ? v : vTextureCoord.y;\n\n    float _amplitude = ((amplitude.y - amplitude.x) * k + amplitude.x ) / filterArea.x;\n    float _waveLength = ((waveLength.y - waveLength.x) * k + waveLength.x) / filterArea.y;\n    float _alpha = (alpha.y - alpha.x) * k + alpha.x;\n\n    float x = vTextureCoord.x + cos(v * 6.28 / _waveLength - time) * _amplitude;\n    x = clamp(x, filterClamp.x, filterClamp.z);\n\n    vec4 color = texture2D(uSampler, vec2(x, y));\n\n    gl_FragColor = color * _alpha;\n}\n",o=function(e){function n(n){e.call(this,r,t),this.uniforms.amplitude=new Float32Array(2),this.uniforms.waveLength=new Float32Array(2),this.uniforms.alpha=new Float32Array(2),this.uniforms.dimensions=new Float32Array(2),Object.assign(this,{mirror:!0,boundary:.5,amplitude:[0,20],waveLength:[30,100],alpha:[1,1],time:0},n)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={mirror:{configurable:!0},boundary:{configurable:!0},amplitude:{configurable:!0},waveLength:{configurable:!0},alpha:{configurable:!0}};return n.prototype.apply=function(e,n,r,t){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,this.uniforms.time=this.time,e.applyFilter(this,n,r,t)},o.mirror.set=function(e){this.uniforms.mirror=e},o.mirror.get=function(){return this.uniforms.mirror},o.boundary.set=function(e){this.uniforms.boundary=e},o.boundary.get=function(){return this.uniforms.boundary},o.amplitude.set=function(e){this.uniforms.amplitude[0]=e[0],this.uniforms.amplitude[1]=e[1]},o.amplitude.get=function(){return this.uniforms.amplitude},o.waveLength.set=function(e){this.uniforms.waveLength[0]=e[0],this.uniforms.waveLength[1]=e[1]},o.waveLength.get=function(){return this.uniforms.waveLength},o.alpha.set=function(e){this.uniforms.alpha[0]=e[0],this.uniforms.alpha[1]=e[1]},o.alpha.get=function(){return this.uniforms.alpha},Object.defineProperties(n.prototype,o),n}(n.Filter);e.ReflectionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],46:[function(require,module,exports){
+},{"pixi.js":239}],46:[function(require,module,exports){
 /*!
  * @pixi/filter-rgb-split - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2613,7 +2447,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(e.__filters={},e.PIXI)}(this,function(e,r){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nvoid main(void)\n{\n   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/filterArea.xy).r;\n   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/filterArea.xy).g;\n   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/filterArea.xy).b;\n   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;\n}\n",o=function(e){function r(r,o,i){void 0===r&&(r=[-10,0]),void 0===o&&(o=[0,10]),void 0===i&&(i=[0,0]),e.call(this,t,n),this.red=r,this.green=o,this.blue=i}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var o={red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return o.red.get=function(){return this.uniforms.red},o.red.set=function(e){this.uniforms.red=e},o.green.get=function(){return this.uniforms.green},o.green.set=function(e){this.uniforms.green=e},o.blue.get=function(){return this.uniforms.blue},o.blue.set=function(e){this.uniforms.blue=e},Object.defineProperties(r.prototype,o),r}(r.Filter);e.RGBSplitFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],47:[function(require,module,exports){
+},{"pixi.js":239}],47:[function(require,module,exports){
 /*!
  * @pixi/filter-shockwave - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -2624,7 +2458,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\n\nuniform vec2 center;\n\nuniform float amplitude;\nuniform float wavelength;\n// uniform float power;\nuniform float brightness;\nuniform float speed;\nuniform float radius;\n\nuniform float time;\n\nconst float PI = 3.14159;\n\nvoid main()\n{\n    float halfWavelength = wavelength * 0.5 / filterArea.x;\n    float maxRadius = radius / filterArea.x;\n    float currentRadius = time * speed / filterArea.x;\n\n    float fade = 1.0;\n\n    if (maxRadius > 0.0) {\n        if (currentRadius > maxRadius) {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n        fade = 1.0 - pow(currentRadius / maxRadius, 2.0);\n    }\n\n    vec2 dir = vec2(vTextureCoord - center / filterArea.xy);\n    dir.y *= filterArea.y / filterArea.x;\n    float dist = length(dir);\n\n    if (dist <= 0.0 || dist < currentRadius - halfWavelength || dist > currentRadius + halfWavelength) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    vec2 diffUV = normalize(dir);\n\n    float diff = (dist - currentRadius) / halfWavelength;\n\n    float p = 1.0 - pow(abs(diff), 2.0);\n\n    // float powDiff = diff * pow(p, 2.0) * ( amplitude * fade );\n    float powDiff = 1.25 * sin(diff * PI) * p * ( amplitude * fade );\n\n    vec2 offset = diffUV * powDiff / filterArea.xy;\n\n    // Do clamp :\n    vec2 coord = vTextureCoord + offset;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    // No clamp :\n    // gl_FragColor = texture2D(uSampler, vTextureCoord + offset);\n\n    color.rgb *= 1.0 + (brightness - 1.0) * p * fade;\n\n    gl_FragColor = color;\n}\n",i=function(e){function t(t,i,o){void 0===t&&(t=[0,0]),void 0===i&&(i={}),void 0===o&&(o=0),e.call(this,n,r),this.center=t,Array.isArray(i)&&(console.warn("Deprecated Warning: ShockwaveFilter params Array has been changed to options Object."),i={}),i=Object.assign({amplitude:30,wavelength:160,brightness:1,speed:500,radius:-1},i),this.amplitude=i.amplitude,this.wavelength=i.wavelength,this.brightness=i.brightness,this.speed=i.speed,this.radius=i.radius,this.time=o}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var i={center:{configurable:!0},amplitude:{configurable:!0},wavelength:{configurable:!0},brightness:{configurable:!0},speed:{configurable:!0},radius:{configurable:!0}};return t.prototype.apply=function(e,t,n,r){this.uniforms.time=this.time,e.applyFilter(this,t,n,r)},i.center.get=function(){return this.uniforms.center},i.center.set=function(e){this.uniforms.center=e},i.amplitude.get=function(){return this.uniforms.amplitude},i.amplitude.set=function(e){this.uniforms.amplitude=e},i.wavelength.get=function(){return this.uniforms.wavelength},i.wavelength.set=function(e){this.uniforms.wavelength=e},i.brightness.get=function(){return this.uniforms.brightness},i.brightness.set=function(e){this.uniforms.brightness=e},i.speed.get=function(){return this.uniforms.speed},i.speed.set=function(e){this.uniforms.speed=e},i.radius.get=function(){return this.uniforms.radius},i.radius.set=function(e){this.uniforms.radius=e},Object.defineProperties(t.prototype,i),t}(t.Filter);e.ShockwaveFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":264}],48:[function(require,module,exports){
+},{"pixi.js":239}],48:[function(require,module,exports){
 /*!
  * @pixi/filter-simple-lightmap - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2635,7 +2469,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform sampler2D uLightmap;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\nuniform vec4 ambientColor;\nvoid main() {\n    vec4 diffuseColor = texture2D(uSampler, vTextureCoord);\n    vec2 lightCoord = (vTextureCoord * filterArea.xy) / dimensions;\n    vec4 light = texture2D(uLightmap, lightCoord);\n    vec3 ambient = ambientColor.rgb * ambientColor.a;\n    vec3 intensity = ambient + light.rgb;\n    vec3 finalColor = diffuseColor.rgb * intensity;\n    gl_FragColor = vec4(finalColor, diffuseColor.a);\n}\n",r=function(e){function r(t,r,n){void 0===r&&(r=0),void 0===n&&(n=1),e.call(this,o,i),this.uniforms.dimensions=new Float32Array(2),this.uniforms.ambientColor=new Float32Array([0,0,0,n]),this.texture=t,this.color=r}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var n={texture:{configurable:!0},color:{configurable:!0},alpha:{configurable:!0}};return r.prototype.apply=function(e,t,o,i){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,e.applyFilter(this,t,o,i)},n.texture.get=function(){return this.uniforms.uLightmap},n.texture.set=function(e){this.uniforms.uLightmap=e},n.color.set=function(e){var o=this.uniforms.ambientColor;"number"==typeof e?(t.utils.hex2rgb(e,o),this._color=e):(o[0]=e[0],o[1]=e[1],o[2]=e[2],o[3]=e[3],this._color=t.utils.rgb2hex(o))},n.color.get=function(){return this._color},n.alpha.get=function(){return this.uniforms.ambientColor[3]},n.alpha.set=function(e){this.uniforms.ambientColor[3]=e},Object.defineProperties(r.prototype,n),r}(t.Filter);e.SimpleLightmapFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],49:[function(require,module,exports){
+},{"pixi.js":239}],49:[function(require,module,exports){
 /*!
  * @pixi/filter-tilt-shift - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2646,7 +2480,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(t.__filters={},t.PIXI)}(this,function(t,e){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float blur;\nuniform float gradientBlur;\nuniform vec2 start;\nuniform vec2 end;\nuniform vec2 delta;\nuniform vec2 texSize;\n\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n    float total = 0.0;\n\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n    float radius = smoothstep(0.0, 1.0, abs(dot(vTextureCoord * texSize - start, normal)) / gradientBlur) * blur;\n\n    for (float t = -30.0; t <= 30.0; t++)\n    {\n        float percent = (t + offset - 0.5) / 30.0;\n        float weight = 1.0 - abs(percent);\n        vec4 sample = texture2D(uSampler, vTextureCoord + delta / texSize * percent * radius);\n        sample.rgb *= sample.a;\n        color += sample * weight;\n        total += weight;\n    }\n\n    color /= total;\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",n=function(t){function n(n,o,s,l){void 0===n&&(n=100),void 0===o&&(o=600),void 0===s&&(s=null),void 0===l&&(l=null),t.call(this,i,r),this.uniforms.blur=n,this.uniforms.gradientBlur=o,this.uniforms.start=s||new e.Point(0,window.innerHeight/2),this.uniforms.end=l||new e.Point(600,window.innerHeight/2),this.uniforms.delta=new e.Point(30,30),this.uniforms.texSize=new e.Point(window.innerWidth,window.innerHeight),this.updateDelta()}t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n;var o={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return n.prototype.updateDelta=function(){this.uniforms.delta.x=0,this.uniforms.delta.y=0},o.blur.get=function(){return this.uniforms.blur},o.blur.set=function(t){this.uniforms.blur=t},o.gradientBlur.get=function(){return this.uniforms.gradientBlur},o.gradientBlur.set=function(t){this.uniforms.gradientBlur=t},o.start.get=function(){return this.uniforms.start},o.start.set=function(t){this.uniforms.start=t,this.updateDelta()},o.end.get=function(){return this.uniforms.end},o.end.set=function(t){this.uniforms.end=t,this.updateDelta()},Object.defineProperties(n.prototype,o),n}(e.Filter),o=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=t/i,this.uniforms.delta.y=e/i},e}(n),s=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=-e/i,this.uniforms.delta.y=t/i},e}(n),l=function(t){function e(e,i,r,n){void 0===e&&(e=100),void 0===i&&(i=600),void 0===r&&(r=null),void 0===n&&(n=null),t.call(this),this.tiltShiftXFilter=new o(e,i,r,n),this.tiltShiftYFilter=new s(e,i,r,n)}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var i={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return e.prototype.apply=function(t,e,i){var r=t.getRenderTarget(!0);this.tiltShiftXFilter.apply(t,e,r),this.tiltShiftYFilter.apply(t,r,i),t.returnRenderTarget(r)},i.blur.get=function(){return this.tiltShiftXFilter.blur},i.blur.set=function(t){this.tiltShiftXFilter.blur=this.tiltShiftYFilter.blur=t},i.gradientBlur.get=function(){return this.tiltShiftXFilter.gradientBlur},i.gradientBlur.set=function(t){this.tiltShiftXFilter.gradientBlur=this.tiltShiftYFilter.gradientBlur=t},i.start.get=function(){return this.tiltShiftXFilter.start},i.start.set=function(t){this.tiltShiftXFilter.start=this.tiltShiftYFilter.start=t},i.end.get=function(){return this.tiltShiftXFilter.end},i.end.set=function(t){this.tiltShiftXFilter.end=this.tiltShiftYFilter.end=t},Object.defineProperties(e.prototype,i),e}(e.Filter);t.TiltShiftFilter=l,t.TiltShiftXFilter=o,t.TiltShiftYFilter=s,t.TiltShiftAxisFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],50:[function(require,module,exports){
+},{"pixi.js":239}],50:[function(require,module,exports){
 /*!
  * @pixi/filter-twist - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -2657,7 +2491,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(o.__filters={},o.PIXI)}(this,function(o,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float radius;\nuniform float angle;\nuniform vec2 offset;\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 twist(vec2 coord)\n{\n    coord -= offset;\n\n    float dist = length(coord);\n\n    if (dist < radius)\n    {\n        float ratioDist = (radius - dist) / radius;\n        float angleMod = ratioDist * ratioDist * angle;\n        float s = sin(angleMod);\n        float c = cos(angleMod);\n        coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);\n    }\n\n    coord += offset;\n\n    return coord;\n}\n\nvoid main(void)\n{\n\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = twist(coord);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord );\n\n}\n",t=function(o){function n(n,t,i){void 0===n&&(n=200),void 0===t&&(t=4),void 0===i&&(i=20),o.call(this,r,e),this.radius=n,this.angle=t,this.padding=i}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={offset:{configurable:!0},radius:{configurable:!0},angle:{configurable:!0}};return t.offset.get=function(){return this.uniforms.offset},t.offset.set=function(o){this.uniforms.offset=o},t.radius.get=function(){return this.uniforms.radius},t.radius.set=function(o){this.uniforms.radius=o},t.angle.get=function(){return this.uniforms.angle},t.angle.set=function(o){this.uniforms.angle=o},Object.defineProperties(n.prototype,t),n}(n.Filter);o.TwistFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],51:[function(require,module,exports){
+},{"pixi.js":239}],51:[function(require,module,exports){
 /*!
  * @pixi/filter-zoom-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -2668,7 +2502,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uCenter;\nuniform float uStrength;\nuniform float uInnerRadius;\nuniform float uRadius;\n\nconst float MAX_KERNEL_SIZE = 32.0;\n\nfloat random(vec3 scale, float seed) {\n    // use the fragment position for a different seed per-pixel\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main() {\n\n    float minGradient = uInnerRadius * 0.3;\n    float innerRadius = (uInnerRadius + minGradient * 0.5) / filterArea.x;\n\n    float gradient = uRadius * 0.3;\n    float radius = (uRadius - gradient * 0.5) / filterArea.x;\n\n    float countLimit = MAX_KERNEL_SIZE;\n\n    vec2 dir = vec2(uCenter.xy / filterArea.xy - vTextureCoord);\n    float dist = length(vec2(dir.x, dir.y * filterArea.y / filterArea.x));\n\n    float strength = uStrength;\n\n    float delta = 0.0;\n    float gap;\n    if (dist < innerRadius) {\n        delta = innerRadius - dist;\n        gap = minGradient;\n    } else if (radius >= 0.0 && dist > radius) { // radius < 0 means it's infinity\n        delta = dist - radius;\n        gap = gradient;\n    }\n\n    if (delta > 0.0) {\n        float normalCount = gap / filterArea.x;\n        delta = (normalCount - delta) / normalCount;\n        countLimit *= delta;\n        strength *= delta;\n        if (countLimit < 1.0)\n        {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n    }\n\n    // randomize the lookup values to hide the fixed number of samples\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n    float total = 0.0;\n    vec4 color = vec4(0.0);\n\n    dir *= strength;\n\n    for (float t = 0.0; t < MAX_KERNEL_SIZE; t++) {\n        float percent = (t + offset) / MAX_KERNEL_SIZE;\n        float weight = 4.0 * (percent - percent * percent);\n        vec2 p = vTextureCoord + dir * percent;\n        vec4 sample = texture2D(uSampler, p);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample * weight;\n        total += weight;\n\n        if (t > countLimit){\n            break;\n        }\n    }\n\n    color /= total;\n    // switch back from pre-multiplied alpha\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",i=function(n){function e(e,i,o,a){void 0===e&&(e=.1),void 0===i&&(i=[0,0]),void 0===o&&(o=0),void 0===a&&(a=-1),n.call(this,t,r),this.center=i,this.strength=e,this.innerRadius=o,this.radius=a}n&&(e.__proto__=n),e.prototype=Object.create(n&&n.prototype),e.prototype.constructor=e;var i={center:{configurable:!0},strength:{configurable:!0},innerRadius:{configurable:!0},radius:{configurable:!0}};return i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(n){this.uniforms.uCenter=n},i.strength.get=function(){return this.uniforms.uStrength},i.strength.set=function(n){this.uniforms.uStrength=n},i.innerRadius.get=function(){return this.uniforms.uInnerRadius},i.innerRadius.set=function(n){this.uniforms.uInnerRadius=n},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(n){(n<0||n===1/0)&&(n=-1),this.uniforms.uRadius=n},Object.defineProperties(e.prototype,i),e}(e.Filter);n.ZoomBlurFilter=i,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":264}],52:[function(require,module,exports){
+},{"pixi.js":239}],52:[function(require,module,exports){
 module.exports = after
 
 function after(count, callback, err_cb) {
@@ -4800,7 +4634,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":64,"./transports/index":65,"component-emitter":59,"debug":71,"engine.io-parser":73,"indexof":80,"parseqs":111,"parseuri":112}],64:[function(require,module,exports){
+},{"./transport":64,"./transports/index":65,"component-emitter":59,"debug":71,"engine.io-parser":73,"indexof":80,"parseqs":86,"parseuri":87}],64:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -5914,7 +5748,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":111,"xmlhttprequest-ssl":70,"yeast":320}],69:[function(require,module,exports){
+},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":86,"xmlhttprequest-ssl":70,"yeast":295}],69:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -6204,7 +6038,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":111,"ws":322,"yeast":320}],70:[function(require,module,exports){
+},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":86,"ws":297,"yeast":295}],70:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -6444,7 +6278,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":72,"_process":326}],72:[function(require,module,exports){
+},{"./debug":72,"_process":301}],72:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -6671,7 +6505,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":108}],73:[function(require,module,exports){
+},{"ms":83}],73:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -7942,7 +7776,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":323,"isarray":78}],78:[function(require,module,exports){
+},{"buffer":298,"isarray":78}],78:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
@@ -7980,648 +7814,6 @@ module.exports = function(arr, obj){
   return -1;
 };
 },{}],81:[function(require,module,exports){
-'use strict'
-
-/**
- * box-box collision
- * @param {number} x1 top-left corner of first box
- * @param {number} y1 top-left corner of first box
- * @param {number} w1 width of first box
- * @param {number} h1 height of first box
- * @param {number} x2 top-left corner of second box
- * @param {number} y2 top-left corner of second box
- * @param {number} w2 width of second box
- * @param {number} h2 height of second box
- */
-module.exports = function boxBox(x1, y1, w1, h1, x2, y2, w2, h2)
-{
-    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2
-}
-
-},{}],82:[function(require,module,exports){
-'use strict'
-
-/**
- * box-circle collision
- * @param {number} xb top-left corner of box
- * @param {number} yb top-left corner of box
- * @param {number} wb width of box
- * @param {number} hb height of box
- * @param {number} xc center of circle
- * @param {number} yc center of circle
- * @param {number} rc radius of circle
- */
-module.exports = function boxCircle(xb, yb, wb, hb, xc, yc, rc)
-{
-    var hw = wb / 2
-    var hh = hb / 2
-    var distX = Math.abs(xc - (xb + wb / 2))
-    var distY = Math.abs(yc - (yb + hb / 2))
-
-    if (distX > hw + rc || distY > hh + rc)
-    {
-        return false
-    }
-
-    if (distX <= hw || distY <= hh)
-    {
-        return true
-    }
-
-    var x = distX - hw
-    var y = distY - hh
-    return x * x + y * y <= rc * rc
-}
-
-},{}],83:[function(require,module,exports){
-'use strict'
-
-var lineBox = require('./line-box')
-
-/**
- * box-line collision
- * @param {number} xb top-left corner of box
- * @param {number} yb top-left corner of box
- * @param {number} wb width of box
- * @param {number} hb height of box
- * @param {number} x1 first point of line
- * @param {number} y1 first point of line
- * @param {number} x2 second point of line
- * @param {number} y2 second point of line
- */
-module.exports = function boxLine(xb, yb, wb, hb, x1, y1, x2, y2)
-{
-    return lineBox(x1, y1, x2, y2, xb, yb, wb, hb)
-}
-
-},{"./line-box":92}],84:[function(require,module,exports){
-'use strict'
-
-/**
- * box-point collision
- * @param {number} x1 top-left corner of box
- * @param {number} y1 top-left corner of box
- * @param {number} w1 width of box
- * @param {number} h1 height of box
- * @param {number} x2 of point
- * @param {number} y2 of point
- * @return {boolean}
- */
-module.exports = function boxPoint(x1, y1, w1, h1, x2, y2)
-{
-    return x2 >= x1 && x2 <= x1 + w1 && y2 >= y1 && y2 <= y1 + h1
-}
-
-},{}],85:[function(require,module,exports){
-'use strict'
-
-var polygonBox = require('./polygon-box')
-
-/**
- * box-polygon collision
- * @param {number} xb top-left corner of box
- * @param {number} yb top-left corner of box
- * @param {number} wb width of box
- * @param {number} hb height of box
- * @param {number[]} points of polygon
- */
-module.exports = function boxPolygon(xb, yb, wb, hb, points)
-{
-    return polygonBox(points, xb, yb, wb, hb)
-}
-
-},{"./polygon-box":101}],86:[function(require,module,exports){
-'use strict'
-
-var boxCircle = require('./box-circle')
-
-/**
- * circle-box (axis-oriented rectangle) collision
- * from http://stackoverflow.com/a/402010/1955997
- * @param {number} xc center of circle
- * @param {number} yc center of circle
- * @param {radius} rc radius of circle
- * @param {number} xb top-left corner of rectangle
- * @param {number} yb top-left corner of rectangle
- * @param {number} wb width of rectangle
- * @param {number} hb height of rectangle
- */
-module.exports = function circleBox(xc, yc, rc, xb, yb, wb, hb)
-{
-    return boxCircle(xb, yb, wb, hb, xc, yc, rc)
-}
-
-},{"./box-circle":82}],87:[function(require,module,exports){
-'use strict'
-
-
-/**
- * circle-circle collision
- * @param {number} x1 center of circle 1
- * @param {number} y1 center of circle 1
- * @param {number} r1 radius of circle 1
- * @param {number} x2 center of circle 2
- * @param {number} y2 center of circle 2
- * @param {number} r2 radius of circle 2
- * @return {boolean}
- */
-module.exports = function circleCircle(x1, y1, r1, x2, y2, r2)
-{
-    var x = x1 - x2
-    var y = y2 - y1
-    var radii = r1 + r2
-    return x * x + y * y <= radii * radii
-}
-
-},{}],88:[function(require,module,exports){
-'use strict'
-
-var lineCircle = require('./line-circle')
-
-/**
- * circle-line collision
- * from http://stackoverflow.com/a/10392860/1955997
- * @param {number} xc center of circle
- * @param {number} yc center of circle
- * @param {radius} rc radius of circle
- * @param {number} x1 first point of line
- * @param {number} y1 first point of line
- * @param {number} x2 second point of line
- * @param {number} y2 second point of line
- * @return {boolean}
- */
-module.exports = function circleLine(xc, yc, rc, x1, y1, x2, y2)
-{
-    return lineCircle(x1, y1, x2, y2, xc, yc, rc)
-}
-
-},{"./line-circle":93}],89:[function(require,module,exports){
-'use strict'
-
-/**
- * circle-point collision
- * @param {number} x1 center of circle
- * @param {number} y1 center of circle
- * @param {radius} r1 radius of circle
- * @param {number} x2 point
- * @param {number} y2 point
- * @return {boolean}
- */
-module.exports = function circlePoint(x1, y1, r1, x2, y2)
-{
-    var x = x2 - x1
-    var y = y2 - y1
-    return x * x + y * y <= r1 * r1
-}
-
-},{}],90:[function(require,module,exports){
-'use strict'
-
-var polygonCircle = require('./polygon-circle')
-
-/**
- * circle-polygon collision
- * from http://stackoverflow.com/a/402019/1955997
- * @param {number} xc center of circle
- * @param {number} yc center of circle
- * @param {radius} rc radius of circle
- * @param {number[]} points [x1, y1, x2, y2, ... xn, yn] of polygon
- */
-module.exports = function circlePolygon(xc, yc, rc, points)
-{
-    return polygonCircle(points, xc, yc, rc)
-}
-
-},{"./polygon-circle":102}],91:[function(require,module,exports){
-'use strict'
-
-module.exports = {
-    circlePoint: require('./circle-point'),
-    circleCircle: require('./circle-circle'),
-    circleLine: require('./circle-line'),
-    circleBox: require('./circle-box'),
-    circlePolygon: require('./circle-polygon'),
-
-    polygonPoint: require('./polygon-point'),
-    polygonLine: require('./polygon-line'),
-    polygonPolygon: require('./polygon-polygon'),
-    polygonBox: require('./polygon-box'),
-    polygonCircle: require('./polygon-circle'),
-
-    boxPoint: require('./box-point'),
-    boxBox: require('./box-box'),
-    boxLine: require('./box-line'),
-    boxPolygon: require('./box-polygon'),
-    boxCircle: require('./box-circle'),
-
-    pointBox: require('./point-box'),
-    pointPolygon: require('./point-polygon'),
-    pointCircle: require('./point-circle'),
-    pointLine: require('./point-line'),
-
-    lineLine: require('./line-line'),
-    lineBox: require('./line-box'),
-    linePolygon: require('./line-polygon'),
-    lineCircle: require('./line-circle'),
-    linePoint: require('./line-point')
-}
-
-},{"./box-box":81,"./box-circle":82,"./box-line":83,"./box-point":84,"./box-polygon":85,"./circle-box":86,"./circle-circle":87,"./circle-line":88,"./circle-point":89,"./circle-polygon":90,"./line-box":92,"./line-circle":93,"./line-line":94,"./line-point":95,"./line-polygon":96,"./point-box":97,"./point-circle":98,"./point-line":99,"./point-polygon":100,"./polygon-box":101,"./polygon-circle":102,"./polygon-line":103,"./polygon-point":104,"./polygon-polygon":105}],92:[function(require,module,exports){
-'use strict'
-
-var boxPoint = require('./box-point')
-var lineLine = require('./line-line')
-
-/**
- * line-box collision
- number @param {number} x1 point 1 of line
- number @param {number} y1 point 1 of line
- number @param {number} x2 point 2 of line
- number @param {number} y2 point 2 of line
- number @param {number} xb top-left of box
- number @param {number} yb top-left of box
- number @param {number} wb width of box
- number @param {number} hb height of box
- */
-module.exports = function lineBox(x1, y1, x2, y2, xb, yb, wb, hb)
-{
-    if (boxPoint(xb, yb, wb, hb, x1, y1) || boxPoint(xb, yb, wb, hb, x2, y2))
-    {
-        return true
-    }
-    return lineLine(x1, y1, x2, y2, xb, yb, xb + wb, yb) ||
-        lineLine(x1, y1, x2, y2, xb + wb, yb, xb + wb, yb + hb) ||
-        lineLine(x1, y1, x2, y2, xb, yb + hb, xb + wb, yb + hb) ||
-        lineLine(x1, y1, x2, y2, xb, yb, xb, yb + hb)
-}
-
-},{"./box-point":84,"./line-line":94}],93:[function(require,module,exports){
-'use strict'
-
-/**
- * line-circle collision
- number @param {number} x1 point 1 of line
- number @param {number} y1 point 1 of line
- number @param {number} x2 point 2 of line
- number @param {number} y2 point 2 of line
- number @param {number} xc center of circle
- number @param {number} yc center of circle
- number @param {number} rc radius of circle
- */
-module.exports = function lineCircle(x1, y1, x2, y2, xc, yc, rc)
-{
-    var ac = [xc - x1, yc - y1]
-    var ab = [x2 - x1, y2 - y1]
-    var ab2 = dot(ab, ab)
-    var acab = dot(ac, ab)
-    var t = acab / ab2
-    t = (t < 0) ? 0 : t
-    t = (t > 1) ? 1 : t
-    var h = [(ab[0] * t + x1) - xc, (ab[1] * t + y1) - yc]
-    var h2 = dot(h, h)
-    return h2 <= rc * rc
-}
-
-function dot(v1, v2)
-{
-    return (v1[0] * v2[0]) + (v1[1] * v2[1])
-}
-
-},{}],94:[function(require,module,exports){
-'use strict'
-
-/**
- * line-line collision
- * from http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
- * @param {number} x1 first point in line 1
- * @param {number} y1 first point in line 1
- * @param {number} x2 second point in line 1
- * @param {number} y2 second point in line 1
- * @param {number} x3 first point in line 2
- * @param {number} y3 first point in line 2
- * @param {number} x4 second point in line 2
- * @param {number} y4 second point in line 2
- * @return {boolean}
- */
-module.exports = function lineLine(x1, y1, x2, y2, x3, y3, x4, y4)
-{
-    var s1_x = x2 - x1
-    var s1_y = y2 - y1
-    var s2_x = x4 - x3
-    var s2_y = y4 - y3
-    var s = (-s1_y * (x1 - x3) + s1_x * (y1 - y3)) / (-s2_x * s1_y + s1_x * s2_y)
-    var t = (s2_x * (y1 - y3) - s2_y * (x1 - x3)) / (-s2_x * s1_y + s1_x * s2_y)
-    return s >= 0 && s <= 1 && t >= 0 && t <= 1
-}
-
-},{}],95:[function(require,module,exports){
-'use strict'
-
-function distanceSquared(x1, y1, x2, y2)
-{
-    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
-}
-
-/**
- * line-point collision
- * from https://stackoverflow.com/a/17693146/1955997
- * @param {number} x1 first point in line
- * @param {number} y1 first point in line
- * @param {number} x2 second point in line
- * @param {number} y2 second point in line
- * @param {number} xp point
- * @param {number} yp point
- * @param {number} [tolerance=1]
- * @return {boolean}
- */
-module.exports = function linePoint(x1, y1, x2, y2, xp, yp, tolerance)
-{
-    tolerance = tolerance || 1
-    return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance
-}
-},{}],96:[function(require,module,exports){
-'use strict'
-
-var polygonPoint = require('./polygon-point')
-var lineLine = require('./line-line')
-
-/**
- * line-polygon collision
- number @param {number} x1 point 1 of line
- number @param {number} y1 point 1 of line
- number @param {number} x2 point 2 of line
- number @param {number} y2 point 2 of line
- number @param {number[]} points of polygon
- */
-module.exports = function linePolygon(x1, y1, x2, y2, points)
-{
-    var length = points.length
-
-    // check if first point is inside the shape (this covers if the line is completely enclosed by the shape)
-    if (polygonPoint(points, x1, y1))
-    {
-        return true
-    }
-
-    // check for intersections for all of the sides
-    for (var i = 0; i < length; i += 2)
-    {
-        var j = (i + 2) % length
-        if (lineLine(x1, y1, x2, y2, points[i], points[i + 1], points[j], points[j + 1]))
-        {
-            return true
-        }
-    }
-    return false
-}
-
-},{"./line-line":94,"./polygon-point":104}],97:[function(require,module,exports){
-'use strict'
-
-var boxPoint = require('./box-point')
-
-/**
- * point-box collision
- * @param {number} x1 point
- * @param {number} y1 point
- * @param {number} xb top-left corner of box
- * @param {number} yb top-left corner of box
- * @param {number} wb width of box
- * @param {number} hb height of box
- * @return {boolean}
- */
-module.exports = function pointBox(x1, y1, xb, yb, wb, hb)
-{
-    return boxPoint(xb, yb, wb, hb, x1, y1)
-}
-
-},{"./box-point":84}],98:[function(require,module,exports){
-'use strict'
-
-var circlePoint = require('./circle-point')
-
-module.exports = function pointCircle(x1, y1, xc, yc, rc)
-{
-    return circlePoint(xc, yc, rc, x1, y1)
-}
-
-},{"./circle-point":89}],99:[function(require,module,exports){
-'use strict'
-
-var linePoint = require('./line-point')
-
-/**
- * point-line collision
- * @param {number} xp point
- * @param {number} yp point
- * @param {number} x1 first point in line
- * @param {number} y1 first point in line
- * @param {number} x2 second point in line
- * @param {number} y2 second point in line
- * @return {boolean}
- */
-module.exports = function pointLine(xp, yp, x1, y1, x2, y2)
-{
-    return linePoint(x1, y1, x2, y2, xp, yp)
-}
-
-},{"./line-point":95}],100:[function(require,module,exports){
-'use strict'
-
-var polygonPoint = require('./polygon-point')
-
-/**
- * point-polygon collision
- * @param {number} x1
- * @param {number} y1
- * @param {number[]} points
- * @return {boolean}
- */
-module.exports = function pointPolygon(x1, y1, points)
-{
-    return polygonPoint(points, x1, y1)
-}
-
-},{"./polygon-point":104}],101:[function(require,module,exports){
-'use strict'
-
-var polygonPolygon = require('./polygon-polygon')
-
-/**
- * polygon-box collision
- * @param {number[]} points [x1, y1, x2, y2, ... xn, yn] of polygon
- * @param {number} x of box
- * @param {number} y of box
- * @param {number} w of box
- * @param {number} h of box
- */
-module.exports = function polygonBox(points, x, y, w, h)
-{
-    var points2 = [x, y, x + w, y, x + w, y + h, x, y + h]
-    return polygonPolygon(points, points2)
-}
-
-},{"./polygon-polygon":105}],102:[function(require,module,exports){
-'use strict'
-
-var polygonPoint = require('./polygon-point')
-var lineCircle = require('./line-circle')
-
-
-/**
- * polygon-circle collision
- * @param {number[]} points [x1, y1, x2, y2, ... xn, yn] of polygon
- * @param {number} xc center of circle
- * @param {number} yc center of circle
- * @param {number} rc radius of circle
- */
-module.exports = function polygonCircle(points, xc, yc, rc)
-{
-    if (polygonPoint(points, xc, yc))
-    {
-        return true
-    }
-    var count = points.length
-    for (var i = 0; i < count - 2; i += 2)
-    {
-        if (lineCircle(points[i], points[i + 1], points[i + 2], points[i + 3], xc, yc, rc))
-        {
-            return true
-        }
-    }
-    return lineCircle(points[0], points[1], points[count - 2], points[count - 1], xc, yc, rc)
-}
-
-},{"./line-circle":93,"./polygon-point":104}],103:[function(require,module,exports){
-'use strict'
-
-var linePolygon = require('./line-polygon')
-
-/**
- * polygon-line collisions
- * @param {number[]} points [x1, y1, x2, y2, ... xn, yn] of polygon
- * @param {number} x1 first point in line
- * @param {number} y1 first point in line
- * @param {number} x2 second point in line
- * @param {number} y2 second point in line
- * @return {boolean}
- */
-module.exports = function polygonLine(points, x1, y1, x2, y2)
-{
-    return linePolygon(x1, y1, x2, y2, points)
-}
-
-},{"./line-polygon":96}],104:[function(require,module,exports){
-'use strict'
-
-const linePoint = require('./line-point')
-
-/**
- * polygon-point collision
- * based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
- * @param {number[]} points [x1, y1, x2, y2, ... xn, yn] of polygon
- * @param {number} x of point
- * @param {number} y of point
- */
-module.exports = function polygonPoint(points, x, y)
-{
-    var length = points.length
-    var c = false
-    var i, j
-    for (i = 0, j = length - 2; i < length; i += 2)
-    {
-        if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i]))
-        {
-            c = !c
-        }
-        j = i
-    }
-    if (c)
-    {
-        return true
-    }
-    for (i = 0; i < length; i += 2)
-    {
-        var p1x = points[i]
-        var p1y = points[i + 1]
-        var p2x, p2y
-        if (i === length - 2)
-        {
-            p2x = points[0]
-            p2y = points[1]
-        }
-        else
-        {
-            p2x = points[i + 2]
-            p2y = points[i + 3]
-        }
-        if (linePoint(p1x, p1y, p2x, p2y, x, y))
-        {
-            return true
-        }
-    }
-    return false
-}
-
-},{"./line-point":95}],105:[function(require,module,exports){
-'use strict'
-
-/**
- * polygon-polygon collision
- * based on http://stackoverflow.com/questions/10962379/how-to-check-intersection-between-2-rotated-rectangles
- * @param {number[]} points1 [x1, y1, x2, y2, ... xn, yn] of first polygon
- * @param {number[]} points2 [x1, y1, x2, y2, ... xn, yn] of second polygon
- * @return {boolean}
- */
-module.exports = function polygonPolygon(points1, points2)
-{
-    var a = points1
-    var b = points2
-    var polygons = [a, b]
-    var minA, maxA, projected, minB, maxB, j
-    for (var i = 0; i < polygons.length; i++)
-    {
-        var polygon = polygons[i]
-        for (var i1 = 0; i1 < polygon.length; i1 += 2)
-        {
-            var i2 = (i1 + 2) % polygon.length
-            var normal = { x: polygon[i2 + 1] - polygon[i1 + 1], y: polygon[i1] - polygon[i2] }
-            minA = maxA = null
-            for (j = 0; j < a.length; j += 2)
-            {
-                projected = normal.x * a[j] + normal.y * a[j + 1]
-                if (minA === null || projected < minA)
-                {
-                    minA = projected
-                }
-                if (maxA === null || projected > maxA)
-                {
-                    maxA = projected
-                }
-            }
-            minB = maxB = null
-            for (j = 0; j < b.length; j += 2)
-            {
-                projected = normal.x * b[j] + normal.y * b[j + 1]
-                if (minB === null || projected < minB)
-                {
-                    minB = projected
-                }
-                if (maxB === null || projected > maxB)
-                {
-                    maxB = projected
-                }
-            }
-            if (maxA < minB || maxB < minA)
-            {
-                return false
-            }
-        }
-    }
-    return true
-}
-
-},{}],106:[function(require,module,exports){
 /**
  * isMobile.js v0.4.1
  *
@@ -8760,7 +7952,7 @@ module.exports = function polygonPolygon(points1, points2)
 
 })(this);
 
-},{}],107:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -8927,7 +8119,7 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],108:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -9081,7 +8273,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],109:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -9173,7 +8365,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],110:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -9205,7 +8397,7 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],111:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -9244,7 +8436,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],112:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -9285,7 +8477,7 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],113:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -9553,7 +8745,7 @@ module.exports = function parseuri(str) {
 
 }).call(this);
 
-},{}],114:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 /*!
  * pixi-filters - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -9564,7 +8756,7 @@ module.exports = function parseuri(str) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});var filterAdjustment=require("@pixi/filter-adjustment"),filterAdvancedBloom=require("@pixi/filter-advanced-bloom"),filterAscii=require("@pixi/filter-ascii"),filterBevel=require("@pixi/filter-bevel"),filterBloom=require("@pixi/filter-bloom"),filterBulgePinch=require("@pixi/filter-bulge-pinch"),filterColorMap=require("@pixi/filter-color-map"),filterColorReplace=require("@pixi/filter-color-replace"),filterConvolution=require("@pixi/filter-convolution"),filterCrossHatch=require("@pixi/filter-cross-hatch"),filterCrt=require("@pixi/filter-crt"),filterDot=require("@pixi/filter-dot"),filterDropShadow=require("@pixi/filter-drop-shadow"),filterEmboss=require("@pixi/filter-emboss"),filterGlitch=require("@pixi/filter-glitch"),filterGlow=require("@pixi/filter-glow"),filterGodray=require("@pixi/filter-godray"),filterKawaseBlur=require("@pixi/filter-kawase-blur"),filterMotionBlur=require("@pixi/filter-motion-blur"),filterMultiColorReplace=require("@pixi/filter-multi-color-replace"),filterOldFilm=require("@pixi/filter-old-film"),filterOutline=require("@pixi/filter-outline"),filterPixelate=require("@pixi/filter-pixelate"),filterRadialBlur=require("@pixi/filter-radial-blur"),filterReflection=require("@pixi/filter-reflection"),filterRgbSplit=require("@pixi/filter-rgb-split"),filterShockwave=require("@pixi/filter-shockwave"),filterSimpleLightmap=require("@pixi/filter-simple-lightmap"),filterTiltShift=require("@pixi/filter-tilt-shift"),filterTwist=require("@pixi/filter-twist"),filterZoomBlur=require("@pixi/filter-zoom-blur");exports.AdjustmentFilter=filterAdjustment.AdjustmentFilter,exports.AdvancedBloomFilter=filterAdvancedBloom.AdvancedBloomFilter,exports.AsciiFilter=filterAscii.AsciiFilter,exports.BevelFilter=filterBevel.BevelFilter,exports.BloomFilter=filterBloom.BloomFilter,exports.BulgePinchFilter=filterBulgePinch.BulgePinchFilter,exports.ColorMapFilter=filterColorMap.ColorMapFilter,exports.ColorReplaceFilter=filterColorReplace.ColorReplaceFilter,exports.ConvolutionFilter=filterConvolution.ConvolutionFilter,exports.CrossHatchFilter=filterCrossHatch.CrossHatchFilter,exports.CRTFilter=filterCrt.CRTFilter,exports.DotFilter=filterDot.DotFilter,exports.DropShadowFilter=filterDropShadow.DropShadowFilter,exports.EmbossFilter=filterEmboss.EmbossFilter,exports.GlitchFilter=filterGlitch.GlitchFilter,exports.GlowFilter=filterGlow.GlowFilter,exports.GodrayFilter=filterGodray.GodrayFilter,exports.KawaseBlurFilter=filterKawaseBlur.KawaseBlurFilter,exports.MotionBlurFilter=filterMotionBlur.MotionBlurFilter,exports.MultiColorReplaceFilter=filterMultiColorReplace.MultiColorReplaceFilter,exports.OldFilmFilter=filterOldFilm.OldFilmFilter,exports.OutlineFilter=filterOutline.OutlineFilter,exports.PixelateFilter=filterPixelate.PixelateFilter,exports.RadialBlurFilter=filterRadialBlur.RadialBlurFilter,exports.ReflectionFilter=filterReflection.ReflectionFilter,exports.RGBSplitFilter=filterRgbSplit.RGBSplitFilter,exports.ShockwaveFilter=filterShockwave.ShockwaveFilter,exports.SimpleLightmapFilter=filterSimpleLightmap.SimpleLightmapFilter,exports.TiltShiftFilter=filterTiltShift.TiltShiftFilter,exports.TiltShiftAxisFilter=filterTiltShift.TiltShiftAxisFilter,exports.TiltShiftXFilter=filterTiltShift.TiltShiftXFilter,exports.TiltShiftYFilter=filterTiltShift.TiltShiftYFilter,exports.TwistFilter=filterTwist.TwistFilter,exports.ZoomBlurFilter=filterZoomBlur.ZoomBlurFilter;
 
 
-},{"@pixi/filter-adjustment":21,"@pixi/filter-advanced-bloom":22,"@pixi/filter-ascii":23,"@pixi/filter-bevel":24,"@pixi/filter-bloom":25,"@pixi/filter-bulge-pinch":26,"@pixi/filter-color-map":27,"@pixi/filter-color-replace":28,"@pixi/filter-convolution":29,"@pixi/filter-cross-hatch":30,"@pixi/filter-crt":31,"@pixi/filter-dot":32,"@pixi/filter-drop-shadow":33,"@pixi/filter-emboss":34,"@pixi/filter-glitch":35,"@pixi/filter-glow":36,"@pixi/filter-godray":37,"@pixi/filter-kawase-blur":38,"@pixi/filter-motion-blur":39,"@pixi/filter-multi-color-replace":40,"@pixi/filter-old-film":41,"@pixi/filter-outline":42,"@pixi/filter-pixelate":43,"@pixi/filter-radial-blur":44,"@pixi/filter-reflection":45,"@pixi/filter-rgb-split":46,"@pixi/filter-shockwave":47,"@pixi/filter-simple-lightmap":48,"@pixi/filter-tilt-shift":49,"@pixi/filter-twist":50,"@pixi/filter-zoom-blur":51}],115:[function(require,module,exports){
+},{"@pixi/filter-adjustment":21,"@pixi/filter-advanced-bloom":22,"@pixi/filter-ascii":23,"@pixi/filter-bevel":24,"@pixi/filter-bloom":25,"@pixi/filter-bulge-pinch":26,"@pixi/filter-color-map":27,"@pixi/filter-color-replace":28,"@pixi/filter-convolution":29,"@pixi/filter-cross-hatch":30,"@pixi/filter-crt":31,"@pixi/filter-dot":32,"@pixi/filter-drop-shadow":33,"@pixi/filter-emboss":34,"@pixi/filter-glitch":35,"@pixi/filter-glow":36,"@pixi/filter-godray":37,"@pixi/filter-kawase-blur":38,"@pixi/filter-motion-blur":39,"@pixi/filter-multi-color-replace":40,"@pixi/filter-old-film":41,"@pixi/filter-outline":42,"@pixi/filter-pixelate":43,"@pixi/filter-radial-blur":44,"@pixi/filter-reflection":45,"@pixi/filter-rgb-split":46,"@pixi/filter-shockwave":47,"@pixi/filter-simple-lightmap":48,"@pixi/filter-tilt-shift":49,"@pixi/filter-twist":50,"@pixi/filter-zoom-blur":51}],90:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -9685,7 +8877,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],116:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -9913,7 +9105,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":118}],117:[function(require,module,exports){
+},{"./GLTexture":93}],92:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -10009,7 +9201,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":123,"./shader/extractAttributes":125,"./shader/extractUniforms":126,"./shader/generateUniformAccessObject":127,"./shader/setPrecision":131}],118:[function(require,module,exports){
+},{"./shader/compileProgram":98,"./shader/extractAttributes":100,"./shader/extractUniforms":101,"./shader/generateUniformAccessObject":102,"./shader/setPrecision":106}],93:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -10344,7 +9536,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],119:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -10612,7 +9804,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":122}],120:[function(require,module,exports){
+},{"./setVertexAttribArrays":97}],95:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -10640,7 +9832,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],121:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -10667,7 +9859,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":115,"./GLFramebuffer":116,"./GLShader":117,"./GLTexture":118,"./VertexArrayObject":119,"./createContext":120,"./setVertexAttribArrays":122,"./shader":128}],122:[function(require,module,exports){
+},{"./GLBuffer":90,"./GLFramebuffer":91,"./GLShader":92,"./GLTexture":93,"./VertexArrayObject":94,"./createContext":95,"./setVertexAttribArrays":97,"./shader":103}],97:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -10724,7 +9916,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],123:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 
 /**
  * @class
@@ -10806,7 +9998,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],124:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -10886,7 +10078,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],125:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -10929,7 +10121,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":129,"./mapType":130}],126:[function(require,module,exports){
+},{"./mapSize":104,"./mapType":105}],101:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -10966,7 +10158,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":124,"./mapType":130}],127:[function(require,module,exports){
+},{"./defaultValue":99,"./mapType":105}],102:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -11089,7 +10281,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],128:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -11100,7 +10292,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":123,"./defaultValue":124,"./extractAttributes":125,"./extractUniforms":126,"./generateUniformAccessObject":127,"./mapSize":129,"./mapType":130,"./setPrecision":131}],129:[function(require,module,exports){
+},{"./compileProgram":98,"./defaultValue":99,"./extractAttributes":100,"./extractUniforms":101,"./generateUniformAccessObject":102,"./mapSize":104,"./mapType":105,"./setPrecision":106}],104:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -11138,7 +10330,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],130:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -11186,7 +10378,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],131:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -11206,7 +10398,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],132:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 var pixi_display;
 (function (pixi_display) {
     Object.assign(PIXI.Container.prototype, {
@@ -11933,7 +11125,7 @@ var pixi_display;
     PIXI.display = pixi_display;
 })(pixi_display || (pixi_display = {}));
 
-},{}],133:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -12054,10 +11246,10 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":304}],134:[function(require,module,exports){
+},{"resource-loader":279}],109:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],135:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12266,7 +11458,7 @@ module.exports = function (_Plugin) {
     return Bounce;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],136:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],111:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12344,7 +11536,7 @@ module.exports = function (_Plugin) {
     return ClampZoom;
 }(Plugin);
 
-},{"./plugin":143}],137:[function(require,module,exports){
+},{"./plugin":118}],112:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12509,7 +11701,7 @@ module.exports = function (_Plugin) {
     return clamp;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],138:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],113:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12664,7 +11856,7 @@ module.exports = function (_Plugin) {
     return Decelerate;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],139:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],114:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12878,7 +12070,7 @@ module.exports = function (_Plugin) {
     return Drag;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],140:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],115:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12956,7 +12148,7 @@ module.exports = function (_Plugin) {
     return Follow;
 }(Plugin);
 
-},{"./plugin":143}],141:[function(require,module,exports){
+},{"./plugin":118}],116:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13130,7 +12322,7 @@ module.exports = function (_Plugin) {
     return MouseEdges;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],142:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],117:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13249,7 +12441,7 @@ module.exports = function (_Plugin) {
     return Pinch;
 }(Plugin);
 
-},{"./plugin":143}],143:[function(require,module,exports){
+},{"./plugin":118}],118:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13300,7 +12492,7 @@ module.exports = function () {
     return Plugin;
 }();
 
-},{}],144:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13476,7 +12668,7 @@ module.exports = function (_Plugin) {
     return SnapZoom;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],145:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],120:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13621,7 +12813,7 @@ module.exports = function (_Plugin) {
     return Snap;
 }(Plugin);
 
-},{"./plugin":143,"./utils":146}],146:[function(require,module,exports){
+},{"./plugin":118,"./utils":121}],121:[function(require,module,exports){
 'use strict';
 
 var Penner = require('penner');
@@ -13656,7 +12848,7 @@ module.exports = {
     ease: ease
 };
 
-},{"penner":113}],147:[function(require,module,exports){
+},{"penner":88}],122:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -15191,7 +14383,7 @@ PIXI.extras.Viewport = Viewport;
 
 module.exports = Viewport;
 
-},{"./bounce":135,"./clamp":137,"./clamp-zoom":136,"./decelerate":138,"./drag":139,"./follow":140,"./mouse-edges":141,"./pinch":142,"./snap":145,"./snap-zoom":144,"./utils":146,"./wheel":148}],148:[function(require,module,exports){
+},{"./bounce":110,"./clamp":112,"./clamp-zoom":111,"./decelerate":113,"./drag":114,"./follow":115,"./mouse-edges":116,"./pinch":117,"./snap":120,"./snap-zoom":119,"./utils":121,"./wheel":123}],123:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -15321,7 +14513,7 @@ module.exports = function (_Plugin) {
     return Wheel;
 }(Plugin);
 
-},{"./plugin":143}],149:[function(require,module,exports){
+},{"./plugin":118}],124:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15850,7 +15042,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":174,"./accessibleTarget":150,"ismobilejs":106}],150:[function(require,module,exports){
+},{"../core":149,"./accessibleTarget":125,"ismobilejs":81}],125:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -15908,7 +15100,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],151:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15933,7 +15125,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":149,"./accessibleTarget":150}],152:[function(require,module,exports){
+},{"./AccessibilityManager":124,"./accessibleTarget":125}],127:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16165,7 +15357,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":154,"./const":155,"./display/Container":157,"./settings":210,"./ticker":230}],153:[function(require,module,exports){
+},{"./autoDetectRenderer":129,"./const":130,"./display/Container":132,"./settings":185,"./ticker":205}],128:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16232,7 +15424,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":210,"pixi-gl-core":121}],154:[function(require,module,exports){
+},{"./settings":185,"pixi-gl-core":96}],129:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16301,7 +15493,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":186,"./renderers/webgl/WebGLRenderer":193,"./utils":234}],155:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":161,"./renderers/webgl/WebGLRenderer":168,"./utils":209}],130:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16644,7 +15836,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],156:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16987,7 +16179,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":179}],157:[function(require,module,exports){
+},{"../math":154}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17605,7 +16797,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":234,"./DisplayObject":158}],158:[function(require,module,exports){
+},{"../utils":209,"./DisplayObject":133}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18299,7 +17491,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":155,"../math":179,"../settings":210,"./Bounds":156,"./Transform":159,"./TransformStatic":161,"eventemitter3":76}],159:[function(require,module,exports){
+},{"../const":130,"../math":154,"../settings":185,"./Bounds":131,"./Transform":134,"./TransformStatic":136,"eventemitter3":76}],134:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18480,7 +17672,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":179,"./TransformBase":160}],160:[function(require,module,exports){
+},{"../math":154,"./TransformBase":135}],135:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18567,7 +17759,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":179}],161:[function(require,module,exports){
+},{"../math":154}],136:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18777,7 +17969,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":179,"./TransformBase":160}],162:[function(require,module,exports){
+},{"../math":154,"./TransformBase":135}],137:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20154,7 +19346,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":155,"../display/Bounds":156,"../display/Container":157,"../math":179,"../renderers/canvas/CanvasRenderer":186,"../sprites/Sprite":211,"../textures/RenderTexture":222,"../textures/Texture":224,"../utils":234,"./GraphicsData":163,"./utils/bezierCurveTo":165}],163:[function(require,module,exports){
+},{"../const":130,"../display/Bounds":131,"../display/Container":132,"../math":154,"../renderers/canvas/CanvasRenderer":161,"../sprites/Sprite":186,"../textures/RenderTexture":197,"../textures/Texture":199,"../utils":209,"./GraphicsData":138,"./utils/bezierCurveTo":140}],138:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -20299,7 +19491,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],164:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20564,7 +19756,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":155,"../../renderers/canvas/CanvasRenderer":186}],165:[function(require,module,exports){
+},{"../../const":130,"../../renderers/canvas/CanvasRenderer":161}],140:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -20614,7 +19806,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],166:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20879,7 +20071,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":155,"../../renderers/webgl/WebGLRenderer":193,"../../renderers/webgl/utils/ObjectRenderer":203,"../../utils":234,"./WebGLGraphicsData":167,"./shaders/PrimitiveShader":168,"./utils/buildCircle":169,"./utils/buildPoly":171,"./utils/buildRectangle":172,"./utils/buildRoundedRectangle":173}],167:[function(require,module,exports){
+},{"../../const":130,"../../renderers/webgl/WebGLRenderer":168,"../../renderers/webgl/utils/ObjectRenderer":178,"../../utils":209,"./WebGLGraphicsData":142,"./shaders/PrimitiveShader":143,"./utils/buildCircle":144,"./utils/buildPoly":146,"./utils/buildRectangle":147,"./utils/buildRoundedRectangle":148}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21022,7 +20214,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":121}],168:[function(require,module,exports){
+},{"pixi-gl-core":96}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21067,7 +20259,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":153}],169:[function(require,module,exports){
+},{"../../../Shader":128}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21162,7 +20354,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":155,"../../../utils":234,"./buildLine":170}],170:[function(require,module,exports){
+},{"../../../const":130,"../../../utils":209,"./buildLine":145}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21436,7 +20628,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":179,"../../../utils":234}],171:[function(require,module,exports){
+},{"../../../math":154,"../../../utils":209}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21522,7 +20714,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":234,"./buildLine":170,"earcut":61}],172:[function(require,module,exports){
+},{"../../../utils":209,"./buildLine":145,"earcut":61}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21598,7 +20790,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":234,"./buildLine":170}],173:[function(require,module,exports){
+},{"../../../utils":209,"./buildLine":145}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21754,7 +20946,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":234,"./buildLine":170,"earcut":61}],174:[function(require,module,exports){
+},{"../../../utils":209,"./buildLine":145,"earcut":61}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22140,7 +21332,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":152,"./Shader":153,"./autoDetectRenderer":154,"./const":155,"./display/Bounds":156,"./display/Container":157,"./display/DisplayObject":158,"./display/Transform":159,"./display/TransformBase":160,"./display/TransformStatic":161,"./graphics/Graphics":162,"./graphics/GraphicsData":163,"./graphics/canvas/CanvasGraphicsRenderer":164,"./graphics/webgl/GraphicsRenderer":166,"./math":179,"./renderers/canvas/CanvasRenderer":186,"./renderers/canvas/utils/CanvasRenderTarget":188,"./renderers/webgl/WebGLRenderer":193,"./renderers/webgl/filters/Filter":195,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":198,"./renderers/webgl/managers/WebGLManager":202,"./renderers/webgl/utils/ObjectRenderer":203,"./renderers/webgl/utils/Quad":204,"./renderers/webgl/utils/RenderTarget":205,"./settings":210,"./sprites/Sprite":211,"./sprites/canvas/CanvasSpriteRenderer":212,"./sprites/canvas/CanvasTinter":213,"./sprites/webgl/SpriteRenderer":215,"./text/Text":217,"./text/TextMetrics":218,"./text/TextStyle":219,"./textures/BaseRenderTexture":220,"./textures/BaseTexture":221,"./textures/RenderTexture":222,"./textures/Spritesheet":223,"./textures/Texture":224,"./textures/TextureMatrix":225,"./textures/TextureUvs":226,"./textures/VideoBaseTexture":227,"./ticker":230,"./utils":234,"pixi-gl-core":121}],175:[function(require,module,exports){
+},{"./Application":127,"./Shader":128,"./autoDetectRenderer":129,"./const":130,"./display/Bounds":131,"./display/Container":132,"./display/DisplayObject":133,"./display/Transform":134,"./display/TransformBase":135,"./display/TransformStatic":136,"./graphics/Graphics":137,"./graphics/GraphicsData":138,"./graphics/canvas/CanvasGraphicsRenderer":139,"./graphics/webgl/GraphicsRenderer":141,"./math":154,"./renderers/canvas/CanvasRenderer":161,"./renderers/canvas/utils/CanvasRenderTarget":163,"./renderers/webgl/WebGLRenderer":168,"./renderers/webgl/filters/Filter":170,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":173,"./renderers/webgl/managers/WebGLManager":177,"./renderers/webgl/utils/ObjectRenderer":178,"./renderers/webgl/utils/Quad":179,"./renderers/webgl/utils/RenderTarget":180,"./settings":185,"./sprites/Sprite":186,"./sprites/canvas/CanvasSpriteRenderer":187,"./sprites/canvas/CanvasTinter":188,"./sprites/webgl/SpriteRenderer":190,"./text/Text":192,"./text/TextMetrics":193,"./text/TextStyle":194,"./textures/BaseRenderTexture":195,"./textures/BaseTexture":196,"./textures/RenderTexture":197,"./textures/Spritesheet":198,"./textures/Texture":199,"./textures/TextureMatrix":200,"./textures/TextureUvs":201,"./textures/VideoBaseTexture":202,"./ticker":205,"./utils":209,"pixi-gl-core":96}],150:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22333,7 +21525,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":176}],176:[function(require,module,exports){
+},{"./Matrix":151}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22855,7 +22047,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":155,"./Point":178}],177:[function(require,module,exports){
+},{"../const":130,"./Point":153}],152:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -23006,7 +22198,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],178:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -23097,7 +22289,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],179:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23185,7 +22377,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":175,"./Matrix":176,"./ObservablePoint":177,"./Point":178,"./shapes/Circle":180,"./shapes/Ellipse":181,"./shapes/Polygon":182,"./shapes/Rectangle":183,"./shapes/RoundedRectangle":184}],180:[function(require,module,exports){
+},{"./GroupD8":150,"./Matrix":151,"./ObservablePoint":152,"./Point":153,"./shapes/Circle":155,"./shapes/Ellipse":156,"./shapes/Polygon":157,"./shapes/Rectangle":158,"./shapes/RoundedRectangle":159}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23299,7 +22491,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":155,"./Rectangle":183}],181:[function(require,module,exports){
+},{"../../const":130,"./Rectangle":158}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23421,7 +22613,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":155,"./Rectangle":183}],182:[function(require,module,exports){
+},{"../../const":130,"./Rectangle":158}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23552,7 +22744,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":155,"../Point":178}],183:[function(require,module,exports){
+},{"../../const":130,"../Point":153}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23815,7 +23007,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":155}],184:[function(require,module,exports){
+},{"../../const":130}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23948,7 +23140,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":155}],185:[function(require,module,exports){
+},{"../../const":130}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24313,7 +23505,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":155,"../display/Container":157,"../math":179,"../settings":210,"../textures/RenderTexture":222,"../utils":234,"eventemitter3":76}],186:[function(require,module,exports){
+},{"../const":130,"../display/Container":132,"../math":154,"../settings":185,"../textures/RenderTexture":197,"../utils":209,"eventemitter3":76}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24678,7 +23870,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":155,"../../settings":210,"../../utils":234,"../SystemRenderer":185,"./utils/CanvasMaskManager":187,"./utils/CanvasRenderTarget":188,"./utils/mapCanvasBlendModesToPixi":190}],187:[function(require,module,exports){
+},{"../../const":130,"../../settings":185,"../../utils":209,"../SystemRenderer":160,"./utils/CanvasMaskManager":162,"./utils/CanvasRenderTarget":163,"./utils/mapCanvasBlendModesToPixi":165}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24847,7 +24039,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":155}],188:[function(require,module,exports){
+},{"../../../const":130}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24971,7 +24163,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":210}],189:[function(require,module,exports){
+},{"../../../settings":185}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25032,7 +24224,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],190:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25104,7 +24296,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":155,"./canUseNewCanvasBlendModes":189}],191:[function(require,module,exports){
+},{"../../../const":130,"./canUseNewCanvasBlendModes":164}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25224,7 +24416,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":155,"../../settings":210}],192:[function(require,module,exports){
+},{"../../const":130,"../../settings":185}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25480,7 +24672,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":155,"../../utils":234,"./utils/RenderTarget":205,"pixi-gl-core":121}],193:[function(require,module,exports){
+},{"../../const":130,"../../utils":209,"./utils/RenderTarget":180,"pixi-gl-core":96}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26297,7 +25489,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":155,"../../textures/BaseTexture":221,"../../utils":234,"../SystemRenderer":185,"./TextureGarbageCollector":191,"./TextureManager":192,"./WebGLState":194,"./managers/FilterManager":199,"./managers/MaskManager":200,"./managers/StencilManager":201,"./utils/ObjectRenderer":203,"./utils/RenderTarget":205,"./utils/mapWebGLDrawModesToPixi":208,"./utils/validateContext":209,"pixi-gl-core":121}],194:[function(require,module,exports){
+},{"../../const":130,"../../textures/BaseTexture":196,"../../utils":209,"../SystemRenderer":160,"./TextureGarbageCollector":166,"./TextureManager":167,"./WebGLState":169,"./managers/FilterManager":174,"./managers/MaskManager":175,"./managers/StencilManager":176,"./utils/ObjectRenderer":178,"./utils/RenderTarget":180,"./utils/mapWebGLDrawModesToPixi":183,"./utils/validateContext":184,"pixi-gl-core":96}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26577,7 +25769,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":207}],195:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":182}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26773,7 +25965,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":155,"../../../settings":210,"../../../utils":234,"./extractUniformsFromSrc":196}],196:[function(require,module,exports){
+},{"../../../const":130,"../../../settings":185,"../../../utils":209,"./extractUniformsFromSrc":171}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26835,7 +26027,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":121}],197:[function(require,module,exports){
+},{"pixi-gl-core":96}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26895,7 +26087,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":179}],198:[function(require,module,exports){
+},{"../../../math":154}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26983,7 +26175,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":179,"../../../../textures/TextureMatrix":225,"../Filter":195,"path":325}],199:[function(require,module,exports){
+},{"../../../../math":154,"../../../../textures/TextureMatrix":200,"../Filter":170,"path":300}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27633,7 +26825,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":153,"../../../math":179,"../filters/filterTransforms":197,"../utils/Quad":204,"../utils/RenderTarget":205,"./WebGLManager":202,"bit-twiddle":56}],200:[function(require,module,exports){
+},{"../../../Shader":128,"../../../math":154,"../filters/filterTransforms":172,"../utils/Quad":179,"../utils/RenderTarget":180,"./WebGLManager":177,"bit-twiddle":56}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27843,7 +27035,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":198,"./WebGLManager":202}],201:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":173,"./WebGLManager":177}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27996,7 +27188,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":202}],202:[function(require,module,exports){
+},{"./WebGLManager":177}],177:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28051,7 +27243,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],203:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28129,7 +27321,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":202}],204:[function(require,module,exports){
+},{"../managers/WebGLManager":177}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28310,7 +27502,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":232,"pixi-gl-core":121}],205:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":207,"pixi-gl-core":96}],180:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28644,7 +27836,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":155,"../../../math":179,"../../../settings":210,"pixi-gl-core":121}],206:[function(require,module,exports){
+},{"../../../const":130,"../../../math":154,"../../../settings":185,"pixi-gl-core":96}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28719,7 +27911,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":121}],207:[function(require,module,exports){
+},{"pixi-gl-core":96}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28768,7 +27960,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":155}],208:[function(require,module,exports){
+},{"../../../const":130}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28800,7 +27992,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":155}],209:[function(require,module,exports){
+},{"../../../const":130}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28816,7 +28008,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],210:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29061,7 +28253,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":231,"./utils/maxRecommendedTextures":236}],211:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":206,"./utils/maxRecommendedTextures":211}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29702,7 +28894,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":155,"../display/Container":157,"../math":179,"../textures/Texture":224,"../utils":234}],212:[function(require,module,exports){
+},{"../const":130,"../display/Container":132,"../math":154,"../textures/Texture":199,"../utils":209}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29855,7 +29047,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":155,"../../math":179,"../../renderers/canvas/CanvasRenderer":186,"./CanvasTinter":213}],213:[function(require,module,exports){
+},{"../../const":130,"../../math":154,"../../renderers/canvas/CanvasRenderer":161,"./CanvasTinter":188}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30106,7 +29298,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":189,"../../utils":234}],214:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":164,"../../utils":209}],189:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -30159,7 +29351,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],215:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30712,7 +29904,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":193,"../../renderers/webgl/utils/ObjectRenderer":203,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":206,"../../settings":210,"../../utils":234,"../../utils/createIndicesForQuads":232,"./BatchBuffer":214,"./generateMultiTextureShader":216,"bit-twiddle":56,"pixi-gl-core":121}],216:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":168,"../../renderers/webgl/utils/ObjectRenderer":178,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":181,"../../settings":185,"../../utils":209,"../../utils/createIndicesForQuads":207,"./BatchBuffer":189,"./generateMultiTextureShader":191,"bit-twiddle":56,"pixi-gl-core":96}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30775,7 +29967,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":153,"path":325}],217:[function(require,module,exports){
+},{"../../Shader":128,"path":300}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31433,7 +30625,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":155,"../math":179,"../settings":210,"../sprites/Sprite":211,"../textures/Texture":224,"../utils":234,"../utils/trimCanvas":239,"./TextMetrics":218,"./TextStyle":219}],218:[function(require,module,exports){
+},{"../const":130,"../math":154,"../settings":185,"../sprites/Sprite":186,"../textures/Texture":199,"../utils":209,"../utils/trimCanvas":214,"./TextMetrics":193,"./TextStyle":194}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32133,7 +31325,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],219:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32967,7 +32159,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":155,"../utils":234}],220:[function(require,module,exports){
+},{"../const":130,"../utils":209}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33129,7 +32321,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":210,"./BaseTexture":221}],221:[function(require,module,exports){
+},{"../settings":185,"./BaseTexture":196}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33975,7 +33167,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":210,"../utils":234,"../utils/determineCrossOrigin":233,"bit-twiddle":56,"eventemitter3":76}],222:[function(require,module,exports){
+},{"../settings":185,"../utils":209,"../utils/determineCrossOrigin":208,"bit-twiddle":56,"eventemitter3":76}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34129,7 +33321,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":220,"./Texture":224}],223:[function(require,module,exports){
+},{"./BaseRenderTexture":195,"./Texture":199}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34458,7 +33650,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":174,"../utils":234}],224:[function(require,module,exports){
+},{"../":149,"../utils":209}],199:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35159,7 +34351,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":179,"../settings":210,"../utils":234,"./BaseTexture":221,"./TextureUvs":226,"./VideoBaseTexture":227,"eventemitter3":76}],225:[function(require,module,exports){
+},{"../math":154,"../settings":185,"../utils":209,"./BaseTexture":196,"./TextureUvs":201,"./VideoBaseTexture":202,"eventemitter3":76}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35323,7 +34515,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":176}],226:[function(require,module,exports){
+},{"../math/Matrix":151}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35428,7 +34620,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":175}],227:[function(require,module,exports){
+},{"../math/GroupD8":150}],202:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35771,7 +34963,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":155,"../ticker":230,"../utils":234,"../utils/determineCrossOrigin":233,"./BaseTexture":221}],228:[function(require,module,exports){
+},{"../const":130,"../ticker":205,"../utils":209,"../utils/determineCrossOrigin":208,"./BaseTexture":196}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36244,7 +35436,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":155,"../settings":210,"./TickerListener":229}],229:[function(require,module,exports){
+},{"../const":130,"../settings":185,"./TickerListener":204}],204:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -36418,7 +35610,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],230:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36498,7 +35690,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":228}],231:[function(require,module,exports){
+},{"./Ticker":203}],206:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -36512,7 +35704,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],232:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -36546,7 +35738,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],233:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36602,7 +35794,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":331}],234:[function(require,module,exports){
+},{"url":306}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37085,7 +36277,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":155,"../settings":210,"./mapPremultipliedBlendModes":235,"./mixin":237,"./pluginTarget":238,"earcut":61,"eventemitter3":76,"ismobilejs":106,"remove-array-items":299}],235:[function(require,module,exports){
+},{"../const":130,"../settings":185,"./mapPremultipliedBlendModes":210,"./mixin":212,"./pluginTarget":213,"earcut":61,"eventemitter3":76,"ismobilejs":81,"remove-array-items":274}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37128,7 +36320,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":155}],236:[function(require,module,exports){
+},{"../const":130}],211:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37150,7 +36342,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":106}],237:[function(require,module,exports){
+},{"ismobilejs":81}],212:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37212,7 +36404,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],238:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37278,7 +36470,7 @@ exports.default = {
     }
 };
 
-},{}],239:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37356,7 +36548,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],240:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38512,7 +37704,7 @@ function deprecation(core) {
     }
 }
 
-},{}],241:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38692,7 +37884,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":174}],242:[function(require,module,exports){
+},{"../../core":149}],217:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38717,7 +37909,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":241,"./webgl/WebGLExtract":243}],243:[function(require,module,exports){
+},{"./canvas/CanvasExtract":216,"./webgl/WebGLExtract":218}],218:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38952,7 +38144,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":174}],244:[function(require,module,exports){
+},{"../../core":149}],219:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39374,7 +38566,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":174}],245:[function(require,module,exports){
+},{"../core":149}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40019,7 +39211,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":174,"../core/math/ObservablePoint":177,"../core/settings":210,"../core/utils":234}],246:[function(require,module,exports){
+},{"../core":149,"../core/math/ObservablePoint":152,"../core/settings":185,"../core/utils":209}],221:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40465,7 +39657,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":174,"../core/sprites/canvas/CanvasTinter":213}],247:[function(require,module,exports){
+},{"../core":149,"../core/sprites/canvas/CanvasTinter":188}],222:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -40869,7 +40061,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":174,"../core/textures/BaseTexture":221,"../core/textures/Texture":224,"../core/utils":234}],248:[function(require,module,exports){
+},{"../core":149,"../core/textures/BaseTexture":196,"../core/textures/Texture":199,"../core/utils":209}],223:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -40904,7 +40096,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":174}],249:[function(require,module,exports){
+},{"../core":149}],224:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -40938,7 +40130,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":174}],250:[function(require,module,exports){
+},{"../core":149}],225:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40990,7 +40182,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":244,"./BitmapText":245,"./TilingSprite":246,"./cacheAsBitmap":247,"./getChildByName":248,"./getGlobalPosition":249,"./webgl/TilingSpriteRenderer":251}],251:[function(require,module,exports){
+},{"./AnimatedSprite":219,"./BitmapText":220,"./TilingSprite":221,"./cacheAsBitmap":222,"./getChildByName":223,"./getGlobalPosition":224,"./webgl/TilingSpriteRenderer":226}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41152,7 +40344,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":174,"../../core/const":155,"path":325}],252:[function(require,module,exports){
+},{"../../core":149,"../../core/const":130,"path":300}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41236,7 +40428,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":174,"path":325}],253:[function(require,module,exports){
+},{"../../core":149,"path":300}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41410,7 +40602,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":174,"./BlurXFilter":254,"./BlurYFilter":255}],254:[function(require,module,exports){
+},{"../../core":149,"./BlurXFilter":229,"./BlurYFilter":230}],229:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41576,7 +40768,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":174,"./generateBlurFragSource":256,"./generateBlurVertSource":257,"./getMaxBlurKernelSize":258}],255:[function(require,module,exports){
+},{"../../core":149,"./generateBlurFragSource":231,"./generateBlurVertSource":232,"./getMaxBlurKernelSize":233}],230:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41741,7 +40933,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":174,"./generateBlurFragSource":256,"./generateBlurVertSource":257,"./getMaxBlurKernelSize":258}],256:[function(require,module,exports){
+},{"../../core":149,"./generateBlurFragSource":231,"./generateBlurVertSource":232,"./getMaxBlurKernelSize":233}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41788,7 +40980,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],257:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41832,7 +41024,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],258:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41848,7 +41040,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],259:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42399,7 +41591,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":174,"path":325}],260:[function(require,module,exports){
+},{"../../core":149,"path":300}],235:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42507,7 +41699,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":174,"path":325}],261:[function(require,module,exports){
+},{"../../core":149,"path":300}],236:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42561,7 +41753,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":174,"path":325}],262:[function(require,module,exports){
+},{"../../core":149,"path":300}],237:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42640,7 +41832,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":252,"./blur/BlurFilter":253,"./blur/BlurXFilter":254,"./blur/BlurYFilter":255,"./colormatrix/ColorMatrixFilter":259,"./displacement/DisplacementFilter":260,"./fxaa/FXAAFilter":261,"./noise/NoiseFilter":263}],263:[function(require,module,exports){
+},{"./alpha/AlphaFilter":227,"./blur/BlurFilter":228,"./blur/BlurXFilter":229,"./blur/BlurYFilter":230,"./colormatrix/ColorMatrixFilter":234,"./displacement/DisplacementFilter":235,"./fxaa/FXAAFilter":236,"./noise/NoiseFilter":238}],238:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42737,7 +41929,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":174,"path":325}],264:[function(require,module,exports){
+},{"../../core":149,"path":300}],239:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -42851,7 +42043,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":151,"./core":174,"./deprecation":240,"./extract":242,"./extras":250,"./filters":262,"./interaction":269,"./loaders":272,"./mesh":281,"./particles":284,"./polyfill":291,"./prepare":295}],265:[function(require,module,exports){
+},{"./accessibility":126,"./core":149,"./deprecation":215,"./extract":217,"./extras":225,"./filters":237,"./interaction":244,"./loaders":247,"./mesh":256,"./particles":259,"./polyfill":266,"./prepare":270}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43074,7 +42266,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":174}],266:[function(require,module,exports){
+},{"../core":149}],241:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -43157,7 +42349,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],267:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44939,7 +44131,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":174,"./InteractionData":265,"./InteractionEvent":266,"./InteractionTrackingData":268,"./interactiveTarget":270,"eventemitter3":76}],268:[function(require,module,exports){
+},{"../core":149,"./InteractionData":240,"./InteractionEvent":241,"./InteractionTrackingData":243,"./interactiveTarget":245,"eventemitter3":76}],243:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -45115,7 +44307,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],269:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45167,7 +44359,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":265,"./InteractionEvent":266,"./InteractionManager":267,"./InteractionTrackingData":268,"./interactiveTarget":270}],270:[function(require,module,exports){
+},{"./InteractionData":240,"./InteractionEvent":241,"./InteractionManager":242,"./InteractionTrackingData":243,"./interactiveTarget":245}],245:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45284,7 +44476,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],271:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45404,7 +44596,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":250,"path":325,"resource-loader":304}],272:[function(require,module,exports){
+},{"../extras":225,"path":300,"resource-loader":279}],247:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45532,7 +44724,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":152,"./bitmapFontParser":271,"./loader":273,"./spritesheetParser":274,"./textureParser":275,"resource-loader":304}],273:[function(require,module,exports){
+},{"../core/Application":127,"./bitmapFontParser":246,"./loader":248,"./spritesheetParser":249,"./textureParser":250,"resource-loader":279}],248:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45703,7 +44895,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":271,"./spritesheetParser":274,"./textureParser":275,"eventemitter3":76,"resource-loader":304,"resource-loader/lib/middlewares/parsing/blob":305}],274:[function(require,module,exports){
+},{"./bitmapFontParser":246,"./spritesheetParser":249,"./textureParser":250,"eventemitter3":76,"resource-loader":279,"resource-loader/lib/middlewares/parsing/blob":280}],249:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45767,7 +44959,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":174,"resource-loader":304,"url":331}],275:[function(require,module,exports){
+},{"../core":149,"resource-loader":279,"url":306}],250:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45790,7 +44982,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":224,"resource-loader":304}],276:[function(require,module,exports){
+},{"../core/textures/Texture":199,"resource-loader":279}],251:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46221,7 +45413,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":174,"../core/textures/Texture":224}],277:[function(require,module,exports){
+},{"../core":149,"../core/textures/Texture":199}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46614,7 +45806,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":278}],278:[function(require,module,exports){
+},{"./Plane":253}],253:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46755,7 +45947,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":276}],279:[function(require,module,exports){
+},{"./Mesh":251}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46991,7 +46183,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":276}],280:[function(require,module,exports){
+},{"./Mesh":251}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47277,7 +46469,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":174,"../Mesh":276}],281:[function(require,module,exports){
+},{"../../core":149,"../Mesh":251}],256:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47338,7 +46530,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":276,"./NineSlicePlane":277,"./Plane":278,"./Rope":279,"./canvas/CanvasMeshRenderer":280,"./webgl/MeshRenderer":282}],282:[function(require,module,exports){
+},{"./Mesh":251,"./NineSlicePlane":252,"./Plane":253,"./Rope":254,"./canvas/CanvasMeshRenderer":255,"./webgl/MeshRenderer":257}],257:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47493,7 +46685,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":174,"../Mesh":276,"path":325,"pixi-gl-core":121}],283:[function(require,module,exports){
+},{"../../core":149,"../Mesh":251,"path":300,"pixi-gl-core":96}],258:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47883,7 +47075,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":174,"../core/utils":234}],284:[function(require,module,exports){
+},{"../core":149,"../core/utils":209}],259:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47908,7 +47100,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":283,"./webgl/ParticleRenderer":286}],285:[function(require,module,exports){
+},{"./ParticleContainer":258,"./webgl/ParticleRenderer":261}],260:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48157,7 +47349,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":232,"pixi-gl-core":121}],286:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":207,"pixi-gl-core":96}],261:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48638,7 +47830,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":174,"../../core/utils":234,"./ParticleBuffer":285,"./ParticleShader":287}],287:[function(require,module,exports){
+},{"../../core":149,"../../core/utils":209,"./ParticleBuffer":260,"./ParticleShader":262}],262:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48681,7 +47873,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":153}],288:[function(require,module,exports){
+},{"../../core/Shader":128}],263:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -48699,7 +47891,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],289:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -48711,7 +47903,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],290:[function(require,module,exports){
+},{}],265:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -48726,7 +47918,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":109}],291:[function(require,module,exports){
+},{"object-assign":84}],266:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -48753,7 +47945,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":288,"./Number.isInteger":289,"./Object.assign":290,"./requestAnimationFrame":292}],292:[function(require,module,exports){
+},{"./Math.sign":263,"./Number.isInteger":264,"./Object.assign":265,"./requestAnimationFrame":267}],267:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -48830,7 +48022,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],293:[function(require,module,exports){
+},{}],268:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49318,7 +48510,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":174,"./limiters/CountLimiter":296}],294:[function(require,module,exports){
+},{"../core":149,"./limiters/CountLimiter":271}],269:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49438,7 +48630,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":174,"../BasePrepare":293}],295:[function(require,module,exports){
+},{"../../core":149,"../BasePrepare":268}],270:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49490,7 +48682,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":293,"./canvas/CanvasPrepare":294,"./limiters/CountLimiter":296,"./limiters/TimeLimiter":297,"./webgl/WebGLPrepare":298}],296:[function(require,module,exports){
+},{"./BasePrepare":268,"./canvas/CanvasPrepare":269,"./limiters/CountLimiter":271,"./limiters/TimeLimiter":272,"./webgl/WebGLPrepare":273}],271:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49548,7 +48740,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],297:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49606,7 +48798,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],298:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49728,7 +48920,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":174,"../BasePrepare":293}],299:[function(require,module,exports){
+},{"../../core":149,"../BasePrepare":268}],274:[function(require,module,exports){
 'use strict'
 
 /**
@@ -49758,7 +48950,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],300:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50411,7 +49603,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":301,"./async":302,"mini-signals":107,"parse-uri":110}],301:[function(require,module,exports){
+},{"./Resource":276,"./async":277,"mini-signals":82,"parse-uri":85}],276:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51567,7 +50759,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":107,"parse-uri":110}],302:[function(require,module,exports){
+},{"mini-signals":82,"parse-uri":85}],277:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51776,7 +50968,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],303:[function(require,module,exports){
+},{}],278:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51844,7 +51036,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],304:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -51868,7 +51060,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":300,"./Resource":301,"./async":302,"./b64":303}],305:[function(require,module,exports){
+},{"./Loader":275,"./Resource":276,"./async":277,"./b64":278}],280:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51956,7 +51148,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":301,"../../b64":303}],306:[function(require,module,exports){
+},{"../../Resource":276,"../../b64":278}],281:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -52052,7 +51244,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":307,"./socket":309,"./url":310,"debug":311,"socket.io-parser":314}],307:[function(require,module,exports){
+},{"./manager":282,"./socket":284,"./url":285,"debug":286,"socket.io-parser":289}],282:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -52627,7 +51819,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":308,"./socket":309,"backo2":54,"component-bind":58,"component-emitter":59,"debug":311,"engine.io-client":62,"indexof":80,"socket.io-parser":314}],308:[function(require,module,exports){
+},{"./on":283,"./socket":284,"backo2":54,"component-bind":58,"component-emitter":59,"debug":286,"engine.io-client":62,"indexof":80,"socket.io-parser":289}],283:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -52653,7 +51845,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],309:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -53093,7 +52285,7 @@ Socket.prototype.binary = function (binary) {
   return this;
 };
 
-},{"./on":308,"component-bind":58,"component-emitter":59,"debug":311,"has-binary2":77,"parseqs":111,"socket.io-parser":314,"to-array":319}],310:[function(require,module,exports){
+},{"./on":283,"component-bind":58,"component-emitter":59,"debug":286,"has-binary2":77,"parseqs":86,"socket.io-parser":289,"to-array":294}],285:[function(require,module,exports){
 (function (global){
 
 /**
@@ -53172,11 +52364,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":311,"parseuri":112}],311:[function(require,module,exports){
+},{"debug":286,"parseuri":87}],286:[function(require,module,exports){
 arguments[4][71][0].apply(exports,arguments)
-},{"./debug":312,"_process":326,"dup":71}],312:[function(require,module,exports){
+},{"./debug":287,"_process":301,"dup":71}],287:[function(require,module,exports){
 arguments[4][72][0].apply(exports,arguments)
-},{"dup":72,"ms":108}],313:[function(require,module,exports){
+},{"dup":72,"ms":83}],288:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -53321,7 +52513,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":315,"isarray":318}],314:[function(require,module,exports){
+},{"./is-buffer":290,"isarray":293}],289:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -53740,7 +52932,7 @@ function error(msg) {
   };
 }
 
-},{"./binary":313,"./is-buffer":315,"component-emitter":59,"debug":316,"isarray":318}],315:[function(require,module,exports){
+},{"./binary":288,"./is-buffer":290,"component-emitter":59,"debug":291,"isarray":293}],290:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -53768,13 +52960,13 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],316:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 arguments[4][71][0].apply(exports,arguments)
-},{"./debug":317,"_process":326,"dup":71}],317:[function(require,module,exports){
+},{"./debug":292,"_process":301,"dup":71}],292:[function(require,module,exports){
 arguments[4][72][0].apply(exports,arguments)
-},{"dup":72,"ms":108}],318:[function(require,module,exports){
+},{"dup":72,"ms":83}],293:[function(require,module,exports){
 arguments[4][78][0].apply(exports,arguments)
-},{"dup":78}],319:[function(require,module,exports){
+},{"dup":78}],294:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -53789,7 +52981,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],320:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -53859,7 +53051,7 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],321:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -54012,9 +53204,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],322:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 
-},{}],323:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -55793,7 +54985,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":321,"ieee754":324}],324:[function(require,module,exports){
+},{"base64-js":296,"ieee754":299}],299:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -55879,7 +55071,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],325:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -56185,7 +55377,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":326}],326:[function(require,module,exports){
+},{"_process":301}],301:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -56371,7 +55563,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],327:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -56908,7 +56100,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],328:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -56994,7 +56186,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],329:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57081,13 +56273,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],330:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":328,"./encode":329}],331:[function(require,module,exports){
+},{"./decode":303,"./encode":304}],306:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57821,7 +57013,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":332,"punycode":327,"querystring":330}],332:[function(require,module,exports){
+},{"./util":307,"punycode":302,"querystring":305}],307:[function(require,module,exports){
 'use strict';
 
 module.exports = {

@@ -1,9 +1,12 @@
-'use strict';
 
-const spriteHelper = require("../../utils/spriteHelper.js");
+const PIXI = require('pixi.js');
+const spriteHelper = require('../../utils/spriteHelper.js');
 
 global.arrowContainer = new PIXI.Container();
-global.arrowContainer.name = "arrow cont"
+global.arrowContainer.name = 'arrow containter';
+
+// const c = global.document.createElement('audio');
+// c.play();
 
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
@@ -13,66 +16,66 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_04.wav'),
   new Audio('audio/arrow_hit_05.wav'),
   new Audio('audio/arrow_hit_06.wav'),
-  new Audio('audio/arrow_hit_07.wav')
+  new Audio('audio/arrow_hit_07.wav'),
 ];
 
 module.exports.arrowManagement = (power, origin, target) => {
+  const pathOne = new PIXI.tween.TweenPath()
+    .moveTo(origin.position.x, origin.position.y)
+    .lineTo(target.x, target.y);
 
-  const path_one = new PIXI.tween.TweenPath()
-  .moveTo(origin.position.x, origin.position.y)
-  .lineTo(target.x, target.y);
+  // spriteHelper.drawPathAndShow(pathOne)
 
-  // spriteHelper.drawPathAndShow(path_one)
-
-  const arrow = PIXI.Sprite.fromFrame('arrow')
-        arrow.width /=2
-        arrow.height /=3
-        arrow.anchor.set(0.9)
-        arrow.rotation = spriteHelper.angle(origin, target)
+  const arrow = PIXI.Sprite.fromFrame('arrow');
+  arrow.width /= 2;
+  arrow.height /= 3;
+  arrow.anchor.set(0.9);
+  arrow.rotation = spriteHelper.angle(origin, target);
 
   const arrowTween = PIXI.tweenManager.createTween(arrow);
-        arrowTween.path = path_one;
-        arrowTween.time = power;
-        arrowTween.easing = PIXI.tween.Easing.linear();
-        arrowTween.start()
-        arrowTween.on("end", () => arrow.pickup = true)
+  arrowTween.path = pathOne;
+  arrowTween.time = power;
+  arrowTween.easing = PIXI.tween.Easing.linear();
+  arrowTween.start();
+  arrowTween.on('end', () => {
+    arrow.pickup = true;
+  });
 
-  arrowTween.on("update", function() {
-
+  arrowTween.on('update', () => {
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
-    .then(res => {
-      arrow.pickup = true;
+      .then(() => {
+        arrow.pickup = true;
+        arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
 
-      arrowSounds[Math.floor((Math.random() * 7) + 1)].play();  
-      
-      setTimeout(()=>arrowTween.stop(),15)
-    })
+        setTimeout(() => {
+          arrowTween.stop();
+        }, 15);
+      });
 
     spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
-    .then(critter => {
-      arrow.pickup = true;
+      .then((critter) => {
+        arrow.pickup = true;
+        arrowTween.stop();
 
-      arrowTween.stop()  
-      critter.texture = critter.dead;
-      critter.stop()
-      critter.mouseDeathSound.play()
+        const currentCritter = critter;
+        currentCritter.texture = critter.dead;
+        currentCritter.stop();
+        currentCritter.mouseDeathSound.play();
 
-      PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-    })
+        PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
+      });
 
     spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
-    .then(enemy => {
-      arrow.pickup = true;
+      .then((enemy) => {
+        arrow.pickup = true;
 
-      arrowTween.stop()
-      enemy.stop()
-      
-      PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-    })
+        arrowTween.stop();
+        enemy.stop();
 
-  })
+        PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
+      });
+  });
 
-  global.arrowContainer.addChild(arrow)
-  global.viewport.addChild(global.arrowContainer)
-
-}
+  global.arrowContainer.addChild(arrow);
+  global.viewport.addChild(global.arrowContainer);
+};

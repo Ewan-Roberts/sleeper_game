@@ -1,8 +1,12 @@
 
-const PIXI = require("pixi.js"),
-$ = require('jQuery')
+const PIXI = require('pixi.js');
+const $ = require('jQuery.js');
 
-function getIntersection(a,b){const c=a.a.x,d=a.a.y,e=a.b.x-a.a.x,f=a.b.y-a.a.y,g=b.a.x,h=b.a.y,i=b.b.x-b.a.x,j=b.b.y-b.a.y,k=Math.sqrt(e*e+f*f),l=Math.sqrt(i*i+j*j);if(e/k==i/l&&f/k==j/l)return null;const m=(e*(h-d)+f*(c-g))/(i*f-j*e),n=(g+i*m-c)/e;return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}}
+function getIntersection(a,b){
+  
+  const c=a.a.x,d=a.a.y,e=a.b.x-a.a.x,f=a.b.y-a.a.y,g=b.a.x,h=b.a.y,i=b.b.x-b.a.x,j=b.b.y-b.a.y,k=Math.sqrt(e*e+f*f),l=Math.sqrt(i*i+j*j);if(e/k==i/l&&f/k==j/l)return null;const m=(e*(h-d)+f*(c-g))/(i*f-j*e),n=(g+i*m-c)/e;return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
+
+}
 
 const addToSegments = item => {
 
@@ -49,10 +53,7 @@ const addLevelRaycasting = () =>{
         raycast.moveTo(intersects[0].x,intersects[0].y);
         raycast.lineStyle(1, 0xffd900, 1);
         for (let i = 1; i < intersects.length; i++) raycast.lineTo(intersects[i].x,intersects[i].y);
+  });
 
-    });
-
-    global.viewport.addChild(raycast)
-
-
+  global.viewport.addChild(raycast)
 }
