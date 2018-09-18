@@ -1,5 +1,3 @@
-'use sctrict';
-
 const PIXI = require('pixi.js');
 
 function getRandomArbitrary(min, max) {

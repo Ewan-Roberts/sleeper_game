@@ -1946,6 +1946,7 @@ module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"pixi.js":239}],17:[function(require,module,exports){
 (function (global){
+
 const filters = require('pixi-filters');
 const PIXI = require('pixi.js');
 
@@ -2121,8 +2122,6 @@ module.exports.arrowManagement = (power, origin, target) => {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../utils/spriteHelper.js":16,"pixi.js":239}],20:[function(require,module,exports){
 (function (global){
-'use sctrict';
-
 const PIXI = require('pixi.js');
 
 function getRandomArbitrary(min, max) {

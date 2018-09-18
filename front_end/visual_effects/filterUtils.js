@@ -1,3 +1,4 @@
+
 const filters = require('pixi-filters');
 const PIXI = require('pixi.js');
 

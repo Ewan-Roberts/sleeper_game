@@ -1,10 +1,10 @@
-const   express = require("express"),
-        app     = express(),
-        server  = require("http").Server(app),
-        port    = process.env.PORT || 3000,
-        mongoose = require("mongoose"),
-        utils = require('require-dir')('./back_end'),
-        User = require("./models/User.js")
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const port = process.env.PORT || 3000;
+const mongoose = require('mongoose');
+const utils = require('require-dir')('./back_end');
+const User = require('./models/User.js');
 
 // mongoose.connect('mongodb://localhost/test');
 
@@ -12,26 +12,26 @@ const   express = require("express"),
 // db.on('error', console.error.bind(console, 'connection error:'));
 
 // db.once('open', () => {
-    
+
 //     console.log("db up")
 
 //     // utils.createContainer({
 //     //     chest_id: 35,
 //     //     name: "footlocker",
-//     //     area: "starter_bedroom", 
+//     //     area: "starter_bedroom",
 //     //     location: {
 //     //         x: 22,
 //     //         y: 20
 //     //     },
-//     //     contents: [1,2,3,4]  
+//     //     contents: [1,2,3,4]
 
 //     // })
 //     // .catch(err=>Error(err))
 //     // .then(result => {
-        
+
 //     //     console.log(result)
 //     //     console.log("-----------------");
-         
+
 //     // })
 
 //     // utils.createItem({
@@ -73,211 +73,170 @@ const   express = require("express"),
 
 // });
 
-let player_info = {
-    x:1200,
-    y:1200
-}
+// const playerInfo = {
+//   x: 1200,
+//   y: 1200,
+// };
 
 
-app.use(express.static("./public"));
+app.use(express.static('./public'));
 
-app.get("/", (req, res) => res.sendFile(__dirname + "/public/index.html"));
+app.get('/', (req, res) => res.sendFile(`${__dirname}/public/index.html`));
 
-server.listen(port, () => console.log("server is listening on port: " + port));
+server.listen(port, () => console.log(`server is listening on port: ${port}`));
 
-io = require("socket.io")(server, {});
+const io = require('socket.io')(server, {});
 
-io.on("connection", socket => {
+io.on('connection', (socket) => {
+  console.log('Client connected.');
+  // socket.emit("get_level_data", levelData)
 
-    console.log('Client connected.'); 
+  socket.on('get_container_contents', () => {
 
-    // socket.emit("get_level_data", levelData)
-    
-    socket.on("get_container_contents", container_data =>{
-
-        console.log(container_data)
-        socket.emit("container_contents","we wee wee")
-        // utils.getContainerById(container_data)
-        // .then(res=>{
-        //   console.log(res)
-        //     socket.emit("container_contents",res)
-        // })
-
-    })
-    console.log("hi")
-    socket.on("set_player_data", front_player =>{
-
-        console.log("get_player_data")
-
-        User.findOneAndUpdate({_id: "5b43c9bdd9101585e767881d"}, {location: front_player.location}, (err,doc)=>{
-            console.log("popppo")
-            console.log(doc)
-        })
-
-        // player_info = data
-        // player_info = data;
-        // console.log(player_info)
-        
-
-    })
-
-    socket.on("get_player_data", ()=>{
-
-        utils.getUser("5b43c9bdd9101585e767881d")
-        .then(res =>{
-            console.log(res)
-            // socket.emit("player_data",res)
-        })
-
-        // socket.emit("player_data",player_info)
-
-    })
-
-
-    socket.on("player_sleep", hours =>{
-
-        console.log(hours)
-
-        utils.meters.updateSleep("5b43c9bdd9101585e767881d",hours)
-        .then(res =>{
-            console.log(res)
-            // socket.emit("player_data",res)
-        })
-
-        // socket.emit("player_data",player_info)
-
-    })    
-
-    socket.on('get_network_sprites', (player) => {
-      
-      console.log(player)
-      const sprite = {
-        x: player.x + 100,
-        y: player.y+ 100
-      }
-
-      setInterval(()=>{
-        sprite.x += 10;
-        socket.emit('server_sprite', sprite)
-
-      },1000)
-        
-      
-    })
-
-
-    // socket.on('post_player_data', player_data => {
-
-    //   console.log(player_data)
-    //   console.log("player_data")
-
+    socket.emit('container_contents', 'we wee wee');
+    // utils.getContainerById(containerData)
+    // .then(res=>{
+    //   console.log(res)
+    //     socket.emit("container_contents",res)
     // })
+  });
 
-    const Player = {
-      x: 0,
-      y: 0,
-      rotation: 0,
-      movement_speed: 20,
-      id: ""
+  socket.on('set_playerData', (frontPlayer) => {
+    // console.log('get_playerData');
+
+    User.findOneAndUpdate({ _id: '5b43c9bdd9101585e767881d' }, { location: frontPlayer.location }, (err, doc) => {
+      // console.log('popppo');
+      // console.log(doc);
+    });
+
+    // playerInfo = data
+    // playerInfo = data;
+    // console.log(playerInfo)
+  });
+
+  socket.on('get_playerData', () => {
+    utils.getUser('5b43c9bdd9101585e767881d')
+      .then(() => {
+        // console.log(res);
+        // socket.emit("playerData",res)
+      });
+
+    // socket.emit("playerData",playerInfo)
+  });
+
+
+  socket.on('player_sleep', (hours) => {
+    // console.log(hours);
+
+    utils.meters.updateSleep('5b43c9bdd9101585e767881d', hours)
+      .then(() => {
+        // console.log(res);
+        // socket.emit("playerData",res)
+      });
+
+    // socket.emit("playerData",playerInfo)
+  });
+
+  socket.on('get_network_sprites', (player) => {
+    // console.log(player);
+    const sprite = {
+      x: player.x + 100,
+      y: player.y + 100,
+    };
+
+    setInterval(() => {
+      sprite.x += 10;
+      socket.emit('server_sprite', sprite);
+    }, 1000);
+  });
+
+
+  // socket.on('post_playerData', playerData => {
+
+  //   console.log(playerData)
+  //   console.log("playerData")
+
+  // })
+
+  const Player = {
+    x: 0,
+    y: 0,
+    rotation: 0,
+    movement_speed: 20,
+    id: '',
+  };
+
+  // const liveKeys = [];
+
+  socket.on('keystroke', (playerData) => {
+    // console.log(playerData);
+
+    if (playerData.key === 'up') {
+      Player.y -= Player.movement_speed;
+      Player.rotation = -2;
     }
 
-    let liveKeys = [];
+    if (playerData.key === 'down') {
+      Player.y += Player.movement_speed;
+      Player.rotation = 2;
+    }
 
-    socket.on('keystroke', (player_data) => {
+    if (playerData.key === 'left') {
+      Player.x -= Player.movement_speed;
+      Player.rotation = -3;
+    }
 
-      console.log(player_data)
-
-      if(player_data.key === "up"){
-        Player.y -= Player.movement_speed; 
-        Player.rotation = -2
-      }
-  
-      if(player_data.key === "down"){
-        Player.y += Player.movement_speed; 
-        Player.rotation = 2
-      }
-  
-      if(player_data.key === "left"){
-        Player.x -= Player.movement_speed; 
-        Player.rotation = -3
-      }
-  
-      if(player_data.key === "right"){
-        Player.x += Player.movement_speed; 
-        Player.rotation = 0
-      }
-      console.log('emit')
-      io.emit('player_move', Player)   
+    if (playerData.key === 'right') {
+      Player.x += Player.movement_speed;
+      Player.rotation = 0;
+    }
+    // console.log('emit');
+    io.emit('player_move', Player);
+  });
 
 
-    })
+  // socket.on("meter_ticker", shit =>{
 
-    
-    // socket.on("meter_ticker", shit =>{
+  //     console.log('ticker')
+  //     console.log(shit)
 
-    //     console.log('ticker')
-    //     console.log(shit)
+  //     User.findOneAndUpdate("5b43c9bdd9101585e767881d", {meters: shit}, (err,doc)=>{
+  //         console.log(err)
+  //         console.log("popppo")
+  //         // console.log(doc)
+  //         // doc.meters = shit;
+  //         doc.save()
 
-    //     User.findOneAndUpdate("5b43c9bdd9101585e767881d", {meters: shit}, (err,doc)=>{
-    //         console.log(err)
-    //         console.log("popppo")
-    //         // console.log(doc)
-    //         // doc.meters = shit;
-    //         doc.save()
+  //     })
 
-    //     })
+  // })
 
-    // })
+  // //ticker
+  // setInterval(()=>{
 
-    // //ticker
-    // setInterval(()=>{
+  //     // utils.meters.start("5b43c9bdd9101585e767881d")
 
-    //     // utils.meters.start("5b43c9bdd9101585e767881d")
+  //     // User.findById("5b43c9bdd9101585e767881d", function (err, foundUser) {
+  //     //     if (err) throw err
 
-    //     // User.findById("5b43c9bdd9101585e767881d", function (err, foundUser) {
-    //     //     if (err) throw err
+  //     //     console.log(foundUser.meters.water)
+  //     //     foundUser.meters.water -= 0.25;
+  //     //     foundUser.meters.food -= 0.15;
+  //     //     foundUser.meters.sleep -= 0.1;
 
-    //     //     console.log(foundUser.meters.water)
-    //     //     foundUser.meters.water -= 0.25;
-    //     //     foundUser.meters.food -= 0.15;
-    //     //     foundUser.meters.sleep -= 0.1;
-        
-    //     //     new User(foundUser).save((err, updatedUser)=> {
-    //     //         if (err) throw err
-    //     //         console.log(updatedUser)
-    //     //     });
-        
-    //     // });
+  //     //     new User(foundUser).save((err, updatedUser)=> {
+  //     //         if (err) throw err
+  //     //         console.log(updatedUser)
+  //     //     });
+
+  //     // });
 
 
-    // },5000)
-
-
-})
-
-
-
-
-
-
+  // },5000)
+});
 
 
 /*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   var data, k, s;
@@ -334,12 +293,6 @@ setInterval((function() {
 }), 1000 / 25);
 
 
-
-
-
-
-
-
 let sockets = {};
 
 let removals = [];
@@ -392,11 +345,4 @@ const Player = (function() {
 })();
 
 
-
 */
-
-
-
-
-
-
