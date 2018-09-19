@@ -37,7 +37,6 @@ module.exports.load_rat = () => new Promise((resolve) => {
   Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
 
   Rat.animation.waiting = [
-
     PIXI.Texture.fromFrame('rat_36'),
     PIXI.Texture.fromFrame('rat_37'),
     PIXI.Texture.fromFrame('rat_38'),

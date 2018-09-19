@@ -3,10 +3,7 @@ const filters = require('pixi-filters');
 const PIXI = require('pixi.js');
 
 const padding = 100;
-
-const overlay = PIXI.Sprite.fromFrame('black_dot');
-overlay.zIndex = -3;
-overlay.anchor.set(0.5);
+let overlay = {};
 
 function countUp() {
   if (overlay.alpha <= 1) {
@@ -28,6 +25,10 @@ function countDown() {
 }
 
 module.exports.fade_in_black = () => {
+  overlay = PIXI.Sprite.fromFrame('black_dot');
+  overlay.zIndex = -3;
+  overlay.anchor.set(0.5);
+
   overlay.alpha = 0;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;
@@ -37,6 +38,9 @@ module.exports.fade_in_black = () => {
 };
 
 module.exports.fade_out_black = () => {
+  overlay = PIXI.Sprite.fromFrame('black_dot');
+  overlay.zIndex = -3;
+  overlay.anchor.set(0.5);
   overlay.alpha = 1;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;

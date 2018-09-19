@@ -39,7 +39,6 @@ module.exports.load_rat = () => new Promise((resolve) => {
   Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
 
   Rat.animation.waiting = [
-
     PIXI.Texture.fromFrame('rat_36'),
     PIXI.Texture.fromFrame('rat_37'),
     PIXI.Texture.fromFrame('rat_38'),
@@ -404,7 +403,7 @@ const Viewport = require('pixi-viewport');
 const tween = require('pixi-tween');
 const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
-
+const debug = require('./level/debug/debug_layout.js');
 
 global.socket = io.connect();
 // global.socket.on('thing', (res) => {
@@ -443,7 +442,6 @@ global.loader = new PIXI.loaders.Loader();
 global.loader.use(pixiPackerParser(PIXI));
 global.loader.add('../../images/bedroom_EN_web.json');
 global.loader.load(() => {
-  const debug = require('./level/debug/debug_layout.js');
   debug.add_floor();
 });
 
@@ -1951,10 +1949,7 @@ const filters = require('pixi-filters');
 const PIXI = require('pixi.js');
 
 const padding = 100;
-
-const overlay = PIXI.Sprite.fromFrame('black_dot');
-overlay.zIndex = -3;
-overlay.anchor.set(0.5);
+let overlay = {};
 
 function countUp() {
   if (overlay.alpha <= 1) {
@@ -1976,6 +1971,10 @@ function countDown() {
 }
 
 module.exports.fade_in_black = () => {
+  overlay = PIXI.Sprite.fromFrame('black_dot');
+  overlay.zIndex = -3;
+  overlay.anchor.set(0.5);
+
   overlay.alpha = 0;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;
@@ -1985,6 +1984,9 @@ module.exports.fade_in_black = () => {
 };
 
 module.exports.fade_out_black = () => {
+  overlay = PIXI.Sprite.fromFrame('black_dot');
+  overlay.zIndex = -3;
+  overlay.anchor.set(0.5);
   overlay.alpha = 1;
   overlay.width = global.viewport.worldWidth + padding;
   overlay.height = global.viewport.worldHeight + padding;
