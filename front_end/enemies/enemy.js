@@ -47,16 +47,16 @@ module.exports.enemy_path = (pathData) => {
   const influenceBoxTween = PIXI.tweenManager.createTween(influenceBox);
   influenceBoxTween.rotation = -0.5;
   influenceBoxTween.path = path;
-  influenceBoxTween.time = 30000;
-  influenceBoxTween.easing = PIXI.tween.Easing.inOutQuad();
+  influenceBoxTween.time = 300000;
+  influenceBoxTween.easing = PIXI.tween.Easing.linear();
   influenceBoxTween.start();
   influenceBoxTween.pingPong = true;
 
   const animatedEnemyTween = PIXI.tweenManager.createTween(enemySprite);
   animatedEnemyTween.path = path;
   animatedEnemyTween.rotation = spriteHelper.angle(enemySprite, path._tmpPoint2);
-  animatedEnemyTween.time = 30000;
-  animatedEnemyTween.easing = PIXI.tween.Easing.inOutQuad();
+  animatedEnemyTween.time = 300000;
+  animatedEnemyTween.easing = PIXI.tween.Easing.linear();
   animatedEnemyTween.start();
   animatedEnemyTween.pingPong = true;
 

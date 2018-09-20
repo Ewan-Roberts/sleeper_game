@@ -1,6 +1,6 @@
 const PIXI = require('pixi.js');
 const bedroomData = require('./bedroom/bedroom_data_4.json');
-const parkData = require('./park/park_3.json');
+const parkData = require('./park/park_4.json');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -52,35 +52,39 @@ module.exports.renderWall = (wallArray) => {
 };
 
 module.exports.importEnemyPathData = () => {
-  const pathData = bedroomData.tiles[4].objectgroup.objects[0].polyline;
-
-  return pathData;
+  const importedParkData = parkData.tiles[2].objectgroup.objects[24].polyline;
+  return importedParkData;
 };
 
 module.exports.createEnemyPathFrom = (levelData) => {
   const path = new PIXI.tween.TweenPath();
 
-  path.moveTo(levelData[0].x, levelData[0].y);
+  path.moveTo(levelData[0].x, levelData[0].y+1388);
 
-  for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y);
+  for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y+1388);
 
   return path;
 };
 
 module.exports.importParkData = () => {
-  const parkBackground = PIXI.Sprite.fromFrame('park');
+  const parkBackground = PIXI.Sprite.fromFrame('park_bottom');
+  const parkTopground = PIXI.Sprite.fromFrame('park_top');
   parkBackground.interactive = true;
   parkBackground.zIndex = 1;
+  parkTopground.zIndex = -200;
+  parkTopground.alpha = 0.95;
   parkBackground.height = parkData.tileheight;
   parkBackground.width = parkData.tilewidth;
+  parkTopground.height = parkData.tileheight;
+  parkTopground.width = parkData.tilewidth;
   // parkBackground.width = 10000
   // parkBackground.height = 6000
 
-  for (let i = 0; i < parkData.tiles[1].objectgroup.objects.length; i += 1) {
-    this.hitAreas(parkData.tiles[1].objectgroup.objects);
+  for (let i = 0; i < parkData.tiles[2].objectgroup.objects.length; i += 1) {
+    this.hitAreas(parkData.tiles[2].objectgroup.objects);
   }
 
-  global.viewport.addChild(parkBackground);
+  global.viewport.addChild(parkTopground, parkBackground);
   global.viewport.updateLayersOrder();
 };
 

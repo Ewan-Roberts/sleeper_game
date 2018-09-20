@@ -36,8 +36,24 @@ function createPair(diffuseTex, normalTex, alpha) {
 const addLevelRaycasting = () =>{
 
     const raycast = new PIXI.Graphics();
-    const points = (bedroom_segments=>{const a = [];global.bedroom_segments.forEach(seg=>a.push(seg.a,seg.b));return a;})(bedroom_segments);
-    const uniquePoints = (points=>{const set = {};return points.filter(p=>{const key = p.x+","+p.y;if(key in set){return false;}else{set[key]=true;return true;}});})(points);
+    const points = (bedroom_segments=>{
+        const a = [];
+        global.bedroom_segments.forEach(seg=>a.push(seg.a,seg.b));
+        return a;
+    })(bedroom_segments);
+    const uniquePoints = (points=>{
+        const set = {};
+        return points.filter(p=>{
+            const key = p.x+","+p.y;
+            if(key in set){
+                return false;
+            }
+            else{
+                set[key]=true;
+                return true;
+            }
+        });
+    })(points);
 
     global.app.ticker.add(delta => {
 

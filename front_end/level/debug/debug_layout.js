@@ -12,6 +12,7 @@ const spriteAnimations = require('../../visual_effects/sprite_animations.js');
 const rain = require('../../weather/rain.js');
 const cutsceneIntro = require('../../cutscene/cutscene_intro.js');
 const rat = require('../../animals/rat.js');
+const cutsceneUtils = require('../../cutscene/cutsceneUtils.js');
 
 
 global.collisionItems = new PIXI.Container();
@@ -116,6 +117,12 @@ module.exports.add_floor = () => {
     if (!loadParkPad.fired) {
       loadParkPad.fired = true;
       levelUtils.importParkData();
+      cutsceneUtils.teleport(1500, 1500);
+      enemy.enemy_frames()
+        .then(() => {
+          const levelPathData = levelUtils.importEnemyPathData();
+          enemy.enemy_path(levelPathData);
+        });
     }
   };
 
