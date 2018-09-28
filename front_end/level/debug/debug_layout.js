@@ -103,16 +103,27 @@ module.exports.add_floor = () => {
   const animationPad = createPad(-700, -100);
   animationPad.fired = false;
   animationPad.alpha = 0.6;
-  animationPad.action = () => {
-    if (!animationPad.fired) {
-      animationPad.fired = true;
-      spriteAnimations.load_flag();
-    }
-  };
+  animationPad.interactive = true;
+  animationPad.on('click', ()=>{
+    animationPad.fired = true;
+    levelUtils.importStreetApartmentData();
+    // cutsceneUtils.teleport(1500, 1500);
+  });
 
   const loadParkPad = createPad(-950, -100);
   loadParkPad.fired = false;
   loadParkPad.alpha = 0.4;
+  loadParkPad.interactive = true;
+  loadParkPad.on('click', ()=>{
+    loadParkPad.fired = true;
+    levelUtils.importParkData();
+    cutsceneUtils.teleport(1500, 1500);
+    enemy.enemy_frames()
+      .then(() => {
+        const levelPathData = levelUtils.importEnemyPathData();
+        enemy.enemy_path(levelPathData);
+      });
+  })
   loadParkPad.action = () => {
     if (!loadParkPad.fired) {
       loadParkPad.fired = true;

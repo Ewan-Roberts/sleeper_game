@@ -135,7 +135,7 @@ module.exports.mousePause = () => new Promise((resolve) => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":16,"pixi.js":239}],2:[function(require,module,exports){
+},{"../utils/spriteHelper.js":17,"pixi.js":240}],2:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const spriteHelper = require('../utils/spriteHelper.js');
@@ -197,7 +197,7 @@ module.exports.movePlayer = (start, finish) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":16,"pixi.js":239}],3:[function(require,module,exports){
+},{"../utils/spriteHelper.js":17,"pixi.js":240}],3:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const cutsceneUtil = require('./cutsceneUtils');
@@ -234,7 +234,7 @@ module.exports.start = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../player/player.js":13,"../visual_effects/filterUtils.js":17,"./cutsceneUtils":2,"pixi.js":239}],4:[function(require,module,exports){
+},{"../player/player.js":14,"../visual_effects/filterUtils.js":18,"./cutsceneUtils":2,"pixi.js":240}],4:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -272,7 +272,7 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 ];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":239}],5:[function(require,module,exports){
+},{"pixi.js":240}],5:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const spriteHelper = require('../utils/spriteHelper.js');
@@ -395,7 +395,7 @@ module.exports.projectileAttack = (target) => {
   global.viewport.addChild(enemy);
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialogUtil.js":4,"../level/level_utils":10,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper":19,"pixi.js":239}],6:[function(require,module,exports){
+},{"../dialog/dialogUtil.js":4,"../level/level_utils":10,"../utils/spriteHelper.js":17,"../weapons/bow/bowHelper":20,"pixi.js":240}],6:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -448,7 +448,7 @@ global.loader.load(() => {
 global.app.ticker.add(() => PIXI.tweenManager.update());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":9,"pixi-layers":107,"pixi-packer-parser":108,"pixi-tween":109,"pixi-viewport":122,"pixi.js":239,"socket.io-client":281}],7:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":9,"pixi-layers":108,"pixi-packer-parser":109,"pixi-tween":110,"pixi-viewport":123,"pixi.js":240,"socket.io-client":282}],7:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -979,7 +979,7 @@ module.exports.add_items = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":239}],9:[function(require,module,exports){
+},{"pixi.js":240}],9:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -1086,16 +1086,27 @@ module.exports.add_floor = () => {
   const animationPad = createPad(-700, -100);
   animationPad.fired = false;
   animationPad.alpha = 0.6;
-  animationPad.action = () => {
-    if (!animationPad.fired) {
-      animationPad.fired = true;
-      spriteAnimations.load_flag();
-    }
-  };
+  animationPad.interactive = true;
+  animationPad.on('click', ()=>{
+    animationPad.fired = true;
+    levelUtils.importStreetApartmentData();
+    // cutsceneUtils.teleport(1500, 1500);
+  });
 
   const loadParkPad = createPad(-950, -100);
   loadParkPad.fired = false;
   loadParkPad.alpha = 0.4;
+  loadParkPad.interactive = true;
+  loadParkPad.on('click', ()=>{
+    loadParkPad.fired = true;
+    levelUtils.importParkData();
+    cutsceneUtils.teleport(1500, 1500);
+    enemy.enemy_frames()
+      .then(() => {
+        const levelPathData = levelUtils.importEnemyPathData();
+        enemy.enemy_path(levelPathData);
+      });
+  })
   loadParkPad.action = () => {
     if (!loadParkPad.fired) {
       loadParkPad.fired = true;
@@ -1178,11 +1189,12 @@ module.exports.add_floor = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":1,"../../cutscene/cutsceneUtils.js":2,"../../cutscene/cutscene_intro.js":3,"../../dialog/dialogUtil.js":4,"../../enemies/enemy.js":5,"../../network/network_players.js":12,"../../player/player.js":13,"../../visual_effects/filterUtils.js":17,"../../visual_effects/sprite_animations.js":18,"../../weather/rain.js":20,"../level_utils.js":10,"./debug_items.js":8,"pixi.js":239}],10:[function(require,module,exports){
+},{"../../animals/rat.js":1,"../../cutscene/cutsceneUtils.js":2,"../../cutscene/cutscene_intro.js":3,"../../dialog/dialogUtil.js":4,"../../enemies/enemy.js":5,"../../network/network_players.js":13,"../../player/player.js":14,"../../visual_effects/filterUtils.js":18,"../../visual_effects/sprite_animations.js":19,"../../weather/rain.js":21,"../level_utils.js":10,"./debug_items.js":8,"pixi.js":240}],10:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const bedroomData = require('./bedroom/bedroom_data_4.json');
-const parkData = require('./park/park_4.json');
+const parkData = require('./park/park_5.json');
+const streetApartmentData = require('./street_apartment/street_apartment.json');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -1205,21 +1217,6 @@ module.exports.clearCollision = () => {
 //   );
 // };
 
-module.exports.importBedroomData = () => {
-  const flatBackground = PIXI.Sprite.fromFrame('flat_floor');
-  flatBackground.interactive = true;
-  flatBackground.zIndex = 1;
-  flatBackground.height = bedroomData.tileheight;
-  flatBackground.width = bedroomData.tilewidth;
-
-  global.collisionItems.zIndex = -1;
-
-  this.renderWall(bedroomData.tiles[1].objectgroup.objects);
-  this.hitAreas(bedroomData.tiles[2].objectgroup.objects);
-  global.viewport.addChild(flatBackground);
-
-  global.viewport.updateLayersOrder();
-};
 
 
 module.exports.renderWall = (wallArray) => {
@@ -1234,7 +1231,7 @@ module.exports.renderWall = (wallArray) => {
 };
 
 module.exports.importEnemyPathData = () => {
-  const importedParkData = parkData.tiles[2].objectgroup.objects[24].polyline;
+  const importedParkData = parkData.tiles[3].objectgroup.objects[10].polyline;
   return importedParkData;
 };
 
@@ -1246,6 +1243,43 @@ module.exports.createEnemyPathFrom = (levelData) => {
   for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y+1388);
 
   return path;
+};
+
+module.exports.importBedroomData = () => {
+  const flatBackground = PIXI.Sprite.fromFrame('flat_floor');
+  flatBackground.zIndex = 1;
+  flatBackground.height = bedroomData.tileheight;
+  flatBackground.width = bedroomData.tilewidth;
+
+  global.collisionItems.zIndex = -1;
+
+  this.renderWall(bedroomData.tiles[1].objectgroup.objects);
+  this.hitAreas(bedroomData.tiles[2].objectgroup.objects);
+  global.viewport.addChild(flatBackground);
+
+  global.viewport.updateLayersOrder();
+};
+
+module.exports.importStreetApartmentData = () => {
+
+  const offset = {
+    x: 1000,
+    y: 3000,
+    rotation: 0.5,
+  }
+
+  const background = PIXI.Sprite.fromFrame('street_apartment');
+  background.zIndex = 1;
+  background.height = streetApartmentData.tileheight;
+  background.width = streetApartmentData.tilewidth;
+  background.position.set(offset.x, offset.y)
+  background.rotation = offset.rotation;
+
+  global.collisionItems.zIndex = -1;
+
+  this.hitAreas(streetApartmentData.tiles[0].objectgroup.objects, offset.x, offset.y, offset.rotation);
+  global.viewport.addChild(background);
+  global.viewport.updateLayersOrder();
 };
 
 module.exports.importParkData = () => {
@@ -1261,9 +1295,18 @@ module.exports.importParkData = () => {
   parkTopground.width = parkData.tilewidth;
   // parkBackground.width = 10000
   // parkBackground.height = 6000
+  console.log(parkData);
 
-  for (let i = 0; i < parkData.tiles[2].objectgroup.objects.length; i += 1) {
-    this.hitAreas(parkData.tiles[2].objectgroup.objects);
+  this.hitAreas(parkData.tiles[3].objectgroup.objects);
+
+  for (let i = 0; i < parkData.tiles[4].objectgroup.objects.length; i += 1) {
+    this.eventPad(parkData.tiles[4].objectgroup.objects[i], ()=>{
+      if (!this.fired) {
+        console.log('event pad hit')
+        module.exports.importStreetApartmentData()
+        this.fired = true;
+      }
+    });
   }
 
   global.viewport.addChild(parkTopground, parkBackground);
@@ -1282,21 +1325,37 @@ module.exports.renderWall = (wallArray) => {
   });
 };
 
-module.exports.hitAreas = (wallArray) => {
+module.exports.hitAreas = (wallArray, x, y, rotation) => {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
-    wall.position.set(wallData.x, wallData.y);
+    wall.position.set(wallData.x + x, wallData.y + y);
     wall.width = wallData.width;
     wall.height = wallData.height;
+    wall.rotation = rotation;
     wall.alpha = 0.01;
 
     global.collisionItems.addChild(wall);
   });
 };
 
+module.exports.eventPad = (details, callback) => {
+  const pad = PIXI.Sprite.fromFrame('black_dot');
+
+  pad.position.set(details.x, details.y);
+  pad.width = details.width;
+  pad.height = details.height;
+  pad.alpha = details.alpha;
+  pad.action = callback;
+  pad.fired = false;
+  pad.alpha = 0.5;
+  console.log('hi')
+  console.log(details)
+  global.eventTriggers.addChild(pad);
+};
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./bedroom/bedroom_data_4.json":7,"./park/park_4.json":11,"pixi.js":239}],11:[function(require,module,exports){
+},{"./bedroom/bedroom_data_4.json":7,"./park/park_5.json":11,"./street_apartment/street_apartment.json":12,"pixi.js":240}],11:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -1309,227 +1368,11 @@ module.exports={ "columns":0,
  "spacing":0,
  "tilecount":2,
  "tileheight":3000,
- "tileproperties":
-    {
-     "0":
-        {
-         "ting":""
-        }
-    },
- "tilepropertytypes":
-    {
-     "0":
-        {
-         "ting":"string"
-        }
-    },
  "tiles":
     {
-     "0":
+     "3":
         {
-         "image":"..\/..\/..\/public\/images\/flat_floor_medium_6.png",
-         "objectgroup":
-            {
-             "draworder":"index",
-             "name":"",
-             "objects":[
-                    {
-                     "height":0,
-                     "id":1,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":65,
-                     "y":85
-                    }, 
-                    {
-                     "height":102,
-                     "id":2,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":43,
-                     "x":65,
-                     "y":81
-                    }, 
-                    {
-                     "height":120,
-                     "id":3,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":201,
-                     "x":-55,
-                     "y":120
-                    }, 
-                    {
-                     "height":351,
-                     "id":4,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":141,
-                     "x":372,
-                     "y":167
-                    }, 
-                    {
-                     "height":564,
-                     "id":5,
-                     "name":"",
-                     "properties":
-                        {
-                         "wvvw":"..\/..\/..\/..\/..\/..\/Desktop\/w"
-                        },
-                     "propertytypes":
-                        {
-                         "wvvw":"file"
-                        },
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":272,
-                     "x":964,
-                     "y":380
-                    }, 
-                    {
-                     "height":476,
-                     "id":6,
-                     "name":"",
-                     "properties":
-                        {
-                         "rg":""
-                        },
-                     "propertytypes":
-                        {
-                         "rg":"file"
-                        },
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":648,
-                     "x":580,
-                     "y":800
-                    }, 
-                    {
-                     "ellipse":true,
-                     "height":1000,
-                     "id":7,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":620,
-                     "x":2084,
-                     "y":1628
-                    }, 
-                    {
-                     "ellipse":true,
-                     "height":108,
-                     "id":8,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":212,
-                     "x":1948,
-                     "y":1880
-                    }, 
-                    {
-                     "ellipse":true,
-                     "height":92,
-                     "id":9,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":596,
-                     "x":2232,
-                     "y":1396
-                    }, 
-                    {
-                     "ellipse":true,
-                     "height":0,
-                     "id":10,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":2436,
-                     "y":2012
-                    }, 
-                    {
-                     "ellipse":true,
-                     "height":0,
-                     "id":11,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":2024,
-                     "y":1936
-                    }, 
-                    {
-                     "ellipse":true,
-                     "height":0,
-                     "id":12,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":2668,
-                     "y":2096
-                    }, 
-                    {
-                     "height":1208,
-                     "id":13,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":224,
-                     "x":1852,
-                     "y":1256
-                    }, 
-                    {
-                     "height":0,
-                     "id":14,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":0,
-                     "x":1228,
-                     "y":1048
-                    }, 
-                    {
-                     "height":456,
-                     "id":15,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":268,
-                     "x":868,
-                     "y":1088
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
-        },
-     "2":
-        {
-         "image":"..\/..\/..\/assets\/park\/park.jpg",
+         "image":"..\/..\/..\/assets\/park\/park_bottom.jpg",
          "imageheight":3000,
          "imagewidth":5000,
          "objectgroup":
@@ -1538,272 +1381,118 @@ module.exports={ "columns":0,
              "name":"",
              "objects":[
                     {
-                     "height":1293.05011342545,
+                     "height":1311.76470588235,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1141.17647058824,
+                     "x":2.94117647058824,
+                     "y":-2.94117647058829
+                    }, 
+                    {
+                     "height":973.529411764706,
+                     "id":2,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1038.23529411765,
+                     "x":1314.70588235294,
+                     "y":2.94117647058824
+                    }, 
+                    {
+                     "height":514.705882352941,
                      "id":3,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":1142.50360899154,
-                     "x":2.06228088265622,
-                     "y":-1.81315735203134
+                     "width":435.294117647059,
+                     "x":2361.76470588235,
+                     "y":-5.88235294117646
                     }, 
                     {
-                     "height":973.396576613735,
+                     "height":641.176470588235,
                      "id":4,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":1045.5764075067,
-                     "x":1315.73520313467,
-                     "y":0
+                     "width":1552.94117647059,
+                     "x":2976.47058823529,
+                     "y":-14.7058823529412
                     }, 
                     {
-                     "height":499.071973602805,
+                     "height":394.117647058823,
                      "id":5,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":435.141266240462,
-                     "x":2365.43617240668,
-                     "y":4.12456176531242
+                     "width":155.882352941177,
+                     "x":4355.88235294118,
+                     "y":617.647058823529
                     }, 
                     {
-                     "height":703.23778098577,
+                     "height":2014.70588235294,
                      "id":6,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":92.8026397195299,
-                     "x":2971.74675190761,
-                     "y":-6.18684264796865
+                     "width":376.470588235294,
+                     "x":4135.29411764706,
+                     "y":1005.88235294118
                     }, 
                     {
-                     "height":136.11053825531,
+                     "height":55.8823529411764,
                      "id":7,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":1303.36151783873,
-                     "x":3062.48711074448,
-                     "y":490.632501546711
+                     "width":755.882352941176,
+                     "x":2623.52941176471,
+                     "y":1300
                     }, 
                     {
-                     "height":367.085997112807,
+                     "height":864.705882352941,
                      "id":8,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":117.550010311405,
-                     "x":4242.11177562384,
-                     "y":631.057950092803
+                     "width":141.176470588235,
+                     "x":1732.35294117647,
+                     "y":1950
                     }, 
                     {
-                     "height":1998.35017529387,
+                     "height":182.35294117647,
                      "id":9,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":169.10703237781,
-                     "x":4087.44070942462,
-                     "y":1002.26850897092
+                     "width":2279.41176470588,
+                     "x":1664.70588235294,
+                     "y":2820.58823529412
                     }, 
                     {
-                     "height":319.653536811714,
+                     "height":1408.82352941176,
                      "id":10,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":131.985976489998,
-                     "x":3829.6555990926,
-                     "y":1196.12291194061
-                    }, 
-                    {
-                     "height":626.93338832749,
-                     "id":12,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":30.9342132398433,
-                     "x":3701.79418436791,
-                     "y":1645.70014435966
-                    }, 
-                    {
-                     "height":332.027222107651,
-                     "id":13,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":43.3078985357806,
-                     "x":3695.60734171994,
-                     "y":2468.55021653949
-                    }, 
-                    {
-                     "height":216.603485672779,
-                     "id":14,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":2249.94844297793,
-                     "x":1668.38523406888,
-                     "y":2784.01519859202
-                    }, 
-                    {
-                     "height":847.597442771705,
-                     "id":15,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":51.5570220664054,
-                     "x":1746.75190760982,
-                     "y":1957.10455764075
-                    }, 
-                    {
-                     "height":98.9894823674983,
-                     "id":16,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":1422.97380903279,
-                     "x":0,
-                     "y":1592.0808414106
-                    }, 
-                    {
-                     "height":1307.48607960404,
-                     "id":17,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":92.8026397195299,
-                     "x":1341.98432666529,
-                     "y":1697.25716642607
-                    }, 
-                    {
-                     "height":166.785459729152,
-                     "id":18,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":41.3399857448326,
-                     "x":2104.06272273699,
-                     "y":2354.95367070563
-                    }, 
-                    {
-                     "height":52.7441197434068,
-                     "id":19,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":112.615823235923,
-                     "x":2148.25374198147,
-                     "y":2468.99501069138
-                    }, 
-                    {
-                     "height":59.8717034925162,
-                     "id":20,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":84.1054882394869,
-                     "x":2875.26728439059,
-                     "y":1425.51674982181
-                    }, 
-                    {
-                     "height":76.9779044903778,
-                     "id":21,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":78.4034212401998,
-                     "x":3004.98930862438,
-                     "y":1429.79330007128
-                    }, 
-                    {
-                     "height":254.501800720288,
-                     "id":22,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":30.0120048019207,
-                     "x":3166.86674669868,
-                     "y":2375.75030012005
-                    }, 
-                    {
-                     "height":43.2172869147657,
-                     "id":23,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":207.683073229292,
-                     "x":3196.8787515006,
-                     "y":2587.03481392557
-                    }, 
-                    {
-                     "height":213.685474189676,
-                     "id":24,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":26.4105642256905,
-                     "x":3378.1512605042,
-                     "y":2373.34933973589
-                    }, 
-                    {
-                     "height":60.2968460111317,
-                     "id":27,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":1037.41496598639,
-                     "x":2622.13976499691,
-                     "y":1283.8719851577
-                    }, 
-                    {
-                     "height":222.336460609176,
-                     "id":28,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":69.3998200745405,
-                     "x":2060.14651073127,
-                     "y":1414.98522040869
-                    }, 
-                    {
-                     "height":88.677547873024,
-                     "id":29,
-                     "name":"",
-                     "rotation":0,
-                     "type":"",
-                     "visible":true,
-                     "width":235.188279141499,
-                     "x":1772.26577560725,
-                     "y":1709.29186479887
+                     "width":1461.76470588235,
+                     "x":-2.94117647058824,
+                     "y":1591.17647058824
                     }, 
                     {
                      "height":0,
-                     "id":30,
+                     "id":11,
                      "name":"",
                      "polyline":[
                             {
@@ -1811,891 +1500,219 @@ module.exports={ "columns":0,
                              "y":0
                             }, 
                             {
-                             "x":43.9266615737204,
-                             "y":-5.72956455309395
+                             "x":128.296507483963,
+                             "y":-3.56379187455445
                             }, 
                             {
-                             "x":93.5828877005348,
-                             "y":-13.3689839572194
+                             "x":146.115466856736,
+                             "y":-3.56379187455445
                             }, 
                             {
-                             "x":148.968678380443,
-                             "y":-17.1886936592819
+                             "x":516.749821810406,
+                             "y":-17.8189593727725
                             }, 
                             {
-                             "x":211.993888464477,
-                             "y":-15.2788388082506
+                             "x":705.630791161796,
+                             "y":-17.8189593727725
                             }, 
                             {
-                             "x":265.469824293354,
-                             "y":-15.2788388082506
+                             "x":926.585887384177,
+                             "y":-17.8189593727725
                             }, 
                             {
-                             "x":339.954163483575,
-                             "y":-1.90985485103147
+                             "x":1108.33927298646,
+                             "y":-96.2223806129721
                             }, 
                             {
-                             "x":378.151260504202,
-                             "y":11.4591291061879
+                             "x":1154.66856735567,
+                             "y":-106.913756236636
                             }, 
                             {
-                             "x":452.635599694423,
-                             "y":17.1886936592819
+                             "x":1375.62366357805,
+                             "y":-324.305060584462
                             }, 
                             {
-                             "x":508.021390374332,
-                             "y":26.7379679144385
+                             "x":2163.2216678546,
+                             "y":-395.580898075552
                             }, 
                             {
-                             "x":586.325439266616,
-                             "y":26.7379679144385
+                             "x":2615.82323592302,
+                             "y":-399.144689950107
                             }, 
                             {
-                             "x":664.6294881589,
-                             "y":34.3773873185637
+                             "x":2633.64219529579,
+                             "y":-449.03777619387
                             }, 
                             {
-                             "x":750.57295645531,
-                             "y":43.9266615737204
+                             "x":2851.03349964362,
+                             "y":-491.803278688525
                             }, 
                             {
-                             "x":857.524828113063,
-                             "y":45.8365164247516
+                             "x":3492.51603706344,
+                             "y":-538.132573057733
                             }, 
                             {
-                             "x":935.828877005348,
-                             "y":47.7463712757831
+                             "x":3738.4176764077,
+                             "y":-327.868852459016
                             }, 
                             {
-                             "x":979.755538579068,
-                             "y":45.8365164247516
+                             "x":3752.67284390592,
+                             "y":-167.498218104063
                             }, 
                             {
-                             "x":1029.41176470588,
-                             "y":38.1970970206264
+                             "x":3756.23663578047,
+                             "y":185.317177476835
                             }, 
                             {
-                             "x":1073.3384262796,
-                             "y":24.828113063407
+                             "x":3802.56593014968,
+                             "y":862.437633642195
                             }, 
                             {
-                             "x":1092.43697478992,
-                             "y":13.3689839572191
+                             "x":3688.52459016393,
+                             "y":901.639344262295
                             }, 
                             {
-                             "x":1111.53552330023,
-                             "y":-9.54927425515666
+                             "x":3168.21097647897,
+                             "y":637.91874554526
                             }, 
                             {
-                             "x":1136.36363636364,
-                             "y":-51.5660809778458
+                             "x":2658.58873841768,
+                             "y":345.687811831789
                             }, 
                             {
-                             "x":1170.7410236822,
-                             "y":-72.5744843391903
+                             "x":2259.44404846757,
+                             "y":498.930862437634
                             }, 
                             {
-                             "x":1189.83957219251,
-                             "y":-84.0336134453783
+                             "x":2056.30791161796,
+                             "y":477.548111190307
                             }, 
                             {
-                             "x":1201.2987012987,
-                             "y":-106.951871657754
+                             "x":1977.90449037776,
+                             "y":898.075552387741
                             }, 
                             {
-                             "x":1208.93812070283,
-                             "y":-143.239113827349
+                             "x":2284.39059158945,
+                             "y":1186.74269422666
                             }, 
                             {
-                             "x":1208.93812070283,
-                             "y":-152.788388082506
+                             "x":2647.89736279401,
+                             "y":1122.59444048468
                             }, 
                             {
-                             "x":1212.75783040489,
-                             "y":-183.346065699007
+                             "x":2637.20598717035,
+                             "y":716.32216678546
                             }, 
                             {
-                             "x":1212.75783040489,
-                             "y":-196.715049656226
+                             "x":2412.68709907341,
+                             "y":416.96364932288
                             }, 
                             {
-                             "x":1220.39724980901,
-                             "y":-225.362872421696
+                             "x":2412.68709907341,
+                             "y":281.539558089808
                             }, 
                             {
-                             "x":1237.5859434683,
-                             "y":-259.74025974026
+                             "x":2209.55096222381,
+                             "y":-210.263720598717
                             }, 
                             {
-                             "x":1264.32391138274,
-                             "y":-275.01909854851
+                             "x":1646.47184604419,
+                             "y":-142.551674982181
                             }, 
                             {
-                             "x":1302.52100840336,
-                             "y":-297.937356760886
+                             "x":1489.66500356379,
+                             "y":24.9465431218819
                             }, 
                             {
-                             "x":1369.36592818946,
-                             "y":-297.937356760886
+                             "x":263.720598717035,
+                             "y":46.329294369209
                             }, 
                             {
-                             "x":1438.12070282659,
-                             "y":-292.207792207792
+                             "x":28.5103349964362,
+                             "y":32.0741268709908
                             }, 
                             {
-                             "x":1482.04736440031,
-                             "y":-257.830404889228
-                            }, 
-                            {
-                             "x":1535.52330022918,
-                             "y":-250.190985485103
-                            }, 
-                            {
-                             "x":1581.35981665393,
-                             "y":-240.641711229947
-                            }, 
-                            {
-                             "x":1665.39343009931,
-                             "y":-254.010695187166
-                            }, 
-                            {
-                             "x":1736.05805958747,
-                             "y":-276.928953399542
-                            }, 
-                            {
-                             "x":2188.69365928189,
-                             "y":-380.061115355233
-                            }, 
-                            {
-                             "x":2230.71046600458,
-                             "y":-381.970970206264
-                            }, 
-                            {
-                             "x":2295.64553093965,
-                             "y":-385.790679908327
-                            }, 
-                            {
-                             "x":2349.12146676853,
-                             "y":-374.331550802139
-                            }, 
-                            {
-                             "x":2370.12987012987,
-                             "y":-374.331550802139
-                            }, 
-                            {
-                             "x":2381.58899923606,
-                             "y":-380.061115355233
-                            }, 
-                            {
-                             "x":2404.50725744843,
-                             "y":-393.430099312452
-                            }, 
-                            {
-                             "x":2404.50725744843,
-                             "y":-414.438502673797
-                            }, 
-                            {
-                             "x":2410.23682200153,
-                             "y":-462.18487394958
-                            }, 
-                            {
-                             "x":2431.24522536287,
-                             "y":-536.669213139802
-                            }, 
-                            {
-                             "x":2457.98319327731,
-                             "y":-586.325439266616
-                            }, 
-                            {
-                             "x":2505.72956455309,
-                             "y":-634.071810542399
-                            }, 
-                            {
-                             "x":2591.6730328495,
-                             "y":-674.178762414057
-                            }, 
-                            {
-                             "x":2643.23911382735,
-                             "y":-704.736440030558
-                            }, 
-                            {
-                             "x":2731.09243697479,
-                             "y":-742.933537051184
-                            }, 
-                            {
-                             "x":2761.65011459129,
-                             "y":-802.139037433155
-                            }, 
-                            {
-                             "x":2799.84721161192,
-                             "y":-844.155844155844
-                            }, 
-                            {
-                             "x":2841.86401833461,
-                             "y":-872.803666921314
-                            }, 
-                            {
-                             "x":2868.60198624905,
-                             "y":-874.713521772345
-                            }, 
-                            {
-                             "x":2897.24980901451,
-                             "y":-868.983957219251
-                            }, 
-                            {
-                             "x":2929.71734148205,
-                             "y":-840.336134453782
-                            }, 
-                            {
-                             "x":2935.44690603514,
-                             "y":-805.958747135218
-                            }, 
-                            {
-                             "x":2941.17647058824,
-                             "y":-741.023682200153
-                            }, 
-                            {
-                             "x":2941.17647058824,
-                             "y":-695.187165775401
-                            }, 
-                            {
-                             "x":2941.17647058824,
-                             "y":-645.530939648587
-                            }, 
-                            {
-                             "x":2966.00458365164,
-                             "y":-572.956455309397
-                            }, 
-                            {
-                             "x":2998.47211611918,
-                             "y":-532.849503437739
-                            }, 
-                            {
-                             "x":3004.20168067227,
-                             "y":-517.570664629488
-                            }, 
-                            {
-                             "x":3004.20168067227,
-                             "y":-508.021390374332
-                            }, 
-                            {
-                             "x":3011.84110007639,
-                             "y":-473.644003055768
-                            }, 
-                            {
-                             "x":3067.2268907563,
-                             "y":-225.362872421696
-                            }, 
-                            {
-                             "x":3072.9564553094,
-                             "y":-206.264323911383
-                            }, 
-                            {
-                             "x":3069.13674560733,
-                             "y":-156.608097784568
-                            }, 
-                            {
-                             "x":3095.87471352177,
-                             "y":-133.689839572193
-                            }, 
-                            {
-                             "x":3139.80137509549,
-                             "y":-139.419404125287
-                            }, 
-                            {
-                             "x":3172.26890756303,
-                             "y":-164.247517188694
-                            }, 
-                            {
-                             "x":3239.11382734912,
-                             "y":-194.805194805195
-                            }, 
-                            {
-                             "x":3330.78686019863,
-                             "y":-194.805194805195
-                            }, 
-                            {
-                             "x":3449.19786096257,
-                             "y":-152.788388082506
-                            }, 
-                            {
-                             "x":3535.14132925898,
-                             "y":-154.698242933537
-                            }, 
-                            {
-                             "x":3680.29029793736,
-                             "y":-183.346065699007
-                            }, 
-                            {
-                             "x":3720.39724980901,
-                             "y":-169.977081741788
-                            }, 
-                            {
-                             "x":3771.96333078686,
-                             "y":-124.140565317036
-                            }, 
-                            {
-                             "x":3779.60275019099,
-                             "y":-63.0252100840337
-                            }, 
-                            {
-                             "x":3783.42245989305,
-                             "y":-17.1886936592819
-                            }, 
-                            {
-                             "x":3764.32391138274,
-                             "y":68.7547746371274
-                            }, 
-                            {
-                             "x":3743.31550802139,
-                             "y":95.4927425515659
-                            }, 
-                            {
-                             "x":3743.31550802139,
-                             "y":143.239113827349
-                            }, 
-                            {
-                             "x":3764.32391138274,
-                             "y":160.427807486631
-                            }, 
-                            {
-                             "x":3802.52100840336,
-                             "y":171.886936592819
-                            }, 
-                            {
-                             "x":3823.52941176471,
-                             "y":166.157372039725
-                            }, 
-                            {
-                             "x":3834.98854087089,
-                             "y":166.157372039725
-                            }, 
-                            {
-                             "x":3840.71810542399,
-                             "y":171.886936592819
-                            }, 
-                            {
-                             "x":3844.53781512605,
-                             "y":190.985485103132
-                            }, 
-                            {
-                             "x":3840.71810542399,
-                             "y":215.813598166539
-                            }, 
-                            {
-                             "x":3806.34071810542,
-                             "y":242.551566080978
-                            }, 
-                            {
-                             "x":3770.05347593583,
-                             "y":240.641711229946
-                            }, 
-                            {
-                             "x":3726.12681436211,
-                             "y":231.09243697479
-                            }, 
-                            {
-                             "x":3653.55233002292,
-                             "y":194.805194805195
-                            }, 
-                            {
-                             "x":3577.15813598167,
-                             "y":169.977081741788
-                            }, 
-                            {
-                             "x":3508.40336134454,
-                             "y":133.689839572193
-                            }, 
-                            {
-                             "x":3132.16195569137,
-                             "y":34.3773873185637
-                            }, 
-                            {
-                             "x":3109.24369747899,
-                             "y":30.557677616501
-                            }, 
-                            {
-                             "x":3090.14514896868,
-                             "y":26.7379679144385
-                            }, 
-                            {
-                             "x":3034.75935828877,
-                             "y":7.63941940412519
-                            }, 
-                            {
-                             "x":3000.38197097021,
-                             "y":7.63941940412519
-                            }, 
-                            {
-                             "x":2958.36516424752,
-                             "y":7.63941940412519
-                            }, 
-                            {
-                             "x":2918.25821237586,
-                             "y":3.81970970206248
-                            }, 
-                            {
-                             "x":2878.1512605042,
-                             "y":-3.81970970206271
-                            }, 
-                            {
-                             "x":2834.22459893048,
-                             "y":-1.90985485103147
-                            }, 
-                            {
-                             "x":2740.64171122995,
-                             "y":28.6478227654698
-                            }, 
-                            {
-                             "x":2654.69824293354,
-                             "y":59.205500381971
-                            }, 
-                            {
-                             "x":2587.85332314744,
-                             "y":110.771581359817
-                            }, 
-                            {
-                             "x":2530.5576776165,
-                             "y":185.255920550038
-                            }, 
-                            {
-                             "x":2440.79449961803,
-                             "y":349.503437738732
-                            }, 
-                            {
-                             "x":2328.11306340718,
-                             "y":550.038197097021
-                            }, 
-                            {
-                             "x":2282.27654698243,
-                             "y":677.998472116119
-                            }, 
-                            {
-                             "x":2266.99770817418,
-                             "y":689.457601222307
-                            }, 
-                            {
-                             "x":2234.53017570665,
-                             "y":706.646294881589
-                            }, 
-                            {
-                             "x":2219.2513368984,
-                             "y":733.384262796027
-                            }, 
-                            {
-                             "x":2213.5217723453,
-                             "y":756.302521008404
-                            }, 
-                            {
-                             "x":2202.06264323911,
-                             "y":769.671504965622
-                            }, 
-                            {
-                             "x":2186.78380443086,
-                             "y":763.941940412529
-                            }, 
-                            {
-                             "x":2173.41482047364,
-                             "y":756.302521008404
-                            }, 
-                            {
-                             "x":2148.58670741024,
-                             "y":742.933537051184
-                            }, 
-                            {
-                             "x":2118.02902979374,
-                             "y":750.57295645531
-                            }, 
-                            {
-                             "x":2089.38120702827,
-                             "y":769.671504965622
-                            }, 
-                            {
-                             "x":2089.38120702827,
-                             "y":792.589763177998
-                            }, 
-                            {
-                             "x":2095.11077158136,
-                             "y":821.237585943469
-                            }, 
-                            {
-                             "x":2119.93888464477,
-                             "y":840.336134453781
-                            }, 
-                            {
-                             "x":2156.22612681436,
-                             "y":859.434682964095
-                            }, 
-                            {
-                             "x":2173.41482047364,
-                             "y":878.533231474408
-                            }, 
-                            {
-                             "x":2200.15278838808,
-                             "y":905.271199388846
-                            }, 
-                            {
-                             "x":2221.16119174943,
-                             "y":926.279602750191
-                            }, 
-                            {
-                             "x":2247.89915966387,
-                             "y":932.009167303285
-                            }, 
-                            {
-                             "x":2255.53857906799,
-                             "y":954.927425515661
-                            }, 
-                            {
-                             "x":2272.72727272727,
-                             "y":970.206264323911
-                            }, 
-                            {
-                             "x":2291.82582123759,
-                             "y":974.025974025974
-                            }, 
-                            {
-                             "x":2305.19480519481,
-                             "y":972.116119174943
-                            }, 
-                            {
-                             "x":2307.10466004584,
-                             "y":949.197860962567
-                            }, 
-                            {
-                             "x":2314.74407944996,
-                             "y":924.36974789916
-                            }, 
-                            {
-                             "x":2326.20320855615,
-                             "y":907.181054239878
-                            }, 
-                            {
-                             "x":2341.4820473644,
-                             "y":903.361344537815
-                            }, 
-                            {
-                             "x":2364.40030557678,
-                             "y":903.361344537815
-                            }, 
-                            {
-                             "x":2381.58899923606,
-                             "y":907.181054239878
-                            }, 
-                            {
-                             "x":2394.95798319328,
-                             "y":924.36974789916
-                            }, 
-                            {
-                             "x":2398.77769289534,
-                             "y":935.828877005348
-                            }, 
-                            {
-                             "x":2398.77769289534,
-                             "y":954.927425515661
-                            }, 
-                            {
-                             "x":2396.86783804431,
-                             "y":974.025974025974
-                            }, 
-                            {
-                             "x":2379.67914438503,
-                             "y":985.485103132162
-                            }, 
-                            {
-                             "x":2347.21161191749,
-                             "y":991.214667685256
-                            }, 
-                            {
-                             "x":2318.56378915202,
-                             "y":991.214667685256
-                            }, 
-                            {
-                             "x":2289.91596638655,
-                             "y":995.034377387319
-                            }, 
-                            {
-                             "x":2251.71886936593,
-                             "y":1006.49350649351
-                            }, 
-                            {
-                             "x":2242.16959511077,
-                             "y":1027.50190985485
-                            }, 
-                            {
-                             "x":2226.89075630252,
-                             "y":1052.33002291826
-                            }, 
-                            {
-                             "x":2211.61191749427,
-                             "y":1054.23987776929
-                            }, 
-                            {
-                             "x":2196.33307868602,
-                             "y":1054.23987776929
-                            }, 
-                            {
-                             "x":2186.78380443086,
-                             "y":1044.69060351413
-                            }, 
-                            {
-                             "x":2186.78380443086,
-                             "y":1035.14132925898
-                            }, 
-                            {
-                             "x":2186.78380443086,
-                             "y":1019.86249045073
-                            }, 
-                            {
-                             "x":2194.42322383499,
-                             "y":1012.2230710466
-                            }, 
-                            {
-                             "x":2205.88235294118,
-                             "y":1012.2230710466
-                            }, 
-                            {
-                             "x":2226.89075630252,
-                             "y":1016.04278074866
-                            }, 
-                            {
-                             "x":2377.769289534,
-                             "y":1040.87089381207
-                            }, 
-                            {
-                             "x":2433.1550802139,
-                             "y":1054.23987776929
-                            }, 
-                            {
-                             "x":2475.17188693659,
-                             "y":1054.23987776929
-                            }, 
-                            {
-                             "x":2500,
-                             "y":1056.14973262032
-                            }, 
-                            {
-                             "x":2534.37738731856,
-                             "y":1075.24828113063
-                            }, 
-                            {
-                             "x":2551.56608097785,
-                             "y":1075.24828113063
-                            }, 
-                            {
-                             "x":2597.4025974026,
-                             "y":1082.88770053476
-                            }, 
-                            {
-                             "x":2645.14896867838,
-                             "y":1086.70741023682
-                            }, 
-                            {
-                             "x":2698.62490450726,
-                             "y":1086.70741023682
-                            }, 
-                            {
-                             "x":2733.00229182582,
-                             "y":1059.96944232238
-                            }, 
-                            {
-                             "x":2780.7486631016,
-                             "y":1025.59205500382
-                            }, 
-                            {
-                             "x":2792.20779220779,
-                             "y":1004.58365164248
-                            }, 
-                            {
-                             "x":2836.13445378151,
-                             "y":964.476699770817
-                            }, 
-                            {
-                             "x":2876.24140565317,
-                             "y":926.279602750191
-                            }, 
-                            {
-                             "x":2935.44690603514,
-                             "y":878.533231474408
-                            }, 
-                            {
-                             "x":2979.37356760886,
-                             "y":868.983957219252
-                            }, 
-                            {
-                             "x":3032.84950343774,
-                             "y":865.164247517189
-                            }, 
-                            {
-                             "x":3088.23529411765,
-                             "y":859.434682964095
-                            }, 
-                            {
-                             "x":3158.89992360581,
-                             "y":826.967150496562
-                            }, 
-                            {
-                             "x":3216.19556913675,
-                             "y":826.967150496562
-                            }, 
-                            {
-                             "x":3263.94194041253,
-                             "y":855.614973262032
-                            }, 
-                            {
-                             "x":3263.94194041253,
-                             "y":907.181054239878
-                            }, 
-                            {
-                             "x":3254.39266615737,
-                             "y":989.304812834225
-                            }, 
-                            {
-                             "x":3244.84339190222,
-                             "y":1037.05118411001
-                            }, 
-                            {
-                             "x":3242.93353705118,
-                             "y":1088.61726508785
-                            }, 
-                            {
-                             "x":3246.75324675325,
-                             "y":1126.81436210848
-                            }, 
-                            {
-                             "x":3281.13063407181,
-                             "y":1142.09320091673
-                            }, 
-                            {
-                             "x":3319.32773109244,
-                             "y":1140.1833460657
-                            }, 
-                            {
-                             "x":3340.33613445378,
-                             "y":1113.44537815126
-                            }, 
-                            {
-                             "x":3340.33613445378,
-                             "y":1084.79755538579
-                            }, 
-                            {
-                             "x":3340.33613445378,
-                             "y":1056.14973262032
-                            }, 
-                            {
-                             "x":3340.33613445378,
-                             "y":1046.60045836516
-                            }, 
-                            {
-                             "x":3340.33613445378,
-                             "y":1010.31321619557
-                            }, 
-                            {
-                             "x":3340.33613445378,
-                             "y":926.279602750191
-                            }, 
-                            {
-                             "x":3355.61497326203,
-                             "y":891.902215431627
-                            }, 
-                            {
-                             "x":3395.72192513369,
-                             "y":867.07410236822
-                            }, 
-                            {
-                             "x":3395.72192513369,
-                             "y":838.42627960275
-                            }, 
-                            {
-                             "x":3378.53323147441,
-                             "y":805.958747135218
-                            }, 
-                            {
-                             "x":3265.85179526356,
-                             "y":767.761650114591
-                            }, 
-                            {
-                             "x":2954.54545454545,
-                             "y":685.637891520244
-                            }, 
-                            {
-                             "x":2626.05042016807,
-                             "y":536.669213139801
-                            }, 
-                            {
-                             "x":2478.99159663866,
-                             "y":462.18487394958
-                            }, 
-                            {
-                             "x":2007.25744843392,
-                             "y":282.658517952636
-                            }, 
-                            {
-                             "x":1822.00152788388,
-                             "y":244.461420932009
-                            }, 
-                            {
-                             "x":1571.81054239878,
-                             "y":227.272727272727
-                            }, 
-                            {
-                             "x":1510.69518716578,
-                             "y":231.09243697479
-                            }, 
-                            {
-                             "x":1482.04736440031,
-                             "y":221.543162719633
-                            }, 
-                            {
-                             "x":1468.67838044309,
-                             "y":202.44461420932
-                            }, 
-                            {
-                             "x":1428.57142857143,
-                             "y":160.427807486631
-                            }, 
-                            {
-                             "x":1354.08708938121,
-                             "y":156.608097784568
-                            }, 
-                            {
-                             "x":1165.01145912911,
-                             "y":150.878533231474
-                            }, 
-                            {
-                             "x":907.181054239878,
-                             "y":166.157372039725
-                            }, 
-                            {
-                             "x":439.266615737204,
-                             "y":169.977081741788
-                            }, 
-                            {
-                             "x":124.140565317036,
-                             "y":173.79679144385
-                            }, 
-                            {
-                             "x":122.230710466005,
-                             "y":171.886936592819
-                            }, 
-                            {
-                             "x":45.8365164247517,
-                             "y":152.788388082506
-                            }, 
-                            {
-                             "x":3.81970970206264,
-                             "y":82.1237585943468
-                            }, 
-                            {
-                             "x":1.90985485103132,
-                             "y":3.81970970206248
+                             "x":0,
+                             "y":0
                             }],
                      "rotation":0,
                      "type":"",
                      "visible":true,
                      "width":0,
-                     "x":0,
-                     "y":1388.46447669977
+                     "x":7.12758374910905,
+                     "y":1457.5908766928
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        },
+     "4":
+        {
+         "image":"..\/..\/..\/assets\/park\/park_bottom.jpg",
+         "imageheight":3000,
+         "imagewidth":5000,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":287.5,
+                     "id":2,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":107.142857142857,
+                     "x":814.285714285714,
+                     "y":1308.92857142857
+                    }, 
+                    {
+                     "height":110.714285714286,
+                     "id":3,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":330.357142857143,
+                     "x":1430.35714285714,
+                     "y":2035.71428571429
+                    }, 
+                    {
+                     "height":76.7857142857142,
+                     "id":4,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":173.214285714286,
+                     "x":1142.85714285714,
+                     "y":866.071428571429
+                    }, 
+                    {
+                     "height":92.8571428571428,
+                     "id":5,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":167.857142857143,
+                     "x":2805.35714285714,
+                     "y":414.285714285714
+                    }, 
+                    {
+                     "height":182.142857142857,
+                     "id":6,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":358.928571428572,
+                     "x":3733.92857142857,
+                     "y":2439.28571428571
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -2709,6 +1726,119 @@ module.exports={ "columns":0,
  "type":"tileset"
 }
 },{}],12:[function(require,module,exports){
+module.exports={ "columns":0,
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
+ "margin":0,
+ "name":"street_apartment",
+ "spacing":0,
+ "tilecount":1,
+ "tileheight":2000,
+ "tiles":
+    {
+     "0":
+        {
+         "image":"..\/..\/..\/assets\/level\/apartment_street\/street_apartment.jpg",
+         "imageheight":2000,
+         "imagewidth":6000,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":391.304347826087,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1404.34782608696,
+                     "x":-4.3478260869565,
+                     "y":734.782608695652
+                    }, 
+                    {
+                     "height":395.652173913043,
+                     "id":2,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":4595.65217391304,
+                     "x":1404.34782608696,
+                     "y":608.695652173913
+                    }, 
+                    {
+                     "height":221.739130434783,
+                     "id":3,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1965.21739130435,
+                     "x":-8.69565217391304,
+                     "y":1704.34782608696
+                    }, 
+                    {
+                     "height":247.826086956522,
+                     "id":4,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":478.260869565217,
+                     "x":1221.73913043478,
+                     "y":1495.65217391304
+                    }, 
+                    {
+                     "height":213.04347826087,
+                     "id":5,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":143.478260869565,
+                     "x":1817.39130434783,
+                     "y":1556.52173913043
+                    }, 
+                    {
+                     "height":295.652173913043,
+                     "id":6,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":2073.91304347826,
+                     "x":2430.4347826087,
+                     "y":1630.4347826087
+                    }, 
+                    {
+                     "height":147.826086956522,
+                     "id":7,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":1495.65217391304,
+                     "x":4517.39130434783,
+                     "y":1808.69565217391
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }
+    },
+ "tilewidth":6000,
+ "type":"tileset"
+}
+},{}],13:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
@@ -2726,7 +1856,7 @@ module.exports.load_network_sprite = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":239}],13:[function(require,module,exports){
+},{"pixi.js":240}],14:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 // const Intersects = require('intersects');
@@ -2966,7 +2096,7 @@ module.exports.remove_controls = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/documentHelper.js":14,"../utils/doorHelper.js":15,"../utils/spriteHelper.js":16,"../weapons/bow/bowHelper.js":19,"pixi.js":239}],14:[function(require,module,exports){
+},{"../utils/documentHelper.js":15,"../utils/doorHelper.js":16,"../utils/spriteHelper.js":17,"../weapons/bow/bowHelper.js":20,"pixi.js":240}],15:[function(require,module,exports){
 
 const keymap = {
   w: 'up',
@@ -2991,7 +2121,7 @@ module.exports.mousePositionFromScreen = (event, viewport) => ({
   y: event.y - viewport.screenHeight / 2,
 });
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 const PIXI = require('pixi.js');
 const spriteHelper = require('./spriteHelper.js');
@@ -3017,7 +2147,7 @@ module.exports.hit = (player, door) => {
   tween.start();
 };
 
-},{"./spriteHelper.js":16,"pixi.js":239}],16:[function(require,module,exports){
+},{"./spriteHelper.js":17,"pixi.js":240}],17:[function(require,module,exports){
 (function (global){
 
 
@@ -3131,7 +2261,7 @@ module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":239}],17:[function(require,module,exports){
+},{"pixi.js":240}],18:[function(require,module,exports){
 (function (global){
 
 const filters = require('pixi-filters');
@@ -3208,7 +2338,7 @@ module.exports.clear = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":89,"pixi.js":239}],18:[function(require,module,exports){
+},{"pixi-filters":90,"pixi.js":240}],19:[function(require,module,exports){
 (function (global){
 const Flag = [];
 const PIXI = require('pixi.js');
@@ -3226,7 +2356,7 @@ module.exports.load_flag = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":239}],19:[function(require,module,exports){
+},{"pixi.js":240}],20:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -3311,7 +2441,7 @@ module.exports.arrowManagement = (power, origin, target) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":16,"pixi.js":239}],20:[function(require,module,exports){
+},{"../../utils/spriteHelper.js":17,"pixi.js":240}],21:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
@@ -3351,7 +2481,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":239}],21:[function(require,module,exports){
+},{"pixi.js":240}],22:[function(require,module,exports){
 /*!
  * @pixi/filter-adjustment - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3362,7 +2492,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(t.__filters={},t.PIXI)}(this,function(t,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float gamma;\nuniform float contrast;\nuniform float saturation;\nuniform float brightness;\nuniform float red;\nuniform float green;\nuniform float blue;\nuniform float alpha;\n\nvoid main(void)\n{\n    vec4 c = texture2D(uSampler, vTextureCoord);\n\n    if (c.a > 0.0) {\n        c.rgb /= c.a;\n\n        vec3 rgb = pow(c.rgb, vec3(1. / gamma));\n        rgb = mix(vec3(.5), mix(vec3(dot(vec3(.2125, .7154, .0721), rgb)), rgb, saturation), contrast);\n        rgb.r *= red;\n        rgb.g *= green;\n        rgb.b *= blue;\n        c.rgb = rgb * brightness;\n\n        c.rgb *= c.a;\n    }\n\n    gl_FragColor = c * alpha;\n}\n",i=function(t){function n(n){t.call(this,r,e),Object.assign(this,{gamma:1,saturation:1,contrast:1,brightness:1,red:1,green:1,blue:1,alpha:1},n)}return t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n,n.prototype.apply=function(t,n,r,e){this.uniforms.gamma=Math.max(this.gamma,1e-4),this.uniforms.saturation=this.saturation,this.uniforms.contrast=this.contrast,this.uniforms.brightness=this.brightness,this.uniforms.red=this.red,this.uniforms.green=this.green,this.uniforms.blue=this.blue,this.uniforms.alpha=this.alpha,t.applyFilter(this,n,r,e)},n}(n.Filter);t.AdjustmentFilter=i,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],22:[function(require,module,exports){
+},{"pixi.js":240}],23:[function(require,module,exports){
 /*!
  * @pixi/filter-advanced-bloom - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3373,7 +2503,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js"),require("@pixi/filter-kawase-blur")):"function"==typeof define&&define.amd?define(["exports","pixi.js","@pixi/filter-kawase-blur"],t):t(e.__filters={},e.PIXI,e.PIXI.filters)}(this,function(e,t,r){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform float threshold;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    // A simple & fast algorithm for getting brightness.\n    // It's inaccuracy , but good enought for this feature.\n    float _max = max(max(color.r, color.g), color.b);\n    float _min = min(min(color.r, color.g), color.b);\n    float brightness = (_max + _min) * 0.5;\n\n    if(brightness > threshold) {\n        gl_FragColor = color;\n    } else {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\n    }\n}\n",n=function(e){function t(t){void 0===t&&(t=.5),e.call(this,o,i),this.threshold=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var r={threshold:{configurable:!0}};return r.threshold.get=function(){return this.uniforms.threshold},r.threshold.set=function(e){this.uniforms.threshold=e},Object.defineProperties(t.prototype,r),t}(t.Filter),l="uniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform sampler2D bloomTexture;\nuniform float bloomScale;\nuniform float brightness;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    color.rgb *= brightness;\n    vec4 bloomColor = vec4(texture2D(bloomTexture, vTextureCoord).rgb, 0.0);\n    bloomColor.rgb *= bloomScale;\n    gl_FragColor = color + bloomColor;\n}\n",s=function(e){function i(i){e.call(this,o,l),"number"==typeof i&&(i={threshold:i}),i=Object.assign({threshold:.5,bloomScale:1,brightness:1,kernels:null,blur:8,quality:4,pixelSize:1,resolution:t.settings.RESOLUTION},i),this.bloomScale=i.bloomScale,this.brightness=i.brightness;var s=i.kernels,u=i.blur,a=i.quality,c=i.pixelSize,h=i.resolution;this._extractFilter=new n(i.threshold),this._extractFilter.resolution=h,this._blurFilter=s?new r.KawaseBlurFilter(s):new r.KawaseBlurFilter(u,a),this.pixelSize=c,this.resolution=h}e&&(i.__proto__=e),i.prototype=Object.create(e&&e.prototype),i.prototype.constructor=i;var s={resolution:{configurable:!0},threshold:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return i.prototype.apply=function(e,t,r,o,i){var n=e.getRenderTarget(!0);this._extractFilter.apply(e,t,n,!0,i);var l=e.getRenderTarget(!0);this._blurFilter.apply(e,n,l,!0,i),this.uniforms.bloomScale=this.bloomScale,this.uniforms.brightness=this.brightness,this.uniforms.bloomTexture=l,e.applyFilter(this,t,r,o),e.returnRenderTarget(l),e.returnRenderTarget(n)},s.resolution.get=function(){return this._resolution},s.resolution.set=function(e){this._resolution=e,this._extractFilter&&(this._extractFilter.resolution=e),this._blurFilter&&(this._blurFilter.resolution=e)},s.threshold.get=function(){return this._extractFilter.threshold},s.threshold.set=function(e){this._extractFilter.threshold=e},s.kernels.get=function(){return this._blurFilter.kernels},s.kernels.set=function(e){this._blurFilter.kernels=e},s.blur.get=function(){return this._blurFilter.blur},s.blur.set=function(e){this._blurFilter.blur=e},s.quality.get=function(){return this._blurFilter.quality},s.quality.set=function(e){this._blurFilter.quality=e},s.pixelSize.get=function(){return this._blurFilter.pixelSize},s.pixelSize.set=function(e){this._blurFilter.pixelSize=e},Object.defineProperties(i.prototype,s),i}(t.Filter);e.AdvancedBloomFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":38,"pixi.js":239}],23:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":39,"pixi.js":240}],24:[function(require,module,exports){
 /*!
  * @pixi/filter-ascii - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3384,7 +2514,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform float pixelSize;\nuniform sampler2D uSampler;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n    return floor( coord / size ) * size;\n}\n\nvec2 getMod(vec2 coord, vec2 size)\n{\n    return mod( coord , size) / size;\n}\n\nfloat character(float n, vec2 p)\n{\n    p = floor(p*vec2(4.0, -4.0) + 2.5);\n    if (clamp(p.x, 0.0, 4.0) == p.x && clamp(p.y, 0.0, 4.0) == p.y)\n    {\n        if (int(mod(n/exp2(p.x + 5.0*p.y), 2.0)) == 1) return 1.0;\n    }\n    return 0.0;\n}\n\nvoid main()\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    // get the rounded color..\n    vec2 pixCoord = pixelate(coord, vec2(pixelSize));\n    pixCoord = unmapCoord(pixCoord);\n\n    vec4 color = texture2D(uSampler, pixCoord);\n\n    // determine the character to use\n    float gray = (color.r + color.g + color.b) / 3.0;\n\n    float n =  65536.0;             // .\n    if (gray > 0.2) n = 65600.0;    // :\n    if (gray > 0.3) n = 332772.0;   // *\n    if (gray > 0.4) n = 15255086.0; // o\n    if (gray > 0.5) n = 23385164.0; // &\n    if (gray > 0.6) n = 15252014.0; // 8\n    if (gray > 0.7) n = 13199452.0; // @\n    if (gray > 0.8) n = 11512810.0; // #\n\n    // get the mod..\n    vec2 modd = getMod(coord, vec2(pixelSize));\n\n    gl_FragColor = color * character( n, vec2(-1.0) + modd * 2.0);\n\n}",t=function(e){function n(n){void 0===n&&(n=8),e.call(this,o,r),this.size=n}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.pixelSize},t.size.set=function(e){this.uniforms.pixelSize=e},Object.defineProperties(n.prototype,t),n}(n.Filter);e.AsciiFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],24:[function(require,module,exports){
+},{"pixi.js":240}],25:[function(require,module,exports){
 /*!
  * @pixi/filter-bevel - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3395,7 +2525,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float transformX;\nuniform float transformY;\nuniform vec3 lightColor;\nuniform float lightAlpha;\nuniform vec3 shadowColor;\nuniform float shadowAlpha;\n\nvoid main(void) {\n    vec2 transform = vec2(1.0 / filterArea) * vec2(transformX, transformY);\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    float light = texture2D(uSampler, vTextureCoord - transform).a;\n    float shadow = texture2D(uSampler, vTextureCoord + transform).a;\n\n    color.rgb = mix(color.rgb, lightColor, clamp((color.a - light) * lightAlpha, 0.0, 1.0));\n    color.rgb = mix(color.rgb, shadowColor, clamp((color.a - shadow) * shadowAlpha, 0.0, 1.0));\n    gl_FragColor = vec4(color.rgb * color.a, color.a);\n}\n",n=function(o){function n(t){void 0===t&&(t={}),o.call(this,r,i),this.uniforms.lightColor=new Float32Array(3),this.uniforms.shadowColor=new Float32Array(3),t=Object.assign({rotation:45,thickness:2,lightColor:16777215,lightAlpha:.7,shadowColor:0,shadowAlpha:.7},t),this.rotation=t.rotation,this.thickness=t.thickness,this.lightColor=t.lightColor,this.lightAlpha=t.lightAlpha,this.shadowColor=t.shadowColor,this.shadowAlpha=t.shadowAlpha}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var e={rotation:{configurable:!0},thickness:{configurable:!0},lightColor:{configurable:!0},lightAlpha:{configurable:!0},shadowColor:{configurable:!0},shadowAlpha:{configurable:!0}};return n.prototype._updateTransform=function(){this.uniforms.transformX=this._thickness*Math.cos(this._angle),this.uniforms.transformY=this._thickness*Math.sin(this._angle)},e.rotation.get=function(){return this._angle/t.DEG_TO_RAD},e.rotation.set=function(o){this._angle=o*t.DEG_TO_RAD,this._updateTransform()},e.thickness.get=function(){return this._thickness},e.thickness.set=function(o){this._thickness=o,this._updateTransform()},e.lightColor.get=function(){return t.utils.rgb2hex(this.uniforms.lightColor)},e.lightColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.lightColor)},e.lightAlpha.get=function(){return this.uniforms.lightAlpha},e.lightAlpha.set=function(o){this.uniforms.lightAlpha=o},e.shadowColor.get=function(){return t.utils.rgb2hex(this.uniforms.shadowColor)},e.shadowColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.shadowColor)},e.shadowAlpha.get=function(){return this.uniforms.shadowAlpha},e.shadowAlpha.set=function(o){this.uniforms.shadowAlpha=o},Object.defineProperties(n.prototype,e),n}(t.Filter);o.BevelFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],25:[function(require,module,exports){
+},{"pixi.js":240}],26:[function(require,module,exports){
 /*!
  * @pixi/filter-bloom - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3406,7 +2536,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(t.__filters={},t.PIXI)}(this,function(t,r){"use strict";var e=r.filters,i=e.BlurXFilter,l=e.BlurYFilter,u=e.AlphaFilter,n=function(t){function e(e,n,o,s){var b,f;void 0===e&&(e=2),void 0===n&&(n=4),void 0===o&&(o=r.settings.RESOLUTION),void 0===s&&(s=5),t.call(this),"number"==typeof e?(b=e,f=e):e instanceof r.Point?(b=e.x,f=e.y):Array.isArray(e)&&(b=e[0],f=e[1]),this.blurXFilter=new i(b,n,o,s),this.blurYFilter=new l(f,n,o,s),this.blurYFilter.blendMode=r.BLEND_MODES.SCREEN,this.defaultFilter=new u}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var n={blur:{configurable:!0},blurX:{configurable:!0},blurY:{configurable:!0}};return e.prototype.apply=function(t,r,e){var i=t.getRenderTarget(!0);this.defaultFilter.apply(t,r,e),this.blurXFilter.apply(t,r,i),this.blurYFilter.apply(t,i,e),t.returnRenderTarget(i)},n.blur.get=function(){return this.blurXFilter.blur},n.blur.set=function(t){this.blurXFilter.blur=this.blurYFilter.blur=t},n.blurX.get=function(){return this.blurXFilter.blur},n.blurX.set=function(t){this.blurXFilter.blur=t},n.blurY.get=function(){return this.blurYFilter.blur},n.blurY.set=function(t){this.blurYFilter.blur=t},Object.defineProperties(e.prototype,n),e}(r.Filter);t.BloomFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],26:[function(require,module,exports){
+},{"pixi.js":240}],27:[function(require,module,exports){
 /*!
  * @pixi/filter-bulge-pinch - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3417,7 +2547,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="uniform float radius;\nuniform float strength;\nuniform vec2 center;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nvoid main()\n{\n    vec2 coord = vTextureCoord * filterArea.xy;\n    coord -= center * dimensions.xy;\n    float distance = length(coord);\n    if (distance < radius) {\n        float percent = distance / radius;\n        if (strength > 0.0) {\n            coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\n        } else {\n            coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\n        }\n    }\n    coord += center * dimensions.xy;\n    coord /= filterArea.xy;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    gl_FragColor = color;\n}\n",o=function(e){function n(n,o,i){e.call(this,t,r),this.uniforms.dimensions=new Float32Array(2),this.center=n||[.5,.5],this.radius=o||100,this.strength=i||1}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={radius:{configurable:!0},strength:{configurable:!0},center:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,e.applyFilter(this,n,t,r)},o.radius.get=function(){return this.uniforms.radius},o.radius.set=function(e){this.uniforms.radius=e},o.strength.get=function(){return this.uniforms.strength},o.strength.set=function(e){this.uniforms.strength=e},o.center.get=function(){return this.uniforms.center},o.center.set=function(e){this.uniforms.center=e},Object.defineProperties(n.prototype,o),n}(n.Filter);e.BulgePinchFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],27:[function(require,module,exports){
+},{"pixi.js":240}],28:[function(require,module,exports){
 /*!
  * @pixi/filter-color-map - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3428,7 +2558,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform sampler2D colorMap;\n\nuniform float _mix;\nuniform float _size;\nuniform float _sliceSize;\nuniform float _slicePixelSize;\nuniform float _sliceInnerSize;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord.xy);\n\n    float sliceIndex = color.b * (_size - 1.0);\n    float zSlice0 = floor(sliceIndex);\n    float zSlice1 = ceil(sliceIndex);\n\n    float xOffset = _slicePixelSize * 0.5 + color.r * _sliceInnerSize;\n    float s0 = xOffset + zSlice0 * _sliceSize;\n    float s1 = xOffset + zSlice1 * _sliceSize;\n    vec4 slice0Color = texture2D(colorMap, vec2(s0, color.g));\n    vec4 slice1Color = texture2D(colorMap, vec2(s1, color.g));\n    vec4 adjusted = mix(slice0Color, slice1Color, fract(sliceIndex));\n\n    gl_FragColor = mix(color, adjusted, _mix);\n}\n",s=function(e){function s(i,s,r){void 0===s&&(s=!1),void 0===r&&(r=1),e.call(this,t,o),this._size=0,this._sliceSize=0,this._slicePixelSize=0,this._sliceInnerSize=0,this._scaleMode=null,this._nearest=!1,this.nearest=s,this.mix=r,this.colorMap=i}e&&(s.__proto__=e),s.prototype=Object.create(e&&e.prototype),s.prototype.constructor=s;var r={colorSize:{configurable:!0},colorMap:{configurable:!0},nearest:{configurable:!0}};return s.prototype.apply=function(e,i,t,o){this.uniforms._mix=this.mix,e.applyFilter(this,i,t,o)},r.colorSize.get=function(){return this._size},r.colorMap.get=function(){return this._colorMap},r.colorMap.set=function(e){e instanceof i.Texture||(e=i.Texture.from(e)),e&&e.baseTexture&&(e.baseTexture.scaleMode=this._scaleMode,e.baseTexture.mipmap=!1,this._size=e.height,this._sliceSize=1/this._size,this._slicePixelSize=this._sliceSize/this._size,this._sliceInnerSize=this._slicePixelSize*(this._size-1),this.uniforms._size=this._size,this.uniforms._sliceSize=this._sliceSize,this.uniforms._slicePixelSize=this._slicePixelSize,this.uniforms._sliceInnerSize=this._sliceInnerSize,this.uniforms.colorMap=e),this._colorMap=e},r.nearest.get=function(){return this._nearest},r.nearest.set=function(e){this._nearest=e,this._scaleMode=e?i.SCALE_MODES.NEAREST:i.SCALE_MODES.LINEAR;var t=this._colorMap;t&&t.baseTexture&&(t.baseTexture._glTextures={},t.baseTexture.scaleMode=this._scaleMode,t.baseTexture.mipmap=!1,t._updateID++,t.baseTexture.emit("update",t.baseTexture))},s.prototype.updateColorMap=function(){var e=this._colorMap;e&&e.baseTexture&&(e._updateID++,e.baseTexture.emit("update",e.baseTexture),this.colorMap=e)},s.prototype.destroy=function(i){this._colorMap&&this._colorMap.destroy(i),e.prototype.destroy.call(this)},Object.defineProperties(s.prototype,r),s}(i.Filter);e.ColorMapFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],28:[function(require,module,exports){
+},{"pixi.js":240}],29:[function(require,module,exports){
 /*!
  * @pixi/filter-color-replace - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3439,7 +2569,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(o.__filters={},o.PIXI)}(this,function(o,r){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec3 originalColor;\nuniform vec3 newColor;\nuniform float epsilon;\nvoid main(void) {\n    vec4 currentColor = texture2D(uSampler, vTextureCoord);\n    vec3 colorDiff = originalColor - (currentColor.rgb / max(currentColor.a, 0.0000000001));\n    float colorDistance = length(colorDiff);\n    float doReplace = step(colorDistance, epsilon);\n    gl_FragColor = vec4(mix(currentColor.rgb, (newColor + colorDiff) * currentColor.a, doReplace), currentColor.a);\n}\n",n=function(o){function n(r,n,t){void 0===r&&(r=16711680),void 0===n&&(n=0),void 0===t&&(t=.4),o.call(this,e,i),this.uniforms.originalColor=new Float32Array(3),this.uniforms.newColor=new Float32Array(3),this.originalColor=r,this.newColor=n,this.epsilon=t}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={originalColor:{configurable:!0},newColor:{configurable:!0},epsilon:{configurable:!0}};return t.originalColor.set=function(o){var e=this.uniforms.originalColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._originalColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._originalColor=r.utils.rgb2hex(e))},t.originalColor.get=function(){return this._originalColor},t.newColor.set=function(o){var e=this.uniforms.newColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._newColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._newColor=r.utils.rgb2hex(e))},t.newColor.get=function(){return this._newColor},t.epsilon.set=function(o){this.uniforms.epsilon=o},t.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(n.prototype,t),n}(r.Filter);o.ColorReplaceFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],29:[function(require,module,exports){
+},{"pixi.js":240}],30:[function(require,module,exports){
 /*!
  * @pixi/filter-convolution - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3450,7 +2580,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying mediump vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec2 texelSize;\nuniform float matrix[9];\n\nvoid main(void)\n{\n   vec4 c11 = texture2D(uSampler, vTextureCoord - texelSize); // top left\n   vec4 c12 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - texelSize.y)); // top center\n   vec4 c13 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y - texelSize.y)); // top right\n\n   vec4 c21 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y)); // mid left\n   vec4 c22 = texture2D(uSampler, vTextureCoord); // mid center\n   vec4 c23 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y)); // mid right\n\n   vec4 c31 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y + texelSize.y)); // bottom left\n   vec4 c32 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + texelSize.y)); // bottom center\n   vec4 c33 = texture2D(uSampler, vTextureCoord + texelSize); // bottom right\n\n   gl_FragColor =\n       c11 * matrix[0] + c12 * matrix[1] + c13 * matrix[2] +\n       c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +\n       c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];\n\n   gl_FragColor.a = c22.a;\n}\n",o=function(e){function t(t,o,n){e.call(this,r,i),this.uniforms.texelSize=new Float32Array(9),this.matrix=t,this.width=o,this.height=n}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var o={matrix:{configurable:!0},width:{configurable:!0},height:{configurable:!0}};return o.matrix.get=function(){return this.uniforms.matrix},o.matrix.set=function(e){this.uniforms.matrix=new Float32Array(e)},o.width.get=function(){return 1/this.uniforms.texelSize[0]},o.width.set=function(e){this.uniforms.texelSize[0]=1/e},o.height.get=function(){return 1/this.uniforms.texelSize[1]},o.height.set=function(e){this.uniforms.texelSize[1]=1/e},Object.defineProperties(t.prototype,o),t}(t.Filter);e.ConvolutionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],30:[function(require,module,exports){
+},{"pixi.js":240}],31:[function(require,module,exports){
 /*!
  * @pixi/filter-cross-hatch - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3461,7 +2591,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(n.__filters={},n.PIXI)}(this,function(n,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void)\n{\n    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);\n\n    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n\n    if (lum < 1.00)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.75)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.50)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.3)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n}\n",t=function(n){function o(){n.call(this,r,e)}return n&&(o.__proto__=n),o.prototype=Object.create(n&&n.prototype),o.prototype.constructor=o,o}(o.Filter);n.CrossHatchFilter=t,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],31:[function(require,module,exports){
+},{"pixi.js":240}],32:[function(require,module,exports){
 /*!
  * @pixi/filter-crt - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3472,7 +2602,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(n.__filters={},n.PIXI)}(this,function(n,i){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nconst float SQRT_2 = 1.414213;\n\nconst float light = 1.0;\n\nuniform float curvature;\nuniform float lineWidth;\nuniform float lineContrast;\nuniform bool verticalLine;\nuniform float noise;\nuniform float noiseSize;\n\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\n\nuniform float seed;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    vec2 dir = vec2(coord - vec2(0.5, 0.5));\n\n    float _c = curvature > 0. ? curvature : 1.;\n    float k = curvature > 0. ?(length(dir * dir) * 0.25 * _c * _c + 0.935 * _c) : 1.;\n    vec2 uv = dir * k;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 rgb = gl_FragColor.rgb;\n\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        rgb += _noise * noise;\n    }\n\n    if (lineWidth > 0.0) {\n        float v = (verticalLine ? uv.x * dimensions.x : uv.y * dimensions.y) * min(1.0, 2.0 / lineWidth ) / _c;\n        float j = 1. + cos(v * 1.2 - time) * 0.5 * lineContrast;\n        rgb *= j;\n        float segment = verticalLine ? mod((dir.x + .5) * dimensions.x, 4.) : mod((dir.y + .5) * dimensions.y, 4.);\n        rgb *= 0.99 + ceil(segment) * 0.015;\n    }\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    gl_FragColor.rgb = rgb;\n}\n",o=function(n){function i(i){n.call(this,e,t),this.uniforms.dimensions=new Float32Array(2),this.time=0,this.seed=0,Object.assign(this,{curvature:1,lineWidth:1,lineContrast:.25,verticalLine:!1,noise:0,noiseSize:1,seed:0,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3,time:0},i)}n&&(i.__proto__=n),i.prototype=Object.create(n&&n.prototype),i.prototype.constructor=i;var o={curvature:{configurable:!0},lineWidth:{configurable:!0},lineContrast:{configurable:!0},verticalLine:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return i.prototype.apply=function(n,i,e,t){this.uniforms.dimensions[0]=i.sourceFrame.width,this.uniforms.dimensions[1]=i.sourceFrame.height,this.uniforms.seed=this.seed,this.uniforms.time=this.time,n.applyFilter(this,i,e,t)},o.curvature.set=function(n){this.uniforms.curvature=n},o.curvature.get=function(){return this.uniforms.curvature},o.lineWidth.set=function(n){this.uniforms.lineWidth=n},o.lineWidth.get=function(){return this.uniforms.lineWidth},o.lineContrast.set=function(n){this.uniforms.lineContrast=n},o.lineContrast.get=function(){return this.uniforms.lineContrast},o.verticalLine.set=function(n){this.uniforms.verticalLine=n},o.verticalLine.get=function(){return this.uniforms.verticalLine},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(i.prototype,o),i}(i.Filter);n.CRTFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],32:[function(require,module,exports){
+},{"pixi.js":240}],33:[function(require,module,exports){
 /*!
  * @pixi/filter-dot - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3483,7 +2613,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform vec4 filterArea;\nuniform sampler2D uSampler;\n\nuniform float angle;\nuniform float scale;\n\nfloat pattern()\n{\n   float s = sin(angle), c = cos(angle);\n   vec2 tex = vTextureCoord * filterArea.xy;\n   vec2 point = vec2(\n       c * tex.x - s * tex.y,\n       s * tex.x + c * tex.y\n   ) * scale;\n   return (sin(point.x) * sin(point.y)) * 4.0;\n}\n\nvoid main()\n{\n   vec4 color = texture2D(uSampler, vTextureCoord);\n   float average = (color.r + color.g + color.b) / 3.0;\n   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);\n}\n",r=function(e){function n(n,r){void 0===n&&(n=1),void 0===r&&(r=5),e.call(this,t,o),this.scale=n,this.angle=r}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={scale:{configurable:!0},angle:{configurable:!0}};return r.scale.get=function(){return this.uniforms.scale},r.scale.set=function(e){this.uniforms.scale=e},r.angle.get=function(){return this.uniforms.angle},r.angle.set=function(e){this.uniforms.angle=e},Object.defineProperties(n.prototype,r),n}(n.Filter);e.DotFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],33:[function(require,module,exports){
+},{"pixi.js":240}],34:[function(require,module,exports){
 /*!
  * @pixi/filter-drop-shadow - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3494,7 +2624,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("@pixi/filter-kawase-blur"),require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","@pixi/filter-kawase-blur","pixi.js"],i):i(t.__filters={},t.PIXI.filters,t.PIXI)}(this,function(t,i,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float alpha;\nuniform vec3 color;\nvoid main(void){\n    vec4 sample = texture2D(uSampler, vTextureCoord);\n\n    // Un-premultiply alpha before applying the color\n    if (sample.a > 0.0) {\n        sample.rgb /= sample.a;\n    }\n\n    // Premultiply alpha again\n    sample.rgb = color.rgb * sample.a;\n\n    // alpha user alpha\n    sample *= alpha;\n\n    gl_FragColor = sample;\n}",o=function(t){function o(o){o&&o.constructor!==Object&&(console.warn("DropShadowFilter now uses options instead of (rotation, distance, blur, color, alpha)"),o={rotation:o},void 0!==arguments[1]&&(o.distance=arguments[1]),void 0!==arguments[2]&&(o.blur=arguments[2]),void 0!==arguments[3]&&(o.color=arguments[3]),void 0!==arguments[4]&&(o.alpha=arguments[4])),o=Object.assign({rotation:45,distance:5,color:0,alpha:.5,shadowOnly:!1,kernels:null,blur:2,quality:3,pixelSize:1,resolution:e.settings.RESOLUTION},o),t.call(this);var l=o.kernels,a=o.blur,s=o.quality,u=o.pixelSize,c=o.resolution;this._tintFilter=new e.Filter(r,n),this._tintFilter.uniforms.color=new Float32Array(4),this._tintFilter.resolution=c,this._blurFilter=l?new i.KawaseBlurFilter(l):new i.KawaseBlurFilter(a,s),this.pixelSize=u,this.resolution=c,this.targetTransform=new e.Matrix;var p=o.shadowOnly,h=o.rotation,f=o.distance,d=o.alpha,g=o.color;this.shadowOnly=p,this.rotation=h,this.distance=f,this.alpha=d,this.color=g,this._updatePadding()}t&&(o.__proto__=t),o.prototype=Object.create(t&&t.prototype),o.prototype.constructor=o;var l={resolution:{configurable:!0},distance:{configurable:!0},rotation:{configurable:!0},alpha:{configurable:!0},color:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return o.prototype.apply=function(t,i,e,r){var n=t.getRenderTarget();n.transform=this.targetTransform,this._tintFilter.apply(t,i,n,!0),n.transform=null,this._blurFilter.apply(t,n,e),!0!==this.shadowOnly&&t.applyFilter(this,i,e,r),t.returnRenderTarget(n)},o.prototype._updatePadding=function(){this.padding=this.distance+2*this.blur},o.prototype._updateTargetTransform=function(){this.targetTransform.tx=this.distance*Math.cos(this.angle),this.targetTransform.ty=this.distance*Math.sin(this.angle)},l.resolution.get=function(){return this._resolution},l.resolution.set=function(t){this._resolution=t,this._tintFilter&&(this._tintFilter.resolution=t),this._blurFilter&&(this._blurFilter.resolution=t)},l.distance.get=function(){return this._distance},l.distance.set=function(t){this._distance=t,this._updatePadding(),this._updateTargetTransform()},l.rotation.get=function(){return this.angle/e.DEG_TO_RAD},l.rotation.set=function(t){this.angle=t*e.DEG_TO_RAD,this._updateTargetTransform()},l.alpha.get=function(){return this._tintFilter.uniforms.alpha},l.alpha.set=function(t){this._tintFilter.uniforms.alpha=t},l.color.get=function(){return e.utils.rgb2hex(this._tintFilter.uniforms.color)},l.color.set=function(t){e.utils.hex2rgb(t,this._tintFilter.uniforms.color)},l.kernels.get=function(){return this._blurFilter.kernels},l.kernels.set=function(t){this._blurFilter.kernels=t},l.blur.get=function(){return this._blurFilter.blur},l.blur.set=function(t){this._blurFilter.blur=t,this._updatePadding()},l.quality.get=function(){return this._blurFilter.quality},l.quality.set=function(t){this._blurFilter.quality=t},l.pixelSize.get=function(){return this._blurFilter.pixelSize},l.pixelSize.set=function(t){this._blurFilter.pixelSize=t},Object.defineProperties(o.prototype,l),o}(e.Filter);t.DropShadowFilter=o,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":38,"pixi.js":239}],34:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":39,"pixi.js":240}],35:[function(require,module,exports){
 /*!
  * @pixi/filter-emboss - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3505,7 +2635,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float strength;\nuniform vec4 filterArea;\n\n\nvoid main(void)\n{\n\tvec2 onePixel = vec2(1.0 / filterArea);\n\n\tvec4 color;\n\n\tcolor.rgb = vec3(0.5);\n\n\tcolor -= texture2D(uSampler, vTextureCoord - onePixel) * strength;\n\tcolor += texture2D(uSampler, vTextureCoord + onePixel) * strength;\n\n\tcolor.rgb = vec3((color.r + color.g + color.b) / 3.0);\n\n\tfloat alpha = texture2D(uSampler, vTextureCoord).a;\n\n\tgl_FragColor = vec4(color.rgb * alpha, alpha);\n}\n",n=function(e){function t(t){void 0===t&&(t=5),e.call(this,r,o),this.strength=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var n={strength:{configurable:!0}};return n.strength.get=function(){return this.uniforms.strength},n.strength.set=function(e){this.uniforms.strength=e},Object.defineProperties(t.prototype,n),t}(t.Filter);e.EmbossFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],35:[function(require,module,exports){
+},{"pixi.js":240}],36:[function(require,module,exports){
 /*!
  * @pixi/filter-glitch - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -3516,7 +2646,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="// precision highp float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\nuniform float aspect;\n\nuniform sampler2D displacementMap;\nuniform float offset;\nuniform float sinDir;\nuniform float cosDir;\nuniform int fillMode;\n\nuniform float seed;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nconst int TRANSPARENT = 0;\nconst int ORIGINAL = 1;\nconst int LOOP = 2;\nconst int CLAMP = 3;\nconst int MIRROR = 4;\n\nvoid main(void)\n{\n    vec2 coord = (vTextureCoord * filterArea.xy) / dimensions;\n\n    if (coord.x > 1.0 || coord.y > 1.0) {\n        return;\n    }\n\n    float cx = coord.x - 0.5;\n    float cy = (coord.y - 0.5) * aspect;\n    float ny = (-sinDir * cx + cosDir * cy) / aspect + 0.5;\n\n    // displacementMap: repeat\n    // ny = ny > 1.0 ? ny - 1.0 : (ny < 0.0 ? 1.0 + ny : ny);\n\n    // displacementMap: mirror\n    ny = ny > 1.0 ? 2.0 - ny : (ny < 0.0 ? -ny : ny);\n\n    vec4 dc = texture2D(displacementMap, vec2(0.5, ny));\n\n    float displacement = (dc.r - dc.g) * (offset / filterArea.x);\n\n    coord = vTextureCoord + vec2(cosDir * displacement, sinDir * displacement * aspect);\n\n    if (fillMode == CLAMP) {\n        coord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    } else {\n        if( coord.x > filterClamp.z ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x -= filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x = filterClamp.z * 2.0 - coord.x;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.x < filterClamp.x ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x += filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x *= -filterClamp.z;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n\n        if( coord.y > filterClamp.w ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y -= filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y = filterClamp.w * 2.0 - coord.y;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.y < filterClamp.y ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y += filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y *= -filterClamp.w;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n    }\n\n    gl_FragColor.r = texture2D(uSampler, coord + red * (1.0 - seed * 0.4) / filterArea.xy).r;\n    gl_FragColor.g = texture2D(uSampler, coord + green * (1.0 - seed * 0.3) / filterArea.xy).g;\n    gl_FragColor.b = texture2D(uSampler, coord + blue * (1.0 - seed * 0.2) / filterArea.xy).b;\n    gl_FragColor.a = texture2D(uSampler, coord).a;\n}\n",r=function(e){function r(r){void 0===r&&(r={}),e.call(this,t,n),this.uniforms.dimensions=new Float32Array(2),r=Object.assign({slices:5,offset:100,direction:0,fillMode:0,average:!1,seed:0,red:[0,0],green:[0,0],blue:[0,0],minSize:8,sampleSize:512},r),this.direction=r.direction,this.red=r.red,this.green=r.green,this.blue=r.blue,this.offset=r.offset,this.fillMode=r.fillMode,this.average=r.average,this.seed=r.seed,this.minSize=r.minSize,this.sampleSize=r.sampleSize,this._canvas=document.createElement("canvas"),this._canvas.width=4,this._canvas.height=this.sampleSize,this.texture=i.Texture.fromCanvas(this._canvas,i.SCALE_MODES.NEAREST),this._slices=0,this.slices=r.slices}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var s={sizes:{configurable:!0},offsets:{configurable:!0},slices:{configurable:!0},direction:{configurable:!0},red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return r.prototype.apply=function(e,i,t,n){var r=i.sourceFrame.width,s=i.sourceFrame.height;this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=s,this.uniforms.aspect=s/r,this.uniforms.seed=this.seed,this.uniforms.offset=this.offset,this.uniforms.fillMode=this.fillMode,e.applyFilter(this,i,t,n)},r.prototype._randomizeSizes=function(){var e=this._sizes,i=this._slices-1,t=this.sampleSize,n=Math.min(this.minSize/t,.9/this._slices);if(this.average){for(var r=this._slices,s=1,o=0;o<i;o++){var l=s/(r-o),f=Math.max(l*(1-.6*Math.random()),n);e[o]=f,s-=f}e[i]=s}else{for(var a=1,c=Math.sqrt(1/this._slices),u=0;u<i;u++){var d=Math.max(c*a*Math.random(),n);e[u]=d,a-=d}e[i]=a}this.shuffle()},r.prototype.shuffle=function(){for(var e=this._sizes,i=this._slices-1;i>0;i--){var t=Math.random()*i>>0,n=e[i];e[i]=e[t],e[t]=n}},r.prototype._randomizeOffsets=function(){for(var e=0;e<this._slices;e++)this._offsets[e]=Math.random()*(Math.random()<.5?-1:1)},r.prototype.refresh=function(){this._randomizeSizes(),this._randomizeOffsets(),this.redraw()},r.prototype.redraw=function(){var e,i=this.sampleSize,t=this.texture,n=this._canvas.getContext("2d");n.clearRect(0,0,8,i);for(var r=0,s=0;s<this._slices;s++){e=Math.floor(256*this._offsets[s]);var o=this._sizes[s]*i,l=e>0?e:0,f=e<0?-e:0;n.fillStyle="rgba("+l+", "+f+", 0, 1)",n.fillRect(0,r>>0,i,o+1>>0),r+=o}t.baseTexture.emit("update",t.baseTexture),this.uniforms.displacementMap=t},s.sizes.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._sizes[t]=e[t]},s.sizes.get=function(){return this._sizes},s.offsets.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._offsets[t]=e[t]},s.offsets.get=function(){return this._offsets},s.slices.get=function(){return this._slices},s.slices.set=function(e){this._slices!==e&&(this._slices=e,this.uniforms.slices=e,this._sizes=this.uniforms.slicesWidth=new Float32Array(e),this._offsets=this.uniforms.slicesOffset=new Float32Array(e),this.refresh())},s.direction.get=function(){return this._direction},s.direction.set=function(e){if(this._direction!==e){this._direction=e;var t=e*i.DEG_TO_RAD;this.uniforms.sinDir=Math.sin(t),this.uniforms.cosDir=Math.cos(t)}},s.red.get=function(){return this.uniforms.red},s.red.set=function(e){this.uniforms.red=e},s.green.get=function(){return this.uniforms.green},s.green.set=function(e){this.uniforms.green=e},s.blue.get=function(){return this.uniforms.blue},s.blue.set=function(e){this.uniforms.blue=e},r.prototype.destroy=function(){this.texture.destroy(!0),this.texture=null,this._canvas=null,this.red=null,this.green=null,this.blue=null,this._sizes=null,this._offsets=null},Object.defineProperties(r.prototype,s),r}(i.Filter);r.TRANSPARENT=0,r.ORIGINAL=1,r.LOOP=2,r.CLAMP=3,r.MIRROR=4,e.GlitchFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":239}],36:[function(require,module,exports){
+},{"pixi.js":240}],37:[function(require,module,exports){
 /*!
  * @pixi/filter-glow - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3527,7 +2657,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform sampler2D uSampler;\n\nuniform float distance;\nuniform float outerStrength;\nuniform float innerStrength;\nuniform vec4 glowColor;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nconst float PI = 3.14159265358979323846264;\n\nvoid main(void) {\n    vec2 px = vec2(1.0 / filterArea.x, 1.0 / filterArea.y);\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float cosAngle;\n    float sinAngle;\n    vec2 displaced;\n    for (float angle = 0.0; angle <= PI * 2.0; angle += %QUALITY_DIST%) {\n       cosAngle = cos(angle);\n       sinAngle = sin(angle);\n       for (float curDistance = 1.0; curDistance <= %DIST%; curDistance++) {\n           displaced.x = vTextureCoord.x + cosAngle * curDistance * px.x;\n           displaced.y = vTextureCoord.y + sinAngle * curDistance * px.y;\n           curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n           totalAlpha += (distance - curDistance) * curColor.a;\n           maxTotalAlpha += (distance - curDistance);\n       }\n    }\n    maxTotalAlpha = max(maxTotalAlpha, 0.0001);\n\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * outerStrength * (1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * innerStrength * ownColor.a;\n    float resultAlpha = (ownColor.a + outerGlowAlpha);\n    gl_FragColor = vec4(mix(mix(ownColor.rgb, glowColor.rgb, innerGlowAlpha / ownColor.a), glowColor.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);\n}\n",r=function(o){function r(t,r,i,l,a){void 0===t&&(t=10),void 0===r&&(r=4),void 0===i&&(i=0),void 0===l&&(l=16777215),void 0===a&&(a=.1),o.call(this,n,e.replace(/%QUALITY_DIST%/gi,""+(1/a/t).toFixed(7)).replace(/%DIST%/gi,""+t.toFixed(7))),this.uniforms.glowColor=new Float32Array([0,0,0,1]),this.distance=t,this.color=l,this.outerStrength=r,this.innerStrength=i}o&&(r.__proto__=o),r.prototype=Object.create(o&&o.prototype),r.prototype.constructor=r;var i={color:{configurable:!0},distance:{configurable:!0},outerStrength:{configurable:!0},innerStrength:{configurable:!0}};return i.color.get=function(){return t.utils.rgb2hex(this.uniforms.glowColor)},i.color.set=function(o){t.utils.hex2rgb(o,this.uniforms.glowColor)},i.distance.get=function(){return this.uniforms.distance},i.distance.set=function(o){this.uniforms.distance=o},i.outerStrength.get=function(){return this.uniforms.outerStrength},i.outerStrength.set=function(o){this.uniforms.outerStrength=o},i.innerStrength.get=function(){return this.uniforms.innerStrength},i.innerStrength.set=function(o){this.uniforms.innerStrength=o},Object.defineProperties(r.prototype,i),r}(t.Filter);o.GlowFilter=r,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],37:[function(require,module,exports){
+},{"pixi.js":240}],38:[function(require,module,exports){
 /*!
  * @pixi/filter-godray - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3538,7 +2668,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="vec3 mod289(vec3 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 mod289(vec4 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 permute(vec4 x)\n{\n    return mod289(((x * 34.0) + 1.0) * x);\n}\nvec4 taylorInvSqrt(vec4 r)\n{\n    return 1.79284291400159 - 0.85373472095314 * r;\n}\nvec3 fade(vec3 t)\n{\n    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);\n}\n// Classic Perlin noise, periodic variant\nfloat pnoise(vec3 P, vec3 rep)\n{\n    vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period\n    vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period\n    Pi0 = mod289(Pi0);\n    Pi1 = mod289(Pi1);\n    vec3 Pf0 = fract(P); // Fractional part for interpolation\n    vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0\n    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);\n    vec4 iy = vec4(Pi0.yy, Pi1.yy);\n    vec4 iz0 = Pi0.zzzz;\n    vec4 iz1 = Pi1.zzzz;\n    vec4 ixy = permute(permute(ix) + iy);\n    vec4 ixy0 = permute(ixy + iz0);\n    vec4 ixy1 = permute(ixy + iz1);\n    vec4 gx0 = ixy0 * (1.0 / 7.0);\n    vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;\n    gx0 = fract(gx0);\n    vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);\n    vec4 sz0 = step(gz0, vec4(0.0));\n    gx0 -= sz0 * (step(0.0, gx0) - 0.5);\n    gy0 -= sz0 * (step(0.0, gy0) - 0.5);\n    vec4 gx1 = ixy1 * (1.0 / 7.0);\n    vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;\n    gx1 = fract(gx1);\n    vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);\n    vec4 sz1 = step(gz1, vec4(0.0));\n    gx1 -= sz1 * (step(0.0, gx1) - 0.5);\n    gy1 -= sz1 * (step(0.0, gy1) - 0.5);\n    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);\n    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);\n    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);\n    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);\n    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);\n    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);\n    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);\n    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);\n    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));\n    g000 *= norm0.x;\n    g010 *= norm0.y;\n    g100 *= norm0.z;\n    g110 *= norm0.w;\n    vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));\n    g001 *= norm1.x;\n    g011 *= norm1.y;\n    g101 *= norm1.z;\n    g111 *= norm1.w;\n    float n000 = dot(g000, Pf0);\n    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));\n    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));\n    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));\n    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));\n    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));\n    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));\n    float n111 = dot(g111, Pf1);\n    vec3 fade_xyz = fade(Pf0);\n    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);\n    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);\n    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);\n    return 2.2 * n_xyz;\n}\nfloat turb(vec3 P, vec3 rep, float lacunarity, float gain)\n{\n    float sum = 0.0;\n    float sc = 1.0;\n    float totalgain = 1.0;\n    for (float i = 0.0; i < 6.0; i++)\n    {\n        sum += totalgain * pnoise(P * sc, rep);\n        sc *= lacunarity;\n        totalgain *= gain;\n    }\n    return abs(sum);\n}\n",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform vec2 light;\nuniform bool parallel;\nuniform float aspect;\n\nuniform float gain;\nuniform float lacunarity;\nuniform float time;\n\n${perlin}\n\nvoid main(void) {\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    float d;\n\n    if (parallel) {\n        float _cos = light.x;\n        float _sin = light.y;\n        d = (_cos * coord.x) + (_sin * coord.y * aspect);\n    } else {\n        float dx = coord.x - light.x / dimensions.x;\n        float dy = (coord.y - light.y / dimensions.y) * aspect;\n        float dis = sqrt(dx * dx + dy * dy) + 0.00001;\n        d = dy / dis;\n    }\n\n    vec3 dir = vec3(d, d, 0.0);\n\n    float noise = turb(dir + vec3(time, 0.0, 62.1 + time) * 0.05, vec3(480.0, 320.0, 480.0), lacunarity, gain);\n    noise = mix(noise, 0.0, 0.3);\n    //fade vertically.\n    vec4 mist = vec4(noise, noise, noise, 1.0) * (1.0 - coord.y);\n    mist.a = 1.0;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord) + mist;\n}\n",r=function(n){function r(r){n.call(this,t,o.replace("${perlin}",i)),this.uniforms.dimensions=new Float32Array(2),"number"==typeof r&&(console.warn("GodrayFilter now uses options instead of (angle, gain, lacunarity, time)"),r={angle:r},void 0!==arguments[1]&&(r.gain=arguments[1]),void 0!==arguments[2]&&(r.lacunarity=arguments[2]),void 0!==arguments[3]&&(r.time=arguments[3])),r=Object.assign({angle:30,gain:.5,lacunarity:2.5,time:0,parallel:!0,center:[0,0]},r),this._angleLight=new e.Point,this.angle=r.angle,this.gain=r.gain,this.lacunarity=r.lacunarity,this.parallel=r.parallel,this.center=r.center,this.time=r.time}n&&(r.__proto__=n),r.prototype=Object.create(n&&n.prototype),r.prototype.constructor=r;var a={angle:{configurable:!0},gain:{configurable:!0},lacunarity:{configurable:!0}};return r.prototype.apply=function(n,e,t,i){var o=e.sourceFrame,r=o.width,a=o.height;this.uniforms.light=this.parallel?this._angleLight:this.center,this.uniforms.parallel=this.parallel,this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=a,this.uniforms.aspect=a/r,this.uniforms.time=this.time,n.applyFilter(this,e,t,i)},a.angle.get=function(){return this._angle},a.angle.set=function(n){this._angle=n;var t=n*e.DEG_TO_RAD;this._angleLight.x=Math.cos(t),this._angleLight.y=Math.sin(t)},a.gain.get=function(){return this.uniforms.gain},a.gain.set=function(n){this.uniforms.gain=n},a.lacunarity.get=function(){return this.uniforms.lacunarity},a.lacunarity.set=function(n){this.uniforms.lacunarity=n},Object.defineProperties(r.prototype,a),r}(e.Filter);n.GodrayFilter=r,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],38:[function(require,module,exports){
+},{"pixi.js":240}],39:[function(require,module,exports){
 /*!
  * @pixi/filter-kawase-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3549,7 +2679,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\nuniform vec4 filterClamp;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}\n",n=function(e){function n(n,l,u){void 0===n&&(n=4),void 0===l&&(l=3),void 0===u&&(u=!1),e.call(this,r,u?o:i),this.uniforms.uOffset=new Float32Array(2),this._pixelSize=new t.Point,this.pixelSize=1,this._clamp=u,this._kernels=null,Array.isArray(n)?this.kernels=n:(this._blur=n,this.quality=l)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var l={kernels:{configurable:!0},clamp:{configurable:!0},pixelSize:{configurable:!0},quality:{configurable:!0},blur:{configurable:!0}};return n.prototype.apply=function(e,t,r,i){var o,n=this.pixelSize.x/t.size.width,l=this.pixelSize.y/t.size.height;if(1===this._quality||0===this._blur)o=this._kernels[0]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,t,r,i);else{for(var u,s=e.getRenderTarget(!0),f=t,a=s,p=this._quality-1,x=0;x<p;x++)o=this._kernels[x]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,a,!0),u=f,f=a,a=u;o=this._kernels[p]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,r,i),e.returnRenderTarget(s)}},n.prototype._generateKernels=function(){var e=this._blur,t=this._quality,r=[e];if(e>0)for(var i=e,o=e/t,n=1;n<t;n++)i-=o,r.push(i);this._kernels=r},l.kernels.get=function(){return this._kernels},l.kernels.set=function(e){Array.isArray(e)&&e.length>0?(this._kernels=e,this._quality=e.length,this._blur=Math.max.apply(Math,e)):(this._kernels=[0],this._quality=1)},l.clamp.get=function(){return this._clamp},l.pixelSize.set=function(e){"number"==typeof e?(this._pixelSize.x=e,this._pixelSize.y=e):Array.isArray(e)?(this._pixelSize.x=e[0],this._pixelSize.y=e[1]):e instanceof t.Point?(this._pixelSize.x=e.x,this._pixelSize.y=e.y):(this._pixelSize.x=1,this._pixelSize.y=1)},l.pixelSize.get=function(){return this._pixelSize},l.quality.get=function(){return this._quality},l.quality.set=function(e){this._quality=Math.max(1,Math.round(e)),this._generateKernels()},l.blur.get=function(){return this._blur},l.blur.set=function(e){this._blur=e,this._generateKernels()},Object.defineProperties(n.prototype,l),n}(t.Filter);e.KawaseBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],39:[function(require,module,exports){
+},{"pixi.js":240}],40:[function(require,module,exports){
 /*!
  * @pixi/filter-motion-blur - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -3560,7 +2690,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uVelocity;\nuniform int uKernelSize;\nuniform float uOffset;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\n// Notice:\n// the perfect way:\n//    int kernelSize = min(uKernelSize, MAX_KERNELSIZE);\n// BUT in real use-case , uKernelSize < MAX_KERNELSIZE almost always.\n// So use uKernelSize directly.\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    vec2 velocity = uVelocity / filterArea.xy;\n    float offset = -uOffset / length(uVelocity) - 0.5;\n    int k = uKernelSize - 1;\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n        vec2 bias = velocity * (float(i) / float(k) + offset);\n        color += texture2D(uSampler, vTextureCoord + bias);\n    }\n    gl_FragColor = color / float(uKernelSize);\n}\n",n=function(e){function n(n,r,l){void 0===n&&(n=[0,0]),void 0===r&&(r=5),void 0===l&&(l=0),e.call(this,i,o),this.uniforms.uVelocity=new Float32Array(2),this._velocity=new t.ObservablePoint(this.velocityChanged,this),this.velocity=n,this.kernelSize=r,this.offset=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={velocity:{configurable:!0},offset:{configurable:!0}};return n.prototype.apply=function(e,t,i,o){var n=this.velocity,r=n.x,l=n.y;this.uniforms.uKernelSize=0!==r||0!==l?this.kernelSize:0,e.applyFilter(this,t,i,o)},r.velocity.set=function(e){Array.isArray(e)?this._velocity.set(e[0],e[1]):(e instanceof t.Point||e instanceof t.ObservablePoint)&&this._velocity.copy(e)},r.velocity.get=function(){return this._velocity},n.prototype.velocityChanged=function(){this.uniforms.uVelocity[0]=this._velocity.x,this.uniforms.uVelocity[1]=this._velocity.y},r.offset.set=function(e){this.uniforms.uOffset=e},r.offset.get=function(){return this.uniforms.uOffset},Object.defineProperties(n.prototype,r),n}(t.Filter);e.MotionBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":239}],40:[function(require,module,exports){
+},{"pixi.js":240}],41:[function(require,module,exports){
 /*!
  * @pixi/filter-multi-color-replace - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3571,7 +2701,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(o.__filters={},o.PIXI)}(this,function(o,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float epsilon;\n\nconst int MAX_COLORS = %maxColors%;\n\nuniform vec3 originalColors[MAX_COLORS];\nuniform vec3 targetColors[MAX_COLORS];\n\nvoid main(void)\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n\n    float alpha = gl_FragColor.a;\n    if (alpha < 0.0001)\n    {\n      return;\n    }\n\n    vec3 color = gl_FragColor.rgb / alpha;\n\n    for(int i = 0; i < MAX_COLORS; i++)\n    {\n      vec3 origColor = originalColors[i];\n      if (origColor.r < 0.0)\n      {\n        break;\n      }\n      vec3 colorDiff = origColor - color;\n      if (length(colorDiff) < epsilon)\n      {\n        vec3 targetColor = targetColors[i];\n        gl_FragColor = vec4((targetColor + colorDiff) * alpha, alpha);\n        return;\n      }\n    }\n}\n",t=function(o){function t(e,t,i){void 0===t&&(t=.05),void 0===i&&(i=null),i=i||e.length,o.call(this,r,n.replace(/%maxColors%/g,i)),this.epsilon=t,this._maxColors=i,this._replacements=null,this.uniforms.originalColors=new Float32Array(3*i),this.uniforms.targetColors=new Float32Array(3*i),this.replacements=e}o&&(t.__proto__=o),t.prototype=Object.create(o&&o.prototype),t.prototype.constructor=t;var i={replacements:{configurable:!0},maxColors:{configurable:!0},epsilon:{configurable:!0}};return i.replacements.set=function(o){var r=this.uniforms.originalColors,n=this.uniforms.targetColors,t=o.length;if(t>this._maxColors)throw"Length of replacements ("+t+") exceeds the maximum colors length ("+this._maxColors+")";r[3*t]=-1;for(var i=0;i<t;i++){var l=o[i],s=l[0];"number"==typeof s?s=e.utils.hex2rgb(s):l[0]=e.utils.rgb2hex(s),r[3*i]=s[0],r[3*i+1]=s[1],r[3*i+2]=s[2];var a=l[1];"number"==typeof a?a=e.utils.hex2rgb(a):l[1]=e.utils.rgb2hex(a),n[3*i]=a[0],n[3*i+1]=a[1],n[3*i+2]=a[2]}this._replacements=o},i.replacements.get=function(){return this._replacements},t.prototype.refresh=function(){this.replacements=this._replacements},i.maxColors.get=function(){return this._maxColors},i.epsilon.set=function(o){this.uniforms.epsilon=o},i.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(t.prototype,i),t}(e.Filter);o.MultiColorReplaceFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],41:[function(require,module,exports){
+},{"pixi.js":240}],42:[function(require,module,exports){
 /*!
  * @pixi/filter-old-film - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3582,7 +2712,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(n.__filters={},n.PIXI)}(this,function(n,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform float sepia;\nuniform float noise;\nuniform float noiseSize;\nuniform float scratch;\nuniform float scratchDensity;\nuniform float scratchWidth;\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\nuniform float seed;\n\nconst float SQRT_2 = 1.414213;\nconst vec3 SEPIA_RGB = vec3(112.0 / 255.0, 66.0 / 255.0, 20.0 / 255.0);\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvec3 Overlay(vec3 src, vec3 dst)\n{\n    // if (dst <= 0.5) then: 2 * src * dst\n    // if (dst > 0.5) then: 1 - 2 * (1 - dst) * (1 - src)\n    return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),\n                (dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),\n                (dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));\n}\n\n\nvoid main()\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 color = gl_FragColor.rgb;\n\n    if (sepia > 0.0)\n    {\n        float gray = (color.x + color.y + color.z) / 3.0;\n        vec3 grayscale = vec3(gray);\n\n        color = Overlay(SEPIA_RGB, grayscale);\n\n        color = grayscale + sepia * (color - grayscale);\n    }\n\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        vec2 dir = vec2(vec2(0.5, 0.5) - coord);\n        dir.y *= dimensions.y / dimensions.x;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        color.rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    if (scratchDensity > seed && scratch != 0.0)\n    {\n        float phase = seed * 256.0;\n        float s = mod(floor(phase), 2.0);\n        float dist = 1.0 / scratchDensity;\n        float d = distance(coord, vec2(seed * dist, abs(s - seed * dist)));\n        if (d < seed * 0.6 + 0.4)\n        {\n            highp float period = scratchDensity * 10.0;\n\n            float xx = coord.x * period + phase;\n            float aa = abs(mod(xx, 0.5) * 4.0);\n            float bb = mod(floor(xx / 0.5), 2.0);\n            float yy = (1.0 - bb) * aa + bb * (2.0 - aa);\n\n            float kk = 2.0 * period;\n            float dw = scratchWidth / dimensions.x * (0.75 + seed);\n            float dh = dw * kk;\n\n            float tine = (yy - (2.0 - dh));\n\n            if (tine > 0.0) {\n                float _sign = sign(scratch);\n\n                tine = s * tine / period + scratch + 0.1;\n                tine = clamp(tine + 1.0, 0.5 + _sign * 0.5, 1.5 + _sign * 0.5);\n\n                color.rgb *= tine;\n            }\n        }\n    }\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        // vec2 d = pixelCoord * noiseSize * vec2(1024.0 + seed * 512.0, 1024.0 - seed * 512.0);\n        // float _noise = snoise(d) * 0.5;\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        color += _noise * noise;\n    }\n\n    gl_FragColor.rgb = color;\n}\n",o=function(n){function t(t,o){void 0===o&&(o=0),n.call(this,i,e),this.uniforms.dimensions=new Float32Array(2),"number"==typeof t?(this.seed=t,t=null):this.seed=o,Object.assign(this,{sepia:.3,noise:.3,noiseSize:1,scratch:.5,scratchDensity:.3,scratchWidth:1,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3},t)}n&&(t.__proto__=n),t.prototype=Object.create(n&&n.prototype),t.prototype.constructor=t;var o={sepia:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},scratch:{configurable:!0},scratchDensity:{configurable:!0},scratchWidth:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return t.prototype.apply=function(n,t,i,e){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,this.uniforms.seed=this.seed,n.applyFilter(this,t,i,e)},o.sepia.set=function(n){this.uniforms.sepia=n},o.sepia.get=function(){return this.uniforms.sepia},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.scratch.set=function(n){this.uniforms.scratch=n},o.scratch.get=function(){return this.uniforms.scratch},o.scratchDensity.set=function(n){this.uniforms.scratchDensity=n},o.scratchDensity.get=function(){return this.uniforms.scratchDensity},o.scratchWidth.set=function(n){this.uniforms.scratchWidth=n},o.scratchWidth.get=function(){return this.uniforms.scratchWidth},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(t.prototype,o),t}(t.Filter);n.OldFilmFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],42:[function(require,module,exports){
+},{"pixi.js":240}],43:[function(require,module,exports){
 /*!
  * @pixi/filter-outline - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3593,7 +2723,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 thickness;\nuniform vec4 outlineColor;\nuniform vec4 filterClamp;\n\nconst float DOUBLE_PI = 3.14159265358979323846264 * 2.;\n\nvoid main(void) {\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float maxAlpha = 0.;\n    vec2 displaced;\n    for (float angle = 0.; angle <= DOUBLE_PI; angle += ${angleStep}) {\n        displaced.x = vTextureCoord.x + thickness.x * cos(angle);\n        displaced.y = vTextureCoord.y + thickness.y * sin(angle);\n        curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n        maxAlpha = max(maxAlpha, curColor.a);\n    }\n    float resultAlpha = max(maxAlpha, ownColor.a);\n    gl_FragColor = vec4((ownColor.rgb + outlineColor.rgb * (1. - ownColor.a)) * resultAlpha, resultAlpha);\n}\n",n=function(e){function n(o,i,l){void 0===o&&(o=1),void 0===i&&(i=0),void 0===l&&(l=.1);var a=Math.max(l*n.MAX_SAMPLES,n.MIN_SAMPLES),s=(2*Math.PI/a).toFixed(7);e.call(this,t,r.replace(/\$\{angleStep\}/,s)),this.uniforms.thickness=new Float32Array([0,0]),this.thickness=o,this.uniforms.outlineColor=new Float32Array([0,0,0,1]),this.color=i,this.quality=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={color:{configurable:!0}};return n.prototype.apply=function(e,o,t,r){this.uniforms.thickness[0]=this.thickness/o.size.width,this.uniforms.thickness[1]=this.thickness/o.size.height,e.applyFilter(this,o,t,r)},i.color.get=function(){return o.utils.rgb2hex(this.uniforms.outlineColor)},i.color.set=function(e){o.utils.hex2rgb(e,this.uniforms.outlineColor)},Object.defineProperties(n.prototype,i),n}(o.Filter);n.MIN_SAMPLES=1,n.MAX_SAMPLES=100,e.OutlineFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],43:[function(require,module,exports){
+},{"pixi.js":240}],44:[function(require,module,exports){
 /*!
  * @pixi/filter-pixelate - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3604,7 +2734,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform vec2 size;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n\treturn floor( coord / size ) * size;\n}\n\nvoid main(void)\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = pixelate(coord, size);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord);\n}\n",t=function(e){function o(o){void 0===o&&(o=10),e.call(this,r,n),this.size=o}e&&(o.__proto__=e),o.prototype=Object.create(e&&e.prototype),o.prototype.constructor=o;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.size},t.size.set=function(e){"number"==typeof e&&(e=[e,e]),this.uniforms.size=e},Object.defineProperties(o.prototype,t),o}(o.Filter);e.PixelateFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],44:[function(require,module,exports){
+},{"pixi.js":240}],45:[function(require,module,exports){
 /*!
  * @pixi/filter-radial-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3615,7 +2745,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float uRadian;\nuniform vec2 uCenter;\nuniform float uRadius;\nuniform int uKernelSize;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    float aspect = filterArea.y / filterArea.x;\n    vec2 center = uCenter.xy / filterArea.xy;\n    float gradient = uRadius / filterArea.x * 0.3;\n    float radius = uRadius / filterArea.x - gradient * 0.5;\n    int k = uKernelSize - 1;\n\n    vec2 coord = vTextureCoord;\n    vec2 dir = vec2(center - coord);\n    float dist = length(vec2(dir.x, dir.y * aspect));\n\n    float radianStep = uRadian;\n    if (radius >= 0.0 && dist > radius) {\n        float delta = dist - radius;\n        float gap = gradient;\n        float scale = 1.0 - abs(delta / gap);\n        if (scale <= 0.0) {\n            gl_FragColor = color;\n            return;\n        }\n        radianStep *= scale;\n    }\n    radianStep /= float(k);\n\n    float s = sin(radianStep);\n    float c = cos(radianStep);\n    mat2 rotationMatrix = mat2(vec2(c, -s), vec2(s, c));\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n\n        coord -= center;\n        coord.y *= aspect;\n        coord = rotationMatrix * coord;\n        coord.y /= aspect;\n        coord += center;\n\n        vec4 sample = texture2D(uSampler, coord);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample;\n    }\n\n    gl_FragColor = color / float(uKernelSize);\n}\n",i=function(e){function n(n,i,o,a){void 0===n&&(n=0),void 0===i&&(i=[0,0]),void 0===o&&(o=5),void 0===a&&(a=-1),e.call(this,t,r),this._angle=0,this.angle=n,this.center=i,this.kernelSize=o,this.radius=a}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={angle:{configurable:!0},center:{configurable:!0},radius:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.uKernelSize=0!==this._angle?this.kernelSize:0,e.applyFilter(this,n,t,r)},i.angle.set=function(e){this._angle=e,this.uniforms.uRadian=e*Math.PI/180},i.angle.get=function(){return this._angle},i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(e){this.uniforms.uCenter=e},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(e){(e<0||e===1/0)&&(e=-1),this.uniforms.uRadius=e},Object.defineProperties(n.prototype,i),n}(n.Filter);e.RadialBlurFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],45:[function(require,module,exports){
+},{"pixi.js":240}],46:[function(require,module,exports){
 /*!
  * @pixi/filter-reflection - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3626,7 +2756,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nuniform bool mirror;\nuniform float boundary;\nuniform vec2 amplitude;\nuniform vec2 waveLength;\nuniform vec2 alpha;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    if (coord.y < boundary) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    float k = (coord.y - boundary) / (1. - boundary + 0.0001);\n    float areaY = boundary * dimensions.y / filterArea.y;\n    float v = areaY + areaY - vTextureCoord.y;\n    float y = mirror ? v : vTextureCoord.y;\n\n    float _amplitude = ((amplitude.y - amplitude.x) * k + amplitude.x ) / filterArea.x;\n    float _waveLength = ((waveLength.y - waveLength.x) * k + waveLength.x) / filterArea.y;\n    float _alpha = (alpha.y - alpha.x) * k + alpha.x;\n\n    float x = vTextureCoord.x + cos(v * 6.28 / _waveLength - time) * _amplitude;\n    x = clamp(x, filterClamp.x, filterClamp.z);\n\n    vec4 color = texture2D(uSampler, vec2(x, y));\n\n    gl_FragColor = color * _alpha;\n}\n",o=function(e){function n(n){e.call(this,r,t),this.uniforms.amplitude=new Float32Array(2),this.uniforms.waveLength=new Float32Array(2),this.uniforms.alpha=new Float32Array(2),this.uniforms.dimensions=new Float32Array(2),Object.assign(this,{mirror:!0,boundary:.5,amplitude:[0,20],waveLength:[30,100],alpha:[1,1],time:0},n)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={mirror:{configurable:!0},boundary:{configurable:!0},amplitude:{configurable:!0},waveLength:{configurable:!0},alpha:{configurable:!0}};return n.prototype.apply=function(e,n,r,t){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,this.uniforms.time=this.time,e.applyFilter(this,n,r,t)},o.mirror.set=function(e){this.uniforms.mirror=e},o.mirror.get=function(){return this.uniforms.mirror},o.boundary.set=function(e){this.uniforms.boundary=e},o.boundary.get=function(){return this.uniforms.boundary},o.amplitude.set=function(e){this.uniforms.amplitude[0]=e[0],this.uniforms.amplitude[1]=e[1]},o.amplitude.get=function(){return this.uniforms.amplitude},o.waveLength.set=function(e){this.uniforms.waveLength[0]=e[0],this.uniforms.waveLength[1]=e[1]},o.waveLength.get=function(){return this.uniforms.waveLength},o.alpha.set=function(e){this.uniforms.alpha[0]=e[0],this.uniforms.alpha[1]=e[1]},o.alpha.get=function(){return this.uniforms.alpha},Object.defineProperties(n.prototype,o),n}(n.Filter);e.ReflectionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],46:[function(require,module,exports){
+},{"pixi.js":240}],47:[function(require,module,exports){
 /*!
  * @pixi/filter-rgb-split - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3637,7 +2767,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(e.__filters={},e.PIXI)}(this,function(e,r){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nvoid main(void)\n{\n   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/filterArea.xy).r;\n   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/filterArea.xy).g;\n   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/filterArea.xy).b;\n   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;\n}\n",o=function(e){function r(r,o,i){void 0===r&&(r=[-10,0]),void 0===o&&(o=[0,10]),void 0===i&&(i=[0,0]),e.call(this,t,n),this.red=r,this.green=o,this.blue=i}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var o={red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return o.red.get=function(){return this.uniforms.red},o.red.set=function(e){this.uniforms.red=e},o.green.get=function(){return this.uniforms.green},o.green.set=function(e){this.uniforms.green=e},o.blue.get=function(){return this.uniforms.blue},o.blue.set=function(e){this.uniforms.blue=e},Object.defineProperties(r.prototype,o),r}(r.Filter);e.RGBSplitFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],47:[function(require,module,exports){
+},{"pixi.js":240}],48:[function(require,module,exports){
 /*!
  * @pixi/filter-shockwave - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -3648,7 +2778,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\n\nuniform vec2 center;\n\nuniform float amplitude;\nuniform float wavelength;\n// uniform float power;\nuniform float brightness;\nuniform float speed;\nuniform float radius;\n\nuniform float time;\n\nconst float PI = 3.14159;\n\nvoid main()\n{\n    float halfWavelength = wavelength * 0.5 / filterArea.x;\n    float maxRadius = radius / filterArea.x;\n    float currentRadius = time * speed / filterArea.x;\n\n    float fade = 1.0;\n\n    if (maxRadius > 0.0) {\n        if (currentRadius > maxRadius) {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n        fade = 1.0 - pow(currentRadius / maxRadius, 2.0);\n    }\n\n    vec2 dir = vec2(vTextureCoord - center / filterArea.xy);\n    dir.y *= filterArea.y / filterArea.x;\n    float dist = length(dir);\n\n    if (dist <= 0.0 || dist < currentRadius - halfWavelength || dist > currentRadius + halfWavelength) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    vec2 diffUV = normalize(dir);\n\n    float diff = (dist - currentRadius) / halfWavelength;\n\n    float p = 1.0 - pow(abs(diff), 2.0);\n\n    // float powDiff = diff * pow(p, 2.0) * ( amplitude * fade );\n    float powDiff = 1.25 * sin(diff * PI) * p * ( amplitude * fade );\n\n    vec2 offset = diffUV * powDiff / filterArea.xy;\n\n    // Do clamp :\n    vec2 coord = vTextureCoord + offset;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    // No clamp :\n    // gl_FragColor = texture2D(uSampler, vTextureCoord + offset);\n\n    color.rgb *= 1.0 + (brightness - 1.0) * p * fade;\n\n    gl_FragColor = color;\n}\n",i=function(e){function t(t,i,o){void 0===t&&(t=[0,0]),void 0===i&&(i={}),void 0===o&&(o=0),e.call(this,n,r),this.center=t,Array.isArray(i)&&(console.warn("Deprecated Warning: ShockwaveFilter params Array has been changed to options Object."),i={}),i=Object.assign({amplitude:30,wavelength:160,brightness:1,speed:500,radius:-1},i),this.amplitude=i.amplitude,this.wavelength=i.wavelength,this.brightness=i.brightness,this.speed=i.speed,this.radius=i.radius,this.time=o}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var i={center:{configurable:!0},amplitude:{configurable:!0},wavelength:{configurable:!0},brightness:{configurable:!0},speed:{configurable:!0},radius:{configurable:!0}};return t.prototype.apply=function(e,t,n,r){this.uniforms.time=this.time,e.applyFilter(this,t,n,r)},i.center.get=function(){return this.uniforms.center},i.center.set=function(e){this.uniforms.center=e},i.amplitude.get=function(){return this.uniforms.amplitude},i.amplitude.set=function(e){this.uniforms.amplitude=e},i.wavelength.get=function(){return this.uniforms.wavelength},i.wavelength.set=function(e){this.uniforms.wavelength=e},i.brightness.get=function(){return this.uniforms.brightness},i.brightness.set=function(e){this.uniforms.brightness=e},i.speed.get=function(){return this.uniforms.speed},i.speed.set=function(e){this.uniforms.speed=e},i.radius.get=function(){return this.uniforms.radius},i.radius.set=function(e){this.uniforms.radius=e},Object.defineProperties(t.prototype,i),t}(t.Filter);e.ShockwaveFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":239}],48:[function(require,module,exports){
+},{"pixi.js":240}],49:[function(require,module,exports){
 /*!
  * @pixi/filter-simple-lightmap - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3659,7 +2789,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform sampler2D uLightmap;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\nuniform vec4 ambientColor;\nvoid main() {\n    vec4 diffuseColor = texture2D(uSampler, vTextureCoord);\n    vec2 lightCoord = (vTextureCoord * filterArea.xy) / dimensions;\n    vec4 light = texture2D(uLightmap, lightCoord);\n    vec3 ambient = ambientColor.rgb * ambientColor.a;\n    vec3 intensity = ambient + light.rgb;\n    vec3 finalColor = diffuseColor.rgb * intensity;\n    gl_FragColor = vec4(finalColor, diffuseColor.a);\n}\n",r=function(e){function r(t,r,n){void 0===r&&(r=0),void 0===n&&(n=1),e.call(this,o,i),this.uniforms.dimensions=new Float32Array(2),this.uniforms.ambientColor=new Float32Array([0,0,0,n]),this.texture=t,this.color=r}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var n={texture:{configurable:!0},color:{configurable:!0},alpha:{configurable:!0}};return r.prototype.apply=function(e,t,o,i){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,e.applyFilter(this,t,o,i)},n.texture.get=function(){return this.uniforms.uLightmap},n.texture.set=function(e){this.uniforms.uLightmap=e},n.color.set=function(e){var o=this.uniforms.ambientColor;"number"==typeof e?(t.utils.hex2rgb(e,o),this._color=e):(o[0]=e[0],o[1]=e[1],o[2]=e[2],o[3]=e[3],this._color=t.utils.rgb2hex(o))},n.color.get=function(){return this._color},n.alpha.get=function(){return this.uniforms.ambientColor[3]},n.alpha.set=function(e){this.uniforms.ambientColor[3]=e},Object.defineProperties(r.prototype,n),r}(t.Filter);e.SimpleLightmapFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],49:[function(require,module,exports){
+},{"pixi.js":240}],50:[function(require,module,exports){
 /*!
  * @pixi/filter-tilt-shift - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3670,7 +2800,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(t.__filters={},t.PIXI)}(this,function(t,e){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float blur;\nuniform float gradientBlur;\nuniform vec2 start;\nuniform vec2 end;\nuniform vec2 delta;\nuniform vec2 texSize;\n\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n    float total = 0.0;\n\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n    float radius = smoothstep(0.0, 1.0, abs(dot(vTextureCoord * texSize - start, normal)) / gradientBlur) * blur;\n\n    for (float t = -30.0; t <= 30.0; t++)\n    {\n        float percent = (t + offset - 0.5) / 30.0;\n        float weight = 1.0 - abs(percent);\n        vec4 sample = texture2D(uSampler, vTextureCoord + delta / texSize * percent * radius);\n        sample.rgb *= sample.a;\n        color += sample * weight;\n        total += weight;\n    }\n\n    color /= total;\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",n=function(t){function n(n,o,s,l){void 0===n&&(n=100),void 0===o&&(o=600),void 0===s&&(s=null),void 0===l&&(l=null),t.call(this,i,r),this.uniforms.blur=n,this.uniforms.gradientBlur=o,this.uniforms.start=s||new e.Point(0,window.innerHeight/2),this.uniforms.end=l||new e.Point(600,window.innerHeight/2),this.uniforms.delta=new e.Point(30,30),this.uniforms.texSize=new e.Point(window.innerWidth,window.innerHeight),this.updateDelta()}t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n;var o={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return n.prototype.updateDelta=function(){this.uniforms.delta.x=0,this.uniforms.delta.y=0},o.blur.get=function(){return this.uniforms.blur},o.blur.set=function(t){this.uniforms.blur=t},o.gradientBlur.get=function(){return this.uniforms.gradientBlur},o.gradientBlur.set=function(t){this.uniforms.gradientBlur=t},o.start.get=function(){return this.uniforms.start},o.start.set=function(t){this.uniforms.start=t,this.updateDelta()},o.end.get=function(){return this.uniforms.end},o.end.set=function(t){this.uniforms.end=t,this.updateDelta()},Object.defineProperties(n.prototype,o),n}(e.Filter),o=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=t/i,this.uniforms.delta.y=e/i},e}(n),s=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=-e/i,this.uniforms.delta.y=t/i},e}(n),l=function(t){function e(e,i,r,n){void 0===e&&(e=100),void 0===i&&(i=600),void 0===r&&(r=null),void 0===n&&(n=null),t.call(this),this.tiltShiftXFilter=new o(e,i,r,n),this.tiltShiftYFilter=new s(e,i,r,n)}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var i={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return e.prototype.apply=function(t,e,i){var r=t.getRenderTarget(!0);this.tiltShiftXFilter.apply(t,e,r),this.tiltShiftYFilter.apply(t,r,i),t.returnRenderTarget(r)},i.blur.get=function(){return this.tiltShiftXFilter.blur},i.blur.set=function(t){this.tiltShiftXFilter.blur=this.tiltShiftYFilter.blur=t},i.gradientBlur.get=function(){return this.tiltShiftXFilter.gradientBlur},i.gradientBlur.set=function(t){this.tiltShiftXFilter.gradientBlur=this.tiltShiftYFilter.gradientBlur=t},i.start.get=function(){return this.tiltShiftXFilter.start},i.start.set=function(t){this.tiltShiftXFilter.start=this.tiltShiftYFilter.start=t},i.end.get=function(){return this.tiltShiftXFilter.end},i.end.set=function(t){this.tiltShiftXFilter.end=this.tiltShiftYFilter.end=t},Object.defineProperties(e.prototype,i),e}(e.Filter);t.TiltShiftFilter=l,t.TiltShiftXFilter=o,t.TiltShiftYFilter=s,t.TiltShiftAxisFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],50:[function(require,module,exports){
+},{"pixi.js":240}],51:[function(require,module,exports){
 /*!
  * @pixi/filter-twist - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -3681,7 +2811,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(o.__filters={},o.PIXI)}(this,function(o,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float radius;\nuniform float angle;\nuniform vec2 offset;\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 twist(vec2 coord)\n{\n    coord -= offset;\n\n    float dist = length(coord);\n\n    if (dist < radius)\n    {\n        float ratioDist = (radius - dist) / radius;\n        float angleMod = ratioDist * ratioDist * angle;\n        float s = sin(angleMod);\n        float c = cos(angleMod);\n        coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);\n    }\n\n    coord += offset;\n\n    return coord;\n}\n\nvoid main(void)\n{\n\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = twist(coord);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord );\n\n}\n",t=function(o){function n(n,t,i){void 0===n&&(n=200),void 0===t&&(t=4),void 0===i&&(i=20),o.call(this,r,e),this.radius=n,this.angle=t,this.padding=i}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={offset:{configurable:!0},radius:{configurable:!0},angle:{configurable:!0}};return t.offset.get=function(){return this.uniforms.offset},t.offset.set=function(o){this.uniforms.offset=o},t.radius.get=function(){return this.uniforms.radius},t.radius.set=function(o){this.uniforms.radius=o},t.angle.get=function(){return this.uniforms.angle},t.angle.set=function(o){this.uniforms.angle=o},Object.defineProperties(n.prototype,t),n}(n.Filter);o.TwistFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],51:[function(require,module,exports){
+},{"pixi.js":240}],52:[function(require,module,exports){
 /*!
  * @pixi/filter-zoom-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -3692,7 +2822,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uCenter;\nuniform float uStrength;\nuniform float uInnerRadius;\nuniform float uRadius;\n\nconst float MAX_KERNEL_SIZE = 32.0;\n\nfloat random(vec3 scale, float seed) {\n    // use the fragment position for a different seed per-pixel\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main() {\n\n    float minGradient = uInnerRadius * 0.3;\n    float innerRadius = (uInnerRadius + minGradient * 0.5) / filterArea.x;\n\n    float gradient = uRadius * 0.3;\n    float radius = (uRadius - gradient * 0.5) / filterArea.x;\n\n    float countLimit = MAX_KERNEL_SIZE;\n\n    vec2 dir = vec2(uCenter.xy / filterArea.xy - vTextureCoord);\n    float dist = length(vec2(dir.x, dir.y * filterArea.y / filterArea.x));\n\n    float strength = uStrength;\n\n    float delta = 0.0;\n    float gap;\n    if (dist < innerRadius) {\n        delta = innerRadius - dist;\n        gap = minGradient;\n    } else if (radius >= 0.0 && dist > radius) { // radius < 0 means it's infinity\n        delta = dist - radius;\n        gap = gradient;\n    }\n\n    if (delta > 0.0) {\n        float normalCount = gap / filterArea.x;\n        delta = (normalCount - delta) / normalCount;\n        countLimit *= delta;\n        strength *= delta;\n        if (countLimit < 1.0)\n        {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n    }\n\n    // randomize the lookup values to hide the fixed number of samples\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n    float total = 0.0;\n    vec4 color = vec4(0.0);\n\n    dir *= strength;\n\n    for (float t = 0.0; t < MAX_KERNEL_SIZE; t++) {\n        float percent = (t + offset) / MAX_KERNEL_SIZE;\n        float weight = 4.0 * (percent - percent * percent);\n        vec2 p = vTextureCoord + dir * percent;\n        vec4 sample = texture2D(uSampler, p);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample * weight;\n        total += weight;\n\n        if (t > countLimit){\n            break;\n        }\n    }\n\n    color /= total;\n    // switch back from pre-multiplied alpha\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",i=function(n){function e(e,i,o,a){void 0===e&&(e=.1),void 0===i&&(i=[0,0]),void 0===o&&(o=0),void 0===a&&(a=-1),n.call(this,t,r),this.center=i,this.strength=e,this.innerRadius=o,this.radius=a}n&&(e.__proto__=n),e.prototype=Object.create(n&&n.prototype),e.prototype.constructor=e;var i={center:{configurable:!0},strength:{configurable:!0},innerRadius:{configurable:!0},radius:{configurable:!0}};return i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(n){this.uniforms.uCenter=n},i.strength.get=function(){return this.uniforms.uStrength},i.strength.set=function(n){this.uniforms.uStrength=n},i.innerRadius.get=function(){return this.uniforms.uInnerRadius},i.innerRadius.set=function(n){this.uniforms.uInnerRadius=n},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(n){(n<0||n===1/0)&&(n=-1),this.uniforms.uRadius=n},Object.defineProperties(e.prototype,i),e}(e.Filter);n.ZoomBlurFilter=i,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":239}],52:[function(require,module,exports){
+},{"pixi.js":240}],53:[function(require,module,exports){
 module.exports = after
 
 function after(count, callback, err_cb) {
@@ -3722,7 +2852,7 @@ function after(count, callback, err_cb) {
 
 function noop() {}
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 /**
  * An abstraction for slicing an arraybuffer even when
  * ArrayBuffer.prototype.slice is not supported
@@ -3753,7 +2883,7 @@ module.exports = function(arraybuffer, start, end) {
   return result.buffer;
 };
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 
 /**
  * Expose `Backoff`.
@@ -3840,7 +2970,7 @@ Backoff.prototype.setJitter = function(jitter){
 };
 
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 /*
  * base64-arraybuffer
  * https://github.com/niklasvh/base64-arraybuffer
@@ -3909,7 +3039,7 @@ Backoff.prototype.setJitter = function(jitter){
   };
 })();
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -4115,7 +3245,7 @@ exports.nextCombination = function(v) {
 }
 
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 (function (global){
 /**
  * Create a blob builder even when vendor prefixes exist
@@ -4215,7 +3345,7 @@ module.exports = (function() {
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -4240,7 +3370,7 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -4405,7 +3535,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -4413,7 +3543,7 @@ module.exports = function(a, b){
   a.prototype = new fn;
   a.prototype.constructor = a;
 };
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -5065,7 +4195,7 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 
 module.exports = require('./socket');
 
@@ -5077,7 +4207,7 @@ module.exports = require('./socket');
  */
 module.exports.parser = require('engine.io-parser');
 
-},{"./socket":63,"engine.io-parser":73}],63:[function(require,module,exports){
+},{"./socket":64,"engine.io-parser":74}],64:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -5824,7 +4954,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":64,"./transports/index":65,"component-emitter":59,"debug":71,"engine.io-parser":73,"indexof":80,"parseqs":86,"parseuri":87}],64:[function(require,module,exports){
+},{"./transport":65,"./transports/index":66,"component-emitter":60,"debug":72,"engine.io-parser":74,"indexof":81,"parseqs":87,"parseuri":88}],65:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -5983,7 +5113,7 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
-},{"component-emitter":59,"engine.io-parser":73}],65:[function(require,module,exports){
+},{"component-emitter":60,"engine.io-parser":74}],66:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies
@@ -6040,7 +5170,7 @@ function polling (opts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":66,"./polling-xhr":67,"./websocket":69,"xmlhttprequest-ssl":70}],66:[function(require,module,exports){
+},{"./polling-jsonp":67,"./polling-xhr":68,"./websocket":70,"xmlhttprequest-ssl":71}],67:[function(require,module,exports){
 (function (global){
 
 /**
@@ -6275,7 +5405,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":68,"component-inherit":60}],67:[function(require,module,exports){
+},{"./polling":69,"component-inherit":61}],68:[function(require,module,exports){
 (function (global){
 /**
  * Module requirements.
@@ -6691,7 +5821,7 @@ function unloadHandler () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":68,"component-emitter":59,"component-inherit":60,"debug":71,"xmlhttprequest-ssl":70}],68:[function(require,module,exports){
+},{"./polling":69,"component-emitter":60,"component-inherit":61,"debug":72,"xmlhttprequest-ssl":71}],69:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -6938,7 +6068,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":86,"xmlhttprequest-ssl":70,"yeast":295}],69:[function(require,module,exports){
+},{"../transport":65,"component-inherit":61,"debug":72,"engine.io-parser":74,"parseqs":87,"xmlhttprequest-ssl":71,"yeast":296}],70:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -7228,7 +6358,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":64,"component-inherit":60,"debug":71,"engine.io-parser":73,"parseqs":86,"ws":297,"yeast":295}],70:[function(require,module,exports){
+},{"../transport":65,"component-inherit":61,"debug":72,"engine.io-parser":74,"parseqs":87,"ws":298,"yeast":296}],71:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -7269,7 +6399,7 @@ module.exports = function (opts) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":79}],71:[function(require,module,exports){
+},{"has-cors":80}],72:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -7468,7 +6598,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":72,"_process":301}],72:[function(require,module,exports){
+},{"./debug":73,"_process":302}],73:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -7695,7 +6825,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":83}],73:[function(require,module,exports){
+},{"ms":84}],74:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -8305,7 +7435,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":74,"./utf8":75,"after":52,"arraybuffer.slice":53,"base64-arraybuffer":55,"blob":57,"has-binary2":77}],74:[function(require,module,exports){
+},{"./keys":75,"./utf8":76,"after":53,"arraybuffer.slice":54,"base64-arraybuffer":56,"blob":58,"has-binary2":78}],75:[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -8326,7 +7456,7 @@ module.exports = Object.keys || function keys (obj){
   return arr;
 };
 
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
@@ -8585,7 +7715,7 @@ module.exports = Object.keys || function keys (obj){
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],76:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -8898,7 +8028,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],77:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 (function (Buffer){
 /* global Blob File */
 
@@ -8966,14 +8096,14 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":298,"isarray":78}],78:[function(require,module,exports){
+},{"buffer":299,"isarray":79}],79:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -8992,7 +8122,7 @@ try {
   module.exports = false;
 }
 
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -9003,7 +8133,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],81:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 /**
  * isMobile.js v0.4.1
  *
@@ -9142,7 +8272,7 @@ module.exports = function(arr, obj){
 
 })(this);
 
-},{}],82:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9309,7 +8439,7 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -9463,7 +8593,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -9555,7 +8685,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -9587,7 +8717,7 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -9626,7 +8756,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -9667,7 +8797,7 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -9935,7 +9065,7 @@ module.exports = function parseuri(str) {
 
 }).call(this);
 
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 /*!
  * pixi-filters - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -9946,7 +9076,7 @@ module.exports = function parseuri(str) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});var filterAdjustment=require("@pixi/filter-adjustment"),filterAdvancedBloom=require("@pixi/filter-advanced-bloom"),filterAscii=require("@pixi/filter-ascii"),filterBevel=require("@pixi/filter-bevel"),filterBloom=require("@pixi/filter-bloom"),filterBulgePinch=require("@pixi/filter-bulge-pinch"),filterColorMap=require("@pixi/filter-color-map"),filterColorReplace=require("@pixi/filter-color-replace"),filterConvolution=require("@pixi/filter-convolution"),filterCrossHatch=require("@pixi/filter-cross-hatch"),filterCrt=require("@pixi/filter-crt"),filterDot=require("@pixi/filter-dot"),filterDropShadow=require("@pixi/filter-drop-shadow"),filterEmboss=require("@pixi/filter-emboss"),filterGlitch=require("@pixi/filter-glitch"),filterGlow=require("@pixi/filter-glow"),filterGodray=require("@pixi/filter-godray"),filterKawaseBlur=require("@pixi/filter-kawase-blur"),filterMotionBlur=require("@pixi/filter-motion-blur"),filterMultiColorReplace=require("@pixi/filter-multi-color-replace"),filterOldFilm=require("@pixi/filter-old-film"),filterOutline=require("@pixi/filter-outline"),filterPixelate=require("@pixi/filter-pixelate"),filterRadialBlur=require("@pixi/filter-radial-blur"),filterReflection=require("@pixi/filter-reflection"),filterRgbSplit=require("@pixi/filter-rgb-split"),filterShockwave=require("@pixi/filter-shockwave"),filterSimpleLightmap=require("@pixi/filter-simple-lightmap"),filterTiltShift=require("@pixi/filter-tilt-shift"),filterTwist=require("@pixi/filter-twist"),filterZoomBlur=require("@pixi/filter-zoom-blur");exports.AdjustmentFilter=filterAdjustment.AdjustmentFilter,exports.AdvancedBloomFilter=filterAdvancedBloom.AdvancedBloomFilter,exports.AsciiFilter=filterAscii.AsciiFilter,exports.BevelFilter=filterBevel.BevelFilter,exports.BloomFilter=filterBloom.BloomFilter,exports.BulgePinchFilter=filterBulgePinch.BulgePinchFilter,exports.ColorMapFilter=filterColorMap.ColorMapFilter,exports.ColorReplaceFilter=filterColorReplace.ColorReplaceFilter,exports.ConvolutionFilter=filterConvolution.ConvolutionFilter,exports.CrossHatchFilter=filterCrossHatch.CrossHatchFilter,exports.CRTFilter=filterCrt.CRTFilter,exports.DotFilter=filterDot.DotFilter,exports.DropShadowFilter=filterDropShadow.DropShadowFilter,exports.EmbossFilter=filterEmboss.EmbossFilter,exports.GlitchFilter=filterGlitch.GlitchFilter,exports.GlowFilter=filterGlow.GlowFilter,exports.GodrayFilter=filterGodray.GodrayFilter,exports.KawaseBlurFilter=filterKawaseBlur.KawaseBlurFilter,exports.MotionBlurFilter=filterMotionBlur.MotionBlurFilter,exports.MultiColorReplaceFilter=filterMultiColorReplace.MultiColorReplaceFilter,exports.OldFilmFilter=filterOldFilm.OldFilmFilter,exports.OutlineFilter=filterOutline.OutlineFilter,exports.PixelateFilter=filterPixelate.PixelateFilter,exports.RadialBlurFilter=filterRadialBlur.RadialBlurFilter,exports.ReflectionFilter=filterReflection.ReflectionFilter,exports.RGBSplitFilter=filterRgbSplit.RGBSplitFilter,exports.ShockwaveFilter=filterShockwave.ShockwaveFilter,exports.SimpleLightmapFilter=filterSimpleLightmap.SimpleLightmapFilter,exports.TiltShiftFilter=filterTiltShift.TiltShiftFilter,exports.TiltShiftAxisFilter=filterTiltShift.TiltShiftAxisFilter,exports.TiltShiftXFilter=filterTiltShift.TiltShiftXFilter,exports.TiltShiftYFilter=filterTiltShift.TiltShiftYFilter,exports.TwistFilter=filterTwist.TwistFilter,exports.ZoomBlurFilter=filterZoomBlur.ZoomBlurFilter;
 
 
-},{"@pixi/filter-adjustment":21,"@pixi/filter-advanced-bloom":22,"@pixi/filter-ascii":23,"@pixi/filter-bevel":24,"@pixi/filter-bloom":25,"@pixi/filter-bulge-pinch":26,"@pixi/filter-color-map":27,"@pixi/filter-color-replace":28,"@pixi/filter-convolution":29,"@pixi/filter-cross-hatch":30,"@pixi/filter-crt":31,"@pixi/filter-dot":32,"@pixi/filter-drop-shadow":33,"@pixi/filter-emboss":34,"@pixi/filter-glitch":35,"@pixi/filter-glow":36,"@pixi/filter-godray":37,"@pixi/filter-kawase-blur":38,"@pixi/filter-motion-blur":39,"@pixi/filter-multi-color-replace":40,"@pixi/filter-old-film":41,"@pixi/filter-outline":42,"@pixi/filter-pixelate":43,"@pixi/filter-radial-blur":44,"@pixi/filter-reflection":45,"@pixi/filter-rgb-split":46,"@pixi/filter-shockwave":47,"@pixi/filter-simple-lightmap":48,"@pixi/filter-tilt-shift":49,"@pixi/filter-twist":50,"@pixi/filter-zoom-blur":51}],90:[function(require,module,exports){
+},{"@pixi/filter-adjustment":22,"@pixi/filter-advanced-bloom":23,"@pixi/filter-ascii":24,"@pixi/filter-bevel":25,"@pixi/filter-bloom":26,"@pixi/filter-bulge-pinch":27,"@pixi/filter-color-map":28,"@pixi/filter-color-replace":29,"@pixi/filter-convolution":30,"@pixi/filter-cross-hatch":31,"@pixi/filter-crt":32,"@pixi/filter-dot":33,"@pixi/filter-drop-shadow":34,"@pixi/filter-emboss":35,"@pixi/filter-glitch":36,"@pixi/filter-glow":37,"@pixi/filter-godray":38,"@pixi/filter-kawase-blur":39,"@pixi/filter-motion-blur":40,"@pixi/filter-multi-color-replace":41,"@pixi/filter-old-film":42,"@pixi/filter-outline":43,"@pixi/filter-pixelate":44,"@pixi/filter-radial-blur":45,"@pixi/filter-reflection":46,"@pixi/filter-rgb-split":47,"@pixi/filter-shockwave":48,"@pixi/filter-simple-lightmap":49,"@pixi/filter-tilt-shift":50,"@pixi/filter-twist":51,"@pixi/filter-zoom-blur":52}],91:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -10067,7 +9197,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -10295,7 +9425,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":93}],92:[function(require,module,exports){
+},{"./GLTexture":94}],93:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -10391,7 +9521,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":98,"./shader/extractAttributes":100,"./shader/extractUniforms":101,"./shader/generateUniformAccessObject":102,"./shader/setPrecision":106}],93:[function(require,module,exports){
+},{"./shader/compileProgram":99,"./shader/extractAttributes":101,"./shader/extractUniforms":102,"./shader/generateUniformAccessObject":103,"./shader/setPrecision":107}],94:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -10726,7 +9856,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -10994,7 +10124,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":97}],95:[function(require,module,exports){
+},{"./setVertexAttribArrays":98}],96:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -11022,7 +10152,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -11049,7 +10179,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":90,"./GLFramebuffer":91,"./GLShader":92,"./GLTexture":93,"./VertexArrayObject":94,"./createContext":95,"./setVertexAttribArrays":97,"./shader":103}],97:[function(require,module,exports){
+},{"./GLBuffer":91,"./GLFramebuffer":92,"./GLShader":93,"./GLTexture":94,"./VertexArrayObject":95,"./createContext":96,"./setVertexAttribArrays":98,"./shader":104}],98:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -11106,7 +10236,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 
 /**
  * @class
@@ -11188,7 +10318,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -11268,7 +10398,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -11311,7 +10441,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":104,"./mapType":105}],101:[function(require,module,exports){
+},{"./mapSize":105,"./mapType":106}],102:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -11348,7 +10478,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":99,"./mapType":105}],102:[function(require,module,exports){
+},{"./defaultValue":100,"./mapType":106}],103:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -11471,7 +10601,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],103:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -11482,7 +10612,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":98,"./defaultValue":99,"./extractAttributes":100,"./extractUniforms":101,"./generateUniformAccessObject":102,"./mapSize":104,"./mapType":105,"./setPrecision":106}],104:[function(require,module,exports){
+},{"./compileProgram":99,"./defaultValue":100,"./extractAttributes":101,"./extractUniforms":102,"./generateUniformAccessObject":103,"./mapSize":105,"./mapType":106,"./setPrecision":107}],105:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -11520,7 +10650,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],105:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -11568,7 +10698,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -11588,7 +10718,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 var pixi_display;
 (function (pixi_display) {
     Object.assign(PIXI.Container.prototype, {
@@ -12315,7 +11445,7 @@ var pixi_display;
     PIXI.display = pixi_display;
 })(pixi_display || (pixi_display = {}));
 
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -12436,10 +11566,10 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":279}],109:[function(require,module,exports){
+},{"resource-loader":280}],110:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12648,7 +11778,7 @@ module.exports = function (_Plugin) {
     return Bounce;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],111:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],112:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12726,7 +11856,7 @@ module.exports = function (_Plugin) {
     return ClampZoom;
 }(Plugin);
 
-},{"./plugin":118}],112:[function(require,module,exports){
+},{"./plugin":119}],113:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12891,7 +12021,7 @@ module.exports = function (_Plugin) {
     return clamp;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],113:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],114:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13046,7 +12176,7 @@ module.exports = function (_Plugin) {
     return Decelerate;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],114:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],115:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13260,7 +12390,7 @@ module.exports = function (_Plugin) {
     return Drag;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],115:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],116:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13338,7 +12468,7 @@ module.exports = function (_Plugin) {
     return Follow;
 }(Plugin);
 
-},{"./plugin":118}],116:[function(require,module,exports){
+},{"./plugin":119}],117:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13512,7 +12642,7 @@ module.exports = function (_Plugin) {
     return MouseEdges;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],117:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],118:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13631,7 +12761,7 @@ module.exports = function (_Plugin) {
     return Pinch;
 }(Plugin);
 
-},{"./plugin":118}],118:[function(require,module,exports){
+},{"./plugin":119}],119:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13682,7 +12812,7 @@ module.exports = function () {
     return Plugin;
 }();
 
-},{}],119:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13858,7 +12988,7 @@ module.exports = function (_Plugin) {
     return SnapZoom;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],120:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],121:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -14003,7 +13133,7 @@ module.exports = function (_Plugin) {
     return Snap;
 }(Plugin);
 
-},{"./plugin":118,"./utils":121}],121:[function(require,module,exports){
+},{"./plugin":119,"./utils":122}],122:[function(require,module,exports){
 'use strict';
 
 var Penner = require('penner');
@@ -14038,7 +13168,7 @@ module.exports = {
     ease: ease
 };
 
-},{"penner":88}],122:[function(require,module,exports){
+},{"penner":89}],123:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -15573,7 +14703,7 @@ PIXI.extras.Viewport = Viewport;
 
 module.exports = Viewport;
 
-},{"./bounce":110,"./clamp":112,"./clamp-zoom":111,"./decelerate":113,"./drag":114,"./follow":115,"./mouse-edges":116,"./pinch":117,"./snap":120,"./snap-zoom":119,"./utils":121,"./wheel":123}],123:[function(require,module,exports){
+},{"./bounce":111,"./clamp":113,"./clamp-zoom":112,"./decelerate":114,"./drag":115,"./follow":116,"./mouse-edges":117,"./pinch":118,"./snap":121,"./snap-zoom":120,"./utils":122,"./wheel":124}],124:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -15703,7 +14833,7 @@ module.exports = function (_Plugin) {
     return Wheel;
 }(Plugin);
 
-},{"./plugin":118}],124:[function(require,module,exports){
+},{"./plugin":119}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16232,7 +15362,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":149,"./accessibleTarget":125,"ismobilejs":81}],125:[function(require,module,exports){
+},{"../core":150,"./accessibleTarget":126,"ismobilejs":82}],126:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -16290,7 +15420,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],126:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16315,7 +15445,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":124,"./accessibleTarget":125}],127:[function(require,module,exports){
+},{"./AccessibilityManager":125,"./accessibleTarget":126}],128:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16547,7 +15677,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":129,"./const":130,"./display/Container":132,"./settings":185,"./ticker":205}],128:[function(require,module,exports){
+},{"./autoDetectRenderer":130,"./const":131,"./display/Container":133,"./settings":186,"./ticker":206}],129:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16614,7 +15744,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":185,"pixi-gl-core":96}],129:[function(require,module,exports){
+},{"./settings":186,"pixi-gl-core":97}],130:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16683,7 +15813,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":161,"./renderers/webgl/WebGLRenderer":168,"./utils":209}],130:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":162,"./renderers/webgl/WebGLRenderer":169,"./utils":210}],131:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17026,7 +16156,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17369,7 +16499,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":154}],132:[function(require,module,exports){
+},{"../math":155}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17987,7 +17117,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":209,"./DisplayObject":133}],133:[function(require,module,exports){
+},{"../utils":210,"./DisplayObject":134}],134:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18681,7 +17811,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":130,"../math":154,"../settings":185,"./Bounds":131,"./Transform":134,"./TransformStatic":136,"eventemitter3":76}],134:[function(require,module,exports){
+},{"../const":131,"../math":155,"../settings":186,"./Bounds":132,"./Transform":135,"./TransformStatic":137,"eventemitter3":77}],135:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18862,7 +17992,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":154,"./TransformBase":135}],135:[function(require,module,exports){
+},{"../math":155,"./TransformBase":136}],136:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18949,7 +18079,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":154}],136:[function(require,module,exports){
+},{"../math":155}],137:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19159,7 +18289,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":154,"./TransformBase":135}],137:[function(require,module,exports){
+},{"../math":155,"./TransformBase":136}],138:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20536,7 +19666,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":130,"../display/Bounds":131,"../display/Container":132,"../math":154,"../renderers/canvas/CanvasRenderer":161,"../sprites/Sprite":186,"../textures/RenderTexture":197,"../textures/Texture":199,"../utils":209,"./GraphicsData":138,"./utils/bezierCurveTo":140}],138:[function(require,module,exports){
+},{"../const":131,"../display/Bounds":132,"../display/Container":133,"../math":155,"../renderers/canvas/CanvasRenderer":162,"../sprites/Sprite":187,"../textures/RenderTexture":198,"../textures/Texture":200,"../utils":210,"./GraphicsData":139,"./utils/bezierCurveTo":141}],139:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -20681,7 +19811,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],139:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20946,7 +20076,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":130,"../../renderers/canvas/CanvasRenderer":161}],140:[function(require,module,exports){
+},{"../../const":131,"../../renderers/canvas/CanvasRenderer":162}],141:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -20996,7 +20126,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],141:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21261,7 +20391,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":130,"../../renderers/webgl/WebGLRenderer":168,"../../renderers/webgl/utils/ObjectRenderer":178,"../../utils":209,"./WebGLGraphicsData":142,"./shaders/PrimitiveShader":143,"./utils/buildCircle":144,"./utils/buildPoly":146,"./utils/buildRectangle":147,"./utils/buildRoundedRectangle":148}],142:[function(require,module,exports){
+},{"../../const":131,"../../renderers/webgl/WebGLRenderer":169,"../../renderers/webgl/utils/ObjectRenderer":179,"../../utils":210,"./WebGLGraphicsData":143,"./shaders/PrimitiveShader":144,"./utils/buildCircle":145,"./utils/buildPoly":147,"./utils/buildRectangle":148,"./utils/buildRoundedRectangle":149}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21404,7 +20534,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":96}],143:[function(require,module,exports){
+},{"pixi-gl-core":97}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21449,7 +20579,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":128}],144:[function(require,module,exports){
+},{"../../../Shader":129}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21544,7 +20674,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":130,"../../../utils":209,"./buildLine":145}],145:[function(require,module,exports){
+},{"../../../const":131,"../../../utils":210,"./buildLine":146}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21818,7 +20948,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":154,"../../../utils":209}],146:[function(require,module,exports){
+},{"../../../math":155,"../../../utils":210}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21904,7 +21034,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":209,"./buildLine":145,"earcut":61}],147:[function(require,module,exports){
+},{"../../../utils":210,"./buildLine":146,"earcut":62}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21980,7 +21110,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":209,"./buildLine":145}],148:[function(require,module,exports){
+},{"../../../utils":210,"./buildLine":146}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22136,7 +21266,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":209,"./buildLine":145,"earcut":61}],149:[function(require,module,exports){
+},{"../../../utils":210,"./buildLine":146,"earcut":62}],150:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22522,7 +21652,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":127,"./Shader":128,"./autoDetectRenderer":129,"./const":130,"./display/Bounds":131,"./display/Container":132,"./display/DisplayObject":133,"./display/Transform":134,"./display/TransformBase":135,"./display/TransformStatic":136,"./graphics/Graphics":137,"./graphics/GraphicsData":138,"./graphics/canvas/CanvasGraphicsRenderer":139,"./graphics/webgl/GraphicsRenderer":141,"./math":154,"./renderers/canvas/CanvasRenderer":161,"./renderers/canvas/utils/CanvasRenderTarget":163,"./renderers/webgl/WebGLRenderer":168,"./renderers/webgl/filters/Filter":170,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":173,"./renderers/webgl/managers/WebGLManager":177,"./renderers/webgl/utils/ObjectRenderer":178,"./renderers/webgl/utils/Quad":179,"./renderers/webgl/utils/RenderTarget":180,"./settings":185,"./sprites/Sprite":186,"./sprites/canvas/CanvasSpriteRenderer":187,"./sprites/canvas/CanvasTinter":188,"./sprites/webgl/SpriteRenderer":190,"./text/Text":192,"./text/TextMetrics":193,"./text/TextStyle":194,"./textures/BaseRenderTexture":195,"./textures/BaseTexture":196,"./textures/RenderTexture":197,"./textures/Spritesheet":198,"./textures/Texture":199,"./textures/TextureMatrix":200,"./textures/TextureUvs":201,"./textures/VideoBaseTexture":202,"./ticker":205,"./utils":209,"pixi-gl-core":96}],150:[function(require,module,exports){
+},{"./Application":128,"./Shader":129,"./autoDetectRenderer":130,"./const":131,"./display/Bounds":132,"./display/Container":133,"./display/DisplayObject":134,"./display/Transform":135,"./display/TransformBase":136,"./display/TransformStatic":137,"./graphics/Graphics":138,"./graphics/GraphicsData":139,"./graphics/canvas/CanvasGraphicsRenderer":140,"./graphics/webgl/GraphicsRenderer":142,"./math":155,"./renderers/canvas/CanvasRenderer":162,"./renderers/canvas/utils/CanvasRenderTarget":164,"./renderers/webgl/WebGLRenderer":169,"./renderers/webgl/filters/Filter":171,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":174,"./renderers/webgl/managers/WebGLManager":178,"./renderers/webgl/utils/ObjectRenderer":179,"./renderers/webgl/utils/Quad":180,"./renderers/webgl/utils/RenderTarget":181,"./settings":186,"./sprites/Sprite":187,"./sprites/canvas/CanvasSpriteRenderer":188,"./sprites/canvas/CanvasTinter":189,"./sprites/webgl/SpriteRenderer":191,"./text/Text":193,"./text/TextMetrics":194,"./text/TextStyle":195,"./textures/BaseRenderTexture":196,"./textures/BaseTexture":197,"./textures/RenderTexture":198,"./textures/Spritesheet":199,"./textures/Texture":200,"./textures/TextureMatrix":201,"./textures/TextureUvs":202,"./textures/VideoBaseTexture":203,"./ticker":206,"./utils":210,"pixi-gl-core":97}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22715,7 +21845,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":151}],151:[function(require,module,exports){
+},{"./Matrix":152}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23237,7 +22367,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":130,"./Point":153}],152:[function(require,module,exports){
+},{"../const":131,"./Point":154}],153:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -23388,7 +22518,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],153:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -23479,7 +22609,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],154:[function(require,module,exports){
+},{}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23567,7 +22697,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":150,"./Matrix":151,"./ObservablePoint":152,"./Point":153,"./shapes/Circle":155,"./shapes/Ellipse":156,"./shapes/Polygon":157,"./shapes/Rectangle":158,"./shapes/RoundedRectangle":159}],155:[function(require,module,exports){
+},{"./GroupD8":151,"./Matrix":152,"./ObservablePoint":153,"./Point":154,"./shapes/Circle":156,"./shapes/Ellipse":157,"./shapes/Polygon":158,"./shapes/Rectangle":159,"./shapes/RoundedRectangle":160}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23681,7 +22811,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":130,"./Rectangle":158}],156:[function(require,module,exports){
+},{"../../const":131,"./Rectangle":159}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23803,7 +22933,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":130,"./Rectangle":158}],157:[function(require,module,exports){
+},{"../../const":131,"./Rectangle":159}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23934,7 +23064,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":130,"../Point":153}],158:[function(require,module,exports){
+},{"../../const":131,"../Point":154}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24197,7 +23327,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":130}],159:[function(require,module,exports){
+},{"../../const":131}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24330,7 +23460,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":130}],160:[function(require,module,exports){
+},{"../../const":131}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24695,7 +23825,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":130,"../display/Container":132,"../math":154,"../settings":185,"../textures/RenderTexture":197,"../utils":209,"eventemitter3":76}],161:[function(require,module,exports){
+},{"../const":131,"../display/Container":133,"../math":155,"../settings":186,"../textures/RenderTexture":198,"../utils":210,"eventemitter3":77}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25060,7 +24190,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":130,"../../settings":185,"../../utils":209,"../SystemRenderer":160,"./utils/CanvasMaskManager":162,"./utils/CanvasRenderTarget":163,"./utils/mapCanvasBlendModesToPixi":165}],162:[function(require,module,exports){
+},{"../../const":131,"../../settings":186,"../../utils":210,"../SystemRenderer":161,"./utils/CanvasMaskManager":163,"./utils/CanvasRenderTarget":164,"./utils/mapCanvasBlendModesToPixi":166}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25229,7 +24359,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":130}],163:[function(require,module,exports){
+},{"../../../const":131}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25353,7 +24483,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":185}],164:[function(require,module,exports){
+},{"../../../settings":186}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25414,7 +24544,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25486,7 +24616,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":130,"./canUseNewCanvasBlendModes":164}],166:[function(require,module,exports){
+},{"../../../const":131,"./canUseNewCanvasBlendModes":165}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25606,7 +24736,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":130,"../../settings":185}],167:[function(require,module,exports){
+},{"../../const":131,"../../settings":186}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25862,7 +24992,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":130,"../../utils":209,"./utils/RenderTarget":180,"pixi-gl-core":96}],168:[function(require,module,exports){
+},{"../../const":131,"../../utils":210,"./utils/RenderTarget":181,"pixi-gl-core":97}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26679,7 +25809,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":130,"../../textures/BaseTexture":196,"../../utils":209,"../SystemRenderer":160,"./TextureGarbageCollector":166,"./TextureManager":167,"./WebGLState":169,"./managers/FilterManager":174,"./managers/MaskManager":175,"./managers/StencilManager":176,"./utils/ObjectRenderer":178,"./utils/RenderTarget":180,"./utils/mapWebGLDrawModesToPixi":183,"./utils/validateContext":184,"pixi-gl-core":96}],169:[function(require,module,exports){
+},{"../../const":131,"../../textures/BaseTexture":197,"../../utils":210,"../SystemRenderer":161,"./TextureGarbageCollector":167,"./TextureManager":168,"./WebGLState":170,"./managers/FilterManager":175,"./managers/MaskManager":176,"./managers/StencilManager":177,"./utils/ObjectRenderer":179,"./utils/RenderTarget":181,"./utils/mapWebGLDrawModesToPixi":184,"./utils/validateContext":185,"pixi-gl-core":97}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26959,7 +26089,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":182}],170:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":183}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27155,7 +26285,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":130,"../../../settings":185,"../../../utils":209,"./extractUniformsFromSrc":171}],171:[function(require,module,exports){
+},{"../../../const":131,"../../../settings":186,"../../../utils":210,"./extractUniformsFromSrc":172}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27217,7 +26347,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":96}],172:[function(require,module,exports){
+},{"pixi-gl-core":97}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27277,7 +26407,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":154}],173:[function(require,module,exports){
+},{"../../../math":155}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27365,7 +26495,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":154,"../../../../textures/TextureMatrix":200,"../Filter":170,"path":300}],174:[function(require,module,exports){
+},{"../../../../math":155,"../../../../textures/TextureMatrix":201,"../Filter":171,"path":301}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28015,7 +27145,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":128,"../../../math":154,"../filters/filterTransforms":172,"../utils/Quad":179,"../utils/RenderTarget":180,"./WebGLManager":177,"bit-twiddle":56}],175:[function(require,module,exports){
+},{"../../../Shader":129,"../../../math":155,"../filters/filterTransforms":173,"../utils/Quad":180,"../utils/RenderTarget":181,"./WebGLManager":178,"bit-twiddle":57}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28225,7 +27355,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":173,"./WebGLManager":177}],176:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":174,"./WebGLManager":178}],177:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28378,7 +27508,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":177}],177:[function(require,module,exports){
+},{"./WebGLManager":178}],178:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28433,7 +27563,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],178:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28511,7 +27641,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":177}],179:[function(require,module,exports){
+},{"../managers/WebGLManager":178}],180:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28692,7 +27822,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":207,"pixi-gl-core":96}],180:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":208,"pixi-gl-core":97}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29026,7 +28156,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":130,"../../../math":154,"../../../settings":185,"pixi-gl-core":96}],181:[function(require,module,exports){
+},{"../../../const":131,"../../../math":155,"../../../settings":186,"pixi-gl-core":97}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29101,7 +28231,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":96}],182:[function(require,module,exports){
+},{"pixi-gl-core":97}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29150,7 +28280,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":130}],183:[function(require,module,exports){
+},{"../../../const":131}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29182,7 +28312,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":130}],184:[function(require,module,exports){
+},{"../../../const":131}],185:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29198,7 +28328,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],185:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29443,7 +28573,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":206,"./utils/maxRecommendedTextures":211}],186:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":207,"./utils/maxRecommendedTextures":212}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30084,7 +29214,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":130,"../display/Container":132,"../math":154,"../textures/Texture":199,"../utils":209}],187:[function(require,module,exports){
+},{"../const":131,"../display/Container":133,"../math":155,"../textures/Texture":200,"../utils":210}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30237,7 +29367,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":130,"../../math":154,"../../renderers/canvas/CanvasRenderer":161,"./CanvasTinter":188}],188:[function(require,module,exports){
+},{"../../const":131,"../../math":155,"../../renderers/canvas/CanvasRenderer":162,"./CanvasTinter":189}],189:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30488,7 +29618,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":164,"../../utils":209}],189:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":165,"../../utils":210}],190:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -30541,7 +29671,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],190:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31094,7 +30224,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":168,"../../renderers/webgl/utils/ObjectRenderer":178,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":181,"../../settings":185,"../../utils":209,"../../utils/createIndicesForQuads":207,"./BatchBuffer":189,"./generateMultiTextureShader":191,"bit-twiddle":56,"pixi-gl-core":96}],191:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":169,"../../renderers/webgl/utils/ObjectRenderer":179,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":182,"../../settings":186,"../../utils":210,"../../utils/createIndicesForQuads":208,"./BatchBuffer":190,"./generateMultiTextureShader":192,"bit-twiddle":57,"pixi-gl-core":97}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31157,7 +30287,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":128,"path":300}],192:[function(require,module,exports){
+},{"../../Shader":129,"path":301}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31815,7 +30945,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":130,"../math":154,"../settings":185,"../sprites/Sprite":186,"../textures/Texture":199,"../utils":209,"../utils/trimCanvas":214,"./TextMetrics":193,"./TextStyle":194}],193:[function(require,module,exports){
+},{"../const":131,"../math":155,"../settings":186,"../sprites/Sprite":187,"../textures/Texture":200,"../utils":210,"../utils/trimCanvas":215,"./TextMetrics":194,"./TextStyle":195}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32515,7 +31645,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],194:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33349,7 +32479,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":130,"../utils":209}],195:[function(require,module,exports){
+},{"../const":131,"../utils":210}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33511,7 +32641,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":185,"./BaseTexture":196}],196:[function(require,module,exports){
+},{"../settings":186,"./BaseTexture":197}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34357,7 +33487,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":185,"../utils":209,"../utils/determineCrossOrigin":208,"bit-twiddle":56,"eventemitter3":76}],197:[function(require,module,exports){
+},{"../settings":186,"../utils":210,"../utils/determineCrossOrigin":209,"bit-twiddle":57,"eventemitter3":77}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34511,7 +33641,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":195,"./Texture":199}],198:[function(require,module,exports){
+},{"./BaseRenderTexture":196,"./Texture":200}],199:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34840,7 +33970,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":149,"../utils":209}],199:[function(require,module,exports){
+},{"../":150,"../utils":210}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35541,7 +34671,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":154,"../settings":185,"../utils":209,"./BaseTexture":196,"./TextureUvs":201,"./VideoBaseTexture":202,"eventemitter3":76}],200:[function(require,module,exports){
+},{"../math":155,"../settings":186,"../utils":210,"./BaseTexture":197,"./TextureUvs":202,"./VideoBaseTexture":203,"eventemitter3":77}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35705,7 +34835,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":151}],201:[function(require,module,exports){
+},{"../math/Matrix":152}],202:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35810,7 +34940,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":150}],202:[function(require,module,exports){
+},{"../math/GroupD8":151}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36153,7 +35283,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":130,"../ticker":205,"../utils":209,"../utils/determineCrossOrigin":208,"./BaseTexture":196}],203:[function(require,module,exports){
+},{"../const":131,"../ticker":206,"../utils":210,"../utils/determineCrossOrigin":209,"./BaseTexture":197}],204:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36626,7 +35756,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":130,"../settings":185,"./TickerListener":204}],204:[function(require,module,exports){
+},{"../const":131,"../settings":186,"./TickerListener":205}],205:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -36800,7 +35930,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],205:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36880,7 +36010,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":203}],206:[function(require,module,exports){
+},{"./Ticker":204}],207:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -36894,7 +36024,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],207:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -36928,7 +36058,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],208:[function(require,module,exports){
+},{}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36984,7 +36114,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":306}],209:[function(require,module,exports){
+},{"url":307}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37467,7 +36597,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":130,"../settings":185,"./mapPremultipliedBlendModes":210,"./mixin":212,"./pluginTarget":213,"earcut":61,"eventemitter3":76,"ismobilejs":81,"remove-array-items":274}],210:[function(require,module,exports){
+},{"../const":131,"../settings":186,"./mapPremultipliedBlendModes":211,"./mixin":213,"./pluginTarget":214,"earcut":62,"eventemitter3":77,"ismobilejs":82,"remove-array-items":275}],211:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37510,7 +36640,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":130}],211:[function(require,module,exports){
+},{"../const":131}],212:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37532,7 +36662,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":81}],212:[function(require,module,exports){
+},{"ismobilejs":82}],213:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37594,7 +36724,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],213:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37660,7 +36790,7 @@ exports.default = {
     }
 };
 
-},{}],214:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37738,7 +36868,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],215:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38894,7 +38024,7 @@ function deprecation(core) {
     }
 }
 
-},{}],216:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39074,7 +38204,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":149}],217:[function(require,module,exports){
+},{"../../core":150}],218:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39099,7 +38229,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":216,"./webgl/WebGLExtract":218}],218:[function(require,module,exports){
+},{"./canvas/CanvasExtract":217,"./webgl/WebGLExtract":219}],219:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39334,7 +38464,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":149}],219:[function(require,module,exports){
+},{"../../core":150}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39756,7 +38886,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":149}],220:[function(require,module,exports){
+},{"../core":150}],221:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40401,7 +39531,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":149,"../core/math/ObservablePoint":152,"../core/settings":185,"../core/utils":209}],221:[function(require,module,exports){
+},{"../core":150,"../core/math/ObservablePoint":153,"../core/settings":186,"../core/utils":210}],222:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40847,7 +39977,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":149,"../core/sprites/canvas/CanvasTinter":188}],222:[function(require,module,exports){
+},{"../core":150,"../core/sprites/canvas/CanvasTinter":189}],223:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -41251,7 +40381,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":149,"../core/textures/BaseTexture":196,"../core/textures/Texture":199,"../core/utils":209}],223:[function(require,module,exports){
+},{"../core":150,"../core/textures/BaseTexture":197,"../core/textures/Texture":200,"../core/utils":210}],224:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -41286,7 +40416,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":149}],224:[function(require,module,exports){
+},{"../core":150}],225:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -41320,7 +40450,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":149}],225:[function(require,module,exports){
+},{"../core":150}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41372,7 +40502,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":219,"./BitmapText":220,"./TilingSprite":221,"./cacheAsBitmap":222,"./getChildByName":223,"./getGlobalPosition":224,"./webgl/TilingSpriteRenderer":226}],226:[function(require,module,exports){
+},{"./AnimatedSprite":220,"./BitmapText":221,"./TilingSprite":222,"./cacheAsBitmap":223,"./getChildByName":224,"./getGlobalPosition":225,"./webgl/TilingSpriteRenderer":227}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41534,7 +40664,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":149,"../../core/const":130,"path":300}],227:[function(require,module,exports){
+},{"../../core":150,"../../core/const":131,"path":301}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41618,7 +40748,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":149,"path":300}],228:[function(require,module,exports){
+},{"../../core":150,"path":301}],229:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41792,7 +40922,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":149,"./BlurXFilter":229,"./BlurYFilter":230}],229:[function(require,module,exports){
+},{"../../core":150,"./BlurXFilter":230,"./BlurYFilter":231}],230:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41958,7 +41088,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":149,"./generateBlurFragSource":231,"./generateBlurVertSource":232,"./getMaxBlurKernelSize":233}],230:[function(require,module,exports){
+},{"../../core":150,"./generateBlurFragSource":232,"./generateBlurVertSource":233,"./getMaxBlurKernelSize":234}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42123,7 +41253,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":149,"./generateBlurFragSource":231,"./generateBlurVertSource":232,"./getMaxBlurKernelSize":233}],231:[function(require,module,exports){
+},{"../../core":150,"./generateBlurFragSource":232,"./generateBlurVertSource":233,"./getMaxBlurKernelSize":234}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42170,7 +41300,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],232:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42214,7 +41344,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],233:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -42230,7 +41360,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],234:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42781,7 +41911,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":149,"path":300}],235:[function(require,module,exports){
+},{"../../core":150,"path":301}],236:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42889,7 +42019,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":149,"path":300}],236:[function(require,module,exports){
+},{"../../core":150,"path":301}],237:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42943,7 +42073,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":149,"path":300}],237:[function(require,module,exports){
+},{"../../core":150,"path":301}],238:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43022,7 +42152,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":227,"./blur/BlurFilter":228,"./blur/BlurXFilter":229,"./blur/BlurYFilter":230,"./colormatrix/ColorMatrixFilter":234,"./displacement/DisplacementFilter":235,"./fxaa/FXAAFilter":236,"./noise/NoiseFilter":238}],238:[function(require,module,exports){
+},{"./alpha/AlphaFilter":228,"./blur/BlurFilter":229,"./blur/BlurXFilter":230,"./blur/BlurYFilter":231,"./colormatrix/ColorMatrixFilter":235,"./displacement/DisplacementFilter":236,"./fxaa/FXAAFilter":237,"./noise/NoiseFilter":239}],239:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43119,7 +42249,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":149,"path":300}],239:[function(require,module,exports){
+},{"../../core":150,"path":301}],240:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -43233,7 +42363,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":126,"./core":149,"./deprecation":215,"./extract":217,"./extras":225,"./filters":237,"./interaction":244,"./loaders":247,"./mesh":256,"./particles":259,"./polyfill":266,"./prepare":270}],240:[function(require,module,exports){
+},{"./accessibility":127,"./core":150,"./deprecation":216,"./extract":218,"./extras":226,"./filters":238,"./interaction":245,"./loaders":248,"./mesh":257,"./particles":260,"./polyfill":267,"./prepare":271}],241:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43456,7 +42586,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":149}],241:[function(require,module,exports){
+},{"../core":150}],242:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -43539,7 +42669,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],242:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45321,7 +44451,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":149,"./InteractionData":240,"./InteractionEvent":241,"./InteractionTrackingData":243,"./interactiveTarget":245,"eventemitter3":76}],243:[function(require,module,exports){
+},{"../core":150,"./InteractionData":241,"./InteractionEvent":242,"./InteractionTrackingData":244,"./interactiveTarget":246,"eventemitter3":77}],244:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -45497,7 +44627,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45549,7 +44679,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":240,"./InteractionEvent":241,"./InteractionManager":242,"./InteractionTrackingData":243,"./interactiveTarget":245}],245:[function(require,module,exports){
+},{"./InteractionData":241,"./InteractionEvent":242,"./InteractionManager":243,"./InteractionTrackingData":244,"./interactiveTarget":246}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45666,7 +44796,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45786,7 +44916,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":225,"path":300,"resource-loader":279}],247:[function(require,module,exports){
+},{"../extras":226,"path":301,"resource-loader":280}],248:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45914,7 +45044,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":127,"./bitmapFontParser":246,"./loader":248,"./spritesheetParser":249,"./textureParser":250,"resource-loader":279}],248:[function(require,module,exports){
+},{"../core/Application":128,"./bitmapFontParser":247,"./loader":249,"./spritesheetParser":250,"./textureParser":251,"resource-loader":280}],249:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46085,7 +45215,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":246,"./spritesheetParser":249,"./textureParser":250,"eventemitter3":76,"resource-loader":279,"resource-loader/lib/middlewares/parsing/blob":280}],249:[function(require,module,exports){
+},{"./bitmapFontParser":247,"./spritesheetParser":250,"./textureParser":251,"eventemitter3":77,"resource-loader":280,"resource-loader/lib/middlewares/parsing/blob":281}],250:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46149,7 +45279,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":149,"resource-loader":279,"url":306}],250:[function(require,module,exports){
+},{"../core":150,"resource-loader":280,"url":307}],251:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46172,7 +45302,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":199,"resource-loader":279}],251:[function(require,module,exports){
+},{"../core/textures/Texture":200,"resource-loader":280}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46603,7 +45733,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":149,"../core/textures/Texture":199}],252:[function(require,module,exports){
+},{"../core":150,"../core/textures/Texture":200}],253:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46996,7 +46126,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":253}],253:[function(require,module,exports){
+},{"./Plane":254}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47137,7 +46267,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":251}],254:[function(require,module,exports){
+},{"./Mesh":252}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47373,7 +46503,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":251}],255:[function(require,module,exports){
+},{"./Mesh":252}],256:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47659,7 +46789,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":149,"../Mesh":251}],256:[function(require,module,exports){
+},{"../../core":150,"../Mesh":252}],257:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47720,7 +46850,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":251,"./NineSlicePlane":252,"./Plane":253,"./Rope":254,"./canvas/CanvasMeshRenderer":255,"./webgl/MeshRenderer":257}],257:[function(require,module,exports){
+},{"./Mesh":252,"./NineSlicePlane":253,"./Plane":254,"./Rope":255,"./canvas/CanvasMeshRenderer":256,"./webgl/MeshRenderer":258}],258:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47875,7 +47005,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":149,"../Mesh":251,"path":300,"pixi-gl-core":96}],258:[function(require,module,exports){
+},{"../../core":150,"../Mesh":252,"path":301,"pixi-gl-core":97}],259:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48265,7 +47395,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":149,"../core/utils":209}],259:[function(require,module,exports){
+},{"../core":150,"../core/utils":210}],260:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48290,7 +47420,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":258,"./webgl/ParticleRenderer":261}],260:[function(require,module,exports){
+},{"./ParticleContainer":259,"./webgl/ParticleRenderer":262}],261:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48539,7 +47669,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":207,"pixi-gl-core":96}],261:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":208,"pixi-gl-core":97}],262:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49020,7 +48150,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":149,"../../core/utils":209,"./ParticleBuffer":260,"./ParticleShader":262}],262:[function(require,module,exports){
+},{"../../core":150,"../../core/utils":210,"./ParticleBuffer":261,"./ParticleShader":263}],263:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49063,7 +48193,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":128}],263:[function(require,module,exports){
+},{"../../core/Shader":129}],264:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -49081,7 +48211,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],264:[function(require,module,exports){
+},{}],265:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -49093,7 +48223,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],265:[function(require,module,exports){
+},{}],266:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -49108,7 +48238,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":84}],266:[function(require,module,exports){
+},{"object-assign":85}],267:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -49135,7 +48265,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":263,"./Number.isInteger":264,"./Object.assign":265,"./requestAnimationFrame":267}],267:[function(require,module,exports){
+},{"./Math.sign":264,"./Number.isInteger":265,"./Object.assign":266,"./requestAnimationFrame":268}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -49212,7 +48342,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],268:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49700,7 +48830,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":149,"./limiters/CountLimiter":271}],269:[function(require,module,exports){
+},{"../core":150,"./limiters/CountLimiter":272}],270:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49820,7 +48950,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":149,"../BasePrepare":268}],270:[function(require,module,exports){
+},{"../../core":150,"../BasePrepare":269}],271:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49872,7 +49002,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":268,"./canvas/CanvasPrepare":269,"./limiters/CountLimiter":271,"./limiters/TimeLimiter":272,"./webgl/WebGLPrepare":273}],271:[function(require,module,exports){
+},{"./BasePrepare":269,"./canvas/CanvasPrepare":270,"./limiters/CountLimiter":272,"./limiters/TimeLimiter":273,"./webgl/WebGLPrepare":274}],272:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49930,7 +49060,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],272:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49988,7 +49118,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],273:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50110,7 +49240,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":149,"../BasePrepare":268}],274:[function(require,module,exports){
+},{"../../core":150,"../BasePrepare":269}],275:[function(require,module,exports){
 'use strict'
 
 /**
@@ -50140,7 +49270,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],275:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50793,7 +49923,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":276,"./async":277,"mini-signals":82,"parse-uri":85}],276:[function(require,module,exports){
+},{"./Resource":277,"./async":278,"mini-signals":83,"parse-uri":86}],277:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51949,7 +51079,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":82,"parse-uri":85}],277:[function(require,module,exports){
+},{"mini-signals":83,"parse-uri":86}],278:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52158,7 +51288,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],278:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52226,7 +51356,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],279:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -52250,7 +51380,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":275,"./Resource":276,"./async":277,"./b64":278}],280:[function(require,module,exports){
+},{"./Loader":276,"./Resource":277,"./async":278,"./b64":279}],281:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52338,7 +51468,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":276,"../../b64":278}],281:[function(require,module,exports){
+},{"../../Resource":277,"../../b64":279}],282:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -52434,7 +51564,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":282,"./socket":284,"./url":285,"debug":286,"socket.io-parser":289}],282:[function(require,module,exports){
+},{"./manager":283,"./socket":285,"./url":286,"debug":287,"socket.io-parser":290}],283:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -53009,7 +52139,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":283,"./socket":284,"backo2":54,"component-bind":58,"component-emitter":59,"debug":286,"engine.io-client":62,"indexof":80,"socket.io-parser":289}],283:[function(require,module,exports){
+},{"./on":284,"./socket":285,"backo2":55,"component-bind":59,"component-emitter":60,"debug":287,"engine.io-client":63,"indexof":81,"socket.io-parser":290}],284:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -53035,7 +52165,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],284:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -53475,7 +52605,7 @@ Socket.prototype.binary = function (binary) {
   return this;
 };
 
-},{"./on":283,"component-bind":58,"component-emitter":59,"debug":286,"has-binary2":77,"parseqs":86,"socket.io-parser":289,"to-array":294}],285:[function(require,module,exports){
+},{"./on":284,"component-bind":59,"component-emitter":60,"debug":287,"has-binary2":78,"parseqs":87,"socket.io-parser":290,"to-array":295}],286:[function(require,module,exports){
 (function (global){
 
 /**
@@ -53554,11 +52684,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":286,"parseuri":87}],286:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./debug":287,"_process":301,"dup":71}],287:[function(require,module,exports){
+},{"debug":287,"parseuri":88}],287:[function(require,module,exports){
 arguments[4][72][0].apply(exports,arguments)
-},{"dup":72,"ms":83}],288:[function(require,module,exports){
+},{"./debug":288,"_process":302,"dup":72}],288:[function(require,module,exports){
+arguments[4][73][0].apply(exports,arguments)
+},{"dup":73,"ms":84}],289:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -53703,7 +52833,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":290,"isarray":293}],289:[function(require,module,exports){
+},{"./is-buffer":291,"isarray":294}],290:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -54122,7 +53252,7 @@ function error(msg) {
   };
 }
 
-},{"./binary":288,"./is-buffer":290,"component-emitter":59,"debug":291,"isarray":293}],290:[function(require,module,exports){
+},{"./binary":289,"./is-buffer":291,"component-emitter":60,"debug":292,"isarray":294}],291:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -54150,13 +53280,13 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],291:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./debug":292,"_process":301,"dup":71}],292:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 arguments[4][72][0].apply(exports,arguments)
-},{"dup":72,"ms":83}],293:[function(require,module,exports){
-arguments[4][78][0].apply(exports,arguments)
-},{"dup":78}],294:[function(require,module,exports){
+},{"./debug":293,"_process":302,"dup":72}],293:[function(require,module,exports){
+arguments[4][73][0].apply(exports,arguments)
+},{"dup":73,"ms":84}],294:[function(require,module,exports){
+arguments[4][79][0].apply(exports,arguments)
+},{"dup":79}],295:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -54171,7 +53301,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -54241,7 +53371,7 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],296:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -54394,9 +53524,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],297:[function(require,module,exports){
-
 },{}],298:[function(require,module,exports){
+
+},{}],299:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -56175,7 +55305,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":296,"ieee754":299}],299:[function(require,module,exports){
+},{"base64-js":297,"ieee754":300}],300:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -56261,7 +55391,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],300:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -56567,7 +55697,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":301}],301:[function(require,module,exports){
+},{"_process":302}],302:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -56753,7 +55883,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],302:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -57290,7 +56420,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],303:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57376,7 +56506,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],304:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57463,13 +56593,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],305:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":303,"./encode":304}],306:[function(require,module,exports){
+},{"./decode":304,"./encode":305}],307:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58203,7 +57333,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":307,"punycode":302,"querystring":305}],307:[function(require,module,exports){
+},{"./util":308,"punycode":303,"querystring":306}],308:[function(require,module,exports){
 'use strict';
 
 module.exports = {
