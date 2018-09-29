@@ -28,8 +28,4 @@ module.exports.add_items = () => {
   global.movableItems.addChild(movableBox);
   global.collisionItems.addChild(boxFull);
   global.viewport.addChild(global.collisionItems);
-
-  // global.socket.on('container_contents', (contents) => {
-  //   console.log(contents)
-  // })
 };

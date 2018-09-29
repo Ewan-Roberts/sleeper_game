@@ -3,18 +3,16 @@ const PIXI = require('pixi.js');
 const player = require('../../player/player.js');
 const enemy = require('../../enemies/enemy.js');
 const items = require('./debug_items.js');
-// const doorHelper = require('../../utils/doorHelper.js');
-const levelUtils = require('../level_utils.js');
 const filterUtil = require('../../visual_effects/filterUtils.js');
 const dialogUtil = require('../../dialog/dialogUtil.js');
 const networkPlayers = require('../../network/network_players.js');
-const spriteAnimations = require('../../visual_effects/sprite_animations.js');
 const rain = require('../../weather/rain.js');
 const cutsceneIntro = require('../../cutscene/cutscene_intro.js');
 const rat = require('../../animals/rat.js');
 const cutsceneUtils = require('../../cutscene/cutsceneUtils.js');
 const generateObject = require('../../construction/generateObject.js');
-
+const bedroomUtil = require('../bedroom/bedroomUtil.js');
+const parkUtil = require('../park/parkUtil.js');
 
 global.collisionItems = new PIXI.Container();
 global.eventTriggers = new PIXI.Container();
@@ -67,7 +65,7 @@ module.exports.add_floor = () => {
   levelLoadPad.action = () => {
     if (!levelLoadPad.fired) {
       levelLoadPad.fired = true;
-      levelUtils.importBedroomData();
+      // levelUtils.importBedroomData();
     }
   };
 
@@ -107,10 +105,7 @@ module.exports.add_floor = () => {
   animationPad.interactive = true;
   animationPad.on('click', ()=>{
     animationPad.fired = true;
-    console.log('fwefew')
     generateObject.renderItem(200, 100)
-    // levelUtils.importStreetApartmentData();
-    // cutsceneUtils.teleport(1500, 1500);
   });
 
   const loadParkPad = createPad(-950, -100);
@@ -119,22 +114,22 @@ module.exports.add_floor = () => {
   loadParkPad.interactive = true;
   loadParkPad.on('click', ()=>{
     loadParkPad.fired = true;
-    levelUtils.importParkData();
+    parkUtil.load();
     cutsceneUtils.teleport(1500, 1500);
     enemy.enemy_frames()
       .then(() => {
-        const levelPathData = levelUtils.importEnemyPathData();
+        const levelPathData = parkUtil.importEnemyPathData();
         enemy.enemy_path(levelPathData);
       });
   })
   loadParkPad.action = () => {
     if (!loadParkPad.fired) {
       loadParkPad.fired = true;
-      levelUtils.importParkData();
+      parkUtil.load();
       cutsceneUtils.teleport(1500, 1500);
       enemy.enemy_frames()
         .then(() => {
-          const levelPathData = levelUtils.importEnemyPathData();
+          const levelPathData = parkUtil.importEnemyPathData();
           enemy.enemy_path(levelPathData);
         });
     }
@@ -158,7 +153,7 @@ module.exports.add_floor = () => {
       enemyPathing.fired = true;
       enemy.enemy_frames()
         .then(() => {
-          const levelPathData = levelUtils.importEnemyPathData();
+          const levelPathData = parkUtil.importEnemyPathData();
           enemy.enemy_path(levelPathData);
         });
     }
@@ -167,6 +162,7 @@ module.exports.add_floor = () => {
   const clearPad = createPad(-200, 50);
   clearPad.fired = false;
   clearPad.alpha = 0.8;
+  clearPad.interactive = true;
   clearPad.action = () => {
     if (!clearPad.fired) {
       clearPad.fired = true;
@@ -174,6 +170,13 @@ module.exports.add_floor = () => {
       cutsceneIntro.start();
     } else filterUtil.clear();
   };
+  clearPad.on('click', () => {
+    console.log('hi');  
+    cutsceneUtils.teleport(1500, 1500);
+    bedroomUtil.load();
+    // filterUtil.godray(global.Player.sprite.x, global.Player.sprite.y);
+  })
+
 
   global.eventTriggers.addChild(
     ratPad,

@@ -1,7 +1,6 @@
 const PIXI = require('pixi.js');
 const spriteHelper = require('../utils/spriteHelper.js');
 const bowHelper = require('../weapons/bow/bowHelper');
-const levelUtils = require('../level/level_utils');
 const dialogUtil = require('../dialog/dialogUtil.js');
 
 global.enemyContainer = new PIXI.Container();
@@ -19,6 +18,16 @@ const Enemy = {
   },
 };
 
+module.exports.createEnemyPathFrom = (levelData) => {
+  const path = new PIXI.tween.TweenPath();
+
+  path.moveTo(levelData[0].x, levelData[0].y+1388);
+
+  for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y+1388);
+
+  return path;
+};
+
 module.exports.enemy_frames = () => new Promise((resolve) => {
   for (let i = 0; i < 19; i += 1) {
     Enemy.animation.moving.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
@@ -27,7 +36,7 @@ module.exports.enemy_frames = () => new Promise((resolve) => {
 });
 
 module.exports.enemy_path = (pathData) => {
-  const path = levelUtils.createEnemyPathFrom(pathData);
+  const path = module.exports.createEnemyPathFrom(pathData);
   spriteHelper.drawPathAndShow(path);
 
   const enemySprite = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
