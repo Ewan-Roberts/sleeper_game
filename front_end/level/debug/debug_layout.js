@@ -13,6 +13,7 @@ const rain = require('../../weather/rain.js');
 const cutsceneIntro = require('../../cutscene/cutscene_intro.js');
 const rat = require('../../animals/rat.js');
 const cutsceneUtils = require('../../cutscene/cutsceneUtils.js');
+const generateObject = require('../../construction/generateObject.js');
 
 
 global.collisionItems = new PIXI.Container();
@@ -106,7 +107,9 @@ module.exports.add_floor = () => {
   animationPad.interactive = true;
   animationPad.on('click', ()=>{
     animationPad.fired = true;
-    levelUtils.importStreetApartmentData();
+    console.log('fwefew')
+    generateObject.renderItem(200, 100)
+    // levelUtils.importStreetApartmentData();
     // cutsceneUtils.teleport(1500, 1500);
   });
 

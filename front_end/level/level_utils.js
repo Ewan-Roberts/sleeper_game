@@ -72,19 +72,17 @@ module.exports.importStreetApartmentData = () => {
   const offset = {
     x: 1000,
     y: 3000,
-    rotation: 0.5,
   }
 
   const background = PIXI.Sprite.fromFrame('street_apartment');
   background.zIndex = 1;
   background.height = streetApartmentData.tileheight;
   background.width = streetApartmentData.tilewidth;
-  background.position.set(offset.x, offset.y)
-  background.rotation = offset.rotation;
+  background.position.set(offset.x, offset.y);
 
   global.collisionItems.zIndex = -1;
 
-  this.hitAreas(streetApartmentData.tiles[0].objectgroup.objects, offset.x, offset.y, offset.rotation);
+  this.hitAreas(streetApartmentData.tiles[0].objectgroup.objects, offset.x, offset.y);
   global.viewport.addChild(background);
   global.viewport.updateLayersOrder();
 };
@@ -110,7 +108,7 @@ module.exports.importParkData = () => {
     this.eventPad(parkData.tiles[4].objectgroup.objects[i], ()=>{
       if (!this.fired) {
         console.log('event pad hit')
-        module.exports.importStreetApartmentData()
+        module.exports.importStreetApartmentData();
         this.fired = true;
       }
     });
@@ -132,14 +130,13 @@ module.exports.renderWall = (wallArray) => {
   });
 };
 
-module.exports.hitAreas = (wallArray, x, y, rotation) => {
+module.exports.hitAreas = (wallArray, x, y) => {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
     wall.position.set(wallData.x + x, wallData.y + y);
     wall.width = wallData.width;
     wall.height = wallData.height;
-    wall.rotation = rotation;
     wall.alpha = 0.01;
 
     global.collisionItems.addChild(wall);
