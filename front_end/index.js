@@ -5,7 +5,7 @@ const tween = require('pixi-tween');
 const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
 const debug = require('./level/debug/debug_layout.js');
-const pathfinding = require('./pathfinding/pathfindUtil.js');
+
 
 global.socket = io.connect();
 // global.socket.on('thing', (res) => {
@@ -45,6 +45,7 @@ global.loader.use(pixiPackerParser(PIXI));
 global.loader.add('../../images/bedroom_EN_web.json');
 global.loader.load(() => {
   debug.add_floor();
+  const pathfinding = require('./pathfinding/pathfindUtil.js');
 });
 
 global.app.ticker.add(() => PIXI.tweenManager.update());

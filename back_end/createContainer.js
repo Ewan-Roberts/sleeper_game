@@ -22,15 +22,10 @@ module.exports = data => {
 	     			console.log("chest")
 
 		     		new Container(data).save(err=>{
-
 		    		    if (err) reject(err)
-
 		     			resolve(chest)
-
 		    		}) 
-
 	     		})
-
 	     	} else {
 	     		reject("Container already exists")
 	     	} 

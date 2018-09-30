@@ -1,0 +1,17 @@
+{ "columns":95,
+ "image":"..\/..\/..\/assets\/bedroom\/flat_floor2.jpg",
+ "imageheight":5500,
+ "imagewidth":3800,
+ "margin":0,
+ "name":"bedroom_tiled",
+ "spacing":0,
+ "terrains":[
+        {
+         "name":"New Terrain",
+         "tile":2884
+        }],
+ "tilecount":13015,
+ "tileheight":40,
+ "tilewidth":40,
+ "type":"tileset"
+}
