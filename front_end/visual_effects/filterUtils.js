@@ -52,21 +52,22 @@ module.exports.glitch = () => {
   global.viewport.filters = [new filters.GlitchFilter()];
 };
 
-module.exports.godray = (x, y) => new Promise((resolve) => {
+module.exports.godray = (x, y) => {
   this.clear();
   const godray = new filters.GodrayFilter();
   godray.parallel = false;
   godray.center = [x, y];
   godray.gain = 0.4;
   godray.time = 20.5;
-  global.viewport.filters = [godray];
+  console.log(global.viewport)
+  global.viewport.children[0].filters = [godray];
 
   function godrayAnimation() {
     if (godray.time <= 100) godray.time += 0.005;
   }
   global.app.ticker.add(godrayAnimation);
-  resolve();
-});
+  
+};
 
 module.exports.clear = () => {
   global.viewport.filters = [];

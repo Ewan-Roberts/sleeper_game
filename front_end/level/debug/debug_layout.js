@@ -103,16 +103,16 @@ module.exports.add_floor = () => {
   animationPad.fired = false;
   animationPad.alpha = 0.6;
   animationPad.interactive = true;
-  animationPad.on('click', ()=>{
+  animationPad.on('click', () => {
     animationPad.fired = true;
-    generateObject.renderItem(200, 100)
+    generateObject.renderItem(200, 100);
   });
 
   const loadParkPad = createPad(-950, -100);
   loadParkPad.fired = false;
   loadParkPad.alpha = 0.4;
   loadParkPad.interactive = true;
-  loadParkPad.on('click', ()=>{
+  loadParkPad.on('click', () => {
     loadParkPad.fired = true;
     parkUtil.load();
     cutsceneUtils.teleport(1500, 1500);
@@ -121,7 +121,8 @@ module.exports.add_floor = () => {
         const levelPathData = parkUtil.importEnemyPathData();
         enemy.enemy_path(levelPathData);
       });
-  })
+  });
+
   loadParkPad.action = () => {
     if (!loadParkPad.fired) {
       loadParkPad.fired = true;
@@ -172,10 +173,9 @@ module.exports.add_floor = () => {
   };
   clearPad.on('click', () => {
     console.log('hi');  
-    cutsceneUtils.teleport(1500, 1500);
+    cutsceneUtils.teleport(3000, 5100);
     bedroomUtil.load();
-    // filterUtil.godray(global.Player.sprite.x, global.Player.sprite.y);
-  })
+  });
 
 
   global.eventTriggers.addChild(

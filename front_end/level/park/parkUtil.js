@@ -1,20 +1,25 @@
 const PIXI = require('pixi.js');
-const parkData = require('./park_5.json');
+const parkData = require('./park_data.json');
 const levelUtil = require('../level_utils.js');
 
 module.exports.load = () => {
-  const parkBackground = PIXI.Sprite.fromFrame('park_bottom');
-  const parkTopground = PIXI.Sprite.fromFrame('park_top');
+  levelUtil.clearViewport();
+  levelUtil.clearCollision();
+  levelUtil.clearEventTriggers()
+  const parkBackground = PIXI.Sprite.fromFrame('park');
+  // const parkTopground = PIXI.Sprite.fromFrame('park_top');
   parkBackground.interactive = true;
   parkBackground.zIndex = 1;
-  parkTopground.zIndex = -200;
-  parkTopground.alpha = 0.95;
-  parkTopground.height = parkData.tileheight;
-  parkTopground.width = parkData.tilewidth;
+  // parkTopground.zIndex = -200;
+  // parkTopground.alpha = 0.95;
+  // parkTopground.height = parkData.tileheight;
+  // parkTopground.width = parkData.tilewidth;
+  parkBackground.height = parkData.tileheight;
+  parkBackground.width = parkData.tilewidth;
 
-  levelUtil.hitAreas(parkData.tiles[3].objectgroup.objects);
+  levelUtil.renderWall(parkData.tiles[0].objectgroup.objects);
 
-  global.viewport.addChild(parkTopground, parkBackground);
+  global.viewport.addChild(parkBackground);
   global.viewport.updateLayersOrder();
 };
 

@@ -1,11 +1,8 @@
 const PIXI = require('pixi.js');
-// const Intersects = require('intersects');
-// const rat = require('../animals/rat.js');
 const spriteHelper = require('../utils/spriteHelper.js');
 const doorHelper = require('../utils/doorHelper.js');
 const bowHelper = require('../weapons/bow/bowHelper.js');
 const documentHelper = require('../utils/documentHelper.js');
-// uuidv4 = require('uuid/v4');
 
 global.Player = {
 
@@ -22,7 +19,7 @@ global.Player = {
     walk: {},
     pullback: {},
   },
-  movement_speed: 20,
+  movement_speed: 15,
   weapon: 'bow',
   moveable: true,
   power: 900,
@@ -209,9 +206,10 @@ module.exports.add_player = () => {
   global.Player.sprite.anchor.set(0.5);
   global.Player.sprite.width /= 2;
   global.Player.sprite.height /= 2;
-  global.Player.sprite.animationSpeed = 0.6;
+  global.Player.sprite.animationSpeed = 0.4;
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
+  global.Player.sprite.name = 'player';
 
   global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
