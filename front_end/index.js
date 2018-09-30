@@ -5,6 +5,7 @@ const tween = require('pixi-tween');
 const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
 const debug = require('./level/debug/debug_layout.js');
+const pathfinding = require('./pathfinding/pathfindUtil.js');
 
 global.socket = io.connect();
 // global.socket.on('thing', (res) => {

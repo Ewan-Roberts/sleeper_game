@@ -32,20 +32,9 @@ module.exports = data => {
 	     		})
 
 	     	} else {
-
 	     		reject("Container already exists")
-
 	     	} 
-
 	    })
-
     })
-
 };
-
-
-
-
-
-
 
