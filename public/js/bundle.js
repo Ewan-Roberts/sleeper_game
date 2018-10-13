@@ -322,8 +322,8 @@ const spriteHelper = require('../utils/spriteHelper.js');
 const bowHelper = require('../weapons/bow/bowHelper');
 const dialogUtil = require('../dialog/dialogUtil.js');
 
-global.enemyContainer = new PIXI.Container();
-global.enemyContainer.name = 'enemyContainer';
+const enemyContainer = new PIXI.Container();
+enemyContainer.name = 'enemyContainer';
 
 const Enemy = {
 
@@ -353,6 +353,54 @@ module.exports.enemy_frames = () => new Promise((resolve) => {
   }
   resolve();
 });
+
+module.exports.init_enemies_container = () => {
+  global.viewport.addChild(enemyContainer);
+}
+
+module.exports.create_enemy = (x, y) => {
+
+  return new Promise ((resolve, reject) => {
+
+    const enemy_frames = []
+    for (let i = 0; i < 19; i += 1) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+    }
+
+    const enemySprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    enemySprite.height /= 3;
+    enemySprite.width /= 3;
+    enemySprite.anchor.set(0.5);
+    enemySprite.position.set(x, y);
+    enemySprite.animationSpeed = 0.4;
+    enemySprite.rotation = -0.5;
+    enemySprite.play();
+    enemyContainer.addChild(enemySprite);
+    resolve(enemySprite)
+  })
+
+};
+
+module.exports.sight_line = (sprite) => {
+
+  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
+  influenceBox.width = 500;
+  influenceBox.height = 500;
+  influenceBox.rotation = -0.5;
+  influenceBox.alpha = 0.3;
+  sprite.addChild(influenceBox);
+
+}
+
+module.exports.influence_box = sprite => {
+
+  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
+  influenceBox.width = 500;
+  influenceBox.height = 500;
+  influenceBox.rotation = -0.5;
+  influenceBox.alpha = 0.3;
+  sprite.addChild(influenceBox);
+}
 
 module.exports.enemy_path = (pathData) => {
   const path = module.exports.createEnemyPathFrom(pathData);
@@ -960,6 +1008,7 @@ module.exports.add_floor = () => {
 
   const enemyPathing = createPad(-200, -200);
   enemyPathing.fired = false;
+  enemyPathing.interactive = true;
   enemyPathing.alpha = 0.8;
   enemyPathing.action = () => {
     if (!enemyPathing.fired) {
@@ -971,6 +1020,14 @@ module.exports.add_floor = () => {
         });
     }
   };
+  enemyPathing.on('click', () => {
+    console.log('hre');
+    enemy.init_enemies_container()
+    enemy.create_enemy(200, -200)
+      .then(sprite => {
+        enemy.sight_line(sprite);
+      })
+  });
 
   const clearPad = createPad(-200, 50);
   clearPad.fired = false;
@@ -13860,7 +13917,7 @@ const pathfinderData = require('./bedroom_grid8.json')
 const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
 
-console.log(pathfinderData.layers[1].objects);
+// console.log(pathfinderData.layers[1].objects);
 
 const renderTile = (array) => {
 
@@ -13892,40 +13949,40 @@ const makeTwoDimentional = (array) => {
 
 const thingArray = makeTwoDimentional(pathfinderData.layers[1].objects);
 
-const grid = [
-  [0,0,1,0,0],
-  [0,0,1,0,0],
-  [0,0,1,0,0],
-  [0,0,1,0,0],
-  [0,0,0,0,0],
-];
+// const grid = [
+//   [0,0,1,0,0],
+//   [0,0,1,0,0],
+//   [0,0,1,0,0],
+//   [0,0,1,0,0],
+//   [0,0,0,0,0],
+// ];
 
-console.log(grid);
-console.log(thingArray);
+// console.log(grid);
+// console.log(thingArray);
 
-easystar.setGrid(thingArray);
-easystar.setAcceptableTiles([0]);
-easystar.setIterationsPerCalculation(1000);
+// easystar.setGrid(thingArray);
+// easystar.setAcceptableTiles([0]);
+// easystar.setIterationsPerCalculation(1000);
 
-easystar.findPath(5, 5, 54, 17, function( path ) {
-  if (path === null) {
-		console.log("Path was not found.");
-	} else {
-    console.log(path);
-    path.forEach((elem)=>{
+// easystar.findPath(5, 5, 54, 17, function( path ) {
+//   if (path === null) {
+// 		console.log("Path was not found.");
+// 	} else {
+//     console.log(path);
+//     path.forEach((elem)=>{
       
-      const mover = PIXI.Sprite.fromFrame('black_dot');
-      mover.width =20;
-      mover.height =20;
+//       const mover = PIXI.Sprite.fromFrame('black_dot');
+//       mover.width =20;
+//       mover.height =20;
       
-      mover.position.set(elem.x*10, elem.y*10);
-      global.viewport.addChild(mover);
-    })
-	}
-});
-setInterval(()=>{
-  easystar.calculate();
-},1000)
+//       mover.position.set(elem.x*10, elem.y*10);
+//       global.viewport.addChild(mover);
+//     })
+// 	}
+// });
+// setInterval(()=>{
+//   easystar.calculate();
+// },1000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./bedroom_grid8.json":18,"easystarjs":68,"pixi.js":250}],20:[function(require,module,exports){

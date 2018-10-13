@@ -148,6 +148,7 @@ module.exports.add_floor = () => {
 
   const enemyPathing = createPad(-200, -200);
   enemyPathing.fired = false;
+  enemyPathing.interactive = true;
   enemyPathing.alpha = 0.8;
   enemyPathing.action = () => {
     if (!enemyPathing.fired) {
@@ -159,6 +160,14 @@ module.exports.add_floor = () => {
         });
     }
   };
+  enemyPathing.on('click', () => {
+    console.log('hre');
+    enemy.init_enemies_container()
+    enemy.create_enemy(200, -200)
+      .then(sprite => {
+        enemy.sight_line(sprite);
+      })
+  });
 
   const clearPad = createPad(-200, 50);
   clearPad.fired = false;

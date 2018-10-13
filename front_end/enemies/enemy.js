@@ -3,8 +3,8 @@ const spriteHelper = require('../utils/spriteHelper.js');
 const bowHelper = require('../weapons/bow/bowHelper');
 const dialogUtil = require('../dialog/dialogUtil.js');
 
-global.enemyContainer = new PIXI.Container();
-global.enemyContainer.name = 'enemyContainer';
+const enemyContainer = new PIXI.Container();
+enemyContainer.name = 'enemyContainer';
 
 const Enemy = {
 
@@ -34,6 +34,54 @@ module.exports.enemy_frames = () => new Promise((resolve) => {
   }
   resolve();
 });
+
+module.exports.init_enemies_container = () => {
+  global.viewport.addChild(enemyContainer);
+}
+
+module.exports.create_enemy = (x, y) => {
+
+  return new Promise ((resolve, reject) => {
+
+    const enemy_frames = []
+    for (let i = 0; i < 19; i += 1) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+    }
+
+    const enemySprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    enemySprite.height /= 3;
+    enemySprite.width /= 3;
+    enemySprite.anchor.set(0.5);
+    enemySprite.position.set(x, y);
+    enemySprite.animationSpeed = 0.4;
+    enemySprite.rotation = -0.5;
+    enemySprite.play();
+    enemyContainer.addChild(enemySprite);
+    resolve(enemySprite)
+  })
+
+};
+
+module.exports.sight_line = (sprite) => {
+
+  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
+  influenceBox.width = 500;
+  influenceBox.height = 500;
+  influenceBox.rotation = -0.5;
+  influenceBox.alpha = 0.3;
+  sprite.addChild(influenceBox);
+
+}
+
+module.exports.influence_box = sprite => {
+
+  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
+  influenceBox.width = 500;
+  influenceBox.height = 500;
+  influenceBox.rotation = -0.5;
+  influenceBox.alpha = 0.3;
+  sprite.addChild(influenceBox);
+}
 
 module.exports.enemy_path = (pathData) => {
   const path = module.exports.createEnemyPathFrom(pathData);
