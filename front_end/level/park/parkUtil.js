@@ -6,7 +6,7 @@ module.exports.load = () => {
   levelUtil.clearViewport();
   levelUtil.clearCollision();
   levelUtil.clearEventTriggers()
-  const parkBackground = PIXI.Sprite.fromFrame('park');
+  // const parkBackground = PIXI.Sprite.fromFrame('park');
   // const parkTopground = PIXI.Sprite.fromFrame('park_top');
   parkBackground.interactive = true;
   parkBackground.zIndex = 1;

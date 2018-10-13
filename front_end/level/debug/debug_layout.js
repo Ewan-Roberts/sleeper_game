@@ -40,111 +40,111 @@ module.exports.add_floor = () => {
   door.position.set(-100, -200);
 
   const ratPad = createPad(-700, 200);
-  ratPad.alpha = 0.4;
-  ratPad.fired = false;
-  ratPad.action = () => {
-    if (!ratPad.fired) {
-      ratPad.fired = true;
-      rat.load_rat().then(() => rat.mouseMove({ x: 100, y: 300 }, { x: 0, y: 400 }));
-    }
-  };
+  // ratPad.alpha = 0.4;
+  // ratPad.fired = false;
+  // ratPad.action = () => {
+  //   if (!ratPad.fired) {
+  //     ratPad.fired = true;
+  //     rat.load_rat().then(() => rat.mouseMove({ x: 100, y: 300 }, { x: 0, y: 400 }));
+  //   }
+  // };
 
-  const enemyPad = createPad(-950, 200);
-  enemyPad.alpha = 0.2;
-  enemyPad.fired = false;
-  enemyPad.action = () => {
-    if (!enemyPad.fired) {
-      enemyPad.fired = true;
-      enemy.enemy_frames().then(() => enemy.projectileAttack(global.Player.sprite));
-    }
-  };
+  // const enemyPad = createPad(-950, 200);
+  // enemyPad.alpha = 0.2;
+  // enemyPad.fired = false;
+  // enemyPad.action = () => {
+  //   if (!enemyPad.fired) {
+  //     enemyPad.fired = true;
+  //     enemy.enemy_frames().then(() => enemy.projectileAttack(global.Player.sprite));
+  //   }
+  // };
 
-  const levelLoadPad = createPad(-450, 200);
-  levelLoadPad.alpha = 0.6;
-  levelLoadPad.fired = false;
-  levelLoadPad.action = () => {
-    if (!levelLoadPad.fired) {
-      levelLoadPad.fired = true;
-      // levelUtils.importBedroomData();
-    }
-  };
+  // const levelLoadPad = createPad(-450, 200);
+  // levelLoadPad.alpha = 0.6;
+  // levelLoadPad.fired = false;
+  // levelLoadPad.action = () => {
+  //   if (!levelLoadPad.fired) {
+  //     levelLoadPad.fired = true;
+  //     // levelUtils.importBedroomData();
+  //   }
+  // };
 
-  const glitchPad = createPad(-700, 50);
-  glitchPad.alpha = 0.4;
-  glitchPad.fired = false;
-  glitchPad.action = () => {
-    if (!glitchPad.fired) {
-      glitchPad.fired = true;
-      filterUtil.glitch();
-    } else filterUtil.clear();
-  };
+  // const glitchPad = createPad(-700, 50);
+  // glitchPad.alpha = 0.4;
+  // glitchPad.fired = false;
+  // glitchPad.action = () => {
+  //   if (!glitchPad.fired) {
+  //     glitchPad.fired = true;
+  //     filterUtil.glitch();
+  //   } else filterUtil.clear();
+  // };
 
-  const dialogPad = createPad(-450, 50);
-  dialogPad.alpha = 0.6;
-  dialogPad.fired = false;
-  dialogPad.action = () => {
-    if (!dialogPad.fired) {
-      dialogPad.fired = true;
-      dialogUtil.renderText(global.Player.sprite, 'I am some dialog');
-    } else rain.start_rain(0, 3400, 400, 850);
-  };
+  // const dialogPad = createPad(-450, 50);
+  // dialogPad.alpha = 0.6;
+  // dialogPad.fired = false;
+  // dialogPad.action = () => {
+  //   if (!dialogPad.fired) {
+  //     dialogPad.fired = true;
+  //     dialogUtil.renderText(global.Player.sprite, 'I am some dialog');
+  //   } else rain.start_rain(0, 3400, 400, 850);
+  // };
 
-  const effectPad = createPad(-200, 200);
-  effectPad.fired = false;
-  effectPad.alpha = 0.8;
-  effectPad.action = () => {
-    if (!effectPad.fired) {
-      effectPad.fired = true;
-      filterUtil.fade_in_black();
-    } else filterUtil.fade_out_black();
-  };
+  // const effectPad = createPad(-200, 200);
+  // effectPad.fired = false;
+  // effectPad.alpha = 0.8;
+  // effectPad.action = () => {
+  //   if (!effectPad.fired) {
+  //     effectPad.fired = true;
+  //     filterUtil.fade_in_black();
+  //   } else filterUtil.fade_out_black();
+  // };
 
-  const animationPad = createPad(-700, -100);
-  animationPad.fired = false;
-  animationPad.alpha = 0.6;
-  animationPad.interactive = true;
-  animationPad.on('click', () => {
-    animationPad.fired = true;
-    generateObject.renderItem(200, 100);
-  });
+  // const animationPad = createPad(-700, -100);
+  // animationPad.fired = false;
+  // animationPad.alpha = 0.6;
+  // animationPad.interactive = true;
+  // animationPad.on('click', () => {
+  //   animationPad.fired = true;
+  //   generateObject.renderItem(200, 100);
+  // });
 
-  const loadParkPad = createPad(-950, -100);
-  loadParkPad.fired = false;
-  loadParkPad.alpha = 0.4;
-  loadParkPad.interactive = true;
-  loadParkPad.on('click', () => {
-    loadParkPad.fired = true;
-    parkUtil.load();
-    cutsceneUtils.teleport(1500, 1500);
-    enemy.enemy_frames()
-      .then(() => {
-        const levelPathData = parkUtil.importEnemyPathData();
-        enemy.enemy_path(levelPathData);
-      });
-  });
+  // const loadParkPad = createPad(-950, -100);
+  // loadParkPad.fired = false;
+  // loadParkPad.alpha = 0.4;
+  // loadParkPad.interactive = true;
+  // loadParkPad.on('click', () => {
+  //   loadParkPad.fired = true;
+  //   parkUtil.load();
+  //   cutsceneUtils.teleport(1500, 1500);
+  //   enemy.enemy_frames()
+  //     .then(() => {
+  //       const levelPathData = parkUtil.importEnemyPathData();
+  //       enemy.enemy_path(levelPathData);
+  //     });
+  // });
 
-  loadParkPad.action = () => {
-    if (!loadParkPad.fired) {
-      loadParkPad.fired = true;
-      parkUtil.load();
-      cutsceneUtils.teleport(1500, 1500);
-      enemy.enemy_frames()
-        .then(() => {
-          const levelPathData = parkUtil.importEnemyPathData();
-          enemy.enemy_path(levelPathData);
-        });
-    }
-  };
+  // loadParkPad.action = () => {
+  //   if (!loadParkPad.fired) {
+  //     loadParkPad.fired = true;
+  //     parkUtil.load();
+  //     cutsceneUtils.teleport(1500, 1500);
+  //     enemy.enemy_frames()
+  //       .then(() => {
+  //         const levelPathData = parkUtil.importEnemyPathData();
+  //         enemy.enemy_path(levelPathData);
+  //       });
+  //   }
+  // };
 
-  const networkPad = createPad(-450, -100);
-  networkPad.fired = false;
-  networkPad.alpha = 0.8;
-  networkPad.action = () => {
-    if (!networkPad.fired) {
-      networkPad.fired = true;
-      networkPlayers.load_network_sprite();
-    }
-  };
+  // const networkPad = createPad(-450, -100);
+  // networkPad.fired = false;
+  // networkPad.alpha = 0.8;
+  // networkPad.action = () => {
+  //   if (!networkPad.fired) {
+  //     networkPad.fired = true;
+  //     networkPlayers.load_network_sprite();
+  //   }
+  // };
 
   const enemyPathing = createPad(-200, -200);
   enemyPathing.fired = false;
@@ -164,9 +164,27 @@ module.exports.add_floor = () => {
     console.log('hre');
     enemy.init_enemies_container()
     enemy.create_enemy(200, -200)
-      .then(sprite => {
+      .then( sprite => {
         enemy.sight_line(sprite);
+        enemy.influence_box(sprite);
+        enemy.crate_path(sprite, [
+          {x: 200, y:-200},
+          {x: 200,y: -200},
+          {x: 300,y:-600},
+          {x: 800,y:-600},
+          {x: 400,y:-100},
+          {x: 200,y:-100},
+          {x: 100,y:-100},
+          {x: 200, y:-200},
+        ])
+        .then(path => {
+          const enemy_tween = enemy.crate_path_tween(sprite, path);
+          enemy.enemy_logic_on_path(sprite, enemy_tween, path)
+        })
+        
+
       })
+
   });
 
   const clearPad = createPad(-200, 50);
@@ -188,16 +206,16 @@ module.exports.add_floor = () => {
 
 
   global.eventTriggers.addChild(
-    ratPad,
-    enemyPad,
-    levelLoadPad,
-    effectPad,
-    clearPad,
-    glitchPad,
-    dialogPad,
-    networkPad,
-    animationPad,
-    loadParkPad,
+    // ratPad,
+    // enemyPad,
+    // levelLoadPad,
+    // effectPad,
+    // clearPad,
+    // glitchPad,
+    // dialogPad,
+    // networkPad,
+    // animationPad,
+    // loadParkPad,
     enemyPathing,
   );
 

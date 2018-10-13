@@ -1,7 +1,9 @@
+
 const PIXI = require('pixi.js');
 const spriteHelper = require('../utils/spriteHelper.js');
 const bowHelper = require('../weapons/bow/bowHelper');
 const dialogUtil = require('../dialog/dialogUtil.js');
+const intersect = require('yy-intersects');
 
 const enemyContainer = new PIXI.Container();
 enemyContainer.name = 'enemyContainer';
@@ -64,24 +66,87 @@ module.exports.create_enemy = (x, y) => {
 
 module.exports.sight_line = (sprite) => {
 
-  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
-  influenceBox.width = 500;
-  influenceBox.height = 500;
-  influenceBox.rotation = -0.5;
-  influenceBox.alpha = 0.3;
-  sprite.addChild(influenceBox);
+  const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
+  sight_line_box.name = 'sight_line';
+  sight_line_box.width = 500;
+  sight_line_box.height = 500;
+  sight_line_box.rotation = -0.5;
+  sight_line_box.alpha = 0.3;
+  sprite.addChild(sight_line_box);
 
 }
 
 module.exports.influence_box = sprite => {
 
-  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
-  influenceBox.width = 500;
-  influenceBox.height = 500;
-  influenceBox.rotation = -0.5;
-  influenceBox.alpha = 0.3;
-  sprite.addChild(influenceBox);
+  const influence_box = PIXI.Sprite.fromFrame('black_dot');
+  influence_box.name = 'influence_box';
+  influence_box.width = 1000;
+  influence_box.height = 1000;
+  influence_box.alpha = 0.2
+  influence_box.anchor.set(0.5);
+  sprite.addChild(influence_box);
 }
+
+module.exports.crate_path = (sprite, path_data) => {
+
+  return new Promise((resolve, reject) => {
+    const path = new PIXI.tween.TweenPath();
+
+    path.moveTo(path_data[0].x, path_data[0].y);
+
+    for (let i = 1; i < path_data.length; i++) {
+      path.lineTo(path_data[i].x, path_data[i].y);
+    }
+
+    const path_visual_guide = new PIXI.Graphics()
+      .lineStyle(5, 0xffffff, 0.8)
+      .drawPath(path);
+
+    global.viewport.addChild(path_visual_guide);
+    resolve(path)
+  })
+}
+
+module.exports.crate_path_tween = (sprite, path) => {
+  console.log(path)
+  const animatedEnemyTween = PIXI.tweenManager.createTween(sprite);
+  animatedEnemyTween.path = path;
+  animatedEnemyTween.rotation = spriteHelper.angle(sprite, path._tmpPoint2);
+  animatedEnemyTween.time = 30000;
+  animatedEnemyTween.easing = PIXI.tween.Easing.linear();
+  animatedEnemyTween.start();
+  animatedEnemyTween.pingPong = true;
+  return animatedEnemyTween;
+}
+
+// point-Rectangle intersection
+
+
+module.exports.enemy_logic_on_path = (sprite, tween, path) => {
+  const player =  {};
+  
+  //TODO this should be based on the sightlines 
+  sprite.shape = new intersect.Rectangle(sprite);
+  player.shape = new intersect.Rectangle(global.Player.sprite);
+
+  tween.on('update', () => {    
+
+    sprite.shape.update();
+    player.shape.update();
+
+    if (sprite.shape.collidesRectangle(player.shape)){
+      console.log('intersected');
+      dialogUtil.renderText(sprite, dialogUtil.enemySurprised());
+      tween.stop();
+      sprite.stop()
+      sprite.rotation = spriteHelper.angle(sprite, global.Player.sprite);
+      
+      // TODO arrow managment;
+      //bowHelper.arrowManagement(500, sprite, global.Player.sprite);
+    }
+  });
+}
+
 
 module.exports.enemy_path = (pathData) => {
   const path = module.exports.createEnemyPathFrom(pathData);

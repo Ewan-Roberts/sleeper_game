@@ -1,6 +1,7 @@
 
 
 const PIXI = require('pixi.js');
+// const intersect = require('yy-intersects');
 
 function distanceSquared(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow((x1 - x2)) + Math.pow(y1 - y2, 2));
@@ -108,3 +109,5 @@ module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
     resolve(sprite);
   }
 });
+
+
