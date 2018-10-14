@@ -1,7 +1,7 @@
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 const doorHelper = require('../utils/doorHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper.js');
+const bowHelper = require('../weapons/bow/bow_helper.js');
 const documentHelper = require('../utils/documentHelper.js');
 
 global.Player = {
@@ -125,13 +125,13 @@ function addPlayerControls() {
 
     doorHelper.hit(global.Player.sprite, global.doors.children[0]);
 
-    spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
-      .then((arrow) => {
-        if (arrow.pickup) {
-          global.Player.ammo += 1;
-          arrow.destroy();
-        }
-      });
+    // spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
+    //   .then((arrow) => {
+    //     if (arrow.pickup) {
+    //       global.Player.ammo += 1;
+    //       arrow.destroy();
+    //     }
+    //   });
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
       .then(() => {

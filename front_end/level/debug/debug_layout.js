@@ -146,22 +146,10 @@ module.exports.add_floor = () => {
   //   }
   // };
 
-  const enemyPathing = createPad(-200, -200);
-  enemyPathing.fired = false;
-  enemyPathing.interactive = true;
-  enemyPathing.alpha = 0.8;
-  enemyPathing.action = () => {
-    if (!enemyPathing.fired) {
-      enemyPathing.fired = true;
-      enemy.enemy_frames()
-        .then(() => {
-          const levelPathData = parkUtil.importEnemyPathData();
-          enemy.enemy_path(levelPathData);
-        });
-    }
-  };
-  enemyPathing.on('click', () => {
-    console.log('hre');
+  const enemy_pathing = createPad(-200, -200);
+  enemy_pathing.interactive = true;
+  enemy_pathing.alpha = 0.8;
+  enemy_pathing.on('click', () => {
     enemy.init_enemies_container()
     enemy.create_enemy(200, -200)
       .then( sprite => {
@@ -181,28 +169,25 @@ module.exports.add_floor = () => {
           const enemy_tween = enemy.crate_path_tween(sprite, path);
           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
         })
-        
-
       })
-
   });
 
-  const clearPad = createPad(-200, 50);
-  clearPad.fired = false;
-  clearPad.alpha = 0.8;
-  clearPad.interactive = true;
-  clearPad.action = () => {
-    if (!clearPad.fired) {
-      clearPad.fired = true;
+  // const clearPad = createPad(-200, 50);
+  // clearPad.fired = false;
+  // clearPad.alpha = 0.8;
+  // clearPad.interactive = true;
+  // clearPad.action = () => {
+  //   if (!clearPad.fired) {
+  //     clearPad.fired = true;
 
-      cutsceneIntro.start();
-    } else filterUtil.clear();
-  };
-  clearPad.on('click', () => {
-    console.log('hi');  
-    cutsceneUtils.teleport(3000, 5100);
-    bedroomUtil.load();
-  });
+  //     cutsceneIntro.start();
+  //   } else filterUtil.clear();
+  // };
+  // clearPad.on('click', () => {
+  //   console.log('hi');  
+  //   cutsceneUtils.teleport(3000, 5100);
+  //   bedroomUtil.load();
+  // });
 
 
   global.eventTriggers.addChild(
@@ -216,7 +201,7 @@ module.exports.add_floor = () => {
     // networkPad,
     // animationPad,
     // loadParkPad,
-    enemyPathing,
+    enemy_pathing,
   );
 
   global.doors.addChild(door);

@@ -1,15 +1,15 @@
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper');
+const spriteHelper = require('../utils/sprite_helper.js');
+const bowHelper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialogUtil.js');
 const intersect = require('yy-intersects');
 
-const enemy_container = new PIXI.Container();
-enemy_container.name = 'enemy_container';
+global.enemy_container = new PIXI.Container();
+global.enemy_container.name = 'enemy_container';
 
 module.exports.init_enemies_container = () => {
-  global.viewport.addChild(enemy_container);
+  global.viewport.addChild(global.enemy_container);
 }
 
 module.exports.create_enemy = (x, y) => {
@@ -28,7 +28,10 @@ module.exports.create_enemy = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
-    enemy_container.addChild(enemy_sprite);
+    enemy_sprite.on_hit = () => {
+      module.exports.put_blood_splatter_on_ground(enemy_sprite)
+    }
+    global.enemy_container.addChild(enemy_sprite);
     resolve(enemy_sprite)
   })
 };
@@ -55,6 +58,18 @@ module.exports.influence_box = sprite => {
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
+}
+
+// TODO put under the enemy sprite
+module.exports.put_blood_splatter_on_ground = sprite => {
+  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  blood_stain.width /= 2;
+  blood_stain.height /= 2;
+  blood_stain.position.set(sprite.x, sprite.y);
+  blood_stain.anchor.set(0.5);
+  blood_stain.alpha = 0.4;
+
+  global.viewport.addChild(blood_stain);
 }
 
 module.exports.crate_path = (sprite, path_data) => {
@@ -121,7 +136,9 @@ module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
   //TODO
   setTimeout(()=>{
     tween.stop()
+    dialogUtil.renderText(enemy_sprite, 'I am waiting');
     setTimeout(()=>{
+      dialogUtil.renderText(enemy_sprite, 'back to original path');
       tween.start()
       tween.chain(previous_tween_path)
       setTimeout(()=>tween.remove(),2600)  

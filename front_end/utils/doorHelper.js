@@ -1,6 +1,6 @@
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('./spriteHelper.js');
+const spriteHelper = require('./sprite_helper.js');
 
 module.exports.hit = (player, door) => {
   const trimmedDoorData = spriteHelper.trimVertexData(door);

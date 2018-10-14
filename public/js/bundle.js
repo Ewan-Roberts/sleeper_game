@@ -1,7 +1,7 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 
 global.critterContainer = new PIXI.Container();
 
@@ -135,7 +135,7 @@ module.exports.mousePause = () => new Promise((resolve) => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":22,"pixi.js":244}],2:[function(require,module,exports){
+},{"../utils/sprite_helper.js":22,"pixi.js":244}],2:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -181,7 +181,7 @@ module.exports.renderItem = (x, y) => {
 },{"../utils/documentHelper.js":20,"pixi.js":244}],3:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 
 module.exports.teleport = (x, y) => {
   global.Player.sprite.x = x;
@@ -240,7 +240,7 @@ module.exports.movePlayer = (start, finish) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":22,"pixi.js":244}],4:[function(require,module,exports){
+},{"../utils/sprite_helper.js":22,"pixi.js":244}],4:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const cutsceneUtil = require('./cutsceneUtils');
@@ -319,16 +319,16 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 (function (global){
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper');
+const spriteHelper = require('../utils/sprite_helper.js');
+const bowHelper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialogUtil.js');
 const intersect = require('yy-intersects');
 
-const enemy_container = new PIXI.Container();
-enemy_container.name = 'enemy_container';
+global.enemy_container = new PIXI.Container();
+global.enemy_container.name = 'enemy_container';
 
 module.exports.init_enemies_container = () => {
-  global.viewport.addChild(enemy_container);
+  global.viewport.addChild(global.enemy_container);
 }
 
 module.exports.create_enemy = (x, y) => {
@@ -347,7 +347,10 @@ module.exports.create_enemy = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
-    enemy_container.addChild(enemy_sprite);
+    enemy_sprite.on_hit = () => {
+      module.exports.put_blood_splatter_on_ground(enemy_sprite)
+    }
+    global.enemy_container.addChild(enemy_sprite);
     resolve(enemy_sprite)
   })
 };
@@ -374,6 +377,18 @@ module.exports.influence_box = sprite => {
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
+}
+
+// TODO put under the enemy sprite
+module.exports.put_blood_splatter_on_ground = sprite => {
+  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  blood_stain.width /= 2;
+  blood_stain.height /= 2;
+  blood_stain.position.set(sprite.x, sprite.y);
+  blood_stain.anchor.set(0.5);
+  blood_stain.alpha = 0.4;
+
+  global.viewport.addChild(blood_stain);
 }
 
 module.exports.crate_path = (sprite, path_data) => {
@@ -440,7 +455,9 @@ module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
   //TODO
   setTimeout(()=>{
     tween.stop()
+    dialogUtil.renderText(enemy_sprite, 'I am waiting');
     setTimeout(()=>{
+      dialogUtil.renderText(enemy_sprite, 'back to original path');
       tween.start()
       tween.chain(previous_tween_path)
       setTimeout(()=>tween.remove(),2600)  
@@ -470,7 +487,7 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
   });
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialogUtil.js":5,"../utils/spriteHelper.js":22,"../weapons/bow/bowHelper":24,"pixi.js":244,"yy-intersects":301}],7:[function(require,module,exports){
+},{"../dialog/dialogUtil.js":5,"../utils/sprite_helper.js":22,"../weapons/bow/bow_helper.js":24,"pixi.js":244,"yy-intersects":301}],7:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -981,22 +998,10 @@ module.exports.add_floor = () => {
   //   }
   // };
 
-  const enemyPathing = createPad(-200, -200);
-  enemyPathing.fired = false;
-  enemyPathing.interactive = true;
-  enemyPathing.alpha = 0.8;
-  enemyPathing.action = () => {
-    if (!enemyPathing.fired) {
-      enemyPathing.fired = true;
-      enemy.enemy_frames()
-        .then(() => {
-          const levelPathData = parkUtil.importEnemyPathData();
-          enemy.enemy_path(levelPathData);
-        });
-    }
-  };
-  enemyPathing.on('click', () => {
-    console.log('hre');
+  const enemy_pathing = createPad(-200, -200);
+  enemy_pathing.interactive = true;
+  enemy_pathing.alpha = 0.8;
+  enemy_pathing.on('click', () => {
     enemy.init_enemies_container()
     enemy.create_enemy(200, -200)
       .then( sprite => {
@@ -1016,28 +1021,25 @@ module.exports.add_floor = () => {
           const enemy_tween = enemy.crate_path_tween(sprite, path);
           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
         })
-        
-
       })
-
   });
 
-  const clearPad = createPad(-200, 50);
-  clearPad.fired = false;
-  clearPad.alpha = 0.8;
-  clearPad.interactive = true;
-  clearPad.action = () => {
-    if (!clearPad.fired) {
-      clearPad.fired = true;
+  // const clearPad = createPad(-200, 50);
+  // clearPad.fired = false;
+  // clearPad.alpha = 0.8;
+  // clearPad.interactive = true;
+  // clearPad.action = () => {
+  //   if (!clearPad.fired) {
+  //     clearPad.fired = true;
 
-      cutsceneIntro.start();
-    } else filterUtil.clear();
-  };
-  clearPad.on('click', () => {
-    console.log('hi');  
-    cutsceneUtils.teleport(3000, 5100);
-    bedroomUtil.load();
-  });
+  //     cutsceneIntro.start();
+  //   } else filterUtil.clear();
+  // };
+  // clearPad.on('click', () => {
+  //   console.log('hi');  
+  //   cutsceneUtils.teleport(3000, 5100);
+  //   bedroomUtil.load();
+  // });
 
 
   global.eventTriggers.addChild(
@@ -1051,7 +1053,7 @@ module.exports.add_floor = () => {
     // networkPad,
     // animationPad,
     // loadParkPad,
-    enemyPathing,
+    enemy_pathing,
   );
 
   global.doors.addChild(door);
@@ -1602,9 +1604,9 @@ module.exports.load_network_sprite = () => {
 },{}],19:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 const doorHelper = require('../utils/doorHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper.js');
+const bowHelper = require('../weapons/bow/bow_helper.js');
 const documentHelper = require('../utils/documentHelper.js');
 
 global.Player = {
@@ -1728,13 +1730,13 @@ function addPlayerControls() {
 
     doorHelper.hit(global.Player.sprite, global.doors.children[0]);
 
-    spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
-      .then((arrow) => {
-        if (arrow.pickup) {
-          global.Player.ammo += 1;
-          arrow.destroy();
-        }
-      });
+    // spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
+    //   .then((arrow) => {
+    //     if (arrow.pickup) {
+    //       global.Player.ammo += 1;
+    //       arrow.destroy();
+    //     }
+    //   });
 
     spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
       .then(() => {
@@ -1837,7 +1839,7 @@ module.exports.remove_controls = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/documentHelper.js":20,"../utils/doorHelper.js":21,"../utils/spriteHelper.js":22,"../weapons/bow/bowHelper.js":24,"pixi.js":244}],20:[function(require,module,exports){
+},{"../utils/documentHelper.js":20,"../utils/doorHelper.js":21,"../utils/sprite_helper.js":22,"../weapons/bow/bow_helper.js":24,"pixi.js":244}],20:[function(require,module,exports){
 
 const keymap = {
   w: 'up',
@@ -1865,7 +1867,7 @@ module.exports.mousePositionFromScreen = (event, viewport) => ({
 },{}],21:[function(require,module,exports){
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('./spriteHelper.js');
+const spriteHelper = require('./sprite_helper.js');
 
 module.exports.hit = (player, door) => {
   const trimmedDoorData = spriteHelper.trimVertexData(door);
@@ -1888,7 +1890,7 @@ module.exports.hit = (player, door) => {
   tween.start();
 };
 
-},{"./spriteHelper.js":22,"pixi.js":244}],22:[function(require,module,exports){
+},{"./sprite_helper.js":22,"pixi.js":244}],22:[function(require,module,exports){
 (function (global){
 
 
@@ -1994,6 +1996,16 @@ module.exports.hitBoxContainerObj = (container, player) => new Promise((resolve)
   }
 });
 
+module.exports.global_container_hit = (container, sprite) => {
+  for (let a = 0; a < container.length; a++) {
+    const sprite_in_container = container[a];
+
+    if(sprite.containsPoint(sprite_in_container.getGlobalPosition())){
+      console.log('hitting something');
+    }
+  }
+};
+
 module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
   const vertexData = this.trimVertexData(sprite);
 
@@ -2087,10 +2099,11 @@ module.exports.clear = () => {
 (function (global){
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('../../utils/spriteHelper.js');
+const sprite_helper = require('../../utils/sprite_helper.js');
+const dialogUtil = require('../../dialog/dialogUtil.js');
 
-global.arrowContainer = new PIXI.Container();
-global.arrowContainer.name = 'arrow containter';
+global.arrow_container = new PIXI.Container();
+global.arrow_container.name = 'arrow containter';
 
 // const c = global.document.createElement('audio');
 // c.play();
@@ -2106,69 +2119,91 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_07.wav'),
 ];
 
-module.exports.arrowManagement = (power, origin, target) => {
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(origin.position.x, origin.position.y)
-    .lineTo(target.x, target.y);
+module.exports.init_arrow_container = () => {
+  global.viewport.addChild(global.arrow_container);
+}
 
-  // spriteHelper.drawPathAndShow(pathOne)
-
+module.exports.create_arrow = () => {
   const arrow = PIXI.Sprite.fromFrame('arrow');
+
   arrow.width /= 2;
   arrow.height /= 3;
   arrow.anchor.set(0.9);
-  arrow.rotation = spriteHelper.angle(origin, target);
 
-  const arrowTween = PIXI.tweenManager.createTween(arrow);
-  arrowTween.path = pathOne;
-  arrowTween.time = power;
-  arrowTween.easing = PIXI.tween.Easing.linear();
-  arrowTween.start();
-  arrowTween.on('end', () => {
+  return arrow;
+}
+
+module.exports.create_path = (origin, target) => {
+  const arrow_path = new PIXI.tween.TweenPath()
+    .moveTo(origin.position.x, origin.position.y)
+    .lineTo(target.x, target.y);
+  
+  return arrow_path
+}
+
+module.exports.create_arrow_tween = (arrow, power, arrow_path) => {
+  const arrow_tween = PIXI.tweenManager.createTween(arrow);
+
+  arrow_tween.path = arrow_path;
+  arrow_tween.time = power;
+  arrow_tween.easing = PIXI.tween.Easing.linear();
+
+  return arrow_tween;
+}
+
+module.exports.arrowManagement = (power, origin, target) => {
+  // make this not fire each time
+  module.exports.init_arrow_container()
+
+  const arrow = module.exports.create_arrow();
+  arrow.rotation = sprite_helper.angle(origin, target);
+
+  const arrow_path = module.exports.create_path(origin,target)
+  const arrow_tween = module.exports.create_arrow_tween(arrow, power, arrow_path)
+  arrow_tween.start();
+
+  arrow_tween.on('end', () => {
     arrow.pickup = true;
   });
+  
+  arrow_tween.on('update', () => {
 
-  arrowTween.on('update', () => {
-    spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
-      .then(() => {
-        arrow.pickup = true;
-        arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
+    for (let i = 0; i < global.enemy_container.children.length; i++) {
+      const sprite_in_container = global.enemy_container.children[i];
+  
+      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+        console.log('hit');
+        dialogUtil.renderText(sprite_in_container, 'I am hit');
+        console.log(sprite_in_container)
+        sprite_in_container.on_hit()
+        arrow_tween.stop();
+      }
+    }
 
-        setTimeout(() => {
-          arrowTween.stop();
-        }, 15);
-      });
+    for (let i = 0; i < global.collisionItems.children.length; i++) {
+      const sprite_in_container = global.collisionItems.children[i];
+  
+      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+        console.log('hit on collision item');
+        arrow_tween.stop()
+      }
+    }
+    // sprite_helper.global_container_hit(global.enemy_container.children, arrow)
+      // .then((enemy) => {
+      //   arrow.pickup = true;
 
-    spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
-      .then((critter) => {
-        arrow.pickup = true;
-        arrowTween.stop();
+      //   arrow_tween.stop();
+      //   enemy.stop();
 
-        const currentCritter = critter;
-        currentCritter.texture = critter.dead;
-        currentCritter.stop();
-        currentCritter.mouseDeathSound.play();
-
-        PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-      });
-
-    spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
-      .then((enemy) => {
-        arrow.pickup = true;
-
-        arrowTween.stop();
-        enemy.stop();
-
-        PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-      });
+      //   PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
+      // });
   });
 
-  global.arrowContainer.addChild(arrow);
-  global.viewport.addChild(global.arrowContainer);
+  global.arrow_container.addChild(arrow);
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":22,"pixi.js":244}],25:[function(require,module,exports){
+},{"../../dialog/dialogUtil.js":5,"../../utils/sprite_helper.js":22,"pixi.js":244}],25:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
