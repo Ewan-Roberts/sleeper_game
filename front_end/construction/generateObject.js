@@ -1,6 +1,6 @@
 
 const PIXI = require('pixi.js');
-const documentHelper = require('../utils/documentHelper.js');
+// const documentHelper = require('../utils/document_helper.js');
 
 function onDragStart(event) {
   this.alpha = 0.5;

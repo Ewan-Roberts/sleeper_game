@@ -63,6 +63,7 @@ module.exports.influence_box = sprite => {
 // TODO put under the enemy sprite
 module.exports.put_blood_splatter_on_ground = sprite => {
   const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  
   blood_stain.width /= 2;
   blood_stain.height /= 2;
   blood_stain.position.set(sprite.x, sprite.y);

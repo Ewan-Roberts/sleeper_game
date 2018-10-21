@@ -1,8 +1,8 @@
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/sprite_helper.js');
-const doorHelper = require('../utils/doorHelper.js');
-const bowHelper = require('../weapons/bow/bow_helper.js');
-const documentHelper = require('../utils/documentHelper.js');
+const sprite_helper = require('../utils/sprite_helper.js');
+const door_helper = require('../utils/door_helper.js');
+const bow_helper = require('../weapons/bow/bow_helper.js');
+const document_helper = require('../utils/document_helper.js');
 
 global.Player = {
 
@@ -50,9 +50,9 @@ function mouseUp() {
     global.app.ticker.remove(countDown);
 
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
-      const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
-      bowHelper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
+      bow_helper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
     }
   });
 }
@@ -60,15 +60,15 @@ function mouseUp() {
 function mouseMove() {
   global.viewport.on('mousemove', (event) => {
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = documentHelper.mousePositionFromScreen(event.data.global, global.viewport);
-      const mousePositionPlayer = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite, global.viewport);
+      const mousePosition = document_helper.mousePositionFromScreen(event.data.global, global.viewport);
+      const mousePositionPlayer = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite, global.viewport);
 
       aimingLine.clear();
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
       aimingLine.lineStyle(3, 0xffffff, 0)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
-      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePositionPlayer);
+      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);
     }
   });
 }
@@ -80,10 +80,10 @@ function mouseDown() {
     global.app.ticker.add(countDown);
 
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
       global.Player.sprite._textures = global.Player.sprite.ready._textures;
-      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePosition);
+      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePosition);
       global.Player.sprite.gotoAndPlay(0);
     }
   });
@@ -95,7 +95,7 @@ function addPlayerControls() {
   }, true);
 
   global.document.addEventListener('keydown', (e) => {
-    const key = documentHelper.getDirection(e.key);
+    const key = document_helper.getDirection(e.key);
 
     if (!global.Player.moveable) return;
 
@@ -123,9 +123,9 @@ function addPlayerControls() {
       global.Player.sprite._textures = global.Player.sprite.walk._textures;
     }
 
-    doorHelper.hit(global.Player.sprite, global.doors.children[0]);
+    door_helper.hit(global.Player.sprite, global.doors.children[0]);
 
-    // spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
+    // sprite_helper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
     //   .then((arrow) => {
     //     if (arrow.pickup) {
     //       global.Player.ammo += 1;
@@ -133,7 +133,7 @@ function addPlayerControls() {
     //     }
     //   });
 
-    spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
       .then(() => {
         if (key === 'up') global.Player.sprite.y += global.Player.movement_speed;
         if (key === 'down') global.Player.sprite.y -= global.Player.movement_speed;
@@ -141,10 +141,10 @@ function addPlayerControls() {
         if (key === 'right') global.Player.sprite.x -= global.Player.movement_speed;
       });
 
-    spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
       .then(pad => pad.action());
 
-    spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
       .then((critter) => {
         global.Player.inventory.push(critter);
 
@@ -153,7 +153,7 @@ function addPlayerControls() {
         critter.destroy();
       });
 
-    spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
       .then((item) => {
         if (key === 'up') {
           global.Player.sprite.y += global.Player.movement_speed - item.weight;

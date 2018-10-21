@@ -6,9 +6,6 @@ const dialogUtil = require('../../dialog/dialogUtil.js');
 global.arrow_container = new PIXI.Container();
 global.arrow_container.name = 'arrow containter';
 
-// const c = global.document.createElement('audio');
-// c.play();
-
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
   new Audio('audio/arrow_hit_01.wav'),
@@ -89,15 +86,6 @@ module.exports.arrowManagement = (power, origin, target) => {
         arrow_tween.stop()
       }
     }
-    // sprite_helper.global_container_hit(global.enemy_container.children, arrow)
-      // .then((enemy) => {
-      //   arrow.pickup = true;
-
-      //   arrow_tween.stop();
-      //   enemy.stop();
-
-      //   PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-      // });
   });
 
   global.arrow_container.addChild(arrow);
