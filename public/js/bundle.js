@@ -366,7 +366,7 @@ module.exports.create_enemy = (x, y) => {
     enemy_sprite.anchor.set(0.5);
     enemy_sprite.position.set(x, y);
     enemy_sprite.animationSpeed = 0.4;
-    enemy_sprite.rotation = -0.5;
+    // enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
     // enemy_sprite.on_hit = (arrow) => {
       
@@ -431,7 +431,6 @@ module.exports.put_blood_splatter_on_ground = sprite => {
 module.exports.create_path = (sprite, path_data) => {
   return new Promise(resolve => {
     const path = new PIXI.tween.TweenPath();
-
     path.moveTo(path_data[0].x, path_data[0].y);
     
     path_data.forEach(elem => path.lineTo(elem.x, elem.y));
@@ -440,8 +439,10 @@ module.exports.create_path = (sprite, path_data) => {
       .lineStyle(5, 0xffffff, 0.8)
       .drawPath(path);
 
+      console.log(path_data)
     global.viewport.addChild(path_visual_guide);
     resolve(path)
+    
   })
 }
 
@@ -449,32 +450,66 @@ module.exports.create_path_tween = (sprite, path) => {
   const enemy_tween = PIXI.tweenManager.createTween(sprite);
 
   enemy_tween.path = path;
+  
   enemy_tween.rotation = sprite_helper.angle(sprite, path._tmpPoint);
   enemy_tween.time = 50000;
   enemy_tween.easing = PIXI.tween.Easing.linear();
   
-  let curent_path_target ={
-    x: 0,
-    y: 0
-  }
+
+  let rotation_degree = 0;
 
   enemy_tween.on('update', delta => {
-    console.log(enemy_tween.path._tmpPoint.x)
-    console.log(curent_path_target.x)
-    if(curent_path_target.x != enemy_tween.path._tmpPoint.x &&
-      curent_path_target.y != enemy_tween.path._tmpPoint.y) {
-      curent_path_target.x = enemy_tween.path._tmpPoint.x;
-      curent_path_target.y = enemy_tween.path._tmpPoint.y;
-      
-      
-      setTimeout(()=> {enemy_tween.start()},1000)
-      enemy_tween.stop()
+
+    
+    
+    rotation_degree = Math.round(sprite_helper.angle(sprite, enemy_tween.path._tmpPoint));
+    
+    // const enemy_path_point = enemy_tween.path.getPoint(1);
+    
+    // enemy_path_point.x = Math.round(enemy_path_point.x)+100;
+    // enemy_path_point.y = Math.round(enemy_path_point.y);
+    // path_point.x = Math.round(path_point.x)
+    // path_point.y = Math.round(path_point.y)
+    // console.log(enemy_path_point)
+    // console.log(path_point)
+    console.log(enemy_tween.path._tmpPoint)
+    console.log(enemy_tween.target.transform.position)
+    if(enemy_tween.target.transform.position.equals(enemy_tween.path._tmpPoint)) {
+      console.log('bonza')
     }
-    const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
-    sprite.rotation = Math.round(sprite.rotation*100)/100;
-    if(sprite.rotation !== angle_to_turn_to){
-      sprite.rotation +=0.01;
+    
+    // if(path_point.equals(enemy_path_point)) {
+    //   enemy_tween.stop()
+    //   setTimeout(()=>{enemy_tween.start()},2000)
+    //   path_item+2
+    // }
+    // if(sprite.position.equals(enemy_tween.path.getPoint(path_item))) {
+    //   path_item++
+    //   console.log("weeeee")
+    //   enemy_tween.stop()
+    //   setTimeout(()=>{enemy_tween.start()},2000)
+      
+    // }
+    
+    if(sprite.rotation != rotation_degree){
+      
+      if(rotation_degree < sprite.rotation) {
+        sprite.rotation -= 0.01;
+      } else {
+        sprite.rotation += 0.01;
+      }
+
     }
+    
+
+    
+    // sprite.rotation = sprite_helper.angle(sprite, enemy_tween.path._tmpPoint);
+    // sprite.rotation = PIXI.DEG_TO_RAD * 359;
+    // const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
+    // sprite.rotation = Math.round(sprite.rotation*100)/100;
+    // if(sprite.rotation !== angle_to_turn_to){
+    //   sprite.rotation +=0.01;
+    // }
   })
 
   enemy_tween.start();
@@ -1057,7 +1092,7 @@ module.exports.add_floor = () => {
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
   create_grid.on('click', () => {
-    
+    //TODO
     level_util.load_debug_map_image()
     level_util.create_level_grid()
       .then(pathfinding_path => {
