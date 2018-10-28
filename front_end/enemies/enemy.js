@@ -143,9 +143,9 @@ module.exports.create_path_tween = (sprite, path) => {
       curent_path_target.x = enemy_tween.path._tmpPoint.x;
       curent_path_target.y = enemy_tween.path._tmpPoint.y;
       
-      enemy_tween.stop()
-      setTimeout(()=> {enemy_tween.start()},2000)
       
+      setTimeout(()=> {enemy_tween.start()},1000)
+      enemy_tween.stop()
     }
     const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
     sprite.rotation = Math.round(sprite.rotation*100)/100;
