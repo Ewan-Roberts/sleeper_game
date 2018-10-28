@@ -92,10 +92,8 @@ module.exports.create_path = (sprite, path_data) => {
     const path = new PIXI.tween.TweenPath();
 
     path.moveTo(path_data[0].x, path_data[0].y);
-
-    for (let i = 1; i < path_data.length; i++) {
-      path.lineTo(path_data[i].x, path_data[i].y);
-    }
+    
+    path_data.forEach(elem => path.lineTo(elem.x, elem.y));
 
     const path_visual_guide = new PIXI.Graphics()
       .lineStyle(5, 0xffffff, 0.8)
@@ -130,7 +128,20 @@ module.exports.create_path_tween = (sprite, path) => {
 
 function get_intersection(a,b){
   
-  const c=a.a.x,d=a.a.y,e=a.b.x-a.a.x,f=a.b.y-a.a.y,g=b.a.x,h=b.a.y,i=b.b.x-b.a.x,j=b.b.y-b.a.y,k=Math.sqrt(e*e+f*f),l=Math.sqrt(i*i+j*j);if(e/k==i/l&&f/k==j/l)return null;const m=(e*(h-d)+f*(c-g))/(i*f-j*e),n=(g+i*m-c)/e;return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
+  const c=a.a.x,
+  d=a.a.y,
+  e=a.b.x-a.a.x,
+  f=a.b.y-a.a.y,
+  g=b.a.x,
+  h=b.a.y,
+  i=b.b.x-b.a.x,
+  j=b.b.y-b.a.y,
+  k=Math.sqrt(e*e+f*f),
+  l=Math.sqrt(i*i+j*j);
+  if(e/k==i/l&&f/k==j/l)return null;
+  const m=(e*(h-d)+f*(c-g))/(i*f-j*e),
+  n=(g+i*m-c)/e;
+  return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
 
 }
 
