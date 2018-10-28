@@ -2194,9 +2194,7 @@ module.exports.lay_down_grid = () => {
     line_grid.push(grid_cell);
     global.grid_container.addChild(grid_cell);
   }
-  console.log(grid);
   global.viewport.addChild(global.grid_container);
-
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
