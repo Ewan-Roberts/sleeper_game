@@ -21,6 +21,19 @@ module.exports.clearEventTriggers = () => {
   }
 };
 
+global.segments = [];
+
+const addToSegments = item => {
+
+  global.segments.push(
+      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+  )
+
+}
+
 // Solid Black wall
 function render_wall (wallArray) {
   wallArray.forEach((wallData) => {
@@ -29,7 +42,19 @@ function render_wall (wallArray) {
     wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
+    
+    const background_image = {
+      x: 0,
+      y: 0,
+      height: debug_room_tiled_tiles.imageheight,
+      width: debug_room_tiled_tiles.imagewidth,
+    }
+    addToSegments(background_image)
+    
+    addToSegments(wall)
     global.collisionItems.addChild(wall);
+
+    
   });
   global.viewport.addChild(global.collisionItems);
 };
@@ -80,6 +105,7 @@ module.exports.load_debug_map_image = () => {
   debug_room_image.position.set(0,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
+
   global.viewport.addChild(debug_room_image);
   render_wall(debug_room_tiled_data.layers[1].objects);
 }
@@ -166,6 +192,5 @@ module.exports.create_level_grid = () => {
     });
     
     easystar.calculate()
-    
   })
 }
