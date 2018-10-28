@@ -1,5 +1,5 @@
 ; ==== Format of the commit message ====
-; <issue-number> <type>(<scope>) <subject>
+<type> <subject>
 ;
 ; <body>
 
