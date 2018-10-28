@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "watchify front_end/index.js -o ./public/js/bundle.js",
     "start": "nodemon server",
-    "spritesheet": "pixi-packer ./images.js public/images/",
+    "spritesheet": "pixi-packer ./scripts/images.js public/images/",
     "watch:js": "coffee -c -b -w -o ./ src/",
     "watch-all": "run-p watch:*"
   },
