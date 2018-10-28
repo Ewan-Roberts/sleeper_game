@@ -138,8 +138,10 @@ module.exports.create_path_tween = (sprite, path) => {
   enemy_tween.on('update', delta => {
     console.log(enemy_tween.path._tmpPoint.x)
     console.log(curent_path_target.x)
-    if(curent_path_target.x != enemy_tween.path._tmpPoint.x) {
+    if(curent_path_target.x != enemy_tween.path._tmpPoint.x &&
+      curent_path_target.y != enemy_tween.path._tmpPoint.y) {
       curent_path_target.x = enemy_tween.path._tmpPoint.x;
+      curent_path_target.y = enemy_tween.path._tmpPoint.y;
       
       enemy_tween.stop()
       setTimeout(()=> {enemy_tween.start()},2000)
