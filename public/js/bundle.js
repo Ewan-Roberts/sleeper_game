@@ -451,7 +451,7 @@ module.exports.create_path_tween = (sprite, path) => {
   return enemy_tween;
 }
 
-function getIntersection(a,b){
+function get_intersection(a,b){
   
   const c=a.a.x,d=a.a.y,e=a.b.x-a.a.x,f=a.b.y-a.a.y,g=b.a.x,h=b.a.y,i=b.b.x-b.a.x,j=b.b.y-b.a.y,k=Math.sqrt(e*e+f*f),l=Math.sqrt(i*i+j*j);if(e/k==i/l&&f/k==j/l)return null;const m=(e*(h-d)+f*(c-g))/(i*f-j*e),n=(g+i*m-c)/e;return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
 
@@ -461,64 +461,77 @@ function add_enemy_raycasting(enemy_sprite) {
 
   const raycast = new PIXI.Graphics();
   const points = (segments=>{
-      const a = [];
-      global.segments.forEach(seg=>a.push(seg.a,seg.b));
-      return a;
+    const a = [];
+    global.segments.forEach(seg=>a.push(seg.a,seg.b));
+    return a;
   })(segments);
+
   const uniquePoints = (points=>{
-      const set = {};
-      return points.filter(p=>{
-          const key = p.x+","+p.y;
-          if(key in set){
-              return false;
-          }
-          else{
-              set[key]=true;
-              return true;
-          }
-      });
+    const set = {};
+    return points.filter(p=>{
+      const key = p.x+","+p.y;
+      if(key in set){
+        return false;
+      }
+      else{
+        set[key]=true;
+        return true;
+      }
+    });
   })(points);
 
   global.app.ticker.add(delta => {
 
-      const uniqueAngles = [];
-      let intersects = [];
-      PIXI.tweenManager.update();
+    const uniqueAngles = [];
+    let intersects = [];
+    PIXI.tweenManager.update();
 
-      raycast.clear()
-      raycast.beginFill(0xfffffff,0.14);
-      for(let j=0;j<uniquePoints.length;j++){
-        const uniquePoint = uniquePoints[j];
-        const angle = Math.atan2(uniquePoint.y-enemy_sprite.y,uniquePoint.x-enemy_sprite.x);
-        uniquePoint.angle = angle;
-        uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);
-      }
-      for(let k=0;k<uniqueAngles.length;k++){
-        const angle = uniqueAngles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {a:{x:enemy_sprite.x,y:enemy_sprite.y},b:{x:enemy_sprite.x+dx,y:enemy_sprite.y+dy}};
-        let closestIntersect = null;
-        for(let i=0;i<global.segments.length;i++){
-          var intersect = getIntersection(ray,global.segments[i]);
-          if(!intersect) continue;
-          if(!closestIntersect || intersect.param<closestIntersect.param){
-            closestIntersect=intersect;
-          }
+    raycast.clear()
+    raycast.beginFill(0xfffffff, 0.14);
+    uniquePoints.forEach(elem => {
+      const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
+      elem.angle = angle;
+      uniqueAngles.push(angle-0.00001, angle-0.00001, angle+0.00001);
+    })
+
+    for(let k=0; k < uniqueAngles.length; k++){
+      const angle = uniqueAngles[k];
+      const dx = Math.cos(angle);
+      const dy = Math.sin(angle);
+      const ray = {
+        a: {
+          x: enemy_sprite.x, 
+          y: enemy_sprite.y
+        },
+        b: {
+          x: enemy_sprite.x + dx,
+          y: enemy_sprite.y + dy
         }
-        if(!closestIntersect) continue;
-        closestIntersect.angle = angle;
-        intersects.push(closestIntersect);
-      }
-      intersects = intersects.sort((a,b)=>a.angle-b.angle);
-      raycast.moveTo(intersects[0].x,intersects[0].y);
-      raycast.lineStyle(1, 0xffd900, 1);
-      for (let i = 1; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x,intersects[i].y);
-      }
-});
+      };
 
-global.viewport.addChild(raycast)
+      let closestIntersect = null;
+
+      for(let i=0; i < global.segments.length; i++){
+        const intersect = get_intersection(ray, global.segments[i]);
+        if(!intersect) continue;
+        if(!closestIntersect || intersect.param<closestIntersect.param){
+          closestIntersect = intersect;
+        }
+      }
+      if(!closestIntersect) continue;
+
+      closestIntersect.angle = angle;
+      intersects.push(closestIntersect);
+    }
+    intersects = intersects.sort((a,b) => a.angle - b.angle);
+    raycast.moveTo(intersects[0].x, intersects[0].y);
+    raycast.lineStyle(1, 0xffd900, 1);
+    for (let i = 1; i < intersects.length; i++) {
+      raycast.lineTo(intersects[i].x, intersects[i].y);
+    }
+  });
+
+  global.viewport.addChild(raycast)
 }
 
 // walk towards player
