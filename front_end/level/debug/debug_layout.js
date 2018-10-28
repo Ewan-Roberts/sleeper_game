@@ -47,7 +47,7 @@ module.exports.add_floor = () => {
       .then( sprite => {
         enemy.sight_line(sprite);
         enemy.influence_box(sprite);
-        enemy.crate_path(sprite, [
+        enemy.create_path(sprite, [
           {x: 200, y:-200},
           {x: 200,y: -200},
           {x: 300,y:-600},
@@ -58,7 +58,7 @@ module.exports.add_floor = () => {
           {x: 200, y:-200},
         ])
         .then(path => {
-          const enemy_tween = enemy.crate_path_tween(sprite, path);
+          const enemy_tween = enemy.create_path_tween(sprite, path);
           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
         })
       })
@@ -69,7 +69,8 @@ module.exports.add_floor = () => {
   create_grid.alpha = 0.8;
   create_grid.on('click', () => {
     
-    level_util.load_debug_room_from_tiled()
+    level_util.load_debug_map_image()
+    level_util.create_level_grid()
       .then(pathfinding_path => {
         enemy.init_enemies_container()
         enemy.create_enemy(200, -200)
@@ -83,6 +84,22 @@ module.exports.add_floor = () => {
             })
           })
       })
+    // pathfinding_util.lay_down_grid()  
+
+    // level_util.load_debug_room_from_tiled()
+    //   .then(pathfinding_path => {
+    //     enemy.init_enemies_container()
+    //     enemy.create_enemy(200, -200)
+    //       .then(sprite => {
+    //         enemy.sight_line(sprite);
+    //         enemy.influence_box(sprite);
+    //         enemy.crate_path(sprite, pathfinding_path)
+    //         .then(path => {
+    //           const enemy_tween = enemy.crate_path_tween(sprite, path);
+    //           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
+    //         })
+    //       })
+    //   })
     // pathfinding_util.lay_down_grid()
   });
 

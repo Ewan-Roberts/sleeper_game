@@ -319,10 +319,9 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 (function (global){
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/sprite_helper.js');
-const bowHelper = require('../weapons/bow/bow_helper.js');
+const sprite_helper = require('../utils/sprite_helper.js');
+const bow_helper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialogUtil.js');
-const intersect = require('yy-intersects');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
@@ -347,9 +346,22 @@ module.exports.create_enemy = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
-    enemy_sprite.on_hit = () => {
-      module.exports.put_blood_splatter_on_ground(enemy_sprite)
-    }
+    // enemy_sprite.on_hit = (arrow) => {
+      
+    //   const new_arrow = PIXI.Sprite.fromFrame('arrow');
+
+    //   new_arrow.width *= 2;
+    //   new_arrow.height *= 3;
+      
+    //   // new_arrow.rotation = arrow.rotation;
+    //   new_arrow.position.x = arrow.x;
+    //   new_arrow.position.y = arrow.y;
+    //   new_arrow.name = 'new_arrow';
+    //   enemy_sprite.addChild(new_arrow)
+    //   console.log(enemy_sprite)
+  
+    //   // module.exports.put_blood_splatter_on_ground(enemy_sprite)
+    // }
     global.enemy_container.addChild(enemy_sprite);
     resolve(enemy_sprite)
   })
@@ -392,7 +404,7 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   global.viewport.addChild(blood_stain);
 }
 
-module.exports.crate_path = (sprite, path_data) => {
+module.exports.create_path = (sprite, path_data) => {
   return new Promise(resolve => {
     const path = new PIXI.tween.TweenPath();
 
@@ -411,13 +423,22 @@ module.exports.crate_path = (sprite, path_data) => {
   })
 }
 
-module.exports.crate_path_tween = (sprite, path) => {
+module.exports.create_path_tween = (sprite, path) => {
   const enemy_tween = PIXI.tweenManager.createTween(sprite);
 
   enemy_tween.path = path;
-  enemy_tween.rotation = spriteHelper.angle(sprite, path._tmpPoint2);
-  enemy_tween.time = 30000;
+  enemy_tween.rotation = sprite_helper.angle(sprite, path._tmpPoint);
+  enemy_tween.time = 50000;
   enemy_tween.easing = PIXI.tween.Easing.linear();
+
+  enemy_tween.on('update', delta =>{
+    // const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
+    // sprite.rotation = Math.round(sprite.rotation*100)/100;
+    // if(sprite.rotation !== angle_to_turn_to){
+    //   sprite.rotation +=0.01;
+    // }
+  })
+
   enemy_tween.start();
   enemy_tween.pingPong = true;
 
@@ -428,7 +449,7 @@ module.exports.crate_path_tween = (sprite, path) => {
 module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
   const player =  global.Player.sprite;
 
-  enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+  enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, player);
   const path_to_player = new PIXI.tween.TweenPath()
     .moveTo(enemy_sprite.x, enemy_sprite.y)
     .lineTo(player.x, player.y);
@@ -439,17 +460,17 @@ module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
 
   global.viewport.addChild(path_to_player_visual_guide);
 
-  const tween = module.exports.crate_path_tween(enemy_sprite, path_to_player);
+  const tween = module.exports.create_path_tween(enemy_sprite, path_to_player);
   tween.time = 5000;
   
   const sight_line = enemy_sprite.children[0];
-  
-  tween.on('update', () => {    
+  // console.log(tween)
+  tween.on('update', () => {
 
     if(sight_line.containsPoint(player.getGlobalPosition())){  
       dialogUtil.renderText(enemy_sprite, 'sight line');
       tween.stop();
-      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+      enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, player);
     }
   });
   
@@ -461,7 +482,7 @@ module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
       dialogUtil.renderText(enemy_sprite, 'back to original path');
       tween.start()
       tween.chain(previous_tween_path)
-      setTimeout(()=>tween.remove(),2600)  
+      setTimeout(()=>tween.remove(),2500)  
     },5000)
   },2500)
 }
@@ -477,7 +498,7 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
     if(sight_line.containsPoint(player.getGlobalPosition())){
       dialogUtil.renderText(enemy_sprite, 'sight line');
       tween.stop();
-      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite);
+      enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, global.Player.sprite);
     }
 
     if(influence_box.containsPoint(player.getGlobalPosition())){
@@ -488,7 +509,7 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
   });
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialogUtil.js":5,"../utils/sprite_helper.js":24,"../weapons/bow/bow_helper.js":26,"pixi.js":251,"yy-intersects":308}],7:[function(require,module,exports){
+},{"../dialog/dialogUtil.js":5,"../utils/sprite_helper.js":24,"../weapons/bow/bow_helper.js":26,"pixi.js":251}],7:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -900,7 +921,7 @@ module.exports.add_floor = () => {
       .then( sprite => {
         enemy.sight_line(sprite);
         enemy.influence_box(sprite);
-        enemy.crate_path(sprite, [
+        enemy.create_path(sprite, [
           {x: 200, y:-200},
           {x: 200,y: -200},
           {x: 300,y:-600},
@@ -911,7 +932,7 @@ module.exports.add_floor = () => {
           {x: 200, y:-200},
         ])
         .then(path => {
-          const enemy_tween = enemy.crate_path_tween(sprite, path);
+          const enemy_tween = enemy.create_path_tween(sprite, path);
           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
         })
       })
@@ -922,7 +943,8 @@ module.exports.add_floor = () => {
   create_grid.alpha = 0.8;
   create_grid.on('click', () => {
     
-    level_util.load_debug_room_from_tiled()
+    level_util.load_debug_map_image()
+    level_util.create_level_grid()
       .then(pathfinding_path => {
         enemy.init_enemies_container()
         enemy.create_enemy(200, -200)
@@ -936,6 +958,22 @@ module.exports.add_floor = () => {
             })
           })
       })
+    // pathfinding_util.lay_down_grid()  
+
+    // level_util.load_debug_room_from_tiled()
+    //   .then(pathfinding_path => {
+    //     enemy.init_enemies_container()
+    //     enemy.create_enemy(200, -200)
+    //       .then(sprite => {
+    //         enemy.sight_line(sprite);
+    //         enemy.influence_box(sprite);
+    //         enemy.crate_path(sprite, pathfinding_path)
+    //         .then(path => {
+    //           const enemy_tween = enemy.crate_path_tween(sprite, path);
+    //           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
+    //         })
+    //       })
+    //   })
     // pathfinding_util.lay_down_grid()
   });
 
@@ -1884,43 +1922,57 @@ global.grid_container.name = 'enemy_container';
 const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
 
-module.exports.load_debug_room_from_tiled = () => {
 
+module.exports.load_debug_map_image = () => {
+  
+  console.log(debug_room_tiled_tiles);
+  const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
+  //TODO
+  debug_room_image.position.set(100,0);
+  debug_room_image.width = debug_room_tiled_tiles.imagewidth;
+  debug_room_image.height = debug_room_tiled_tiles.imageheight;
+  global.viewport.addChild(debug_room_image);
+}
+
+module.exports.create_level_grid = () => {
+  
   return new Promise((resolve,reject) => {
+    
+    const sprite_grid = [];
+    let line_grid = [];
+    
+    const binary_grid_map = [];
+    let binary_line = [];
 
-    const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-    debug_room_image.position.set(0,0);
-    debug_room_image.width *= 2;
-    debug_room_image.height *= 2;
-    global.viewport.addChild(debug_room_image);
     let current_x = 0;
     let current_y = 0;
-    const grid = [];
-    let line_grid = [];
-    let binary_line = [];
-    let binary_grid_map = [];
     
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
       
-      if(i % 20 === 0 && i !== 0){
-        grid.push(line_grid);
+      if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
+        sprite_grid.push(line_grid);
         binary_grid_map.push(binary_line);
+
         line_grid = [];
         binary_line = [];
+
         current_y += 100;
         current_x = 0;
       }
+      current_x += 100;
+
       const grid_cell = PIXI.Sprite.fromFrame('black_dot');
       grid_cell.width = 100;
       grid_cell.height = 100;
       grid_cell.x = current_x;
       grid_cell.y = current_y;
-      current_x += 100;
   
       if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
+        // is a wall
         grid_cell.alpha = 0.5
         binary_line.push(1);
       } else {
+        // is walkable ground
         grid_cell.alpha = 0.1;
         binary_line.push(0);
       }
@@ -1928,17 +1980,9 @@ module.exports.load_debug_room_from_tiled = () => {
       line_grid.push(grid_cell);
   
       global.grid_container.addChild(grid_cell);
-      global.viewport.addChild(global.grid_container);
     }
-  
-    const highlight_grid = (path, grid_line) => {
-  
-      for (let i = 0; i < path.length; i++) {
-        const position = path[i];
-  
-        grid_line[position.y][position.x].alpha =0.3; 
-      }
-    }
+    
+    global.viewport.addChild(global.grid_container);
 
     const grid_center = (path, grid_line) => {
       let grid_centers = [];
@@ -1946,14 +1990,18 @@ module.exports.load_debug_room_from_tiled = () => {
         const position = path[i];
 
         const block_found = grid_line[position.y][position.x];
-  
-        grid_centers.push({x: block_found.x, y: block_found.y})
+        //TODO for testing
+        block_found.alpha = 0.3;
+
+        grid_centers.push({
+          x: block_found.x + (debug_room_tiled_tiles.tilewidth/2), 
+          y: block_found.y + (debug_room_tiled_tiles.tileheight/2)
+        })
       }
       return grid_centers;
     }
   
     easystar.setGrid(binary_grid_map);
-  
     easystar.setAcceptableTiles([0]);
     easystar.setIterationsPerCalculation(1000);
     easystar.findPath(0, 0, 6, 6, (path) => {
@@ -1961,16 +2009,15 @@ module.exports.load_debug_room_from_tiled = () => {
         console.log('no path foud');
       } else {
         console.log(path)
-
-        highlight_grid(path, grid)
-        const path_to_follow_based_on_grid_centers= grid_center(path, grid);
+        
+        const path_to_follow_based_on_grid_centers = grid_center(path, sprite_grid);
         resolve(path_to_follow_based_on_grid_centers);
       }
     });
+    
     easystar.calculate()
-
+    
   })
-  
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./debug/playground/map2_output.json":12,"./debug/playground/map2_tiles.json":13,"easystarjs":69,"pixi.js":251}],17:[function(require,module,exports){
@@ -2778,26 +2825,30 @@ module.exports.arrowManagement = (power, origin, target) => {
   module.exports.init_arrow_container()
 
   const arrow = module.exports.create_arrow();
+  arrow.name = 'arrow';
   arrow.rotation = sprite_helper.angle(origin, target);
 
   const arrow_path = module.exports.create_path(origin,target)
   const arrow_tween = module.exports.create_arrow_tween(arrow, power, arrow_path)
   arrow_tween.start();
 
-  arrow_tween.on('end', () => {
-    arrow.pickup = true;
-  });
-  
+  // arrow_tween.on('end', () => {
+  //   arrow.pickup = true;
+  // });
+  global.arrow_container.addChild(arrow);
   arrow_tween.on('update', () => {
 
     for (let i = 0; i < global.enemy_container.children.length; i++) {
       const sprite_in_container = global.enemy_container.children[i];
-  
+      
       if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log('hit');
+        console.log(arrow.getGlobalPosition())
+        console.log(arrow.getLocalBounds())
+        console.log('hit')
         dialogUtil.renderText(sprite_in_container, 'I am hit');
-        console.log(sprite_in_container)
-        sprite_in_container.on_hit()
+        arrow.width = 200;
+        arrow.height = 50;
+        sprite_in_container.addChild(arrow)
         arrow_tween.stop();
       }
     }
@@ -2812,7 +2863,7 @@ module.exports.arrowManagement = (power, origin, target) => {
     }
   });
 
-  global.arrow_container.addChild(arrow);
+  
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -7329,7 +7380,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":74,"component-inherit":67,"debug":81,"engine.io-parser":83,"parseqs":98,"ws":314,"yeast":307}],80:[function(require,module,exports){
+},{"../transport":74,"component-inherit":67,"debug":81,"engine.io-parser":83,"parseqs":98,"ws":309,"yeast":307}],80:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -7569,7 +7620,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":82,"_process":318}],82:[function(require,module,exports){
+},{"./debug":82,"_process":313}],82:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -9067,7 +9118,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":315,"isarray":88}],88:[function(require,module,exports){
+},{"buffer":310,"isarray":88}],88:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
@@ -27846,7 +27897,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":166,"../../../../textures/TextureMatrix":212,"../Filter":182,"path":317}],186:[function(require,module,exports){
+},{"../../../../math":166,"../../../../textures/TextureMatrix":212,"../Filter":182,"path":312}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31638,7 +31689,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":140,"path":317}],204:[function(require,module,exports){
+},{"../../Shader":140,"path":312}],204:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37465,7 +37516,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":323}],221:[function(require,module,exports){
+},{"url":318}],221:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42015,7 +42066,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":161,"../../core/const":142,"path":317}],239:[function(require,module,exports){
+},{"../../core":161,"../../core/const":142,"path":312}],239:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42099,7 +42150,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":161,"path":317}],240:[function(require,module,exports){
+},{"../../core":161,"path":312}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43262,7 +43313,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":161,"path":317}],247:[function(require,module,exports){
+},{"../../core":161,"path":312}],247:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43370,7 +43421,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":161,"path":317}],248:[function(require,module,exports){
+},{"../../core":161,"path":312}],248:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43424,7 +43475,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":161,"path":317}],249:[function(require,module,exports){
+},{"../../core":161,"path":312}],249:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43600,7 +43651,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":161,"path":317}],251:[function(require,module,exports){
+},{"../../core":161,"path":312}],251:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46267,7 +46318,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":237,"path":317,"resource-loader":291}],259:[function(require,module,exports){
+},{"../extras":237,"path":312,"resource-loader":291}],259:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46630,7 +46681,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":161,"resource-loader":291,"url":323}],262:[function(require,module,exports){
+},{"../core":161,"resource-loader":291,"url":318}],262:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48356,7 +48407,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":161,"../Mesh":263,"path":317,"pixi-gl-core":108}],270:[function(require,module,exports){
+},{"../../core":161,"../Mesh":263,"path":312,"pixi-gl-core":108}],270:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54037,7 +54088,7 @@ function url (uri, loc) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"debug":298,"parseuri":99}],298:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
-},{"./debug":299,"_process":318,"dup":81}],299:[function(require,module,exports){
+},{"./debug":299,"_process":313,"dup":81}],299:[function(require,module,exports){
 arguments[4][82][0].apply(exports,arguments)
 },{"dup":82,"ms":95}],300:[function(require,module,exports){
 (function (global){
@@ -54633,7 +54684,7 @@ function isBuf(obj) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],303:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
-},{"./debug":304,"_process":318,"dup":81}],304:[function(require,module,exports){
+},{"./debug":304,"_process":313,"dup":81}],304:[function(require,module,exports){
 arguments[4][82][0].apply(exports,arguments)
 },{"dup":82,"ms":95}],305:[function(require,module,exports){
 arguments[4][88][0].apply(exports,arguments)
@@ -54723,674 +54774,6 @@ yeast.decode = decode;
 module.exports = yeast;
 
 },{}],308:[function(require,module,exports){
-/**
- * @file intersects.js
- * @author David Figatner
- * @license MIT
- * Copyright (c) 2016 YOPEY YOPEY LLC
- * {@link https://github.com/davidfig/intersects}
- */
-
-module.exports = {
-    Shape: require('./src/shape.js'),
-    Rectangle: require('./src/rectangle.js'),
-    Polygon: require('./src/polygon.js'),
-    Circle: require('./src/circle.js')
-};
-},{"./src/circle.js":309,"./src/polygon.js":310,"./src/rectangle.js":311,"./src/shape.js":312}],309:[function(require,module,exports){
-/**
- * @file src/circle.js
- * @author David Figatner
- * @license MIT
- * Copyright (c) 2016 YOPEY YOPEY LLC
- * {@link https://github.com/davidfig/intersects}
- */
-
-const Shape = require('./shape.js');
-
-/** circle shape */
-class Circle extends Shape
-{
-    /**
-     * @param {Article} article that uses this shape
-     * @param {object} [options] - @see {@link Circle.set}
-     */
-    constructor(article, options)
-    {
-        super(article);
-        this.SHAPE = 'Circle';
-        this.AABB = [];
-        options = options || {};
-        this.set(options);
-    }
-
-    /**
-     * @param {object} options
-     * @param {object} [options.positionObject=this.article] use this to update position
-     * @param {number} [options.radius] otherwise article.width / 2 is used as radius
-     */
-    set(options)
-    {
-        this.radius = options.radius || this.article.width / 2;
-        this.radiusSquared = this.radius * this.radius;
-        this.center = options.positionObject ? options.positionObject : this.article;
-        this.update();
-    }
-
-    /** update AABB */
-    update()
-    {
-        const AABB = this.AABB;
-        const radius = this.radius;
-        const center = this.center;
-        AABB[0] = center.x - radius;
-        AABB[1] = center.y - radius;
-        AABB[2] = center.x + radius;
-        AABB[3] = center.y + radius;
-    }
-
-    /**
-     * Does Circle collide with Circle?
-     * @param {Circle} circle
-     * @return {boolean}
-     */
-    collidesCircle(circle)
-    {
-        const thisCenter = this.center;
-        const center = circle.center;
-        const x = center.x - thisCenter.x;
-        const y = center.y - thisCenter.y;
-        const radii = circle.radius + this.radius;
-        return x * x + y * y <= radii * radii;
-    }
-
-    /**
-     * Does Circle collide with point?
-     * @param {Point} point
-     * @return {boolean}
-     */
-    collidesPoint(point)
-    {
-        const x = point.x - this.center.x;
-        const y = point.y - this.center.y;
-        return x * x + y * y <= this.radiusSquared;
-    }
-
-    /**
-     * Does Circle collide with a line?
-     * from http://stackoverflow.com/a/10392860/1955997
-     * @param {Point} p1
-     * @param {Point} p2
-     * @return {boolean}
-     */
-    collidesLine(p1, p2)
-    {
-        function dot(v1, v2)
-        {
-            return (v1[0] * v2[0]) + (v1[1] * v2[1]);
-        }
-
-        const center = this.center;
-        const ac = [center.x - p1.x, center.y - p1.y];
-        const ab = [p2.x - p1.x, p2.y - p1.y];
-        const ab2 = dot(ab, ab);
-        const acab = dot(ac, ab);
-        let t = acab / ab2;
-        t = (t < 0) ? 0 : t;
-        t = (t > 1) ? 1 : t;
-        let h = [(ab[0] * t + p1.x) - center.x, (ab[1] * t + p1.y) - center.y];
-        const h2 = dot(h, h);
-        return h2 <= this.radiusSquared;
-    }
-
-    /**
-     * Does circle collide with Rectangle?
-     * @param {Rectangle} rectangle
-     */
-    collidesRectangle(rectangle)
-    {
-        // from http://stackoverflow.com/a/402010/1955997
-        if (rectangle.noRotate)
-        {
-            const AABB = rectangle.AABB;
-            const hw = (AABB[2] - AABB[0]) / 2;
-            const hh = (AABB[3] - AABB[1]) / 2;
-            const center = this.center;
-            const radius = this.radius;
-            const distX = Math.abs(center.x - AABB[0]);
-            const distY = Math.abs(center.y - AABB[1]);
-
-            if (distX > hw + radius || distY > hh + radius)
-            {
-                return false;
-            }
-
-            if (distX <= hw || distY <= hh)
-            {
-                return true;
-            }
-
-            const x = distX - hw;
-            const y = distY - hh;
-            return x * x + y * y <= this.radiusSquared;
-        }
-
-        // from http://stackoverflow.com/a/402019/1955997
-        else
-        {
-            const center = this.center;
-            if (rectangle.collidesPoint(center))
-            {
-                return true;
-            }
-
-            const vertices = rectangle.vertices;
-            return this.collidesLine({x: vertices[0], y: vertices[1]}, {x: vertices[2], y: vertices[3]}) ||
-                this.collidesLine({x: vertices[2], y: vertices[3]}, {x: vertices[4], y: vertices[5]}) ||
-                this.collidesLine({x: vertices[4], y: vertices[5]}, {x: vertices[6], y: vertices[7]}) ||
-                this.collidesLine({x: vertices[6], y: vertices[7]}, {x: vertices[0], y: vertices[1]});
-        }
-    }
-
-    // from http://stackoverflow.com/a/402019/1955997
-    collidesPolygon(polygon)
-    {
-        const center = this.center;
-        if (polygon.collidesPoint(center))
-        {
-            return true;
-        }
-        const vertices = polygon.vertices;
-        const count = vertices.length;
-        for (let i = 0; i < count - 2; i += 2)
-        {
-            if (this.collidesLine({x: vertices[i], y: vertices[i + 1]}, {x: vertices[i + 2], y: vertices[i + 3]}))
-            {
-                return true;
-            }
-        }
-        return this.collidesLine({x: vertices[0], y: vertices[1]}, {x: vertices[count - 2], y: vertices[count - 1]});
-    }
-}
-
-module.exports = Circle;
-},{"./shape.js":312}],310:[function(require,module,exports){
-/**
- * @file src/polygon.js
- * @author David Figatner
- * @license MIT
- * Copyright (c) 2016 YOPEY YOPEY LLC
- * {@link https://github.com/davidfig/intersects}
- */
-
-const Shape = require('./shape.js');
-
-/** Polygon */
-class Polygon extends Shape
-{
-    /**
-     * @param {Article} article that uses this shape
-     * @param {array} points in the form of [x, y, x2, y2, x3, y3, . . .]
-     * @param {object} [options] @see {@link Polygon.set}
-     */
-    constructor(article, points, options)
-    {
-        super(article);
-        this.SHAPE = 'Polygon';
-        options = options || {};
-        this.points = points;
-        this.vertices = [];
-        this.AABB = [];
-        this.set(options);
-    }
-
-    /**
-     * @param {object} options
-     * @param {PIXI.Point[]} options.points
-     * @param {PIXI.DisplayObject} [options.center] - object to use for position (and rotation, unless separately defined)
-     * @param {PIXI.DisplayObject} [options.rotation] - object to use for rotation instead of options.center or article
-     */
-    set(options)
-    {
-        if (options.point)
-        {
-            this.points = options.points;
-        }
-        this.center = options.center || this.article;
-        this.rotation = options.rotation ? options.rotation : (options.center ? options.center : this.article);
-        this.update();
-    }
-
-    /**
-     * based on http://www.willperone.net/Code/coderr.php
-     */
-    update()
-    {
-        const rotation = this.rotation.rotation;
-        const sin = Math.sin(rotation);
-        const cos = Math.cos(rotation);
-
-        let minX = Infinity, maxX = 0, minY = Infinity, maxY = 0;
-        const points = this.points;
-        const count = points.length;
-        const vertices = this.vertices;
-        const center = this.center;
-        for (let i = 0; i < count; i += 2)
-        {
-            const pointX = points[i];
-            const pointY = points[i + 1];
-            const x = vertices[i] = center.x + pointX * cos - pointY * sin;
-            const y = vertices[i + 1] = center.y + pointX * sin + pointY * cos;
-            minX = (x < minX) ? x : minX;
-            maxX = (x > maxX) ? x : maxX;
-            minY = (y < minY) ? y : minY;
-            maxY = (y > maxY) ? y : maxY;
-        }
-        this.AABB[0] = minX;
-        this.AABB[1] = minY;
-        this.AABB[2] = maxX;
-        this.AABB[3] = maxY;
-        this.width = maxX - minX;
-        this.height = maxY - minY;
-        this.hw = (maxX - minX) / 2;
-        this.hh = (maxY - minY) / 2;
-    }
-
-    /**
-     * Does Rectangle collide Rectangle?
-     * @param {Rectangle} rectangle
-     * @return {boolean}
-     */
-    collidesRectangle(rectangle)
-    {
-        return this.collidesPolygon(rectangle);
-    }
-
-    /**
-     * Does Rectangle collide Circle?
-     * @param {Circle} circle
-     * @return {boolean}
-     */
-    collidesCircle(circle)
-    {
-        return circle.collidesPolygon(this);
-    }
-}
-
-module.exports = Polygon;
-},{"./shape.js":312}],311:[function(require,module,exports){
-/**
- * @file src/rectangle.js
- * @author David Figatner
- * @license MIT
- * Copyright (c) 2016 YOPEY YOPEY LLC
- * {@link https://github.com/davidfig/intersects}
- */
-
-const Shape = require('./shape.js');
-
-class Rectangle extends Shape
-{
-    /**
-     * @param {object} article that uses this shape
-     * @param {object} [options] @see {@link Rectangle.set}
-     */
-    constructor(article, options)
-    {
-        super(article);
-        this.SHAPE = 'Rectangle';
-        options = options || {};
-        this._vertices = [];
-        this.AABB = [0, 0, 0, 0];   // [x1, y1, x2, y2]
-        this.set(options);
-    }
-
-    /**
-     * @param {object} options
-     * @param {number} [options.width] width of object when aligned
-     * @param {number} [options.height] height of object when aligned
-     * @param {number} [options.square] side size of a square
-     * @param {object} [options.center] object to use for position (and rotation, unless separately defined)
-     * @param {object} [options.rotation] object to use for rotation instead of options.center or article
-     * @param {boolean} [options.noRotate] object does not rotate (simplifies math)
-     */
-    set(options)
-    {
-        this.center = options.center || this.article;
-        this.rotation = options.rotation ? options.rotation : (options.center ? options.center : this.article);
-        if (typeof options.square !== 'undefined')
-        {
-            this._width = this._height = options.square;
-        }
-        else
-        {
-            this._width = options.width || this.article.width;
-            this._height = options.height || this.article.height;
-        }
-        this.noRotate = options.noRotate;
-        this.hw = this._width / 2;
-        this.hh = this._height / 2;
-        this.update();
-    }
-
-    /** width of rectangle */
-    get width()
-    {
-        return this._width;
-    }
-    set width(value)
-    {
-        this._width = value;
-        this.hw = value / 2;
-    }
-
-    /** height of rectangle */
-    get height()
-    {
-        return this._height;
-    }
-    set height(value)
-    {
-        this._height = value;
-        this.hh = value / 2;
-    }
-
-    /**
-     * based on http://www.willperone.net/Code/coderr.php
-     * update AABB and sets vertices to dirty
-     */
-    update()
-    {
-        const AABB = this.AABB;
-        const center = this.center;
-
-        if (this.noRotate)
-        {
-            const hw = this.hw;
-            const hh = this.hh;
-            AABB[0] = center.x - hw;
-            AABB[1] = center.y - hh;
-            AABB[2] = center.x + hw;
-            AABB[3] = center.y + hh;
-        }
-        else
-        {
-            const s = Math.abs(Math.sin(this.rotation.rotation) / 2);
-            const c = Math.abs(Math.cos(this.rotation.rotation) / 2);
-
-            const width = this._width;
-            const height = this._height;
-            const ex = height * s + width * c;  // x extent of AABB
-            const ey = height * c + width * s;  // y extent of AABB
-
-            AABB[0] = center.x - ex;
-            AABB[1] = center.y - ey;
-            AABB[2] = center.x + ex;
-            AABB[3] = center.y + ey;
-        }
-        this.verticesDirty = true;
-    }
-
-    /** updates vertices automatically when dirty */
-    updateVertices()
-    {
-        const vertices = this._vertices;
-        const center = this.center;
-        const hw = this.hw;
-        const hh = this.hh;
-        if (this.noRotate)
-        {
-            const AABB = this.AABB;
-            vertices[0] = AABB[0];
-            vertices[1] = AABB[1];
-            vertices[2] = AABB[2];
-            vertices[3] = AABB[1];
-            vertices[4] = AABB[2];
-            vertices[5] = AABB[3];
-            vertices[6] = AABB[0];
-            vertices[7] = AABB[3];
-        }
-        else
-        {
-            const rotation = this.rotation.rotation;
-            const sin = Math.sin(rotation);
-            const cos = Math.cos(rotation);
-
-            vertices[0] = center.x - hw * cos + hh * sin;
-            vertices[1] = center.y - hw * sin - hh * cos;
-            vertices[2] = center.x + hw * cos + hh * sin;
-            vertices[3] = center.y + hw * sin - hh * cos;
-            vertices[4] = center.x + hw * cos - hh * sin;
-            vertices[5] = center.y + hw * sin + hh * cos;
-            vertices[6] = center.x - hw * cos - hh * sin;
-            vertices[7] = center.y - hw * sin + hh * cos;
-        }
-        this.verticesDirty = false;
-    }
-
-    /** sets vertices Array[8] */
-    get vertices()
-    {
-        if (this.verticesDirty)
-        {
-            this.updateVertices();
-        }
-        return this._vertices;
-    }
-
-    /**
-     * Does Rectangle collide Rectangle?
-     * @param {Rectangle} rectangle
-     * @return {boolean}
-     */
-    collidesRectangle(rectangle)
-    {
-        if (this.noRotate && rectangle.noRotate)
-        {
-            return this.AABBs(rectangle.AABB);
-        }
-        else
-        {
-            return this.collidesPolygon(rectangle);
-        }
-    }
-
-    /**
-     * Does Rectangle collide Circle?
-     * @param {Circle} circle
-     * @return {boolean}
-     */
-    collidesCircle(circle)
-    {
-        return circle.collidesRectangle(this);
-    }
-
-    static fromRectangle(x, y, width, height)
-    {
-        const center = {x: x + width / 2, y: y + height / 2};
-        return new Rectangle(center, {width: width, height: height, noRotate: true});
-    }
-}
-
-module.exports = Rectangle;
-},{"./shape.js":312}],312:[function(require,module,exports){
-/**
- * @file src/shape.js
- * @author David Figatner
- * @license MIT
- * Copyright (c) 2016 YOPEY YOPEY LLC
- * {@link https://github.com/davidfig/intersects}
- */
-
-/** base class of all shapes */
-class Shape
-{
-    /**
-     * @param {object} [article] that uses this shape
-     */
-    constructor(article)
-    {
-        this.article = article;
-    }
-
-    update() {}
-
-    /**
-     * collides with this shape's AABB box
-     * @param {object} AABB
-     */
-    AABBs(AABB)
-    {
-        var AABB2 = this.AABB;
-        return !(AABB[2] < AABB2[0] || AABB2[2] < AABB[0] || AABB[3] < AABB2[1] || AABB2[3] < AABB[1]);
-    }
-
-    /**
-     * point-polygon collision test based on this.vertices
-     * based on http://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon/2922778#2922778
-     * @param {Point} point
-     * @return {boolean}
-     */
-    collidesPoint(point)
-    {
-        const vertices = this.vertices;
-        const length = vertices.length;
-        let c = false;
-        for (let i = 0, j = length - 2; i < length; i += 2)
-        {
-            if (((vertices[i + 1] > point.y) !== (vertices[j + 1] > point.y)) && (point.x < (vertices[j] - vertices[i]) * (point.y - vertices[i + 1]) / (vertices[j + 1] - vertices[i + 1]) + vertices[i]))
-            {
-                c = !c;
-            }
-            j = i;
-        }
-        return c;
-    }
-
-    collidesCircle() {}
-    collidesRectangle() {}
-
-    /**
-     * Does Polygon collide Polygon or AABB?
-     * based on http://stackoverflow.com/questions/10962379/how-to-check-intersection-between-2-rotated-rectangles
-     * @param {Array} polygon
-     * @param {boolean} isAABB
-     * @return {boolean}
-     */
-    collidesPolygon(polygon, isAABB)
-    {
-        const a = this.vertices;
-        const b = isAABB ? polygon : polygon.vertices;
-        const polygons = [a, b];
-        let minA, maxA, projected, minB, maxB;
-        for (let i = 0; i < polygons.length; i++)
-        {
-            const polygon = polygons[i];
-            for (let i1 = 0; i1 < polygon.length; i1 += 2)
-            {
-                var i2 = (i1 + 2) % polygon.length;
-                var normal = { x: polygon[i2 + 1] - polygon[i1 + 1], y: polygon[i1] - polygon[i2] };
-                minA = maxA = null;
-                for (let j = 0; j < a.length; j += 2)
-                {
-                    projected = normal.x * a[j] + normal.y * a[j + 1];
-                    if (minA === null || projected < minA)
-                    {
-                        minA = projected;
-                    }
-                    if (maxA === null || projected > maxA)
-                    {
-                        maxA = projected;
-                    }
-                }
-                minB = maxB = null;
-                for (let j = 0; j < b.length; j += 2)
-                {
-                    projected = normal.x * b[j] + normal.y * b[j + 1];
-                    if (minB === null || projected < minB)
-                    {
-                        minB = projected;
-                    }
-                    if (maxB === null || projected > maxB)
-                    {
-                        maxB = projected;
-                    }
-                }
-                if (maxA < minB || maxB < minA)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Does polygon collide Line?
-     * @param {Point} p1
-     * @param {Point} p2
-     * @return {boolean}
-     */
-    collidesLine(p1, p2)
-    {
-        const vertices = this.vertices;
-        const length = vertices.length;
-
-        // check if first point is inside the shape (this covers if the line is completely enclosed by the shape)
-        if (this.collidesPoint(p1))
-        {
-            return true;
-        }
-
-        // check for intersections for all of the sides
-        for (let i = 0; i < length; i += 2)
-        {
-            const j = (i + 2) % length;
-            if (Shape.lineLine(p1, p2, {x: vertices[i], y: vertices[i + 1]}, {x: vertices[j], y: vertices[j + 1]}))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /** catch all for automatic collision checking */
-    collides(shape)
-    {
-        return this['collides' + shape.SHAPE](shape);
-    }
-
-    /**
-     * Do two lines intersect?
-     * from http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-     * @param {Point} p1
-     * @param {Point} p2
-     * @param {Point} p3
-     * @param {Point} p4
-     * @return {boolean}
-     */
-    static lineLine(p1, p2, p3, p4)
-    {
-        const p0_x = p1.x;
-        const p0_y = p1.y;
-        const p1_x = p2.x;
-        const p1_y = p2.y;
-        const p2_x = p3.x;
-        const p2_y = p3.y;
-        const p3_x = p4.x;
-        const p3_y = p4.y;
-        const s1_x = p1_x - p0_x;
-        const s1_y = p1_y - p0_y;
-        const s2_x = p3_x - p2_x;
-        const s2_y = p3_y - p2_y;
-        const s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-        const t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
-        return s >= 0 && s <= 1 && t >= 0 && t <= 1;
-    }
-}
-
-module.exports = Shape;
-},{}],313:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -55543,9 +54926,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],314:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 
-},{}],315:[function(require,module,exports){
+},{}],310:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -57324,7 +56707,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":313,"ieee754":316}],316:[function(require,module,exports){
+},{"base64-js":308,"ieee754":311}],311:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -57410,7 +56793,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],317:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -57716,7 +57099,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":318}],318:[function(require,module,exports){
+},{"_process":313}],313:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -57902,7 +57285,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],319:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -58439,7 +57822,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],320:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58525,7 +57908,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],321:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58612,13 +57995,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],322:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":320,"./encode":321}],323:[function(require,module,exports){
+},{"./decode":315,"./encode":316}],318:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -59352,7 +58735,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":324,"punycode":319,"querystring":322}],324:[function(require,module,exports){
+},{"./util":319,"punycode":314,"querystring":317}],319:[function(require,module,exports){
 'use strict';
 
 module.exports = {

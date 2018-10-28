@@ -1,9 +1,8 @@
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/sprite_helper.js');
-const bowHelper = require('../weapons/bow/bow_helper.js');
+const sprite_helper = require('../utils/sprite_helper.js');
+const bow_helper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialogUtil.js');
-const intersect = require('yy-intersects');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
@@ -28,9 +27,22 @@ module.exports.create_enemy = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
-    enemy_sprite.on_hit = () => {
-      module.exports.put_blood_splatter_on_ground(enemy_sprite)
-    }
+    // enemy_sprite.on_hit = (arrow) => {
+      
+    //   const new_arrow = PIXI.Sprite.fromFrame('arrow');
+
+    //   new_arrow.width *= 2;
+    //   new_arrow.height *= 3;
+      
+    //   // new_arrow.rotation = arrow.rotation;
+    //   new_arrow.position.x = arrow.x;
+    //   new_arrow.position.y = arrow.y;
+    //   new_arrow.name = 'new_arrow';
+    //   enemy_sprite.addChild(new_arrow)
+    //   console.log(enemy_sprite)
+  
+    //   // module.exports.put_blood_splatter_on_ground(enemy_sprite)
+    // }
     global.enemy_container.addChild(enemy_sprite);
     resolve(enemy_sprite)
   })
@@ -73,7 +85,7 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   global.viewport.addChild(blood_stain);
 }
 
-module.exports.crate_path = (sprite, path_data) => {
+module.exports.create_path = (sprite, path_data) => {
   return new Promise(resolve => {
     const path = new PIXI.tween.TweenPath();
 
@@ -92,13 +104,22 @@ module.exports.crate_path = (sprite, path_data) => {
   })
 }
 
-module.exports.crate_path_tween = (sprite, path) => {
+module.exports.create_path_tween = (sprite, path) => {
   const enemy_tween = PIXI.tweenManager.createTween(sprite);
 
   enemy_tween.path = path;
-  enemy_tween.rotation = spriteHelper.angle(sprite, path._tmpPoint2);
-  enemy_tween.time = 30000;
+  enemy_tween.rotation = sprite_helper.angle(sprite, path._tmpPoint);
+  enemy_tween.time = 50000;
   enemy_tween.easing = PIXI.tween.Easing.linear();
+
+  enemy_tween.on('update', delta =>{
+    // const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
+    // sprite.rotation = Math.round(sprite.rotation*100)/100;
+    // if(sprite.rotation !== angle_to_turn_to){
+    //   sprite.rotation +=0.01;
+    // }
+  })
+
   enemy_tween.start();
   enemy_tween.pingPong = true;
 
@@ -109,7 +130,7 @@ module.exports.crate_path_tween = (sprite, path) => {
 module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
   const player =  global.Player.sprite;
 
-  enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+  enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, player);
   const path_to_player = new PIXI.tween.TweenPath()
     .moveTo(enemy_sprite.x, enemy_sprite.y)
     .lineTo(player.x, player.y);
@@ -120,17 +141,17 @@ module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
 
   global.viewport.addChild(path_to_player_visual_guide);
 
-  const tween = module.exports.crate_path_tween(enemy_sprite, path_to_player);
+  const tween = module.exports.create_path_tween(enemy_sprite, path_to_player);
   tween.time = 5000;
   
   const sight_line = enemy_sprite.children[0];
-  
-  tween.on('update', () => {    
+  // console.log(tween)
+  tween.on('update', () => {
 
     if(sight_line.containsPoint(player.getGlobalPosition())){  
       dialogUtil.renderText(enemy_sprite, 'sight line');
       tween.stop();
-      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+      enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, player);
     }
   });
   
@@ -142,7 +163,7 @@ module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
       dialogUtil.renderText(enemy_sprite, 'back to original path');
       tween.start()
       tween.chain(previous_tween_path)
-      setTimeout(()=>tween.remove(),2600)  
+      setTimeout(()=>tween.remove(),2500)  
     },5000)
   },2500)
 }
@@ -158,7 +179,7 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
     if(sight_line.containsPoint(player.getGlobalPosition())){
       dialogUtil.renderText(enemy_sprite, 'sight line');
       tween.stop();
-      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite);
+      enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, global.Player.sprite);
     }
 
     if(influence_box.containsPoint(player.getGlobalPosition())){

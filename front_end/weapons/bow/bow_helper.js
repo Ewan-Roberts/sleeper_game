@@ -54,26 +54,30 @@ module.exports.arrowManagement = (power, origin, target) => {
   module.exports.init_arrow_container()
 
   const arrow = module.exports.create_arrow();
+  arrow.name = 'arrow';
   arrow.rotation = sprite_helper.angle(origin, target);
 
   const arrow_path = module.exports.create_path(origin,target)
   const arrow_tween = module.exports.create_arrow_tween(arrow, power, arrow_path)
   arrow_tween.start();
 
-  arrow_tween.on('end', () => {
-    arrow.pickup = true;
-  });
-  
+  // arrow_tween.on('end', () => {
+  //   arrow.pickup = true;
+  // });
+  global.arrow_container.addChild(arrow);
   arrow_tween.on('update', () => {
 
     for (let i = 0; i < global.enemy_container.children.length; i++) {
       const sprite_in_container = global.enemy_container.children[i];
-  
+      
       if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log('hit');
+        console.log(arrow.getGlobalPosition())
+        console.log(arrow.getLocalBounds())
+        console.log('hit')
         dialogUtil.renderText(sprite_in_container, 'I am hit');
-        console.log(sprite_in_container)
-        sprite_in_container.on_hit()
+        arrow.width = 200;
+        arrow.height = 50;
+        sprite_in_container.addChild(arrow)
         arrow_tween.stop();
       }
     }
@@ -88,5 +92,5 @@ module.exports.arrowManagement = (power, origin, target) => {
     }
   });
 
-  global.arrow_container.addChild(arrow);
+  
 };
