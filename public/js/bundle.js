@@ -334,6 +334,24 @@ module.exports.init_enemies_container = () => {
   global.viewport.addChild(global.enemy_container);
 }
 
+function get_intersection(a,b){
+  
+  const c=a.a.x,
+  d=a.a.y,
+  e=a.b.x-a.a.x,
+  f=a.b.y-a.a.y,
+  g=b.a.x,
+  h=b.a.y,
+  i=b.b.x-b.a.x,
+  j=b.b.y-b.a.y,
+  k=Math.sqrt(e*e+f*f),
+  l=Math.sqrt(i*i+j*j);
+  if(e/k==i/l&&f/k==j/l)return null;
+  const m=(e*(h-d)+f*(c-g))/(i*f-j*e),
+  n=(g+i*m-c)/e;
+  return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
+}
+
 module.exports.create_enemy = (x, y) => {
   return new Promise (resolve => {
 
@@ -434,38 +452,33 @@ module.exports.create_path_tween = (sprite, path) => {
   enemy_tween.rotation = sprite_helper.angle(sprite, path._tmpPoint);
   enemy_tween.time = 50000;
   enemy_tween.easing = PIXI.tween.Easing.linear();
+  
+  let curent_path_target ={
+    x: 0,
+    y: 0
+  }
 
-  enemy_tween.on('update', delta =>{
-    // const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
-    // sprite.rotation = Math.round(sprite.rotation*100)/100;
-    // if(sprite.rotation !== angle_to_turn_to){
-    //   sprite.rotation +=0.01;
-    // }
+  enemy_tween.on('update', delta => {
+    console.log(enemy_tween.path._tmpPoint.x)
+    console.log(curent_path_target.x)
+    if(curent_path_target.x != enemy_tween.path._tmpPoint.x) {
+      curent_path_target.x = enemy_tween.path._tmpPoint.x;
+      
+      enemy_tween.stop()
+      setTimeout(()=> {enemy_tween.start()},2000)
+      
+    }
+    const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
+    sprite.rotation = Math.round(sprite.rotation*100)/100;
+    if(sprite.rotation !== angle_to_turn_to){
+      sprite.rotation +=0.01;
+    }
   })
 
   enemy_tween.start();
   enemy_tween.pingPong = true;
 
   return enemy_tween;
-}
-
-function get_intersection(a,b){
-  
-  const c=a.a.x,
-  d=a.a.y,
-  e=a.b.x-a.a.x,
-  f=a.b.y-a.a.y,
-  g=b.a.x,
-  h=b.a.y,
-  i=b.b.x-b.a.x,
-  j=b.b.y-b.a.y,
-  k=Math.sqrt(e*e+f*f),
-  l=Math.sqrt(i*i+j*j);
-  if(e/k==i/l&&f/k==j/l)return null;
-  const m=(e*(h-d)+f*(c-g))/(i*f-j*e),
-  n=(g+i*m-c)/e;
-  return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
-
 }
 
 function add_enemy_raycasting(enemy_sprite) {

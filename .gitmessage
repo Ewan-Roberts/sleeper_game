@@ -1,5 +1,5 @@
 ; ==== Format of the commit message ====
-<type> <subject>
+:type: <subject>
 ;
 
 ; ==== Emoji list for the type ====
