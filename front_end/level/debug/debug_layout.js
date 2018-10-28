@@ -77,11 +77,9 @@ module.exports.add_floor = () => {
           .then(sprite => {
             enemy.sight_line(sprite);
             enemy.influence_box(sprite);
-            enemy.create_path(sprite, pathfinding_path)
-            .then(path => {
-              const enemy_tween = enemy.create_path_tween(sprite, path);
-              enemy.enemy_logic_on_path(sprite, enemy_tween, path)
-            })
+            const enemy_tween = enemy.create_path_tween(sprite, pathfinding_path);
+            enemy.enemy_logic_on_path(sprite, enemy_tween, pathfinding_path)
+            
           })
       })
   });

@@ -3,9 +3,7 @@ const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialog_util.js');
-
-const {createjs} = require('@createjs/tweenjs');
-console.log(createjs);
+const { createjs } = require('@createjs/tweenjs');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
@@ -46,7 +44,7 @@ module.exports.create_enemy = (x, y) => {
     enemy_sprite.anchor.set(0.5);
     enemy_sprite.position.set(x, y);
     enemy_sprite.animationSpeed = 0.4;
-    // enemy_sprite.rotation = -0.5;
+    enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
     // enemy_sprite.on_hit = (arrow) => {
       
@@ -108,171 +106,41 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   global.viewport.addChild(blood_stain);
 }
 
-module.exports.create_path = (sprite, path_data) => {
-  return new Promise(resolve => {
-    const path = new PIXI.tween.TweenPath();
-    // path.moveTo(path_data[0].x, path_data[0].y);
-    
-    // path_data.forEach(elem => path.lineTo(elem.x, elem.y));
-
-    // const path_visual_guide = new PIXI.Graphics()
-    //   .lineStyle(5, 0xffffff, 0.8)
-    //   .drawPath(path);
-
-    //   console.log(path_data)
-    // global.viewport.addChild(path_visual_guide);
-    resolve(path_data)
-    
-  })
-}
-
 module.exports.create_path_tween = (sprite, path_data) => {
 
-  console.log(createjs)
+  //write it simple for now Ewan
   var tween = createjs.Tween.get(sprite)
   .to({
     x:path_data[0].x,
     y:path_data[0].y,
-    rotation: 0,
+    rotation: sprite_helper.angle(sprite, path_data[0]),
   },1000)
   .wait(500)
   .to({
     x:path_data[1].x,
     y:path_data[1].y,
-    rotation: 1,
+    rotation: sprite_helper.angle(sprite, path_data[1]),
   },1000)
   .to({
     x:path_data[2].x,
     y:path_data[2].y,
-    rotation: 2,
+    rotation: sprite_helper.angle(sprite, path_data[2]),
   },1000)
   .to({
     x:path_data[3].x,
     y:path_data[3].y,
-    rotation: 1,
+    rotation: sprite_helper.angle(sprite, path_data[3]),
   },1000)
   .to({
     x:path_data[4].x,
     y:path_data[4].y,
-    rotation: 1,
+    rotation: sprite_helper.angle(sprite, path_data[4]),
   },1000)
   // .to({alpha:0,visible:false},1000)
   .call(()=>{
     console.log('poop')
   });
 
-
-  // const enemy_tween = PIXI.tweenManager.createTween(sprite);
-  // console.log(path_data)
-  // // enemy_tween.path = path;
-  // const path = new PIXI.tween.TweenPath();
-  // path.moveTo(path_data[0].x, path_data[0].y);
-  
-  
-  // path.lineTo(path_data[1].x, path_data[1].y)
-
-  // const path_visual_guide = new PIXI.Graphics()
-  // .lineStyle(5, 0xffffff, 0.8)
-  // .drawPath(path);
-
-  // global.viewport.addChild(path_visual_guide);
-
-  // enemy_tween.path = path;
-  // // enemy_tween.rotation = sprite_helper.angle(sprite, path._tmpPoint);
-  // enemy_tween.time = 1000;
-  // enemy_tween.easing = PIXI.tween.Easing.linear();
-  // enemy_tween.start();
-
-
-  // const path2 = new PIXI.tween.TweenPath();
-  // path2.moveTo(path_data[1].x, path_data[1].y);
-  // path2.lineTo(path_data[2].x, path_data[2].y)
-  // const path2_visual_guide = new PIXI.Graphics()
-  //   .lineStyle(5, 0xffffff, 0.8)
-  //   .drawPath(path2);
-
-  // global.viewport.addChild(path2_visual_guide);
-
-  
-  // var tween2 = PIXI.tweenManager.createTween(sprite);
-  // tween2.time = 1000
-  // tween2.easing = PIXI.tween.Easing.linear();
-  // tween2.start();
-  
-  // tween2.path = path;
-  // // tween2.from({
-  // //   rotation: 0,
-  // //   scale: {
-  // //     x: 1, y: 1
-  // //   }
-  // // });
-  // // tween2.to({
-  // //   rotation: PIXI.DEG_TO_RAD * 359,
-  // //   scale: {x: 2.5, y: 2.5}
-  // // });
-  // console.log(enemy_tween)
-  // enemy_tween.chain(tween2)
-  // // PIXI.tween.chain(tween2)
-  // let rotation_degree = 0;
-
-  // enemy_tween.on('update', delta => {
-
-    
-    
-  //   // rotation_degree = Math.round(sprite_helper.angle(sprite, enemy_tween.path._tmpPoint));
-    
-  //   // const enemy_path_point = enemy_tween.path.getPoint(1);
-    
-  //   // enemy_path_point.x = Math.round(enemy_path_point.x)+100;
-  //   // enemy_path_point.y = Math.round(enemy_path_point.y);
-  //   // path_point.x = Math.round(path_point.x)
-  //   // path_point.y = Math.round(path_point.y)
-  //   // console.log(enemy_path_point)
-  //   // console.log(path_point)
-  //   // console.log(enemy_tween.path._tmpPoint)
-  //   // console.log(enemy_tween.target.transform.position)
-  //   // if(enemy_tween.target.transform.position.equals(enemy_tween.path._tmpPoint)) {
-  //   //   console.log('bonza')
-  //   // }
-    
-  //   // if(path_point.equals(enemy_path_point)) {
-  //   //   enemy_tween.stop()
-  //   //   setTimeout(()=>{enemy_tween.start()},2000)
-  //   //   path_item+2
-  //   // }
-  //   // if(sprite.position.equals(enemy_tween.path.getPoint(path_item))) {
-  //   //   path_item++
-  //   //   console.log("weeeee")
-  //   //   enemy_tween.stop()
-  //   //   setTimeout(()=>{enemy_tween.start()},2000)
-      
-  //   // }
-    
-  //   if(sprite.rotation != rotation_degree){
-      
-  //     if(rotation_degree < sprite.rotation) {
-  //       sprite.rotation -= 0.01;
-  //     } else {
-  //       sprite.rotation += 0.01;
-  //     }
-
-  //   }
-    
-
-    
-  //   // sprite.rotation = sprite_helper.angle(sprite, enemy_tween.path._tmpPoint);
-  //   // sprite.rotation = PIXI.DEG_TO_RAD * 359;
-  //   // const angle_to_turn_to = Math.abs(Math.round(sprite_helper.angle(sprite, path._tmpPoint) * 100) / 100);
-  //   // sprite.rotation = Math.round(sprite.rotation*100)/100;
-  //   // if(sprite.rotation !== angle_to_turn_to){
-  //   //   sprite.rotation +=0.01;
-  //   // }
-  // })
-
-  // // enemy_tween.start();
-  // // enemy_tween.pingPong = true;
-
-  // return enemy_tween;
 }
 
 function add_enemy_raycasting(enemy_sprite) {
@@ -356,42 +224,15 @@ function add_enemy_raycasting(enemy_sprite) {
 module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
   const player =  global.Player.sprite;
 
-  enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, player);
-  const path_to_player = new PIXI.tween.TweenPath()
-    .moveTo(enemy_sprite.x, enemy_sprite.y)
-    .lineTo(player.x, player.y);
-  
-  const path_to_player_visual_guide = new PIXI.Graphics()
-    .lineStyle(1, 0xffffff, 1)
-    .drawPath(path_to_player);
-
   global.viewport.addChild(path_to_player_visual_guide);
 
-  const tween = module.exports.create_path_tween(enemy_sprite, path_to_player);
-  tween.time = 5000;
-  
-  const sight_line = enemy_sprite.children[0];
-  // // console.log(tween)
-  // tween.on('update', () => {
-
-  //   if(sight_line.containsPoint(player.getGlobalPosition())){  
-  //     dialogUtil.renderText(enemy_sprite, 'sight line');
-  //     tween.stop();
-  //     enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, player);
-  //   }
-  // });
-  
-  //TODO
-  setTimeout(()=>{
-    tween.stop()
-    dialogUtil.renderText(enemy_sprite, 'I am waiting');
-    setTimeout(()=>{
-      dialogUtil.renderText(enemy_sprite, 'back to original path');
-      tween.start()
-      tween.chain(previous_tween_path)
-      setTimeout(()=>tween.remove(),2500)  
-    },5000)
-  },2500)
+  const tween = createjs.Tween.get(sprite)
+  .to({
+    x:player.x,
+    y:player.y,
+    rotation: sprite_helper.angle(sprite, player),
+  },2000)
+  .wait(500)
 }
 
 module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
@@ -399,6 +240,11 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
   const player =  global.Player.sprite;
   const sight_line = enemy_sprite.children[0];
   const influence_box = enemy_sprite.children[1];
+
+  createjs.Tween.get(influence_box, {override:true}).addEventListener("change", handleChange);
+  function handleChange(event) {
+      console.log(event)
+  }
 
   // tween.on('update', () => {    
 
