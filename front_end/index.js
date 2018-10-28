@@ -45,7 +45,7 @@ global.loader.use(pixiPackerParser(PIXI));
 global.loader.add('../../images/bedroom_EN_web.json');
 global.loader.load(() => {
   debug.add_floor();
-  const pathfinding = require('./pathfinding/pathfindUtil.js');
+  const pathfinding = require('./pathfinding/pathfind_util.js');
 });
 
 global.app.ticker.add(() => PIXI.tweenManager.update());

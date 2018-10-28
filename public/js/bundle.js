@@ -1,7 +1,7 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 
 global.critterContainer = new PIXI.Container();
 
@@ -135,11 +135,11 @@ module.exports.mousePause = () => new Promise((resolve) => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":23,"pixi.js":250}],2:[function(require,module,exports){
+},{"../utils/sprite_helper.js":24,"pixi.js":251}],2:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
-const documentHelper = require('../utils/documentHelper.js');
+// const documentHelper = require('../utils/document_helper.js');
 
 function onDragStart(event) {
   this.alpha = 0.5;
@@ -178,10 +178,10 @@ module.exports.renderItem = (x, y) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/documentHelper.js":21,"pixi.js":250}],3:[function(require,module,exports){
+},{"pixi.js":251}],3:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 
 module.exports.teleport = (x, y) => {
   global.Player.sprite.x = x;
@@ -240,7 +240,7 @@ module.exports.movePlayer = (start, finish) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/spriteHelper.js":23,"pixi.js":250}],4:[function(require,module,exports){
+},{"../utils/sprite_helper.js":24,"pixi.js":251}],4:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const cutsceneUtil = require('./cutsceneUtils');
@@ -277,7 +277,7 @@ module.exports.start = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../player/player.js":20,"../visual_effects/filterUtils.js":24,"./cutsceneUtils":3,"pixi.js":250}],5:[function(require,module,exports){
+},{"../player/player.js":21,"../visual_effects/filterUtils.js":25,"./cutsceneUtils":3,"pixi.js":251}],5:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -315,139 +315,180 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 ];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":250}],6:[function(require,module,exports){
+},{"pixi.js":251}],6:[function(require,module,exports){
 (function (global){
+
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper');
+const spriteHelper = require('../utils/sprite_helper.js');
+const bowHelper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialogUtil.js');
+const intersect = require('yy-intersects');
 
-global.enemyContainer = new PIXI.Container();
-global.enemyContainer.name = 'enemyContainer';
+global.enemy_container = new PIXI.Container();
+global.enemy_container.name = 'enemy_container';
 
-const Enemy = {
+module.exports.init_enemies_container = () => {
+  global.viewport.addChild(global.enemy_container);
+}
 
-  animation: {
-    moving: [],
-    waiting: [],
-  },
-  sprite: {
-    moving: {},
-    waiting: {},
-  },
+module.exports.create_enemy = (x, y) => {
+  return new Promise (resolve => {
+
+    const enemy_frames = []
+    for (let i = 0; i < 19; i++) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+    }
+
+    const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    enemy_sprite.height /= 3;
+    enemy_sprite.width /= 3;
+    enemy_sprite.anchor.set(0.5);
+    enemy_sprite.position.set(x, y);
+    enemy_sprite.animationSpeed = 0.4;
+    enemy_sprite.rotation = -0.5;
+    enemy_sprite.play();
+    enemy_sprite.on_hit = () => {
+      module.exports.put_blood_splatter_on_ground(enemy_sprite)
+    }
+    global.enemy_container.addChild(enemy_sprite);
+    resolve(enemy_sprite)
+  })
 };
 
-module.exports.createEnemyPathFrom = (levelData) => {
-  const path = new PIXI.tween.TweenPath();
+module.exports.sight_line = (sprite) => {
+  const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
-  path.moveTo(levelData[0].x, levelData[0].y+1388);
+  sight_line_box.name = 'sight_line';
+  sight_line_box.width = 300;
+  sight_line_box.height = 300;
+  sight_line_box.rotation = -0.5;
+  sight_line_box.alpha = 0.3;
 
-  for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y+1388);
+  sprite.addChild(sight_line_box);
+}
 
-  return path;
-};
+module.exports.influence_box = sprite => {
+  const influence_box = PIXI.Sprite.fromFrame('black_dot');
 
-module.exports.enemy_frames = () => new Promise((resolve) => {
-  for (let i = 0; i < 19; i += 1) {
-    Enemy.animation.moving.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-  }
-  resolve();
-});
+  influence_box.name = 'influence_box';
+  influence_box.width = 2000;
+  influence_box.height = 2000;
+  influence_box.alpha = 0.2
+  influence_box.anchor.set(0.5);
 
-module.exports.enemy_path = (pathData) => {
-  const path = module.exports.createEnemyPathFrom(pathData);
-  spriteHelper.drawPathAndShow(path);
+  sprite.addChild(influence_box);
+}
 
-  const enemySprite = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  enemySprite.height /= 3;
-  enemySprite.width /= 3;
-  enemySprite.anchor.set(0.5);
-  enemySprite.animationSpeed = 0.4;
-  enemySprite.rotation = -0.5;
-  enemySprite.play();
+// TODO put under the enemy sprite
+module.exports.put_blood_splatter_on_ground = sprite => {
+  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  
+  blood_stain.width /= 2;
+  blood_stain.height /= 2;
+  blood_stain.position.set(sprite.x, sprite.y);
+  blood_stain.anchor.set(0.5);
+  blood_stain.alpha = 0.4;
 
-  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
-  influenceBox.width = 500;
-  influenceBox.height = 500;
-  influenceBox.rotation = -0.5;
-  influenceBox.alpha = 0.3;
+  global.viewport.addChild(blood_stain);
+}
 
-  const influenceBoxTween = PIXI.tweenManager.createTween(influenceBox);
-  influenceBoxTween.rotation = -0.5;
-  influenceBoxTween.path = path;
-  influenceBoxTween.time = 300000;
-  influenceBoxTween.easing = PIXI.tween.Easing.linear();
-  influenceBoxTween.start();
-  influenceBoxTween.pingPong = true;
+module.exports.crate_path = (sprite, path_data) => {
+  return new Promise(resolve => {
+    const path = new PIXI.tween.TweenPath();
 
-  const animatedEnemyTween = PIXI.tweenManager.createTween(enemySprite);
-  animatedEnemyTween.path = path;
-  animatedEnemyTween.rotation = spriteHelper.angle(enemySprite, path._tmpPoint2);
-  animatedEnemyTween.time = 300000;
-  animatedEnemyTween.easing = PIXI.tween.Easing.linear();
-  animatedEnemyTween.start();
-  animatedEnemyTween.pingPong = true;
+    path.moveTo(path_data[0].x, path_data[0].y);
 
-  influenceBoxTween.on('update', () => {
-    animatedEnemyTween.target.rotation = animatedEnemyTween.rotation + spriteHelper.angle(enemySprite, path._tmpPoint2);
-    influenceBoxTween.target.rotation = influenceBoxTween.rotation + spriteHelper.angle(enemySprite, path._tmpPoint2);
-    spriteHelper.hitBoxSpriteObj(influenceBox, global.Player.sprite)
-      .then(() => {
-        dialogUtil.renderText(enemySprite, dialogUtil.enemySurprised());
-        animatedEnemyTween.stop();
-        enemySprite.stop();
-        enemySprite.rotation = spriteHelper.angle(enemySprite, global.Player.sprite);
-        influenceBoxTween.stop();
-        bowHelper.arrowManagement(500, enemySprite, global.Player.sprite);
-      });
-  });
+    for (let i = 1; i < path_data.length; i++) {
+      path.lineTo(path_data[i].x, path_data[i].y);
+    }
 
-  global.enemyContainer.addChild(enemySprite, influenceBox);
-  global.viewport.addChild(global.enemyContainer);
-};
+    const path_visual_guide = new PIXI.Graphics()
+      .lineStyle(5, 0xffffff, 0.8)
+      .drawPath(path);
 
-module.exports.move = (start, finish) => {
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(start.x, start.y)
-    .lineTo(finish.x, finish.y);
+    global.viewport.addChild(path_visual_guide);
+    resolve(path)
+  })
+}
 
-  const pathOneVisualGuide = new PIXI.Graphics()
+module.exports.crate_path_tween = (sprite, path) => {
+  const enemy_tween = PIXI.tweenManager.createTween(sprite);
+
+  enemy_tween.path = path;
+  enemy_tween.rotation = spriteHelper.angle(sprite, path._tmpPoint2);
+  enemy_tween.time = 30000;
+  enemy_tween.easing = PIXI.tween.Easing.linear();
+  enemy_tween.start();
+  enemy_tween.pingPong = true;
+
+  return enemy_tween;
+}
+
+// walk towards player
+module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
+  const player =  global.Player.sprite;
+
+  enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+  const path_to_player = new PIXI.tween.TweenPath()
+    .moveTo(enemy_sprite.x, enemy_sprite.y)
+    .lineTo(player.x, player.y);
+  
+  const path_to_player_visual_guide = new PIXI.Graphics()
     .lineStyle(1, 0xffffff, 1)
-    .drawPath(pathOne);
+    .drawPath(path_to_player);
 
-  global.viewport.addChild(pathOneVisualGuide);
+  global.viewport.addChild(path_to_player_visual_guide);
 
-  const animatedEnemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  animatedEnemy.height /= 3;
-  animatedEnemy.width /= 3;
-  animatedEnemy.texture.width = 100;
-  animatedEnemy.texture.height = 100;
-  animatedEnemy.anchor.set(0);
-  animatedEnemy.animationSpeed = 0.4;
-  animatedEnemy.play();
+  const tween = module.exports.crate_path_tween(enemy_sprite, path_to_player);
+  tween.time = 5000;
+  
+  const sight_line = enemy_sprite.children[0];
+  
+  tween.on('update', () => {    
 
-  const animatedEnemyTween = PIXI.tweenManager.createTween(animatedEnemy);
-  animatedEnemyTween.path = pathOne;
-  animatedEnemyTween.target.rotation = spriteHelper.angle(animatedEnemy, pathOne._tmpPoint2);
-  animatedEnemyTween.time = 3000;
-  animatedEnemyTween.easing = PIXI.tween.Easing.inOutQuad();
-  animatedEnemyTween.start();
+    if(sight_line.containsPoint(player.getGlobalPosition())){  
+      dialogUtil.renderText(enemy_sprite, 'sight line');
+      tween.stop();
+      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+    }
+  });
+  
+  //TODO
+  setTimeout(()=>{
+    tween.stop()
+    dialogUtil.renderText(enemy_sprite, 'I am waiting');
+    setTimeout(()=>{
+      dialogUtil.renderText(enemy_sprite, 'back to original path');
+      tween.start()
+      tween.chain(previous_tween_path)
+      setTimeout(()=>tween.remove(),2600)  
+    },5000)
+  },2500)
+}
 
-  global.enemyContainer.addChild(animatedEnemy);
-  global.viewport.addChild(global.enemyContainer);
+module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
 
-  Enemy.sprite.moving = animatedEnemy;
-};
+  const player =  global.Player.sprite;
+  const sight_line = enemy_sprite.children[0];
+  const influence_box = enemy_sprite.children[1];
 
-module.exports.projectileAttack = (target) => {
-  const enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
+  tween.on('update', () => {    
 
-  bowHelper.arrowManagement(500, enemy, target);
+    if(sight_line.containsPoint(player.getGlobalPosition())){
+      dialogUtil.renderText(enemy_sprite, 'sight line');
+      tween.stop();
+      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite);
+    }
 
-  global.viewport.addChild(enemy);
-};
+    if(influence_box.containsPoint(player.getGlobalPosition())){
+      dialogUtil.renderText(enemy_sprite, 'influence zone');
+      module.exports.move_to_player(enemy_sprite, tween)
+      tween.stop();
+    }
+  });
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialogUtil.js":5,"../utils/spriteHelper.js":23,"../weapons/bow/bowHelper":25,"pixi.js":250}],7:[function(require,module,exports){
+},{"../dialog/dialogUtil.js":5,"../utils/sprite_helper.js":24,"../weapons/bow/bow_helper.js":26,"pixi.js":251,"yy-intersects":308}],7:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -496,13 +537,13 @@ global.loader.use(pixiPackerParser(PIXI));
 global.loader.add('../../images/bedroom_EN_web.json');
 global.loader.load(() => {
   debug.add_floor();
-  const pathfinding = require('./pathfinding/pathfindUtil.js');
+  const pathfinding = require('./pathfinding/pathfind_util.js');
 });
 
 global.app.ticker.add(() => PIXI.tweenManager.update());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./level/debug/debug_layout.js":11,"./pathfinding/pathfindUtil.js":19,"pixi-layers":118,"pixi-packer-parser":119,"pixi-tween":120,"pixi-viewport":133,"pixi.js":250,"socket.io-client":292}],8:[function(require,module,exports){
+},{"./level/debug/debug_layout.js":11,"./pathfinding/pathfind_util.js":20,"pixi-layers":119,"pixi-packer-parser":120,"pixi-tween":121,"pixi-viewport":134,"pixi.js":251,"socket.io-client":293}],8:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const bedroomData = require('./bedroom_data_5.json');
@@ -533,7 +574,7 @@ module.exports.load = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../cutscene/cutsceneUtils":3,"../foyer/foyerUtil.js":12,"../level_utils.js":14,"./bedroom_data_5.json":9,"pixi.js":250}],9:[function(require,module,exports){
+},{"../../cutscene/cutsceneUtils":3,"../foyer/foyerUtil.js":14,"../level_utils.js":16,"./bedroom_data_5.json":9,"pixi.js":251}],9:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -808,7 +849,7 @@ module.exports.add_items = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":250}],11:[function(require,module,exports){
+},{"pixi.js":251}],11:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -825,6 +866,8 @@ const cutsceneUtils = require('../../cutscene/cutsceneUtils.js');
 const generateObject = require('../../construction/generateObject.js');
 const bedroomUtil = require('../bedroom/bedroomUtil.js');
 const parkUtil = require('../park/parkUtil.js');
+const pathfinding_util = require('../../pathfinding/pathfind_util.js');
+const level_util = require('../level_utils.js');
 
 global.collisionItems = new PIXI.Container();
 global.eventTriggers = new PIXI.Container();
@@ -840,9 +883,6 @@ function createPad(x, y) {
 }
 
 module.exports.add_floor = () => {
-  const slantedWall = PIXI.Sprite.fromFrame('black_wall');
-  slantedWall.rotation = 0.4;
-  slantedWall.position.set(100, 100);
 
   const collisionWall = PIXI.Sprite.fromFrame('black_wall');
   collisionWall.position.set(100, 600);
@@ -851,157 +891,58 @@ module.exports.add_floor = () => {
   door.width /= 2;
   door.position.set(-100, -200);
 
-  const ratPad = createPad(-700, 200);
-  ratPad.alpha = 0.4;
-  ratPad.fired = false;
-  ratPad.action = () => {
-    if (!ratPad.fired) {
-      ratPad.fired = true;
-      rat.load_rat().then(() => rat.mouseMove({ x: 100, y: 300 }, { x: 0, y: 400 }));
-    }
-  };
-
-  const enemyPad = createPad(-950, 200);
-  enemyPad.alpha = 0.2;
-  enemyPad.fired = false;
-  enemyPad.action = () => {
-    if (!enemyPad.fired) {
-      enemyPad.fired = true;
-      enemy.enemy_frames().then(() => enemy.projectileAttack(global.Player.sprite));
-    }
-  };
-
-  const levelLoadPad = createPad(-450, 200);
-  levelLoadPad.alpha = 0.6;
-  levelLoadPad.fired = false;
-  levelLoadPad.action = () => {
-    if (!levelLoadPad.fired) {
-      levelLoadPad.fired = true;
-      // levelUtils.importBedroomData();
-    }
-  };
-
-  const glitchPad = createPad(-700, 50);
-  glitchPad.alpha = 0.4;
-  glitchPad.fired = false;
-  glitchPad.action = () => {
-    if (!glitchPad.fired) {
-      glitchPad.fired = true;
-      filterUtil.glitch();
-    } else filterUtil.clear();
-  };
-
-  const dialogPad = createPad(-450, 50);
-  dialogPad.alpha = 0.6;
-  dialogPad.fired = false;
-  dialogPad.action = () => {
-    if (!dialogPad.fired) {
-      dialogPad.fired = true;
-      dialogUtil.renderText(global.Player.sprite, 'I am some dialog');
-    } else rain.start_rain(0, 3400, 400, 850);
-  };
-
-  const effectPad = createPad(-200, 200);
-  effectPad.fired = false;
-  effectPad.alpha = 0.8;
-  effectPad.action = () => {
-    if (!effectPad.fired) {
-      effectPad.fired = true;
-      filterUtil.fade_in_black();
-    } else filterUtil.fade_out_black();
-  };
-
-  const animationPad = createPad(-700, -100);
-  animationPad.fired = false;
-  animationPad.alpha = 0.6;
-  animationPad.interactive = true;
-  animationPad.on('click', () => {
-    animationPad.fired = true;
-    generateObject.renderItem(200, 100);
+  const enemy_pathing = createPad(-200, -200);
+  enemy_pathing.interactive = true;
+  enemy_pathing.alpha = 0.8;
+  enemy_pathing.on('click', () => {
+    enemy.init_enemies_container()
+    enemy.create_enemy(200, -200)
+      .then( sprite => {
+        enemy.sight_line(sprite);
+        enemy.influence_box(sprite);
+        enemy.crate_path(sprite, [
+          {x: 200, y:-200},
+          {x: 200,y: -200},
+          {x: 300,y:-600},
+          {x: 800,y:-600},
+          {x: 400,y:-100},
+          {x: 200,y:-100},
+          {x: 100,y:-100},
+          {x: 200, y:-200},
+        ])
+        .then(path => {
+          const enemy_tween = enemy.crate_path_tween(sprite, path);
+          enemy.enemy_logic_on_path(sprite, enemy_tween, path)
+        })
+      })
   });
 
-  const loadParkPad = createPad(-950, -100);
-  loadParkPad.fired = false;
-  loadParkPad.alpha = 0.4;
-  loadParkPad.interactive = true;
-  loadParkPad.on('click', () => {
-    loadParkPad.fired = true;
-    parkUtil.load();
-    cutsceneUtils.teleport(1500, 1500);
-    enemy.enemy_frames()
-      .then(() => {
-        const levelPathData = parkUtil.importEnemyPathData();
-        enemy.enemy_path(levelPathData);
-      });
-  });
-
-  loadParkPad.action = () => {
-    if (!loadParkPad.fired) {
-      loadParkPad.fired = true;
-      parkUtil.load();
-      cutsceneUtils.teleport(1500, 1500);
-      enemy.enemy_frames()
-        .then(() => {
-          const levelPathData = parkUtil.importEnemyPathData();
-          enemy.enemy_path(levelPathData);
-        });
-    }
-  };
-
-  const networkPad = createPad(-450, -100);
-  networkPad.fired = false;
-  networkPad.alpha = 0.8;
-  networkPad.action = () => {
-    if (!networkPad.fired) {
-      networkPad.fired = true;
-      networkPlayers.load_network_sprite();
-    }
-  };
-
-  const enemyPathing = createPad(-200, -200);
-  enemyPathing.fired = false;
-  enemyPathing.alpha = 0.8;
-  enemyPathing.action = () => {
-    if (!enemyPathing.fired) {
-      enemyPathing.fired = true;
-      enemy.enemy_frames()
-        .then(() => {
-          const levelPathData = parkUtil.importEnemyPathData();
-          enemy.enemy_path(levelPathData);
-        });
-    }
-  };
-
-  const clearPad = createPad(-200, 50);
-  clearPad.fired = false;
-  clearPad.alpha = 0.8;
-  clearPad.interactive = true;
-  clearPad.action = () => {
-    if (!clearPad.fired) {
-      clearPad.fired = true;
-
-      cutsceneIntro.start();
-    } else filterUtil.clear();
-  };
-  clearPad.on('click', () => {
-    console.log('hi');  
-    cutsceneUtils.teleport(3000, 5100);
-    bedroomUtil.load();
+  const create_grid = createPad(-500, -200);
+  create_grid.interactive = true;
+  create_grid.alpha = 0.8;
+  create_grid.on('click', () => {
+    
+    level_util.load_debug_room_from_tiled()
+      .then(pathfinding_path => {
+        enemy.init_enemies_container()
+        enemy.create_enemy(200, -200)
+          .then(sprite => {
+            enemy.sight_line(sprite);
+            enemy.influence_box(sprite);
+            enemy.crate_path(sprite, pathfinding_path)
+            .then(path => {
+              const enemy_tween = enemy.crate_path_tween(sprite, path);
+              enemy.enemy_logic_on_path(sprite, enemy_tween, path)
+            })
+          })
+      })
+    // pathfinding_util.lay_down_grid()
   });
 
 
   global.eventTriggers.addChild(
-    ratPad,
-    enemyPad,
-    levelLoadPad,
-    effectPad,
-    clearPad,
-    glitchPad,
-    dialogPad,
-    networkPad,
-    animationPad,
-    loadParkPad,
-    enemyPathing,
+    create_grid,
+    enemy_pathing,
   );
 
   global.doors.addChild(door);
@@ -1016,7 +957,7 @@ module.exports.add_floor = () => {
 
   global.viewport.addChild(global.eventTriggers);
   global.collisionItems.zIndex = 1;
-  global.collisionItems.addChild(slantedWall, collisionWall);
+  global.collisionItems.addChild( /* slantedWall */ collisionWall);
   global.viewport.updateLayersOrder();
 
   player.add_player();
@@ -1024,7 +965,599 @@ module.exports.add_floor = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../animals/rat.js":1,"../../construction/generateObject.js":2,"../../cutscene/cutsceneUtils.js":3,"../../cutscene/cutscene_intro.js":4,"../../dialog/dialogUtil.js":5,"../../enemies/enemy.js":6,"../../network/network_players.js":17,"../../player/player.js":20,"../../visual_effects/filterUtils.js":24,"../../weather/rain.js":26,"../bedroom/bedroomUtil.js":8,"../park/parkUtil.js":15,"./debug_items.js":10,"pixi.js":250}],12:[function(require,module,exports){
+},{"../../animals/rat.js":1,"../../construction/generateObject.js":2,"../../cutscene/cutsceneUtils.js":3,"../../cutscene/cutscene_intro.js":4,"../../dialog/dialogUtil.js":5,"../../enemies/enemy.js":6,"../../network/network_players.js":19,"../../pathfinding/pathfind_util.js":20,"../../player/player.js":21,"../../visual_effects/filterUtils.js":25,"../../weather/rain.js":27,"../bedroom/bedroomUtil.js":8,"../level_utils.js":16,"../park/parkUtil.js":17,"./debug_items.js":10,"pixi.js":251}],12:[function(require,module,exports){
+module.exports={ "height":100,
+ "infinite":true,
+ "layers":[
+        {
+         "chunks":[
+                {
+                 "data":"AQAAAAIAAAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAADQAAAA4AAAAPAAAAEAAAABUAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAAcAAAAHQAAAB4AAAAfAAAAIAAAACEAAAAiAAAAIwAAACQAAAApAAAAKgAAACsAAAAsAAAALQAAAC4AAAAvAAAAMAAAADEAAAAyAAAAMwAAADQAAAA1AAAANgAAADcAAAA4AAAAPQAAAD4AAAA\/AAAAQAAAAEEAAABCAAAAQwAAAEQAAABFAAAARgAAAEcAAABIAAAASQAAAEoAAABLAAAATAAAAFEAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAF0AAABeAAAAXwAAAGAAAABlAAAAZgAAAGcAAABoAAAAaQAAAGoAAABrAAAAbAAAAG0AAABuAAAAbwAAAHAAAABxAAAAcgAAAHMAAAB0AAAAeQAAAHoAAAB7AAAAfAAAAH0AAAB+AAAAfwAAAIAAAACBAAAAggAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAI0AAACOAAAAjwAAAJAAAACRAAAAkgAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAJkAAACaAAAAmwAAAJwAAAChAAAAogAAAKMAAACkAAAApQAAAKYAAACnAAAAqAAAAKkAAACqAAAAqwAAAKwAAACtAAAArgAAAK8AAACwAAAAtQAAALYAAAC3AAAAuAAAALkAAAC6AAAAuwAAALwAAAC9AAAAvgAAAL8AAADAAAAAwQAAAMIAAADDAAAAxAAAAMkAAADKAAAAywAAAMwAAADNAAAAzgAAAM8AAADQAAAA0QAAANIAAADTAAAA1AAAANUAAADWAAAA1wAAANgAAADdAAAA3gAAAN8AAADgAAAA4QAAAOIAAADjAAAA5AAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA8QAAAPIAAADzAAAA9AAAAPUAAAD2AAAA9wAAAPgAAAD5AAAA+gAAAPsAAAD8AAAA\/QAAAP4AAAD\/AAAAAAEAAAUBAAAGAQAABwEAAAgBAAAJAQAACgEAAAsBAAAMAQAADQEAAA4BAAAPAQAAEAEAABEBAAASAQAAEwEAABQBAAAZAQAAGgEAABsBAAAcAQAAHQEAAB4BAAAfAQAAIAEAACEBAAAiAQAAIwEAACQBAAAlAQAAJgEAACcBAAAoAQAALQEAAC4BAAAvAQAAMAEAADEBAAAyAQAAMwEAADQBAAA1AQAANgEAADcBAAA4AQAAOQEAADoBAAA7AQAAPAEAAA==",
+                 "height":16,
+                 "width":16,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "data":"EQAAABIAAAATAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUAAAAmAAAAJwAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5AAAAOgAAADsAAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATQAAAE4AAABPAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGEAAABiAAAAYwAAAGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1AAAAdgAAAHcAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiQAAAIoAAACLAAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ0AAACeAAAAnwAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACxAAAAsgAAALMAAAC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxQAAAMYAAADHAAAAyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANkAAADaAAAA2wAAANwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADtAAAA7gAAAO8AAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAIBAAADAQAABAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABUBAAAWAQAAFwEAABgBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApAQAAKgEAACsBAAAsAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPQEAAD4BAAA\/AQAAQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                 "height":16,
+                 "width":16,
+                 "x":16,
+                 "y":0
+                }, 
+                {
+                 "data":"QQEAAEIBAABDAQAARAEAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                 "height":16,
+                 "width":16,
+                 "x":0,
+                 "y":16
+                }, 
+                {
+                 "data":"UQEAAFIBAABTAQAAVAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                 "height":16,
+                 "width":16,
+                 "x":16,
+                 "y":16
+                }],
+         "encoding":"base64",
+         "height":32,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "startx":0,
+         "starty":0,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "height":1074.38016528926,
+                 "id":1,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":77.4793388429752,
+                 "x":330.578512396694,
+                 "y":340.909090909091
+                }, 
+                {
+                 "height":98.1404958677685,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":444.214876033058,
+                 "x":397.727272727273,
+                 "y":1317.14876033058
+                }, 
+                {
+                 "height":87.8099173553719,
+                 "id":3,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":625,
+                 "x":1182.85123966942,
+                 "y":1317.14876033058
+                }, 
+                {
+                 "height":1022.72727272727,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":113.636363636364,
+                 "x":1694.21487603306,
+                 "y":320.247933884297
+                }, 
+                {
+                 "height":82.6446280991736,
+                 "id":5,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1430.78512396694,
+                 "x":315.082644628099,
+                 "y":320.247933884298
+                }, 
+                {
+                 "height":366.735537190083,
+                 "id":6,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":87.8099173553719,
+                 "x":1064.04958677686,
+                 "y":371.900826446281
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":7,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.1.6",
+ "tileheight":100,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"map2_tiles.json"
+        }, 
+        {
+         "firstgid":341,
+         "source":"..\/test4.json"
+        }],
+ "tilewidth":100,
+ "type":"map",
+ "version":1,
+ "width":95
+}
+},{}],13:[function(require,module,exports){
+module.exports={ "columns":20,
+ "image":"..\/..\/..\/..\/assets\/debug\/debug_room.jpg",
+ "imageheight":1700,
+ "imagewidth":2000,
+ "margin":0,
+ "name":"map2_tiles",
+ "spacing":0,
+ "tilecount":340,
+ "tileheight":100,
+ "tileproperties":
+    {
+     "103":
+        {
+         "wall":true
+        },
+     "110":
+        {
+         "wall":true
+        },
+     "111":
+        {
+         "wall":true
+        },
+     "117":
+        {
+         "wall":true
+        },
+     "123":
+        {
+         "wall":true
+        },
+     "130":
+        {
+         "wall":true
+        },
+     "131":
+        {
+         "wall":true
+        },
+     "137":
+        {
+         "wall":true
+        },
+     "143":
+        {
+         "wall":true
+        },
+     "150":
+        {
+         "wall":true
+        },
+     "151":
+        {
+         "wall":true
+        },
+     "157":
+        {
+         "wall":true
+        },
+     "163":
+        {
+         "wall":true
+        },
+     "177":
+        {
+         "wall":true
+        },
+     "183":
+        {
+         "wall":true
+        },
+     "197":
+        {
+         "wall":true
+        },
+     "203":
+        {
+         "wall":true
+        },
+     "217":
+        {
+         "wall":true
+        },
+     "223":
+        {
+         "wall":true
+        },
+     "237":
+        {
+         "wall":true
+        },
+     "243":
+        {
+         "wall":true
+        },
+     "257":
+        {
+         "wall":true
+        },
+     "263":
+        {
+         "wall":true
+        },
+     "264":
+        {
+         "wall":true
+        },
+     "265":
+        {
+         "wall":true
+        },
+     "266":
+        {
+         "wall":true
+        },
+     "267":
+        {
+         "wall":true
+        },
+     "268":
+        {
+         "wall":true
+        },
+     "271":
+        {
+         "wall":true
+        },
+     "272":
+        {
+         "wall":true
+        },
+     "273":
+        {
+         "wall":true
+        },
+     "274":
+        {
+         "wall":true
+        },
+     "275":
+        {
+         "wall":true
+        },
+     "276":
+        {
+         "wall":true
+        },
+     "277":
+        {
+         "wall":true
+        },
+     "63":
+        {
+         "wall":true
+        },
+     "64":
+        {
+         "wall":true
+        },
+     "65":
+        {
+         "wall":true
+        },
+     "66":
+        {
+         "wall":true
+        },
+     "67":
+        {
+         "wall":true
+        },
+     "68":
+        {
+         "wall":true
+        },
+     "69":
+        {
+         "wall":true
+        },
+     "70":
+        {
+         "wall":true
+        },
+     "71":
+        {
+         "wall":true
+        },
+     "72":
+        {
+         "wall":true
+        },
+     "73":
+        {
+         "wall":true
+        },
+     "74":
+        {
+         "wall":true
+        },
+     "75":
+        {
+         "wall":true
+        },
+     "76":
+        {
+         "wall":true
+        },
+     "77":
+        {
+         "wall":true
+        },
+     "83":
+        {
+         "wall":true
+        },
+     "90":
+        {
+         "wall":true
+        },
+     "91":
+        {
+         "wall":true
+        },
+     "97":
+        {
+         "wall":true
+        }
+    },
+ "tilepropertytypes":
+    {
+     "103":
+        {
+         "wall":"bool"
+        },
+     "110":
+        {
+         "wall":"bool"
+        },
+     "111":
+        {
+         "wall":"bool"
+        },
+     "117":
+        {
+         "wall":"bool"
+        },
+     "123":
+        {
+         "wall":"bool"
+        },
+     "130":
+        {
+         "wall":"bool"
+        },
+     "131":
+        {
+         "wall":"bool"
+        },
+     "137":
+        {
+         "wall":"bool"
+        },
+     "143":
+        {
+         "wall":"bool"
+        },
+     "150":
+        {
+         "wall":"bool"
+        },
+     "151":
+        {
+         "wall":"bool"
+        },
+     "157":
+        {
+         "wall":"bool"
+        },
+     "163":
+        {
+         "wall":"bool"
+        },
+     "177":
+        {
+         "wall":"bool"
+        },
+     "183":
+        {
+         "wall":"bool"
+        },
+     "197":
+        {
+         "wall":"bool"
+        },
+     "203":
+        {
+         "wall":"bool"
+        },
+     "217":
+        {
+         "wall":"bool"
+        },
+     "223":
+        {
+         "wall":"bool"
+        },
+     "237":
+        {
+         "wall":"bool"
+        },
+     "243":
+        {
+         "wall":"bool"
+        },
+     "257":
+        {
+         "wall":"bool"
+        },
+     "263":
+        {
+         "wall":"bool"
+        },
+     "264":
+        {
+         "wall":"bool"
+        },
+     "265":
+        {
+         "wall":"bool"
+        },
+     "266":
+        {
+         "wall":"bool"
+        },
+     "267":
+        {
+         "wall":"bool"
+        },
+     "268":
+        {
+         "wall":"bool"
+        },
+     "271":
+        {
+         "wall":"bool"
+        },
+     "272":
+        {
+         "wall":"bool"
+        },
+     "273":
+        {
+         "wall":"bool"
+        },
+     "274":
+        {
+         "wall":"bool"
+        },
+     "275":
+        {
+         "wall":"bool"
+        },
+     "276":
+        {
+         "wall":"bool"
+        },
+     "277":
+        {
+         "wall":"bool"
+        },
+     "63":
+        {
+         "wall":"bool"
+        },
+     "64":
+        {
+         "wall":"bool"
+        },
+     "65":
+        {
+         "wall":"bool"
+        },
+     "66":
+        {
+         "wall":"bool"
+        },
+     "67":
+        {
+         "wall":"bool"
+        },
+     "68":
+        {
+         "wall":"bool"
+        },
+     "69":
+        {
+         "wall":"bool"
+        },
+     "70":
+        {
+         "wall":"bool"
+        },
+     "71":
+        {
+         "wall":"bool"
+        },
+     "72":
+        {
+         "wall":"bool"
+        },
+     "73":
+        {
+         "wall":"bool"
+        },
+     "74":
+        {
+         "wall":"bool"
+        },
+     "75":
+        {
+         "wall":"bool"
+        },
+     "76":
+        {
+         "wall":"bool"
+        },
+     "77":
+        {
+         "wall":"bool"
+        },
+     "83":
+        {
+         "wall":"bool"
+        },
+     "90":
+        {
+         "wall":"bool"
+        },
+     "91":
+        {
+         "wall":"bool"
+        },
+     "97":
+        {
+         "wall":"bool"
+        }
+    },
+ "tilewidth":100,
+ "type":"tileset"
+}
+},{}],14:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const foyerData = require('./foyer_data.json');
@@ -1055,7 +1588,7 @@ module.exports.load = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../cutscene/cutsceneUtils":3,"../level_utils.js":14,"../park/parkUtil.js":15,"./foyer_data.json":13,"pixi.js":250}],13:[function(require,module,exports){
+},{"../../cutscene/cutsceneUtils":3,"../level_utils.js":16,"../park/parkUtil.js":17,"./foyer_data.json":15,"pixi.js":251}],15:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -1273,7 +1806,7 @@ module.exports={ "columns":0,
  "tilewidth":4320,
  "type":"tileset"
 }
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
@@ -1342,8 +1875,105 @@ module.exports.eventPad = (padArray, callback) => {
   global.viewport.addChild(global.eventTriggers);
 };
 
+const debug_room_tiled_data = require('./debug/playground/map2_output.json');
+const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
+
+global.grid_container = new PIXI.Container();
+global.grid_container.name = 'enemy_container';
+
+const easystarjs = require('easystarjs');
+const easystar = new easystarjs.js();
+
+module.exports.load_debug_room_from_tiled = () => {
+
+  return new Promise((resolve,reject) => {
+
+    const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
+    debug_room_image.position.set(0,0);
+    debug_room_image.width *= 2;
+    debug_room_image.height *= 2;
+    global.viewport.addChild(debug_room_image);
+    let current_x = 0;
+    let current_y = 0;
+    const grid = [];
+    let line_grid = [];
+    let binary_line = [];
+    let binary_grid_map = [];
+    
+    for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
+      
+      if(i % 20 === 0 && i !== 0){
+        grid.push(line_grid);
+        binary_grid_map.push(binary_line);
+        line_grid = [];
+        binary_line = [];
+        current_y += 100;
+        current_x = 0;
+      }
+      const grid_cell = PIXI.Sprite.fromFrame('black_dot');
+      grid_cell.width = 100;
+      grid_cell.height = 100;
+      grid_cell.x = current_x;
+      grid_cell.y = current_y;
+      current_x += 100;
+  
+      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
+        grid_cell.alpha = 0.5
+        binary_line.push(1);
+      } else {
+        grid_cell.alpha = 0.1;
+        binary_line.push(0);
+      }
+  
+      line_grid.push(grid_cell);
+  
+      global.grid_container.addChild(grid_cell);
+      global.viewport.addChild(global.grid_container);
+    }
+  
+    const highlight_grid = (path, grid_line) => {
+  
+      for (let i = 0; i < path.length; i++) {
+        const position = path[i];
+  
+        grid_line[position.y][position.x].alpha =0.3; 
+      }
+    }
+
+    const grid_center = (path, grid_line) => {
+      let grid_centers = [];
+      for (let i = 0; i < path.length; i++) {
+        const position = path[i];
+
+        const block_found = grid_line[position.y][position.x];
+  
+        grid_centers.push({x: block_found.x, y: block_found.y})
+      }
+      return grid_centers;
+    }
+  
+    easystar.setGrid(binary_grid_map);
+  
+    easystar.setAcceptableTiles([0]);
+    easystar.setIterationsPerCalculation(1000);
+    easystar.findPath(0, 0, 6, 6, (path) => {
+      if(path === null) {
+        console.log('no path foud');
+      } else {
+        console.log(path)
+
+        highlight_grid(path, grid)
+        const path_to_follow_based_on_grid_centers= grid_center(path, grid);
+        resolve(path_to_follow_based_on_grid_centers);
+      }
+    });
+    easystar.calculate()
+
+  })
+  
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":250}],15:[function(require,module,exports){
+},{"./debug/playground/map2_output.json":12,"./debug/playground/map2_tiles.json":13,"easystarjs":69,"pixi.js":251}],17:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const parkData = require('./park_data.json');
@@ -1353,7 +1983,7 @@ module.exports.load = () => {
   levelUtil.clearViewport();
   levelUtil.clearCollision();
   levelUtil.clearEventTriggers()
-  const parkBackground = PIXI.Sprite.fromFrame('park');
+  // const parkBackground = PIXI.Sprite.fromFrame('park');
   // const parkTopground = PIXI.Sprite.fromFrame('park_top');
   parkBackground.interactive = true;
   parkBackground.zIndex = 1;
@@ -1376,7 +2006,7 @@ module.exports.importEnemyPathData = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../level_utils.js":14,"./park_data.json":16,"pixi.js":250}],16:[function(require,module,exports){
+},{"../level_utils.js":16,"./park_data.json":18,"pixi.js":251}],18:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -1456,7 +2086,7 @@ module.exports={ "columns":0,
  "tilewidth":5000,
  "type":"tileset"
 }
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
@@ -1474,12467 +2104,135 @@ module.exports.load_network_sprite = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":250}],18:[function(require,module,exports){
-module.exports={ "height":144,
- "infinite":true,
- "layers":[
-        {
-         "chunks":[
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfAQAAIAEAACEBAAAiAQAAIwEAACQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfgEAAH8BAACAAQAAgQEAAIIBAACDAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN0BAADeAQAA3wEAAOABAADhAQAA4gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AgAAPQIAAD4CAAA\/AgAAQAIAAEECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmwIAAJwCAACdAgAAngIAAJ8CAACgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPoCAAD7AgAA\/AIAAP0CAAD+AgAA\/wIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZAwAAWgMAAFsDAABcAwAAXQMAAF4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAuAMAALkDAAC6AwAAuwMAALwDAAC9AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABcEAAAYBAAAGQQAABoEAAAbBAAAHAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2BAAAdwQAAHgEAAB5BAAAegQAAHsEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1QQAANYEAADXBAAA2AQAANkEAADaBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQFAAA1BQAANgUAADcFAAA4BQAAOQUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTBQAAlAUAAJUFAACWBQAAlwUAAJgFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8gUAAPMFAAD0BQAA9QUAAPYFAAD3BQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFEGAABSBgAAUwYAAFQGAABVBgAAVgYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "data":"xgAAAMcAAADIAAAAyQAAAMoAAADLAAAAzAAAAM0AAADOAAAAzwAAANAAAADRAAAA0gAAANMAAADUAAAA1QAAACUBAAAmAQAAJwEAACgBAAApAQAAKgEAACsBAAAsAQAALQEAAC4BAAAvAQAAMAEAADEBAAAyAQAAMwEAADQBAACEAQAAhQEAAIYBAACHAQAAiAEAAIkBAACKAQAAiwEAAIwBAACNAQAAjgEAAI8BAACQAQAAkQEAAJIBAACTAQAA4wEAAOQBAADlAQAA5gEAAOcBAADoAQAA6QEAAOoBAADrAQAA7AEAAO0BAADuAQAA7wEAAPABAADxAQAA8gEAAEICAABDAgAARAIAAEUCAABGAgAARwIAAEgCAABJAgAASgIAAEsCAABMAgAATQIAAE4CAABPAgAAUAIAAFECAAChAgAAogIAAKMCAACkAgAApQIAAKYCAACnAgAAqAIAAKkCAACqAgAAqwIAAKwCAACtAgAArgIAAK8CAACwAgAAAAMAAAEDAAACAwAAAwMAAAQDAAAFAwAABgMAAAcDAAAIAwAACQMAAAoDAAALAwAADAMAAA0DAAAOAwAADwMAAF8DAABgAwAAYQMAAGIDAABjAwAAZAMAAGUDAABmAwAAZwMAAGgDAABpAwAAagMAAGsDAABsAwAAbQMAAG4DAAC+AwAAvwMAAMADAADBAwAAwgMAAMMDAADEAwAAxQMAAMYDAADHAwAAyAMAAMkDAADKAwAAywMAAMwDAADNAwAAHQQAAB4EAAAfBAAAIAQAACEEAAAiBAAAIwQAACQEAAAlBAAAJgQAACcEAAAoBAAAKQQAACoEAAArBAAALAQAAHwEAAB9BAAAfgQAAH8EAACABAAAgQQAAIIEAACDBAAAhAQAAIUEAACGBAAAhwQAAIgEAACJBAAAigQAAIsEAADbBAAA3AQAAN0EAADeBAAA3wQAAOAEAADhBAAA4gQAAOMEAADkBAAA5QQAAOYEAADnBAAA6AQAAOkEAADqBAAAOgUAADsFAAA8BQAAPQUAAD4FAAA\/BQAAQAUAAEEFAABCBQAAQwUAAEQFAABFBQAARgUAAEcFAABIBQAASQUAAJkFAACaBQAAmwUAAJwFAACdBQAAngUAAJ8FAACgBQAAoQUAAKIFAACjBQAApAUAAKUFAACmBQAApwUAAKgFAAD4BQAA+QUAAPoFAAD7BQAA\/AUAAP0FAAD+BQAA\/wUAAAAGAAABBgAAAgYAAAMGAAAEBgAABQYAAAYGAAAHBgAAVwYAAFgGAABZBgAAWgYAAFsGAABcBgAAXQYAAF4GAABfBgAAYAYAAGEGAABiBgAAYwYAAGQGAABlBgAAZgYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":0
-                }, 
-                {
-                 "data":"1gAAANcAAADYAAAA2QAAANoAAADbAAAA3AAAAN0AAADeAAAA3wAAAOAAAADhAAAA4gAAAOMAAADkAAAA5QAAADUBAAA2AQAANwEAADgBAAA5AQAAOgEAADsBAAA8AQAAPQEAAD4BAAA\/AQAAQAEAAEEBAABCAQAAQwEAAEQBAACUAQAAlQEAAJYBAACXAQAAmAEAAJkBAACaAQAAmwEAAJwBAACdAQAAngEAAJ8BAACgAQAAoQEAAKIBAACjAQAA8wEAAPQBAAD1AQAA9gEAAPcBAAD4AQAA+QEAAPoBAAD7AQAA\/AEAAP0BAAD+AQAA\/wEAAAACAAABAgAAAgIAAFICAABTAgAAVAIAAFUCAABWAgAAVwIAAFgCAABZAgAAWgIAAFsCAABcAgAAXQIAAF4CAABfAgAAYAIAAGECAACxAgAAsgIAALMCAAC0AgAAtQIAALYCAAC3AgAAuAIAALkCAAC6AgAAuwIAALwCAAC9AgAAvgIAAL8CAADAAgAAEAMAABEDAAASAwAAEwMAABQDAAAVAwAAFgMAABcDAAAYAwAAGQMAABoDAAAbAwAAHAMAAB0DAAAeAwAAHwMAAG8DAABwAwAAcQMAAHIDAABzAwAAdAMAAHUDAAB2AwAAdwMAAHgDAAB5AwAAegMAAHsDAAB8AwAAfQMAAH4DAADOAwAAzwMAANADAADRAwAA0gMAANMDAADUAwAA1QMAANYDAADXAwAA2AMAANkDAADaAwAA2wMAANwDAADdAwAALQQAAC4EAAAvBAAAMAQAADEEAAAyBAAAMwQAADQEAAA1BAAANgQAADcEAAA4BAAAOQQAADoEAAA7BAAAPAQAAIwEAACNBAAAjgQAAI8EAACQBAAAkQQAAJIEAACTBAAAlAQAAJUEAACWBAAAlwQAAJgEAACZBAAAmgQAAJsEAADrBAAA7AQAAO0EAADuBAAA7wQAAPAEAADxBAAA8gQAAPMEAAD0BAAA9QQAAPYEAAD3BAAA+AQAAPkEAAD6BAAASgUAAEsFAABMBQAATQUAAE4FAABPBQAAUAUAAFEFAABSBQAAUwUAAFQFAABVBQAAVgUAAFcFAABYBQAAWQUAAKkFAACqBQAAqwUAAKwFAACtBQAArgUAAK8FAACwBQAAsQUAALIFAACzBQAAtAUAALUFAAC2BQAAtwUAALgFAAAIBgAACQYAAAoGAAALBgAADAYAAA0GAAAOBgAADwYAABAGAAARBgAAEgYAABMGAAAUBgAAFQYAABYGAAAXBgAAZwYAAGgGAABpBgAAagYAAGsGAABsBgAAbQYAAG4GAABvBgAAcAYAAHEGAAByBgAAcwYAAHQGAAB1BgAAdgYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":0
-                }, 
-                {
-                 "data":"5gAAAOcAAADoAAAA6QAAAOoAAADrAAAA7AAAAO0AAADuAAAA7wAAAPAAAADxAAAA8gAAAPMAAAD0AAAA9QAAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAFEBAABSAQAAUwEAAFQBAACkAQAApQEAAKYBAACnAQAAqAEAAKkBAACqAQAAqwEAAKwBAACtAQAArgEAAK8BAACwAQAAsQEAALIBAACzAQAAAwIAAAQCAAAFAgAABgIAAAcCAAAIAgAACQIAAAoCAAALAgAADAIAAA0CAAAOAgAADwIAABACAAARAgAAEgIAAGICAABjAgAAZAIAAGUCAABmAgAAZwIAAGgCAABpAgAAagIAAGsCAABsAgAAbQIAAG4CAABvAgAAcAIAAHECAADBAgAAwgIAAMMCAADEAgAAxQIAAMYCAADHAgAAyAIAAMkCAADKAgAAywIAAMwCAADNAgAAzgIAAM8CAADQAgAAIAMAACEDAAAiAwAAIwMAACQDAAAlAwAAJgMAACcDAAAoAwAAKQMAACoDAAArAwAALAMAAC0DAAAuAwAALwMAAH8DAACAAwAAgQMAAIIDAACDAwAAhAMAAIUDAACGAwAAhwMAAIgDAACJAwAAigMAAIsDAACMAwAAjQMAAI4DAADeAwAA3wMAAOADAADhAwAA4gMAAOMDAADkAwAA5QMAAOYDAADnAwAA6AMAAOkDAADqAwAA6wMAAOwDAADtAwAAPQQAAD4EAAA\/BAAAQAQAAEEEAABCBAAAQwQAAEQEAABFBAAARgQAAEcEAABIBAAASQQAAEoEAABLBAAATAQAAJwEAACdBAAAngQAAJ8EAACgBAAAoQQAAKIEAACjBAAApAQAAKUEAACmBAAApwQAAKgEAACpBAAAqgQAAKsEAAD7BAAA\/AQAAP0EAAD+BAAA\/wQAAAAFAAABBQAAAgUAAAMFAAAEBQAABQUAAAYFAAAHBQAACAUAAAkFAAAKBQAAWgUAAFsFAABcBQAAXQUAAF4FAABfBQAAYAUAAGEFAABiBQAAYwUAAGQFAABlBQAAZgUAAGcFAABoBQAAaQUAALkFAAC6BQAAuwUAALwFAAC9BQAAvgUAAL8FAADABQAAwQUAAMIFAADDBQAAxAUAAMUFAADGBQAAxwUAAMgFAAAYBgAAGQYAABoGAAAbBgAAHAYAAB0GAAAeBgAAHwYAACAGAAAhBgAAIgYAACMGAAAkBgAAJQYAACYGAAAnBgAAdwYAAHgGAAB5BgAAegYAAHsGAAB8BgAAfQYAAH4GAAB\/BgAAgAYAAIEGAACCBgAAgwYAAIQGAACFBgAAhgYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":0
-                }, 
-                {
-                 "data":"9gAAAPcAAAD4AAAA+QAAAPoAAAD7AAAA\/AAAAP0AAAD+AAAA\/wAAAAABAAABAQAAAgEAAAMBAAAEAQAABQEAAFUBAABWAQAAVwEAAFgBAABZAQAAWgEAAFsBAABcAQAAXQEAAF4BAABfAQAAYAEAAGEBAABiAQAAYwEAAGQBAAC0AQAAtQEAALYBAAC3AQAAuAEAALkBAAC6AQAAuwEAALwBAAC9AQAAvgEAAL8BAADAAQAAwQEAAMIBAADDAQAAEwIAABQCAAAVAgAAFgIAABcCAAAYAgAAGQIAABoCAAAbAgAAHAIAAB0CAAAeAgAAHwIAACACAAAhAgAAIgIAAHICAABzAgAAdAIAAHUCAAB2AgAAdwIAAHgCAAB5AgAAegIAAHsCAAB8AgAAfQIAAH4CAAB\/AgAAgAIAAIECAADRAgAA0gIAANMCAADUAgAA1QIAANYCAADXAgAA2AIAANkCAADaAgAA2wIAANwCAADdAgAA3gIAAN8CAADgAgAAMAMAADEDAAAyAwAAMwMAADQDAAA1AwAANgMAADcDAAA4AwAAOQMAADoDAAA7AwAAPAMAAD0DAAA+AwAAPwMAAI8DAACQAwAAkQMAAJIDAACTAwAAlAMAAJUDAACWAwAAlwMAAJgDAACZAwAAmgMAAJsDAACcAwAAnQMAAJ4DAADuAwAA7wMAAPADAADxAwAA8gMAAPMDAAD0AwAA9QMAAPYDAAD3AwAA+AMAAPkDAAD6AwAA+wMAAPwDAAD9AwAATQQAAE4EAABPBAAAUAQAAFEEAABSBAAAUwQAAFQEAABVBAAAVgQAAFcEAABYBAAAWQQAAFoEAABbBAAAXAQAAKwEAACtBAAArgQAAK8EAACwBAAAsQQAALIEAACzBAAAtAQAALUEAAC2BAAAtwQAALgEAAC5BAAAugQAALsEAAALBQAADAUAAA0FAAAOBQAADwUAABAFAAARBQAAEgUAABMFAAAUBQAAFQUAABYFAAAXBQAAGAUAABkFAAAaBQAAagUAAGsFAABsBQAAbQUAAG4FAABvBQAAcAUAAHEFAAByBQAAcwUAAHQFAAB1BQAAdgUAAHcFAAB4BQAAeQUAAMkFAADKBQAAywUAAMwFAADNBQAAzgUAAM8FAADQBQAA0QUAANIFAADTBQAA1AUAANUFAADWBQAA1wUAANgFAAAoBgAAKQYAACoGAAArBgAALAYAAC0GAAAuBgAALwYAADAGAAAxBgAAMgYAADMGAAA0BgAANQYAADYGAAA3BgAAhwYAAIgGAACJBgAAigYAAIsGAACMBgAAjQYAAI4GAACPBgAAkAYAAJEGAACSBgAAkwYAAJQGAACVBgAAlgYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":0
-                }, 
-                {
-                 "data":"BgEAAAcBAAAIAQAACQEAAAoBAAALAQAADAEAAA0BAAAOAQAADwEAABABAAARAQAAEgEAABMBAAAUAQAAFQEAAGUBAABmAQAAZwEAAGgBAABpAQAAagEAAGsBAABsAQAAbQEAAG4BAABvAQAAcAEAAHEBAAByAQAAcwEAAHQBAADEAQAAxQEAAMYBAADHAQAAyAEAAMkBAADKAQAAywEAAMwBAADNAQAAzgEAAM8BAADQAQAA0QEAANIBAADTAQAAIwIAACQCAAAlAgAAJgIAACcCAAAoAgAAKQIAACoCAAArAgAALAIAAC0CAAAuAgAALwIAADACAAAxAgAAMgIAAIICAACDAgAAhAIAAIUCAACGAgAAhwIAAIgCAACJAgAAigIAAIsCAACMAgAAjQIAAI4CAACPAgAAkAIAAJECAADhAgAA4gIAAOMCAADkAgAA5QIAAOYCAADnAgAA6AIAAOkCAADqAgAA6wIAAOwCAADtAgAA7gIAAO8CAADwAgAAQAMAAEEDAABCAwAAQwMAAEQDAABFAwAARgMAAEcDAABIAwAASQMAAEoDAABLAwAATAMAAE0DAABOAwAATwMAAJ8DAACgAwAAoQMAAKIDAACjAwAApAMAAKUDAACmAwAApwMAAKgDAACpAwAAqgMAAKsDAACsAwAArQMAAK4DAAD+AwAA\/wMAAAAEAAABBAAAAgQAAAMEAAAEBAAABQQAAAYEAAAHBAAACAQAAAkEAAAKBAAACwQAAAwEAAANBAAAXQQAAF4EAABfBAAAYAQAAGEEAABiBAAAYwQAAGQEAABlBAAAZgQAAGcEAABoBAAAaQQAAGoEAABrBAAAbAQAALwEAAC9BAAAvgQAAL8EAADABAAAwQQAAMIEAADDBAAAxAQAAMUEAADGBAAAxwQAAMgEAADJBAAAygQAAMsEAAAbBQAAHAUAAB0FAAAeBQAAHwUAACAFAAAhBQAAIgUAACMFAAAkBQAAJQUAACYFAAAnBQAAKAUAACkFAAAqBQAAegUAAHsFAAB8BQAAfQUAAH4FAAB\/BQAAgAUAAIEFAACCBQAAgwUAAIQFAACFBQAAhgUAAIcFAACIBQAAiQUAANkFAADaBQAA2wUAANwFAADdBQAA3gUAAN8FAADgBQAA4QUAAOIFAADjBQAA5AUAAOUFAADmBQAA5wUAAOgFAAA4BgAAOQYAADoGAAA7BgAAPAYAAD0GAAA+BgAAPwYAAEAGAABBBgAAQgYAAEMGAABEBgAARQYAAEYGAABHBgAAlwYAAJgGAACZBgAAmgYAAJsGAACcBgAAnQYAAJ4GAACfBgAAoAYAAKEGAACiBgAAowYAAKQGAAClBgAApgYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":0
-                }, 
-                {
-                 "data":"FgEAABcBAAAYAQAAGQEAABoBAAAbAQAAHAEAAB0BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHUBAAB2AQAAdwEAAHgBAAB5AQAAegEAAHsBAAB8AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUAQAA1QEAANYBAADXAQAA2AEAANkBAADaAQAA2wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMwIAADQCAAA1AgAANgIAADcCAAA4AgAAOQIAADoCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJICAACTAgAAlAIAAJUCAACWAgAAlwIAAJgCAACZAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxAgAA8gIAAPMCAAD0AgAA9QIAAPYCAAD3AgAA+AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAMAAFEDAABSAwAAUwMAAFQDAABVAwAAVgMAAFcDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK8DAACwAwAAsQMAALIDAACzAwAAtAMAALUDAAC2AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOBAAADwQAABAEAAARBAAAEgQAABMEAAAUBAAAFQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbQQAAG4EAABvBAAAcAQAAHEEAAByBAAAcwQAAHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMwEAADNBAAAzgQAAM8EAADQBAAA0QQAANIEAADTBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArBQAALAUAAC0FAAAuBQAALwUAADAFAAAxBQAAMgUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAigUAAIsFAACMBQAAjQUAAI4FAACPBQAAkAUAAJEFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOkFAADqBQAA6wUAAOwFAADtBQAA7gUAAO8FAADwBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIBgAASQYAAEoGAABLBgAATAYAAE0GAABOBgAATwYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApwYAAKgGAACpBgAAqgYAAKsGAACsBgAArQYAAK4GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":0
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALAGAACxBgAAsgYAALMGAAC0BgAAtQYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBwAAEAcAABEHAAASBwAAEwcAABQHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbgcAAG8HAABwBwAAcQcAAHIHAABzBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM0HAADOBwAAzwcAANAHAADRBwAA0gcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsCAAALQgAAC4IAAAvCAAAMAgAADEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiwgAAIwIAACNCAAAjggAAI8IAACQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOoIAADrCAAA7AgAAO0IAADuCAAA7wgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABJCQAASgkAAEsJAABMCQAATQkAAE4JAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAqAkAAKkJAACqCQAAqwkAAKwJAACtCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcKAAAICgAACQoAAAoKAAALCgAADAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmCgAAZwoAAGgKAABpCgAAagoAAGsKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxQoAAMYKAADHCgAAyAoAAMkKAADKCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQLAAAlCwAAJgsAACcLAAAoCwAAKQsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDCwAAhAsAAIULAACGCwAAhwsAAIgLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4gsAAOMLAADkCwAA5QsAAOYLAADnCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEMAABCDAAAQwwAAEQMAABFDAAARgwAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":16
-                }, 
-                {
-                 "data":"tgYAALcGAABDAgAAuQYAALoGAAC7BgAAvAYAAL0GAAC+BgAAvwYAAMAGAADBBgAAwgYAAMMGAADEBgAAxQYAABUHAAAWBwAAFwcAABgHAAAZBwAAGgcAABsHAAAcBwAAHQcAAB4HAAAfBwAAIAcAACEHAAAiBwAAIwcAACQHAAB0BwAAdQcAAHYHAAB3BwAAeAcAAHkHAAB6BwAAewcAAHwHAAB9BwAAfgcAAH8HAACABwAAgQcAAIIHAACDBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA2QcAANoHAADbBwAA3AcAAN0HAADeBwAA3wcAAOAHAADhBwAA4gcAADIIAAAzCAAANAgAADUIAAA2CAAANwgAADgIAAA5CAAAOggAADsIAAA8CAAAPQgAAD4IAAA\/CAAAQAgAAEEIAACRCAAAkggAAJMIAACUCAAAlQgAAJYIAACXCAAAmAgAAJkIAACaCAAAmwgAAJwIAACdCAAAnggAAJ8IAACgCAAA8AgAAPEIAADyCAAA8wgAAPQIAAD1CAAA9ggAAPcIAAD4CAAA+QgAAPoIAAD7CAAA\/AgAAP0IAAD+CAAA\/wgAAE8JAABQCQAAUQkAAFIJAABTCQAAVAkAAFUJAABWCQAAVwkAAFgJAABZCQAAWgkAAFsJAABcCQAAXQkAAF4JAACuCQAArwkAALAJAACxCQAAsgkAALMJAAC0CQAAtQkAALYJAAC3CQAAuAkAALkJAAC6CQAAuwkAALwJAAC9CQAADQoAAA4KAAAPCgAAEAoAABEKAAASCgAAEwoAABQKAAAVCgAAFgoAABcKAAAYCgAAGQoAABoKAAAbCgAAHAoAAGwKAABtCgAAbgoAAG8KAABwCgAAcQoAAHIKAABzCgAAdAoAAHUKAAB2CgAAdwoAAHgKAAB5CgAAegoAAHsKAADLCgAAzAoAAM0KAADOCgAAzwoAANAKAADRCgAA0goAANMKAADUCgAA1QoAANYKAADXCgAA2AoAANkKAADaCgAAKgsAACsLAAAsCwAALQsAAC4LAAAvCwAAMAsAADELAAAyCwAAMwsAADQLAAA1CwAANgsAADcLAAA4CwAAOQsAAIkLAACKCwAAiwsAAIwLAACNCwAAjgsAAI8LAACQCwAAkQsAAJILAACTCwAAlAsAAJULAACWCwAAlwsAAJgLAADoCwAA6QsAAOoLAADrCwAA7AsAAO0LAADuCwAA7wsAAPALAADxCwAA8gsAAPMLAAD0CwAA9QsAAPYLAAD3CwAARwwAAEgMAABJDAAASgwAAEsMAABMDAAATQwAAE4MAABPDAAAUAwAAFEMAABSDAAAUwwAAFQMAABVDAAAVgwAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":16
-                }, 
-                {
-                 "data":"xgYAAMcGAADIBgAAyQYAAMoGAADLBgAAzAYAAM0GAADOBgAAzwYAANAGAADRBgAA0gYAANMGAADUBgAA1QYAACUHAAAmBwAAJwcAACgHAAApBwAAKgcAACsHAAAsBwAALQcAAC4HAAAvBwAAMAcAADEHAAAyBwAAMwcAADQHAACEBwAAhQcAAIYHAACHBwAAiAcAAIkHAACKBwAAiwcAAIwHAACNBwAAjgcAAI8HAACQBwAAkQcAAJIHAACTBwAA4wcAAOQHAADlBwAA5gcAAOcHAADoBwAA6QcAAOoHAADrBwAA7AcAAO0HAADuBwAA7wcAAPAHAADxBwAA8gcAAEIIAABDCAAARAgAAEUIAABGCAAARwgAAEgIAABJCAAASggAAEsIAABMCAAATQgAAE4IAABPCAAAUAgAAFEIAAChCAAAoggAAKMIAACkCAAApQgAAKYIAACnCAAAqAgAAKkIAACqCAAAqwgAAKwIAACtCAAArggAAK8IAACwCAAAAAkAAAEJAAACCQAAAwkAAAQJAAAFCQAABgkAAAcJAAAICQAACQkAAAoJAAALCQAADAkAAA0JAAAOCQAADwkAAF8JAABgCQAAYQkAAGIJAABjCQAAZAkAAGUJAABmCQAAZwkAAGgJAABpCQAAagkAAGsJAABsCQAAbQkAAG4JAAC+CQAAvwkAAMAJAADBCQAAwgkAAMMJAADECQAAxQkAAMYJAADHCQAAyAkAAMkJAADKCQAAywkAAMwJAADNCQAAHQoAAB4KAAAfCgAAIAoAACEKAAAiCgAAIwoAACQKAAAlCgAAJgoAACcKAAAoCgAAKQoAACoKAAArCgAALAoAAHwKAAB9CgAAfgoAAH8KAACACgAAgQoAAIIKAACDCgAAhAoAAIUKAACGCgAAhwoAAIgKAACJCgAAigoAAIsKAADbCgAA3AoAAN0KAADeCgAA3woAAOAKAADhCgAA4goAAOMKAADkCgAA5QoAAOYKAADnCgAA6AoAAOkKAADqCgAAOgsAADsLAAA8CwAAPQsAAD4LAAA\/CwAAQAsAAEELAABCCwAAQwsAAEQLAABFCwAARgsAAEcLAABICwAASQsAAJkLAACaCwAAmwsAAJwLAACdCwAAngsAAJ8LAACgCwAAoQsAAKILAACjCwAApAsAAKULAACmCwAApwsAAKgLAAD4CwAA+QsAAPoLAAD7CwAA\/AsAAP0LAAD+CwAA\/wsAAAAMAAABDAAAAgwAAAMMAAAEDAAABQwAAAYMAAAHDAAAVwwAAFgMAABZDAAAWgwAAFsMAABcDAAAXQwAAF4MAABfDAAAYAwAAGEMAABiDAAAYwwAAGQMAABlDAAAZgwAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":16
-                }, 
-                {
-                 "data":"1gYAANcGAADYBgAA2QYAANoGAADbBgAA3AYAAN0GAADeBgAA3wYAAOAGAADhBgAA4gYAAOMGAADkBgAA5QYAADUHAAA2BwAANwcAADgHAAA5BwAAOgcAADsHAAA8BwAAPQcAAD4HAAA\/BwAAQAcAAEEHAABCBwAAQwcAAEQHAACUBwAAlQcAAJYHAACXBwAAmAcAAJkHAACaBwAAmwcAAJwHAACdBwAAngcAAJ8HAACgBwAAoQcAAKIHAACjBwAA8wcAAPQHAAD1BwAA9gcAAPcHAAD4BwAA+QcAAPoHAAD7BwAA\/AcAAP0HAAD+BwAA\/wcAAAAIAAABCAAAAggAAFIIAABTCAAAVAgAAFUIAABWCAAAVwgAAFgIAABZCAAAWggAAFsIAABcCAAAXQgAAF4IAABfCAAAYAgAAGEIAACxCAAAsggAALMIAAC0CAAAtQgAALYIAAC3CAAAuAgAALkIAAC6CAAAuwgAALwIAAC9CAAAvggAAL8IAADACAAAEAkAABEJAAASCQAAEwkAABQJAAAVCQAAFgkAABcJAAAYCQAAGQkAABoJAAAbCQAAHAkAAB0JAAAeCQAAHwkAAG8JAABwCQAAcQkAAHIJAABzCQAAdAkAAHUJAAB2CQAAdwkAAHgJAAB5CQAAegkAAHsJAAB8CQAAfQkAAH4JAADOCQAAzwkAANAJAADRCQAA0gkAANMJAADUCQAA1QkAANYJAADXCQAA2AkAANkJAADaCQAA2wkAANwJAADdCQAALQoAAC4KAAAvCgAAMAoAADEKAAAyCgAAMwoAADQKAAA1CgAANgoAADcKAAA4CgAAOQoAADoKAAA7CgAAPAoAAIwKAACNCgAAjgoAAI8KAACQCgAAkQoAAJIKAACTCgAAlAoAAJUKAACWCgAAlwoAAJgKAACZCgAAmgoAAJsKAADrCgAA7AoAAO0KAADuCgAA7woAAPAKAADxCgAA8goAAPMKAAD0CgAA9QoAAPYKAAD3CgAA+AoAAPkKAAD6CgAASgsAAEsLAABMCwAATQsAAE4LAABPCwAAUAsAAFELAABSCwAAUwsAAFQLAABVCwAAVgsAAFcLAABYCwAAWQsAAKkLAACqCwAAqwsAAKwLAACtCwAArgsAAK8LAACwCwAAsQsAALILAACzCwAAtAsAALULAAC2CwAAtwsAALgLAAAIDAAACQwAAAoMAAALDAAADAwAAA0MAAAODAAADwwAABAMAAARDAAAEgwAABMMAAAUDAAAFQwAABYMAAAXDAAAZwwAAGgMAABpDAAAagwAAGsMAABsDAAAbQwAAG4MAABvDAAAcAwAAHEMAAByDAAAcwwAAHQMAAB1DAAAdgwAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":16
-                }, 
-                {
-                 "data":"5gYAAOcGAADoBgAA6QYAAOoGAADrBgAA7AYAAO0GAADuBgAA7wYAAPAGAADxBgAA8gYAAPMGAAD0BgAA9QYAAEUHAABGBwAARwcAAEgHAABJBwAASgcAAEsHAABMBwAATQcAAE4HAABPBwAAUAcAAFEHAABSBwAAUwcAAFQHAACkBwAApQcAAKYHAACnBwAAqAcAAKkHAACqBwAAqwcAAKwHAACtBwAArgcAAK8HAACwBwAAsQcAALIHAACzBwAAAwgAAAQIAAAFCAAABggAAAcIAAAICAAACQgAAAoIAAALCAAADAgAAA0IAAAOCAAADwgAABAIAAARCAAAEggAAGIIAABjCAAAZAgAAGUIAABmCAAAZwgAAGgIAABpCAAAaggAAGsIAABsCAAAbQgAAG4IAABvCAAAcAgAAHEIAADBCAAAwggAAMMIAADECAAAxQgAAMYIAADHCAAAyAgAAMkIAADKCAAAywgAAMwIAADNCAAAzggAAM8IAADQCAAAIAkAACEJAAAiCQAAIwkAACQJAAAlCQAAJgkAACcJAAAoCQAAKQkAACoJAAArCQAALAkAAC0JAAAuCQAALwkAAH8JAACACQAAgQkAAIIJAACDCQAAhAkAAIUJAACGCQAAhwkAAIgJAACJCQAAigkAAIsJAACMCQAAjQkAAI4JAADeCQAA3wkAAOAJAADhCQAA4gkAAOMJAADkCQAA5QkAAOYJAADnCQAA6AkAAOkJAADqCQAA6wkAAOwJAADtCQAAPQoAAD4KAAA\/CgAAQAoAAEEKAABCCgAAQwoAAEQKAABFCgAARgoAAEcKAABICgAASQoAAEoKAABLCgAATAoAAJwKAACdCgAAngoAAJ8KAACgCgAAoQoAAKIKAACjCgAApAoAAKUKAACmCgAApwoAAKgKAACpCgAAqgoAAKsKAAD7CgAA\/AoAAP0KAAD+CgAA\/woAAAALAAABCwAAAgsAAAMLAAAECwAABQsAAAYLAAAHCwAACAsAAAkLAAAKCwAAWgsAAFsLAABcCwAAXQsAAF4LAABfCwAAYAsAAGELAABiCwAAYwsAAGQLAABlCwAAZgsAAGcLAABoCwAAaQsAALkLAAC6CwAAuwsAALwLAAC9CwAAvgsAAL8LAADACwAAwQsAAMILAADDCwAAxAsAAMULAADGCwAAxwsAAMgLAAAYDAAAGQwAABoMAAAbDAAAHAwAAB0MAAAeDAAAHwwAACAMAAAhDAAAIgwAACMMAAAkDAAAJQwAACYMAAAnDAAAdwwAAHgMAAB5DAAAegwAAHsMAAB8DAAAfQwAAH4MAAB\/DAAAgAwAAIEMAACCDAAAgwwAAIQMAACFDAAAhgwAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":16
-                }, 
-                {
-                 "data":"9gYAAPcGAAD4BgAA+QYAAPoGAAD7BgAA\/AYAAP0GAAD+BgAA\/wYAAAAHAAABBwAAAgcAAAMHAAAEBwAABQcAAFUHAABWBwAAVwcAAFgHAABZBwAAWgcAAFsHAABcBwAAXQcAAF4HAABfBwAAYAcAAGEHAABiBwAAYwcAAGQHAAC0BwAAtQcAALYHAAC3BwAAuAcAALkHAAC6BwAAuwcAALwHAAC9BwAAvgcAAL8HAADABwAAwQcAAMIHAADDBwAAEwgAABQIAAAVCAAAFggAABcIAAAYCAAAGQgAABoIAAAbCAAAHAgAAB0IAAAeCAAAHwgAACAIAAAhCAAAIggAAHIIAABzCAAAdAgAAHUIAAB2CAAAdwgAAHgIAAB5CAAAeggAAHsIAAB8CAAAfQgAAH4IAAB\/CAAAgAgAAIEIAADRCAAA0ggAANMIAADUCAAA1QgAANYIAADXCAAA2AgAANkIAADaCAAA2wgAANwIAADdCAAA3ggAAN8IAADgCAAAMAkAADEJAAAyCQAAMwkAADQJAAA1CQAANgkAADcJAAA4CQAAOQkAADoJAAA7CQAAPAkAAD0JAAA+CQAAPwkAAI8JAACQCQAAkQkAAJIJAACTCQAAlAkAAJUJAACWCQAAlwkAAJgJAACZCQAAmgkAAJsJAACcCQAAnQkAAJ4JAADuCQAA7wkAAPAJAADxCQAA8gkAAPMJAAD0CQAA9QkAAPYJAAD3CQAA+AkAAPkJAAD6CQAA+wkAAPwJAAD9CQAATQoAAE4KAABPCgAAUAoAAFEKAABSCgAAUwoAAFQKAABVCgAAVgoAAFcKAABYCgAAWQoAAFoKAABbCgAAXAoAAKwKAACtCgAArgoAAK8KAACwCgAAsQoAALIKAACzCgAAtAoAALUKAAC2CgAAtwoAALgKAAC5CgAAugoAALsKAAALCwAADAsAAA0LAAAOCwAADwsAABALAAARCwAAEgsAABMLAAAUCwAAFQsAABYLAAAXCwAAGAsAABkLAAAaCwAAagsAAGsLAABsCwAAbQsAAG4LAABvCwAAcAsAAHELAAByCwAAcwsAAHQLAAB1CwAAdgsAAHcLAAB4CwAAeQsAAMkLAADKCwAAywsAAMwLAADNCwAAzgsAAM8LAADQCwAA0QsAANILAADTCwAA1AsAANULAADWCwAA1wsAANgLAAAoDAAAKQwAACoMAAArDAAALAwAAC0MAAAuDAAALwwAADAMAAAxDAAAMgwAADMMAAA0DAAANQwAADYMAAA3DAAAhwwAAIgMAACJDAAAigwAAIsMAACMDAAAjQwAAI4MAACPDAAAkAwAAJEMAACSDAAAkwwAAJQMAACVDAAAlgwAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":16
-                }, 
-                {
-                 "data":"BgcAAAcHAAAIBwAACQcAAAoHAAALBwAADAcAAA0HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGUHAABmBwAAZwcAAGgHAABpBwAAagcAAGsHAABsBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEBwAAxQcAAMYHAADHBwAAyAcAAMkHAADKBwAAywcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIwgAACQIAAAlCAAAJggAACcIAAAoCAAAKQgAACoIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIIIAACDCAAAhAgAAIUIAACGCAAAhwgAAIgIAACJCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADhCAAA4ggAAOMIAADkCAAA5QgAAOYIAADnCAAA6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAkAAEEJAABCCQAAQwkAAEQJAABFCQAARgkAAEcJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ8JAACgCQAAoQkAAKIJAACjCQAApAkAAKUJAACmCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+CQAA\/wkAAAAKAAABCgAAAgoAAAMKAAAECgAABQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXQoAAF4KAABfCgAAYAoAAGEKAABiCgAAYwoAAGQKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALwKAAC9CgAAvgoAAL8KAADACgAAwQoAAMIKAADDCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbCwAAHAsAAB0LAAAeCwAAHwsAACALAAAhCwAAIgsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAegsAAHsLAAB8CwAAfQsAAH4LAAB\/CwAAgAsAAIELAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANkLAADaCwAA2wsAANwLAADdCwAA3gsAAN8LAADgCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4DAAAOQwAADoMAAA7DAAAPAwAAD0MAAA+DAAAPwwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlwwAAJgMAACZDAAAmgwAAJsMAACcDAAAnQwAAJ4MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":16
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAMAAChDAAAogwAAKMMAACkDAAApQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD\/DAAAAA0AAAENAAACDQAAAw0AAAQNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXg0AAF8NAABgDQAAYQ0AAGINAABjDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL0NAAC+DQAAvw0AAMANAADBDQAAwg0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcDgAAHQ4AAB4OAAAfDgAAIA4AACEOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAew4AAHwOAAB9DgAAfg4AAH8OAACADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANoOAADbDgAA3A4AAN0OAADeDgAA3w4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5DwAAOg8AADsPAAA8DwAAPQ8AAD4PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmA8AAJkPAACaDwAAmw8AAJwPAACdDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPcPAAD4DwAA+Q8AAPoPAAD7DwAA\/A8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABWEAAAVxAAAFgQAABZEAAAWhAAAFsQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtRAAALYQAAC3EAAAuBAAALkQAAC6EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQRAAAVEQAAFhEAABcRAAAYEQAAGREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABzEQAAdBEAAHURAAB2EQAAdxEAAHgRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0hEAANMRAADUEQAA1REAANYRAADXEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADESAAAyEgAAMxIAADQSAAA1EgAANhIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":32
-                }, 
-                {
-                 "data":"pgwAAKcMAACoDAAAqQwAAKoMAACrDAAArAwAAK0MAACuDAAArwwAALAMAACxDAAAsgwAALMMAAC0DAAAtQwAAAUNAAAGDQAABw0AAAgNAAAJDQAACg0AAAsNAAAMDQAADQ0AAA4NAAAPDQAAEA0AABENAAASDQAAEw0AABQNAABkDQAAZQ0AAGYNAABnDQAAaA0AAGkNAABqDQAAaw0AAGwNAABtDQAAbg0AAG8NAABwDQAAcQ0AAHINAABzDQAAww0AAMQNAADFDQAAxg0AAMcNAADIDQAAyQ0AAMoNAADLDQAAzA0AAM0NAADODQAAzw0AANANAADRDQAA0g0AACIOAAAjDgAAJA4AACUOAAAmDgAAJw4AACgOAAApDgAAKg4AACsOAAAsDgAALQ4AAC4OAAAvDgAAMA4AADEOAACBDgAAgg4AAIMOAACEDgAAhQ4AAIYOAACHDgAAiA4AAIkOAACKDgAAiw4AAIwOAACNDgAAjg4AAI8OAACQDgAA4A4AAOEOAADiDgAA4w4AAOQOAADlDgAA5g4AAOcOAADoDgAA6Q4AAOoOAADrDgAA7A4AAO0OAADuDgAA7w4AAD8PAABADwAAQQ8AAEIPAABDDwAARA8AAEUPAABGDwAARw8AAEgPAABJDwAASg8AAEsPAABMDwAATQ8AAE4PAACeDwAAnw8AAKAPAAChDwAAog8AAKMPAACkDwAApQ8AAKYPAACnDwAAqA8AAKkPAACqDwAAqw8AAKwPAACtDwAA\/Q8AAP4PAAD\/DwAAABAAAAEQAAACEAAAAxAAAAQQAAAFEAAABhAAAAcQAAAIEAAACRAAAAoQAAALEAAADBAAAFwQAABdEAAAXhAAAF8QAABgEAAAYRAAAGIQAABjEAAAZBAAAGUQAABmEAAAZxAAAGgQAABpEAAAahAAAGsQAAC7EAAAvBAAAL0QAAC+EAAAvxAAAMAQAADBEAAAwhAAAMMQAADEEAAAxRAAAMYQAADHEAAAyBAAAMkQAADKEAAAGhEAABsRAAAcEQAAHREAAB4RAAAfEQAAIBEAACERAAAiEQAAIxEAACQRAAAlEQAAJhEAACcRAAAoEQAAKREAAHkRAAB6EQAAexEAAHwRAAB9EQAAfhEAAH8RAACAEQAAgREAAIIRAACDEQAAhBEAAIURAACGEQAAhxEAAIgRAADYEQAA2REAANoRAADbEQAA3BEAAN0RAADeEQAA3xEAAOARAADhEQAA4hEAAOMRAADkEQAA5REAAOYRAADnEQAANxIAADgSAAA5EgAAOhIAADsSAAA8EgAAPRIAAD4SAAA\/EgAAQBIAAEESAABCEgAAQxIAAEQSAABFEgAARhIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":32
-                }, 
-                {
-                 "data":"tgwAALcMAAC4DAAAuQwAALoMAAC7DAAAvAwAAL0MAAC+DAAAvwwAAMAMAADBDAAAwgwAAMMMAADEDAAAxQwAABUNAAAWDQAAFw0AABgNAAAZDQAAGg0AABsNAAAcDQAAHQ0AAB4NAAAfDQAAIA0AACENAAAiDQAAIw0AACQNAAB0DQAAdQ0AAHYNAAB3DQAAeA0AAHkNAAB6DQAAew0AAHwNAAB9DQAAfg0AAH8NAACADQAAgQ0AAIINAACDDQAA0w0AANQNAADVDQAA1g0AANcNAADYDQAA2Q0AANoNAADbDQAA3A0AAN0NAADeDQAA3w0AAOANAADhDQAA4g0AADIOAAAzDgAANA4AADUOAAA2DgAANw4AADgOAAA5DgAAOg4AADsOAAA8DgAAPQ4AAD4OAAA\/DgAAQA4AAEEOAACRDgAAkg4AAJMOAACUDgAAlQ4AAJYOAACXDgAAmA4AAJkOAACaDgAAmw4AAJwOAACdDgAAng4AAJ8OAACgDgAA8A4AAPEOAADyDgAA8w4AAPQOAAD1DgAA9g4AAPcOAAD4DgAA+Q4AAPoOAAD7DgAA\/A4AAP0OAAD+DgAA\/w4AAE8PAABQDwAAUQ8AAFIPAABTDwAAVA8AAFUPAABWDwAAVw8AAFgPAABZDwAAWg8AAFsPAABcDwAAXQ8AAF4PAACuDwAArw8AALAPAACxDwAAsg8AALMPAAC0DwAAtQ8AALYPAAC3DwAAuA8AALkPAAC6DwAAuw8AALwPAAC9DwAADRAAAA4QAAAPEAAAEBAAABEQAAASEAAAExAAABQQAAAVEAAAFhAAABcQAAAYEAAAGRAAABoQAAAbEAAAHBAAAGwQAABtEAAAbhAAAG8QAABwEAAAcRAAAHIQAABzEAAAdBAAAHUQAAB2EAAAdxAAAHgQAAB5EAAAehAAAHsQAADLEAAAzBAAAM0QAADOEAAAzxAAANAQAADREAAA0hAAANMQAADUEAAA1RAAANYQAADXEAAA2BAAANkQAADaEAAAKhEAACsRAAAsEQAALREAAC4RAAAvEQAAMBEAADERAAAyEQAAMxEAADQRAAA1EQAANhEAADcRAAA4EQAAOREAAIkRAACKEQAAixEAAIwRAACNEQAAjhEAAI8RAACQEQAAkREAAJIRAACTEQAAlBEAAJURAACWEQAAlxEAAJgRAADoEQAA6REAAOoRAADrEQAA7BEAAO0RAADuEQAA7xEAAPARAADxEQAA8hEAAPMRAAD0EQAA9REAAPYRAAD3EQAARxIAAEgSAABJEgAAShIAAEsSAABMEgAATRIAAE4SAABPEgAAUBIAAFESAABSEgAAUxIAAFQSAABVEgAAVhIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":32
-                }, 
-                {
-                 "data":"xgwAAMcMAADIDAAAyQwAAMoMAADLDAAAzAwAAM0MAADODAAAzwwAANAMAADRDAAA0gwAANMMAADUDAAA1QwAACUNAAAmDQAAJw0AACgNAAApDQAAKg0AACsNAAAsDQAALQ0AAC4NAAAvDQAAMA0AADENAAAyDQAAMw0AADQNAACEDQAAhQ0AAIYNAACHDQAAiA0AAIkNAACKDQAAiw0AAIwNAACNDQAAjg0AAI8NAACQDQAAkQ0AAJINAACTDQAA4w0AAOQNAADlDQAA5g0AAOcNAADoDQAA6Q0AAOoNAADrDQAA7A0AAO0NAADuDQAA7w0AAPANAADxDQAA8g0AAEIOAABDDgAARA4AAEUOAABGDgAARw4AAEgOAABJDgAASg4AAEsOAABMDgAATQ4AAE4OAABPDgAAUA4AAFEOAAChDgAAog4AAKMOAACkDgAApQ4AAKYOAACnDgAAqA4AAKkOAACqDgAAqw4AAKwOAACtDgAArg4AAK8OAACwDgAAAA8AAAEPAAACDwAAAw8AAAQPAAAFDwAABg8AAAcPAAAIDwAACQ8AAAoPAAALDwAADA8AAA0PAAAODwAADw8AAF8PAABgDwAAYQ8AAGIPAABjDwAAZA8AAGUPAABmDwAAZw8AAGgPAABpDwAAag8AAGsPAABsDwAAbQ8AAG4PAAC+DwAAvw8AAMAPAADBDwAAwg8AAMMPAADEDwAAxQ8AAMYPAADHDwAAyA8AAMkPAADKDwAAyw8AAMwPAADNDwAAHRAAAB4QAAAfEAAAIBAAACEQAAAiEAAAIxAAACQQAAAlEAAAJhAAACcQAAAoEAAAKRAAACoQAAArEAAALBAAAHwQAAB9EAAAfhAAAH8QAACAEAAAgRAAAIIQAACDEAAAhBAAAIUQAACGEAAAhxAAAIgQAACJEAAAihAAAIsQAADbEAAA3BAAAN0QAADeEAAA3xAAAOAQAADhEAAA4hAAAOMQAADkEAAA5RAAAOYQAADnEAAA6BAAAOkQAADqEAAAOhEAADsRAAA8EQAAPREAAD4RAAA\/EQAAQBEAAEERAABCEQAAQxEAAEQRAABFEQAARhEAAEcRAABIEQAASREAAJkRAACaEQAAmxEAAJwRAACdEQAAnhEAAJ8RAACgEQAAoREAAKIRAACjEQAApBEAAKURAACmEQAApxEAAKgRAAD4EQAA+REAAPoRAAD7EQAA\/BEAAP0RAAD+EQAA\/xEAAAASAAABEgAAAhIAAAMSAAAEEgAABRIAAAYSAAAHEgAAVxIAAFgSAABZEgAAWhIAAFsSAABcEgAAXRIAAF4SAABfEgAAYBIAAGESAABiEgAAYxIAAGQSAABlEgAAZhIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":32
-                }, 
-                {
-                 "data":"1gwAANcMAADYDAAA2QwAANoMAADbDAAA3AwAAN0MAADeDAAA3wwAAOAMAADhDAAA4gwAAOMMAADkDAAA5QwAADUNAAA2DQAANw0AADgNAAA5DQAAOg0AADsNAAA8DQAAPQ0AAD4NAAA\/DQAAQA0AAEENAABCDQAAQw0AAEQNAACUDQAAlQ0AAJYNAACXDQAAmA0AAJkNAACaDQAAmw0AAJwNAACdDQAAng0AAJ8NAACgDQAAoQ0AAKINAACjDQAA8w0AAPQNAAD1DQAA9g0AAPcNAAD4DQAA+Q0AAPoNAAD7DQAA\/A0AAP0NAAD+DQAA\/w0AAAAOAAABDgAAAg4AAFIOAABTDgAAVA4AAFUOAABWDgAAVw4AAFgOAABZDgAAWg4AAFsOAABcDgAAXQ4AAF4OAABfDgAAYA4AAGEOAACxDgAAsg4AALMOAAC0DgAAtQ4AALYOAAC3DgAAuA4AALkOAAC6DgAAuw4AALwOAAC9DgAAvg4AAL8OAADADgAAEA8AABEPAAASDwAAEw8AABQPAAAVDwAAFg8AABcPAAAYDwAAGQ8AABoPAAAbDwAAHA8AAB0PAAAeDwAAHw8AAG8PAABwDwAAcQ8AAHIPAABzDwAAdA8AAHUPAAB2DwAAdw8AAHgPAAB5DwAAeg8AAHsPAAB8DwAAfQ8AAH4PAADODwAAzw8AANAPAADRDwAA0g8AANMPAADUDwAA1Q8AANYPAADXDwAA2A8AANkPAADaDwAA2w8AANwPAADdDwAALRAAAC4QAAAvEAAAMBAAADEQAAAyEAAAMxAAADQQAAA1EAAANhAAADcQAAA4EAAAORAAADoQAAA7EAAAPBAAAIwQAACNEAAAjhAAAI8QAACQEAAAkRAAAJIQAACTEAAAlBAAAJUQAACWEAAAlxAAAJgQAACZEAAAmhAAAJsQAADrEAAA7BAAAO0QAADuEAAA7xAAAPAQAADxEAAA8hAAAPMQAAD0EAAA9RAAAPYQAAD3EAAA+BAAAPkQAAD6EAAAShEAAEsRAABMEQAATREAAE4RAABPEQAAUBEAAFERAABSEQAAUxEAAFQRAABVEQAAVhEAAFcRAABYEQAAWREAAKkRAACqEQAAqxEAAKwRAACtEQAArhEAAK8RAACwEQAAsREAALIRAACzEQAAtBEAALURAAC2EQAAtxEAALgRAAAIEgAACRIAAAoSAAALEgAADBIAAA0SAAAOEgAADxIAABASAAAREgAAEhIAABMSAAAUEgAAFRIAABYSAAAXEgAAZxIAAGgSAABpEgAAahIAAGsSAABsEgAAbRIAAG4SAABvEgAAcBIAAHESAAByEgAAcxIAAHQSAAB1EgAAdhIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":32
-                }, 
-                {
-                 "data":"5gwAAOcMAADoDAAA6QwAAOoMAADrDAAA7AwAAO0MAADuDAAA7wwAAPAMAADxDAAA8gwAAPMMAAD0DAAA9QwAAEUNAABGDQAARw0AAEgNAABJDQAASg0AAEsNAABMDQAATQ0AAE4NAABPDQAAUA0AAFENAABSDQAAUw0AAFQNAACkDQAApQ0AAKYNAACnDQAAqA0AAKkNAACqDQAAqw0AAKwNAACtDQAArg0AAK8NAACwDQAAsQ0AALINAACzDQAAAw4AAAQOAAAFDgAABg4AAAcOAAAIDgAACQ4AAAoOAAALDgAADA4AAA0OAAAODgAADw4AABAOAAARDgAAEg4AAGIOAABjDgAAZA4AAGUOAABmDgAAZw4AAGgOAABpDgAAag4AAGsOAABsDgAAbQ4AAG4OAABvDgAAcA4AAHEOAADBDgAAwg4AAMMOAADEDgAAxQ4AAMYOAADHDgAAyA4AAMkOAADKDgAAyw4AAMwOAADNDgAAzg4AAM8OAADQDgAAIA8AACEPAAAiDwAAIw8AACQPAAAlDwAAJg8AACcPAAAoDwAAKQ8AACoPAAArDwAALA8AAC0PAAAuDwAALw8AAH8PAACADwAAgQ8AAIIPAACDDwAAhA8AAIUPAACGDwAAhw8AAIgPAACJDwAAig8AAIsPAACMDwAAjQ8AAI4PAADeDwAA3w8AAOAPAADhDwAA4g8AAOMPAADkDwAA5Q8AAOYPAADnDwAA6A8AAOkPAADqDwAA6w8AAOwPAADtDwAAPRAAAD4QAAA\/EAAAQBAAAEEQAABCEAAAQxAAAEQQAABFEAAARhAAAEcQAABIEAAASRAAAEoQAABLEAAATBAAAJwQAACdEAAAnhAAAJ8QAACgEAAAoRAAAKIQAACjEAAApBAAAKUQAACmEAAApxAAAKgQAACpEAAAqhAAAKsQAAD7EAAA\/BAAAP0QAAD+EAAA\/xAAAAARAAABEQAAAhEAAAMRAAAEEQAABREAAAYRAAAHEQAACBEAAAkRAAAKEQAAWhEAAFsRAABcEQAAXREAAF4RAABfEQAAYBEAAGERAABiEQAAYxEAAGQRAABlEQAAZhEAAGcRAABoEQAAaREAALkRAAC6EQAAuxEAALwRAAC9EQAAvhEAAL8RAADAEQAAwREAAMIRAADDEQAAxBEAAMURAADGEQAAxxEAAMgRAAAYEgAAGRIAABoSAAAbEgAAHBIAAB0SAAAeEgAAHxIAACASAAAhEgAAIhIAACMSAAAkEgAAJRIAACYSAAAnEgAAdxIAAHgSAAB5EgAAehIAAHsSAAB8EgAAfRIAAH4SAAB\/EgAAgBIAAIESAACCEgAAgxIAAIQSAACFEgAAhhIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":32
-                }, 
-                {
-                 "data":"9gwAAPcMAAD4DAAA+QwAAPoMAAD7DAAA\/AwAAP0MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUNAABWDQAAVw0AAFgNAABZDQAAWg0AAFsNAABcDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC0DQAAtQ0AALYNAAC3DQAAuA0AALkNAAC6DQAAuw0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEw4AABQOAAAVDgAAFg4AABcOAAAYDgAAGQ4AABoOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHIOAABzDgAAdA4AAHUOAAB2DgAAdw4AAHgOAAB5DgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADRDgAA0g4AANMOAADUDgAA1Q4AANYOAADXDgAA2A4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMA8AADEPAAAyDwAAMw8AADQPAAA1DwAANg8AADcPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI8PAACQDwAAkQ8AAJIPAACTDwAAlA8AAJUPAACWDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADuDwAA7w8AAPAPAADxDwAA8g8AAPMPAAD0DwAA9Q8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATRAAAE4QAABPEAAAUBAAAFEQAABSEAAAUxAAAFQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKwQAACtEAAArhAAAK8QAACwEAAAsRAAALIQAACzEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALEQAADBEAAA0RAAAOEQAADxEAABARAAAREQAAEhEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAahEAAGsRAABsEQAAbREAAG4RAABvEQAAcBEAAHERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMkRAADKEQAAyxEAAMwRAADNEQAAzhEAAM8RAADQEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoEgAAKRIAACoSAAArEgAALBIAAC0SAAAuEgAALxIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhxIAAIgSAACJEgAAihIAAIsSAACMEgAAjRIAAI4SAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":32
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJASAACREgAAkhIAAJMSAACUEgAAlRIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADvEgAA8BIAAPESAADyEgAA8xIAAPQSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAThMAAE8TAABQEwAAURMAAFITAABTEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK0TAACuEwAArxMAALATAACxEwAAshMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMFAAADRQAAA4UAAAPFAAAEBQAABEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaxQAAGwUAABtFAAAbhQAAG8UAABwFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMoUAADLFAAAzBQAAM0UAADOFAAAzxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApFQAAKhUAACsVAAAsFQAALRUAAC4VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiBUAAIkVAACKFQAAixUAAIwVAACNFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOcVAADoFQAA6RUAAOoVAADrFQAA7BUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGFgAARxYAAEgWAABJFgAAShYAAEsWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApRYAAKYWAACnFgAAqBYAAKkWAACqFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQXAAAFFwAABhcAAAcXAAAIFwAACRcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABjFwAAZBcAAGUXAABmFwAAZxcAAGgXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwhcAAMMXAADEFwAAxRcAAMYXAADHFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEYAAAiGAAAIxgAACQYAAAlGAAAJhgAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":48
-                }, 
-                {
-                 "data":"lhIAAJcSAACYEgAAmRIAAJoSAACbEgAAnBIAAJ0SAACeEgAAnxIAAKASAAChEgAAohIAAKMSAACkEgAApRIAAPUSAAD2EgAA9xIAAPgSAAD5EgAA+hIAAPsSAAD8EgAA\/RIAAP4SAAD\/EgAAABMAAAETAAACEwAAAxMAAAQTAABUEwAAVRMAAFYTAABXEwAAWBMAAFkTAABaEwAAWxMAAFwTAABdEwAAXhMAAF8TAABgEwAAYRMAAGITAABjEwAAsxMAALQTAAC1EwAAthMAALcTAAC4EwAAuRMAALoTAAC7EwAAvBMAAL0TAAC+EwAAvxMAAMATAADBEwAAwhMAABIUAAATFAAAFBQAABUUAAAWFAAAFxQAABgUAAAZFAAAGhQAABsUAAAcFAAAHRQAAB4UAAAfFAAAIBQAACEUAABxFAAAchQAAHMUAAB0FAAAdRQAAHYUAAB3FAAAeBQAAHkUAAB6FAAAexQAAHwUAAB9FAAAfhQAAH8UAACAFAAA0BQAANEUAADSFAAA0xQAANQUAADVFAAA1hQAANcUAADYFAAA2RQAANoUAADbFAAA3BQAAN0UAADeFAAA3xQAAC8VAAAwFQAAMRUAADIVAAAzFQAANBUAADUVAAA2FQAANxUAADgVAAA5FQAAOhUAADsVAAA8FQAAPRUAAD4VAACOFQAAjxUAAJAVAACRFQAAkhUAAJMVAACUFQAAlRUAAJYVAACXFQAAmBUAAJkVAACaFQAAmxUAAJwVAACdFQAA7RUAAO4VAADvFQAA8BUAAPEVAADyFQAA8xUAAPQVAAD1FQAA9hUAAPcVAAD4FQAA+RUAAPoVAAD7FQAA\/BUAAEwWAABNFgAAThYAAE8WAABQFgAAURYAAFIWAABTFgAAVBYAAFUWAABWFgAAVxYAAFgWAABZFgAAWhYAAFsWAACrFgAArBYAAK0WAACuFgAArxYAALAWAACxFgAAshYAALMWAAC0FgAAtRYAALYWAAC3FgAAuBYAALkWAAC6FgAAChcAAAsXAAAMFwAADRcAAA4XAAAPFwAAEBcAABEXAAASFwAAExcAABQXAAAVFwAAFhcAABcXAAAYFwAAGRcAAGkXAABqFwAAaxcAAGwXAABtFwAAbhcAAG8XAABwFwAAcRcAAHIXAABzFwAAdBcAAHUXAAB2FwAAdxcAAHgXAADIFwAAyRcAAMoXAADLFwAAzBcAAM0XAADOFwAAzxcAANAXAADRFwAA0hcAANMXAADUFwAA1RcAANYXAADXFwAAJxgAACgYAAApGAAAKhgAACsYAAAsGAAALRgAAC4YAAAvGAAAMBgAADEYAAAyGAAAMxgAADQYAAA1GAAANhgAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":48
-                }, 
-                {
-                 "data":"phIAAKcSAACoEgAAqRIAAKoSAACrEgAArBIAAK0SAACuEgAArxIAALASAACxEgAAshIAALMSAAC0EgAAtRIAAAUTAAAGEwAABxMAAAgTAAAJEwAAChMAAAsTAAAMEwAADRMAAA4TAAAPEwAAEBMAABETAAASEwAAExMAABQTAABkEwAAZRMAAGYTAABnEwAAaBMAAGkTAABqEwAAaxMAAGwTAABtEwAAbhMAAG8TAABwEwAAcRMAAHITAABzEwAAwxMAAMQTAADFEwAAxhMAAMcTAADIEwAAyRMAAMoTAADLEwAAzBMAAM0TAADOEwAAzxMAANATAADREwAA0hMAACIUAAAjFAAAJBQAACUUAAAmFAAAJxQAACgUAAApFAAAKhQAACsUAAAsFAAALRQAAC4UAAAvFAAAMBQAADEUAACBFAAAghQAAIMUAACEFAAAhRQAAIYUAACHFAAAiBQAAIkUAACKFAAAixQAAIwUAACNFAAAjhQAAI8UAACQFAAA4BQAAOEUAADiFAAA4xQAAOQUAADlFAAA5hQAAOcUAADoFAAA6RQAAOoUAADrFAAA7BQAAO0UAADuFAAA7xQAAD8VAABAFQAAQRUAAEIVAABDFQAARBUAAEUVAABGFQAARxUAAEgVAABJFQAAShUAAEsVAABMFQAATRUAAE4VAACeFQAAnxUAAKAVAAChFQAAohUAAKMVAACkFQAApRUAAKYVAACnFQAAqBUAAKkVAACqFQAAqxUAAKwVAACtFQAA\/RUAAP4VAAD\/FQAAABYAAAEWAAACFgAAAxYAAAQWAAAFFgAABhYAAAcWAAAIFgAACRYAAAoWAAALFgAADBYAAFwWAABdFgAAXhYAAF8WAABgFgAAYRYAAGIWAABjFgAAZBYAAGUWAABmFgAAZxYAAGgWAABpFgAAahYAAGsWAAC7FgAAvBYAAL0WAAC+FgAAvxYAAMAWAADBFgAAwhYAAMMWAADEFgAAxRYAAMYWAADHFgAAyBYAAMkWAADKFgAAGhcAABsXAAAcFwAAHRcAAB4XAAAfFwAAIBcAACEXAAAiFwAAIxcAACQXAAAlFwAAJhcAACcXAAAoFwAAKRcAAHkXAAB6FwAAexcAAHwXAAB9FwAAfhcAAH8XAACAFwAAgRcAAIIXAACDFwAAhBcAAIUXAACGFwAAhxcAAIgXAADYFwAA2RcAANoXAADbFwAA3BcAAN0XAADeFwAA3xcAAOAXAADhFwAA4hcAAOMXAADkFwAA5RcAAOYXAADnFwAANxgAADgYAAA5GAAAOhgAADsYAAA8GAAAPRgAAD4YAAA\/GAAAQBgAAEEYAABCGAAAQxgAAEQYAABFGAAARhgAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":48
-                }, 
-                {
-                 "data":"thIAALcSAAC4EgAAuRIAALoSAAC7EgAAvBIAAL0SAAC+EgAAvxIAAMASAADBEgAAwhIAAMMSAADEEgAAxRIAABUTAAAWEwAAFxMAABgTAAAZEwAAGhMAABsTAAAcEwAAHRMAAB4TAAAfEwAAIBMAACETAAAiEwAAIxMAACQTAAB0EwAAdRMAAHYTAAB3EwAAeBMAAHkTAAB6EwAAexMAAHwTAAB9EwAAfhMAAH8TAACAEwAAgRMAAIITAACDEwAA0xMAANQTAADVEwAA1hMAANcTAADYEwAA2RMAANoTAADbEwAA3BMAAN0TAADeEwAA3xMAAOATAADhEwAA4hMAADIUAAAzFAAANBQAADUUAAA2FAAANxQAADgUAAA5FAAAOhQAADsUAAA8FAAAPRQAAD4UAAA\/FAAAQBQAAEEUAACRFAAAkhQAAJMUAACUFAAAlRQAAJYUAACXFAAAmBQAAJkUAACaFAAAmxQAAJwUAACdFAAAnhQAAJ8UAACgFAAA8BQAAPEUAADyFAAA8xQAAPQUAAD1FAAA9hQAAPcUAAD4FAAA+RQAAPoUAAD7FAAA\/BQAAP0UAAD+FAAA\/xQAAE8VAABQFQAAURUAAFIVAABTFQAAVBUAAFUVAABWFQAAVxUAAFgVAABZFQAAWhUAAFsVAABcFQAAXRUAAF4VAACuFQAArxUAALAVAACxFQAAshUAALMVAAC0FQAAtRUAALYVAAC3FQAAuBUAALkVAAC6FQAAuxUAALwVAAC9FQAADRYAAA4WAAAPFgAAEBYAABEWAAASFgAAExYAABQWAAAVFgAAFhYAABcWAAAYFgAAGRYAABoWAAAbFgAAHBYAAGwWAABtFgAAbhYAAG8WAABwFgAAcRYAAHIWAABzFgAAdBYAAHUWAAB2FgAAdxYAAHgWAAB5FgAAehYAAHsWAADLFgAAzBYAAM0WAADOFgAAzxYAANAWAADRFgAA0hYAANMWAADUFgAA1RYAANYWAADXFgAA2BYAANkWAADaFgAAKhcAACsXAAAsFwAALRcAAC4XAAAvFwAAMBcAADEXAAAyFwAAMxcAADQXAAA1FwAANhcAADcXAAA4FwAAORcAAIkXAACKFwAAixcAAIwXAACNFwAAjhcAAI8XAACQFwAAkRcAAJIXAACTFwAAlBcAAJUXAACWFwAAlxcAAJgXAADoFwAA6RcAAOoXAADrFwAA7BcAAO0XAADuFwAA7xcAAPAXAADxFwAA8hcAAPMXAAD0FwAA9RcAAPYXAAD3FwAARxgAAEgYAABJGAAAShgAAEsYAABMGAAATRgAAE4YAABPGAAAUBgAAFEYAABSGAAAUxgAAFQYAABVGAAAVhgAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":48
-                }, 
-                {
-                 "data":"xhIAAMcSAADIEgAAyRIAAMoSAADLEgAAzBIAAM0SAADOEgAAzxIAANASAADREgAA0hIAANMSAADUEgAA1RIAACUTAAAmEwAAJxMAACgTAAApEwAAKhMAACsTAAAsEwAALRMAAC4TAAAvEwAAMBMAADETAAAyEwAAMxMAADQTAACEEwAAhRMAAIYTAACHEwAAiBMAAIkTAACKEwAAixMAAIwTAACNEwAAjhMAAI8TAACQEwAAkRMAAJITAACTEwAA4xMAAOQTAADlEwAA5hMAAOcTAADoEwAA6RMAAOoTAADrEwAA7BMAAO0TAADuEwAA7xMAAPATAADxEwAA8hMAAEIUAABDFAAARBQAAEUUAABGFAAARxQAAEgUAABJFAAAShQAAEsUAABMFAAATRQAAE4UAABPFAAAUBQAAFEUAAChFAAAohQAAKMUAACkFAAApRQAAKYUAACnFAAAqBQAAKkUAACqFAAAqxQAAKwUAACtFAAArhQAAK8UAACwFAAAABUAAAEVAAACFQAAAxUAAAQVAAAFFQAABhUAAAcVAAAIFQAACRUAAAoVAAALFQAADBUAAA0VAAAOFQAADxUAAF8VAABgFQAAYRUAAGIVAABjFQAAZBUAAGUVAABmFQAAZxUAAGgVAABpFQAAahUAAGsVAABsFQAAbRUAAG4VAAC+FQAAvxUAAMAVAADBFQAAwhUAAMMVAADEFQAAxRUAAMYVAADHFQAAyBUAAMkVAADKFQAAyxUAAMwVAADNFQAAHRYAAB4WAAAfFgAAIBYAACEWAAAiFgAAIxYAACQWAAAlFgAAJhYAACcWAAAoFgAAKRYAACoWAAArFgAALBYAAHwWAAB9FgAAfhYAAH8WAACAFgAAgRYAAIIWAACDFgAAhBYAAIUWAACGFgAAhxYAAIgWAACJFgAAihYAAIsWAADbFgAA3BYAAN0WAADeFgAA3xYAAOAWAADhFgAA4hYAAOMWAADkFgAA5RYAAOYWAADnFgAA6BYAAOkWAADqFgAAOhcAADsXAAA8FwAAPRcAAD4XAAA\/FwAAQBcAAEEXAABCFwAAQxcAAEQXAABFFwAARhcAAEcXAABIFwAASRcAAJkXAACaFwAAmxcAAJwXAACdFwAAnhcAAJ8XAACgFwAAoRcAAKIXAACjFwAApBcAAKUXAACmFwAApxcAAKgXAAD4FwAA+RcAAPoXAAD7FwAA\/BcAAP0XAAD+FwAA\/xcAAAAYAAABGAAAAhgAAAMYAAAEGAAABRgAAAYYAAAHGAAAVxgAAFgYAABZGAAAWhgAAFsYAABcGAAAXRgAAF4YAABfGAAAYBgAAGEYAABiGAAAYxgAAGQYAABlGAAAZhgAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":48
-                }, 
-                {
-                 "data":"1hIAANcSAADYEgAA2RIAANoSAADbEgAA3BIAAN0SAADeEgAA3xIAAOASAADhEgAA4hIAAOMSAADkEgAA5RIAADUTAAA2EwAANxMAADgTAAA5EwAAOhMAADsTAAA8EwAAPRMAAD4TAAA\/EwAAQBMAAEETAABCEwAAQxMAAEQTAACUEwAAlRMAAJYTAACXEwAAmBMAAJkTAACaEwAAmxMAAJwTAACdEwAAnhMAAJ8TAACgEwAAoRMAAKITAACjEwAA8xMAAPQTAAD1EwAA9hMAAPcTAAD4EwAA+RMAAPoTAAD7EwAA\/BMAAP0TAAD+EwAA\/xMAAAAUAAABFAAAAhQAAFIUAABTFAAAVBQAAFUUAABWFAAAVxQAAFgUAABZFAAAWhQAAFsUAABcFAAAXRQAAF4UAABfFAAAYBQAAGEUAACxFAAAshQAALMUAAC0FAAAtRQAALYUAAC3FAAAuBQAALkUAAC6FAAAuxQAALwUAAC9FAAAvhQAAL8UAADAFAAAEBUAABEVAAASFQAAExUAABQVAAAVFQAAFhUAABcVAAAYFQAAGRUAABoVAAAbFQAAHBUAAB0VAAAeFQAAHxUAAG8VAABwFQAAcRUAAHIVAABzFQAAdBUAAHUVAAB2FQAAdxUAAHgVAAB5FQAAehUAAHsVAAB8FQAAfRUAAH4VAADOFQAAzxUAANAVAADRFQAA0hUAANMVAADUFQAA1RUAANYVAADXFQAA2BUAANkVAADaFQAA2xUAANwVAADdFQAALRYAAC4WAAAvFgAAMBYAADEWAAAyFgAAMxYAADQWAAA1FgAANhYAADcWAAA4FgAAORYAADoWAAA7FgAAPBYAAIwWAACNFgAAjhYAAI8WAACQFgAAkRYAAJIWAACTFgAAlBYAAJUWAACWFgAAlxYAAJgWAACZFgAAmhYAAJsWAADrFgAA7BYAAO0WAADuFgAA7xYAAPAWAADxFgAA8hYAAPMWAAD0FgAA9RYAAPYWAAD3FgAA+BYAAPkWAAD6FgAAShcAAEsXAABMFwAATRcAAE4XAABPFwAAUBcAAFEXAABSFwAAUxcAAFQXAABVFwAAVhcAAFcXAABYFwAAWRcAAKkXAACqFwAAqxcAAKwXAACtFwAArhcAAK8XAACwFwAAsRcAALIXAACzFwAAtBcAALUXAAC2FwAAtxcAALgXAAAIGAAACRgAAAoYAAALGAAADBgAAA0YAAAOGAAADxgAABAYAAARGAAAEhgAABMYAAAUGAAAFRgAABYYAAAXGAAAZxgAAGgYAABpGAAAahgAAGsYAABsGAAAbRgAAG4YAABvGAAAcBgAAHEYAAByGAAAcxgAAHQYAAB1GAAAdhgAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":48
-                }, 
-                {
-                 "data":"5hIAAOcSAADoEgAA6RIAAOoSAADrEgAA7BIAAO0SAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEUTAABGEwAARxMAAEgTAABJEwAAShMAAEsTAABMEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkEwAApRMAAKYTAACnEwAAqBMAAKkTAACqEwAAqxMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxQAAAQUAAAFFAAABhQAAAcUAAAIFAAACRQAAAoUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGIUAABjFAAAZBQAAGUUAABmFAAAZxQAAGgUAABpFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBFAAAwhQAAMMUAADEFAAAxRQAAMYUAADHFAAAyBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBUAACEVAAAiFQAAIxUAACQVAAAlFQAAJhUAACcVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH8VAACAFQAAgRUAAIIVAACDFQAAhBUAAIUVAACGFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADeFQAA3xUAAOAVAADhFQAA4hUAAOMVAADkFQAA5RUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPRYAAD4WAAA\/FgAAQBYAAEEWAABCFgAAQxYAAEQWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJwWAACdFgAAnhYAAJ8WAACgFgAAoRYAAKIWAACjFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD7FgAA\/BYAAP0WAAD+FgAA\/xYAAAAXAAABFwAAAhcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWhcAAFsXAABcFwAAXRcAAF4XAABfFwAAYBcAAGEXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALkXAAC6FwAAuxcAALwXAAC9FwAAvhcAAL8XAADAFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYGAAAGRgAABoYAAAbGAAAHBgAAB0YAAAeGAAAHxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdxgAAHgYAAB5GAAAehgAAHsYAAB8GAAAfRgAAH4YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":48
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAYAACBGAAAghgAAIMYAACEGAAAhRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADfGAAA4BgAAOEYAADiGAAA4xgAAOQYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPhkAAD8ZAABAGQAAQRkAAEIZAABDGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ0ZAACeGQAAnxkAAKAZAAChGQAAohkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8GQAA\/RkAAP4ZAAD\/GQAAABoAAAEaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWxoAAFwaAABdGgAAXhoAAF8aAABgGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALoaAAC7GgAAvBoAAL0aAAC+GgAAvxoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZGwAAGhsAABsbAAAcGwAAHRsAAB4bAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeBsAAHkbAAB6GwAAexsAAHwbAAB9GwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANcbAADYGwAA2RsAANobAADbGwAA3BsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2HAAANxwAADgcAAA5HAAAOhwAADscAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlRwAAJYcAACXHAAAmBwAAJkcAACaHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPQcAAD1HAAA9hwAAPccAAD4HAAA+RwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABTHQAAVB0AAFUdAABWHQAAVx0AAFgdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsh0AALMdAAC0HQAAtR0AALYdAAC3HQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEeAAASHgAAEx4AABQeAAAVHgAAFh4AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":64
-                }, 
-                {
-                 "data":"hhgAAIcYAACIGAAAiRgAAIoYAACLGAAAjBgAAI0YAACOGAAAjxgAAJAYAACRGAAAkhgAAJMYAACUGAAAlRgAAOUYAADmGAAA5xgAAOgYAADpGAAA6hgAAOsYAADsGAAA7RgAAO4YAADvGAAA8BgAAPEYAADyGAAA8xgAAPQYAABEGQAARRkAAEYZAABHGQAASBkAAEkZAABKGQAASxkAAEwZAABNGQAAThkAAE8ZAABQGQAAURkAAFIZAABTGQAAoxkAAKQZAAClGQAAphkAAKcZAACoGQAAqRkAAKoZAACrGQAArBkAAK0ZAACuGQAArxkAALAZAACxGQAAshkAAAIaAAADGgAABBoAAAUaAAAGGgAABxoAAAgaAAAJGgAAChoAAAsaAAAMGgAADRoAAA4aAAAPGgAAEBoAABEaAABhGgAAYhoAAGMaAABkGgAAZRoAAGYaAABnGgAAaBoAAGkaAABqGgAAaxoAAGwaAABtGgAAbhoAAG8aAABwGgAAwBoAAMEaAADCGgAAwxoAAMQaAADFGgAAxhoAAMcaAADIGgAAyRoAAMoaAADLGgAAzBoAAM0aAADOGgAAzxoAAB8bAAAgGwAAIRsAACIbAAAjGwAAJBsAACUbAAAmGwAAJxsAACgbAAApGwAAKhsAACsbAAAsGwAALRsAAC4bAAB+GwAAfxsAAIAbAACBGwAAghsAAIMbAACEGwAAhRsAAIYbAACHGwAAiBsAAIkbAACKGwAAixsAAIwbAACNGwAA3RsAAN4bAADfGwAA4BsAAOEbAADiGwAA4xsAAOQbAADlGwAA5hsAAOcbAADoGwAA6RsAAOobAADrGwAA7BsAADwcAAA9HAAAPhwAAD8cAABAHAAAQRwAAEIcAABDHAAARBwAAEUcAABGHAAARxwAAEgcAABJHAAAShwAAEscAACbHAAAnBwAAJ0cAACeHAAAnxwAAKAcAAChHAAAohwAAKMcAACkHAAApRwAAKYcAACnHAAAqBwAAKkcAACqHAAA+hwAAPscAAD8HAAA\/RwAAP4cAAD\/HAAAAB0AAAEdAAACHQAAAx0AAAQdAAAFHQAABh0AAAcdAAAIHQAACR0AAFkdAABaHQAAWx0AAFwdAABdHQAAXh0AAF8dAABgHQAAYR0AAGIdAABjHQAAZB0AAGUdAABmHQAAZx0AAGgdAAC4HQAAuR0AALodAAC7HQAAvB0AAL0dAAC+HQAAvx0AAMAdAADBHQAAwh0AAMMdAADEHQAAxR0AAMYdAADHHQAAFx4AABgeAAAZHgAAGh4AABseAAAcHgAAHR4AAB4eAAAfHgAAIB4AACEeAAAiHgAAIx4AACQeAAAlHgAAJh4AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":64
-                }, 
-                {
-                 "data":"lhgAAJcYAACYGAAAmRgAAJoYAACbGAAAnBgAAJ0YAACeGAAAnxgAAKAYAAChGAAAohgAAKMYAACkGAAApRgAAPUYAAD2GAAA9xgAAPgYAAD5GAAA+hgAAPsYAAD8GAAA\/RgAAP4YAAD\/GAAAABkAAAEZAAACGQAAAxkAAAQZAABUGQAAVRkAAFYZAABXGQAAWBkAAFkZAABaGQAAWxkAAFwZAABdGQAAXhkAAF8ZAABgGQAAYRkAAGIZAABjGQAAsxkAALQZAAC1GQAAthkAALcZAAC4GQAAuRkAALoZAAC7GQAAvBkAAL0ZAAC+GQAAvxkAAMAZAADBGQAAwhkAABIaAAATGgAAFBoAABUaAAAWGgAAFxoAABgaAAAZGgAAGhoAABsaAAAcGgAAHRoAAB4aAAAfGgAAIBoAACEaAABxGgAAchoAAHMaAAB0GgAAdRoAAHYaAAB3GgAAeBoAAHkaAAB6GgAAexoAAHwaAAB9GgAAfhoAAH8aAACAGgAA0BoAANEaAADSGgAA0xoAANQaAADVGgAA1hoAANcaAADYGgAA2RoAANoaAADbGgAA3BoAAN0aAADeGgAA3xoAAC8bAAAwGwAAMRsAADIbAAAzGwAANBsAADUbAAA2GwAANxsAADgbAAA5GwAAOhsAADsbAAA8GwAAPRsAAD4bAACOGwAAjxsAAJAbAACRGwAAkhsAAJMbAACUGwAAlRsAAJYbAACXGwAAmBsAAJkbAACaGwAAmxsAAJwbAACdGwAA7RsAAO4bAADvGwAA8BsAAPEbAADyGwAA8xsAAPQbAAD1GwAA9hsAAPcbAAD4GwAA+RsAAPobAAD7GwAA\/BsAAEwcAABNHAAAThwAAE8cAABQHAAAURwAAFIcAABTHAAAVBwAAFUcAABWHAAAVxwAAFgcAABZHAAAWhwAAFscAACrHAAArBwAAK0cAACuHAAArxwAALAcAACxHAAAshwAALMcAAC0HAAAtRwAALYcAAC3HAAAuBwAALkcAAC6HAAACh0AAAsdAAAMHQAADR0AAA4dAAAPHQAAEB0AABEdAAASHQAAEx0AABQdAAAVHQAAFh0AABcdAAAYHQAAGR0AAGkdAABqHQAAax0AAGwdAABtHQAAbh0AAG8dAABwHQAAcR0AAHIdAABzHQAAdB0AAHUdAAB2HQAAdx0AAHgdAADIHQAAyR0AAModAADLHQAAzB0AAM0dAADOHQAAzx0AANAdAADRHQAA0h0AANMdAADUHQAA1R0AANYdAADXHQAAJx4AACgeAAApHgAAKh4AACseAAAsHgAALR4AAC4eAAAvHgAAMB4AADEeAAAyHgAAMx4AADQeAAA1HgAANh4AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":64
-                }, 
-                {
-                 "data":"phgAAKcYAACoGAAAqRgAAKoYAACrGAAArBgAAK0YAACuGAAArxgAALAYAACxGAAAshgAALMYAAC0GAAAtRgAAAUZAAAGGQAABxkAAAgZAAAJGQAAChkAAAsZAAAMGQAADRkAAA4ZAAAPGQAAEBkAABEZAAASGQAAExkAABQZAABkGQAAZRkAAGYZAABnGQAAaBkAAGkZAABqGQAAaxkAAGwZAABtGQAAbhkAAG8ZAABwGQAAcRkAAHIZAABzGQAAwxkAAMQZAADFGQAAxhkAAMcZAADIGQAAyRkAAMoZAADLGQAAzBkAAM0ZAADOGQAAzxkAANAZAADRGQAA0hkAACIaAAAjGgAAJBoAACUaAAAmGgAAJxoAACgaAAApGgAAKhoAACsaAAAsGgAALRoAAC4aAAAvGgAAMBoAADEaAACBGgAAghoAAIMaAACEGgAAhRoAAIYaAACHGgAAiBoAAIkaAACKGgAAixoAAIwaAACNGgAAjhoAAI8aAACQGgAA4BoAAOEaAADiGgAA4xoAAOQaAADlGgAA5hoAAOcaAADoGgAA6RoAAOoaAADrGgAA7BoAAO0aAADuGgAA7xoAAD8bAABAGwAAQRsAAEIbAABDGwAARBsAAEUbAABGGwAARxsAAEgbAABJGwAAShsAAEsbAABMGwAATRsAAE4bAACeGwAAnxsAAKAbAAChGwAAohsAAKMbAACkGwAApRsAAKYbAACnGwAAqBsAAKkbAACqGwAAqxsAAKwbAACtGwAA\/RsAAP4bAAD\/GwAAABwAAAEcAAACHAAAAxwAAAQcAAAFHAAABhwAAAccAAAIHAAACRwAAAocAAALHAAADBwAAFwcAABdHAAAXhwAAF8cAABgHAAAYRwAAGIcAABjHAAAZBwAAGUcAABmHAAAZxwAAGgcAABpHAAAahwAAGscAAC7HAAAvBwAAL0cAAC+HAAAvxwAAMAcAADBHAAAwhwAAMMcAADEHAAAxRwAAMYcAADHHAAAyBwAAMkcAADKHAAAGh0AABsdAAAcHQAAHR0AAB4dAAAfHQAAIB0AACEdAAAiHQAAIx0AACQdAAAlHQAAJh0AACcdAAAoHQAAKR0AAHkdAAB6HQAAex0AAHwdAAB9HQAAfh0AAH8dAACAHQAAgR0AAIIdAACDHQAAhB0AAIUdAACGHQAAhx0AAIgdAADYHQAA2R0AANodAADbHQAA3B0AAN0dAADeHQAA3x0AAOAdAADhHQAA4h0AAOMdAADkHQAA5R0AAOYdAADnHQAANx4AADgeAAA5HgAAOh4AADseAAA8HgAAPR4AAD4eAAA\/HgAAQB4AAEEeAABCHgAAQx4AAEQeAABFHgAARh4AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":64
-                }, 
-                {
-                 "data":"thgAALcYAAC4GAAAuRgAALoYAAC7GAAAvBgAAL0YAAC+GAAAvxgAAMAYAADBGAAAwhgAAMMYAADEGAAAxRgAABUZAAAWGQAAFxkAABgZAAAZGQAAGhkAABsZAAAcGQAAHRkAAB4ZAAAfGQAAIBkAACEZAAAiGQAAIxkAACQZAAB0GQAAdRkAAHYZAAB3GQAAeBkAAHkZAAB6GQAAexkAAHwZAAB9GQAAfhkAAH8ZAACAGQAAgRkAAIIZAACDGQAA0xkAANQZAADVGQAA1hkAANcZAADYGQAA2RkAANoZAADbGQAA3BkAAN0ZAADeGQAA3xkAAOAZAADhGQAA4hkAADIaAAAzGgAANBoAADUaAAA2GgAANxoAADgaAAA5GgAAOhoAADsaAAA8GgAAPRoAAD4aAAA\/GgAAQBoAAEEaAACRGgAAkhoAAJMaAACUGgAAlRoAAJYaAACXGgAAmBoAAJkaAACaGgAAmxoAAJwaAACdGgAAnhoAAJ8aAACgGgAA8BoAAPEaAADyGgAA8xoAAPQaAAD1GgAA9hoAAPcaAAD4GgAA+RoAAPoaAAD7GgAA\/BoAAP0aAAD+GgAA\/xoAAE8bAABQGwAAURsAAFIbAABTGwAAVBsAAFUbAABWGwAAVxsAAFgbAABZGwAAWhsAAFsbAABcGwAAXRsAAF4bAACuGwAArxsAALAbAACxGwAAshsAALMbAAC0GwAAtRsAALYbAAC3GwAAuBsAALkbAAC6GwAAuxsAALwbAAC9GwAADRwAAA4cAAAPHAAAEBwAABEcAAASHAAAExwAABQcAAAVHAAAFhwAABccAAAYHAAAGRwAABocAAAbHAAAHBwAAGwcAABtHAAAbhwAAG8cAABwHAAAcRwAAHIcAABzHAAAdBwAAHUcAAB2HAAAdxwAAHgcAAB5HAAAehwAAHscAADLHAAAzBwAAM0cAADOHAAAzxwAANAcAADRHAAA0hwAANMcAADUHAAA1RwAANYcAADXHAAA2BwAANkcAADaHAAAKh0AACsdAAAsHQAALR0AAC4dAAAvHQAAMB0AADEdAAAyHQAAMx0AADQdAAA1HQAANh0AADcdAAA4HQAAOR0AAIkdAACKHQAAix0AAIwdAACNHQAAjh0AAI8dAACQHQAAkR0AAJIdAACTHQAAlB0AAJUdAACWHQAAlx0AAJgdAADoHQAA6R0AAOodAADrHQAA7B0AAO0dAADuHQAA7x0AAPAdAADxHQAA8h0AAPMdAAD0HQAA9R0AAPYdAAD3HQAARx4AAEgeAABJHgAASh4AAEseAABMHgAATR4AAE4eAABPHgAAUB4AAFEeAABSHgAAUx4AAFQeAABVHgAAVh4AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":64
-                }, 
-                {
-                 "data":"xhgAAMcYAADIGAAAyRgAAMoYAADLGAAAzBgAAM0YAADOGAAAzxgAANAYAADRGAAA0hgAANMYAADUGAAA1RgAACUZAAAmGQAAJxkAACgZAAApGQAAKhkAACsZAAAsGQAALRkAAC4ZAAAvGQAAMBkAADEZAAAyGQAAMxkAADQZAACEGQAAhRkAAIYZAACHGQAAiBkAAIkZAACKGQAAixkAAIwZAACNGQAAjhkAAI8ZAACQGQAAkRkAAJIZAACTGQAA4xkAAOQZAADlGQAA5hkAAOcZAADoGQAA6RkAAOoZAADrGQAA7BkAAO0ZAADuGQAA7xkAAPAZAADxGQAA8hkAAEIaAABDGgAARBoAAEUaAABGGgAARxoAAEgaAABJGgAAShoAAEsaAABMGgAATRoAAE4aAABPGgAAUBoAAFEaAAChGgAAohoAAKMaAACkGgAApRoAAKYaAACnGgAAqBoAAKkaAACqGgAAqxoAAKwaAACtGgAArhoAAK8aAACwGgAAABsAAAEbAAACGwAAAxsAAAQbAAAFGwAABhsAAAcbAAAIGwAACRsAAAobAAALGwAADBsAAA0bAAAOGwAADxsAAF8bAABgGwAAYRsAAGIbAABjGwAAZBsAAGUbAABmGwAAZxsAAGgbAABpGwAAahsAAGsbAABsGwAAbRsAAG4bAAC+GwAAvxsAAMAbAADBGwAAwhsAAMMbAADEGwAAxRsAAMYbAADHGwAAyBsAAMkbAADKGwAAyxsAAMwbAADNGwAAHRwAAB4cAAAfHAAAIBwAACEcAAAiHAAAIxwAACQcAAAlHAAAJhwAACccAAAoHAAAKRwAACocAAArHAAALBwAAHwcAAB9HAAAfhwAAH8cAACAHAAAgRwAAIIcAACDHAAAhBwAAIUcAACGHAAAhxwAAIgcAACJHAAAihwAAIscAADbHAAA3BwAAN0cAADeHAAA3xwAAOAcAADhHAAA4hwAAOMcAADkHAAA5RwAAOYcAADnHAAA6BwAAOkcAADqHAAAOh0AADsdAAA8HQAAPR0AAD4dAAA\/HQAAQB0AAEEdAABCHQAAQx0AAEQdAABFHQAARh0AAEcdAABIHQAASR0AAJkdAACaHQAAmx0AAJwdAACdHQAAnh0AAJ8dAACgHQAAoR0AAKIdAACjHQAApB0AAKUdAACmHQAApx0AAKgdAAD4HQAA+R0AAPodAAD7HQAA\/B0AAP0dAAD+HQAA\/x0AAAAeAAABHgAAAh4AAAMeAAAEHgAABR4AAAYeAAAHHgAAVx4AAFgeAABZHgAAWh4AAFseAABcHgAAXR4AAF4eAABfHgAAYB4AAGEeAABiHgAAYx4AAGQeAABlHgAAZh4AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":64
-                }, 
-                {
-                 "data":"1hgAANcYAADYGAAA2RgAANoYAADbGAAA3BgAAN0YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUZAAA2GQAANxkAADgZAAA5GQAAOhkAADsZAAA8GQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUGQAAlRkAAJYZAACXGQAAmBkAAJkZAACaGQAAmxkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8xkAAPQZAAD1GQAA9hkAAPcZAAD4GQAA+RkAAPoZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFIaAABTGgAAVBoAAFUaAABWGgAAVxoAAFgaAABZGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACxGgAAshoAALMaAAC0GgAAtRoAALYaAAC3GgAAuBoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBsAABEbAAASGwAAExsAABQbAAAVGwAAFhsAABcbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG8bAABwGwAAcRsAAHIbAABzGwAAdBsAAHUbAAB2GwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADOGwAAzxsAANAbAADRGwAA0hsAANMbAADUGwAA1RsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALRwAAC4cAAAvHAAAMBwAADEcAAAyHAAAMxwAADQcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIwcAACNHAAAjhwAAI8cAACQHAAAkRwAAJIcAACTHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADrHAAA7BwAAO0cAADuHAAA7xwAAPAcAADxHAAA8hwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASh0AAEsdAABMHQAATR0AAE4dAABPHQAAUB0AAFEdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKkdAACqHQAAqx0AAKwdAACtHQAArh0AAK8dAACwHQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIHgAACR4AAAoeAAALHgAADB4AAA0eAAAOHgAADx4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZx4AAGgeAABpHgAAah4AAGseAABsHgAAbR4AAG4eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":64
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAeAABxHgAAch4AAHMeAAB0HgAAdR4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADPHgAA0B4AANEeAADSHgAA0x4AANQeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALh8AAC8fAAAwHwAAMR8AADIfAAAzHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI0fAACOHwAAjx8AAJAfAACRHwAAkh8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADsHwAA7R8AAO4fAADvHwAA8B8AAPEfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASyAAAEwgAABNIAAATiAAAE8gAABQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKogAACrIAAArCAAAK0gAACuIAAAryAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJIQAACiEAAAshAAAMIQAADSEAAA4hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaCEAAGkhAABqIQAAayEAAGwhAABtIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMchAADIIQAAySEAAMohAADLIQAAzCEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmIgAAJyIAACgiAAApIgAAKiIAACsiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhSIAAIYiAACHIgAAiCIAAIkiAACKIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOQiAADlIgAA5iIAAOciAADoIgAA6SIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDIwAARCMAAEUjAABGIwAARyMAAEgjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoiMAAKMjAACkIwAApSMAAKYjAACnIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEkAAACJAAAAyQAAAQkAAAFJAAABiQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":80
-                }, 
-                {
-                 "data":"dh4AAHceAAB4HgAAeR4AAHoeAAB7HgAAfB4AAH0eAAB+HgAAfx4AAIAeAACBHgAAgh4AAIMeAACEHgAAhR4AANUeAADWHgAA1x4AANgeAADZHgAA2h4AANseAADcHgAA3R4AAN4eAADfHgAA4B4AAOEeAADiHgAA4x4AAOQeAAA0HwAANR8AADYfAAA3HwAAOB8AADkfAAA6HwAAOx8AADwfAAA9HwAAPh8AAD8fAABAHwAAQR8AAEIfAABDHwAAkx8AAJQfAACVHwAAlh8AAJcfAACYHwAAmR8AAJofAACbHwAAnB8AAJ0fAACeHwAAnx8AAKAfAAChHwAAoh8AAPIfAADzHwAA9B8AAPUfAAD2HwAA9x8AAPgfAAD5HwAA+h8AAPsfAAD8HwAA\/R8AAP4fAAD\/HwAAACAAAAEgAABRIAAAUiAAAFMgAABUIAAAVSAAAFYgAABXIAAAWCAAAFkgAABaIAAAWyAAAFwgAABdIAAAXiAAAF8gAABgIAAAsCAAALEgAACyIAAAsyAAALQgAAC1IAAAtiAAALcgAAC4IAAAuSAAALogAAC7IAAAvCAAAL0gAAC+IAAAvyAAAA8hAAAQIQAAESEAABIhAAATIQAAFCEAABUhAAAWIQAAFyEAABghAAAZIQAAGiEAABshAAAcIQAAHSEAAB4hAABuIQAAbyEAAHAhAABxIQAAciEAAHMhAAB0IQAAdSEAAHYhAAB3IQAAeCEAAHkhAAB6IQAAeyEAAHwhAAB9IQAAzSEAAM4hAADPIQAA0CEAANEhAADSIQAA0yEAANQhAADVIQAA1iEAANchAADYIQAA2SEAANohAADbIQAA3CEAACwiAAAtIgAALiIAAC8iAAAwIgAAMSIAADIiAAAzIgAANCIAADUiAAA2IgAANyIAADgiAAA5IgAAOiIAADsiAACLIgAAjCIAAI0iAACOIgAAjyIAAJAiAACRIgAAkiIAAJMiAACUIgAAlSIAAJYiAACXIgAAmCIAAJkiAACaIgAA6iIAAOsiAADsIgAA7SIAAO4iAADvIgAA8CIAAPEiAADyIgAA8yIAAPQiAAD1IgAA9iIAAPciAAD4IgAA+SIAAEkjAABKIwAASyMAAEwjAABNIwAATiMAAE8jAABQIwAAUSMAAFIjAABTIwAAVCMAAFUjAABWIwAAVyMAAFgjAACoIwAAqSMAAKojAACrIwAArCMAAK0jAACuIwAAryMAALAjAACxIwAAsiMAALMjAAC0IwAAtSMAALYjAAC3IwAAByQAAAgkAAAJJAAACiQAAAskAAAMJAAADSQAAA4kAAAPJAAAECQAABEkAAASJAAAEyQAABQkAAAVJAAAFiQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":80
-                }, 
-                {
-                 "data":"hh4AAIceAACIHgAAiR4AAIoeAACLHgAAjB4AAI0eAACOHgAAjx4AAJAeAACRHgAAkh4AAJMeAACUHgAAlR4AAOUeAADmHgAA5x4AAOgeAADpHgAA6h4AAOseAADsHgAA7R4AAO4eAADvHgAA8B4AAPEeAADyHgAA8x4AAPQeAABEHwAARR8AAEYfAABHHwAASB8AAEkfAABKHwAASx8AAEwfAABNHwAATh8AAE8fAABQHwAAUR8AAFIfAABTHwAAox8AAKQfAAClHwAAph8AAKcfAACoHwAAqR8AAKofAACrHwAArB8AAK0fAACuHwAArx8AALAfAACxHwAAsh8AAAIgAAADIAAABCAAAAUgAAAGIAAAByAAAAggAAAJIAAACiAAAAsgAAAMIAAADSAAAA4gAAAPIAAAECAAABEgAABhIAAAYiAAAGMgAABkIAAAZSAAAGYgAABnIAAAaCAAAGkgAABqIAAAayAAAGwgAABtIAAAbiAAAG8gAABwIAAAwCAAAMEgAADCIAAAwyAAAMQgAADFIAAAxiAAAMcgAADIIAAAySAAAMogAADLIAAAzCAAAM0gAADOIAAAzyAAAB8hAAAgIQAAISEAACIhAAAjIQAAJCEAACUhAAAmIQAAJyEAACghAAApIQAAKiEAACshAAAsIQAALSEAAC4hAAB+IQAAfyEAAIAhAACBIQAAgiEAAIMhAACEIQAAhSEAAIYhAACHIQAAiCEAAIkhAACKIQAAiyEAAIwhAACNIQAA3SEAAN4hAADfIQAA4CEAAOEhAADiIQAA4yEAAOQhAADlIQAA5iEAAOchAADoIQAA6SEAAOohAADrIQAA7CEAADwiAAA9IgAAPiIAAD8iAABAIgAAQSIAAEIiAABDIgAARCIAAEUiAABGIgAARyIAAEgiAABJIgAASiIAAEsiAACbIgAAnCIAAJ0iAACeIgAAnyIAAKAiAAChIgAAoiIAAKMiAACkIgAApSIAAKYiAACnIgAAqCIAAKkiAACqIgAA+iIAAPsiAAD8IgAA\/SIAAP4iAAD\/IgAAACMAAAEjAAACIwAAAyMAAAQjAAAFIwAABiMAAAcjAAAIIwAACSMAAFkjAABaIwAAWyMAAFwjAABdIwAAXiMAAF8jAABgIwAAYSMAAGIjAABjIwAAZCMAAGUjAABmIwAAZyMAAGgjAAC4IwAAuSMAALojAAC7IwAAvCMAAL0jAAC+IwAAvyMAAMAjAADBIwAAwiMAAMMjAADEIwAAxSMAAMYjAADHIwAAFyQAABgkAAAZJAAAGiQAABskAAAcJAAAHSQAAB4kAAAfJAAAICQAACEkAAAiJAAAIyQAACQkAAAlJAAAJiQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":80
-                }, 
-                {
-                 "data":"lh4AAJceAACYHgAAmR4AAJoeAACbHgAAnB4AAJ0eAACeHgAAnx4AAKAeAAChHgAAoh4AAKMeAACkHgAApR4AAPUeAAD2HgAA9x4AAPgeAAD5HgAA+h4AAPseAAD8HgAA\/R4AAP4eAAD\/HgAAAB8AAAEfAAACHwAAAx8AAAQfAABUHwAAVR8AAFYfAABXHwAAWB8AAFkfAABaHwAAWx8AAFwfAABdHwAAXh8AAF8fAABgHwAAYR8AAGIfAABjHwAAsx8AALQfAAC1HwAAth8AALcfAAC4HwAAuR8AALofAAC7HwAAvB8AAL0fAAC+HwAAvx8AAMAfAADBHwAAwh8AABIgAAATIAAAFCAAABUgAAAWIAAAFyAAABggAAAZIAAAGiAAABsgAAAcIAAAHSAAAB4gAAAfIAAAICAAACEgAABxIAAAciAAAHMgAAB0IAAAdSAAAHYgAAB3IAAAeCAAAHkgAAB6IAAAeyAAAHwgAAB9IAAAfiAAAH8gAACAIAAA0CAAANEgAADSIAAA0yAAANQgAADVIAAA1iAAANcgAADYIAAA2SAAANogAADbIAAA3CAAAN0gAADeIAAA3yAAAC8hAAAwIQAAMSEAADIhAAAzIQAANCEAADUhAAA2IQAANyEAADghAAA5IQAAOiEAADshAAA8IQAAPSEAAD4hAACOIQAAjyEAAJAhAACRIQAAkiEAAJMhAACUIQAAlSEAAJYhAACXIQAAmCEAAJkhAACaIQAAmyEAAJwhAACdIQAA7SEAAO4hAADvIQAA8CEAAPEhAADyIQAA8yEAAPQhAAD1IQAA9iEAAPchAAD4IQAA+SEAAPohAAD7IQAA\/CEAAEwiAABNIgAATiIAAE8iAABQIgAAUSIAAFIiAABTIgAAVCIAAFUiAABWIgAAVyIAAFgiAABZIgAAWiIAAFsiAACrIgAArCIAAK0iAACuIgAAryIAALAiAACxIgAAsiIAALMiAAC0IgAAtSIAALYiAAC3IgAAuCIAALkiAAC6IgAACiMAAAsjAAAMIwAADSMAAA4jAAAPIwAAECMAABEjAAASIwAAEyMAABQjAAAVIwAAFiMAABcjAAAYIwAAGSMAAGkjAABqIwAAayMAAGwjAABtIwAAbiMAAG8jAABwIwAAcSMAAHIjAABzIwAAdCMAAHUjAAB2IwAAdyMAAHgjAADIIwAAySMAAMojAADLIwAAzCMAAM0jAADOIwAAzyMAANAjAADRIwAA0iMAANMjAADUIwAA1SMAANYjAADXIwAAJyQAACgkAAApJAAAKiQAACskAAAsJAAALSQAAC4kAAAvJAAAMCQAADEkAAAyJAAAMyQAADQkAAA1JAAANiQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":80
-                }, 
-                {
-                 "data":"ph4AAKceAACoHgAAqR4AAKoeAACrHgAArB4AAK0eAACuHgAArx4AALAeAACxHgAAsh4AALMeAAC0HgAAtR4AAAUfAAAGHwAABx8AAAgfAAAJHwAACh8AAAsfAAAMHwAADR8AAA4fAAAPHwAAEB8AABEfAAASHwAAEx8AABQfAABkHwAAZR8AAGYfAABnHwAAaB8AAGkfAABqHwAAax8AAGwfAABtHwAAbh8AAG8fAABwHwAAcR8AAHIfAABzHwAAwx8AAMQfAADFHwAAxh8AAMcfAADIHwAAyR8AAMofAADLHwAAzB8AAM0fAADOHwAAzx8AANAfAADRHwAA0h8AACIgAAAjIAAAJCAAACUgAAAmIAAAJyAAACggAAApIAAAKiAAACsgAAAsIAAALSAAAC4gAAAvIAAAMCAAADEgAACBIAAAgiAAAIMgAACEIAAAhSAAAIYgAACHIAAAiCAAAIkgAACKIAAAiyAAAIwgAACNIAAAjiAAAI8gAACQIAAA4CAAAOEgAADiIAAA4yAAAOQgAADlIAAA5iAAAOcgAADoIAAA6SAAAOogAADrIAAA7CAAAO0gAADuIAAA7yAAAD8hAABAIQAAQSEAAEIhAABDIQAARCEAAEUhAABGIQAARyEAAEghAABJIQAASiEAAEshAABMIQAATSEAAE4hAACeIQAAnyEAAKAhAAChIQAAoiEAAKMhAACkIQAApSEAAKYhAACnIQAAqCEAAKkhAACqIQAAqyEAAKwhAACtIQAA\/SEAAP4hAAD\/IQAAACIAAAEiAAACIgAAAyIAAAQiAAAFIgAABiIAAAciAAAIIgAACSIAAAoiAAALIgAADCIAAFwiAABdIgAAXiIAAF8iAABgIgAAYSIAAGIiAABjIgAAZCIAAGUiAABmIgAAZyIAAGgiAABpIgAAaiIAAGsiAAC7IgAAvCIAAL0iAAC+IgAAvyIAAMAiAADBIgAAwiIAAMMiAADEIgAAxSIAAMYiAADHIgAAyCIAAMkiAADKIgAAGiMAABsjAAAcIwAAHSMAAB4jAAAfIwAAICMAACEjAAAiIwAAIyMAACQjAAAlIwAAJiMAACcjAAAoIwAAKSMAAHkjAAB6IwAAeyMAAHwjAAB9IwAAfiMAAH8jAACAIwAAgSMAAIIjAACDIwAAhCMAAIUjAACGIwAAhyMAAIgjAADYIwAA2SMAANojAADbIwAA3CMAAN0jAADeIwAA3yMAAOAjAADhIwAA4iMAAOMjAADkIwAA5SMAAOYjAADnIwAANyQAADgkAAA5JAAAOiQAADskAAA8JAAAPSQAAD4kAAA\/JAAAQCQAAEEkAABCJAAAQyQAAEQkAABFJAAARiQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":80
-                }, 
-                {
-                 "data":"th4AALceAAC4HgAAuR4AALoeAAC7HgAAvB4AAL0eAAC+HgAAvx4AAMAeAADBHgAAwh4AAMMeAADEHgAAxR4AABUfAAAWHwAAFx8AABgfAAAZHwAAGh8AABsfAAAcHwAAHR8AAB4fAAAfHwAAIB8AACEfAAAiHwAAIx8AACQfAAB0HwAAdR8AAHYfAAB3HwAAeB8AAHkfAAB6HwAAex8AAHwfAAB9HwAAfh8AAH8fAACAHwAAgR8AAIIfAACDHwAA0x8AANQfAADVHwAA1h8AANcfAADYHwAA2R8AANofAADbHwAA3B8AAN0fAADeHwAA3x8AAOAfAADhHwAA4h8AADIgAAAzIAAANCAAADUgAAA2IAAANyAAADggAAA5IAAAOiAAADsgAAA8IAAAPSAAAD4gAAA\/IAAAQCAAAEEgAACRIAAAkiAAAJMgAACUIAAAlSAAAJYgAACXIAAAmCAAAJkgAACaIAAAmyAAAJwgAACdIAAAniAAAJ8gAACgIAAA8CAAAPEgAADyIAAA8yAAAPQgAAD1IAAA9iAAAPcgAAD4IAAA+SAAAPogAAD7IAAA\/CAAAP0gAAD+IAAA\/yAAAE8hAABQIQAAUSEAAFIhAABTIQAAVCEAAFUhAABWIQAAVyEAAFghAABZIQAAWiEAAFshAABcIQAAXSEAAF4hAACuIQAAryEAALAhAACxIQAAsiEAALMhAAC0IQAAtSEAALYhAAC3IQAAuCEAALkhAAC6IQAAuyEAALwhAAC9IQAADSIAAA4iAAAPIgAAECIAABEiAAASIgAAEyIAABQiAAAVIgAAFiIAABciAAAYIgAAGSIAABoiAAAbIgAAHCIAAGwiAABtIgAAbiIAAG8iAABwIgAAcSIAAHIiAABzIgAAdCIAAHUiAAB2IgAAdyIAAHgiAAB5IgAAeiIAAHsiAADLIgAAzCIAAM0iAADOIgAAzyIAANAiAADRIgAA0iIAANMiAADUIgAA1SIAANYiAADXIgAA2CIAANkiAADaIgAAKiMAACsjAAAsIwAALSMAAC4jAAAvIwAAMCMAADEjAAAyIwAAMyMAADQjAAA1IwAANiMAADcjAAA4IwAAOSMAAIkjAACKIwAAiyMAAIwjAACNIwAAjiMAAI8jAACQIwAAkSMAAJIjAACTIwAAlCMAAJUjAACWIwAAlyMAAJgjAADoIwAA6SMAAOojAADrIwAA7CMAAO0jAADuIwAA7yMAAPAjAADxIwAA8iMAAPMjAAD0IwAA9SMAAPYjAAD3IwAARyQAAEgkAABJJAAASiQAAEskAABMJAAATSQAAE4kAABPJAAAUCQAAFEkAABSJAAAUyQAAFQkAABVJAAAViQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":80
-                }, 
-                {
-                 "data":"xh4AAMceAADIHgAAyR4AAMoeAADLHgAAzB4AAM0eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUfAAAmHwAAJx8AACgfAAApHwAAKh8AACsfAAAsHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEHwAAhR8AAIYfAACHHwAAiB8AAIkfAACKHwAAix8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4x8AAOQfAADlHwAA5h8AAOcfAADoHwAA6R8AAOofAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIgAABDIAAARCAAAEUgAABGIAAARyAAAEggAABJIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAChIAAAoiAAAKMgAACkIAAApSAAAKYgAACnIAAAqCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEAAAEhAAACIQAAAyEAAAQhAAAFIQAABiEAAAchAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF8hAABgIQAAYSEAAGIhAABjIQAAZCEAAGUhAABmIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC+IQAAvyEAAMAhAADBIQAAwiEAAMMhAADEIQAAxSEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHSIAAB4iAAAfIgAAICIAACEiAAAiIgAAIyIAACQiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwiAAB9IgAAfiIAAH8iAACAIgAAgSIAAIIiAACDIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADbIgAA3CIAAN0iAADeIgAA3yIAAOAiAADhIgAA4iIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOiMAADsjAAA8IwAAPSMAAD4jAAA\/IwAAQCMAAEEjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJkjAACaIwAAmyMAAJwjAACdIwAAniMAAJ8jAACgIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4IwAA+SMAAPojAAD7IwAA\/CMAAP0jAAD+IwAA\/yMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVyQAAFgkAABZJAAAWiQAAFskAABcJAAAXSQAAF4kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":80
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAkAABhJAAAYiQAAGMkAABkJAAAZSQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC\/JAAAwCQAAMEkAADCJAAAwyQAAMQkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHiUAAB8lAAAgJQAAISUAACIlAAAjJQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH0lAAB+JQAAfyUAAIAlAACBJQAAgiUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcJQAA3SUAAN4lAADfJQAA4CUAAOElAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOyYAADwmAAA9JgAAPiYAAD8mAABAJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJomAACbJgAAnCYAAJ0mAACeJgAAnyYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD5JgAA+iYAAPsmAAD8JgAA\/SYAAP4mAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWCcAAFknAABaJwAAWycAAFwnAABdJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALcnAAC4JwAAuScAALonAAC7JwAAvCcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWKAAAFygAABgoAAAZKAAAGigAABsoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdSgAAHYoAAB3KAAAeCgAAHkoAAB6KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANQoAADVKAAA1igAANcoAADYKAAA2SgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzKQAANCkAADUpAAA2KQAANykAADgpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkikAAJMpAACUKQAAlSkAAJYpAACXKQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPEpAADyKQAA8ykAAPQpAAD1KQAA9ikAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":96
-                }, 
-                {
-                 "data":"ZiQAAGckAABoJAAAaSQAAGokAABrJAAAbCQAAG0kAABuJAAAbyQAAHAkAABxJAAAciQAAHMkAAB0JAAAdSQAAMUkAADGJAAAxyQAAMgkAADJJAAAyiQAAMskAADMJAAAzSQAAM4kAADPJAAA0CQAANEkAADSJAAA0yQAANQkAAAkJQAAJSUAACYlAAAnJQAAKCUAACklAAAqJQAAKyUAACwlAAAtJQAALiUAAC8lAAAwJQAAMSUAADIlAAAzJQAAgyUAAIQlAACFJQAAhiUAAIclAACIJQAAiSUAAIolAACLJQAAjCUAAI0lAACOJQAAjyUAAJAlAACRJQAAkiUAAOIlAADjJQAA5CUAAOUlAADmJQAA5yUAAOglAADpJQAA6iUAAOslAADsJQAA7SUAAO4lAADvJQAA8CUAAPElAABBJgAAQiYAAEMmAABEJgAARSYAAEYmAABHJgAASCYAAEkmAABKJgAASyYAAEwmAABNJgAATiYAAE8mAABQJgAAoCYAAKEmAACiJgAAoyYAAKQmAAClJgAApiYAAKcmAACoJgAAqSYAAKomAACrJgAArCYAAK0mAACuJgAAryYAAP8mAAAAJwAAAScAAAInAAADJwAABCcAAAUnAAAGJwAABycAAAgnAAAJJwAACicAAAsnAAAMJwAADScAAA4nAABeJwAAXycAAGAnAABhJwAAYicAAGMnAABkJwAAZScAAGYnAABnJwAAaCcAAGknAABqJwAAaycAAGwnAABtJwAAvScAAL4nAAC\/JwAAwCcAAMEnAADCJwAAwycAAMQnAADFJwAAxicAAMcnAADIJwAAyScAAMonAADLJwAAzCcAABwoAAAdKAAAHigAAB8oAAAgKAAAISgAACIoAAAjKAAAJCgAACUoAAAmKAAAJygAACgoAAApKAAAKigAACsoAAB7KAAAfCgAAH0oAAB+KAAAfygAAIAoAACBKAAAgigAAIMoAACEKAAAhSgAAIYoAACHKAAAiCgAAIkoAACKKAAA2igAANsoAADcKAAA3SgAAN4oAADfKAAA4CgAAOEoAADiKAAA4ygAAOQoAADlKAAA5igAAOcoAADoKAAA6SgAADkpAAA6KQAAOykAADwpAAA9KQAAPikAAD8pAABAKQAAQSkAAEIpAABDKQAARCkAAEUpAABGKQAARykAAEgpAACYKQAAmSkAAJopAACbKQAAnCkAAJ0pAACeKQAAnykAAKApAAChKQAAoikAAKMpAACkKQAApSkAAKYpAACnKQAA9ykAAPgpAAD5KQAA+ikAAPspAAD8KQAA\/SkAAP4pAAD\/KQAAACoAAAEqAAACKgAAAyoAAAQqAAAFKgAABioAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":96
-                }, 
-                {
-                 "data":"diQAAHckAAB4JAAAeSQAAHokAAB7JAAAfCQAAH0kAAB+JAAAfyQAAIAkAACBJAAAgiQAAIMkAACEJAAAhSQAANUkAADWJAAA1yQAANgkAADZJAAA2iQAANskAADcJAAA3SQAAN4kAADfJAAA4CQAAOEkAADiJAAA4yQAAOQkAAA0JQAANSUAADYlAAA3JQAAOCUAADklAAA6JQAAOyUAADwlAAA9JQAAPiUAAD8lAABAJQAAQSUAAEIlAABDJQAAkyUAAJQlAACVJQAAliUAAJclAACYJQAAmSUAAJolAACbJQAAnCUAAJ0lAACeJQAAnyUAAKAlAAChJQAAoiUAAPIlAADzJQAA9CUAAPUlAAD2JQAA9yUAAPglAAD5JQAA+iUAAPslAAD8JQAA\/SUAAP4lAAD\/JQAAACYAAAEmAABRJgAAUiYAAFMmAABUJgAAVSYAAFYmAABXJgAAWCYAAFkmAABaJgAAWyYAAFwmAABdJgAAXiYAAF8mAABgJgAAsCYAALEmAACyJgAAsyYAALQmAAC1JgAAtiYAALcmAAC4JgAAuSYAALomAAC7JgAAvCYAAL0mAAC+JgAAvyYAAA8nAAAQJwAAEScAABInAAATJwAAFCcAABUnAAAWJwAAFycAABgnAAAZJwAAGicAABsnAAAcJwAAHScAAB4nAABuJwAAbycAAHAnAABxJwAAcicAAHMnAAB0JwAAdScAAHYnAAB3JwAAeCcAAHknAAB6JwAAeycAAHwnAAB9JwAAzScAAM4nAADPJwAA0CcAANEnAADSJwAA0ycAANQnAADVJwAA1icAANcnAADYJwAA2ScAANonAADbJwAA3CcAACwoAAAtKAAALigAAC8oAAAwKAAAMSgAADIoAAAzKAAANCgAADUoAAA2KAAANygAADgoAAA5KAAAOigAADsoAACLKAAAjCgAAI0oAACOKAAAjygAAJAoAACRKAAAkigAAJMoAACUKAAAlSgAAJYoAACXKAAAmCgAAJkoAACaKAAA6igAAOsoAADsKAAA7SgAAO4oAADvKAAA8CgAAPEoAADyKAAA8ygAAPQoAAD1KAAA9igAAPcoAAD4KAAA+SgAAEkpAABKKQAASykAAEwpAABNKQAATikAAE8pAABQKQAAUSkAAFIpAABTKQAAVCkAAFUpAABWKQAAVykAAFgpAACoKQAAqSkAAKopAACrKQAArCkAAK0pAACuKQAArykAALApAACxKQAAsikAALMpAAC0KQAAtSkAALYpAAC3KQAAByoAAAgqAAAJKgAACioAAAsqAAAMKgAADSoAAA4qAAAPKgAAECoAABEqAAASKgAAEyoAABQqAAAVKgAAFioAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":96
-                }, 
-                {
-                 "data":"hiQAAIckAACIJAAAiSQAAIokAACLJAAAjCQAAI0kAACOJAAAjyQAAJAkAACRJAAAkiQAAJMkAACUJAAAlSQAAOUkAADmJAAA5yQAAOgkAADpJAAA6iQAAOskAADsJAAA7SQAAO4kAADvJAAA8CQAAPEkAADyJAAA8yQAAPQkAABEJQAARSUAAEYlAABHJQAASCUAAEklAABKJQAASyUAAEwlAABNJQAATiUAAE8lAABQJQAAUSUAAFIlAABTJQAAoyUAAKQlAAClJQAApiUAAKclAACoJQAAqSUAAKolAACrJQAArCUAAK0lAACuJQAAryUAALAlAACxJQAAsiUAAAImAAADJgAABCYAAAUmAAAGJgAAByYAAAgmAAAJJgAACiYAAAsmAAAMJgAADSYAAA4mAAAPJgAAECYAABEmAABhJgAAYiYAAGMmAABkJgAAZSYAAGYmAABnJgAAaCYAAGkmAABqJgAAayYAAGwmAABtJgAAbiYAAG8mAABwJgAAwCYAAMEmAADCJgAAwyYAAMQmAADFJgAAxiYAAMcmAADIJgAAySYAAMomAADLJgAAzCYAAM0mAADOJgAAzyYAAB8nAAAgJwAAIScAACInAAAjJwAAJCcAACUnAAAmJwAAJycAACgnAAApJwAAKicAACsnAAAsJwAALScAAC4nAAB+JwAAfycAAIAnAACBJwAAgicAAIMnAACEJwAAhScAAIYnAACHJwAAiCcAAIknAACKJwAAiycAAIwnAACNJwAA3ScAAN4nAADfJwAA4CcAAOEnAADiJwAA4ycAAOQnAADlJwAA5icAAOcnAADoJwAA6ScAAOonAADrJwAA7CcAADwoAAA9KAAAPigAAD8oAABAKAAAQSgAAEIoAABDKAAARCgAAEUoAABGKAAARygAAEgoAABJKAAASigAAEsoAACbKAAAnCgAAJ0oAACeKAAAnygAAKAoAAChKAAAoigAAKMoAACkKAAApSgAAKYoAACnKAAAqCgAAKkoAACqKAAA+igAAPsoAAD8KAAA\/SgAAP4oAAD\/KAAAACkAAAEpAAACKQAAAykAAAQpAAAFKQAABikAAAcpAAAIKQAACSkAAFkpAABaKQAAWykAAFwpAABdKQAAXikAAF8pAABgKQAAYSkAAGIpAABjKQAAZCkAAGUpAABmKQAAZykAAGgpAAC4KQAAuSkAALopAAC7KQAAvCkAAL0pAAC+KQAAvykAAMApAADBKQAAwikAAMMpAADEKQAAxSkAAMYpAADHKQAAFyoAABgqAAAZKgAAGioAABsqAAAcKgAAHSoAAB4qAAAfKgAAICoAACEqAAAiKgAAIyoAACQqAAAlKgAAJioAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":96
-                }, 
-                {
-                 "data":"liQAAJckAACYJAAAmSQAAJokAACbJAAAnCQAAJ0kAACeJAAAnyQAAKAkAAChJAAAoiQAAKMkAACkJAAApSQAAPUkAAD2JAAA9yQAAPgkAAD5JAAA+iQAAPskAAD8JAAA\/SQAAP4kAAD\/JAAAACUAAAElAAACJQAAAyUAAAQlAABUJQAAVSUAAFYlAABXJQAAWCUAAFklAABaJQAAWyUAAFwlAABdJQAAXiUAAF8lAABgJQAAYSUAAGIlAABjJQAAsyUAALQlAAC1JQAAtiUAALclAAC4JQAAuSUAALolAAC7JQAAvCUAAL0lAAC+JQAAvyUAAMAlAADBJQAAwiUAABImAAATJgAAFCYAABUmAAAWJgAAFyYAABgmAAAZJgAAGiYAABsmAAAcJgAAHSYAAB4mAAAfJgAAICYAACEmAABxJgAAciYAAHMmAAB0JgAAdSYAAHYmAAB3JgAAeCYAAHkmAAB6JgAAeyYAAHwmAAB9JgAAfiYAAH8mAACAJgAA0CYAANEmAADSJgAA0yYAANQmAADVJgAA1iYAANcmAADYJgAA2SYAANomAADbJgAA3CYAAN0mAADeJgAA3yYAAC8nAAAwJwAAMScAADInAAAzJwAANCcAADUnAAA2JwAANycAADgnAAA5JwAAOicAADsnAAA8JwAAPScAAD4nAACOJwAAjycAAJAnAACRJwAAkicAAJMnAACUJwAAlScAAJYnAACXJwAAmCcAAJknAACaJwAAmycAAJwnAACdJwAA7ScAAO4nAADvJwAA8CcAAPEnAADyJwAA8ycAAPQnAAD1JwAA9icAAPcnAAD4JwAA+ScAAPonAAD7JwAA\/CcAAEwoAABNKAAATigAAE8oAABQKAAAUSgAAFIoAABTKAAAVCgAAFUoAABWKAAAVygAAFgoAABZKAAAWigAAFsoAACrKAAArCgAAK0oAACuKAAArygAALAoAACxKAAAsigAALMoAAC0KAAAtSgAALYoAAC3KAAAuCgAALkoAAC6KAAACikAAAspAAAMKQAADSkAAA4pAAAPKQAAECkAABEpAAASKQAAEykAABQpAAAVKQAAFikAABcpAAAYKQAAGSkAAGkpAABqKQAAaykAAGwpAABtKQAAbikAAG8pAABwKQAAcSkAAHIpAABzKQAAdCkAAHUpAAB2KQAAdykAAHgpAADIKQAAySkAAMopAADLKQAAzCkAAM0pAADOKQAAzykAANApAADRKQAA0ikAANMpAADUKQAA1SkAANYpAADXKQAAJyoAACgqAAApKgAAKioAACsqAAAsKgAALSoAAC4qAAAvKgAAMCoAADEqAAAyKgAAMyoAADQqAAA1KgAANioAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":96
-                }, 
-                {
-                 "data":"piQAAKckAACoJAAAqSQAAKokAACrJAAArCQAAK0kAACuJAAAryQAALAkAACxJAAAsiQAALMkAAC0JAAAtSQAAAUlAAAGJQAAByUAAAglAAAJJQAACiUAAAslAAAMJQAADSUAAA4lAAAPJQAAECUAABElAAASJQAAEyUAABQlAABkJQAAZSUAAGYlAABnJQAAaCUAAGklAABqJQAAayUAAGwlAABtJQAAbiUAAG8lAABwJQAAcSUAAHIlAABzJQAAwyUAAMQlAADFJQAAxiUAAMclAADIJQAAySUAAMolAADLJQAAzCUAAM0lAADOJQAAzyUAANAlAADRJQAA0iUAACImAAAjJgAAJCYAACUmAAAmJgAAJyYAACgmAAApJgAAKiYAACsmAAAsJgAALSYAAC4mAAAvJgAAMCYAADEmAACBJgAAgiYAAIMmAACEJgAAhSYAAIYmAACHJgAAiCYAAIkmAACKJgAAiyYAAIwmAACNJgAAjiYAAI8mAACQJgAA4CYAAOEmAADiJgAA4yYAAOQmAADlJgAA5iYAAOcmAADoJgAA6SYAAOomAADrJgAA7CYAAO0mAADuJgAA7yYAAD8nAABAJwAAQScAAEInAABDJwAARCcAAEUnAABGJwAARycAAEgnAABJJwAASicAAEsnAABMJwAATScAAE4nAACeJwAAnycAAKAnAAChJwAAoicAAKMnAACkJwAApScAAKYnAACnJwAAqCcAAKknAACqJwAAqycAAKwnAACtJwAA\/ScAAP4nAAD\/JwAAACgAAAEoAAACKAAAAygAAAQoAAAFKAAABigAAAcoAAAIKAAACSgAAAooAAALKAAADCgAAFwoAABdKAAAXigAAF8oAABgKAAAYSgAAGIoAABjKAAAZCgAAGUoAABmKAAAZygAAGgoAABpKAAAaigAAGsoAAC7KAAAvCgAAL0oAAC+KAAAvygAAMAoAADBKAAAwigAAMMoAADEKAAAxSgAAMYoAADHKAAAyCgAAMkoAADKKAAAGikAABspAAAcKQAAHSkAAB4pAAAfKQAAICkAACEpAAAiKQAAIykAACQpAAAlKQAAJikAACcpAAAoKQAAKSkAAHkpAAB6KQAAeykAAHwpAAB9KQAAfikAAH8pAACAKQAAgSkAAIIpAACDKQAAhCkAAIUpAACGKQAAhykAAIgpAADYKQAA2SkAANopAADbKQAA3CkAAN0pAADeKQAA3ykAAOApAADhKQAA4ikAAOMpAADkKQAA5SkAAOYpAADnKQAANyoAADgqAAA5KgAAOioAADsqAAA8KgAAPSoAAD4qAAA\/KgAAQCoAAEEqAABCKgAAQyoAAEQqAABFKgAARioAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":96
-                }, 
-                {
-                 "data":"tiQAALckAAC4JAAAuSQAALokAAC7JAAAvCQAAL0kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABUlAAAWJQAAFyUAABglAAAZJQAAGiUAABslAAAcJQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB0JQAAdSUAAHYlAAB3JQAAeCUAAHklAAB6JQAAeyUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0yUAANQlAADVJQAA1iUAANclAADYJQAA2SUAANolAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADImAAAzJgAANCYAADUmAAA2JgAANyYAADgmAAA5JgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACRJgAAkiYAAJMmAACUJgAAlSYAAJYmAACXJgAAmCYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8CYAAPEmAADyJgAA8yYAAPQmAAD1JgAA9iYAAPcmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE8nAABQJwAAUScAAFInAABTJwAAVCcAAFUnAABWJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACuJwAArycAALAnAACxJwAAsicAALMnAAC0JwAAtScAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADSgAAA4oAAAPKAAAECgAABEoAAASKAAAEygAABQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwoAABtKAAAbigAAG8oAABwKAAAcSgAAHIoAABzKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADLKAAAzCgAAM0oAADOKAAAzygAANAoAADRKAAA0igAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKikAACspAAAsKQAALSkAAC4pAAAvKQAAMCkAADEpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIkpAACKKQAAiykAAIwpAACNKQAAjikAAI8pAACQKQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADoKQAA6SkAAOopAADrKQAA7CkAAO0pAADuKQAA7ykAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARyoAAEgqAABJKgAASioAAEsqAABMKgAATSoAAE4qAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":96
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAqAABRKgAAUioAAFMqAABUKgAAVSoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACvKgAAsCoAALEqAACyKgAAsyoAALQqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADisAAA8rAAAQKwAAESsAABIrAAATKwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG0rAABuKwAAbysAAHArAABxKwAAcisAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMKwAAzSsAAM4rAADPKwAA0CsAANErAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKywAACwsAAAtLAAALiwAAC8sAAAwLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIosAACLLAAAjCwAAI0sAACOLAAAjywAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADpLAAA6iwAAOssAADsLAAA7SwAAO4sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASC0AAEktAABKLQAASy0AAEwtAABNLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKctAACoLQAAqS0AAKotAACrLQAArC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGLgAABy4AAAguAAAJLgAACi4AAAsuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZS4AAGYuAABnLgAAaC4AAGkuAABqLgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMQuAADFLgAAxi4AAMcuAADILgAAyS4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjLwAAJC8AACUvAAAmLwAAJy8AACgvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgi8AAIMvAACELwAAhS8AAIYvAACHLwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEvAADiLwAA4y8AAOQvAADlLwAA5i8AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":112
-                }, 
-                {
-                 "data":"VioAAFcqAABYKgAAWSoAAFoqAABbKgAAXCoAAF0qAABeKgAAXyoAAGAqAABhKgAAYioAAGMqAABkKgAAZSoAALUqAAC2KgAAtyoAALgqAAC5KgAAuioAALsqAAC8KgAAvSoAAL4qAAC\/KgAAwCoAAMEqAADCKgAAwyoAAMQqAAAUKwAAFSsAABYrAAAXKwAAGCsAABkrAAAaKwAAGysAABwrAAAdKwAAHisAAB8rAAAgKwAAISsAACIrAAAjKwAAcysAAHQrAAB1KwAAdisAAHcrAAB4KwAAeSsAAHorAAB7KwAAfCsAAH0rAAB+KwAAfysAAIArAACBKwAAgisAANIrAADTKwAA1CsAANUrAADWKwAA1ysAANgrAADZKwAA2isAANsrAADcKwAA3SsAAN4rAADfKwAA4CsAAOErAAAxLAAAMiwAADMsAAA0LAAANSwAADYsAAA3LAAAOCwAADksAAA6LAAAOywAADwsAAA9LAAAPiwAAD8sAABALAAAkCwAAJEsAACSLAAAkywAAJQsAACVLAAAliwAAJcsAACYLAAAmSwAAJosAACbLAAAnCwAAJ0sAACeLAAAnywAAO8sAADwLAAA8SwAAPIsAADzLAAA9CwAAPUsAAD2LAAA9ywAAPgsAAD5LAAA+iwAAPssAAD8LAAA\/SwAAP4sAABOLQAATy0AAFAtAABRLQAAUi0AAFMtAABULQAAVS0AAFYtAABXLQAAWC0AAFktAABaLQAAWy0AAFwtAABdLQAArS0AAK4tAACvLQAAsC0AALEtAACyLQAAsy0AALQtAAC1LQAAti0AALctAAC4LQAAuS0AALotAAC7LQAAvC0AAAwuAAANLgAADi4AAA8uAAAQLgAAES4AABIuAAATLgAAFC4AABUuAAAWLgAAFy4AABguAAAZLgAAGi4AABsuAABrLgAAbC4AAG0uAABuLgAAby4AAHAuAABxLgAAci4AAHMuAAB0LgAAdS4AAHYuAAB3LgAAeC4AAHkuAAB6LgAAyi4AAMsuAADMLgAAzS4AAM4uAADPLgAA0C4AANEuAADSLgAA0y4AANQuAADVLgAA1i4AANcuAADYLgAA2S4AACkvAAAqLwAAKy8AACwvAAAtLwAALi8AAC8vAAAwLwAAMS8AADIvAAAzLwAANC8AADUvAAA2LwAANy8AADgvAACILwAAiS8AAIovAACLLwAAjC8AAI0vAACOLwAAjy8AAJAvAACRLwAAki8AAJMvAACULwAAlS8AAJYvAACXLwAA5y8AAOgvAADpLwAA6i8AAOsvAADsLwAA7S8AAO4vAADvLwAA8C8AAPEvAADyLwAA8y8AAPQvAAD1LwAA9i8AAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":112
-                }, 
-                {
-                 "data":"ZioAAGcqAABoKgAAaSoAAGoqAABrKgAAbCoAAG0qAABuKgAAbyoAAHAqAABxKgAAcioAAHMqAAB0KgAAdSoAAMUqAADGKgAAxyoAAMgqAADJKgAAyioAAMsqAADMKgAAzSoAAM4qAADPKgAA0CoAANEqAADSKgAA0yoAANQqAAAkKwAAJSsAACYrAAAnKwAAKCsAACkrAAAqKwAAKysAACwrAAAtKwAALisAAC8rAAAwKwAAMSsAADIrAAAzKwAAgysAAIQrAACFKwAAhisAAIcrAACIKwAAiSsAAIorAACLKwAAjCsAAI0rAACOKwAAjysAAJArAACRKwAAkisAAOIrAADjKwAA5CsAAOUrAADmKwAA5ysAAOgrAADpKwAA6isAAOsrAADsKwAA7SsAAO4rAADvKwAA8CsAAPErAABBLAAAQiwAAEMsAABELAAARSwAAEYsAABHLAAASCwAAEksAABKLAAASywAAEwsAABNLAAATiwAAE8sAABQLAAAoCwAAKEsAACiLAAAoywAAKQsAAClLAAApiwAAKcsAACoLAAAqSwAAKosAACrLAAArCwAAK0sAACuLAAArywAAP8sAAAALQAAAS0AAAItAAADLQAABC0AAAUtAAAGLQAABy0AAAgtAAAJLQAACi0AAAstAAAMLQAADS0AAA4tAABeLQAAXy0AAGAtAABhLQAAYi0AAGMtAABkLQAAZS0AAGYtAABnLQAAaC0AAGktAABqLQAAay0AAGwtAABtLQAAvS0AAL4tAAC\/LQAAwC0AAMEtAADCLQAAwy0AAMQtAADFLQAAxi0AAMctAADILQAAyS0AAMotAADLLQAAzC0AABwuAAAdLgAAHi4AAB8uAAAgLgAAIS4AACIuAAAjLgAAJC4AACUuAAAmLgAAJy4AACguAAApLgAAKi4AACsuAAB7LgAAfC4AAH0uAAB+LgAAfy4AAIAuAACBLgAAgi4AAIMuAACELgAAhS4AAIYuAACHLgAAiC4AAIkuAACKLgAA2i4AANsuAADcLgAA3S4AAN4uAADfLgAA4C4AAOEuAADiLgAA4y4AAOQuAADlLgAA5i4AAOcuAADoLgAA6S4AADkvAAA6LwAAOy8AADwvAAA9LwAAPi8AAD8vAABALwAAQS8AAEIvAABDLwAARC8AAEUvAABGLwAARy8AAEgvAACYLwAAmS8AAJovAACbLwAAnC8AAJ0vAACeLwAAny8AAKAvAAChLwAAoi8AAKMvAACkLwAApS8AAKYvAACnLwAA9y8AAPgvAAD5LwAA+i8AAPsvAAD8LwAA\/S8AAP4vAAD\/LwAAADAAAAEwAAACMAAAAzAAAAQwAAAFMAAABjAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":112
-                }, 
-                {
-                 "data":"dioAAHcqAAB4KgAAeSoAAHoqAAB7KgAAfCoAAH0qAAB+KgAAfyoAAIAqAACBKgAAgioAAIMqAACEKgAAhSoAANUqAADWKgAA1yoAANgqAADZKgAA2ioAANsqAADcKgAA3SoAAN4qAADfKgAA4CoAAOEqAADiKgAA4yoAAOQqAAA0KwAANSsAADYrAAA3KwAAOCsAADkrAAA6KwAAOysAADwrAAA9KwAAPisAAD8rAABAKwAAQSsAAEIrAABDKwAAkysAAJQrAACVKwAAlisAAJcrAACYKwAAmSsAAJorAACbKwAAnCsAAJ0rAACeKwAAnysAAKArAAChKwAAoisAAPIrAADzKwAA9CsAAPUrAAD2KwAA9ysAAPgrAAD5KwAA+isAAPsrAAD8KwAA\/SsAAP4rAAD\/KwAAACwAAAEsAABRLAAAUiwAAFMsAABULAAAVSwAAFYsAABXLAAAWCwAAFksAABaLAAAWywAAFwsAABdLAAAXiwAAF8sAABgLAAAsCwAALEsAACyLAAAsywAALQsAAC1LAAAtiwAALcsAAC4LAAAuSwAALosAAC7LAAAvCwAAL0sAAC+LAAAvywAAA8tAAAQLQAAES0AABItAAATLQAAFC0AABUtAAAWLQAAFy0AABgtAAAZLQAAGi0AABstAAAcLQAAHS0AAB4tAABuLQAAby0AAHAtAABxLQAAci0AAHMtAAB0LQAAdS0AAHYtAAB3LQAAeC0AAHktAAB6LQAAey0AAHwtAAB9LQAAzS0AAM4tAADPLQAA0C0AANEtAADSLQAA0y0AANQtAADVLQAA1i0AANctAADYLQAA2S0AANotAADbLQAA3C0AACwuAAAtLgAALi4AAC8uAAAwLgAAMS4AADIuAAAzLgAANC4AADUuAAA2LgAANy4AADguAAA5LgAAOi4AADsuAACLLgAAjC4AAI0uAACOLgAAjy4AAJAuAACRLgAAki4AAJMuAACULgAAlS4AAJYuAACXLgAAmC4AAJkuAACaLgAA6i4AAOsuAADsLgAA7S4AAO4uAADvLgAA8C4AAPEuAADyLgAA8y4AAPQuAAD1LgAA9i4AAPcuAAD4LgAA+S4AAEkvAABKLwAASy8AAEwvAABNLwAATi8AAE8vAABQLwAAUS8AAFIvAABTLwAAVC8AAFUvAABWLwAAVy8AAFgvAACoLwAAqS8AAKovAACrLwAArC8AAK0vAACuLwAAry8AALAvAACxLwAAsi8AALMvAAC0LwAAtS8AALYvAAC3LwAABzAAAAgwAAAJMAAACjAAAAswAAAMMAAADTAAAA4wAAAPMAAAEDAAABEwAAASMAAAEzAAABQwAAAVMAAAFjAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":112
-                }, 
-                {
-                 "data":"hioAAIcqAACIKgAAiSoAAIoqAACLKgAAjCoAAI0qAACOKgAAjyoAAJAqAACRKgAAkioAAJMqAACUKgAAlSoAAOUqAADmKgAA5yoAAOgqAADpKgAA6ioAAOsqAADsKgAA7SoAAO4qAADvKgAA8CoAAPEqAADyKgAA8yoAAPQqAABEKwAARSsAAEYrAABHKwAASCsAAEkrAABKKwAASysAAEwrAABNKwAATisAAE8rAABQKwAAUSsAAFIrAABTKwAAoysAAKQrAAClKwAApisAAKcrAACoKwAAqSsAAKorAACrKwAArCsAAK0rAACuKwAArysAALArAACxKwAAsisAAAIsAAADLAAABCwAAAUsAAAGLAAABywAAAgsAAAJLAAACiwAAAssAAAMLAAADSwAAA4sAAAPLAAAECwAABEsAABhLAAAYiwAAGMsAABkLAAAZSwAAGYsAABnLAAAaCwAAGksAABqLAAAaywAAGwsAABtLAAAbiwAAG8sAABwLAAAwCwAAMEsAADCLAAAwywAAMQsAADFLAAAxiwAAMcsAADILAAAySwAAMosAADLLAAAzCwAAM0sAADOLAAAzywAAB8tAAAgLQAAIS0AACItAAAjLQAAJC0AACUtAAAmLQAAJy0AACgtAAApLQAAKi0AACstAAAsLQAALS0AAC4tAAB+LQAAfy0AAIAtAACBLQAAgi0AAIMtAACELQAAhS0AAIYtAACHLQAAiC0AAIktAACKLQAAiy0AAIwtAACNLQAA3S0AAN4tAADfLQAA4C0AAOEtAADiLQAA4y0AAOQtAADlLQAA5i0AAOctAADoLQAA6S0AAOotAADrLQAA7C0AADwuAAA9LgAAPi4AAD8uAABALgAAQS4AAEIuAABDLgAARC4AAEUuAABGLgAARy4AAEguAABJLgAASi4AAEsuAACbLgAAnC4AAJ0uAACeLgAAny4AAKAuAAChLgAAoi4AAKMuAACkLgAApS4AAKYuAACnLgAAqC4AAKkuAACqLgAA+i4AAPsuAAD8LgAA\/S4AAP4uAAD\/LgAAAC8AAAEvAAACLwAAAy8AAAQvAAAFLwAABi8AAAcvAAAILwAACS8AAFkvAABaLwAAWy8AAFwvAABdLwAAXi8AAF8vAABgLwAAYS8AAGIvAABjLwAAZC8AAGUvAABmLwAAZy8AAGgvAAC4LwAAuS8AALovAAC7LwAAvC8AAL0vAAC+LwAAvy8AAMAvAADBLwAAwi8AAMMvAADELwAAxS8AAMYvAADHLwAAFzAAABgwAAAZMAAAGjAAABswAAAcMAAAHTAAAB4wAAAfMAAAIDAAACEwAAAiMAAAIzAAACQwAAAlMAAAJjAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":112
-                }, 
-                {
-                 "data":"lioAAJcqAACYKgAAmSoAAJoqAACbKgAAnCoAAJ0qAACeKgAAnyoAAKAqAAChKgAAoioAAKMqAACkKgAApSoAAPUqAAD2KgAA9yoAAPgqAAD5KgAA+ioAAPsqAAD8KgAA\/SoAAP4qAAD\/KgAAACsAAAErAAACKwAAAysAAAQrAABUKwAAVSsAAFYrAABXKwAAWCsAAFkrAABaKwAAWysAAFwrAABdKwAAXisAAF8rAABgKwAAYSsAAGIrAABjKwAAsysAALQrAAC1KwAAtisAALcrAAC4KwAAuSsAALorAAC7KwAAvCsAAL0rAAC+KwAAvysAAMArAADBKwAAwisAABIsAAATLAAAFCwAABUsAAAWLAAAFywAABgsAAAZLAAAGiwAABssAAAcLAAAHSwAAB4sAAAfLAAAICwAACEsAABxLAAAciwAAHMsAAB0LAAAdSwAAHYsAAB3LAAAeCwAAHksAAB6LAAAeywAAHwsAAB9LAAAfiwAAH8sAACALAAA0CwAANEsAADSLAAA0ywAANQsAADVLAAA1iwAANcsAADYLAAA2SwAANosAADbLAAA3CwAAN0sAADeLAAA3ywAAC8tAAAwLQAAMS0AADItAAAzLQAANC0AADUtAAA2LQAANy0AADgtAAA5LQAAOi0AADstAAA8LQAAPS0AAD4tAACOLQAAjy0AAJAtAACRLQAAki0AAJMtAACULQAAlS0AAJYtAACXLQAAmC0AAJktAACaLQAAmy0AAJwtAACdLQAA7S0AAO4tAADvLQAA8C0AAPEtAADyLQAA8y0AAPQtAAD1LQAA9i0AAPctAAD4LQAA+S0AAPotAAD7LQAA\/C0AAEwuAABNLgAATi4AAE8uAABQLgAAUS4AAFIuAABTLgAAVC4AAFUuAABWLgAAVy4AAFguAABZLgAAWi4AAFsuAACrLgAArC4AAK0uAACuLgAAry4AALAuAACxLgAAsi4AALMuAAC0LgAAtS4AALYuAAC3LgAAuC4AALkuAAC6LgAACi8AAAsvAAAMLwAADS8AAA4vAAAPLwAAEC8AABEvAAASLwAAEy8AABQvAAAVLwAAFi8AABcvAAAYLwAAGS8AAGkvAABqLwAAay8AAGwvAABtLwAAbi8AAG8vAABwLwAAcS8AAHIvAABzLwAAdC8AAHUvAAB2LwAAdy8AAHgvAADILwAAyS8AAMovAADLLwAAzC8AAM0vAADOLwAAzy8AANAvAADRLwAA0i8AANMvAADULwAA1S8AANYvAADXLwAAJzAAACgwAAApMAAAKjAAACswAAAsMAAALTAAAC4wAAAvMAAAMDAAADEwAAAyMAAAMzAAADQwAAA1MAAANjAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":112
-                }, 
-                {
-                 "data":"pioAAKcqAACoKgAAqSoAAKoqAACrKgAArCoAAK0qAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUrAAAGKwAABysAAAgrAAAJKwAACisAAAsrAAAMKwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkKwAAZSsAAGYrAABnKwAAaCsAAGkrAABqKwAAaysAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwysAAMQrAADFKwAAxisAAMcrAADIKwAAySsAAMorAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIsAAAjLAAAJCwAACUsAAAmLAAAJywAACgsAAApLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBLAAAgiwAAIMsAACELAAAhSwAAIYsAACHLAAAiCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4CwAAOEsAADiLAAA4ywAAOQsAADlLAAA5iwAAOcsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8tAABALQAAQS0AAEItAABDLQAARC0AAEUtAABGLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACeLQAAny0AAKAtAAChLQAAoi0AAKMtAACkLQAApS0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\/S0AAP4tAAD\/LQAAAC4AAAEuAAACLgAAAy4AAAQuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFwuAABdLgAAXi4AAF8uAABgLgAAYS4AAGIuAABjLgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC7LgAAvC4AAL0uAAC+LgAAvy4AAMAuAADBLgAAwi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGi8AABsvAAAcLwAAHS8AAB4vAAAfLwAAIC8AACEvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHkvAAB6LwAAey8AAHwvAAB9LwAAfi8AAH8vAACALwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYLwAA2S8AANovAADbLwAA3C8AAN0vAADeLwAA3y8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANzAAADgwAAA5MAAAOjAAADswAAA8MAAAPTAAAD4wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":112
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAwAABBMAAAQjAAAEMwAABEMAAARTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACfMAAAoDAAAKEwAACiMAAAozAAAKQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\/jAAAP8wAAAAMQAAATEAAAIxAAADMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF0xAABeMQAAXzEAAGAxAABhMQAAYjEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC8MQAAvTEAAL4xAAC\/MQAAwDEAAMExAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGzIAABwyAAAdMgAAHjIAAB8yAAAgMgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHoyAAB7MgAAfDIAAH0yAAB+MgAAfzIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":128
-                }, 
-                {
-                 "data":"RjAAAEcwAABIMAAASTAAAEowAABLMAAATDAAAE0wAABOMAAATzAAAFAwAABRMAAAUjAAAFMwAABUMAAAVTAAAKUwAACmMAAApzAAAKgwAACpMAAAqjAAAKswAACsMAAArTAAAK4wAACvMAAAsDAAALEwAACyMAAAszAAALQwAAAEMQAABTEAAAYxAAAHMQAACDEAAAkxAAAKMQAACzEAAAwxAAANMQAADjEAAA8xAAAQMQAAETEAABIxAAATMQAAYzEAAGQxAABlMQAAZjEAAGcxAABoMQAAaTEAAGoxAABrMQAAbDEAAG0xAABuMQAAbzEAAHAxAABxMQAAcjEAAMIxAADDMQAAxDEAAMUxAADGMQAAxzEAAMgxAADJMQAAyjEAAMsxAADMMQAAzTEAAM4xAADPMQAA0DEAANExAAAhMgAAIjIAACMyAAAkMgAAJTIAACYyAAAnMgAAKDIAACkyAAAqMgAAKzIAACwyAAAtMgAALjIAAC8yAAAwMgAAgDIAAIEyAACCMgAAgzIAAIQyAACFMgAAhjIAAIcyAACIMgAAiTIAAIoyAACLMgAAjDIAAI0yAACOMgAAjzIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":128
-                }, 
-                {
-                 "data":"VjAAAFcwAABYMAAAWTAAAFowAABbMAAAXDAAAF0wAABeMAAAXzAAAGAwAABhMAAAYjAAAGMwAABkMAAAZTAAALUwAAC2MAAAtzAAALgwAAC5MAAAujAAALswAAC8MAAAvTAAAL4wAAC\/MAAAwDAAAMEwAADCMAAAwzAAAMQwAAAUMQAAFTEAABYxAAAXMQAAGDEAABkxAAAaMQAAGzEAABwxAAAdMQAAHjEAAB8xAAAgMQAAITEAACIxAAAjMQAAczEAAHQxAAB1MQAAdjEAAHcxAAB4MQAAeTEAAHoxAAB7MQAAfDEAAH0xAAB+MQAAfzEAAIAxAACBMQAAgjEAANIxAADTMQAA1DEAANUxAADWMQAA1zEAANgxAADZMQAA2jEAANsxAADcMQAA3TEAAN4xAADfMQAA4DEAAOExAAAxMgAAMjIAADMyAAA0MgAANTIAADYyAAA3MgAAODIAADkyAAA6MgAAOzIAADwyAAA9MgAAPjIAAD8yAABAMgAAkDIAAJEyAACSMgAAkzIAAJQyAACVMgAAljIAAJcyAACYMgAAmTIAAJoyAACbMgAAnDIAAJ0yAACeMgAAnzIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":128
-                }, 
-                {
-                 "data":"ZjAAAGcwAABoMAAAaTAAAGowAABrMAAAbDAAAG0wAABuMAAAbzAAAHAwAABxMAAAcjAAAHMwAAB0MAAAdTAAAMUwAADGMAAAxzAAAMgwAADJMAAAyjAAAMswAADMMAAAzTAAAM4wAADPMAAA0DAAANEwAADSMAAA0zAAANQwAAAkMQAAJTEAACYxAAAnMQAAKDEAACkxAAAqMQAAKzEAACwxAAAtMQAALjEAAC8xAAAwMQAAMTEAADIxAAAzMQAAgzEAAIQxAACFMQAAhjEAAIcxAACIMQAAiTEAAIoxAACLMQAAjDEAAI0xAACOMQAAjzEAAJAxAACRMQAAkjEAAOIxAADjMQAA5DEAAOUxAADmMQAA5zEAAOgxAADpMQAA6jEAAOsxAADsMQAA7TEAAO4xAADvMQAA8DEAAPExAABBMgAAQjIAAEMyAABEMgAARTIAAEYyAABHMgAASDIAAEkyAABKMgAASzIAAEwyAABNMgAATjIAAE8yAABQMgAAoDIAAKEyAACiMgAAozIAAKQyAAClMgAApjIAAKcyAACoMgAAqTIAAKoyAACrMgAArDIAAK0yAACuMgAArzIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":48,
-                 "y":128
-                }, 
-                {
-                 "data":"djAAAHcwAAB4MAAAeTAAAHowAAB7MAAAfDAAAH0wAAB+MAAAfzAAAIAwAACBMAAAgjAAAIMwAACEMAAAhTAAANUwAADWMAAA1zAAANgwAADZMAAA2jAAANswAADcMAAA3TAAAN4wAADfMAAA4DAAAOEwAADiMAAA4zAAAOQwAAA0MQAANTEAADYxAAA3MQAAODEAADkxAAA6MQAAOzEAADwxAAA9MQAAPjEAAD8xAABAMQAAQTEAAEIxAABDMQAAkzEAAJQxAACVMQAAljEAAJcxAACYMQAAmTEAAJoxAACbMQAAnDEAAJ0xAACeMQAAnzEAAKAxAAChMQAAojEAAPIxAADzMQAA9DEAAPUxAAD2MQAA9zEAAPgxAAD5MQAA+jEAAPsxAAD8MQAA\/TEAAP4xAAD\/MQAAADIAAAEyAABRMgAAUjIAAFMyAABUMgAAVTIAAFYyAABXMgAAWDIAAFkyAABaMgAAWzIAAFwyAABdMgAAXjIAAF8yAABgMgAAsDIAALEyAACyMgAAszIAALQyAAC1MgAAtjIAALcyAAC4MgAAuTIAALoyAAC7MgAAvDIAAL0yAAC+MgAAvzIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":64,
-                 "y":128
-                }, 
-                {
-                 "data":"hjAAAIcwAACIMAAAiTAAAIowAACLMAAAjDAAAI0wAACOMAAAjzAAAJAwAACRMAAAkjAAAJMwAACUMAAAlTAAAOUwAADmMAAA5zAAAOgwAADpMAAA6jAAAOswAADsMAAA7TAAAO4wAADvMAAA8DAAAPEwAADyMAAA8zAAAPQwAABEMQAARTEAAEYxAABHMQAASDEAAEkxAABKMQAASzEAAEwxAABNMQAATjEAAE8xAABQMQAAUTEAAFIxAABTMQAAozEAAKQxAAClMQAApjEAAKcxAACoMQAAqTEAAKoxAACrMQAArDEAAK0xAACuMQAArzEAALAxAACxMQAAsjEAAAIyAAADMgAABDIAAAUyAAAGMgAABzIAAAgyAAAJMgAACjIAAAsyAAAMMgAADTIAAA4yAAAPMgAAEDIAABEyAABhMgAAYjIAAGMyAABkMgAAZTIAAGYyAABnMgAAaDIAAGkyAABqMgAAazIAAGwyAABtMgAAbjIAAG8yAABwMgAAwDIAAMEyAADCMgAAwzIAAMQyAADFMgAAxjIAAMcyAADIMgAAyTIAAMoyAADLMgAAzDIAAM0yAADOMgAAzzIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":80,
-                 "y":128
-                }, 
-                {
-                 "data":"ljAAAJcwAACYMAAAmTAAAJowAACbMAAAnDAAAJ0wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPUwAAD2MAAA9zAAAPgwAAD5MAAA+jAAAPswAAD8MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABUMQAAVTEAAFYxAABXMQAAWDEAAFkxAABaMQAAWzEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAszEAALQxAAC1MQAAtjEAALcxAAC4MQAAuTEAALoxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIyAAATMgAAFDIAABUyAAAWMgAAFzIAABgyAAAZMgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABxMgAAcjIAAHMyAAB0MgAAdTIAAHYyAAB3MgAAeDIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0DIAANEyAADSMgAA0zIAANQyAADVMgAA1jIAANcyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":96,
-                 "y":128
-                }],
-         "encoding":"base64",
-         "height":144,
-         "name":"Tile Layer 1",
-         "opacity":1,
-         "startx":0,
-         "starty":0,
-         "type":"tilelayer",
-         "visible":true,
-         "width":112,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":23,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":24,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":25,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":26,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":27,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":28,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":680
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":29,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":680
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":30,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":721
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":31,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":720
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":32,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":680
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":33,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":760
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":34,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":760
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":35,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":801
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":36,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":800
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":37,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":760
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":38,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":840
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":39,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":840
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":40,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":881
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":41,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":880
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":42,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":840
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":43,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":920
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":44,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":920
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":45,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":961
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":46,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":960
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":47,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":920
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":54,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":680
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":55,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":721
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":59,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":760
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":60,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":801
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":64,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":840
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":65,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":881
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":69,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":920
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":70,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":961
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":73,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":74,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":75,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":76,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":77,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":78,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":79,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":80,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":81,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":82,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":83,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":84,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":85,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":86,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":87,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":88,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":89,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":90,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":91,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":92,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":93,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":94,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":95,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":96,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":97,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":98,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":99,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":100,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":101,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":102,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":103,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":104,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":105,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":106,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":107,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":108,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":109,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":110,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":111,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":112,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":113,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":114,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":115,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":116,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":117,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":118,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":119,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":120,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":121,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":122,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":123,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":124,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":125,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":126,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":127,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":128,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":129,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":130,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":131,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":132,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":133,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":134,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":135,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":136,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":137,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":138,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":139,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":140,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":141,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":142,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":143,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":144,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":145,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":146,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":147,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":148,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":149,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":150,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":151,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":152,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":153,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":154,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":155,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":156,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":157,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":158,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":159,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":160,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":161,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":162,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":163,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":164,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":165,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":166,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":167,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":168,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":169,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":170,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":171,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":172,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":173,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":174,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":175,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":176,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":177,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":178,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":179,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":180,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":181,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":182,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":183,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":184,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":185,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":186,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":187,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":188,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":189,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":190,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":191,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":192,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":193,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":194,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":195,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":196,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":197,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":198,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":199,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":600
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":200,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":641
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":201,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":640
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":202,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":600
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":203,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":204,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":205,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":206,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":207,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":208,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":209,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":210,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":211,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":212,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":213,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":214,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":215,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":216,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":217,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":218,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":219,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":220,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":221,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":222,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":223,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":224,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":225,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":226,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":227,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":228,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":229,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":230,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":231,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":232,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":233,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":234,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":235,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":236,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":237,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":238,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":239,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":240,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":241,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":242,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":243,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":244,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":245,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":246,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":247,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":248,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":249,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":250,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":251,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":252,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":253,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":254,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":255,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":256,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":257,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":258,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":259,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":260,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":261,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":262,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":263,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":264,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":265,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":266,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":267,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":268,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":269,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":270,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":271,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":272,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":273,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":274,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":275,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":276,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":277,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":278,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":279,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":280,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":281,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":282,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":283,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":284,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":285,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":286,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":287,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":288,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":289,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":290,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":291,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":292,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":293,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":294,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":295,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":296,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":297,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":298,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":299,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":300,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":301,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":302,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":303,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":304,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":305,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":306,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":307,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":308,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":309,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":310,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":311,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":312,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":313,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":314,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":315,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":316,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":317,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":318,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":319,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":320,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":321,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":322,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":323,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":324,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":325,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":326,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":327,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":328,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":329,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":330,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":463,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":464,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":465,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":466,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":467,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":468,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":469,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":470,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":471,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":472,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":473,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":474,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":475,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":476,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":477,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":478,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":479,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":480,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":481,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":482,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":483,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":484,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":485,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":486,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":487,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":488,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":489,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":490,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":491,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":492,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":493,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":494,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":495,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":496,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":497,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":498,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":499,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":500,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":501,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":502,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":503,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":504,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":505,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":506,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":507,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":508,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":509,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":510,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":511,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":512,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":513,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":514,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":515,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":516,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":517,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":518,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":519,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":520,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":521,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":522,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":523,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":524,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":525,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":526,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":527,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":528,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":529,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":530,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":531,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":532,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":533,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":534,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":535,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":536,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":537,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":538,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":539,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":540,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":541,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":542,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":543,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":544,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":545,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":546,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":547,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":548,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":549,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":550,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":551,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":552,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":553,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":554,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":555,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":556,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":557,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":558,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":559,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":560,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":561,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":562,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":563,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":564,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":565,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":566,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":567,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":568,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":569,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":570,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":571,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":572,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":573,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":574,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":575,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":576,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":577,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":578,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":579,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":580,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":581,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":582,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":583,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":584,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":585,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":586,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":587,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":588,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":589,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":590,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":591,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":592,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":593,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":594,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":595,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":596,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":597,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":598,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":599,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":600,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":601,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":602,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":603,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":604,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":605,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":606,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":607,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":608,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":609,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":610,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":611,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":612,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":613,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":614,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":615,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":616,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":617,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":618,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":619,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":620,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":621,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":622,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":623,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":624,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":625,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":626,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":627,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":628,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":629,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":630,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":631,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":632,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":633,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":634,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":635,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":636,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":637,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":638,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":639,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":640,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":641,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":642,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":643,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":644,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":645,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":646,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":647,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":648,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":649,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":650,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":651,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":652,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":653,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":654,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":655,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":656,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":657,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":658,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":659,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":660,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":661,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":662,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":663,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":664,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":665,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":666,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":667,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":668,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":669,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":670,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":671,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":672,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":673,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":674,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":675,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":676,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":677,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":678,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":679,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":680,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":681,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":682,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":683,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":684,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":685,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":686,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":687,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":688,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":689,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":690,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":691,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":692,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":693,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":694,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":695,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":696,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":697,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":698,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":699,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":700,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":701,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":702,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":703,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":704,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":705,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":706,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":707,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":708,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":709,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":710,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":711,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":712,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":713,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":714,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":715,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":716,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":717,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":718,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":719,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":720,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":721,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":722,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":723,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":724,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":725,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2320,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":726,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2280,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":727,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":728,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":729,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":730,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":731,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":732,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":733,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":734,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":735,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":736,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":737,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2400,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":738,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2360,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":739,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":740,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":741,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2480,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":742,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2440,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":743,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":744,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":745,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":746,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":747,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":748,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":749,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":750,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2520,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":751,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":752,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":753,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":754,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":755,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":756,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":757,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":758,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":759,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":760,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":761,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":762,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":763,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":764,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":765,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":766,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":767,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":768,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":769,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":770,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":771,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":772,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":773,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":774,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":775,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":776,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":777,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":778,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":779,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":780,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":781,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":782,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2560,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":783,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":784,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":785,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":786,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":787,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":788,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":789,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":790,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":791,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":792,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":793,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":794,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":795,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":796,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":797,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":798,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":807,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":808,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":809,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":810,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":811,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":812,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":813,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":814,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":815,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":816,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":817,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":818,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":819,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":680
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":822,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":720
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":823,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":824,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":825,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":826,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":827,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":760
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":830,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":800
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":831,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":832,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":833,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":834,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":835,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":836,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":837,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2640,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":838,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2600,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":839,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":840,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":841,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":842,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":843,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":840
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":846,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":880
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":847,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":848,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":849,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2720,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":850,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2680,
-                 "y":960
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":851,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":920
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":854,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2760,
-                 "y":960
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":863,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1001
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":864,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1000
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":865,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1040
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":866,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1040
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":867,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1081
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":868,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1080
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":869,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1040
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":870,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1121
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":871,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1120
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":872,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1160
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":873,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1160
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":874,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1201
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":875,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1200
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":876,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":877,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":878,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":879,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":880,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":881,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":882,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":883,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":884,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":885,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":886,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":887,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":888,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":889,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":890,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":891,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":892,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":893,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":894,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":895,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":896,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":897,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":898,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":899,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":900,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":901,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":902,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":903,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":904,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":905,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":906,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":907,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":908,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":909,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":910,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":911,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":912,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":913,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":914,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":915,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":916,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":917,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":918,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":919,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":920,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":921,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":922,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":923,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":924,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":925,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":926,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":927,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":928,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":929,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":930,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":931,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":932,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":933,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":934,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":935,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":936,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":937,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":938,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":939,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":940,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":941,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":942,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":943,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":944,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":945,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":946,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":947,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":948,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":949,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":950,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":951,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":952,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":953,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":954,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":955,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":956,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":957,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":958,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":959,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":960,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":961,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":962,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":963,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":964,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":965,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":966,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":967,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":968,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":969,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":970,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":971,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":972,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":973,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":974,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":975,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":976,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":977,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":978,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":979,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":980,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":981,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":982,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1000
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":983,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":984,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":985,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":986,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":987,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":988,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1040
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":989,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":990,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1080
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":991,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":992,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":993,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":994,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":995,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":996,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":997,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":998,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":999,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1000,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1001,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1002,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1003,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1004,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1005,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1006,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1007,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1008,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1009,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1010,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1011,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1012,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1013,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1014,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1015,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1016,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1017,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1018,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1019,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1020,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1021,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1022,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1023,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1024,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1025,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1026,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1027,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1028,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1029,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1030,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1031,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1032,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1033,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1034,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1035,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1036,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1037,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1038,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1039,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1040,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1041,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1042,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1043,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1044,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1045,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1046,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1047,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1048,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1049,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1050,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1051,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1052,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1053,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1054,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1055,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1056,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1057,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1058,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1059,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1060,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1061,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1062,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1063,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1064,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1065,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1066,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1067,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1068,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1069,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1070,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1071,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1072,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1073,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1074,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1075,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1076,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1077,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1078,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1079,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1080,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1081,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1082,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1083,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1084,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1085,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1086,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1087,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1088,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1089,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1090,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1091,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1092,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1093,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1094,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1095,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1096,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1120
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1097,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1098,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1099,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1100,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1101,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1102,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1160
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1103,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1200
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1104,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1200
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":1105,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1240
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":1106,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1240
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":1107,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":720,
-                 "y":1281
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":1108,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1280
-                }, 
-                {
-                 "gid":13115,
-                 "height":40,
-                 "id":1109,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":680,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1110,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1111,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1112,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":800,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1113,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":760,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1114,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1115,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1116,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":880,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1117,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":840,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1118,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1119,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1120,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":960,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1121,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":920,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1122,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1123,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1124,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1040,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1125,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1000,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1126,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1127,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1128,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1120,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1129,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1080,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1130,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1131,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1132,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1200,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1133,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1160,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1134,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1135,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1136,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1280,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1137,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1240,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1138,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1139,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1140,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1360,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1141,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1320,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1142,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1143,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1144,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1440,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1145,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1400,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1146,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1147,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1148,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1520,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1149,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1480,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1150,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1151,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1152,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1600,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1153,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1560,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1154,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1155,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1156,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1680,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1157,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1640,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1158,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1159,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1160,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1760,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1161,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1720,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1162,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1163,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1164,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1840,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1165,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1800,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1166,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1167,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1168,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1920,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1169,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1880,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1170,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1171,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1172,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2000,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1173,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":1960,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1174,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1175,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1176,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2080,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1177,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2040,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1178,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1179,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1180,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2160,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1181,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2120,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1182,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1183,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1240
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1184,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2240,
-                 "y":1280
-                }, 
-                {
-                 "gid":579,
-                 "height":40,
-                 "id":1185,
-                 "name":"",
-                 "rotation":0,
-                 "type":"walk",
-                 "visible":true,
-                 "width":40,
-                 "x":2200,
-                 "y":1280
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextobjectid":1186,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.1.6",
- "tileheight":40,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/level\/bedroom\/bedroom_grid2.json"
-        }, 
-        {
-         "columns":14,
-         "firstgid":13016,
-         "image":"..\/..\/assets\/game_images\/textures\/black_dot.png",
-         "imageheight":586,
-         "imagewidth":596,
-         "margin":0,
-         "name":"wall",
-         "spacing":0,
-         "tilecount":196,
-         "tileheight":40,
-         "tilewidth":40
-        }],
- "tilewidth":40,
- "type":"map",
- "version":1,
- "width":106
-}
-},{}],19:[function(require,module,exports){
+},{"pixi.js":251}],20:[function(require,module,exports){
 (function (global){
-const PIXI = require('pixi.js');
-// const spriteHelper = require('../utils/spriteHelper.js');
-const pathfinderData = require('./bedroom_grid8.json')
+  const PIXI = require('pixi.js');
+// // const spriteHelper = require('../utils/spriteHelper.js');
+// const pathfinderData = require('./bedroom_grid8.json')
 
 const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
 
-console.log(pathfinderData.layers[1].objects);
+// // console.log(pathfinderData.layers[1].objects);
 
-const renderTile = (array) => {
+global.grid_container = new PIXI.Container();
+global.grid_container.name = 'enemy_container';
 
-  array.forEach((elem) => {
-    const tile = PIXI.Sprite.fromFrame('black_dot');
-    tile.height = elem.height;
-    tile.width = elem.width;
-    tile.position.x = elem.x;
-    tile.position.y = elem.y;
-    global.viewport.addChild(tile);
-  });
-};
+module.exports.lay_down_grid = () => {
+  
+  let current_x = -115;
+  let current_y = -115;
 
-renderTile(pathfinderData.layers[1].objects);
+  const slantedWall = PIXI.Sprite.fromFrame('black_dot');
+  slantedWall.name = 'slanted wall';
+  // slantedWall.width = 300;
+  // slantedWall.height = 300;
+  slantedWall.position.set(0, 0);
+  slantedWall.alpha = 0
+  global.viewport.addChild(slantedWall);
 
-const makeTwoDimentional = (array) => {
-  array.sort((a, b) => a.id - b.id);
-  for (let i = 0; i < array.length; i++) {
-    if(array[i].type === 'walk') {
-      array[i] = 0;
-    } else {
-      array[i] = 1;
+  const grid = [];
+  let line_grid = [];
+
+  for (let i = 0; i < 400; i++) {
+
+    if(i % 20 === 0 && i !== 0){
+      grid.push(line_grid);
+      line_grid = [];
+      current_y += 50;
+      current_x = -115;
     }
+    const grid_cell = PIXI.Sprite.fromFrame('black_dot');
+    grid_cell.width = 50;
+    grid_cell.height = 50;
+    grid_cell.x = current_x;
+    grid_cell.y = current_y;
+    current_x += 50;
+    
+    if(slantedWall.containsPoint(grid_cell.getGlobalPosition())){
+      grid_cell.alpha = 0.3
+    }
+    line_grid.push(grid_cell);
+    global.grid_container.addChild(grid_cell);
   }
-  const newArr = [];
-  while (array.length) newArr.push(array.splice(0, 55));
-  return newArr;
+  console.log(grid);
+  global.viewport.addChild(global.grid_container);
+
 }
 
-const thingArray = makeTwoDimentional(pathfinderData.layers[1].objects);
+// const renderTile = (array) => {
 
-const grid = [
-  [0,0,1,0,0],
-  [0,0,1,0,0],
-  [0,0,1,0,0],
-  [0,0,1,0,0],
-  [0,0,0,0,0],
-];
+//   array.forEach((elem) => {
+//     const tile = PIXI.Sprite.fromFrame('black_dot');
+//     tile.height = elem.height;
+//     tile.width = elem.width;
+//     tile.position.x = elem.x;
+//     tile.position.y = elem.y;
+//     global.viewport.addChild(tile);
+//   });
+// };
 
-console.log(grid);
-console.log(thingArray);
+// renderTile(pathfinderData.layers[1].objects);
 
-easystar.setGrid(thingArray);
-easystar.setAcceptableTiles([0]);
-easystar.setIterationsPerCalculation(1000);
+// const makeTwoDimentional = (array) => {
+//   array.sort((a, b) => a.id - b.id);
+//   for (let i = 0; i < array.length; i++) {
+//     if(array[i].type === 'walk') {
+//       array[i] = 0;
+//     } else {
+//       array[i] = 1;
+//     }
+//   }
+//   const newArr = [];
+//   while (array.length) newArr.push(array.splice(0, 55));
+//   return newArr;
+// }
 
-easystar.findPath(5, 5, 54, 17, function( path ) {
-  if (path === null) {
-		console.log("Path was not found.");
-	} else {
-    console.log(path);
-    path.forEach((elem)=>{
+// const thingArray = makeTwoDimentional(pathfinderData.layers[1].objects);
+
+// const grid = [
+//   [0,0,1,0,0],
+//   [0,0,1,0,0],
+//   [0,0,1,0,0],
+//   [0,0,1,0,0],
+//   [0,0,0,0,0],
+// ];
+
+// console.log(grid);
+// console.log(thingArray);
+
+// easystar.setGrid(thingArray);
+// easystar.setAcceptableTiles([0]);
+// easystar.setIterationsPerCalculation(1000);
+
+// easystar.findPath(5, 5, 54, 17, function( path ) {
+//   if (path === null) {
+// 		console.log("Path was not found.");
+// 	} else {
+//     console.log(path);
+//     path.forEach((elem)=>{
       
-      const mover = PIXI.Sprite.fromFrame('black_dot');
-      mover.width =20;
-      mover.height =20;
+//       const mover = PIXI.Sprite.fromFrame('black_dot');
+//       mover.width =20;
+//       mover.height =20;
       
-      mover.position.set(elem.x*10, elem.y*10);
-      global.viewport.addChild(mover);
-    })
-	}
-});
-setInterval(()=>{
-  easystar.calculate();
-},1000)
+//       mover.position.set(elem.x*10, elem.y*10);
+//       global.viewport.addChild(mover);
+//     })
+// 	}
+// });
+// setInterval(()=>{
+//   easystar.calculate();
+// },1000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./bedroom_grid8.json":18,"easystarjs":68,"pixi.js":250}],20:[function(require,module,exports){
+},{"easystarjs":69,"pixi.js":251}],21:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
-const doorHelper = require('../utils/doorHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper.js');
-const documentHelper = require('../utils/documentHelper.js');
+const sprite_helper = require('../utils/sprite_helper.js');
+const door_helper = require('../utils/door_helper.js');
+const bow_helper = require('../weapons/bow/bow_helper.js');
+const document_helper = require('../utils/document_helper.js');
 
 global.Player = {
 
@@ -13982,9 +2280,9 @@ function mouseUp() {
     global.app.ticker.remove(countDown);
 
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
-      const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
-      bowHelper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
+      bow_helper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
     }
   });
 }
@@ -13992,15 +2290,15 @@ function mouseUp() {
 function mouseMove() {
   global.viewport.on('mousemove', (event) => {
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = documentHelper.mousePositionFromScreen(event.data.global, global.viewport);
-      const mousePositionPlayer = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite, global.viewport);
+      const mousePosition = document_helper.mousePositionFromScreen(event.data.global, global.viewport);
+      const mousePositionPlayer = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite, global.viewport);
 
       aimingLine.clear();
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
       aimingLine.lineStyle(3, 0xffffff, 0)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
-      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePositionPlayer);
+      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);
     }
   });
 }
@@ -14012,10 +2310,10 @@ function mouseDown() {
     global.app.ticker.add(countDown);
 
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = documentHelper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
       global.Player.sprite._textures = global.Player.sprite.ready._textures;
-      global.Player.sprite.rotation = spriteHelper.angle(global.Player.sprite, mousePosition);
+      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePosition);
       global.Player.sprite.gotoAndPlay(0);
     }
   });
@@ -14027,7 +2325,7 @@ function addPlayerControls() {
   }, true);
 
   global.document.addEventListener('keydown', (e) => {
-    const key = documentHelper.getDirection(e.key);
+    const key = document_helper.getDirection(e.key);
 
     if (!global.Player.moveable) return;
 
@@ -14055,17 +2353,17 @@ function addPlayerControls() {
       global.Player.sprite._textures = global.Player.sprite.walk._textures;
     }
 
-    doorHelper.hit(global.Player.sprite, global.doors.children[0]);
+    door_helper.hit(global.Player.sprite, global.doors.children[0]);
 
-    spriteHelper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
-      .then((arrow) => {
-        if (arrow.pickup) {
-          global.Player.ammo += 1;
-          arrow.destroy();
-        }
-      });
+    // sprite_helper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
+    //   .then((arrow) => {
+    //     if (arrow.pickup) {
+    //       global.Player.ammo += 1;
+    //       arrow.destroy();
+    //     }
+    //   });
 
-    spriteHelper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
       .then(() => {
         if (key === 'up') global.Player.sprite.y += global.Player.movement_speed;
         if (key === 'down') global.Player.sprite.y -= global.Player.movement_speed;
@@ -14073,10 +2371,10 @@ function addPlayerControls() {
         if (key === 'right') global.Player.sprite.x -= global.Player.movement_speed;
       });
 
-    spriteHelper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
       .then(pad => pad.action());
 
-    spriteHelper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
       .then((critter) => {
         global.Player.inventory.push(critter);
 
@@ -14085,7 +2383,7 @@ function addPlayerControls() {
         critter.destroy();
       });
 
-    spriteHelper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
+    sprite_helper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
       .then((item) => {
         if (key === 'up') {
           global.Player.sprite.y += global.Player.movement_speed - item.weight;
@@ -14166,7 +2464,7 @@ module.exports.remove_controls = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/documentHelper.js":21,"../utils/doorHelper.js":22,"../utils/spriteHelper.js":23,"../weapons/bow/bowHelper.js":25,"pixi.js":250}],21:[function(require,module,exports){
+},{"../utils/document_helper.js":22,"../utils/door_helper.js":23,"../utils/sprite_helper.js":24,"../weapons/bow/bow_helper.js":26,"pixi.js":251}],22:[function(require,module,exports){
 
 const keymap = {
   w: 'up',
@@ -14191,10 +2489,10 @@ module.exports.mousePositionFromScreen = (event, viewport) => ({
   y: event.y - viewport.screenHeight / 2,
 });
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('./spriteHelper.js');
+const spriteHelper = require('./sprite_helper.js');
 
 module.exports.hit = (player, door) => {
   const trimmedDoorData = spriteHelper.trimVertexData(door);
@@ -14217,11 +2515,12 @@ module.exports.hit = (player, door) => {
   tween.start();
 };
 
-},{"./spriteHelper.js":23,"pixi.js":250}],23:[function(require,module,exports){
+},{"./sprite_helper.js":24,"pixi.js":251}],24:[function(require,module,exports){
 (function (global){
 
 
 const PIXI = require('pixi.js');
+// const intersect = require('yy-intersects');
 
 function distanceSquared(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow((x1 - x2)) + Math.pow(y1 - y2, 2));
@@ -14322,6 +2621,16 @@ module.exports.hitBoxContainerObj = (container, player) => new Promise((resolve)
   }
 });
 
+module.exports.global_container_hit = (container, sprite) => {
+  for (let a = 0; a < container.length; a++) {
+    const sprite_in_container = container[a];
+
+    if(sprite.containsPoint(sprite_in_container.getGlobalPosition())){
+      console.log('hitting something');
+    }
+  }
+};
+
 module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
   const vertexData = this.trimVertexData(sprite);
 
@@ -14330,8 +2639,10 @@ module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
   }
 });
 
+
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":250}],24:[function(require,module,exports){
+},{"pixi.js":251}],25:[function(require,module,exports){
 (function (global){
 
 const filters = require('pixi-filters');
@@ -14409,17 +2720,15 @@ module.exports.clear = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":100,"pixi.js":250}],25:[function(require,module,exports){
+},{"pixi-filters":101,"pixi.js":251}],26:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
-const spriteHelper = require('../../utils/spriteHelper.js');
+const sprite_helper = require('../../utils/sprite_helper.js');
+const dialogUtil = require('../../dialog/dialogUtil.js');
 
-global.arrowContainer = new PIXI.Container();
-global.arrowContainer.name = 'arrow containter';
-
-// const c = global.document.createElement('audio');
-// c.play();
+global.arrow_container = new PIXI.Container();
+global.arrow_container.name = 'arrow containter';
 
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
@@ -14432,69 +2741,82 @@ const arrowSounds = [
   new Audio('audio/arrow_hit_07.wav'),
 ];
 
-module.exports.arrowManagement = (power, origin, target) => {
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(origin.position.x, origin.position.y)
-    .lineTo(target.x, target.y);
+module.exports.init_arrow_container = () => {
+  global.viewport.addChild(global.arrow_container);
+}
 
-  // spriteHelper.drawPathAndShow(pathOne)
-
+module.exports.create_arrow = () => {
   const arrow = PIXI.Sprite.fromFrame('arrow');
+
   arrow.width /= 2;
   arrow.height /= 3;
   arrow.anchor.set(0.9);
-  arrow.rotation = spriteHelper.angle(origin, target);
 
-  const arrowTween = PIXI.tweenManager.createTween(arrow);
-  arrowTween.path = pathOne;
-  arrowTween.time = power;
-  arrowTween.easing = PIXI.tween.Easing.linear();
-  arrowTween.start();
-  arrowTween.on('end', () => {
+  return arrow;
+}
+
+module.exports.create_path = (origin, target) => {
+  const arrow_path = new PIXI.tween.TweenPath()
+    .moveTo(origin.position.x, origin.position.y)
+    .lineTo(target.x, target.y);
+  
+  return arrow_path
+}
+
+module.exports.create_arrow_tween = (arrow, power, arrow_path) => {
+  const arrow_tween = PIXI.tweenManager.createTween(arrow);
+
+  arrow_tween.path = arrow_path;
+  arrow_tween.time = power;
+  arrow_tween.easing = PIXI.tween.Easing.linear();
+
+  return arrow_tween;
+}
+
+module.exports.arrowManagement = (power, origin, target) => {
+  // make this not fire each time
+  module.exports.init_arrow_container()
+
+  const arrow = module.exports.create_arrow();
+  arrow.rotation = sprite_helper.angle(origin, target);
+
+  const arrow_path = module.exports.create_path(origin,target)
+  const arrow_tween = module.exports.create_arrow_tween(arrow, power, arrow_path)
+  arrow_tween.start();
+
+  arrow_tween.on('end', () => {
     arrow.pickup = true;
   });
+  
+  arrow_tween.on('update', () => {
 
-  arrowTween.on('update', () => {
-    spriteHelper.hitBoxContainerObj(global.collisionItems.children, arrow)
-      .then(() => {
-        arrow.pickup = true;
-        arrowSounds[Math.floor((Math.random() * 7) + 1)].play();
+    for (let i = 0; i < global.enemy_container.children.length; i++) {
+      const sprite_in_container = global.enemy_container.children[i];
+  
+      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+        console.log('hit');
+        dialogUtil.renderText(sprite_in_container, 'I am hit');
+        console.log(sprite_in_container)
+        sprite_in_container.on_hit()
+        arrow_tween.stop();
+      }
+    }
 
-        setTimeout(() => {
-          arrowTween.stop();
-        }, 15);
-      });
-
-    spriteHelper.hitBoxContainerObj(global.critterContainer.children, arrow)
-      .then((critter) => {
-        arrow.pickup = true;
-        arrowTween.stop();
-
-        const currentCritter = critter;
-        currentCritter.texture = critter.dead;
-        currentCritter.stop();
-        currentCritter.mouseDeathSound.play();
-
-        PIXI.tweenManager.getTweensForTarget(critter)[0].active = false;
-      });
-
-    spriteHelper.hitBoxContainerObj(global.enemyContainer.children, arrow)
-      .then((enemy) => {
-        arrow.pickup = true;
-
-        arrowTween.stop();
-        enemy.stop();
-
-        PIXI.tweenManager.getTweensForTarget(enemy)[0].active = false;
-      });
+    for (let i = 0; i < global.collisionItems.children.length; i++) {
+      const sprite_in_container = global.collisionItems.children[i];
+  
+      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+        console.log('hit on collision item');
+        arrow_tween.stop()
+      }
+    }
   });
 
-  global.arrowContainer.addChild(arrow);
-  global.viewport.addChild(global.arrowContainer);
+  global.arrow_container.addChild(arrow);
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utils/spriteHelper.js":23,"pixi.js":250}],26:[function(require,module,exports){
+},{"../../dialog/dialogUtil.js":5,"../../utils/sprite_helper.js":24,"pixi.js":251}],27:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
@@ -14534,7 +2856,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":250}],27:[function(require,module,exports){
+},{"pixi.js":251}],28:[function(require,module,exports){
 /*!
  * @pixi/filter-adjustment - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14545,7 +2867,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(t.__filters={},t.PIXI)}(this,function(t,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float gamma;\nuniform float contrast;\nuniform float saturation;\nuniform float brightness;\nuniform float red;\nuniform float green;\nuniform float blue;\nuniform float alpha;\n\nvoid main(void)\n{\n    vec4 c = texture2D(uSampler, vTextureCoord);\n\n    if (c.a > 0.0) {\n        c.rgb /= c.a;\n\n        vec3 rgb = pow(c.rgb, vec3(1. / gamma));\n        rgb = mix(vec3(.5), mix(vec3(dot(vec3(.2125, .7154, .0721), rgb)), rgb, saturation), contrast);\n        rgb.r *= red;\n        rgb.g *= green;\n        rgb.b *= blue;\n        c.rgb = rgb * brightness;\n\n        c.rgb *= c.a;\n    }\n\n    gl_FragColor = c * alpha;\n}\n",i=function(t){function n(n){t.call(this,r,e),Object.assign(this,{gamma:1,saturation:1,contrast:1,brightness:1,red:1,green:1,blue:1,alpha:1},n)}return t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n,n.prototype.apply=function(t,n,r,e){this.uniforms.gamma=Math.max(this.gamma,1e-4),this.uniforms.saturation=this.saturation,this.uniforms.contrast=this.contrast,this.uniforms.brightness=this.brightness,this.uniforms.red=this.red,this.uniforms.green=this.green,this.uniforms.blue=this.blue,this.uniforms.alpha=this.alpha,t.applyFilter(this,n,r,e)},n}(n.Filter);t.AdjustmentFilter=i,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],28:[function(require,module,exports){
+},{"pixi.js":251}],29:[function(require,module,exports){
 /*!
  * @pixi/filter-advanced-bloom - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14556,7 +2878,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js"),require("@pixi/filter-kawase-blur")):"function"==typeof define&&define.amd?define(["exports","pixi.js","@pixi/filter-kawase-blur"],t):t(e.__filters={},e.PIXI,e.PIXI.filters)}(this,function(e,t,r){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform float threshold;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    // A simple & fast algorithm for getting brightness.\n    // It's inaccuracy , but good enought for this feature.\n    float _max = max(max(color.r, color.g), color.b);\n    float _min = min(min(color.r, color.g), color.b);\n    float brightness = (_max + _min) * 0.5;\n\n    if(brightness > threshold) {\n        gl_FragColor = color;\n    } else {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\n    }\n}\n",n=function(e){function t(t){void 0===t&&(t=.5),e.call(this,o,i),this.threshold=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var r={threshold:{configurable:!0}};return r.threshold.get=function(){return this.uniforms.threshold},r.threshold.set=function(e){this.uniforms.threshold=e},Object.defineProperties(t.prototype,r),t}(t.Filter),l="uniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform sampler2D bloomTexture;\nuniform float bloomScale;\nuniform float brightness;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    color.rgb *= brightness;\n    vec4 bloomColor = vec4(texture2D(bloomTexture, vTextureCoord).rgb, 0.0);\n    bloomColor.rgb *= bloomScale;\n    gl_FragColor = color + bloomColor;\n}\n",s=function(e){function i(i){e.call(this,o,l),"number"==typeof i&&(i={threshold:i}),i=Object.assign({threshold:.5,bloomScale:1,brightness:1,kernels:null,blur:8,quality:4,pixelSize:1,resolution:t.settings.RESOLUTION},i),this.bloomScale=i.bloomScale,this.brightness=i.brightness;var s=i.kernels,u=i.blur,a=i.quality,c=i.pixelSize,h=i.resolution;this._extractFilter=new n(i.threshold),this._extractFilter.resolution=h,this._blurFilter=s?new r.KawaseBlurFilter(s):new r.KawaseBlurFilter(u,a),this.pixelSize=c,this.resolution=h}e&&(i.__proto__=e),i.prototype=Object.create(e&&e.prototype),i.prototype.constructor=i;var s={resolution:{configurable:!0},threshold:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return i.prototype.apply=function(e,t,r,o,i){var n=e.getRenderTarget(!0);this._extractFilter.apply(e,t,n,!0,i);var l=e.getRenderTarget(!0);this._blurFilter.apply(e,n,l,!0,i),this.uniforms.bloomScale=this.bloomScale,this.uniforms.brightness=this.brightness,this.uniforms.bloomTexture=l,e.applyFilter(this,t,r,o),e.returnRenderTarget(l),e.returnRenderTarget(n)},s.resolution.get=function(){return this._resolution},s.resolution.set=function(e){this._resolution=e,this._extractFilter&&(this._extractFilter.resolution=e),this._blurFilter&&(this._blurFilter.resolution=e)},s.threshold.get=function(){return this._extractFilter.threshold},s.threshold.set=function(e){this._extractFilter.threshold=e},s.kernels.get=function(){return this._blurFilter.kernels},s.kernels.set=function(e){this._blurFilter.kernels=e},s.blur.get=function(){return this._blurFilter.blur},s.blur.set=function(e){this._blurFilter.blur=e},s.quality.get=function(){return this._blurFilter.quality},s.quality.set=function(e){this._blurFilter.quality=e},s.pixelSize.get=function(){return this._blurFilter.pixelSize},s.pixelSize.set=function(e){this._blurFilter.pixelSize=e},Object.defineProperties(i.prototype,s),i}(t.Filter);e.AdvancedBloomFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":44,"pixi.js":250}],29:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":45,"pixi.js":251}],30:[function(require,module,exports){
 /*!
  * @pixi/filter-ascii - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14567,7 +2889,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform float pixelSize;\nuniform sampler2D uSampler;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n    return floor( coord / size ) * size;\n}\n\nvec2 getMod(vec2 coord, vec2 size)\n{\n    return mod( coord , size) / size;\n}\n\nfloat character(float n, vec2 p)\n{\n    p = floor(p*vec2(4.0, -4.0) + 2.5);\n    if (clamp(p.x, 0.0, 4.0) == p.x && clamp(p.y, 0.0, 4.0) == p.y)\n    {\n        if (int(mod(n/exp2(p.x + 5.0*p.y), 2.0)) == 1) return 1.0;\n    }\n    return 0.0;\n}\n\nvoid main()\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    // get the rounded color..\n    vec2 pixCoord = pixelate(coord, vec2(pixelSize));\n    pixCoord = unmapCoord(pixCoord);\n\n    vec4 color = texture2D(uSampler, pixCoord);\n\n    // determine the character to use\n    float gray = (color.r + color.g + color.b) / 3.0;\n\n    float n =  65536.0;             // .\n    if (gray > 0.2) n = 65600.0;    // :\n    if (gray > 0.3) n = 332772.0;   // *\n    if (gray > 0.4) n = 15255086.0; // o\n    if (gray > 0.5) n = 23385164.0; // &\n    if (gray > 0.6) n = 15252014.0; // 8\n    if (gray > 0.7) n = 13199452.0; // @\n    if (gray > 0.8) n = 11512810.0; // #\n\n    // get the mod..\n    vec2 modd = getMod(coord, vec2(pixelSize));\n\n    gl_FragColor = color * character( n, vec2(-1.0) + modd * 2.0);\n\n}",t=function(e){function n(n){void 0===n&&(n=8),e.call(this,o,r),this.size=n}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.pixelSize},t.size.set=function(e){this.uniforms.pixelSize=e},Object.defineProperties(n.prototype,t),n}(n.Filter);e.AsciiFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],30:[function(require,module,exports){
+},{"pixi.js":251}],31:[function(require,module,exports){
 /*!
  * @pixi/filter-bevel - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14578,7 +2900,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float transformX;\nuniform float transformY;\nuniform vec3 lightColor;\nuniform float lightAlpha;\nuniform vec3 shadowColor;\nuniform float shadowAlpha;\n\nvoid main(void) {\n    vec2 transform = vec2(1.0 / filterArea) * vec2(transformX, transformY);\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    float light = texture2D(uSampler, vTextureCoord - transform).a;\n    float shadow = texture2D(uSampler, vTextureCoord + transform).a;\n\n    color.rgb = mix(color.rgb, lightColor, clamp((color.a - light) * lightAlpha, 0.0, 1.0));\n    color.rgb = mix(color.rgb, shadowColor, clamp((color.a - shadow) * shadowAlpha, 0.0, 1.0));\n    gl_FragColor = vec4(color.rgb * color.a, color.a);\n}\n",n=function(o){function n(t){void 0===t&&(t={}),o.call(this,r,i),this.uniforms.lightColor=new Float32Array(3),this.uniforms.shadowColor=new Float32Array(3),t=Object.assign({rotation:45,thickness:2,lightColor:16777215,lightAlpha:.7,shadowColor:0,shadowAlpha:.7},t),this.rotation=t.rotation,this.thickness=t.thickness,this.lightColor=t.lightColor,this.lightAlpha=t.lightAlpha,this.shadowColor=t.shadowColor,this.shadowAlpha=t.shadowAlpha}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var e={rotation:{configurable:!0},thickness:{configurable:!0},lightColor:{configurable:!0},lightAlpha:{configurable:!0},shadowColor:{configurable:!0},shadowAlpha:{configurable:!0}};return n.prototype._updateTransform=function(){this.uniforms.transformX=this._thickness*Math.cos(this._angle),this.uniforms.transformY=this._thickness*Math.sin(this._angle)},e.rotation.get=function(){return this._angle/t.DEG_TO_RAD},e.rotation.set=function(o){this._angle=o*t.DEG_TO_RAD,this._updateTransform()},e.thickness.get=function(){return this._thickness},e.thickness.set=function(o){this._thickness=o,this._updateTransform()},e.lightColor.get=function(){return t.utils.rgb2hex(this.uniforms.lightColor)},e.lightColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.lightColor)},e.lightAlpha.get=function(){return this.uniforms.lightAlpha},e.lightAlpha.set=function(o){this.uniforms.lightAlpha=o},e.shadowColor.get=function(){return t.utils.rgb2hex(this.uniforms.shadowColor)},e.shadowColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.shadowColor)},e.shadowAlpha.get=function(){return this.uniforms.shadowAlpha},e.shadowAlpha.set=function(o){this.uniforms.shadowAlpha=o},Object.defineProperties(n.prototype,e),n}(t.Filter);o.BevelFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],31:[function(require,module,exports){
+},{"pixi.js":251}],32:[function(require,module,exports){
 /*!
  * @pixi/filter-bloom - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14589,7 +2911,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(t.__filters={},t.PIXI)}(this,function(t,r){"use strict";var e=r.filters,i=e.BlurXFilter,l=e.BlurYFilter,u=e.AlphaFilter,n=function(t){function e(e,n,o,s){var b,f;void 0===e&&(e=2),void 0===n&&(n=4),void 0===o&&(o=r.settings.RESOLUTION),void 0===s&&(s=5),t.call(this),"number"==typeof e?(b=e,f=e):e instanceof r.Point?(b=e.x,f=e.y):Array.isArray(e)&&(b=e[0],f=e[1]),this.blurXFilter=new i(b,n,o,s),this.blurYFilter=new l(f,n,o,s),this.blurYFilter.blendMode=r.BLEND_MODES.SCREEN,this.defaultFilter=new u}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var n={blur:{configurable:!0},blurX:{configurable:!0},blurY:{configurable:!0}};return e.prototype.apply=function(t,r,e){var i=t.getRenderTarget(!0);this.defaultFilter.apply(t,r,e),this.blurXFilter.apply(t,r,i),this.blurYFilter.apply(t,i,e),t.returnRenderTarget(i)},n.blur.get=function(){return this.blurXFilter.blur},n.blur.set=function(t){this.blurXFilter.blur=this.blurYFilter.blur=t},n.blurX.get=function(){return this.blurXFilter.blur},n.blurX.set=function(t){this.blurXFilter.blur=t},n.blurY.get=function(){return this.blurYFilter.blur},n.blurY.set=function(t){this.blurYFilter.blur=t},Object.defineProperties(e.prototype,n),e}(r.Filter);t.BloomFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],32:[function(require,module,exports){
+},{"pixi.js":251}],33:[function(require,module,exports){
 /*!
  * @pixi/filter-bulge-pinch - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14600,7 +2922,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="uniform float radius;\nuniform float strength;\nuniform vec2 center;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nvoid main()\n{\n    vec2 coord = vTextureCoord * filterArea.xy;\n    coord -= center * dimensions.xy;\n    float distance = length(coord);\n    if (distance < radius) {\n        float percent = distance / radius;\n        if (strength > 0.0) {\n            coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\n        } else {\n            coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\n        }\n    }\n    coord += center * dimensions.xy;\n    coord /= filterArea.xy;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    gl_FragColor = color;\n}\n",o=function(e){function n(n,o,i){e.call(this,t,r),this.uniforms.dimensions=new Float32Array(2),this.center=n||[.5,.5],this.radius=o||100,this.strength=i||1}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={radius:{configurable:!0},strength:{configurable:!0},center:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,e.applyFilter(this,n,t,r)},o.radius.get=function(){return this.uniforms.radius},o.radius.set=function(e){this.uniforms.radius=e},o.strength.get=function(){return this.uniforms.strength},o.strength.set=function(e){this.uniforms.strength=e},o.center.get=function(){return this.uniforms.center},o.center.set=function(e){this.uniforms.center=e},Object.defineProperties(n.prototype,o),n}(n.Filter);e.BulgePinchFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],33:[function(require,module,exports){
+},{"pixi.js":251}],34:[function(require,module,exports){
 /*!
  * @pixi/filter-color-map - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14611,7 +2933,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform sampler2D colorMap;\n\nuniform float _mix;\nuniform float _size;\nuniform float _sliceSize;\nuniform float _slicePixelSize;\nuniform float _sliceInnerSize;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord.xy);\n\n    float sliceIndex = color.b * (_size - 1.0);\n    float zSlice0 = floor(sliceIndex);\n    float zSlice1 = ceil(sliceIndex);\n\n    float xOffset = _slicePixelSize * 0.5 + color.r * _sliceInnerSize;\n    float s0 = xOffset + zSlice0 * _sliceSize;\n    float s1 = xOffset + zSlice1 * _sliceSize;\n    vec4 slice0Color = texture2D(colorMap, vec2(s0, color.g));\n    vec4 slice1Color = texture2D(colorMap, vec2(s1, color.g));\n    vec4 adjusted = mix(slice0Color, slice1Color, fract(sliceIndex));\n\n    gl_FragColor = mix(color, adjusted, _mix);\n}\n",s=function(e){function s(i,s,r){void 0===s&&(s=!1),void 0===r&&(r=1),e.call(this,t,o),this._size=0,this._sliceSize=0,this._slicePixelSize=0,this._sliceInnerSize=0,this._scaleMode=null,this._nearest=!1,this.nearest=s,this.mix=r,this.colorMap=i}e&&(s.__proto__=e),s.prototype=Object.create(e&&e.prototype),s.prototype.constructor=s;var r={colorSize:{configurable:!0},colorMap:{configurable:!0},nearest:{configurable:!0}};return s.prototype.apply=function(e,i,t,o){this.uniforms._mix=this.mix,e.applyFilter(this,i,t,o)},r.colorSize.get=function(){return this._size},r.colorMap.get=function(){return this._colorMap},r.colorMap.set=function(e){e instanceof i.Texture||(e=i.Texture.from(e)),e&&e.baseTexture&&(e.baseTexture.scaleMode=this._scaleMode,e.baseTexture.mipmap=!1,this._size=e.height,this._sliceSize=1/this._size,this._slicePixelSize=this._sliceSize/this._size,this._sliceInnerSize=this._slicePixelSize*(this._size-1),this.uniforms._size=this._size,this.uniforms._sliceSize=this._sliceSize,this.uniforms._slicePixelSize=this._slicePixelSize,this.uniforms._sliceInnerSize=this._sliceInnerSize,this.uniforms.colorMap=e),this._colorMap=e},r.nearest.get=function(){return this._nearest},r.nearest.set=function(e){this._nearest=e,this._scaleMode=e?i.SCALE_MODES.NEAREST:i.SCALE_MODES.LINEAR;var t=this._colorMap;t&&t.baseTexture&&(t.baseTexture._glTextures={},t.baseTexture.scaleMode=this._scaleMode,t.baseTexture.mipmap=!1,t._updateID++,t.baseTexture.emit("update",t.baseTexture))},s.prototype.updateColorMap=function(){var e=this._colorMap;e&&e.baseTexture&&(e._updateID++,e.baseTexture.emit("update",e.baseTexture),this.colorMap=e)},s.prototype.destroy=function(i){this._colorMap&&this._colorMap.destroy(i),e.prototype.destroy.call(this)},Object.defineProperties(s.prototype,r),s}(i.Filter);e.ColorMapFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],34:[function(require,module,exports){
+},{"pixi.js":251}],35:[function(require,module,exports){
 /*!
  * @pixi/filter-color-replace - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14622,7 +2944,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(o.__filters={},o.PIXI)}(this,function(o,r){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec3 originalColor;\nuniform vec3 newColor;\nuniform float epsilon;\nvoid main(void) {\n    vec4 currentColor = texture2D(uSampler, vTextureCoord);\n    vec3 colorDiff = originalColor - (currentColor.rgb / max(currentColor.a, 0.0000000001));\n    float colorDistance = length(colorDiff);\n    float doReplace = step(colorDistance, epsilon);\n    gl_FragColor = vec4(mix(currentColor.rgb, (newColor + colorDiff) * currentColor.a, doReplace), currentColor.a);\n}\n",n=function(o){function n(r,n,t){void 0===r&&(r=16711680),void 0===n&&(n=0),void 0===t&&(t=.4),o.call(this,e,i),this.uniforms.originalColor=new Float32Array(3),this.uniforms.newColor=new Float32Array(3),this.originalColor=r,this.newColor=n,this.epsilon=t}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={originalColor:{configurable:!0},newColor:{configurable:!0},epsilon:{configurable:!0}};return t.originalColor.set=function(o){var e=this.uniforms.originalColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._originalColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._originalColor=r.utils.rgb2hex(e))},t.originalColor.get=function(){return this._originalColor},t.newColor.set=function(o){var e=this.uniforms.newColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._newColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._newColor=r.utils.rgb2hex(e))},t.newColor.get=function(){return this._newColor},t.epsilon.set=function(o){this.uniforms.epsilon=o},t.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(n.prototype,t),n}(r.Filter);o.ColorReplaceFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],35:[function(require,module,exports){
+},{"pixi.js":251}],36:[function(require,module,exports){
 /*!
  * @pixi/filter-convolution - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14633,7 +2955,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying mediump vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec2 texelSize;\nuniform float matrix[9];\n\nvoid main(void)\n{\n   vec4 c11 = texture2D(uSampler, vTextureCoord - texelSize); // top left\n   vec4 c12 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - texelSize.y)); // top center\n   vec4 c13 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y - texelSize.y)); // top right\n\n   vec4 c21 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y)); // mid left\n   vec4 c22 = texture2D(uSampler, vTextureCoord); // mid center\n   vec4 c23 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y)); // mid right\n\n   vec4 c31 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y + texelSize.y)); // bottom left\n   vec4 c32 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + texelSize.y)); // bottom center\n   vec4 c33 = texture2D(uSampler, vTextureCoord + texelSize); // bottom right\n\n   gl_FragColor =\n       c11 * matrix[0] + c12 * matrix[1] + c13 * matrix[2] +\n       c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +\n       c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];\n\n   gl_FragColor.a = c22.a;\n}\n",o=function(e){function t(t,o,n){e.call(this,r,i),this.uniforms.texelSize=new Float32Array(9),this.matrix=t,this.width=o,this.height=n}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var o={matrix:{configurable:!0},width:{configurable:!0},height:{configurable:!0}};return o.matrix.get=function(){return this.uniforms.matrix},o.matrix.set=function(e){this.uniforms.matrix=new Float32Array(e)},o.width.get=function(){return 1/this.uniforms.texelSize[0]},o.width.set=function(e){this.uniforms.texelSize[0]=1/e},o.height.get=function(){return 1/this.uniforms.texelSize[1]},o.height.set=function(e){this.uniforms.texelSize[1]=1/e},Object.defineProperties(t.prototype,o),t}(t.Filter);e.ConvolutionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],36:[function(require,module,exports){
+},{"pixi.js":251}],37:[function(require,module,exports){
 /*!
  * @pixi/filter-cross-hatch - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14644,7 +2966,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(n.__filters={},n.PIXI)}(this,function(n,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void)\n{\n    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);\n\n    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n\n    if (lum < 1.00)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.75)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.50)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.3)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n}\n",t=function(n){function o(){n.call(this,r,e)}return n&&(o.__proto__=n),o.prototype=Object.create(n&&n.prototype),o.prototype.constructor=o,o}(o.Filter);n.CrossHatchFilter=t,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],37:[function(require,module,exports){
+},{"pixi.js":251}],38:[function(require,module,exports){
 /*!
  * @pixi/filter-crt - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14655,7 +2977,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(n.__filters={},n.PIXI)}(this,function(n,i){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nconst float SQRT_2 = 1.414213;\n\nconst float light = 1.0;\n\nuniform float curvature;\nuniform float lineWidth;\nuniform float lineContrast;\nuniform bool verticalLine;\nuniform float noise;\nuniform float noiseSize;\n\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\n\nuniform float seed;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    vec2 dir = vec2(coord - vec2(0.5, 0.5));\n\n    float _c = curvature > 0. ? curvature : 1.;\n    float k = curvature > 0. ?(length(dir * dir) * 0.25 * _c * _c + 0.935 * _c) : 1.;\n    vec2 uv = dir * k;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 rgb = gl_FragColor.rgb;\n\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        rgb += _noise * noise;\n    }\n\n    if (lineWidth > 0.0) {\n        float v = (verticalLine ? uv.x * dimensions.x : uv.y * dimensions.y) * min(1.0, 2.0 / lineWidth ) / _c;\n        float j = 1. + cos(v * 1.2 - time) * 0.5 * lineContrast;\n        rgb *= j;\n        float segment = verticalLine ? mod((dir.x + .5) * dimensions.x, 4.) : mod((dir.y + .5) * dimensions.y, 4.);\n        rgb *= 0.99 + ceil(segment) * 0.015;\n    }\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    gl_FragColor.rgb = rgb;\n}\n",o=function(n){function i(i){n.call(this,e,t),this.uniforms.dimensions=new Float32Array(2),this.time=0,this.seed=0,Object.assign(this,{curvature:1,lineWidth:1,lineContrast:.25,verticalLine:!1,noise:0,noiseSize:1,seed:0,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3,time:0},i)}n&&(i.__proto__=n),i.prototype=Object.create(n&&n.prototype),i.prototype.constructor=i;var o={curvature:{configurable:!0},lineWidth:{configurable:!0},lineContrast:{configurable:!0},verticalLine:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return i.prototype.apply=function(n,i,e,t){this.uniforms.dimensions[0]=i.sourceFrame.width,this.uniforms.dimensions[1]=i.sourceFrame.height,this.uniforms.seed=this.seed,this.uniforms.time=this.time,n.applyFilter(this,i,e,t)},o.curvature.set=function(n){this.uniforms.curvature=n},o.curvature.get=function(){return this.uniforms.curvature},o.lineWidth.set=function(n){this.uniforms.lineWidth=n},o.lineWidth.get=function(){return this.uniforms.lineWidth},o.lineContrast.set=function(n){this.uniforms.lineContrast=n},o.lineContrast.get=function(){return this.uniforms.lineContrast},o.verticalLine.set=function(n){this.uniforms.verticalLine=n},o.verticalLine.get=function(){return this.uniforms.verticalLine},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(i.prototype,o),i}(i.Filter);n.CRTFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],38:[function(require,module,exports){
+},{"pixi.js":251}],39:[function(require,module,exports){
 /*!
  * @pixi/filter-dot - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14666,7 +2988,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform vec4 filterArea;\nuniform sampler2D uSampler;\n\nuniform float angle;\nuniform float scale;\n\nfloat pattern()\n{\n   float s = sin(angle), c = cos(angle);\n   vec2 tex = vTextureCoord * filterArea.xy;\n   vec2 point = vec2(\n       c * tex.x - s * tex.y,\n       s * tex.x + c * tex.y\n   ) * scale;\n   return (sin(point.x) * sin(point.y)) * 4.0;\n}\n\nvoid main()\n{\n   vec4 color = texture2D(uSampler, vTextureCoord);\n   float average = (color.r + color.g + color.b) / 3.0;\n   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);\n}\n",r=function(e){function n(n,r){void 0===n&&(n=1),void 0===r&&(r=5),e.call(this,t,o),this.scale=n,this.angle=r}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={scale:{configurable:!0},angle:{configurable:!0}};return r.scale.get=function(){return this.uniforms.scale},r.scale.set=function(e){this.uniforms.scale=e},r.angle.get=function(){return this.uniforms.angle},r.angle.set=function(e){this.uniforms.angle=e},Object.defineProperties(n.prototype,r),n}(n.Filter);e.DotFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],39:[function(require,module,exports){
+},{"pixi.js":251}],40:[function(require,module,exports){
 /*!
  * @pixi/filter-drop-shadow - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14677,7 +2999,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("@pixi/filter-kawase-blur"),require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","@pixi/filter-kawase-blur","pixi.js"],i):i(t.__filters={},t.PIXI.filters,t.PIXI)}(this,function(t,i,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float alpha;\nuniform vec3 color;\nvoid main(void){\n    vec4 sample = texture2D(uSampler, vTextureCoord);\n\n    // Un-premultiply alpha before applying the color\n    if (sample.a > 0.0) {\n        sample.rgb /= sample.a;\n    }\n\n    // Premultiply alpha again\n    sample.rgb = color.rgb * sample.a;\n\n    // alpha user alpha\n    sample *= alpha;\n\n    gl_FragColor = sample;\n}",o=function(t){function o(o){o&&o.constructor!==Object&&(console.warn("DropShadowFilter now uses options instead of (rotation, distance, blur, color, alpha)"),o={rotation:o},void 0!==arguments[1]&&(o.distance=arguments[1]),void 0!==arguments[2]&&(o.blur=arguments[2]),void 0!==arguments[3]&&(o.color=arguments[3]),void 0!==arguments[4]&&(o.alpha=arguments[4])),o=Object.assign({rotation:45,distance:5,color:0,alpha:.5,shadowOnly:!1,kernels:null,blur:2,quality:3,pixelSize:1,resolution:e.settings.RESOLUTION},o),t.call(this);var l=o.kernels,a=o.blur,s=o.quality,u=o.pixelSize,c=o.resolution;this._tintFilter=new e.Filter(r,n),this._tintFilter.uniforms.color=new Float32Array(4),this._tintFilter.resolution=c,this._blurFilter=l?new i.KawaseBlurFilter(l):new i.KawaseBlurFilter(a,s),this.pixelSize=u,this.resolution=c,this.targetTransform=new e.Matrix;var p=o.shadowOnly,h=o.rotation,f=o.distance,d=o.alpha,g=o.color;this.shadowOnly=p,this.rotation=h,this.distance=f,this.alpha=d,this.color=g,this._updatePadding()}t&&(o.__proto__=t),o.prototype=Object.create(t&&t.prototype),o.prototype.constructor=o;var l={resolution:{configurable:!0},distance:{configurable:!0},rotation:{configurable:!0},alpha:{configurable:!0},color:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return o.prototype.apply=function(t,i,e,r){var n=t.getRenderTarget();n.transform=this.targetTransform,this._tintFilter.apply(t,i,n,!0),n.transform=null,this._blurFilter.apply(t,n,e),!0!==this.shadowOnly&&t.applyFilter(this,i,e,r),t.returnRenderTarget(n)},o.prototype._updatePadding=function(){this.padding=this.distance+2*this.blur},o.prototype._updateTargetTransform=function(){this.targetTransform.tx=this.distance*Math.cos(this.angle),this.targetTransform.ty=this.distance*Math.sin(this.angle)},l.resolution.get=function(){return this._resolution},l.resolution.set=function(t){this._resolution=t,this._tintFilter&&(this._tintFilter.resolution=t),this._blurFilter&&(this._blurFilter.resolution=t)},l.distance.get=function(){return this._distance},l.distance.set=function(t){this._distance=t,this._updatePadding(),this._updateTargetTransform()},l.rotation.get=function(){return this.angle/e.DEG_TO_RAD},l.rotation.set=function(t){this.angle=t*e.DEG_TO_RAD,this._updateTargetTransform()},l.alpha.get=function(){return this._tintFilter.uniforms.alpha},l.alpha.set=function(t){this._tintFilter.uniforms.alpha=t},l.color.get=function(){return e.utils.rgb2hex(this._tintFilter.uniforms.color)},l.color.set=function(t){e.utils.hex2rgb(t,this._tintFilter.uniforms.color)},l.kernels.get=function(){return this._blurFilter.kernels},l.kernels.set=function(t){this._blurFilter.kernels=t},l.blur.get=function(){return this._blurFilter.blur},l.blur.set=function(t){this._blurFilter.blur=t,this._updatePadding()},l.quality.get=function(){return this._blurFilter.quality},l.quality.set=function(t){this._blurFilter.quality=t},l.pixelSize.get=function(){return this._blurFilter.pixelSize},l.pixelSize.set=function(t){this._blurFilter.pixelSize=t},Object.defineProperties(o.prototype,l),o}(e.Filter);t.DropShadowFilter=o,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"@pixi/filter-kawase-blur":44,"pixi.js":250}],40:[function(require,module,exports){
+},{"@pixi/filter-kawase-blur":45,"pixi.js":251}],41:[function(require,module,exports){
 /*!
  * @pixi/filter-emboss - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14688,7 +3010,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float strength;\nuniform vec4 filterArea;\n\n\nvoid main(void)\n{\n\tvec2 onePixel = vec2(1.0 / filterArea);\n\n\tvec4 color;\n\n\tcolor.rgb = vec3(0.5);\n\n\tcolor -= texture2D(uSampler, vTextureCoord - onePixel) * strength;\n\tcolor += texture2D(uSampler, vTextureCoord + onePixel) * strength;\n\n\tcolor.rgb = vec3((color.r + color.g + color.b) / 3.0);\n\n\tfloat alpha = texture2D(uSampler, vTextureCoord).a;\n\n\tgl_FragColor = vec4(color.rgb * alpha, alpha);\n}\n",n=function(e){function t(t){void 0===t&&(t=5),e.call(this,r,o),this.strength=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var n={strength:{configurable:!0}};return n.strength.get=function(){return this.uniforms.strength},n.strength.set=function(e){this.uniforms.strength=e},Object.defineProperties(t.prototype,n),t}(t.Filter);e.EmbossFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],41:[function(require,module,exports){
+},{"pixi.js":251}],42:[function(require,module,exports){
 /*!
  * @pixi/filter-glitch - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -14699,7 +3021,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="// precision highp float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\nuniform float aspect;\n\nuniform sampler2D displacementMap;\nuniform float offset;\nuniform float sinDir;\nuniform float cosDir;\nuniform int fillMode;\n\nuniform float seed;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nconst int TRANSPARENT = 0;\nconst int ORIGINAL = 1;\nconst int LOOP = 2;\nconst int CLAMP = 3;\nconst int MIRROR = 4;\n\nvoid main(void)\n{\n    vec2 coord = (vTextureCoord * filterArea.xy) / dimensions;\n\n    if (coord.x > 1.0 || coord.y > 1.0) {\n        return;\n    }\n\n    float cx = coord.x - 0.5;\n    float cy = (coord.y - 0.5) * aspect;\n    float ny = (-sinDir * cx + cosDir * cy) / aspect + 0.5;\n\n    // displacementMap: repeat\n    // ny = ny > 1.0 ? ny - 1.0 : (ny < 0.0 ? 1.0 + ny : ny);\n\n    // displacementMap: mirror\n    ny = ny > 1.0 ? 2.0 - ny : (ny < 0.0 ? -ny : ny);\n\n    vec4 dc = texture2D(displacementMap, vec2(0.5, ny));\n\n    float displacement = (dc.r - dc.g) * (offset / filterArea.x);\n\n    coord = vTextureCoord + vec2(cosDir * displacement, sinDir * displacement * aspect);\n\n    if (fillMode == CLAMP) {\n        coord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    } else {\n        if( coord.x > filterClamp.z ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x -= filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x = filterClamp.z * 2.0 - coord.x;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.x < filterClamp.x ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x += filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x *= -filterClamp.z;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n\n        if( coord.y > filterClamp.w ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y -= filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y = filterClamp.w * 2.0 - coord.y;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.y < filterClamp.y ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y += filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y *= -filterClamp.w;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n    }\n\n    gl_FragColor.r = texture2D(uSampler, coord + red * (1.0 - seed * 0.4) / filterArea.xy).r;\n    gl_FragColor.g = texture2D(uSampler, coord + green * (1.0 - seed * 0.3) / filterArea.xy).g;\n    gl_FragColor.b = texture2D(uSampler, coord + blue * (1.0 - seed * 0.2) / filterArea.xy).b;\n    gl_FragColor.a = texture2D(uSampler, coord).a;\n}\n",r=function(e){function r(r){void 0===r&&(r={}),e.call(this,t,n),this.uniforms.dimensions=new Float32Array(2),r=Object.assign({slices:5,offset:100,direction:0,fillMode:0,average:!1,seed:0,red:[0,0],green:[0,0],blue:[0,0],minSize:8,sampleSize:512},r),this.direction=r.direction,this.red=r.red,this.green=r.green,this.blue=r.blue,this.offset=r.offset,this.fillMode=r.fillMode,this.average=r.average,this.seed=r.seed,this.minSize=r.minSize,this.sampleSize=r.sampleSize,this._canvas=document.createElement("canvas"),this._canvas.width=4,this._canvas.height=this.sampleSize,this.texture=i.Texture.fromCanvas(this._canvas,i.SCALE_MODES.NEAREST),this._slices=0,this.slices=r.slices}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var s={sizes:{configurable:!0},offsets:{configurable:!0},slices:{configurable:!0},direction:{configurable:!0},red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return r.prototype.apply=function(e,i,t,n){var r=i.sourceFrame.width,s=i.sourceFrame.height;this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=s,this.uniforms.aspect=s/r,this.uniforms.seed=this.seed,this.uniforms.offset=this.offset,this.uniforms.fillMode=this.fillMode,e.applyFilter(this,i,t,n)},r.prototype._randomizeSizes=function(){var e=this._sizes,i=this._slices-1,t=this.sampleSize,n=Math.min(this.minSize/t,.9/this._slices);if(this.average){for(var r=this._slices,s=1,o=0;o<i;o++){var l=s/(r-o),f=Math.max(l*(1-.6*Math.random()),n);e[o]=f,s-=f}e[i]=s}else{for(var a=1,c=Math.sqrt(1/this._slices),u=0;u<i;u++){var d=Math.max(c*a*Math.random(),n);e[u]=d,a-=d}e[i]=a}this.shuffle()},r.prototype.shuffle=function(){for(var e=this._sizes,i=this._slices-1;i>0;i--){var t=Math.random()*i>>0,n=e[i];e[i]=e[t],e[t]=n}},r.prototype._randomizeOffsets=function(){for(var e=0;e<this._slices;e++)this._offsets[e]=Math.random()*(Math.random()<.5?-1:1)},r.prototype.refresh=function(){this._randomizeSizes(),this._randomizeOffsets(),this.redraw()},r.prototype.redraw=function(){var e,i=this.sampleSize,t=this.texture,n=this._canvas.getContext("2d");n.clearRect(0,0,8,i);for(var r=0,s=0;s<this._slices;s++){e=Math.floor(256*this._offsets[s]);var o=this._sizes[s]*i,l=e>0?e:0,f=e<0?-e:0;n.fillStyle="rgba("+l+", "+f+", 0, 1)",n.fillRect(0,r>>0,i,o+1>>0),r+=o}t.baseTexture.emit("update",t.baseTexture),this.uniforms.displacementMap=t},s.sizes.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._sizes[t]=e[t]},s.sizes.get=function(){return this._sizes},s.offsets.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._offsets[t]=e[t]},s.offsets.get=function(){return this._offsets},s.slices.get=function(){return this._slices},s.slices.set=function(e){this._slices!==e&&(this._slices=e,this.uniforms.slices=e,this._sizes=this.uniforms.slicesWidth=new Float32Array(e),this._offsets=this.uniforms.slicesOffset=new Float32Array(e),this.refresh())},s.direction.get=function(){return this._direction},s.direction.set=function(e){if(this._direction!==e){this._direction=e;var t=e*i.DEG_TO_RAD;this.uniforms.sinDir=Math.sin(t),this.uniforms.cosDir=Math.cos(t)}},s.red.get=function(){return this.uniforms.red},s.red.set=function(e){this.uniforms.red=e},s.green.get=function(){return this.uniforms.green},s.green.set=function(e){this.uniforms.green=e},s.blue.get=function(){return this.uniforms.blue},s.blue.set=function(e){this.uniforms.blue=e},r.prototype.destroy=function(){this.texture.destroy(!0),this.texture=null,this._canvas=null,this.red=null,this.green=null,this.blue=null,this._sizes=null,this._offsets=null},Object.defineProperties(r.prototype,s),r}(i.Filter);r.TRANSPARENT=0,r.ORIGINAL=1,r.LOOP=2,r.CLAMP=3,r.MIRROR=4,e.GlitchFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":250}],42:[function(require,module,exports){
+},{"pixi.js":251}],43:[function(require,module,exports){
 /*!
  * @pixi/filter-glow - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14710,7 +3032,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform sampler2D uSampler;\n\nuniform float distance;\nuniform float outerStrength;\nuniform float innerStrength;\nuniform vec4 glowColor;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nconst float PI = 3.14159265358979323846264;\n\nvoid main(void) {\n    vec2 px = vec2(1.0 / filterArea.x, 1.0 / filterArea.y);\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float cosAngle;\n    float sinAngle;\n    vec2 displaced;\n    for (float angle = 0.0; angle <= PI * 2.0; angle += %QUALITY_DIST%) {\n       cosAngle = cos(angle);\n       sinAngle = sin(angle);\n       for (float curDistance = 1.0; curDistance <= %DIST%; curDistance++) {\n           displaced.x = vTextureCoord.x + cosAngle * curDistance * px.x;\n           displaced.y = vTextureCoord.y + sinAngle * curDistance * px.y;\n           curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n           totalAlpha += (distance - curDistance) * curColor.a;\n           maxTotalAlpha += (distance - curDistance);\n       }\n    }\n    maxTotalAlpha = max(maxTotalAlpha, 0.0001);\n\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * outerStrength * (1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * innerStrength * ownColor.a;\n    float resultAlpha = (ownColor.a + outerGlowAlpha);\n    gl_FragColor = vec4(mix(mix(ownColor.rgb, glowColor.rgb, innerGlowAlpha / ownColor.a), glowColor.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);\n}\n",r=function(o){function r(t,r,i,l,a){void 0===t&&(t=10),void 0===r&&(r=4),void 0===i&&(i=0),void 0===l&&(l=16777215),void 0===a&&(a=.1),o.call(this,n,e.replace(/%QUALITY_DIST%/gi,""+(1/a/t).toFixed(7)).replace(/%DIST%/gi,""+t.toFixed(7))),this.uniforms.glowColor=new Float32Array([0,0,0,1]),this.distance=t,this.color=l,this.outerStrength=r,this.innerStrength=i}o&&(r.__proto__=o),r.prototype=Object.create(o&&o.prototype),r.prototype.constructor=r;var i={color:{configurable:!0},distance:{configurable:!0},outerStrength:{configurable:!0},innerStrength:{configurable:!0}};return i.color.get=function(){return t.utils.rgb2hex(this.uniforms.glowColor)},i.color.set=function(o){t.utils.hex2rgb(o,this.uniforms.glowColor)},i.distance.get=function(){return this.uniforms.distance},i.distance.set=function(o){this.uniforms.distance=o},i.outerStrength.get=function(){return this.uniforms.outerStrength},i.outerStrength.set=function(o){this.uniforms.outerStrength=o},i.innerStrength.get=function(){return this.uniforms.innerStrength},i.innerStrength.set=function(o){this.uniforms.innerStrength=o},Object.defineProperties(r.prototype,i),r}(t.Filter);o.GlowFilter=r,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],43:[function(require,module,exports){
+},{"pixi.js":251}],44:[function(require,module,exports){
 /*!
  * @pixi/filter-godray - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14721,7 +3043,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="vec3 mod289(vec3 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 mod289(vec4 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 permute(vec4 x)\n{\n    return mod289(((x * 34.0) + 1.0) * x);\n}\nvec4 taylorInvSqrt(vec4 r)\n{\n    return 1.79284291400159 - 0.85373472095314 * r;\n}\nvec3 fade(vec3 t)\n{\n    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);\n}\n// Classic Perlin noise, periodic variant\nfloat pnoise(vec3 P, vec3 rep)\n{\n    vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period\n    vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period\n    Pi0 = mod289(Pi0);\n    Pi1 = mod289(Pi1);\n    vec3 Pf0 = fract(P); // Fractional part for interpolation\n    vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0\n    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);\n    vec4 iy = vec4(Pi0.yy, Pi1.yy);\n    vec4 iz0 = Pi0.zzzz;\n    vec4 iz1 = Pi1.zzzz;\n    vec4 ixy = permute(permute(ix) + iy);\n    vec4 ixy0 = permute(ixy + iz0);\n    vec4 ixy1 = permute(ixy + iz1);\n    vec4 gx0 = ixy0 * (1.0 / 7.0);\n    vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;\n    gx0 = fract(gx0);\n    vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);\n    vec4 sz0 = step(gz0, vec4(0.0));\n    gx0 -= sz0 * (step(0.0, gx0) - 0.5);\n    gy0 -= sz0 * (step(0.0, gy0) - 0.5);\n    vec4 gx1 = ixy1 * (1.0 / 7.0);\n    vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;\n    gx1 = fract(gx1);\n    vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);\n    vec4 sz1 = step(gz1, vec4(0.0));\n    gx1 -= sz1 * (step(0.0, gx1) - 0.5);\n    gy1 -= sz1 * (step(0.0, gy1) - 0.5);\n    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);\n    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);\n    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);\n    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);\n    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);\n    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);\n    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);\n    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);\n    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));\n    g000 *= norm0.x;\n    g010 *= norm0.y;\n    g100 *= norm0.z;\n    g110 *= norm0.w;\n    vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));\n    g001 *= norm1.x;\n    g011 *= norm1.y;\n    g101 *= norm1.z;\n    g111 *= norm1.w;\n    float n000 = dot(g000, Pf0);\n    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));\n    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));\n    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));\n    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));\n    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));\n    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));\n    float n111 = dot(g111, Pf1);\n    vec3 fade_xyz = fade(Pf0);\n    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);\n    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);\n    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);\n    return 2.2 * n_xyz;\n}\nfloat turb(vec3 P, vec3 rep, float lacunarity, float gain)\n{\n    float sum = 0.0;\n    float sc = 1.0;\n    float totalgain = 1.0;\n    for (float i = 0.0; i < 6.0; i++)\n    {\n        sum += totalgain * pnoise(P * sc, rep);\n        sc *= lacunarity;\n        totalgain *= gain;\n    }\n    return abs(sum);\n}\n",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform vec2 light;\nuniform bool parallel;\nuniform float aspect;\n\nuniform float gain;\nuniform float lacunarity;\nuniform float time;\n\n${perlin}\n\nvoid main(void) {\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    float d;\n\n    if (parallel) {\n        float _cos = light.x;\n        float _sin = light.y;\n        d = (_cos * coord.x) + (_sin * coord.y * aspect);\n    } else {\n        float dx = coord.x - light.x / dimensions.x;\n        float dy = (coord.y - light.y / dimensions.y) * aspect;\n        float dis = sqrt(dx * dx + dy * dy) + 0.00001;\n        d = dy / dis;\n    }\n\n    vec3 dir = vec3(d, d, 0.0);\n\n    float noise = turb(dir + vec3(time, 0.0, 62.1 + time) * 0.05, vec3(480.0, 320.0, 480.0), lacunarity, gain);\n    noise = mix(noise, 0.0, 0.3);\n    //fade vertically.\n    vec4 mist = vec4(noise, noise, noise, 1.0) * (1.0 - coord.y);\n    mist.a = 1.0;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord) + mist;\n}\n",r=function(n){function r(r){n.call(this,t,o.replace("${perlin}",i)),this.uniforms.dimensions=new Float32Array(2),"number"==typeof r&&(console.warn("GodrayFilter now uses options instead of (angle, gain, lacunarity, time)"),r={angle:r},void 0!==arguments[1]&&(r.gain=arguments[1]),void 0!==arguments[2]&&(r.lacunarity=arguments[2]),void 0!==arguments[3]&&(r.time=arguments[3])),r=Object.assign({angle:30,gain:.5,lacunarity:2.5,time:0,parallel:!0,center:[0,0]},r),this._angleLight=new e.Point,this.angle=r.angle,this.gain=r.gain,this.lacunarity=r.lacunarity,this.parallel=r.parallel,this.center=r.center,this.time=r.time}n&&(r.__proto__=n),r.prototype=Object.create(n&&n.prototype),r.prototype.constructor=r;var a={angle:{configurable:!0},gain:{configurable:!0},lacunarity:{configurable:!0}};return r.prototype.apply=function(n,e,t,i){var o=e.sourceFrame,r=o.width,a=o.height;this.uniforms.light=this.parallel?this._angleLight:this.center,this.uniforms.parallel=this.parallel,this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=a,this.uniforms.aspect=a/r,this.uniforms.time=this.time,n.applyFilter(this,e,t,i)},a.angle.get=function(){return this._angle},a.angle.set=function(n){this._angle=n;var t=n*e.DEG_TO_RAD;this._angleLight.x=Math.cos(t),this._angleLight.y=Math.sin(t)},a.gain.get=function(){return this.uniforms.gain},a.gain.set=function(n){this.uniforms.gain=n},a.lacunarity.get=function(){return this.uniforms.lacunarity},a.lacunarity.set=function(n){this.uniforms.lacunarity=n},Object.defineProperties(r.prototype,a),r}(e.Filter);n.GodrayFilter=r,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],44:[function(require,module,exports){
+},{"pixi.js":251}],45:[function(require,module,exports){
 /*!
  * @pixi/filter-kawase-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14732,7 +3054,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\nuniform vec4 filterClamp;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}\n",n=function(e){function n(n,l,u){void 0===n&&(n=4),void 0===l&&(l=3),void 0===u&&(u=!1),e.call(this,r,u?o:i),this.uniforms.uOffset=new Float32Array(2),this._pixelSize=new t.Point,this.pixelSize=1,this._clamp=u,this._kernels=null,Array.isArray(n)?this.kernels=n:(this._blur=n,this.quality=l)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var l={kernels:{configurable:!0},clamp:{configurable:!0},pixelSize:{configurable:!0},quality:{configurable:!0},blur:{configurable:!0}};return n.prototype.apply=function(e,t,r,i){var o,n=this.pixelSize.x/t.size.width,l=this.pixelSize.y/t.size.height;if(1===this._quality||0===this._blur)o=this._kernels[0]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,t,r,i);else{for(var u,s=e.getRenderTarget(!0),f=t,a=s,p=this._quality-1,x=0;x<p;x++)o=this._kernels[x]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,a,!0),u=f,f=a,a=u;o=this._kernels[p]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,r,i),e.returnRenderTarget(s)}},n.prototype._generateKernels=function(){var e=this._blur,t=this._quality,r=[e];if(e>0)for(var i=e,o=e/t,n=1;n<t;n++)i-=o,r.push(i);this._kernels=r},l.kernels.get=function(){return this._kernels},l.kernels.set=function(e){Array.isArray(e)&&e.length>0?(this._kernels=e,this._quality=e.length,this._blur=Math.max.apply(Math,e)):(this._kernels=[0],this._quality=1)},l.clamp.get=function(){return this._clamp},l.pixelSize.set=function(e){"number"==typeof e?(this._pixelSize.x=e,this._pixelSize.y=e):Array.isArray(e)?(this._pixelSize.x=e[0],this._pixelSize.y=e[1]):e instanceof t.Point?(this._pixelSize.x=e.x,this._pixelSize.y=e.y):(this._pixelSize.x=1,this._pixelSize.y=1)},l.pixelSize.get=function(){return this._pixelSize},l.quality.get=function(){return this._quality},l.quality.set=function(e){this._quality=Math.max(1,Math.round(e)),this._generateKernels()},l.blur.get=function(){return this._blur},l.blur.set=function(e){this._blur=e,this._generateKernels()},Object.defineProperties(n.prototype,l),n}(t.Filter);e.KawaseBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],45:[function(require,module,exports){
+},{"pixi.js":251}],46:[function(require,module,exports){
 /*!
  * @pixi/filter-motion-blur - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -14743,7 +3065,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uVelocity;\nuniform int uKernelSize;\nuniform float uOffset;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\n// Notice:\n// the perfect way:\n//    int kernelSize = min(uKernelSize, MAX_KERNELSIZE);\n// BUT in real use-case , uKernelSize < MAX_KERNELSIZE almost always.\n// So use uKernelSize directly.\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    vec2 velocity = uVelocity / filterArea.xy;\n    float offset = -uOffset / length(uVelocity) - 0.5;\n    int k = uKernelSize - 1;\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n        vec2 bias = velocity * (float(i) / float(k) + offset);\n        color += texture2D(uSampler, vTextureCoord + bias);\n    }\n    gl_FragColor = color / float(uKernelSize);\n}\n",n=function(e){function n(n,r,l){void 0===n&&(n=[0,0]),void 0===r&&(r=5),void 0===l&&(l=0),e.call(this,i,o),this.uniforms.uVelocity=new Float32Array(2),this._velocity=new t.ObservablePoint(this.velocityChanged,this),this.velocity=n,this.kernelSize=r,this.offset=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={velocity:{configurable:!0},offset:{configurable:!0}};return n.prototype.apply=function(e,t,i,o){var n=this.velocity,r=n.x,l=n.y;this.uniforms.uKernelSize=0!==r||0!==l?this.kernelSize:0,e.applyFilter(this,t,i,o)},r.velocity.set=function(e){Array.isArray(e)?this._velocity.set(e[0],e[1]):(e instanceof t.Point||e instanceof t.ObservablePoint)&&this._velocity.copy(e)},r.velocity.get=function(){return this._velocity},n.prototype.velocityChanged=function(){this.uniforms.uVelocity[0]=this._velocity.x,this.uniforms.uVelocity[1]=this._velocity.y},r.offset.set=function(e){this.uniforms.uOffset=e},r.offset.get=function(){return this.uniforms.uOffset},Object.defineProperties(n.prototype,r),n}(t.Filter);e.MotionBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":250}],46:[function(require,module,exports){
+},{"pixi.js":251}],47:[function(require,module,exports){
 /*!
  * @pixi/filter-multi-color-replace - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14754,7 +3076,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(o.__filters={},o.PIXI)}(this,function(o,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float epsilon;\n\nconst int MAX_COLORS = %maxColors%;\n\nuniform vec3 originalColors[MAX_COLORS];\nuniform vec3 targetColors[MAX_COLORS];\n\nvoid main(void)\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n\n    float alpha = gl_FragColor.a;\n    if (alpha < 0.0001)\n    {\n      return;\n    }\n\n    vec3 color = gl_FragColor.rgb / alpha;\n\n    for(int i = 0; i < MAX_COLORS; i++)\n    {\n      vec3 origColor = originalColors[i];\n      if (origColor.r < 0.0)\n      {\n        break;\n      }\n      vec3 colorDiff = origColor - color;\n      if (length(colorDiff) < epsilon)\n      {\n        vec3 targetColor = targetColors[i];\n        gl_FragColor = vec4((targetColor + colorDiff) * alpha, alpha);\n        return;\n      }\n    }\n}\n",t=function(o){function t(e,t,i){void 0===t&&(t=.05),void 0===i&&(i=null),i=i||e.length,o.call(this,r,n.replace(/%maxColors%/g,i)),this.epsilon=t,this._maxColors=i,this._replacements=null,this.uniforms.originalColors=new Float32Array(3*i),this.uniforms.targetColors=new Float32Array(3*i),this.replacements=e}o&&(t.__proto__=o),t.prototype=Object.create(o&&o.prototype),t.prototype.constructor=t;var i={replacements:{configurable:!0},maxColors:{configurable:!0},epsilon:{configurable:!0}};return i.replacements.set=function(o){var r=this.uniforms.originalColors,n=this.uniforms.targetColors,t=o.length;if(t>this._maxColors)throw"Length of replacements ("+t+") exceeds the maximum colors length ("+this._maxColors+")";r[3*t]=-1;for(var i=0;i<t;i++){var l=o[i],s=l[0];"number"==typeof s?s=e.utils.hex2rgb(s):l[0]=e.utils.rgb2hex(s),r[3*i]=s[0],r[3*i+1]=s[1],r[3*i+2]=s[2];var a=l[1];"number"==typeof a?a=e.utils.hex2rgb(a):l[1]=e.utils.rgb2hex(a),n[3*i]=a[0],n[3*i+1]=a[1],n[3*i+2]=a[2]}this._replacements=o},i.replacements.get=function(){return this._replacements},t.prototype.refresh=function(){this.replacements=this._replacements},i.maxColors.get=function(){return this._maxColors},i.epsilon.set=function(o){this.uniforms.epsilon=o},i.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(t.prototype,i),t}(e.Filter);o.MultiColorReplaceFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],47:[function(require,module,exports){
+},{"pixi.js":251}],48:[function(require,module,exports){
 /*!
  * @pixi/filter-old-film - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14765,7 +3087,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(n.__filters={},n.PIXI)}(this,function(n,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform float sepia;\nuniform float noise;\nuniform float noiseSize;\nuniform float scratch;\nuniform float scratchDensity;\nuniform float scratchWidth;\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\nuniform float seed;\n\nconst float SQRT_2 = 1.414213;\nconst vec3 SEPIA_RGB = vec3(112.0 / 255.0, 66.0 / 255.0, 20.0 / 255.0);\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvec3 Overlay(vec3 src, vec3 dst)\n{\n    // if (dst <= 0.5) then: 2 * src * dst\n    // if (dst > 0.5) then: 1 - 2 * (1 - dst) * (1 - src)\n    return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),\n                (dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),\n                (dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));\n}\n\n\nvoid main()\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 color = gl_FragColor.rgb;\n\n    if (sepia > 0.0)\n    {\n        float gray = (color.x + color.y + color.z) / 3.0;\n        vec3 grayscale = vec3(gray);\n\n        color = Overlay(SEPIA_RGB, grayscale);\n\n        color = grayscale + sepia * (color - grayscale);\n    }\n\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        vec2 dir = vec2(vec2(0.5, 0.5) - coord);\n        dir.y *= dimensions.y / dimensions.x;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        color.rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    if (scratchDensity > seed && scratch != 0.0)\n    {\n        float phase = seed * 256.0;\n        float s = mod(floor(phase), 2.0);\n        float dist = 1.0 / scratchDensity;\n        float d = distance(coord, vec2(seed * dist, abs(s - seed * dist)));\n        if (d < seed * 0.6 + 0.4)\n        {\n            highp float period = scratchDensity * 10.0;\n\n            float xx = coord.x * period + phase;\n            float aa = abs(mod(xx, 0.5) * 4.0);\n            float bb = mod(floor(xx / 0.5), 2.0);\n            float yy = (1.0 - bb) * aa + bb * (2.0 - aa);\n\n            float kk = 2.0 * period;\n            float dw = scratchWidth / dimensions.x * (0.75 + seed);\n            float dh = dw * kk;\n\n            float tine = (yy - (2.0 - dh));\n\n            if (tine > 0.0) {\n                float _sign = sign(scratch);\n\n                tine = s * tine / period + scratch + 0.1;\n                tine = clamp(tine + 1.0, 0.5 + _sign * 0.5, 1.5 + _sign * 0.5);\n\n                color.rgb *= tine;\n            }\n        }\n    }\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        // vec2 d = pixelCoord * noiseSize * vec2(1024.0 + seed * 512.0, 1024.0 - seed * 512.0);\n        // float _noise = snoise(d) * 0.5;\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        color += _noise * noise;\n    }\n\n    gl_FragColor.rgb = color;\n}\n",o=function(n){function t(t,o){void 0===o&&(o=0),n.call(this,i,e),this.uniforms.dimensions=new Float32Array(2),"number"==typeof t?(this.seed=t,t=null):this.seed=o,Object.assign(this,{sepia:.3,noise:.3,noiseSize:1,scratch:.5,scratchDensity:.3,scratchWidth:1,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3},t)}n&&(t.__proto__=n),t.prototype=Object.create(n&&n.prototype),t.prototype.constructor=t;var o={sepia:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},scratch:{configurable:!0},scratchDensity:{configurable:!0},scratchWidth:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return t.prototype.apply=function(n,t,i,e){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,this.uniforms.seed=this.seed,n.applyFilter(this,t,i,e)},o.sepia.set=function(n){this.uniforms.sepia=n},o.sepia.get=function(){return this.uniforms.sepia},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.scratch.set=function(n){this.uniforms.scratch=n},o.scratch.get=function(){return this.uniforms.scratch},o.scratchDensity.set=function(n){this.uniforms.scratchDensity=n},o.scratchDensity.get=function(){return this.uniforms.scratchDensity},o.scratchWidth.set=function(n){this.uniforms.scratchWidth=n},o.scratchWidth.get=function(){return this.uniforms.scratchWidth},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(t.prototype,o),t}(t.Filter);n.OldFilmFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],48:[function(require,module,exports){
+},{"pixi.js":251}],49:[function(require,module,exports){
 /*!
  * @pixi/filter-outline - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14776,7 +3098,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 thickness;\nuniform vec4 outlineColor;\nuniform vec4 filterClamp;\n\nconst float DOUBLE_PI = 3.14159265358979323846264 * 2.;\n\nvoid main(void) {\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float maxAlpha = 0.;\n    vec2 displaced;\n    for (float angle = 0.; angle <= DOUBLE_PI; angle += ${angleStep}) {\n        displaced.x = vTextureCoord.x + thickness.x * cos(angle);\n        displaced.y = vTextureCoord.y + thickness.y * sin(angle);\n        curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n        maxAlpha = max(maxAlpha, curColor.a);\n    }\n    float resultAlpha = max(maxAlpha, ownColor.a);\n    gl_FragColor = vec4((ownColor.rgb + outlineColor.rgb * (1. - ownColor.a)) * resultAlpha, resultAlpha);\n}\n",n=function(e){function n(o,i,l){void 0===o&&(o=1),void 0===i&&(i=0),void 0===l&&(l=.1);var a=Math.max(l*n.MAX_SAMPLES,n.MIN_SAMPLES),s=(2*Math.PI/a).toFixed(7);e.call(this,t,r.replace(/\$\{angleStep\}/,s)),this.uniforms.thickness=new Float32Array([0,0]),this.thickness=o,this.uniforms.outlineColor=new Float32Array([0,0,0,1]),this.color=i,this.quality=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={color:{configurable:!0}};return n.prototype.apply=function(e,o,t,r){this.uniforms.thickness[0]=this.thickness/o.size.width,this.uniforms.thickness[1]=this.thickness/o.size.height,e.applyFilter(this,o,t,r)},i.color.get=function(){return o.utils.rgb2hex(this.uniforms.outlineColor)},i.color.set=function(e){o.utils.hex2rgb(e,this.uniforms.outlineColor)},Object.defineProperties(n.prototype,i),n}(o.Filter);n.MIN_SAMPLES=1,n.MAX_SAMPLES=100,e.OutlineFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],49:[function(require,module,exports){
+},{"pixi.js":251}],50:[function(require,module,exports){
 /*!
  * @pixi/filter-pixelate - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14787,7 +3109,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform vec2 size;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n\treturn floor( coord / size ) * size;\n}\n\nvoid main(void)\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = pixelate(coord, size);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord);\n}\n",t=function(e){function o(o){void 0===o&&(o=10),e.call(this,r,n),this.size=o}e&&(o.__proto__=e),o.prototype=Object.create(e&&e.prototype),o.prototype.constructor=o;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.size},t.size.set=function(e){"number"==typeof e&&(e=[e,e]),this.uniforms.size=e},Object.defineProperties(o.prototype,t),o}(o.Filter);e.PixelateFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],50:[function(require,module,exports){
+},{"pixi.js":251}],51:[function(require,module,exports){
 /*!
  * @pixi/filter-radial-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14798,7 +3120,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float uRadian;\nuniform vec2 uCenter;\nuniform float uRadius;\nuniform int uKernelSize;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    float aspect = filterArea.y / filterArea.x;\n    vec2 center = uCenter.xy / filterArea.xy;\n    float gradient = uRadius / filterArea.x * 0.3;\n    float radius = uRadius / filterArea.x - gradient * 0.5;\n    int k = uKernelSize - 1;\n\n    vec2 coord = vTextureCoord;\n    vec2 dir = vec2(center - coord);\n    float dist = length(vec2(dir.x, dir.y * aspect));\n\n    float radianStep = uRadian;\n    if (radius >= 0.0 && dist > radius) {\n        float delta = dist - radius;\n        float gap = gradient;\n        float scale = 1.0 - abs(delta / gap);\n        if (scale <= 0.0) {\n            gl_FragColor = color;\n            return;\n        }\n        radianStep *= scale;\n    }\n    radianStep /= float(k);\n\n    float s = sin(radianStep);\n    float c = cos(radianStep);\n    mat2 rotationMatrix = mat2(vec2(c, -s), vec2(s, c));\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n\n        coord -= center;\n        coord.y *= aspect;\n        coord = rotationMatrix * coord;\n        coord.y /= aspect;\n        coord += center;\n\n        vec4 sample = texture2D(uSampler, coord);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample;\n    }\n\n    gl_FragColor = color / float(uKernelSize);\n}\n",i=function(e){function n(n,i,o,a){void 0===n&&(n=0),void 0===i&&(i=[0,0]),void 0===o&&(o=5),void 0===a&&(a=-1),e.call(this,t,r),this._angle=0,this.angle=n,this.center=i,this.kernelSize=o,this.radius=a}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={angle:{configurable:!0},center:{configurable:!0},radius:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.uKernelSize=0!==this._angle?this.kernelSize:0,e.applyFilter(this,n,t,r)},i.angle.set=function(e){this._angle=e,this.uniforms.uRadian=e*Math.PI/180},i.angle.get=function(){return this._angle},i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(e){this.uniforms.uCenter=e},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(e){(e<0||e===1/0)&&(e=-1),this.uniforms.uRadius=e},Object.defineProperties(n.prototype,i),n}(n.Filter);e.RadialBlurFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],51:[function(require,module,exports){
+},{"pixi.js":251}],52:[function(require,module,exports){
 /*!
  * @pixi/filter-reflection - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14809,7 +3131,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nuniform bool mirror;\nuniform float boundary;\nuniform vec2 amplitude;\nuniform vec2 waveLength;\nuniform vec2 alpha;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    if (coord.y < boundary) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    float k = (coord.y - boundary) / (1. - boundary + 0.0001);\n    float areaY = boundary * dimensions.y / filterArea.y;\n    float v = areaY + areaY - vTextureCoord.y;\n    float y = mirror ? v : vTextureCoord.y;\n\n    float _amplitude = ((amplitude.y - amplitude.x) * k + amplitude.x ) / filterArea.x;\n    float _waveLength = ((waveLength.y - waveLength.x) * k + waveLength.x) / filterArea.y;\n    float _alpha = (alpha.y - alpha.x) * k + alpha.x;\n\n    float x = vTextureCoord.x + cos(v * 6.28 / _waveLength - time) * _amplitude;\n    x = clamp(x, filterClamp.x, filterClamp.z);\n\n    vec4 color = texture2D(uSampler, vec2(x, y));\n\n    gl_FragColor = color * _alpha;\n}\n",o=function(e){function n(n){e.call(this,r,t),this.uniforms.amplitude=new Float32Array(2),this.uniforms.waveLength=new Float32Array(2),this.uniforms.alpha=new Float32Array(2),this.uniforms.dimensions=new Float32Array(2),Object.assign(this,{mirror:!0,boundary:.5,amplitude:[0,20],waveLength:[30,100],alpha:[1,1],time:0},n)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={mirror:{configurable:!0},boundary:{configurable:!0},amplitude:{configurable:!0},waveLength:{configurable:!0},alpha:{configurable:!0}};return n.prototype.apply=function(e,n,r,t){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,this.uniforms.time=this.time,e.applyFilter(this,n,r,t)},o.mirror.set=function(e){this.uniforms.mirror=e},o.mirror.get=function(){return this.uniforms.mirror},o.boundary.set=function(e){this.uniforms.boundary=e},o.boundary.get=function(){return this.uniforms.boundary},o.amplitude.set=function(e){this.uniforms.amplitude[0]=e[0],this.uniforms.amplitude[1]=e[1]},o.amplitude.get=function(){return this.uniforms.amplitude},o.waveLength.set=function(e){this.uniforms.waveLength[0]=e[0],this.uniforms.waveLength[1]=e[1]},o.waveLength.get=function(){return this.uniforms.waveLength},o.alpha.set=function(e){this.uniforms.alpha[0]=e[0],this.uniforms.alpha[1]=e[1]},o.alpha.get=function(){return this.uniforms.alpha},Object.defineProperties(n.prototype,o),n}(n.Filter);e.ReflectionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],52:[function(require,module,exports){
+},{"pixi.js":251}],53:[function(require,module,exports){
 /*!
  * @pixi/filter-rgb-split - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14820,7 +3142,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(e.__filters={},e.PIXI)}(this,function(e,r){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nvoid main(void)\n{\n   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/filterArea.xy).r;\n   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/filterArea.xy).g;\n   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/filterArea.xy).b;\n   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;\n}\n",o=function(e){function r(r,o,i){void 0===r&&(r=[-10,0]),void 0===o&&(o=[0,10]),void 0===i&&(i=[0,0]),e.call(this,t,n),this.red=r,this.green=o,this.blue=i}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var o={red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return o.red.get=function(){return this.uniforms.red},o.red.set=function(e){this.uniforms.red=e},o.green.get=function(){return this.uniforms.green},o.green.set=function(e){this.uniforms.green=e},o.blue.get=function(){return this.uniforms.blue},o.blue.set=function(e){this.uniforms.blue=e},Object.defineProperties(r.prototype,o),r}(r.Filter);e.RGBSplitFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],53:[function(require,module,exports){
+},{"pixi.js":251}],54:[function(require,module,exports){
 /*!
  * @pixi/filter-shockwave - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -14831,7 +3153,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\n\nuniform vec2 center;\n\nuniform float amplitude;\nuniform float wavelength;\n// uniform float power;\nuniform float brightness;\nuniform float speed;\nuniform float radius;\n\nuniform float time;\n\nconst float PI = 3.14159;\n\nvoid main()\n{\n    float halfWavelength = wavelength * 0.5 / filterArea.x;\n    float maxRadius = radius / filterArea.x;\n    float currentRadius = time * speed / filterArea.x;\n\n    float fade = 1.0;\n\n    if (maxRadius > 0.0) {\n        if (currentRadius > maxRadius) {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n        fade = 1.0 - pow(currentRadius / maxRadius, 2.0);\n    }\n\n    vec2 dir = vec2(vTextureCoord - center / filterArea.xy);\n    dir.y *= filterArea.y / filterArea.x;\n    float dist = length(dir);\n\n    if (dist <= 0.0 || dist < currentRadius - halfWavelength || dist > currentRadius + halfWavelength) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    vec2 diffUV = normalize(dir);\n\n    float diff = (dist - currentRadius) / halfWavelength;\n\n    float p = 1.0 - pow(abs(diff), 2.0);\n\n    // float powDiff = diff * pow(p, 2.0) * ( amplitude * fade );\n    float powDiff = 1.25 * sin(diff * PI) * p * ( amplitude * fade );\n\n    vec2 offset = diffUV * powDiff / filterArea.xy;\n\n    // Do clamp :\n    vec2 coord = vTextureCoord + offset;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    // No clamp :\n    // gl_FragColor = texture2D(uSampler, vTextureCoord + offset);\n\n    color.rgb *= 1.0 + (brightness - 1.0) * p * fade;\n\n    gl_FragColor = color;\n}\n",i=function(e){function t(t,i,o){void 0===t&&(t=[0,0]),void 0===i&&(i={}),void 0===o&&(o=0),e.call(this,n,r),this.center=t,Array.isArray(i)&&(console.warn("Deprecated Warning: ShockwaveFilter params Array has been changed to options Object."),i={}),i=Object.assign({amplitude:30,wavelength:160,brightness:1,speed:500,radius:-1},i),this.amplitude=i.amplitude,this.wavelength=i.wavelength,this.brightness=i.brightness,this.speed=i.speed,this.radius=i.radius,this.time=o}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var i={center:{configurable:!0},amplitude:{configurable:!0},wavelength:{configurable:!0},brightness:{configurable:!0},speed:{configurable:!0},radius:{configurable:!0}};return t.prototype.apply=function(e,t,n,r){this.uniforms.time=this.time,e.applyFilter(this,t,n,r)},i.center.get=function(){return this.uniforms.center},i.center.set=function(e){this.uniforms.center=e},i.amplitude.get=function(){return this.uniforms.amplitude},i.amplitude.set=function(e){this.uniforms.amplitude=e},i.wavelength.get=function(){return this.uniforms.wavelength},i.wavelength.set=function(e){this.uniforms.wavelength=e},i.brightness.get=function(){return this.uniforms.brightness},i.brightness.set=function(e){this.uniforms.brightness=e},i.speed.get=function(){return this.uniforms.speed},i.speed.set=function(e){this.uniforms.speed=e},i.radius.get=function(){return this.uniforms.radius},i.radius.set=function(e){this.uniforms.radius=e},Object.defineProperties(t.prototype,i),t}(t.Filter);e.ShockwaveFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":250}],54:[function(require,module,exports){
+},{"pixi.js":251}],55:[function(require,module,exports){
 /*!
  * @pixi/filter-simple-lightmap - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14842,7 +3164,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform sampler2D uLightmap;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\nuniform vec4 ambientColor;\nvoid main() {\n    vec4 diffuseColor = texture2D(uSampler, vTextureCoord);\n    vec2 lightCoord = (vTextureCoord * filterArea.xy) / dimensions;\n    vec4 light = texture2D(uLightmap, lightCoord);\n    vec3 ambient = ambientColor.rgb * ambientColor.a;\n    vec3 intensity = ambient + light.rgb;\n    vec3 finalColor = diffuseColor.rgb * intensity;\n    gl_FragColor = vec4(finalColor, diffuseColor.a);\n}\n",r=function(e){function r(t,r,n){void 0===r&&(r=0),void 0===n&&(n=1),e.call(this,o,i),this.uniforms.dimensions=new Float32Array(2),this.uniforms.ambientColor=new Float32Array([0,0,0,n]),this.texture=t,this.color=r}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var n={texture:{configurable:!0},color:{configurable:!0},alpha:{configurable:!0}};return r.prototype.apply=function(e,t,o,i){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,e.applyFilter(this,t,o,i)},n.texture.get=function(){return this.uniforms.uLightmap},n.texture.set=function(e){this.uniforms.uLightmap=e},n.color.set=function(e){var o=this.uniforms.ambientColor;"number"==typeof e?(t.utils.hex2rgb(e,o),this._color=e):(o[0]=e[0],o[1]=e[1],o[2]=e[2],o[3]=e[3],this._color=t.utils.rgb2hex(o))},n.color.get=function(){return this._color},n.alpha.get=function(){return this.uniforms.ambientColor[3]},n.alpha.set=function(e){this.uniforms.ambientColor[3]=e},Object.defineProperties(r.prototype,n),r}(t.Filter);e.SimpleLightmapFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],55:[function(require,module,exports){
+},{"pixi.js":251}],56:[function(require,module,exports){
 /*!
  * @pixi/filter-tilt-shift - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14853,7 +3175,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(t.__filters={},t.PIXI)}(this,function(t,e){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float blur;\nuniform float gradientBlur;\nuniform vec2 start;\nuniform vec2 end;\nuniform vec2 delta;\nuniform vec2 texSize;\n\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n    float total = 0.0;\n\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n    float radius = smoothstep(0.0, 1.0, abs(dot(vTextureCoord * texSize - start, normal)) / gradientBlur) * blur;\n\n    for (float t = -30.0; t <= 30.0; t++)\n    {\n        float percent = (t + offset - 0.5) / 30.0;\n        float weight = 1.0 - abs(percent);\n        vec4 sample = texture2D(uSampler, vTextureCoord + delta / texSize * percent * radius);\n        sample.rgb *= sample.a;\n        color += sample * weight;\n        total += weight;\n    }\n\n    color /= total;\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",n=function(t){function n(n,o,s,l){void 0===n&&(n=100),void 0===o&&(o=600),void 0===s&&(s=null),void 0===l&&(l=null),t.call(this,i,r),this.uniforms.blur=n,this.uniforms.gradientBlur=o,this.uniforms.start=s||new e.Point(0,window.innerHeight/2),this.uniforms.end=l||new e.Point(600,window.innerHeight/2),this.uniforms.delta=new e.Point(30,30),this.uniforms.texSize=new e.Point(window.innerWidth,window.innerHeight),this.updateDelta()}t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n;var o={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return n.prototype.updateDelta=function(){this.uniforms.delta.x=0,this.uniforms.delta.y=0},o.blur.get=function(){return this.uniforms.blur},o.blur.set=function(t){this.uniforms.blur=t},o.gradientBlur.get=function(){return this.uniforms.gradientBlur},o.gradientBlur.set=function(t){this.uniforms.gradientBlur=t},o.start.get=function(){return this.uniforms.start},o.start.set=function(t){this.uniforms.start=t,this.updateDelta()},o.end.get=function(){return this.uniforms.end},o.end.set=function(t){this.uniforms.end=t,this.updateDelta()},Object.defineProperties(n.prototype,o),n}(e.Filter),o=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=t/i,this.uniforms.delta.y=e/i},e}(n),s=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=-e/i,this.uniforms.delta.y=t/i},e}(n),l=function(t){function e(e,i,r,n){void 0===e&&(e=100),void 0===i&&(i=600),void 0===r&&(r=null),void 0===n&&(n=null),t.call(this),this.tiltShiftXFilter=new o(e,i,r,n),this.tiltShiftYFilter=new s(e,i,r,n)}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var i={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return e.prototype.apply=function(t,e,i){var r=t.getRenderTarget(!0);this.tiltShiftXFilter.apply(t,e,r),this.tiltShiftYFilter.apply(t,r,i),t.returnRenderTarget(r)},i.blur.get=function(){return this.tiltShiftXFilter.blur},i.blur.set=function(t){this.tiltShiftXFilter.blur=this.tiltShiftYFilter.blur=t},i.gradientBlur.get=function(){return this.tiltShiftXFilter.gradientBlur},i.gradientBlur.set=function(t){this.tiltShiftXFilter.gradientBlur=this.tiltShiftYFilter.gradientBlur=t},i.start.get=function(){return this.tiltShiftXFilter.start},i.start.set=function(t){this.tiltShiftXFilter.start=this.tiltShiftYFilter.start=t},i.end.get=function(){return this.tiltShiftXFilter.end},i.end.set=function(t){this.tiltShiftXFilter.end=this.tiltShiftYFilter.end=t},Object.defineProperties(e.prototype,i),e}(e.Filter);t.TiltShiftFilter=l,t.TiltShiftXFilter=o,t.TiltShiftYFilter=s,t.TiltShiftAxisFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],56:[function(require,module,exports){
+},{"pixi.js":251}],57:[function(require,module,exports){
 /*!
  * @pixi/filter-twist - v2.5.0
  * Compiled Wed, 10 Jan 2018 17:38:59 UTC
@@ -14864,7 +3186,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(o,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(o.__filters={},o.PIXI)}(this,function(o,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float radius;\nuniform float angle;\nuniform vec2 offset;\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 twist(vec2 coord)\n{\n    coord -= offset;\n\n    float dist = length(coord);\n\n    if (dist < radius)\n    {\n        float ratioDist = (radius - dist) / radius;\n        float angleMod = ratioDist * ratioDist * angle;\n        float s = sin(angleMod);\n        float c = cos(angleMod);\n        coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);\n    }\n\n    coord += offset;\n\n    return coord;\n}\n\nvoid main(void)\n{\n\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = twist(coord);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord );\n\n}\n",t=function(o){function n(n,t,i){void 0===n&&(n=200),void 0===t&&(t=4),void 0===i&&(i=20),o.call(this,r,e),this.radius=n,this.angle=t,this.padding=i}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={offset:{configurable:!0},radius:{configurable:!0},angle:{configurable:!0}};return t.offset.get=function(){return this.uniforms.offset},t.offset.set=function(o){this.uniforms.offset=o},t.radius.get=function(){return this.uniforms.radius},t.radius.set=function(o){this.uniforms.radius=o},t.angle.get=function(){return this.uniforms.angle},t.angle.set=function(o){this.uniforms.angle=o},Object.defineProperties(n.prototype,t),n}(n.Filter);o.TwistFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],57:[function(require,module,exports){
+},{"pixi.js":251}],58:[function(require,module,exports){
 /*!
  * @pixi/filter-zoom-blur - v2.6.0
  * Compiled Wed, 28 Feb 2018 22:04:57 UTC
@@ -14875,7 +3197,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uCenter;\nuniform float uStrength;\nuniform float uInnerRadius;\nuniform float uRadius;\n\nconst float MAX_KERNEL_SIZE = 32.0;\n\nfloat random(vec3 scale, float seed) {\n    // use the fragment position for a different seed per-pixel\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main() {\n\n    float minGradient = uInnerRadius * 0.3;\n    float innerRadius = (uInnerRadius + minGradient * 0.5) / filterArea.x;\n\n    float gradient = uRadius * 0.3;\n    float radius = (uRadius - gradient * 0.5) / filterArea.x;\n\n    float countLimit = MAX_KERNEL_SIZE;\n\n    vec2 dir = vec2(uCenter.xy / filterArea.xy - vTextureCoord);\n    float dist = length(vec2(dir.x, dir.y * filterArea.y / filterArea.x));\n\n    float strength = uStrength;\n\n    float delta = 0.0;\n    float gap;\n    if (dist < innerRadius) {\n        delta = innerRadius - dist;\n        gap = minGradient;\n    } else if (radius >= 0.0 && dist > radius) { // radius < 0 means it's infinity\n        delta = dist - radius;\n        gap = gradient;\n    }\n\n    if (delta > 0.0) {\n        float normalCount = gap / filterArea.x;\n        delta = (normalCount - delta) / normalCount;\n        countLimit *= delta;\n        strength *= delta;\n        if (countLimit < 1.0)\n        {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n    }\n\n    // randomize the lookup values to hide the fixed number of samples\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n    float total = 0.0;\n    vec4 color = vec4(0.0);\n\n    dir *= strength;\n\n    for (float t = 0.0; t < MAX_KERNEL_SIZE; t++) {\n        float percent = (t + offset) / MAX_KERNEL_SIZE;\n        float weight = 4.0 * (percent - percent * percent);\n        vec2 p = vTextureCoord + dir * percent;\n        vec4 sample = texture2D(uSampler, p);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample * weight;\n        total += weight;\n\n        if (t > countLimit){\n            break;\n        }\n    }\n\n    color /= total;\n    // switch back from pre-multiplied alpha\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",i=function(n){function e(e,i,o,a){void 0===e&&(e=.1),void 0===i&&(i=[0,0]),void 0===o&&(o=0),void 0===a&&(a=-1),n.call(this,t,r),this.center=i,this.strength=e,this.innerRadius=o,this.radius=a}n&&(e.__proto__=n),e.prototype=Object.create(n&&n.prototype),e.prototype.constructor=e;var i={center:{configurable:!0},strength:{configurable:!0},innerRadius:{configurable:!0},radius:{configurable:!0}};return i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(n){this.uniforms.uCenter=n},i.strength.get=function(){return this.uniforms.uStrength},i.strength.set=function(n){this.uniforms.uStrength=n},i.innerRadius.get=function(){return this.uniforms.uInnerRadius},i.innerRadius.set=function(n){this.uniforms.uInnerRadius=n},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(n){(n<0||n===1/0)&&(n=-1),this.uniforms.uRadius=n},Object.defineProperties(e.prototype,i),e}(e.Filter);n.ZoomBlurFilter=i,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
 
 
-},{"pixi.js":250}],58:[function(require,module,exports){
+},{"pixi.js":251}],59:[function(require,module,exports){
 module.exports = after
 
 function after(count, callback, err_cb) {
@@ -14905,7 +3227,7 @@ function after(count, callback, err_cb) {
 
 function noop() {}
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 /**
  * An abstraction for slicing an arraybuffer even when
  * ArrayBuffer.prototype.slice is not supported
@@ -14936,7 +3258,7 @@ module.exports = function(arraybuffer, start, end) {
   return result.buffer;
 };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 
 /**
  * Expose `Backoff`.
@@ -15023,7 +3345,7 @@ Backoff.prototype.setJitter = function(jitter){
 };
 
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 /*
  * base64-arraybuffer
  * https://github.com/niklasvh/base64-arraybuffer
@@ -15092,7 +3414,7 @@ Backoff.prototype.setJitter = function(jitter){
   };
 })();
 
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -15298,7 +3620,7 @@ exports.nextCombination = function(v) {
 }
 
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 (function (global){
 /**
  * Create a blob builder even when vendor prefixes exist
@@ -15398,7 +3720,7 @@ module.exports = (function() {
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -15423,7 +3745,7 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -15588,7 +3910,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -15596,7 +3918,7 @@ module.exports = function(a, b){
   a.prototype = new fn;
   a.prototype.constructor = a;
 };
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -16248,7 +4570,7 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 /**
 *   EasyStar.js
 *   github.com/prettymuchbryce/EasyStarJS
@@ -16806,7 +5128,7 @@ EasyStar.BOTTOM_LEFT = 'BOTTOM_LEFT'
 EasyStar.LEFT = 'LEFT'
 EasyStar.TOP_LEFT = 'TOP_LEFT'
 
-},{"./instance":69,"./node":70,"heap":89}],69:[function(require,module,exports){
+},{"./instance":70,"./node":71,"heap":90}],70:[function(require,module,exports){
 /**
  * Represents a single instance of EasyStar.
  * A path that is in the queue to eventually be found.
@@ -16821,7 +5143,7 @@ module.exports = function() {
     this.nodeHash = {};
     this.openList;
 };
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 /**
 * A simple Node that represents a single tile on the grid.
 * @param {Object} parent The parent node.
@@ -16844,7 +5166,7 @@ module.exports = function(parent, x, y, costSoFar, simpleDistanceToTarget) {
         return this.costSoFar + this.simpleDistanceToTarget;
     }
 };
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 
 module.exports = require('./socket');
 
@@ -16856,7 +5178,7 @@ module.exports = require('./socket');
  */
 module.exports.parser = require('engine.io-parser');
 
-},{"./socket":72,"engine.io-parser":82}],72:[function(require,module,exports){
+},{"./socket":73,"engine.io-parser":83}],73:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -17603,7 +5925,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":73,"./transports/index":74,"component-emitter":65,"debug":80,"engine.io-parser":82,"indexof":91,"parseqs":97,"parseuri":98}],73:[function(require,module,exports){
+},{"./transport":74,"./transports/index":75,"component-emitter":66,"debug":81,"engine.io-parser":83,"indexof":92,"parseqs":98,"parseuri":99}],74:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -17762,7 +6084,7 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
-},{"component-emitter":65,"engine.io-parser":82}],74:[function(require,module,exports){
+},{"component-emitter":66,"engine.io-parser":83}],75:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies
@@ -17819,7 +6141,7 @@ function polling (opts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":75,"./polling-xhr":76,"./websocket":78,"xmlhttprequest-ssl":79}],75:[function(require,module,exports){
+},{"./polling-jsonp":76,"./polling-xhr":77,"./websocket":79,"xmlhttprequest-ssl":80}],76:[function(require,module,exports){
 (function (global){
 
 /**
@@ -18054,7 +6376,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":77,"component-inherit":66}],76:[function(require,module,exports){
+},{"./polling":78,"component-inherit":67}],77:[function(require,module,exports){
 (function (global){
 /**
  * Module requirements.
@@ -18470,7 +6792,7 @@ function unloadHandler () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":77,"component-emitter":65,"component-inherit":66,"debug":80,"xmlhttprequest-ssl":79}],77:[function(require,module,exports){
+},{"./polling":78,"component-emitter":66,"component-inherit":67,"debug":81,"xmlhttprequest-ssl":80}],78:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -18717,7 +7039,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":73,"component-inherit":66,"debug":80,"engine.io-parser":82,"parseqs":97,"xmlhttprequest-ssl":79,"yeast":306}],78:[function(require,module,exports){
+},{"../transport":74,"component-inherit":67,"debug":81,"engine.io-parser":83,"parseqs":98,"xmlhttprequest-ssl":80,"yeast":307}],79:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -19007,7 +7329,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":73,"component-inherit":66,"debug":80,"engine.io-parser":82,"parseqs":97,"ws":308,"yeast":306}],79:[function(require,module,exports){
+},{"../transport":74,"component-inherit":67,"debug":81,"engine.io-parser":83,"parseqs":98,"ws":314,"yeast":307}],80:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -19048,7 +7370,7 @@ module.exports = function (opts) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":88}],80:[function(require,module,exports){
+},{"has-cors":89}],81:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -19247,7 +7569,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":81,"_process":312}],81:[function(require,module,exports){
+},{"./debug":82,"_process":318}],82:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -19474,7 +7796,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":94}],82:[function(require,module,exports){
+},{"ms":95}],83:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -20084,7 +8406,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":83,"./utf8":84,"after":58,"arraybuffer.slice":59,"base64-arraybuffer":61,"blob":63,"has-binary2":86}],83:[function(require,module,exports){
+},{"./keys":84,"./utf8":85,"after":59,"arraybuffer.slice":60,"base64-arraybuffer":62,"blob":64,"has-binary2":87}],84:[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -20105,7 +8427,7 @@ module.exports = Object.keys || function keys (obj){
   return arr;
 };
 
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
@@ -20364,7 +8686,7 @@ module.exports = Object.keys || function keys (obj){
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -20677,7 +8999,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (Buffer){
 /* global Blob File */
 
@@ -20745,14 +9067,14 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":309,"isarray":87}],87:[function(require,module,exports){
+},{"buffer":315,"isarray":88}],88:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -20771,10 +9093,10 @@ try {
   module.exports = false;
 }
 
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 module.exports = require('./lib/heap');
 
-},{"./lib/heap":90}],90:[function(require,module,exports){
+},{"./lib/heap":91}],91:[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 (function() {
   var Heap, defaultCmp, floor, heapify, heappop, heappush, heappushpop, heapreplace, insort, min, nlargest, nsmallest, updateItem, _siftdown, _siftup;
@@ -21151,7 +9473,7 @@ module.exports = require('./lib/heap');
 
 }).call(this);
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -21162,7 +9484,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 /**
  * isMobile.js v0.4.1
  *
@@ -21301,7 +9623,7 @@ module.exports = function(arr, obj){
 
 })(this);
 
-},{}],93:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21468,7 +9790,7 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -21622,7 +9944,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],95:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -21714,7 +10036,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -21746,7 +10068,7 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -21785,7 +10107,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -21826,7 +10148,7 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -22094,7 +10416,7 @@ module.exports = function parseuri(str) {
 
 }).call(this);
 
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 /*!
  * pixi-filters - v2.6.1
  * Compiled Thu, 03 May 2018 14:20:43 UTC
@@ -22105,7 +10427,7 @@ module.exports = function parseuri(str) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0});var filterAdjustment=require("@pixi/filter-adjustment"),filterAdvancedBloom=require("@pixi/filter-advanced-bloom"),filterAscii=require("@pixi/filter-ascii"),filterBevel=require("@pixi/filter-bevel"),filterBloom=require("@pixi/filter-bloom"),filterBulgePinch=require("@pixi/filter-bulge-pinch"),filterColorMap=require("@pixi/filter-color-map"),filterColorReplace=require("@pixi/filter-color-replace"),filterConvolution=require("@pixi/filter-convolution"),filterCrossHatch=require("@pixi/filter-cross-hatch"),filterCrt=require("@pixi/filter-crt"),filterDot=require("@pixi/filter-dot"),filterDropShadow=require("@pixi/filter-drop-shadow"),filterEmboss=require("@pixi/filter-emboss"),filterGlitch=require("@pixi/filter-glitch"),filterGlow=require("@pixi/filter-glow"),filterGodray=require("@pixi/filter-godray"),filterKawaseBlur=require("@pixi/filter-kawase-blur"),filterMotionBlur=require("@pixi/filter-motion-blur"),filterMultiColorReplace=require("@pixi/filter-multi-color-replace"),filterOldFilm=require("@pixi/filter-old-film"),filterOutline=require("@pixi/filter-outline"),filterPixelate=require("@pixi/filter-pixelate"),filterRadialBlur=require("@pixi/filter-radial-blur"),filterReflection=require("@pixi/filter-reflection"),filterRgbSplit=require("@pixi/filter-rgb-split"),filterShockwave=require("@pixi/filter-shockwave"),filterSimpleLightmap=require("@pixi/filter-simple-lightmap"),filterTiltShift=require("@pixi/filter-tilt-shift"),filterTwist=require("@pixi/filter-twist"),filterZoomBlur=require("@pixi/filter-zoom-blur");exports.AdjustmentFilter=filterAdjustment.AdjustmentFilter,exports.AdvancedBloomFilter=filterAdvancedBloom.AdvancedBloomFilter,exports.AsciiFilter=filterAscii.AsciiFilter,exports.BevelFilter=filterBevel.BevelFilter,exports.BloomFilter=filterBloom.BloomFilter,exports.BulgePinchFilter=filterBulgePinch.BulgePinchFilter,exports.ColorMapFilter=filterColorMap.ColorMapFilter,exports.ColorReplaceFilter=filterColorReplace.ColorReplaceFilter,exports.ConvolutionFilter=filterConvolution.ConvolutionFilter,exports.CrossHatchFilter=filterCrossHatch.CrossHatchFilter,exports.CRTFilter=filterCrt.CRTFilter,exports.DotFilter=filterDot.DotFilter,exports.DropShadowFilter=filterDropShadow.DropShadowFilter,exports.EmbossFilter=filterEmboss.EmbossFilter,exports.GlitchFilter=filterGlitch.GlitchFilter,exports.GlowFilter=filterGlow.GlowFilter,exports.GodrayFilter=filterGodray.GodrayFilter,exports.KawaseBlurFilter=filterKawaseBlur.KawaseBlurFilter,exports.MotionBlurFilter=filterMotionBlur.MotionBlurFilter,exports.MultiColorReplaceFilter=filterMultiColorReplace.MultiColorReplaceFilter,exports.OldFilmFilter=filterOldFilm.OldFilmFilter,exports.OutlineFilter=filterOutline.OutlineFilter,exports.PixelateFilter=filterPixelate.PixelateFilter,exports.RadialBlurFilter=filterRadialBlur.RadialBlurFilter,exports.ReflectionFilter=filterReflection.ReflectionFilter,exports.RGBSplitFilter=filterRgbSplit.RGBSplitFilter,exports.ShockwaveFilter=filterShockwave.ShockwaveFilter,exports.SimpleLightmapFilter=filterSimpleLightmap.SimpleLightmapFilter,exports.TiltShiftFilter=filterTiltShift.TiltShiftFilter,exports.TiltShiftAxisFilter=filterTiltShift.TiltShiftAxisFilter,exports.TiltShiftXFilter=filterTiltShift.TiltShiftXFilter,exports.TiltShiftYFilter=filterTiltShift.TiltShiftYFilter,exports.TwistFilter=filterTwist.TwistFilter,exports.ZoomBlurFilter=filterZoomBlur.ZoomBlurFilter;
 
 
-},{"@pixi/filter-adjustment":27,"@pixi/filter-advanced-bloom":28,"@pixi/filter-ascii":29,"@pixi/filter-bevel":30,"@pixi/filter-bloom":31,"@pixi/filter-bulge-pinch":32,"@pixi/filter-color-map":33,"@pixi/filter-color-replace":34,"@pixi/filter-convolution":35,"@pixi/filter-cross-hatch":36,"@pixi/filter-crt":37,"@pixi/filter-dot":38,"@pixi/filter-drop-shadow":39,"@pixi/filter-emboss":40,"@pixi/filter-glitch":41,"@pixi/filter-glow":42,"@pixi/filter-godray":43,"@pixi/filter-kawase-blur":44,"@pixi/filter-motion-blur":45,"@pixi/filter-multi-color-replace":46,"@pixi/filter-old-film":47,"@pixi/filter-outline":48,"@pixi/filter-pixelate":49,"@pixi/filter-radial-blur":50,"@pixi/filter-reflection":51,"@pixi/filter-rgb-split":52,"@pixi/filter-shockwave":53,"@pixi/filter-simple-lightmap":54,"@pixi/filter-tilt-shift":55,"@pixi/filter-twist":56,"@pixi/filter-zoom-blur":57}],101:[function(require,module,exports){
+},{"@pixi/filter-adjustment":28,"@pixi/filter-advanced-bloom":29,"@pixi/filter-ascii":30,"@pixi/filter-bevel":31,"@pixi/filter-bloom":32,"@pixi/filter-bulge-pinch":33,"@pixi/filter-color-map":34,"@pixi/filter-color-replace":35,"@pixi/filter-convolution":36,"@pixi/filter-cross-hatch":37,"@pixi/filter-crt":38,"@pixi/filter-dot":39,"@pixi/filter-drop-shadow":40,"@pixi/filter-emboss":41,"@pixi/filter-glitch":42,"@pixi/filter-glow":43,"@pixi/filter-godray":44,"@pixi/filter-kawase-blur":45,"@pixi/filter-motion-blur":46,"@pixi/filter-multi-color-replace":47,"@pixi/filter-old-film":48,"@pixi/filter-outline":49,"@pixi/filter-pixelate":50,"@pixi/filter-radial-blur":51,"@pixi/filter-reflection":52,"@pixi/filter-rgb-split":53,"@pixi/filter-shockwave":54,"@pixi/filter-simple-lightmap":55,"@pixi/filter-tilt-shift":56,"@pixi/filter-twist":57,"@pixi/filter-zoom-blur":58}],102:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -22226,7 +10548,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -22454,7 +10776,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":104}],103:[function(require,module,exports){
+},{"./GLTexture":105}],104:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -22550,7 +10872,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":109,"./shader/extractAttributes":111,"./shader/extractUniforms":112,"./shader/generateUniformAccessObject":113,"./shader/setPrecision":117}],104:[function(require,module,exports){
+},{"./shader/compileProgram":110,"./shader/extractAttributes":112,"./shader/extractUniforms":113,"./shader/generateUniformAccessObject":114,"./shader/setPrecision":118}],105:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -22885,7 +11207,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],105:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -23153,7 +11475,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":108}],106:[function(require,module,exports){
+},{"./setVertexAttribArrays":109}],107:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -23181,7 +11503,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -23208,7 +11530,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":101,"./GLFramebuffer":102,"./GLShader":103,"./GLTexture":104,"./VertexArrayObject":105,"./createContext":106,"./setVertexAttribArrays":108,"./shader":114}],108:[function(require,module,exports){
+},{"./GLBuffer":102,"./GLFramebuffer":103,"./GLShader":104,"./GLTexture":105,"./VertexArrayObject":106,"./createContext":107,"./setVertexAttribArrays":109,"./shader":115}],109:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -23265,7 +11587,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 
 /**
  * @class
@@ -23347,7 +11669,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -23427,7 +11749,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -23470,7 +11792,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":115,"./mapType":116}],112:[function(require,module,exports){
+},{"./mapSize":116,"./mapType":117}],113:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -23507,7 +11829,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":110,"./mapType":116}],113:[function(require,module,exports){
+},{"./defaultValue":111,"./mapType":117}],114:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -23630,7 +11952,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],114:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -23641,7 +11963,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":109,"./defaultValue":110,"./extractAttributes":111,"./extractUniforms":112,"./generateUniformAccessObject":113,"./mapSize":115,"./mapType":116,"./setPrecision":117}],115:[function(require,module,exports){
+},{"./compileProgram":110,"./defaultValue":111,"./extractAttributes":112,"./extractUniforms":113,"./generateUniformAccessObject":114,"./mapSize":116,"./mapType":117,"./setPrecision":118}],116:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -23679,7 +12001,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -23727,7 +12049,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -23747,7 +12069,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],118:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 var pixi_display;
 (function (pixi_display) {
     Object.assign(PIXI.Container.prototype, {
@@ -24474,7 +12796,7 @@ var pixi_display;
     PIXI.display = pixi_display;
 })(pixi_display || (pixi_display = {}));
 
-},{}],119:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -24595,10 +12917,10 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":290}],120:[function(require,module,exports){
+},{"resource-loader":291}],121:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -24807,7 +13129,7 @@ module.exports = function (_Plugin) {
     return Bounce;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],122:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],123:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -24885,7 +13207,7 @@ module.exports = function (_Plugin) {
     return ClampZoom;
 }(Plugin);
 
-},{"./plugin":129}],123:[function(require,module,exports){
+},{"./plugin":130}],124:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25050,7 +13372,7 @@ module.exports = function (_Plugin) {
     return clamp;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],124:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],125:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25205,7 +13527,7 @@ module.exports = function (_Plugin) {
     return Decelerate;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],125:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],126:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25419,7 +13741,7 @@ module.exports = function (_Plugin) {
     return Drag;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],126:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],127:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25497,7 +13819,7 @@ module.exports = function (_Plugin) {
     return Follow;
 }(Plugin);
 
-},{"./plugin":129}],127:[function(require,module,exports){
+},{"./plugin":130}],128:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25671,7 +13993,7 @@ module.exports = function (_Plugin) {
     return MouseEdges;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],128:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],129:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25790,7 +14112,7 @@ module.exports = function (_Plugin) {
     return Pinch;
 }(Plugin);
 
-},{"./plugin":129}],129:[function(require,module,exports){
+},{"./plugin":130}],130:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25841,7 +14163,7 @@ module.exports = function () {
     return Plugin;
 }();
 
-},{}],130:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26017,7 +14339,7 @@ module.exports = function (_Plugin) {
     return SnapZoom;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],131:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],132:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26162,7 +14484,7 @@ module.exports = function (_Plugin) {
     return Snap;
 }(Plugin);
 
-},{"./plugin":129,"./utils":132}],132:[function(require,module,exports){
+},{"./plugin":130,"./utils":133}],133:[function(require,module,exports){
 'use strict';
 
 var Penner = require('penner');
@@ -26197,7 +14519,7 @@ module.exports = {
     ease: ease
 };
 
-},{"penner":99}],133:[function(require,module,exports){
+},{"penner":100}],134:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -27732,7 +16054,7 @@ PIXI.extras.Viewport = Viewport;
 
 module.exports = Viewport;
 
-},{"./bounce":121,"./clamp":123,"./clamp-zoom":122,"./decelerate":124,"./drag":125,"./follow":126,"./mouse-edges":127,"./pinch":128,"./snap":131,"./snap-zoom":130,"./utils":132,"./wheel":134}],134:[function(require,module,exports){
+},{"./bounce":122,"./clamp":124,"./clamp-zoom":123,"./decelerate":125,"./drag":126,"./follow":127,"./mouse-edges":128,"./pinch":129,"./snap":132,"./snap-zoom":131,"./utils":133,"./wheel":135}],135:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -27862,7 +16184,7 @@ module.exports = function (_Plugin) {
     return Wheel;
 }(Plugin);
 
-},{"./plugin":129}],135:[function(require,module,exports){
+},{"./plugin":130}],136:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28391,7 +16713,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":160,"./accessibleTarget":136,"ismobilejs":92}],136:[function(require,module,exports){
+},{"../core":161,"./accessibleTarget":137,"ismobilejs":93}],137:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28449,7 +16771,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],137:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28474,7 +16796,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":135,"./accessibleTarget":136}],138:[function(require,module,exports){
+},{"./AccessibilityManager":136,"./accessibleTarget":137}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28706,7 +17028,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":140,"./const":141,"./display/Container":143,"./settings":196,"./ticker":216}],139:[function(require,module,exports){
+},{"./autoDetectRenderer":141,"./const":142,"./display/Container":144,"./settings":197,"./ticker":217}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28773,7 +17095,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":196,"pixi-gl-core":107}],140:[function(require,module,exports){
+},{"./settings":197,"pixi-gl-core":108}],141:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28842,7 +17164,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":172,"./renderers/webgl/WebGLRenderer":179,"./utils":220}],141:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":173,"./renderers/webgl/WebGLRenderer":180,"./utils":221}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29185,7 +17507,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],142:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29528,7 +17850,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":165}],143:[function(require,module,exports){
+},{"../math":166}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30146,7 +18468,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":220,"./DisplayObject":144}],144:[function(require,module,exports){
+},{"../utils":221,"./DisplayObject":145}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30840,7 +19162,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":141,"../math":165,"../settings":196,"./Bounds":142,"./Transform":145,"./TransformStatic":147,"eventemitter3":85}],145:[function(require,module,exports){
+},{"../const":142,"../math":166,"../settings":197,"./Bounds":143,"./Transform":146,"./TransformStatic":148,"eventemitter3":86}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31021,7 +19343,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":165,"./TransformBase":146}],146:[function(require,module,exports){
+},{"../math":166,"./TransformBase":147}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31108,7 +19430,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":165}],147:[function(require,module,exports){
+},{"../math":166}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31318,7 +19640,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":165,"./TransformBase":146}],148:[function(require,module,exports){
+},{"../math":166,"./TransformBase":147}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32695,7 +21017,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":141,"../display/Bounds":142,"../display/Container":143,"../math":165,"../renderers/canvas/CanvasRenderer":172,"../sprites/Sprite":197,"../textures/RenderTexture":208,"../textures/Texture":210,"../utils":220,"./GraphicsData":149,"./utils/bezierCurveTo":151}],149:[function(require,module,exports){
+},{"../const":142,"../display/Bounds":143,"../display/Container":144,"../math":166,"../renderers/canvas/CanvasRenderer":173,"../sprites/Sprite":198,"../textures/RenderTexture":209,"../textures/Texture":211,"../utils":221,"./GraphicsData":150,"./utils/bezierCurveTo":152}],150:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -32840,7 +21162,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],150:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33105,7 +21427,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":141,"../../renderers/canvas/CanvasRenderer":172}],151:[function(require,module,exports){
+},{"../../const":142,"../../renderers/canvas/CanvasRenderer":173}],152:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -33155,7 +21477,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],152:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33420,7 +21742,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":141,"../../renderers/webgl/WebGLRenderer":179,"../../renderers/webgl/utils/ObjectRenderer":189,"../../utils":220,"./WebGLGraphicsData":153,"./shaders/PrimitiveShader":154,"./utils/buildCircle":155,"./utils/buildPoly":157,"./utils/buildRectangle":158,"./utils/buildRoundedRectangle":159}],153:[function(require,module,exports){
+},{"../../const":142,"../../renderers/webgl/WebGLRenderer":180,"../../renderers/webgl/utils/ObjectRenderer":190,"../../utils":221,"./WebGLGraphicsData":154,"./shaders/PrimitiveShader":155,"./utils/buildCircle":156,"./utils/buildPoly":158,"./utils/buildRectangle":159,"./utils/buildRoundedRectangle":160}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33563,7 +21885,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":107}],154:[function(require,module,exports){
+},{"pixi-gl-core":108}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33608,7 +21930,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":139}],155:[function(require,module,exports){
+},{"../../../Shader":140}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33703,7 +22025,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":141,"../../../utils":220,"./buildLine":156}],156:[function(require,module,exports){
+},{"../../../const":142,"../../../utils":221,"./buildLine":157}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33977,7 +22299,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":165,"../../../utils":220}],157:[function(require,module,exports){
+},{"../../../math":166,"../../../utils":221}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34063,7 +22385,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":220,"./buildLine":156,"earcut":67}],158:[function(require,module,exports){
+},{"../../../utils":221,"./buildLine":157,"earcut":68}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34139,7 +22461,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":220,"./buildLine":156}],159:[function(require,module,exports){
+},{"../../../utils":221,"./buildLine":157}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34295,7 +22617,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":220,"./buildLine":156,"earcut":67}],160:[function(require,module,exports){
+},{"../../../utils":221,"./buildLine":157,"earcut":68}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34681,7 +23003,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":138,"./Shader":139,"./autoDetectRenderer":140,"./const":141,"./display/Bounds":142,"./display/Container":143,"./display/DisplayObject":144,"./display/Transform":145,"./display/TransformBase":146,"./display/TransformStatic":147,"./graphics/Graphics":148,"./graphics/GraphicsData":149,"./graphics/canvas/CanvasGraphicsRenderer":150,"./graphics/webgl/GraphicsRenderer":152,"./math":165,"./renderers/canvas/CanvasRenderer":172,"./renderers/canvas/utils/CanvasRenderTarget":174,"./renderers/webgl/WebGLRenderer":179,"./renderers/webgl/filters/Filter":181,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":184,"./renderers/webgl/managers/WebGLManager":188,"./renderers/webgl/utils/ObjectRenderer":189,"./renderers/webgl/utils/Quad":190,"./renderers/webgl/utils/RenderTarget":191,"./settings":196,"./sprites/Sprite":197,"./sprites/canvas/CanvasSpriteRenderer":198,"./sprites/canvas/CanvasTinter":199,"./sprites/webgl/SpriteRenderer":201,"./text/Text":203,"./text/TextMetrics":204,"./text/TextStyle":205,"./textures/BaseRenderTexture":206,"./textures/BaseTexture":207,"./textures/RenderTexture":208,"./textures/Spritesheet":209,"./textures/Texture":210,"./textures/TextureMatrix":211,"./textures/TextureUvs":212,"./textures/VideoBaseTexture":213,"./ticker":216,"./utils":220,"pixi-gl-core":107}],161:[function(require,module,exports){
+},{"./Application":139,"./Shader":140,"./autoDetectRenderer":141,"./const":142,"./display/Bounds":143,"./display/Container":144,"./display/DisplayObject":145,"./display/Transform":146,"./display/TransformBase":147,"./display/TransformStatic":148,"./graphics/Graphics":149,"./graphics/GraphicsData":150,"./graphics/canvas/CanvasGraphicsRenderer":151,"./graphics/webgl/GraphicsRenderer":153,"./math":166,"./renderers/canvas/CanvasRenderer":173,"./renderers/canvas/utils/CanvasRenderTarget":175,"./renderers/webgl/WebGLRenderer":180,"./renderers/webgl/filters/Filter":182,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":185,"./renderers/webgl/managers/WebGLManager":189,"./renderers/webgl/utils/ObjectRenderer":190,"./renderers/webgl/utils/Quad":191,"./renderers/webgl/utils/RenderTarget":192,"./settings":197,"./sprites/Sprite":198,"./sprites/canvas/CanvasSpriteRenderer":199,"./sprites/canvas/CanvasTinter":200,"./sprites/webgl/SpriteRenderer":202,"./text/Text":204,"./text/TextMetrics":205,"./text/TextStyle":206,"./textures/BaseRenderTexture":207,"./textures/BaseTexture":208,"./textures/RenderTexture":209,"./textures/Spritesheet":210,"./textures/Texture":211,"./textures/TextureMatrix":212,"./textures/TextureUvs":213,"./textures/VideoBaseTexture":214,"./ticker":217,"./utils":221,"pixi-gl-core":108}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34874,7 +23196,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":162}],162:[function(require,module,exports){
+},{"./Matrix":163}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35396,7 +23718,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":141,"./Point":164}],163:[function(require,module,exports){
+},{"../const":142,"./Point":165}],164:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -35547,7 +23869,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],164:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -35638,7 +23960,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35726,7 +24048,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":161,"./Matrix":162,"./ObservablePoint":163,"./Point":164,"./shapes/Circle":166,"./shapes/Ellipse":167,"./shapes/Polygon":168,"./shapes/Rectangle":169,"./shapes/RoundedRectangle":170}],166:[function(require,module,exports){
+},{"./GroupD8":162,"./Matrix":163,"./ObservablePoint":164,"./Point":165,"./shapes/Circle":167,"./shapes/Ellipse":168,"./shapes/Polygon":169,"./shapes/Rectangle":170,"./shapes/RoundedRectangle":171}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35840,7 +24162,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":141,"./Rectangle":169}],167:[function(require,module,exports){
+},{"../../const":142,"./Rectangle":170}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35962,7 +24284,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":141,"./Rectangle":169}],168:[function(require,module,exports){
+},{"../../const":142,"./Rectangle":170}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36093,7 +24415,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":141,"../Point":164}],169:[function(require,module,exports){
+},{"../../const":142,"../Point":165}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36356,7 +24678,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":141}],170:[function(require,module,exports){
+},{"../../const":142}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36489,7 +24811,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":141}],171:[function(require,module,exports){
+},{"../../const":142}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36854,7 +25176,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":141,"../display/Container":143,"../math":165,"../settings":196,"../textures/RenderTexture":208,"../utils":220,"eventemitter3":85}],172:[function(require,module,exports){
+},{"../const":142,"../display/Container":144,"../math":166,"../settings":197,"../textures/RenderTexture":209,"../utils":221,"eventemitter3":86}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37219,7 +25541,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":141,"../../settings":196,"../../utils":220,"../SystemRenderer":171,"./utils/CanvasMaskManager":173,"./utils/CanvasRenderTarget":174,"./utils/mapCanvasBlendModesToPixi":176}],173:[function(require,module,exports){
+},{"../../const":142,"../../settings":197,"../../utils":221,"../SystemRenderer":172,"./utils/CanvasMaskManager":174,"./utils/CanvasRenderTarget":175,"./utils/mapCanvasBlendModesToPixi":177}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37388,7 +25710,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":141}],174:[function(require,module,exports){
+},{"../../../const":142}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37512,7 +25834,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":196}],175:[function(require,module,exports){
+},{"../../../settings":197}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37573,7 +25895,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37645,7 +25967,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":141,"./canUseNewCanvasBlendModes":175}],177:[function(require,module,exports){
+},{"../../../const":142,"./canUseNewCanvasBlendModes":176}],178:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37765,7 +26087,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":141,"../../settings":196}],178:[function(require,module,exports){
+},{"../../const":142,"../../settings":197}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38021,7 +26343,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":141,"../../utils":220,"./utils/RenderTarget":191,"pixi-gl-core":107}],179:[function(require,module,exports){
+},{"../../const":142,"../../utils":221,"./utils/RenderTarget":192,"pixi-gl-core":108}],180:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38838,7 +27160,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":141,"../../textures/BaseTexture":207,"../../utils":220,"../SystemRenderer":171,"./TextureGarbageCollector":177,"./TextureManager":178,"./WebGLState":180,"./managers/FilterManager":185,"./managers/MaskManager":186,"./managers/StencilManager":187,"./utils/ObjectRenderer":189,"./utils/RenderTarget":191,"./utils/mapWebGLDrawModesToPixi":194,"./utils/validateContext":195,"pixi-gl-core":107}],180:[function(require,module,exports){
+},{"../../const":142,"../../textures/BaseTexture":208,"../../utils":221,"../SystemRenderer":172,"./TextureGarbageCollector":178,"./TextureManager":179,"./WebGLState":181,"./managers/FilterManager":186,"./managers/MaskManager":187,"./managers/StencilManager":188,"./utils/ObjectRenderer":190,"./utils/RenderTarget":192,"./utils/mapWebGLDrawModesToPixi":195,"./utils/validateContext":196,"pixi-gl-core":108}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39118,7 +27440,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":193}],181:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":194}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39314,7 +27636,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":141,"../../../settings":196,"../../../utils":220,"./extractUniformsFromSrc":182}],182:[function(require,module,exports){
+},{"../../../const":142,"../../../settings":197,"../../../utils":221,"./extractUniformsFromSrc":183}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39376,7 +27698,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":107}],183:[function(require,module,exports){
+},{"pixi-gl-core":108}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39436,7 +27758,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":165}],184:[function(require,module,exports){
+},{"../../../math":166}],185:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39524,7 +27846,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":165,"../../../../textures/TextureMatrix":211,"../Filter":181,"path":311}],185:[function(require,module,exports){
+},{"../../../../math":166,"../../../../textures/TextureMatrix":212,"../Filter":182,"path":317}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40174,7 +28496,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":139,"../../../math":165,"../filters/filterTransforms":183,"../utils/Quad":190,"../utils/RenderTarget":191,"./WebGLManager":188,"bit-twiddle":62}],186:[function(require,module,exports){
+},{"../../../Shader":140,"../../../math":166,"../filters/filterTransforms":184,"../utils/Quad":191,"../utils/RenderTarget":192,"./WebGLManager":189,"bit-twiddle":63}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40384,7 +28706,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":184,"./WebGLManager":188}],187:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":185,"./WebGLManager":189}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40537,7 +28859,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":188}],188:[function(require,module,exports){
+},{"./WebGLManager":189}],189:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40592,7 +28914,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],189:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40670,7 +28992,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":188}],190:[function(require,module,exports){
+},{"../managers/WebGLManager":189}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40851,7 +29173,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":218,"pixi-gl-core":107}],191:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":219,"pixi-gl-core":108}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41185,7 +29507,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":141,"../../../math":165,"../../../settings":196,"pixi-gl-core":107}],192:[function(require,module,exports){
+},{"../../../const":142,"../../../math":166,"../../../settings":197,"pixi-gl-core":108}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41260,7 +29582,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":107}],193:[function(require,module,exports){
+},{"pixi-gl-core":108}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41309,7 +29631,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":141}],194:[function(require,module,exports){
+},{"../../../const":142}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41341,7 +29663,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":141}],195:[function(require,module,exports){
+},{"../../../const":142}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41357,7 +29679,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],196:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41602,7 +29924,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":217,"./utils/maxRecommendedTextures":222}],197:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":218,"./utils/maxRecommendedTextures":223}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42243,7 +30565,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":141,"../display/Container":143,"../math":165,"../textures/Texture":210,"../utils":220}],198:[function(require,module,exports){
+},{"../const":142,"../display/Container":144,"../math":166,"../textures/Texture":211,"../utils":221}],199:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42396,7 +30718,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":141,"../../math":165,"../../renderers/canvas/CanvasRenderer":172,"./CanvasTinter":199}],199:[function(require,module,exports){
+},{"../../const":142,"../../math":166,"../../renderers/canvas/CanvasRenderer":173,"./CanvasTinter":200}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42647,7 +30969,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":175,"../../utils":220}],200:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":176,"../../utils":221}],201:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -42700,7 +31022,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],201:[function(require,module,exports){
+},{}],202:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43253,7 +31575,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":179,"../../renderers/webgl/utils/ObjectRenderer":189,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":192,"../../settings":196,"../../utils":220,"../../utils/createIndicesForQuads":218,"./BatchBuffer":200,"./generateMultiTextureShader":202,"bit-twiddle":62,"pixi-gl-core":107}],202:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":180,"../../renderers/webgl/utils/ObjectRenderer":190,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":193,"../../settings":197,"../../utils":221,"../../utils/createIndicesForQuads":219,"./BatchBuffer":201,"./generateMultiTextureShader":203,"bit-twiddle":63,"pixi-gl-core":108}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43316,7 +31638,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":139,"path":311}],203:[function(require,module,exports){
+},{"../../Shader":140,"path":317}],204:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43974,7 +32296,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":141,"../math":165,"../settings":196,"../sprites/Sprite":197,"../textures/Texture":210,"../utils":220,"../utils/trimCanvas":225,"./TextMetrics":204,"./TextStyle":205}],204:[function(require,module,exports){
+},{"../const":142,"../math":166,"../settings":197,"../sprites/Sprite":198,"../textures/Texture":211,"../utils":221,"../utils/trimCanvas":226,"./TextMetrics":205,"./TextStyle":206}],205:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44674,7 +32996,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],205:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45508,7 +33830,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":141,"../utils":220}],206:[function(require,module,exports){
+},{"../const":142,"../utils":221}],207:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45670,7 +33992,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":196,"./BaseTexture":207}],207:[function(require,module,exports){
+},{"../settings":197,"./BaseTexture":208}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46516,7 +34838,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":196,"../utils":220,"../utils/determineCrossOrigin":219,"bit-twiddle":62,"eventemitter3":85}],208:[function(require,module,exports){
+},{"../settings":197,"../utils":221,"../utils/determineCrossOrigin":220,"bit-twiddle":63,"eventemitter3":86}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46670,7 +34992,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":206,"./Texture":210}],209:[function(require,module,exports){
+},{"./BaseRenderTexture":207,"./Texture":211}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46999,7 +35321,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":160,"../utils":220}],210:[function(require,module,exports){
+},{"../":161,"../utils":221}],211:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47700,7 +36022,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":165,"../settings":196,"../utils":220,"./BaseTexture":207,"./TextureUvs":212,"./VideoBaseTexture":213,"eventemitter3":85}],211:[function(require,module,exports){
+},{"../math":166,"../settings":197,"../utils":221,"./BaseTexture":208,"./TextureUvs":213,"./VideoBaseTexture":214,"eventemitter3":86}],212:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47864,7 +36186,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":162}],212:[function(require,module,exports){
+},{"../math/Matrix":163}],213:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47969,7 +36291,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":161}],213:[function(require,module,exports){
+},{"../math/GroupD8":162}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48312,7 +36634,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":141,"../ticker":216,"../utils":220,"../utils/determineCrossOrigin":219,"./BaseTexture":207}],214:[function(require,module,exports){
+},{"../const":142,"../ticker":217,"../utils":221,"../utils/determineCrossOrigin":220,"./BaseTexture":208}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48785,7 +37107,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":141,"../settings":196,"./TickerListener":215}],215:[function(require,module,exports){
+},{"../const":142,"../settings":197,"./TickerListener":216}],216:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -48959,7 +37281,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],216:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49039,7 +37361,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":214}],217:[function(require,module,exports){
+},{"./Ticker":215}],218:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49053,7 +37375,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],218:[function(require,module,exports){
+},{}],219:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49087,7 +37409,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],219:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49143,7 +37465,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":317}],220:[function(require,module,exports){
+},{"url":323}],221:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49626,7 +37948,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":141,"../settings":196,"./mapPremultipliedBlendModes":221,"./mixin":223,"./pluginTarget":224,"earcut":67,"eventemitter3":85,"ismobilejs":92,"remove-array-items":285}],221:[function(require,module,exports){
+},{"../const":142,"../settings":197,"./mapPremultipliedBlendModes":222,"./mixin":224,"./pluginTarget":225,"earcut":68,"eventemitter3":86,"ismobilejs":93,"remove-array-items":286}],222:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49669,7 +37991,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":141}],222:[function(require,module,exports){
+},{"../const":142}],223:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49691,7 +38013,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":92}],223:[function(require,module,exports){
+},{"ismobilejs":93}],224:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49753,7 +38075,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],224:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49819,7 +38141,7 @@ exports.default = {
     }
 };
 
-},{}],225:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49897,7 +38219,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],226:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51053,7 +39375,7 @@ function deprecation(core) {
     }
 }
 
-},{}],227:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51233,7 +39555,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":160}],228:[function(require,module,exports){
+},{"../../core":161}],229:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51258,7 +39580,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":227,"./webgl/WebGLExtract":229}],229:[function(require,module,exports){
+},{"./canvas/CanvasExtract":228,"./webgl/WebGLExtract":230}],230:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51493,7 +39815,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":160}],230:[function(require,module,exports){
+},{"../../core":161}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51915,7 +40237,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":160}],231:[function(require,module,exports){
+},{"../core":161}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52560,7 +40882,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":160,"../core/math/ObservablePoint":163,"../core/settings":196,"../core/utils":220}],232:[function(require,module,exports){
+},{"../core":161,"../core/math/ObservablePoint":164,"../core/settings":197,"../core/utils":221}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53006,7 +41328,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":160,"../core/sprites/canvas/CanvasTinter":199}],233:[function(require,module,exports){
+},{"../core":161,"../core/sprites/canvas/CanvasTinter":200}],234:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -53410,7 +41732,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":160,"../core/textures/BaseTexture":207,"../core/textures/Texture":210,"../core/utils":220}],234:[function(require,module,exports){
+},{"../core":161,"../core/textures/BaseTexture":208,"../core/textures/Texture":211,"../core/utils":221}],235:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -53445,7 +41767,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":160}],235:[function(require,module,exports){
+},{"../core":161}],236:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -53479,7 +41801,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":160}],236:[function(require,module,exports){
+},{"../core":161}],237:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53531,7 +41853,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":230,"./BitmapText":231,"./TilingSprite":232,"./cacheAsBitmap":233,"./getChildByName":234,"./getGlobalPosition":235,"./webgl/TilingSpriteRenderer":237}],237:[function(require,module,exports){
+},{"./AnimatedSprite":231,"./BitmapText":232,"./TilingSprite":233,"./cacheAsBitmap":234,"./getChildByName":235,"./getGlobalPosition":236,"./webgl/TilingSpriteRenderer":238}],238:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53693,7 +42015,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":160,"../../core/const":141,"path":311}],238:[function(require,module,exports){
+},{"../../core":161,"../../core/const":142,"path":317}],239:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53777,7 +42099,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":160,"path":311}],239:[function(require,module,exports){
+},{"../../core":161,"path":317}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53951,7 +42273,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":160,"./BlurXFilter":240,"./BlurYFilter":241}],240:[function(require,module,exports){
+},{"../../core":161,"./BlurXFilter":241,"./BlurYFilter":242}],241:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54117,7 +42439,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":160,"./generateBlurFragSource":242,"./generateBlurVertSource":243,"./getMaxBlurKernelSize":244}],241:[function(require,module,exports){
+},{"../../core":161,"./generateBlurFragSource":243,"./generateBlurVertSource":244,"./getMaxBlurKernelSize":245}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54282,7 +42604,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":160,"./generateBlurFragSource":242,"./generateBlurVertSource":243,"./getMaxBlurKernelSize":244}],242:[function(require,module,exports){
+},{"../../core":161,"./generateBlurFragSource":243,"./generateBlurVertSource":244,"./getMaxBlurKernelSize":245}],243:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54329,7 +42651,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],243:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54373,7 +42695,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -54389,7 +42711,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54940,7 +43262,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":160,"path":311}],246:[function(require,module,exports){
+},{"../../core":161,"path":317}],247:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55048,7 +43370,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":160,"path":311}],247:[function(require,module,exports){
+},{"../../core":161,"path":317}],248:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55102,7 +43424,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":160,"path":311}],248:[function(require,module,exports){
+},{"../../core":161,"path":317}],249:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55181,7 +43503,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":238,"./blur/BlurFilter":239,"./blur/BlurXFilter":240,"./blur/BlurYFilter":241,"./colormatrix/ColorMatrixFilter":245,"./displacement/DisplacementFilter":246,"./fxaa/FXAAFilter":247,"./noise/NoiseFilter":249}],249:[function(require,module,exports){
+},{"./alpha/AlphaFilter":239,"./blur/BlurFilter":240,"./blur/BlurXFilter":241,"./blur/BlurYFilter":242,"./colormatrix/ColorMatrixFilter":246,"./displacement/DisplacementFilter":247,"./fxaa/FXAAFilter":248,"./noise/NoiseFilter":250}],250:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55278,7 +43600,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":160,"path":311}],250:[function(require,module,exports){
+},{"../../core":161,"path":317}],251:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55392,7 +43714,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":137,"./core":160,"./deprecation":226,"./extract":228,"./extras":236,"./filters":248,"./interaction":255,"./loaders":258,"./mesh":267,"./particles":270,"./polyfill":277,"./prepare":281}],251:[function(require,module,exports){
+},{"./accessibility":138,"./core":161,"./deprecation":227,"./extract":229,"./extras":237,"./filters":249,"./interaction":256,"./loaders":259,"./mesh":268,"./particles":271,"./polyfill":278,"./prepare":282}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55615,7 +43937,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":160}],252:[function(require,module,exports){
+},{"../core":161}],253:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -55698,7 +44020,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],253:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57480,7 +45802,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":160,"./InteractionData":251,"./InteractionEvent":252,"./InteractionTrackingData":254,"./interactiveTarget":256,"eventemitter3":85}],254:[function(require,module,exports){
+},{"../core":161,"./InteractionData":252,"./InteractionEvent":253,"./InteractionTrackingData":255,"./interactiveTarget":257,"eventemitter3":86}],255:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -57656,7 +45978,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],255:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57708,7 +46030,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":251,"./InteractionEvent":252,"./InteractionManager":253,"./InteractionTrackingData":254,"./interactiveTarget":256}],256:[function(require,module,exports){
+},{"./InteractionData":252,"./InteractionEvent":253,"./InteractionManager":254,"./InteractionTrackingData":255,"./interactiveTarget":257}],257:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57825,7 +46147,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],257:[function(require,module,exports){
+},{}],258:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57945,7 +46267,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":236,"path":311,"resource-loader":290}],258:[function(require,module,exports){
+},{"../extras":237,"path":317,"resource-loader":291}],259:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58073,7 +46395,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":138,"./bitmapFontParser":257,"./loader":259,"./spritesheetParser":260,"./textureParser":261,"resource-loader":290}],259:[function(require,module,exports){
+},{"../core/Application":139,"./bitmapFontParser":258,"./loader":260,"./spritesheetParser":261,"./textureParser":262,"resource-loader":291}],260:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58244,7 +46566,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":257,"./spritesheetParser":260,"./textureParser":261,"eventemitter3":85,"resource-loader":290,"resource-loader/lib/middlewares/parsing/blob":291}],260:[function(require,module,exports){
+},{"./bitmapFontParser":258,"./spritesheetParser":261,"./textureParser":262,"eventemitter3":86,"resource-loader":291,"resource-loader/lib/middlewares/parsing/blob":292}],261:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58308,7 +46630,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":160,"resource-loader":290,"url":317}],261:[function(require,module,exports){
+},{"../core":161,"resource-loader":291,"url":323}],262:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58331,7 +46653,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":210,"resource-loader":290}],262:[function(require,module,exports){
+},{"../core/textures/Texture":211,"resource-loader":291}],263:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58762,7 +47084,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":160,"../core/textures/Texture":210}],263:[function(require,module,exports){
+},{"../core":161,"../core/textures/Texture":211}],264:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59155,7 +47477,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":264}],264:[function(require,module,exports){
+},{"./Plane":265}],265:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59296,7 +47618,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":262}],265:[function(require,module,exports){
+},{"./Mesh":263}],266:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59532,7 +47854,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":262}],266:[function(require,module,exports){
+},{"./Mesh":263}],267:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59818,7 +48140,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":160,"../Mesh":262}],267:[function(require,module,exports){
+},{"../../core":161,"../Mesh":263}],268:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59879,7 +48201,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":262,"./NineSlicePlane":263,"./Plane":264,"./Rope":265,"./canvas/CanvasMeshRenderer":266,"./webgl/MeshRenderer":268}],268:[function(require,module,exports){
+},{"./Mesh":263,"./NineSlicePlane":264,"./Plane":265,"./Rope":266,"./canvas/CanvasMeshRenderer":267,"./webgl/MeshRenderer":269}],269:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60034,7 +48356,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":160,"../Mesh":262,"path":311,"pixi-gl-core":107}],269:[function(require,module,exports){
+},{"../../core":161,"../Mesh":263,"path":317,"pixi-gl-core":108}],270:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60424,7 +48746,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":160,"../core/utils":220}],270:[function(require,module,exports){
+},{"../core":161,"../core/utils":221}],271:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60449,7 +48771,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":269,"./webgl/ParticleRenderer":272}],271:[function(require,module,exports){
+},{"./ParticleContainer":270,"./webgl/ParticleRenderer":273}],272:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -60698,7 +49020,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":218,"pixi-gl-core":107}],272:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":219,"pixi-gl-core":108}],273:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -61179,7 +49501,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":160,"../../core/utils":220,"./ParticleBuffer":271,"./ParticleShader":273}],273:[function(require,module,exports){
+},{"../../core":161,"../../core/utils":221,"./ParticleBuffer":272,"./ParticleShader":274}],274:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -61222,7 +49544,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":139}],274:[function(require,module,exports){
+},{"../../core/Shader":140}],275:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -61240,7 +49562,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],275:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -61252,7 +49574,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],276:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -61267,7 +49589,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":95}],277:[function(require,module,exports){
+},{"object-assign":96}],278:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -61294,7 +49616,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":274,"./Number.isInteger":275,"./Object.assign":276,"./requestAnimationFrame":278}],278:[function(require,module,exports){
+},{"./Math.sign":275,"./Number.isInteger":276,"./Object.assign":277,"./requestAnimationFrame":279}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -61371,7 +49693,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],279:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -61859,7 +50181,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":160,"./limiters/CountLimiter":282}],280:[function(require,module,exports){
+},{"../core":161,"./limiters/CountLimiter":283}],281:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -61979,7 +50301,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":160,"../BasePrepare":279}],281:[function(require,module,exports){
+},{"../../core":161,"../BasePrepare":280}],282:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -62031,7 +50353,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":279,"./canvas/CanvasPrepare":280,"./limiters/CountLimiter":282,"./limiters/TimeLimiter":283,"./webgl/WebGLPrepare":284}],282:[function(require,module,exports){
+},{"./BasePrepare":280,"./canvas/CanvasPrepare":281,"./limiters/CountLimiter":283,"./limiters/TimeLimiter":284,"./webgl/WebGLPrepare":285}],283:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -62089,7 +50411,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],283:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -62147,7 +50469,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],284:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -62269,7 +50591,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":160,"../BasePrepare":279}],285:[function(require,module,exports){
+},{"../../core":161,"../BasePrepare":280}],286:[function(require,module,exports){
 'use strict'
 
 /**
@@ -62299,7 +50621,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],286:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -62952,7 +51274,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":287,"./async":288,"mini-signals":93,"parse-uri":96}],287:[function(require,module,exports){
+},{"./Resource":288,"./async":289,"mini-signals":94,"parse-uri":97}],288:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -64108,7 +52430,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":93,"parse-uri":96}],288:[function(require,module,exports){
+},{"mini-signals":94,"parse-uri":97}],289:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -64317,7 +52639,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],289:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -64385,7 +52707,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],290:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -64409,7 +52731,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":286,"./Resource":287,"./async":288,"./b64":289}],291:[function(require,module,exports){
+},{"./Loader":287,"./Resource":288,"./async":289,"./b64":290}],292:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -64497,7 +52819,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":287,"../../b64":289}],292:[function(require,module,exports){
+},{"../../Resource":288,"../../b64":290}],293:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -64593,7 +52915,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":293,"./socket":295,"./url":296,"debug":297,"socket.io-parser":300}],293:[function(require,module,exports){
+},{"./manager":294,"./socket":296,"./url":297,"debug":298,"socket.io-parser":301}],294:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -65168,7 +53490,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":294,"./socket":295,"backo2":60,"component-bind":64,"component-emitter":65,"debug":297,"engine.io-client":71,"indexof":91,"socket.io-parser":300}],294:[function(require,module,exports){
+},{"./on":295,"./socket":296,"backo2":61,"component-bind":65,"component-emitter":66,"debug":298,"engine.io-client":72,"indexof":92,"socket.io-parser":301}],295:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -65194,7 +53516,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -65634,7 +53956,7 @@ Socket.prototype.binary = function (binary) {
   return this;
 };
 
-},{"./on":294,"component-bind":64,"component-emitter":65,"debug":297,"has-binary2":86,"parseqs":97,"socket.io-parser":300,"to-array":305}],296:[function(require,module,exports){
+},{"./on":295,"component-bind":65,"component-emitter":66,"debug":298,"has-binary2":87,"parseqs":98,"socket.io-parser":301,"to-array":306}],297:[function(require,module,exports){
 (function (global){
 
 /**
@@ -65713,11 +54035,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":297,"parseuri":98}],297:[function(require,module,exports){
-arguments[4][80][0].apply(exports,arguments)
-},{"./debug":298,"_process":312,"dup":80}],298:[function(require,module,exports){
+},{"debug":298,"parseuri":99}],298:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
-},{"dup":81,"ms":94}],299:[function(require,module,exports){
+},{"./debug":299,"_process":318,"dup":81}],299:[function(require,module,exports){
+arguments[4][82][0].apply(exports,arguments)
+},{"dup":82,"ms":95}],300:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -65862,7 +54184,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":301,"isarray":304}],300:[function(require,module,exports){
+},{"./is-buffer":302,"isarray":305}],301:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -66281,7 +54603,7 @@ function error(msg) {
   };
 }
 
-},{"./binary":299,"./is-buffer":301,"component-emitter":65,"debug":302,"isarray":304}],301:[function(require,module,exports){
+},{"./binary":300,"./is-buffer":302,"component-emitter":66,"debug":303,"isarray":305}],302:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -66309,13 +54631,13 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],302:[function(require,module,exports){
-arguments[4][80][0].apply(exports,arguments)
-},{"./debug":303,"_process":312,"dup":80}],303:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
-},{"dup":81,"ms":94}],304:[function(require,module,exports){
-arguments[4][87][0].apply(exports,arguments)
-},{"dup":87}],305:[function(require,module,exports){
+},{"./debug":304,"_process":318,"dup":81}],304:[function(require,module,exports){
+arguments[4][82][0].apply(exports,arguments)
+},{"dup":82,"ms":95}],305:[function(require,module,exports){
+arguments[4][88][0].apply(exports,arguments)
+},{"dup":88}],306:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -66330,7 +54652,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],306:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -66400,7 +54722,675 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],307:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
+/**
+ * @file intersects.js
+ * @author David Figatner
+ * @license MIT
+ * Copyright (c) 2016 YOPEY YOPEY LLC
+ * {@link https://github.com/davidfig/intersects}
+ */
+
+module.exports = {
+    Shape: require('./src/shape.js'),
+    Rectangle: require('./src/rectangle.js'),
+    Polygon: require('./src/polygon.js'),
+    Circle: require('./src/circle.js')
+};
+},{"./src/circle.js":309,"./src/polygon.js":310,"./src/rectangle.js":311,"./src/shape.js":312}],309:[function(require,module,exports){
+/**
+ * @file src/circle.js
+ * @author David Figatner
+ * @license MIT
+ * Copyright (c) 2016 YOPEY YOPEY LLC
+ * {@link https://github.com/davidfig/intersects}
+ */
+
+const Shape = require('./shape.js');
+
+/** circle shape */
+class Circle extends Shape
+{
+    /**
+     * @param {Article} article that uses this shape
+     * @param {object} [options] - @see {@link Circle.set}
+     */
+    constructor(article, options)
+    {
+        super(article);
+        this.SHAPE = 'Circle';
+        this.AABB = [];
+        options = options || {};
+        this.set(options);
+    }
+
+    /**
+     * @param {object} options
+     * @param {object} [options.positionObject=this.article] use this to update position
+     * @param {number} [options.radius] otherwise article.width / 2 is used as radius
+     */
+    set(options)
+    {
+        this.radius = options.radius || this.article.width / 2;
+        this.radiusSquared = this.radius * this.radius;
+        this.center = options.positionObject ? options.positionObject : this.article;
+        this.update();
+    }
+
+    /** update AABB */
+    update()
+    {
+        const AABB = this.AABB;
+        const radius = this.radius;
+        const center = this.center;
+        AABB[0] = center.x - radius;
+        AABB[1] = center.y - radius;
+        AABB[2] = center.x + radius;
+        AABB[3] = center.y + radius;
+    }
+
+    /**
+     * Does Circle collide with Circle?
+     * @param {Circle} circle
+     * @return {boolean}
+     */
+    collidesCircle(circle)
+    {
+        const thisCenter = this.center;
+        const center = circle.center;
+        const x = center.x - thisCenter.x;
+        const y = center.y - thisCenter.y;
+        const radii = circle.radius + this.radius;
+        return x * x + y * y <= radii * radii;
+    }
+
+    /**
+     * Does Circle collide with point?
+     * @param {Point} point
+     * @return {boolean}
+     */
+    collidesPoint(point)
+    {
+        const x = point.x - this.center.x;
+        const y = point.y - this.center.y;
+        return x * x + y * y <= this.radiusSquared;
+    }
+
+    /**
+     * Does Circle collide with a line?
+     * from http://stackoverflow.com/a/10392860/1955997
+     * @param {Point} p1
+     * @param {Point} p2
+     * @return {boolean}
+     */
+    collidesLine(p1, p2)
+    {
+        function dot(v1, v2)
+        {
+            return (v1[0] * v2[0]) + (v1[1] * v2[1]);
+        }
+
+        const center = this.center;
+        const ac = [center.x - p1.x, center.y - p1.y];
+        const ab = [p2.x - p1.x, p2.y - p1.y];
+        const ab2 = dot(ab, ab);
+        const acab = dot(ac, ab);
+        let t = acab / ab2;
+        t = (t < 0) ? 0 : t;
+        t = (t > 1) ? 1 : t;
+        let h = [(ab[0] * t + p1.x) - center.x, (ab[1] * t + p1.y) - center.y];
+        const h2 = dot(h, h);
+        return h2 <= this.radiusSquared;
+    }
+
+    /**
+     * Does circle collide with Rectangle?
+     * @param {Rectangle} rectangle
+     */
+    collidesRectangle(rectangle)
+    {
+        // from http://stackoverflow.com/a/402010/1955997
+        if (rectangle.noRotate)
+        {
+            const AABB = rectangle.AABB;
+            const hw = (AABB[2] - AABB[0]) / 2;
+            const hh = (AABB[3] - AABB[1]) / 2;
+            const center = this.center;
+            const radius = this.radius;
+            const distX = Math.abs(center.x - AABB[0]);
+            const distY = Math.abs(center.y - AABB[1]);
+
+            if (distX > hw + radius || distY > hh + radius)
+            {
+                return false;
+            }
+
+            if (distX <= hw || distY <= hh)
+            {
+                return true;
+            }
+
+            const x = distX - hw;
+            const y = distY - hh;
+            return x * x + y * y <= this.radiusSquared;
+        }
+
+        // from http://stackoverflow.com/a/402019/1955997
+        else
+        {
+            const center = this.center;
+            if (rectangle.collidesPoint(center))
+            {
+                return true;
+            }
+
+            const vertices = rectangle.vertices;
+            return this.collidesLine({x: vertices[0], y: vertices[1]}, {x: vertices[2], y: vertices[3]}) ||
+                this.collidesLine({x: vertices[2], y: vertices[3]}, {x: vertices[4], y: vertices[5]}) ||
+                this.collidesLine({x: vertices[4], y: vertices[5]}, {x: vertices[6], y: vertices[7]}) ||
+                this.collidesLine({x: vertices[6], y: vertices[7]}, {x: vertices[0], y: vertices[1]});
+        }
+    }
+
+    // from http://stackoverflow.com/a/402019/1955997
+    collidesPolygon(polygon)
+    {
+        const center = this.center;
+        if (polygon.collidesPoint(center))
+        {
+            return true;
+        }
+        const vertices = polygon.vertices;
+        const count = vertices.length;
+        for (let i = 0; i < count - 2; i += 2)
+        {
+            if (this.collidesLine({x: vertices[i], y: vertices[i + 1]}, {x: vertices[i + 2], y: vertices[i + 3]}))
+            {
+                return true;
+            }
+        }
+        return this.collidesLine({x: vertices[0], y: vertices[1]}, {x: vertices[count - 2], y: vertices[count - 1]});
+    }
+}
+
+module.exports = Circle;
+},{"./shape.js":312}],310:[function(require,module,exports){
+/**
+ * @file src/polygon.js
+ * @author David Figatner
+ * @license MIT
+ * Copyright (c) 2016 YOPEY YOPEY LLC
+ * {@link https://github.com/davidfig/intersects}
+ */
+
+const Shape = require('./shape.js');
+
+/** Polygon */
+class Polygon extends Shape
+{
+    /**
+     * @param {Article} article that uses this shape
+     * @param {array} points in the form of [x, y, x2, y2, x3, y3, . . .]
+     * @param {object} [options] @see {@link Polygon.set}
+     */
+    constructor(article, points, options)
+    {
+        super(article);
+        this.SHAPE = 'Polygon';
+        options = options || {};
+        this.points = points;
+        this.vertices = [];
+        this.AABB = [];
+        this.set(options);
+    }
+
+    /**
+     * @param {object} options
+     * @param {PIXI.Point[]} options.points
+     * @param {PIXI.DisplayObject} [options.center] - object to use for position (and rotation, unless separately defined)
+     * @param {PIXI.DisplayObject} [options.rotation] - object to use for rotation instead of options.center or article
+     */
+    set(options)
+    {
+        if (options.point)
+        {
+            this.points = options.points;
+        }
+        this.center = options.center || this.article;
+        this.rotation = options.rotation ? options.rotation : (options.center ? options.center : this.article);
+        this.update();
+    }
+
+    /**
+     * based on http://www.willperone.net/Code/coderr.php
+     */
+    update()
+    {
+        const rotation = this.rotation.rotation;
+        const sin = Math.sin(rotation);
+        const cos = Math.cos(rotation);
+
+        let minX = Infinity, maxX = 0, minY = Infinity, maxY = 0;
+        const points = this.points;
+        const count = points.length;
+        const vertices = this.vertices;
+        const center = this.center;
+        for (let i = 0; i < count; i += 2)
+        {
+            const pointX = points[i];
+            const pointY = points[i + 1];
+            const x = vertices[i] = center.x + pointX * cos - pointY * sin;
+            const y = vertices[i + 1] = center.y + pointX * sin + pointY * cos;
+            minX = (x < minX) ? x : minX;
+            maxX = (x > maxX) ? x : maxX;
+            minY = (y < minY) ? y : minY;
+            maxY = (y > maxY) ? y : maxY;
+        }
+        this.AABB[0] = minX;
+        this.AABB[1] = minY;
+        this.AABB[2] = maxX;
+        this.AABB[3] = maxY;
+        this.width = maxX - minX;
+        this.height = maxY - minY;
+        this.hw = (maxX - minX) / 2;
+        this.hh = (maxY - minY) / 2;
+    }
+
+    /**
+     * Does Rectangle collide Rectangle?
+     * @param {Rectangle} rectangle
+     * @return {boolean}
+     */
+    collidesRectangle(rectangle)
+    {
+        return this.collidesPolygon(rectangle);
+    }
+
+    /**
+     * Does Rectangle collide Circle?
+     * @param {Circle} circle
+     * @return {boolean}
+     */
+    collidesCircle(circle)
+    {
+        return circle.collidesPolygon(this);
+    }
+}
+
+module.exports = Polygon;
+},{"./shape.js":312}],311:[function(require,module,exports){
+/**
+ * @file src/rectangle.js
+ * @author David Figatner
+ * @license MIT
+ * Copyright (c) 2016 YOPEY YOPEY LLC
+ * {@link https://github.com/davidfig/intersects}
+ */
+
+const Shape = require('./shape.js');
+
+class Rectangle extends Shape
+{
+    /**
+     * @param {object} article that uses this shape
+     * @param {object} [options] @see {@link Rectangle.set}
+     */
+    constructor(article, options)
+    {
+        super(article);
+        this.SHAPE = 'Rectangle';
+        options = options || {};
+        this._vertices = [];
+        this.AABB = [0, 0, 0, 0];   // [x1, y1, x2, y2]
+        this.set(options);
+    }
+
+    /**
+     * @param {object} options
+     * @param {number} [options.width] width of object when aligned
+     * @param {number} [options.height] height of object when aligned
+     * @param {number} [options.square] side size of a square
+     * @param {object} [options.center] object to use for position (and rotation, unless separately defined)
+     * @param {object} [options.rotation] object to use for rotation instead of options.center or article
+     * @param {boolean} [options.noRotate] object does not rotate (simplifies math)
+     */
+    set(options)
+    {
+        this.center = options.center || this.article;
+        this.rotation = options.rotation ? options.rotation : (options.center ? options.center : this.article);
+        if (typeof options.square !== 'undefined')
+        {
+            this._width = this._height = options.square;
+        }
+        else
+        {
+            this._width = options.width || this.article.width;
+            this._height = options.height || this.article.height;
+        }
+        this.noRotate = options.noRotate;
+        this.hw = this._width / 2;
+        this.hh = this._height / 2;
+        this.update();
+    }
+
+    /** width of rectangle */
+    get width()
+    {
+        return this._width;
+    }
+    set width(value)
+    {
+        this._width = value;
+        this.hw = value / 2;
+    }
+
+    /** height of rectangle */
+    get height()
+    {
+        return this._height;
+    }
+    set height(value)
+    {
+        this._height = value;
+        this.hh = value / 2;
+    }
+
+    /**
+     * based on http://www.willperone.net/Code/coderr.php
+     * update AABB and sets vertices to dirty
+     */
+    update()
+    {
+        const AABB = this.AABB;
+        const center = this.center;
+
+        if (this.noRotate)
+        {
+            const hw = this.hw;
+            const hh = this.hh;
+            AABB[0] = center.x - hw;
+            AABB[1] = center.y - hh;
+            AABB[2] = center.x + hw;
+            AABB[3] = center.y + hh;
+        }
+        else
+        {
+            const s = Math.abs(Math.sin(this.rotation.rotation) / 2);
+            const c = Math.abs(Math.cos(this.rotation.rotation) / 2);
+
+            const width = this._width;
+            const height = this._height;
+            const ex = height * s + width * c;  // x extent of AABB
+            const ey = height * c + width * s;  // y extent of AABB
+
+            AABB[0] = center.x - ex;
+            AABB[1] = center.y - ey;
+            AABB[2] = center.x + ex;
+            AABB[3] = center.y + ey;
+        }
+        this.verticesDirty = true;
+    }
+
+    /** updates vertices automatically when dirty */
+    updateVertices()
+    {
+        const vertices = this._vertices;
+        const center = this.center;
+        const hw = this.hw;
+        const hh = this.hh;
+        if (this.noRotate)
+        {
+            const AABB = this.AABB;
+            vertices[0] = AABB[0];
+            vertices[1] = AABB[1];
+            vertices[2] = AABB[2];
+            vertices[3] = AABB[1];
+            vertices[4] = AABB[2];
+            vertices[5] = AABB[3];
+            vertices[6] = AABB[0];
+            vertices[7] = AABB[3];
+        }
+        else
+        {
+            const rotation = this.rotation.rotation;
+            const sin = Math.sin(rotation);
+            const cos = Math.cos(rotation);
+
+            vertices[0] = center.x - hw * cos + hh * sin;
+            vertices[1] = center.y - hw * sin - hh * cos;
+            vertices[2] = center.x + hw * cos + hh * sin;
+            vertices[3] = center.y + hw * sin - hh * cos;
+            vertices[4] = center.x + hw * cos - hh * sin;
+            vertices[5] = center.y + hw * sin + hh * cos;
+            vertices[6] = center.x - hw * cos - hh * sin;
+            vertices[7] = center.y - hw * sin + hh * cos;
+        }
+        this.verticesDirty = false;
+    }
+
+    /** sets vertices Array[8] */
+    get vertices()
+    {
+        if (this.verticesDirty)
+        {
+            this.updateVertices();
+        }
+        return this._vertices;
+    }
+
+    /**
+     * Does Rectangle collide Rectangle?
+     * @param {Rectangle} rectangle
+     * @return {boolean}
+     */
+    collidesRectangle(rectangle)
+    {
+        if (this.noRotate && rectangle.noRotate)
+        {
+            return this.AABBs(rectangle.AABB);
+        }
+        else
+        {
+            return this.collidesPolygon(rectangle);
+        }
+    }
+
+    /**
+     * Does Rectangle collide Circle?
+     * @param {Circle} circle
+     * @return {boolean}
+     */
+    collidesCircle(circle)
+    {
+        return circle.collidesRectangle(this);
+    }
+
+    static fromRectangle(x, y, width, height)
+    {
+        const center = {x: x + width / 2, y: y + height / 2};
+        return new Rectangle(center, {width: width, height: height, noRotate: true});
+    }
+}
+
+module.exports = Rectangle;
+},{"./shape.js":312}],312:[function(require,module,exports){
+/**
+ * @file src/shape.js
+ * @author David Figatner
+ * @license MIT
+ * Copyright (c) 2016 YOPEY YOPEY LLC
+ * {@link https://github.com/davidfig/intersects}
+ */
+
+/** base class of all shapes */
+class Shape
+{
+    /**
+     * @param {object} [article] that uses this shape
+     */
+    constructor(article)
+    {
+        this.article = article;
+    }
+
+    update() {}
+
+    /**
+     * collides with this shape's AABB box
+     * @param {object} AABB
+     */
+    AABBs(AABB)
+    {
+        var AABB2 = this.AABB;
+        return !(AABB[2] < AABB2[0] || AABB2[2] < AABB[0] || AABB[3] < AABB2[1] || AABB2[3] < AABB[1]);
+    }
+
+    /**
+     * point-polygon collision test based on this.vertices
+     * based on http://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon/2922778#2922778
+     * @param {Point} point
+     * @return {boolean}
+     */
+    collidesPoint(point)
+    {
+        const vertices = this.vertices;
+        const length = vertices.length;
+        let c = false;
+        for (let i = 0, j = length - 2; i < length; i += 2)
+        {
+            if (((vertices[i + 1] > point.y) !== (vertices[j + 1] > point.y)) && (point.x < (vertices[j] - vertices[i]) * (point.y - vertices[i + 1]) / (vertices[j + 1] - vertices[i + 1]) + vertices[i]))
+            {
+                c = !c;
+            }
+            j = i;
+        }
+        return c;
+    }
+
+    collidesCircle() {}
+    collidesRectangle() {}
+
+    /**
+     * Does Polygon collide Polygon or AABB?
+     * based on http://stackoverflow.com/questions/10962379/how-to-check-intersection-between-2-rotated-rectangles
+     * @param {Array} polygon
+     * @param {boolean} isAABB
+     * @return {boolean}
+     */
+    collidesPolygon(polygon, isAABB)
+    {
+        const a = this.vertices;
+        const b = isAABB ? polygon : polygon.vertices;
+        const polygons = [a, b];
+        let minA, maxA, projected, minB, maxB;
+        for (let i = 0; i < polygons.length; i++)
+        {
+            const polygon = polygons[i];
+            for (let i1 = 0; i1 < polygon.length; i1 += 2)
+            {
+                var i2 = (i1 + 2) % polygon.length;
+                var normal = { x: polygon[i2 + 1] - polygon[i1 + 1], y: polygon[i1] - polygon[i2] };
+                minA = maxA = null;
+                for (let j = 0; j < a.length; j += 2)
+                {
+                    projected = normal.x * a[j] + normal.y * a[j + 1];
+                    if (minA === null || projected < minA)
+                    {
+                        minA = projected;
+                    }
+                    if (maxA === null || projected > maxA)
+                    {
+                        maxA = projected;
+                    }
+                }
+                minB = maxB = null;
+                for (let j = 0; j < b.length; j += 2)
+                {
+                    projected = normal.x * b[j] + normal.y * b[j + 1];
+                    if (minB === null || projected < minB)
+                    {
+                        minB = projected;
+                    }
+                    if (maxB === null || projected > maxB)
+                    {
+                        maxB = projected;
+                    }
+                }
+                if (maxA < minB || maxB < minA)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Does polygon collide Line?
+     * @param {Point} p1
+     * @param {Point} p2
+     * @return {boolean}
+     */
+    collidesLine(p1, p2)
+    {
+        const vertices = this.vertices;
+        const length = vertices.length;
+
+        // check if first point is inside the shape (this covers if the line is completely enclosed by the shape)
+        if (this.collidesPoint(p1))
+        {
+            return true;
+        }
+
+        // check for intersections for all of the sides
+        for (let i = 0; i < length; i += 2)
+        {
+            const j = (i + 2) % length;
+            if (Shape.lineLine(p1, p2, {x: vertices[i], y: vertices[i + 1]}, {x: vertices[j], y: vertices[j + 1]}))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** catch all for automatic collision checking */
+    collides(shape)
+    {
+        return this['collides' + shape.SHAPE](shape);
+    }
+
+    /**
+     * Do two lines intersect?
+     * from http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+     * @param {Point} p1
+     * @param {Point} p2
+     * @param {Point} p3
+     * @param {Point} p4
+     * @return {boolean}
+     */
+    static lineLine(p1, p2, p3, p4)
+    {
+        const p0_x = p1.x;
+        const p0_y = p1.y;
+        const p1_x = p2.x;
+        const p1_y = p2.y;
+        const p2_x = p3.x;
+        const p2_y = p3.y;
+        const p3_x = p4.x;
+        const p3_y = p4.y;
+        const s1_x = p1_x - p0_x;
+        const s1_y = p1_y - p0_y;
+        const s2_x = p3_x - p2_x;
+        const s2_y = p3_y - p2_y;
+        const s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
+        const t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+        return s >= 0 && s <= 1 && t >= 0 && t <= 1;
+    }
+}
+
+module.exports = Shape;
+},{}],313:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -66553,9 +55543,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],308:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 
-},{}],309:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -68334,7 +57324,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":307,"ieee754":310}],310:[function(require,module,exports){
+},{"base64-js":313,"ieee754":316}],316:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -68420,7 +57410,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],311:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -68726,7 +57716,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":312}],312:[function(require,module,exports){
+},{"_process":318}],318:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -68912,7 +57902,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],313:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -69449,7 +58439,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],314:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -69535,7 +58525,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],315:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -69622,13 +58612,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],316:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":314,"./encode":315}],317:[function(require,module,exports){
+},{"./decode":320,"./encode":321}],323:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -70362,7 +59352,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":318,"punycode":313,"querystring":316}],318:[function(require,module,exports){
+},{"./util":324,"punycode":319,"querystring":322}],324:[function(require,module,exports){
 'use strict';
 
 module.exports = {

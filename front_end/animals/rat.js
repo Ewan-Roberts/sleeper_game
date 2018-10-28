@@ -1,5 +1,5 @@
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
+const spriteHelper = require('../utils/sprite_helper.js');
 
 global.critterContainer = new PIXI.Container();
 

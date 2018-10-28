@@ -1,129 +1,170 @@
+
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/spriteHelper.js');
-const bowHelper = require('../weapons/bow/bowHelper');
+const spriteHelper = require('../utils/sprite_helper.js');
+const bowHelper = require('../weapons/bow/bow_helper.js');
 const dialogUtil = require('../dialog/dialogUtil.js');
+const intersect = require('yy-intersects');
 
-global.enemyContainer = new PIXI.Container();
-global.enemyContainer.name = 'enemyContainer';
+global.enemy_container = new PIXI.Container();
+global.enemy_container.name = 'enemy_container';
 
-const Enemy = {
+module.exports.init_enemies_container = () => {
+  global.viewport.addChild(global.enemy_container);
+}
 
-  animation: {
-    moving: [],
-    waiting: [],
-  },
-  sprite: {
-    moving: {},
-    waiting: {},
-  },
+module.exports.create_enemy = (x, y) => {
+  return new Promise (resolve => {
+
+    const enemy_frames = []
+    for (let i = 0; i < 19; i++) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+    }
+
+    const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    enemy_sprite.height /= 3;
+    enemy_sprite.width /= 3;
+    enemy_sprite.anchor.set(0.5);
+    enemy_sprite.position.set(x, y);
+    enemy_sprite.animationSpeed = 0.4;
+    enemy_sprite.rotation = -0.5;
+    enemy_sprite.play();
+    enemy_sprite.on_hit = () => {
+      module.exports.put_blood_splatter_on_ground(enemy_sprite)
+    }
+    global.enemy_container.addChild(enemy_sprite);
+    resolve(enemy_sprite)
+  })
 };
 
-module.exports.createEnemyPathFrom = (levelData) => {
-  const path = new PIXI.tween.TweenPath();
+module.exports.sight_line = (sprite) => {
+  const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
-  path.moveTo(levelData[0].x, levelData[0].y+1388);
+  sight_line_box.name = 'sight_line';
+  sight_line_box.width = 300;
+  sight_line_box.height = 300;
+  sight_line_box.rotation = -0.5;
+  sight_line_box.alpha = 0.3;
 
-  for (let i = 1; i < levelData.length; i += 1) path.lineTo(levelData[i].x, levelData[i].y+1388);
+  sprite.addChild(sight_line_box);
+}
 
-  return path;
-};
+module.exports.influence_box = sprite => {
+  const influence_box = PIXI.Sprite.fromFrame('black_dot');
 
-module.exports.enemy_frames = () => new Promise((resolve) => {
-  for (let i = 0; i < 19; i += 1) {
-    Enemy.animation.moving.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-  }
-  resolve();
-});
+  influence_box.name = 'influence_box';
+  influence_box.width = 2000;
+  influence_box.height = 2000;
+  influence_box.alpha = 0.2
+  influence_box.anchor.set(0.5);
 
-module.exports.enemy_path = (pathData) => {
-  const path = module.exports.createEnemyPathFrom(pathData);
-  spriteHelper.drawPathAndShow(path);
+  sprite.addChild(influence_box);
+}
 
-  const enemySprite = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  enemySprite.height /= 3;
-  enemySprite.width /= 3;
-  enemySprite.anchor.set(0.5);
-  enemySprite.animationSpeed = 0.4;
-  enemySprite.rotation = -0.5;
-  enemySprite.play();
+// TODO put under the enemy sprite
+module.exports.put_blood_splatter_on_ground = sprite => {
+  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  
+  blood_stain.width /= 2;
+  blood_stain.height /= 2;
+  blood_stain.position.set(sprite.x, sprite.y);
+  blood_stain.anchor.set(0.5);
+  blood_stain.alpha = 0.4;
 
-  const influenceBox = PIXI.Sprite.fromFrame('black_dot');
-  influenceBox.width = 500;
-  influenceBox.height = 500;
-  influenceBox.rotation = -0.5;
-  influenceBox.alpha = 0.3;
+  global.viewport.addChild(blood_stain);
+}
 
-  const influenceBoxTween = PIXI.tweenManager.createTween(influenceBox);
-  influenceBoxTween.rotation = -0.5;
-  influenceBoxTween.path = path;
-  influenceBoxTween.time = 300000;
-  influenceBoxTween.easing = PIXI.tween.Easing.linear();
-  influenceBoxTween.start();
-  influenceBoxTween.pingPong = true;
+module.exports.crate_path = (sprite, path_data) => {
+  return new Promise(resolve => {
+    const path = new PIXI.tween.TweenPath();
 
-  const animatedEnemyTween = PIXI.tweenManager.createTween(enemySprite);
-  animatedEnemyTween.path = path;
-  animatedEnemyTween.rotation = spriteHelper.angle(enemySprite, path._tmpPoint2);
-  animatedEnemyTween.time = 300000;
-  animatedEnemyTween.easing = PIXI.tween.Easing.linear();
-  animatedEnemyTween.start();
-  animatedEnemyTween.pingPong = true;
+    path.moveTo(path_data[0].x, path_data[0].y);
 
-  influenceBoxTween.on('update', () => {
-    animatedEnemyTween.target.rotation = animatedEnemyTween.rotation + spriteHelper.angle(enemySprite, path._tmpPoint2);
-    influenceBoxTween.target.rotation = influenceBoxTween.rotation + spriteHelper.angle(enemySprite, path._tmpPoint2);
-    spriteHelper.hitBoxSpriteObj(influenceBox, global.Player.sprite)
-      .then(() => {
-        dialogUtil.renderText(enemySprite, dialogUtil.enemySurprised());
-        animatedEnemyTween.stop();
-        enemySprite.stop();
-        enemySprite.rotation = spriteHelper.angle(enemySprite, global.Player.sprite);
-        influenceBoxTween.stop();
-        bowHelper.arrowManagement(500, enemySprite, global.Player.sprite);
-      });
-  });
+    for (let i = 1; i < path_data.length; i++) {
+      path.lineTo(path_data[i].x, path_data[i].y);
+    }
 
-  global.enemyContainer.addChild(enemySprite, influenceBox);
-  global.viewport.addChild(global.enemyContainer);
-};
+    const path_visual_guide = new PIXI.Graphics()
+      .lineStyle(5, 0xffffff, 0.8)
+      .drawPath(path);
 
-module.exports.move = (start, finish) => {
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(start.x, start.y)
-    .lineTo(finish.x, finish.y);
+    global.viewport.addChild(path_visual_guide);
+    resolve(path)
+  })
+}
 
-  const pathOneVisualGuide = new PIXI.Graphics()
+module.exports.crate_path_tween = (sprite, path) => {
+  const enemy_tween = PIXI.tweenManager.createTween(sprite);
+
+  enemy_tween.path = path;
+  enemy_tween.rotation = spriteHelper.angle(sprite, path._tmpPoint2);
+  enemy_tween.time = 30000;
+  enemy_tween.easing = PIXI.tween.Easing.linear();
+  enemy_tween.start();
+  enemy_tween.pingPong = true;
+
+  return enemy_tween;
+}
+
+// walk towards player
+module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
+  const player =  global.Player.sprite;
+
+  enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+  const path_to_player = new PIXI.tween.TweenPath()
+    .moveTo(enemy_sprite.x, enemy_sprite.y)
+    .lineTo(player.x, player.y);
+  
+  const path_to_player_visual_guide = new PIXI.Graphics()
     .lineStyle(1, 0xffffff, 1)
-    .drawPath(pathOne);
+    .drawPath(path_to_player);
 
-  global.viewport.addChild(pathOneVisualGuide);
+  global.viewport.addChild(path_to_player_visual_guide);
 
-  const animatedEnemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
-  animatedEnemy.height /= 3;
-  animatedEnemy.width /= 3;
-  animatedEnemy.texture.width = 100;
-  animatedEnemy.texture.height = 100;
-  animatedEnemy.anchor.set(0);
-  animatedEnemy.animationSpeed = 0.4;
-  animatedEnemy.play();
+  const tween = module.exports.crate_path_tween(enemy_sprite, path_to_player);
+  tween.time = 5000;
+  
+  const sight_line = enemy_sprite.children[0];
+  
+  tween.on('update', () => {    
 
-  const animatedEnemyTween = PIXI.tweenManager.createTween(animatedEnemy);
-  animatedEnemyTween.path = pathOne;
-  animatedEnemyTween.target.rotation = spriteHelper.angle(animatedEnemy, pathOne._tmpPoint2);
-  animatedEnemyTween.time = 3000;
-  animatedEnemyTween.easing = PIXI.tween.Easing.inOutQuad();
-  animatedEnemyTween.start();
+    if(sight_line.containsPoint(player.getGlobalPosition())){  
+      dialogUtil.renderText(enemy_sprite, 'sight line');
+      tween.stop();
+      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, player);
+    }
+  });
+  
+  //TODO
+  setTimeout(()=>{
+    tween.stop()
+    dialogUtil.renderText(enemy_sprite, 'I am waiting');
+    setTimeout(()=>{
+      dialogUtil.renderText(enemy_sprite, 'back to original path');
+      tween.start()
+      tween.chain(previous_tween_path)
+      setTimeout(()=>tween.remove(),2600)  
+    },5000)
+  },2500)
+}
 
-  global.enemyContainer.addChild(animatedEnemy);
-  global.viewport.addChild(global.enemyContainer);
+module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
 
-  Enemy.sprite.moving = animatedEnemy;
-};
+  const player =  global.Player.sprite;
+  const sight_line = enemy_sprite.children[0];
+  const influence_box = enemy_sprite.children[1];
 
-module.exports.projectileAttack = (target) => {
-  const enemy = new PIXI.extras.AnimatedSprite(Enemy.animation.moving);
+  tween.on('update', () => {    
 
-  bowHelper.arrowManagement(500, enemy, target);
+    if(sight_line.containsPoint(player.getGlobalPosition())){
+      dialogUtil.renderText(enemy_sprite, 'sight line');
+      tween.stop();
+      enemy_sprite.rotation = spriteHelper.angle(enemy_sprite, global.Player.sprite);
+    }
 
-  global.viewport.addChild(enemy);
-};
+    if(influence_box.containsPoint(player.getGlobalPosition())){
+      dialogUtil.renderText(enemy_sprite, 'influence zone');
+      module.exports.move_to_player(enemy_sprite, tween)
+      tween.stop();
+    }
+  });
+}
