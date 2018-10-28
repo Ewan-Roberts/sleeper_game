@@ -22,7 +22,7 @@ module.exports.clearEventTriggers = () => {
 };
 
 // Solid Black wall
-module.exports.render_wall = (wallArray) => {
+function render_wall (wallArray) {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
@@ -35,7 +35,7 @@ module.exports.render_wall = (wallArray) => {
 };
 
 // hit area that is transparent, kept a little tint for testing
-module.exports.hitAreas = (wallArray, x, y) => {
+module.exports.hit_areas = (wallArray, x, y) => {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
@@ -49,7 +49,7 @@ module.exports.hitAreas = (wallArray, x, y) => {
 };
 
 // Load event pads
-module.exports.eventPad = (padArray, callback) => {
+module.exports.event_pad = (padArray, callback) => {
   padArray.forEach((padDetails) => {
     const pad = PIXI.Sprite.fromFrame('black_dot');
 
@@ -76,14 +76,12 @@ const easystar = new easystarjs.js();
 
 
 module.exports.load_debug_map_image = () => {
-  
-  
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
   debug_room_image.position.set(0,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
   global.viewport.addChild(debug_room_image);
-  module.exports.render_wall(debug_room_tiled_data.layers[1].objects);
+  render_wall(debug_room_tiled_data.layers[1].objects);
 }
 
 module.exports.create_level_grid = () => {
@@ -124,6 +122,7 @@ module.exports.create_level_grid = () => {
         grid_cell.alpha = 0.5
         binary_line.push(1);
       } else {
+
         // is walkable ground
         grid_cell.alpha = 0.1;
         binary_line.push(0);
@@ -142,6 +141,7 @@ module.exports.create_level_grid = () => {
         const position = path[i];
 
         const block_found = grid_line[position.y][position.x];
+        
         //TODO for testing
         block_found.alpha = 0.3;
 
@@ -160,8 +160,6 @@ module.exports.create_level_grid = () => {
       if(path === null) {
         console.log('no path foud');
       } else {
-        console.log(path)
-        
         const path_to_follow_based_on_grid_centers = grid_center(path, sprite_grid);
         resolve(path_to_follow_based_on_grid_centers);
       }

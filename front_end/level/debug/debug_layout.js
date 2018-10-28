@@ -84,23 +84,6 @@ module.exports.add_floor = () => {
             })
           })
       })
-    // pathfinding_util.lay_down_grid()  
-
-    // level_util.load_debug_room_from_tiled()
-    //   .then(pathfinding_path => {
-    //     enemy.init_enemies_container()
-    //     enemy.create_enemy(200, -200)
-    //       .then(sprite => {
-    //         enemy.sight_line(sprite);
-    //         enemy.influence_box(sprite);
-    //         enemy.crate_path(sprite, pathfinding_path)
-    //         .then(path => {
-    //           const enemy_tween = enemy.create_path_tween(sprite, path);
-    //           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
-    //         })
-    //       })
-    //   })
-    // pathfinding_util.lay_down_grid()
   });
 
 
