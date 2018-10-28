@@ -22,7 +22,7 @@ module.exports.clearEventTriggers = () => {
 };
 
 // Solid Black wall
-module.exports.renderWall = (wallArray) => {
+module.exports.render_wall = (wallArray) => {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
@@ -77,18 +77,18 @@ const easystar = new easystarjs.js();
 
 module.exports.load_debug_map_image = () => {
   
-  console.log(debug_room_tiled_tiles);
+  
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-  //TODO
-  debug_room_image.position.set(100,0);
+  debug_room_image.position.set(0,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
   global.viewport.addChild(debug_room_image);
+  module.exports.render_wall(debug_room_tiled_data.layers[1].objects);
 }
 
 module.exports.create_level_grid = () => {
   
-  return new Promise((resolve,reject) => {
+  return new Promise(resolve => {
     
     const sprite_grid = [];
     let line_grid = [];
@@ -109,7 +109,7 @@ module.exports.create_level_grid = () => {
         binary_line = [];
 
         current_y += 100;
-        current_x = 0;
+        current_x = -100;
       }
       current_x += 100;
 

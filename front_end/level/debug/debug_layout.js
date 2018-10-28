@@ -63,7 +63,7 @@ module.exports.add_floor = () => {
         })
       })
   });
-
+  level_util.load_debug_map_image()
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;

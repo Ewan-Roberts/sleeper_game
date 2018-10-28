@@ -45,7 +45,7 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"Object Layer 1",
+         "name":"collision_items",
          "objects":[
                 {
                  "height":1074.38016528926,
