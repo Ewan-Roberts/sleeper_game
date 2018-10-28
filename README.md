@@ -1,3 +1,5 @@
 # sleeper_game
 
-nothing to see here... 
+Currently in the process of building the game engine.
+
+Look back here later :) 
