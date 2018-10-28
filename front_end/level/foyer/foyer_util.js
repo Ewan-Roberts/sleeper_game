@@ -1,8 +1,8 @@
 const PIXI = require('pixi.js');
 const foyerData = require('./foyer_data.json');
 const levelUtil = require('../level_utils.js');
-const parkUtil = require('../park/parkUtil.js');
-const cutsceneUtils = require('../../cutscene/cutsceneUtils');
+const parkUtil = require('../park/park_util.js');
+const cutsceneUtils = require('../../cutscene/cutscene_utils');
 
 module.exports.load = () => {
   levelUtil.clearViewport();

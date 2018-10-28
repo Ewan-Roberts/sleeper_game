@@ -1,8 +1,8 @@
 const PIXI = require('pixi.js');
 const bedroomData = require('./bedroom_data_5.json');
 const levelUtil = require('../level_utils.js');
-const foyerUtil = require('../foyer/foyerUtil.js');
-const cutsceneUtils = require('../../cutscene/cutsceneUtils');
+const foyerUtil = require('../foyer/foyer_util.js');
+const cutsceneUtils = require('../../cutscene/cutscene_utils');
 
 module.exports.load = () => {
   levelUtil.clearViewport();

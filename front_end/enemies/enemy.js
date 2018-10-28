@@ -2,7 +2,7 @@
 const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
-const dialogUtil = require('../dialog/dialogUtil.js');
+const dialogUtil = require('../dialog/dialog_util.js');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';

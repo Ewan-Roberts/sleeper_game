@@ -3,16 +3,16 @@ const PIXI = require('pixi.js');
 const player = require('../../player/player.js');
 const enemy = require('../../enemies/enemy.js');
 const items = require('./debug_items.js');
-const filterUtil = require('../../visual_effects/filterUtils.js');
-const dialogUtil = require('../../dialog/dialogUtil.js');
+const filterUtil = require('../../visual_effects/filter_utils.js');
+const dialogUtil = require('../../dialog/dialog_util.js');
 const networkPlayers = require('../../network/network_players.js');
 const rain = require('../../weather/rain.js');
 const cutsceneIntro = require('../../cutscene/cutscene_intro.js');
 const rat = require('../../animals/rat.js');
-const cutsceneUtils = require('../../cutscene/cutsceneUtils.js');
-const generateObject = require('../../construction/generateObject.js');
-const bedroomUtil = require('../bedroom/bedroomUtil.js');
-const parkUtil = require('../park/parkUtil.js');
+const cutsceneUtils = require('../../cutscene/cutscene_utils.js');
+const generateObject = require('../../construction/generate_object.js');
+const bedroomUtil = require('../bedroom/bedroom_util.js');
+const parkUtil = require('../park/park_util.js');
 const pathfinding_util = require('../../pathfinding/pathfind_util.js');
 const level_util = require('../level_utils.js');
 
@@ -77,9 +77,9 @@ module.exports.add_floor = () => {
           .then(sprite => {
             enemy.sight_line(sprite);
             enemy.influence_box(sprite);
-            enemy.crate_path(sprite, pathfinding_path)
+            enemy.create_path(sprite, pathfinding_path)
             .then(path => {
-              const enemy_tween = enemy.crate_path_tween(sprite, path);
+              const enemy_tween = enemy.create_path_tween(sprite, path);
               enemy.enemy_logic_on_path(sprite, enemy_tween, path)
             })
           })
@@ -95,7 +95,7 @@ module.exports.add_floor = () => {
     //         enemy.influence_box(sprite);
     //         enemy.crate_path(sprite, pathfinding_path)
     //         .then(path => {
-    //           const enemy_tween = enemy.crate_path_tween(sprite, path);
+    //           const enemy_tween = enemy.create_path_tween(sprite, path);
     //           enemy.enemy_logic_on_path(sprite, enemy_tween, path)
     //         })
     //       })
