@@ -429,10 +429,30 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   global.viewport.addChild(blood_stain);
 }
 
+
+module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
+
+  const player =  global.Player.sprite;
+  const sight_line = enemy_sprite.children[0];
+  const influence_box = enemy_sprite.children[1];
+  
+  tween.addEventListener("change", () =>{
+    if(sight_line.containsPoint(player.getGlobalPosition())){
+      console.log('sight line')
+      dialogUtil.renderText(enemy_sprite, 'sight line');
+      module.exports.move_to_player(enemy_sprite)
+    }
+    if(influence_box.containsPoint(player.getGlobalPosition())){
+      dialogUtil.renderText(enemy_sprite, 'influence zone');
+      module.exports.move_to_player(enemy_sprite, tween)
+    }
+  });
+}
+
 module.exports.create_path_tween = (sprite, path_data) => {
 
   //write it simple for now Ewan
-  var tween = createjs.Tween.get(sprite)
+  const tween = createjs.Tween.get(sprite)
   .to({
     x:path_data[0].x,
     y:path_data[0].y,
@@ -447,23 +467,26 @@ module.exports.create_path_tween = (sprite, path_data) => {
   .to({
     x:path_data[2].x,
     y:path_data[2].y,
-    rotation: sprite_helper.angle(sprite, path_data[2]),
+    rotation: sprite_helper.angle(sprite, path_data[2])-1,
+  },1000)
+  .to({
+    rotation: sprite_helper.angle(sprite, path_data[4]),
   },1000)
   .to({
     x:path_data[3].x,
     y:path_data[3].y,
-    rotation: sprite_helper.angle(sprite, path_data[3]),
+    rotation: sprite_helper.angle(sprite, path_data[4]),
   },1000)
   .to({
     x:path_data[4].x,
     y:path_data[4].y,
     rotation: sprite_helper.angle(sprite, path_data[4]),
   },1000)
-  // .to({alpha:0,visible:false},1000)
+  .to({alpha:0,visible:false},1000)
   .call(()=>{
     console.log('poop')
   });
-
+  module.exports.enemy_logic_on_path(sprite, tween)
 }
 
 function add_enemy_raycasting(enemy_sprite) {
@@ -544,46 +567,20 @@ function add_enemy_raycasting(enemy_sprite) {
 }
 
 // walk towards player
-module.exports.move_to_player = (enemy_sprite, previous_tween_path) => {
+module.exports.move_to_player = (enemy_sprite) => {
   const player =  global.Player.sprite;
 
-  global.viewport.addChild(path_to_player_visual_guide);
+  // global.viewport.addChild(path_to_player_visual_guide);
 
-  const tween = createjs.Tween.get(sprite)
+  const tween = createjs.Tween.get(enemy_sprite)
   .to({
     x:player.x,
     y:player.y,
-    rotation: sprite_helper.angle(sprite, player),
+    rotation: sprite_helper.angle(enemy_sprite, player),
   },2000)
   .wait(500)
 }
 
-module.exports.enemy_logic_on_path = (enemy_sprite, tween, path) => {
-
-  const player =  global.Player.sprite;
-  const sight_line = enemy_sprite.children[0];
-  const influence_box = enemy_sprite.children[1];
-
-  createjs.Tween.get(influence_box, {override:true}).addEventListener("change", handleChange);
-  function handleChange(event) {
-      console.log(event)
-  }
-
-  // tween.on('update', () => {    
-
-  //   if(sight_line.containsPoint(player.getGlobalPosition())){
-  //     dialogUtil.renderText(enemy_sprite, 'sight line');
-  //     tween.stop();
-  //     enemy_sprite.rotation = sprite_helper.angle(enemy_sprite, global.Player.sprite);
-  //   }
-
-  //   if(influence_box.containsPoint(player.getGlobalPosition())){
-  //     dialogUtil.renderText(enemy_sprite, 'influence zone');
-  //     module.exports.move_to_player(enemy_sprite, tween)
-  //     tween.stop();
-  //   }
-  // });
-}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../dialog/dialog_util.js":7,"../utils/sprite_helper.js":26,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],9:[function(require,module,exports){
 (function (global){
