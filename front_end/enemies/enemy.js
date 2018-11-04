@@ -181,7 +181,6 @@ module.exports.create_path_tween = (sprite, path_data) => {
   // },1000)
   // // .to({alpha:0,visible:false},1000)
   // .call(()=>{
-  //   console.log('poop')
   // });
   // module.exports.enemy_logic_on_path(sprite, tween)
 }

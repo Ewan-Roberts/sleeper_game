@@ -499,7 +499,6 @@ module.exports.create_path_tween = (sprite, path_data) => {
   // },1000)
   // // .to({alpha:0,visible:false},1000)
   // .call(()=>{
-  //   console.log('poop')
   // });
   // module.exports.enemy_logic_on_path(sprite, tween)
 }
@@ -1953,7 +1952,7 @@ function render_wall (wallArray) {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
-    wall.position.set(wallData.x, wallData.y);
+    wall.position.set(wallData.x +100, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
     
@@ -2015,7 +2014,7 @@ global.easystar = new easystarjs.js();
 
 module.exports.load_debug_map_image = () => {
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-  debug_room_image.position.set(0,0);
+  debug_room_image.position.set(100,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
 
@@ -2069,7 +2068,7 @@ module.exports.create_level_grid = () => {
         y: current_grid_y,
       }
      
-      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i+1)){
+      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
         // is a wall
         grid_cell.alpha = 0.5
         binary_line.push(1);
