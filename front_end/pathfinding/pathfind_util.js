@@ -23,7 +23,6 @@ function highlight_grid_cell_from_path(path) {
 }
 
 function create_path_from_two_points(sprite_one, sprite_two) {
-  
   return new Promise((resolve) => {
 
     const enemy_point = get_sprite_position_on_grid(sprite_one);
@@ -51,54 +50,18 @@ function create_tween_on_point_array_with_options(sprite, point_array, {time_to_
   point_array.forEach(grid => {
     path_to_follow.push(global.sprite_grid[grid.y][grid.x]);
   })
-  const time_length_total = 3000/point_array.length
+  const time_length_total = 2000/point_array.length
 
   const tween = createjs.Tween.get(sprite)
-  .to({
-    x:path_to_follow[0].middle.x,
-    y:path_to_follow[0].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[1].middle.x,
-    y:path_to_follow[1].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[2].middle.x,
-    y:path_to_follow[2].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[3].middle.x,
-    y:path_to_follow[3].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[4].middle.x,
-    y:path_to_follow[4].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[5].middle.x,
-    y:path_to_follow[5].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[6].middle.x,
-    y:path_to_follow[6].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[7].middle.x,
-    y:path_to_follow[7].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[8].middle.x,
-    y:path_to_follow[8].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[9].middle.x,
-    y:path_to_follow[9].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[10].middle.x,
-    y:path_to_follow[10].middle.y,
-  },time_length_total)
-  .call(()=>{
+
+  for (let i = 1; i < path_to_follow.length; i++) {
+    tween.to({
+      x:path_to_follow[i].middle.x,
+      y:path_to_follow[i].middle.y,
+    },time_length_total)
+  }
+
+  tween.call(()=>{
     console.log('end of tween')
   });
 }

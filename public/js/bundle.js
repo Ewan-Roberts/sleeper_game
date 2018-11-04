@@ -1960,11 +1960,10 @@ function render_wall (wallArray) {
     const background_image = {
       x: 0,
       y: 0,
-      height: debug_room_tiled_tiles.imageheight,
-      width: debug_room_tiled_tiles.imagewidth,
+      height: debug_room_tiled_tiles.imageheight +500,
+      width: debug_room_tiled_tiles.imagewidth + 500,
     }
     addToSegments(background_image)
-    
     addToSegments(wall)
     global.collisionItems.addChild(wall);
 
@@ -2036,7 +2035,7 @@ module.exports.create_level_grid = () => {
 
     let current_x = 0;
     let current_y = 0;
-    let current_grid_x = 0;
+    let current_grid_x = -1;
     let current_grid_y = 0;
     
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
@@ -2049,8 +2048,8 @@ module.exports.create_level_grid = () => {
         binary_line = [];
 
         current_y += 100;
-        current_x = -100;
-        current_grid_x = 0;
+        current_x = 0;
+        current_grid_x = -1;
         current_grid_y += 1;
       }
       current_x += 100;
@@ -2070,7 +2069,7 @@ module.exports.create_level_grid = () => {
         y: current_grid_y,
       }
      
-      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
+      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i+1)){
         // is a wall
         grid_cell.alpha = 0.5
         binary_line.push(1);
@@ -2088,40 +2087,40 @@ module.exports.create_level_grid = () => {
     }
     
     global.viewport.addChild(global.grid_container);
-
-    const grid_center = (path, grid_line) => {
-      let grid_centers = [];
-      for (let i = 0; i < path.length; i++) {
-        const position = path[i];
-
-        const block_found = grid_line[position.y][position.x];
-        
-        //TODO for testing
-        block_found.alpha = 0.3;
-
-        grid_centers.push({
-          x: block_found.x + (debug_room_tiled_tiles.tilewidth/2), 
-          y: block_found.y + (debug_room_tiled_tiles.tileheight/2)
-        })
-      }
-      return grid_centers;
-    }
-  
     global.easystar.setGrid(global.binary_grid_map);
     global.easystar.setAcceptableTiles([0]);
     global.easystar.setIterationsPerCalculation(1000);
-    global.easystar.findPath(0, 0, 0, 6, (path) => {
-      if(path === null) {
-        console.log('no path found');
-      } else {
-        const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
-        resolve(path_to_follow_based_on_grid_centers);
-      }
-    });
-    
-    global.easystar.calculate()
+    resolve()
+    // global.easystar.findPath(0, 0, 0, 6, (path) => {
+    //   if(path === null) {
+    //     console.log('no path found');
+    //   } else {
+    //     const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
+    //     resolve(path_to_follow_based_on_grid_centers);
+    //   }
+    // });
+    // global.easystar.calculate()
   })
 }
+
+
+// const grid_center = (path, grid_line) => {
+//   let grid_centers = [];
+//   for (let i = 0; i < path.length; i++) {
+//     const position = path[i];
+
+//     const block_found = grid_line[position.y][position.x];
+    
+//     //TODO for testing
+//     block_found.alpha = 0.3;
+
+//     grid_centers.push({
+//       x: block_found.x + (debug_room_tiled_tiles.tilewidth/2), 
+//       y: block_found.y + (debug_room_tiled_tiles.tileheight/2)
+//     })
+//   }
+//   return grid_centers;
+// }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./debug/playground/map2_output.json":12,"./debug/playground/map2_tiles.json":13,"easystarjs":70,"pixi.js":252}],17:[function(require,module,exports){
 module.exports={ "columns":0,
@@ -2281,7 +2280,6 @@ function highlight_grid_cell_from_path(path) {
 }
 
 function create_path_from_two_points(sprite_one, sprite_two) {
-  
   return new Promise((resolve) => {
 
     const enemy_point = get_sprite_position_on_grid(sprite_one);
@@ -2309,54 +2307,18 @@ function create_tween_on_point_array_with_options(sprite, point_array, {time_to_
   point_array.forEach(grid => {
     path_to_follow.push(global.sprite_grid[grid.y][grid.x]);
   })
-  const time_length_total = 3000/point_array.length
+  const time_length_total = 2000/point_array.length
 
   const tween = createjs.Tween.get(sprite)
-  .to({
-    x:path_to_follow[0].middle.x,
-    y:path_to_follow[0].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[1].middle.x,
-    y:path_to_follow[1].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[2].middle.x,
-    y:path_to_follow[2].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[3].middle.x,
-    y:path_to_follow[3].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[4].middle.x,
-    y:path_to_follow[4].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[5].middle.x,
-    y:path_to_follow[5].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[6].middle.x,
-    y:path_to_follow[6].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[7].middle.x,
-    y:path_to_follow[7].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[8].middle.x,
-    y:path_to_follow[8].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[9].middle.x,
-    y:path_to_follow[9].middle.y,
-  },time_length_total)
-  .to({
-    x:path_to_follow[10].middle.x,
-    y:path_to_follow[10].middle.y,
-  },time_length_total)
-  .call(()=>{
+
+  for (let i = 1; i < path_to_follow.length; i++) {
+    tween.to({
+      x:path_to_follow[i].middle.x,
+      y:path_to_follow[i].middle.y,
+    },time_length_total)
+  }
+
+  tween.call(()=>{
     console.log('end of tween')
   });
 }

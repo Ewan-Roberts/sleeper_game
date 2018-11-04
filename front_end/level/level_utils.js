@@ -45,11 +45,10 @@ function render_wall (wallArray) {
     const background_image = {
       x: 0,
       y: 0,
-      height: debug_room_tiled_tiles.imageheight,
-      width: debug_room_tiled_tiles.imagewidth,
+      height: debug_room_tiled_tiles.imageheight +500,
+      width: debug_room_tiled_tiles.imagewidth + 500,
     }
     addToSegments(background_image)
-    
     addToSegments(wall)
     global.collisionItems.addChild(wall);
 
@@ -121,7 +120,7 @@ module.exports.create_level_grid = () => {
 
     let current_x = 0;
     let current_y = 0;
-    let current_grid_x = 0;
+    let current_grid_x = -1;
     let current_grid_y = 0;
     
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
@@ -134,8 +133,8 @@ module.exports.create_level_grid = () => {
         binary_line = [];
 
         current_y += 100;
-        current_x = -100;
-        current_grid_x = 0;
+        current_x = 0;
+        current_grid_x = -1;
         current_grid_y += 1;
       }
       current_x += 100;
@@ -155,7 +154,7 @@ module.exports.create_level_grid = () => {
         y: current_grid_y,
       }
      
-      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
+      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i+1)){
         // is a wall
         grid_cell.alpha = 0.5
         binary_line.push(1);
@@ -173,37 +172,37 @@ module.exports.create_level_grid = () => {
     }
     
     global.viewport.addChild(global.grid_container);
-
-    const grid_center = (path, grid_line) => {
-      let grid_centers = [];
-      for (let i = 0; i < path.length; i++) {
-        const position = path[i];
-
-        const block_found = grid_line[position.y][position.x];
-        
-        //TODO for testing
-        block_found.alpha = 0.3;
-
-        grid_centers.push({
-          x: block_found.x + (debug_room_tiled_tiles.tilewidth/2), 
-          y: block_found.y + (debug_room_tiled_tiles.tileheight/2)
-        })
-      }
-      return grid_centers;
-    }
-  
     global.easystar.setGrid(global.binary_grid_map);
     global.easystar.setAcceptableTiles([0]);
     global.easystar.setIterationsPerCalculation(1000);
-    global.easystar.findPath(0, 0, 0, 6, (path) => {
-      if(path === null) {
-        console.log('no path found');
-      } else {
-        const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
-        resolve(path_to_follow_based_on_grid_centers);
-      }
-    });
-    
-    global.easystar.calculate()
+    resolve()
+    // global.easystar.findPath(0, 0, 0, 6, (path) => {
+    //   if(path === null) {
+    //     console.log('no path found');
+    //   } else {
+    //     const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
+    //     resolve(path_to_follow_based_on_grid_centers);
+    //   }
+    // });
+    // global.easystar.calculate()
   })
 }
+
+
+// const grid_center = (path, grid_line) => {
+//   let grid_centers = [];
+//   for (let i = 0; i < path.length; i++) {
+//     const position = path[i];
+
+//     const block_found = grid_line[position.y][position.x];
+    
+//     //TODO for testing
+//     block_found.alpha = 0.3;
+
+//     grid_centers.push({
+//       x: block_found.x + (debug_room_tiled_tiles.tilewidth/2), 
+//       y: block_found.y + (debug_room_tiled_tiles.tileheight/2)
+//     })
+//   }
+//   return grid_centers;
+// }
