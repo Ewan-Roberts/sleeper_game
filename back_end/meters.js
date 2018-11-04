@@ -6,8 +6,6 @@ const   dynamoose       = require('mongoose'),
 //need an email
 
 module.exports.start = user_id => {
-
-    console.log("meters_start called")
     User.findById(user_id, (err, foundUser) =>{
         
         if (err) throw err
@@ -17,7 +15,6 @@ module.exports.start = user_id => {
     
         new User(foundUser).save((err, updatedUser)=> {
             if (err) throw err
-            console.log(updatedUser)
         });
     
     });
@@ -29,8 +26,6 @@ module.exports.updateSleep = (user_id,to_add) => {
 	let parsed_hour = parseInt(to_add)
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_sleep called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err
@@ -51,8 +46,6 @@ module.exports.updateSleep = (user_id,to_add) => {
 module.exports.updateFood = (user_id,amount) => {
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_food called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err
@@ -73,8 +66,6 @@ module.exports.updateFood = (user_id,amount) => {
 module.exports.updateWater = (user_id,amount) => {
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_water called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err
@@ -95,8 +86,6 @@ module.exports.updateWater = (user_id,amount) => {
 module.exports.updateHealth = (user_id,amount) => {
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_health called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err
@@ -117,8 +106,6 @@ module.exports.updateHealth = (user_id,amount) => {
 module.exports.updateHeat = (user_id,amount) => {
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_heat called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err
@@ -139,8 +126,6 @@ module.exports.updateHeat = (user_id,amount) => {
 module.exports.updateWeight = (user_id,amount) => {
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_weight called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err
@@ -161,8 +146,6 @@ module.exports.updateWeight = (user_id,amount) => {
 module.exports.updateDesease = (user_id,amount) => {
 
 	return new Promise((resolve,reject)=>{
-    
-	    console.log("update_desease called")
 	    User.findById(user_id, (err, foundUser) =>{
 	        
 	        if (err) throw err

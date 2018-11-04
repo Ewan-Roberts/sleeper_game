@@ -69,7 +69,7 @@ module.exports.add_floor = () => {
   create_grid.alpha = 0.8;
   create_grid.on('click', () => {
     //TODO
-    level_util.load_debug_map_image()
+    // level_util.load_debug_map_image()
     level_util.create_level_grid()
       .then(pathfinding_path => {
         enemy.init_enemies_container()

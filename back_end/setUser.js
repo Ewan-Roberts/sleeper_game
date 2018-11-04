@@ -6,10 +6,6 @@ const   dynamoose       = require('mongoose'),
 //need an email
 module.exports = user_info => {
 
-    console.log("setUser called")
-
-    console.log(user_info)
-
     const newUser = new User(user_info)
 
     newUser.save(err=>{

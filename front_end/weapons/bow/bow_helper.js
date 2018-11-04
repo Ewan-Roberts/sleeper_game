@@ -71,13 +71,7 @@ module.exports.arrowManagement = (power, origin, target) => {
       const sprite_in_container = global.enemy_container.children[i];
       
       if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log(arrow.getGlobalPosition())
-        console.log(arrow.getLocalBounds())
-        console.log('hit')
         dialog_util.renderText(sprite_in_container, 'I am hit');
-        arrow.width = 200;
-        arrow.height = 50;
-        sprite_in_container.addChild(arrow)
         arrow_tween.stop();
       }
     }

@@ -31,7 +31,6 @@ const addToSegments = item => {
       {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
       {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
   )
-
 }
 
 // Solid Black wall
@@ -147,6 +146,10 @@ module.exports.create_level_grid = () => {
       grid_cell.height = 100;
       grid_cell.x = current_x;
       grid_cell.y = current_y;
+      grid_cell.middle = {
+        x: grid_cell.x + 50,
+        y: grid_cell.y + 50,
+      }
       grid_cell.cell_position = {
         x: current_grid_x,
         y: current_grid_y,
@@ -157,9 +160,8 @@ module.exports.create_level_grid = () => {
         grid_cell.alpha = 0.5
         binary_line.push(1);
       } else {
-
         // is walkable ground
-        grid_cell.alpha = 0.1;
+        grid_cell.alpha = 0;
         binary_line.push(0);
       }
   
@@ -195,7 +197,7 @@ module.exports.create_level_grid = () => {
     global.easystar.setIterationsPerCalculation(1000);
     global.easystar.findPath(0, 0, 0, 6, (path) => {
       if(path === null) {
-        console.log('no path foud');
+        console.log('no path found');
       } else {
         const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
         resolve(path_to_follow_based_on_grid_centers);

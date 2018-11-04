@@ -5,21 +5,15 @@ const 	Container 	= require('../models/Container'),
 
 
 module.exports = data => {
-
-    // console.log("setUser called")
-    // console.log(data)
     return new Promise((resolve,reject)=>{
 
 	    Container.findOne({"chest_id": data.chest_id}, (err, chest) =>{
 	    	if (err) reject(err)
 
 	     	if(chest === null){
-	     		console.log("see me?")
 	     		getItems(data.contents).then(res=>{
 	     			
 	     			data.contents = res
-	     			console.log(data)
-	     			console.log("chest")
 
 		     		new Container(data).save(err=>{
 		    		    if (err) reject(err)
