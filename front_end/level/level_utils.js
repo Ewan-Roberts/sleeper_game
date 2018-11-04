@@ -97,7 +97,7 @@ global.grid_container = new PIXI.Container();
 global.grid_container.name = 'enemy_container';
 
 const easystarjs = require('easystarjs');
-const easystar = new easystarjs.js();
+global.easystar = new easystarjs.js();
 
 
 module.exports.load_debug_map_image = () => {
@@ -122,6 +122,9 @@ module.exports.create_level_grid = () => {
 
     let current_x = 0;
     let current_y = 0;
+
+    let row = 0;
+    let column = 0;
     
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
       
@@ -136,13 +139,21 @@ module.exports.create_level_grid = () => {
         current_x = -100;
       }
       current_x += 100;
-
+      
       const grid_cell = PIXI.Sprite.fromFrame('black_dot');
       grid_cell.width = 100;
       grid_cell.height = 100;
       grid_cell.x = current_x;
       grid_cell.y = current_y;
-  
+      grid_cell.grid_position = {
+        x: row,
+        y: column,
+      };
+      column ++;
+      if(i % 20 === 0) {
+        column = 0;
+        row++;
+      }
       if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
         // is a wall
         grid_cell.alpha = 0.5
@@ -155,7 +166,9 @@ module.exports.create_level_grid = () => {
       }
   
       line_grid.push(grid_cell);
-  
+
+      global.line_grid = line_grid;
+   
       global.grid_container.addChild(grid_cell);
     }
     
@@ -179,10 +192,10 @@ module.exports.create_level_grid = () => {
       return grid_centers;
     }
   
-    easystar.setGrid(binary_grid_map);
-    easystar.setAcceptableTiles([0]);
-    easystar.setIterationsPerCalculation(1000);
-    easystar.findPath(0, 0, 6, 6, (path) => {
+    global.easystar.setGrid(binary_grid_map);
+    global.easystar.setAcceptableTiles([0]);
+    global.easystar.setIterationsPerCalculation(1000);
+    global.easystar.findPath(0, 0, 0, 6, (path) => {
       if(path === null) {
         console.log('no path foud');
       } else {
@@ -191,6 +204,6 @@ module.exports.create_level_grid = () => {
       }
     });
     
-    easystar.calculate()
+    global.easystar.calculate()
   })
 }

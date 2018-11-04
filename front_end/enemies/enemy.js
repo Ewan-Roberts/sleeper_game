@@ -4,30 +4,13 @@ const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
+const { get_sprite_point_on_grid } = require('../pathfinding/pathfind_util');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
 
 module.exports.init_enemies_container = () => {
   global.viewport.addChild(global.enemy_container);
-}
-
-class Ememy {
-  constructor(name){
-    this.name = name;
-  }
-
-  set location(x, y) {
-    this.position.set(x, y)
-  }
-
-  get location () {
-    return this.position;
-  }
-
-  say_sentence(sentence) {
-    dialog_util.renderText(this, 'test');
-  }
 }
 
 function get_intersection(a,b){
@@ -130,7 +113,10 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
   const player =  global.Player.sprite;
   const sight_line = enemy_sprite.children[0];
   const influence_box = enemy_sprite.children[1];
-  
+  let one_time = false;
+
+  let new_grid = [];
+
   tween.addEventListener("change", () =>{
     if(sight_line.containsPoint(player.getGlobalPosition())){
       console.log('sight line')
@@ -138,8 +124,43 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
       module.exports.move_to_player(enemy_sprite)
     }
     if(influence_box.containsPoint(player.getGlobalPosition())){
-      dialog_util.renderText(enemy_sprite, 'influence zone');
-      module.exports.move_to_player(enemy_sprite, tween)
+      if(one_time === false) {
+        console.log(global.grid_container);
+        one_time = true;
+        dialog_util.renderText(enemy_sprite, 'influence zone');
+        console.log('path')
+        console.log(global.easystar)
+
+        global.easystar.findPath(0, 0, 1, 1, (path) => {
+          console.log('path')
+          console.log(path)
+          path.forEach(grid => {
+            new_grid.push(global.line_grid[grid.y,grid.x])
+          })
+          console.log(new_grid)
+          createjs.Tween.get(enemy_sprite)
+          .to({
+            x:new_grid[0].x,
+            y:new_grid[0].y,
+          },1000)
+          .wait(500)
+          .to({
+            x:new_grid[1].x,
+            y:new_grid[1].y,
+          },1000)
+          .wait(500)
+          // createjs.Tween.get(enemy_sprite).chain(tween2)
+          // module.exports.create_path_tween(enemy_sprite, new_grid)
+        })
+        global.easystar.calculate()
+
+        
+
+        
+
+        // get_sprite_point_on_grid(enemy_sprite)
+        // module.exports.move_to_player(enemy_sprite, tween)		
+      }
     }
   });
 }
@@ -172,17 +193,19 @@ module.exports.create_path_tween = (sprite, path_data) => {
     y:path_data[3].y,
     rotation: sprite_helper.angle(sprite, path_data[4]),
   },1000)
-  .to({
-    x:path_data[4].x,
-    y:path_data[4].y,
-    rotation: sprite_helper.angle(sprite, path_data[4]),
-  },1000)
-  .to({alpha:0,visible:false},1000)
+  // .to({alpha:0,visible:false},1000)
   .call(()=>{
     console.log('poop')
   });
   module.exports.enemy_logic_on_path(sprite, tween)
 }
+
+module.exports.enemy_to_player = () => {
+
+  console.log(global);
+
+}
+
 
 function add_enemy_raycasting(enemy_sprite) {
 

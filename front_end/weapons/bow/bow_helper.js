@@ -1,7 +1,7 @@
 
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
-const dialogUtil = require('../../dialog/dialogUtil.js');
+const dialog_util = require('../../dialog/dialog_util.js');
 
 global.arrow_container = new PIXI.Container();
 global.arrow_container.name = 'arrow containter';
@@ -74,7 +74,7 @@ module.exports.arrowManagement = (power, origin, target) => {
         console.log(arrow.getGlobalPosition())
         console.log(arrow.getLocalBounds())
         console.log('hit')
-        dialogUtil.renderText(sprite_in_container, 'I am hit');
+        dialog_util.renderText(sprite_in_container, 'I am hit');
         arrow.width = 200;
         arrow.height = 50;
         sprite_in_container.addChild(arrow)

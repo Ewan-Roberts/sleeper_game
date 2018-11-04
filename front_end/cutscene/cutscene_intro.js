@@ -1,6 +1,5 @@
 const PIXI = require('pixi.js');
-const cutsceneUtil = require('./cutsceneUtils');
-const filterUtil = require('../visual_effects/filterUtils.js');
+const cutscene_util = require('./cutscene_utils');
 const player = require('../player/player.js');
 
 const scene = {
@@ -10,8 +9,8 @@ const scene = {
 
 module.exports.start = () => {
   player.remove_controls();
-  cutsceneUtil.clearScene();
-  cutsceneUtil.teleport(scene.x, scene.y);
+  cutscene_util.clearScene();
+  cutscene_util.teleport(scene.x, scene.y);
 
   const introFloor = PIXI.Sprite.fromFrame('bedroom_floor_cutscene');
   introFloor.width *= 2;
@@ -22,10 +21,10 @@ module.exports.start = () => {
   global.viewport.addChild(introFloor);
 
   filterUtil.godray(introFloor.x + 100, (scene.y - introFloor.height - 50))
-    .then(() => cutsceneUtil.createPlayer())
+    .then(() => cutscene_util.createPlayer())
     .then(() => {
       global.Player.moveable = false;
-      cutsceneUtil.movePlayer(
+      cutscene_util.movePlayer(
         { x: scene.x + 200, y: scene.y - 200 },
         { x: scene.x + 200, y: scene.y + 500 },
       );
