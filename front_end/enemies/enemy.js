@@ -47,22 +47,6 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
-    // enemy_sprite.on_hit = (arrow) => {
-      
-    //   const new_arrow = PIXI.Sprite.fromFrame('arrow');
-
-    //   new_arrow.width *= 2;
-    //   new_arrow.height *= 3;
-      
-    //   // new_arrow.rotation = arrow.rotation;
-    //   new_arrow.position.x = arrow.x;
-    //   new_arrow.position.y = arrow.y;
-    //   new_arrow.name = 'new_arrow';
-    //   enemy_sprite.addChild(new_arrow)
-    //   console.log(enemy_sprite)
-  
-    //   // module.exports.put_blood_splatter_on_ground(enemy_sprite)
-    // }
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
     resolve(enemy_sprite)
@@ -119,7 +103,6 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
 
   tween.addEventListener("change", () =>{
     if(sight_line.containsPoint(player.getGlobalPosition())){
-      console.log('sight line')
       dialog_util.renderText(enemy_sprite, 'sight line');
       module.exports.move_to_player(enemy_sprite)
     }
@@ -129,41 +112,40 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
         one_time = true;
         dialog_util.renderText(enemy_sprite, 'influence zone');
         
-        let new_path = [];
-        global.easystar.findPath(0, 0, 1, 5, (path) => {
+        // let new_path = [];
+        // global.easystar.findPath(0, 0, 1, 5, (path) => {
           
-          
-          path.forEach(path_node => {
+        //   path.forEach(path_node => {
             
-            const current_x = path_node.x;
-            const current_y = path_node.y;
+        //     const current_x = path_node.x;
+        //     const current_y = path_node.y;
             
-            const current = global.sprite_grid[current_x][current_y];
-            new_path.push(current)
-          })
-          var tweenA = new createjs.Tween(enemy_sprite)
-          .to({
-            x:new_path[4].x,
-            y:new_path[4].y,
-          }, 1000)
-          .wait(500)
-          .to({ 
-            x:new_path[5].x,
-            y:new_path[5].y,
-          }, 1000)
-          .to({ 
-            x:new_path[6].x,
-            y:new_path[6].y,
-          }, 1000)
-          .to({ 
-            x:new_path[7].x,
-            y:new_path[7].y,
-          }, 1000)
+        //     const current = global.sprite_grid[current_x][current_y];
+        //     new_path.push(current)
+        //   })
+        //   var tweenA = new createjs.Tween(enemy_sprite)
+        //   .to({
+        //     x:new_path[4].x,
+        //     y:new_path[4].y,
+        //   }, 1000)
+        //   .wait(500)
+        //   .to({ 
+        //     x:new_path[5].x,
+        //     y:new_path[5].y,
+        //   }, 1000)
+        //   .to({ 
+        //     x:new_path[6].x,
+        //     y:new_path[6].y,
+        //   }, 1000)
+        //   .to({ 
+        //     x:new_path[7].x,
+        //     y:new_path[7].y,
+        //   }, 1000)
           
           
-          tween.chain(tweenA)
-        })
-        global.easystar.calculate()
+        //   tween.chain(tweenA)
+        // })
+        // global.easystar.calculate() 
       }
     }
   });

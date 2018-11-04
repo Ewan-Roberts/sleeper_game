@@ -53,34 +53,89 @@ module.exports.lay_down_grid = () => {
   }
   global.viewport.addChild(global.grid_container);
 }
+// TODO store this without having to loop through the whole grid
+// module.exports.find_player_point_on_grid = player => {
 
-module.exports.get_sprite_point_on_grid = (enemy_sprite) => {
-  console.log('needle')
-  const needle = new PIXI.Point(1900,1600)
+//   global.grid_container.children.forEach(grid => {
+//     if(grid.containsPoint(player.getGlobalPosition())){
+//       // console.log('at grid: ' + grid)
+//       grid.alpha = 1;
+//     }
+//   })
+// }
 
-  global.grid_container.children.forEach( grid_sprite => {
-    // console.log(grid_sprite)
-    console.log(grid_sprite)
-    
-    if(grid_sprite.containsPoint(needle)) {
-      console.log('hit');
-      console.log(grid_sprite);
-      // grid_sprite.visable = false;
-      grid_sprite.alpha = 0;
-      
-      
-      global.easystar.findPath(0, 0, 1, 1, (path) => {
-        console.log(path);
-        console.log('path');
-        if(path === null) {
-          console.log('no path foud');
-        } else {
-          grid_sprite.alpha = 1;
-          console.log('grid_sprite')
-          console.log(grid_sprite)
-        }
-      });
+// module.exports.find_enemy_point_on_grid = enemy => {
+//   global.grid_container.children.forEach(grid => {
+
+//     if(grid.containsPoint(enemy.getGlobalPosition())){
+//       // console.log('enemy at')
+//       return enemy.position;
+//       // grid.alpha = 1;
+//     }
+//   })
+// }
+
+module.exports.create_grid_position_from_sprite = (sprite) => {
+
+  for (let i = 0; i < global.grid_container.children.length; i++) {
+    const grid = global.grid_container.children[i];
+    if(grid.containsPoint(sprite.getGlobalPosition())){
+      return grid.cell_position;
     }
-    
-  })
+  }
+
 }
+
+module.exports.create_path_from_two_points = (point_1, point_2) => {
+  const enemy_point = module.exports.create_grid_position_from_sprite(global.enemy_container.children[0])
+  const player_point = module.exports.create_grid_position_from_sprite(global.Player.sprite)
+  console.log(player_point)
+  console.log(enemy_point)
+  global.easystar.findPath(enemy_point.x, enemy_point.y, player_point.x, player_point.y, (path) => {
+    if(path === null) {
+      console.log('no path foud');
+    } else {
+      console.log('real path');
+      console.log(path);
+    }
+  });
+  global.easystar.calculate()
+
+}
+
+
+setInterval(()=>{
+  // module.exports.find_player_point_on_grid(global.Player.sprite)
+  module.exports.create_path_from_two_points();
+},3000)
+
+// module.exports.get_sprite_point_on_grid = (enemy_sprite) => {
+//   console.log('needle')
+//   const needle = new PIXI.Point(1900,1600)
+
+//   global.grid_container.children.forEach( grid_sprite => {
+//     // console.log(grid_sprite)
+//     console.log(grid_sprite)
+    
+//     if(grid_sprite.containsPoint(needle)) {
+//       console.log('hit');
+//       console.log(grid_sprite);
+//       // grid_sprite.visable = false;
+//       grid_sprite.alpha = 0;
+      
+      
+//       global.easystar.findPath(0, 0, 1, 1, (path) => {
+//         console.log(path);
+//         console.log('path');
+//         if(path === null) {
+//           console.log('no path foud');
+//         } else {
+//           grid_sprite.alpha = 1;
+//           console.log('grid_sprite')
+//           console.log(grid_sprite)
+//         }
+//       });
+//     }
+    
+//   })
+// }

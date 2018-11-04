@@ -365,22 +365,6 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
-    // enemy_sprite.on_hit = (arrow) => {
-      
-    //   const new_arrow = PIXI.Sprite.fromFrame('arrow');
-
-    //   new_arrow.width *= 2;
-    //   new_arrow.height *= 3;
-      
-    //   // new_arrow.rotation = arrow.rotation;
-    //   new_arrow.position.x = arrow.x;
-    //   new_arrow.position.y = arrow.y;
-    //   new_arrow.name = 'new_arrow';
-    //   enemy_sprite.addChild(new_arrow)
-    //   console.log(enemy_sprite)
-  
-    //   // module.exports.put_blood_splatter_on_ground(enemy_sprite)
-    // }
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
     resolve(enemy_sprite)
@@ -437,7 +421,6 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
 
   tween.addEventListener("change", () =>{
     if(sight_line.containsPoint(player.getGlobalPosition())){
-      console.log('sight line')
       dialog_util.renderText(enemy_sprite, 'sight line');
       module.exports.move_to_player(enemy_sprite)
     }
@@ -447,41 +430,40 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
         one_time = true;
         dialog_util.renderText(enemy_sprite, 'influence zone');
         
-        let new_path = [];
-        global.easystar.findPath(0, 0, 1, 5, (path) => {
+        // let new_path = [];
+        // global.easystar.findPath(0, 0, 1, 5, (path) => {
           
-          
-          path.forEach(path_node => {
+        //   path.forEach(path_node => {
             
-            const current_x = path_node.x;
-            const current_y = path_node.y;
+        //     const current_x = path_node.x;
+        //     const current_y = path_node.y;
             
-            const current = global.sprite_grid[current_x][current_y];
-            new_path.push(current)
-          })
-          var tweenA = new createjs.Tween(enemy_sprite)
-          .to({
-            x:new_path[4].x,
-            y:new_path[4].y,
-          }, 1000)
-          .wait(500)
-          .to({ 
-            x:new_path[5].x,
-            y:new_path[5].y,
-          }, 1000)
-          .to({ 
-            x:new_path[6].x,
-            y:new_path[6].y,
-          }, 1000)
-          .to({ 
-            x:new_path[7].x,
-            y:new_path[7].y,
-          }, 1000)
+        //     const current = global.sprite_grid[current_x][current_y];
+        //     new_path.push(current)
+        //   })
+        //   var tweenA = new createjs.Tween(enemy_sprite)
+        //   .to({
+        //     x:new_path[4].x,
+        //     y:new_path[4].y,
+        //   }, 1000)
+        //   .wait(500)
+        //   .to({ 
+        //     x:new_path[5].x,
+        //     y:new_path[5].y,
+        //   }, 1000)
+        //   .to({ 
+        //     x:new_path[6].x,
+        //     y:new_path[6].y,
+        //   }, 1000)
+        //   .to({ 
+        //     x:new_path[7].x,
+        //     y:new_path[7].y,
+        //   }, 1000)
           
           
-          tween.chain(tweenA)
-        })
-        global.easystar.calculate()
+        //   tween.chain(tweenA)
+        // })
+        // global.easystar.calculate() 
       }
     }
   });
@@ -2059,43 +2041,41 @@ module.exports.create_level_grid = () => {
     global.sprite_grid = [];
     let line_grid = [];
     
-    const binary_grid_map = [];
+    global.binary_grid_map = [];
     let binary_line = [];
 
     let current_x = 0;
     let current_y = 0;
-
-    let row = 0;
-    let column = 0;
+    let current_grid_x = 0;
+    let current_grid_y = 0;
     
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
       
       if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
         global.sprite_grid.push(line_grid);
-        binary_grid_map.push(binary_line);
+        global.binary_grid_map.push(binary_line);
 
         line_grid = [];
         binary_line = [];
 
         current_y += 100;
         current_x = -100;
+        current_grid_x = 0;
+        current_grid_y += 1;
       }
       current_x += 100;
+      current_grid_x += 1;
       
       const grid_cell = PIXI.Sprite.fromFrame('black_dot');
       grid_cell.width = 100;
       grid_cell.height = 100;
       grid_cell.x = current_x;
       grid_cell.y = current_y;
-      grid_cell.grid_position = {
-        x: row,
-        y: column,
-      };
-      column ++;
-      if(i % 20 === 0) {
-        column = 0;
-        row++;
+      grid_cell.cell_position = {
+        x: current_grid_x,
+        y: current_grid_y,
       }
+     
       if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
         // is a wall
         grid_cell.alpha = 0.5
@@ -2134,7 +2114,7 @@ module.exports.create_level_grid = () => {
       return grid_centers;
     }
   
-    global.easystar.setGrid(binary_grid_map);
+    global.easystar.setGrid(global.binary_grid_map);
     global.easystar.setAcceptableTiles([0]);
     global.easystar.setIterationsPerCalculation(1000);
     global.easystar.findPath(0, 0, 0, 6, (path) => {
@@ -2338,37 +2318,92 @@ module.exports.lay_down_grid = () => {
   }
   global.viewport.addChild(global.grid_container);
 }
+// TODO store this without having to loop through the whole grid
+// module.exports.find_player_point_on_grid = player => {
 
-module.exports.get_sprite_point_on_grid = (enemy_sprite) => {
-  console.log('needle')
-  const needle = new PIXI.Point(1900,1600)
+//   global.grid_container.children.forEach(grid => {
+//     if(grid.containsPoint(player.getGlobalPosition())){
+//       // console.log('at grid: ' + grid)
+//       grid.alpha = 1;
+//     }
+//   })
+// }
 
-  global.grid_container.children.forEach( grid_sprite => {
-    // console.log(grid_sprite)
-    console.log(grid_sprite)
-    
-    if(grid_sprite.containsPoint(needle)) {
-      console.log('hit');
-      console.log(grid_sprite);
-      // grid_sprite.visable = false;
-      grid_sprite.alpha = 0;
-      
-      
-      global.easystar.findPath(0, 0, 1, 1, (path) => {
-        console.log(path);
-        console.log('path');
-        if(path === null) {
-          console.log('no path foud');
-        } else {
-          grid_sprite.alpha = 1;
-          console.log('grid_sprite')
-          console.log(grid_sprite)
-        }
-      });
+// module.exports.find_enemy_point_on_grid = enemy => {
+//   global.grid_container.children.forEach(grid => {
+
+//     if(grid.containsPoint(enemy.getGlobalPosition())){
+//       // console.log('enemy at')
+//       return enemy.position;
+//       // grid.alpha = 1;
+//     }
+//   })
+// }
+
+module.exports.create_grid_position_from_sprite = (sprite) => {
+
+  for (let i = 0; i < global.grid_container.children.length; i++) {
+    const grid = global.grid_container.children[i];
+    if(grid.containsPoint(sprite.getGlobalPosition())){
+      return grid.cell_position;
     }
-    
-  })
+  }
+
 }
+
+module.exports.create_path_from_two_points = (point_1, point_2) => {
+  const enemy_point = module.exports.create_grid_position_from_sprite(global.enemy_container.children[0])
+  const player_point = module.exports.create_grid_position_from_sprite(global.Player.sprite)
+  console.log(player_point)
+  console.log(enemy_point)
+  global.easystar.findPath(enemy_point.x, enemy_point.y, player_point.x, player_point.y, (path) => {
+    if(path === null) {
+      console.log('no path foud');
+    } else {
+      console.log('real path');
+      console.log(path);
+    }
+  });
+  global.easystar.calculate()
+
+}
+
+
+setInterval(()=>{
+  // module.exports.find_player_point_on_grid(global.Player.sprite)
+  module.exports.create_path_from_two_points();
+},3000)
+
+// module.exports.get_sprite_point_on_grid = (enemy_sprite) => {
+//   console.log('needle')
+//   const needle = new PIXI.Point(1900,1600)
+
+//   global.grid_container.children.forEach( grid_sprite => {
+//     // console.log(grid_sprite)
+//     console.log(grid_sprite)
+    
+//     if(grid_sprite.containsPoint(needle)) {
+//       console.log('hit');
+//       console.log(grid_sprite);
+//       // grid_sprite.visable = false;
+//       grid_sprite.alpha = 0;
+      
+      
+//       global.easystar.findPath(0, 0, 1, 1, (path) => {
+//         console.log(path);
+//         console.log('path');
+//         if(path === null) {
+//           console.log('no path foud');
+//         } else {
+//           grid_sprite.alpha = 1;
+//           console.log('grid_sprite')
+//           console.log(grid_sprite)
+//         }
+//       });
+//     }
+    
+//   })
+// }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"easystarjs":70,"pixi.js":252}],21:[function(require,module,exports){

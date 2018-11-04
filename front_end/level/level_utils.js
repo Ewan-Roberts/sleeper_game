@@ -117,43 +117,41 @@ module.exports.create_level_grid = () => {
     global.sprite_grid = [];
     let line_grid = [];
     
-    const binary_grid_map = [];
+    global.binary_grid_map = [];
     let binary_line = [];
 
     let current_x = 0;
     let current_y = 0;
-
-    let row = 0;
-    let column = 0;
+    let current_grid_x = 0;
+    let current_grid_y = 0;
     
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
       
       if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
         global.sprite_grid.push(line_grid);
-        binary_grid_map.push(binary_line);
+        global.binary_grid_map.push(binary_line);
 
         line_grid = [];
         binary_line = [];
 
         current_y += 100;
         current_x = -100;
+        current_grid_x = 0;
+        current_grid_y += 1;
       }
       current_x += 100;
+      current_grid_x += 1;
       
       const grid_cell = PIXI.Sprite.fromFrame('black_dot');
       grid_cell.width = 100;
       grid_cell.height = 100;
       grid_cell.x = current_x;
       grid_cell.y = current_y;
-      grid_cell.grid_position = {
-        x: row,
-        y: column,
-      };
-      column ++;
-      if(i % 20 === 0) {
-        column = 0;
-        row++;
+      grid_cell.cell_position = {
+        x: current_grid_x,
+        y: current_grid_y,
       }
+     
       if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
         // is a wall
         grid_cell.alpha = 0.5
@@ -192,7 +190,7 @@ module.exports.create_level_grid = () => {
       return grid_centers;
     }
   
-    global.easystar.setGrid(binary_grid_map);
+    global.easystar.setGrid(global.binary_grid_map);
     global.easystar.setAcceptableTiles([0]);
     global.easystar.setIterationsPerCalculation(1000);
     global.easystar.findPath(0, 0, 0, 6, (path) => {
