@@ -443,41 +443,45 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
     }
     if(influence_box.containsPoint(player.getGlobalPosition())){
       if(one_time === false) {
-        console.log(global.grid_container);
+        
         one_time = true;
         dialog_util.renderText(enemy_sprite, 'influence zone');
-        console.log('path')
-        console.log(global.easystar)
-
-        global.easystar.findPath(0, 0, 1, 1, (path) => {
-          console.log('path')
-          console.log(path)
-          path.forEach(grid => {
-            new_grid.push(global.line_grid[grid.y,grid.x])
+        
+        let new_path = [];
+        global.easystar.findPath(0, 0, 1, 5, (path) => {
+          
+          
+          path.forEach(path_node => {
+            
+            const current_x = path_node.x;
+            const current_y = path_node.y;
+            
+            const current = global.sprite_grid[current_x][current_y];
+            new_path.push(current)
           })
-          console.log(new_grid)
-          createjs.Tween.get(enemy_sprite)
+          var tweenA = new createjs.Tween(enemy_sprite)
           .to({
-            x:new_grid[0].x,
-            y:new_grid[0].y,
-          },1000)
+            x:new_path[4].x,
+            y:new_path[4].y,
+          }, 1000)
           .wait(500)
-          .to({
-            x:new_grid[1].x,
-            y:new_grid[1].y,
-          },1000)
-          .wait(500)
-          // createjs.Tween.get(enemy_sprite).chain(tween2)
-          // module.exports.create_path_tween(enemy_sprite, new_grid)
+          .to({ 
+            x:new_path[5].x,
+            y:new_path[5].y,
+          }, 1000)
+          .to({ 
+            x:new_path[6].x,
+            y:new_path[6].y,
+          }, 1000)
+          .to({ 
+            x:new_path[7].x,
+            y:new_path[7].y,
+          }, 1000)
+          
+          
+          tween.chain(tweenA)
         })
         global.easystar.calculate()
-
-        
-
-        
-
-        // get_sprite_point_on_grid(enemy_sprite)
-        // module.exports.move_to_player(enemy_sprite, tween)		
       }
     }
   });
@@ -2052,7 +2056,7 @@ module.exports.create_level_grid = () => {
   
   return new Promise(resolve => {
     
-    const sprite_grid = [];
+    global.sprite_grid = [];
     let line_grid = [];
     
     const binary_grid_map = [];
@@ -2067,7 +2071,7 @@ module.exports.create_level_grid = () => {
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
       
       if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
-        sprite_grid.push(line_grid);
+        global.sprite_grid.push(line_grid);
         binary_grid_map.push(binary_line);
 
         line_grid = [];
@@ -2137,7 +2141,7 @@ module.exports.create_level_grid = () => {
       if(path === null) {
         console.log('no path foud');
       } else {
-        const path_to_follow_based_on_grid_centers = grid_center(path, sprite_grid);
+        const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
         resolve(path_to_follow_based_on_grid_centers);
       }
     });

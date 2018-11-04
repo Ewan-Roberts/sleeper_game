@@ -114,7 +114,7 @@ module.exports.create_level_grid = () => {
   
   return new Promise(resolve => {
     
-    const sprite_grid = [];
+    global.sprite_grid = [];
     let line_grid = [];
     
     const binary_grid_map = [];
@@ -129,7 +129,7 @@ module.exports.create_level_grid = () => {
     for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
       
       if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
-        sprite_grid.push(line_grid);
+        global.sprite_grid.push(line_grid);
         binary_grid_map.push(binary_line);
 
         line_grid = [];
@@ -199,7 +199,7 @@ module.exports.create_level_grid = () => {
       if(path === null) {
         console.log('no path foud');
       } else {
-        const path_to_follow_based_on_grid_centers = grid_center(path, sprite_grid);
+        const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
         resolve(path_to_follow_based_on_grid_centers);
       }
     });
