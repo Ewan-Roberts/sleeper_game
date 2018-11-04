@@ -73,7 +73,7 @@ module.exports.add_floor = () => {
     level_util.create_level_grid()
       .then(pathfinding_path => {
         enemy.init_enemies_container()
-        enemy.create_enemy_at_location(200, -200)
+        enemy.create_enemy_at_location(300, 300)
           .then(sprite => {
             enemy.sight_line(sprite);
             enemy.influence_box(sprite);

@@ -101,97 +101,90 @@ module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
 
   let new_grid = [];
 
-  tween.addEventListener("change", () =>{
-    if(sight_line.containsPoint(player.getGlobalPosition())){
-      dialog_util.renderText(enemy_sprite, 'sight line');
-      module.exports.move_to_player(enemy_sprite)
-    }
-    if(influence_box.containsPoint(player.getGlobalPosition())){
-      if(one_time === false) {
+  // tween.addEventListener("change", () =>{
+  //   if(sight_line.containsPoint(player.getGlobalPosition())){
+  //     dialog_util.renderText(enemy_sprite, 'sight line');
+  //     module.exports.move_to_player(enemy_sprite)
+  //   }
+  //   if(influence_box.containsPoint(player.getGlobalPosition())){
+  //     if(one_time === false) {
         
-        one_time = true;
-        dialog_util.renderText(enemy_sprite, 'influence zone');
+  //       one_time = true;
+  //       dialog_util.renderText(enemy_sprite, 'influence zone');
         
-        // let new_path = [];
-        // global.easystar.findPath(0, 0, 1, 5, (path) => {
+  //       // let new_path = [];
+  //       // global.easystar.findPath(0, 0, 1, 5, (path) => {
           
-        //   path.forEach(path_node => {
+  //       //   path.forEach(path_node => {
             
-        //     const current_x = path_node.x;
-        //     const current_y = path_node.y;
+  //       //     const current_x = path_node.x;
+  //       //     const current_y = path_node.y;
             
-        //     const current = global.sprite_grid[current_x][current_y];
-        //     new_path.push(current)
-        //   })
-        //   var tweenA = new createjs.Tween(enemy_sprite)
-        //   .to({
-        //     x:new_path[4].x,
-        //     y:new_path[4].y,
-        //   }, 1000)
-        //   .wait(500)
-        //   .to({ 
-        //     x:new_path[5].x,
-        //     y:new_path[5].y,
-        //   }, 1000)
-        //   .to({ 
-        //     x:new_path[6].x,
-        //     y:new_path[6].y,
-        //   }, 1000)
-        //   .to({ 
-        //     x:new_path[7].x,
-        //     y:new_path[7].y,
-        //   }, 1000)
+  //       //     const current = global.sprite_grid[current_x][current_y];
+  //       //     new_path.push(current)
+  //       //   })
+  //       //   var tweenA = new createjs.Tween(enemy_sprite)
+  //       //   .to({
+  //       //     x:new_path[4].x,
+  //       //     y:new_path[4].y,
+  //       //   }, 1000)
+  //       //   .wait(500)
+  //       //   .to({ 
+  //       //     x:new_path[5].x,
+  //       //     y:new_path[5].y,
+  //       //   }, 1000)
+  //       //   .to({ 
+  //       //     x:new_path[6].x,
+  //       //     y:new_path[6].y,
+  //       //   }, 1000)
+  //       //   .to({ 
+  //       //     x:new_path[7].x,
+  //       //     y:new_path[7].y,
+  //       //   }, 1000)
           
           
-        //   tween.chain(tweenA)
-        // })
-        // global.easystar.calculate() 
-      }
-    }
-  });
+  //       //   tween.chain(tweenA)
+  //       // })
+  //       // global.easystar.calculate() 
+  //     }
+  //   }
+  // });
 }
 
 module.exports.create_path_tween = (sprite, path_data) => {
 
-  //write it simple for now Ewan
-  const tween = createjs.Tween.get(sprite)
-  .to({
-    x:path_data[0].x,
-    y:path_data[0].y,
-    rotation: sprite_helper.angle(sprite, path_data[0]),
-  },1000)
-  .wait(500)
-  .to({
-    x:path_data[1].x,
-    y:path_data[1].y,
-    rotation: sprite_helper.angle(sprite, path_data[1]),
-  },1000)
-  .to({
-    x:path_data[2].x,
-    y:path_data[2].y,
-    rotation: sprite_helper.angle(sprite, path_data[2])-1,
-  },1000)
-  .to({
-    rotation: sprite_helper.angle(sprite, path_data[4]),
-  },1000)
-  .to({
-    x:path_data[3].x,
-    y:path_data[3].y,
-    rotation: sprite_helper.angle(sprite, path_data[4]),
-  },1000)
-  // .to({alpha:0,visible:false},1000)
-  .call(()=>{
-    console.log('poop')
-  });
-  module.exports.enemy_logic_on_path(sprite, tween)
+  // write it simple for now Ewan
+  // const tween = createjs.Tween.get(sprite)
+  // .to({
+  //   x:path_data[0].x,
+  //   y:path_data[0].y,
+  //   rotation: sprite_helper.angle(sprite, path_data[0]),
+  // },1000)
+  // .wait(500)
+  // .to({
+  //   x:path_data[1].x,
+  //   y:path_data[1].y,
+  //   rotation: sprite_helper.angle(sprite, path_data[1]),
+  // },1000)
+  // .to({
+  //   x:path_data[2].x,
+  //   y:path_data[2].y,
+  //   rotation: sprite_helper.angle(sprite, path_data[2])-1,
+  // },1000)
+  // .to({
+  //   rotation: sprite_helper.angle(sprite, path_data[4]),
+  // },1000)
+  // .to({
+  //   x:path_data[3].x,
+  //   y:path_data[3].y,
+  //   rotation: sprite_helper.angle(sprite, path_data[4]),
+  // },1000)
+  // // .to({alpha:0,visible:false},1000)
+  // .call(()=>{
+  //   console.log('poop')
+  // });
+  // module.exports.enemy_logic_on_path(sprite, tween)
 }
-
-module.exports.enemy_to_player = () => {
-
-  console.log(global);
-
-}
-
 
 function add_enemy_raycasting(enemy_sprite) {
 

@@ -1,5 +1,6 @@
 const PIXI = require('pixi.js');
 const easystarjs = require('easystarjs');
+const { createjs } = require('@createjs/tweenjs');
 
 const easystar = new easystarjs.js();
 
@@ -85,12 +86,10 @@ function create_grid_position_from_sprite(sprite) {
   }
 }
 
-function highlight_grid_cell(path) {
-
+function highlight_grid_cell_from_path(path) {
   path.forEach(grid => {
     global.sprite_grid[grid.y][grid.x].alpha = 1;
   })
-
 }
 
 function create_path_from_two_points(sprite_one, sprite_two) {
@@ -107,27 +106,125 @@ function create_path_from_two_points(sprite_one, sprite_two) {
         resolve(path)
       }
     });
+
     global.easystar.calculate()
   })
 }
 
-function create_path_tween_to_from_sprite_to_player(sprite) {
+function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
 
-  const player_point = create_grid_position_from_sprite(global.Player.sprite);
-  const sprite_path = create_grid_position_from_sprite(sprite);
+  let grid_positions = [];
+  let path_to_follow = [];
+  
+  point_array.forEach(grid => {
+    path_to_follow.push(global.sprite_grid[grid.y][grid.x]);
+  })
+  const time_length_total = 3000/point_array.length
+  // sprite.position.set(path_to_follow[0].x, path_to_follow[0].y)
 
-  const path_data = create_path_from_two_points(player_point, sprite_path);
+  // const tween = createjs.Tween.get(sprite)
 
   const tween = createjs.Tween.get(sprite)
+  .to({
+    x:path_to_follow[0].x,
+    y:path_to_follow[0].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[1].x,
+    y:path_to_follow[1].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[2].x,
+    y:path_to_follow[2].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[3].x,
+    y:path_to_follow[3].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[4].x,
+    y:path_to_follow[4].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[5].x,
+    y:path_to_follow[5].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[6].x,
+    y:path_to_follow[6].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[7].x,
+    y:path_to_follow[7].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[8].x,
+    y:path_to_follow[8].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[9].x,
+    y:path_to_follow[9].y,
+  },time_length_total)
+  .to({
+    x:path_to_follow[10].x,
+    y:path_to_follow[10].y,
+  },time_length_total)
+  .call(()=>{
+    console.log('poop')
+  });
+  // point_array.forEach(point => {
+
+  //   tween.to({
+  //     x: point.x,
+  //     y: point.y,
+  //   }, time_to_point)
+  //   .wait(time_to_wait)
+
+  // })
+
+}
+
+
+function create_path_tween_to_from_sprite_to_player(sprite, path_data) {
+
+  // const player_point = create_grid_position_from_sprite(global.Player.sprite);
+  // const sprite_path = create_grid_position_from_sprite(sprite);
+
+  // create_path_from_two_points(sprite_path, player_point);
+  console.log(path_data);
+  console.log('path_data');
+  const options = {
+    time_to_wait : 500,
+    time_to_point: 2000
+  }
+
+  const tween_to_add = create_tween_on_point_array_with_options(sprite, path_data, options);
+
+  console.log(tween_to_add);
+  return tween_to_add;
+  // const tween = createjs.Tween.get(sprite);
+
+  // tween.chain(tween_to_add);
 }
 
 
 setInterval(()=>{
   // module.exports.find_player_point_on_grid(global.Player.sprite)
-  module.exports.create_path_from_two_points(global.enemy_container.children[0], global.Player.sprite)
-  .then(res => {
-    highlight_grid_cell(res)
+  create_path_from_two_points(global.enemy_container.children[0], global.Player.sprite)
+  .then(path_data => {
+    highlight_grid_cell_from_path(path_data)
+    create_path_tween_to_from_sprite_to_player(global.enemy_container.children[0], path_data);
   })
+  // .then(new_tween => {
+  //   // const current_tween = createjs.Tween.get(global.enemy_container.children[0])
+  //   // current_tween.to(new_tween);
+    
+
+  //   // console.log('current_tween');
+  //   // console.log(current_tween);
+  //   // console.log('new_tween');
+  //   // console.log(new_tween);
+  // })
 },3000)
 
 // module.exports.get_sprite_point_on_grid = (enemy_sprite) => {
