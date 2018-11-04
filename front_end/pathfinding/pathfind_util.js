@@ -75,7 +75,7 @@ module.exports.lay_down_grid = () => {
 //   })
 // }
 
-module.exports.create_grid_position_from_sprite = (sprite) => {
+function create_grid_position_from_sprite(sprite) {
 
   for (let i = 0; i < global.grid_container.children.length; i++) {
     const grid = global.grid_container.children[i];
@@ -83,30 +83,51 @@ module.exports.create_grid_position_from_sprite = (sprite) => {
       return grid.cell_position;
     }
   }
+}
+
+function highlight_grid_cell(path) {
+
+  path.forEach(grid => {
+    global.sprite_grid[grid.y][grid.x].alpha = 1;
+  })
 
 }
 
-module.exports.create_path_from_two_points = (point_1, point_2) => {
-  const enemy_point = module.exports.create_grid_position_from_sprite(global.enemy_container.children[0])
-  const player_point = module.exports.create_grid_position_from_sprite(global.Player.sprite)
-  console.log(player_point)
-  console.log(enemy_point)
-  global.easystar.findPath(enemy_point.x, enemy_point.y, player_point.x, player_point.y, (path) => {
-    if(path === null) {
-      console.log('no path foud');
-    } else {
-      console.log('real path');
-      console.log(path);
-    }
-  });
-  global.easystar.calculate()
+function create_path_from_two_points(sprite_one, sprite_two) {
+  
+  return new Promise((resolve) => {
 
+    const enemy_point = create_grid_position_from_sprite(sprite_one);
+    const player_point = create_grid_position_from_sprite(sprite_two);
+    
+    global.easystar.findPath(enemy_point.x, enemy_point.y, player_point.x, player_point.y, (path) => {
+      if(path === null) {
+        console.log('no path foud');
+      } else {
+        resolve(path)
+      }
+    });
+    global.easystar.calculate()
+  })
+}
+
+function create_path_tween_to_from_sprite_to_player(sprite) {
+
+  const player_point = create_grid_position_from_sprite(global.Player.sprite);
+  const sprite_path = create_grid_position_from_sprite(sprite);
+
+  const path_data = create_path_from_two_points(player_point, sprite_path);
+
+  const tween = createjs.Tween.get(sprite)
 }
 
 
 setInterval(()=>{
   // module.exports.find_player_point_on_grid(global.Player.sprite)
-  module.exports.create_path_from_two_points();
+  module.exports.create_path_from_two_points(global.enemy_container.children[0], global.Player.sprite)
+  .then(res => {
+    highlight_grid_cell(res)
+  })
 },3000)
 
 // module.exports.get_sprite_point_on_grid = (enemy_sprite) => {
