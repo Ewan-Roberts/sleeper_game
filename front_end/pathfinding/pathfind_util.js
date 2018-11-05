@@ -24,11 +24,8 @@ function highlight_grid_cell_from_path(path) {
 
 function create_path_from_two_points(sprite_one, sprite_two) {
   return new Promise((resolve) => {
-
-    const enemy_point = get_sprite_position_on_grid(sprite_one);
-    const player_point = get_sprite_position_on_grid(sprite_two);
     
-    global.easystar.findPath(enemy_point.x, enemy_point.y, player_point.x, player_point.y, (path) => {
+    global.easystar.findPath(sprite_one.x, sprite_one.y, sprite_two.x, sprite_two.y, (path) => {
       if(path === null) {
         console.log('no path found');
       } else {
@@ -43,8 +40,6 @@ function create_path_from_two_points(sprite_one, sprite_two) {
 function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
   
   highlight_grid_cell_from_path(point_array);
-
-  let grid_positions = [];
   let path_to_follow = [];
   
   point_array.forEach(grid => {
@@ -67,23 +62,29 @@ function create_tween_on_point_array_with_options(sprite, point_array, {time_to_
 }
 
 
-function create_path_tween_to_from_sprite_to_player(sprite, path_data) {
+function run_pathfinding_test() {
+  
+  const enemy_sprite = global.enemy_container.children[0];
+  const player_sprite = global.Player.sprite;
+
+  const enemy_point = get_sprite_position_on_grid(enemy_sprite);
+  const player_point = get_sprite_position_on_grid(player_sprite);
 
   const options = {
     time_to_wait : 500,
     time_to_point: 2000
   }
 
-  const tween_to_add = create_tween_on_point_array_with_options(sprite, path_data, options);
+  create_path_from_two_points(enemy_point, player_point)
+  .then(path_data => {
 
-  console.log(tween_to_add);
-  return tween_to_add;
+    create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+  })
+
 }
 
 
+
 setInterval(()=>{
-  create_path_from_two_points(global.enemy_container.children[0], global.Player.sprite)
-  .then(path_data => {
-    create_path_tween_to_from_sprite_to_player(global.enemy_container.children[0], path_data);
-  })
+  run_pathfinding_test()
 },2000)

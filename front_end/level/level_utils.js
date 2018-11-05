@@ -176,15 +176,6 @@ module.exports.create_level_grid = () => {
     global.easystar.setAcceptableTiles([0]);
     global.easystar.setIterationsPerCalculation(1000);
     resolve()
-    // global.easystar.findPath(0, 0, 0, 6, (path) => {
-    //   if(path === null) {
-    //     console.log('no path found');
-    //   } else {
-    //     const path_to_follow_based_on_grid_centers = grid_center(path, global.sprite_grid);
-    //     resolve(path_to_follow_based_on_grid_centers);
-    //   }
-    // });
-    // global.easystar.calculate()
   })
 }
 
