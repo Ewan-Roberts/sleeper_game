@@ -4,12 +4,11 @@ const { createjs } = require('@createjs/tweenjs');
 
 const easystar = new easystarjs.js();
 
-global.grid_container = new PIXI.Container();
-global.grid_container.name = 'enemy_container';
+const grid_container = new PIXI.Container();
+grid_container.name = 'enemy_container';
 
-global.sprite_grid = [];
-global.binary_grid_map = [];
-
+const sprite_grid = [];
+const binary_grid_map = [];
 
 module.exports.create_level_grid = (tiles_object) => {
     
@@ -25,8 +24,8 @@ module.exports.create_level_grid = (tiles_object) => {
   for (let i = 0; i < tiles_object.tilecount; i++) {
     
     if(i % tiles_object.columns === 0 && i !== 0){
-      global.sprite_grid.push(line_grid);
-      global.binary_grid_map.push(binary_line);
+      sprite_grid.push(line_grid);
+      binary_grid_map.push(binary_line);
 
       line_grid = [];
       binary_line = [];
@@ -67,11 +66,11 @@ module.exports.create_level_grid = (tiles_object) => {
 
     global.line_grid = line_grid;
   
-    global.grid_container.addChild(grid_cell);
+    grid_container.addChild(grid_cell);
   }
   
-  global.viewport.addChild(global.grid_container);
-  global.easystar.setGrid(global.binary_grid_map);
+  global.viewport.addChild(grid_container);
+  global.easystar.setGrid(binary_grid_map);
   global.easystar.setAcceptableTiles([0]);
   global.easystar.setIterationsPerCalculation(1000);
 }
@@ -91,7 +90,7 @@ function get_sprite_position_on_grid(sprite, container) {
 
 function highlight_grid_cell_from_path(path) {
   path.forEach(grid => {
-    global.sprite_grid[grid.y][grid.x].alpha = 0.5;
+    sprite_grid[grid.y][grid.x].alpha = 0.5;
   })
 }
 
@@ -116,9 +115,10 @@ function create_tween_on_point_array_with_options(sprite, point_array, {time_to_
   let path_to_follow = [];
   
   point_array.forEach(grid => {
-    path_to_follow.push(global.sprite_grid[grid.y][grid.x]);
+    path_to_follow.push(sprite_grid[grid.y][grid.x]);
   })
-  const time_length_total = 2000/point_array.length
+
+  const time_length_total = 2000 / point_array.length
 
   const tween = createjs.Tween.get(sprite)
 
@@ -140,8 +140,8 @@ function run_pathfinding_test() {
   const enemy_sprite = global.enemy_container.children[0];
   const player_sprite = global.Player.sprite;
 
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, global.grid_container);
-  const player_point = get_sprite_position_on_grid(player_sprite, global.grid_container);
+  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container);
+  const player_point = get_sprite_position_on_grid(player_sprite, grid_container);
 
   const options = {
     time_to_wait : 500,
