@@ -70,20 +70,13 @@ module.exports.add_floor = () => {
   create_grid.on('click', () => {
     //TODO
     // level_util.load_debug_map_image()
-    level_util.create_level_grid()
-      .then(pathfinding_path => {
-        enemy.init_enemies_container()
-        enemy.create_enemy_at_location(300, 300)
-          .then(sprite => {
-            enemy.sight_line(sprite);
-            enemy.influence_box(sprite);
-            const enemy_tween = enemy.create_path_tween(sprite, pathfinding_path);
-            enemy.enemy_logic_on_path(sprite, enemy_tween, pathfinding_path)
-            
-          })
-      })
+    enemy.init_enemies_container()
+    enemy.create_enemy_at_location(300, 300)
+    .then(sprite => {
+      enemy.sight_line(sprite);
+      enemy.influence_box(sprite);
+    })
   });
-
 
   global.eventTriggers.addChild(
     create_grid,

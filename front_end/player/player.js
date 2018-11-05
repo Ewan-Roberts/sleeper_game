@@ -209,7 +209,7 @@ module.exports.add_player = () => {
   global.Player.sprite.animationSpeed = 0.4;
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
-  global.Player.sprite.name = 'player';
+  global.Player.sprite.tag = 'player';
 
   global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);

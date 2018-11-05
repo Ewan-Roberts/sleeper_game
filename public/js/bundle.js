@@ -365,6 +365,7 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
+    enemy_sprite.tag = 'enemy';
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
     resolve(enemy_sprite)
@@ -1031,20 +1032,13 @@ module.exports.add_floor = () => {
   create_grid.on('click', () => {
     //TODO
     // level_util.load_debug_map_image()
-    level_util.create_level_grid()
-      .then(pathfinding_path => {
-        enemy.init_enemies_container()
-        enemy.create_enemy_at_location(300, 300)
-          .then(sprite => {
-            enemy.sight_line(sprite);
-            enemy.influence_box(sprite);
-            const enemy_tween = enemy.create_path_tween(sprite, pathfinding_path);
-            enemy.enemy_logic_on_path(sprite, enemy_tween, pathfinding_path)
-            
-          })
-      })
+    enemy.init_enemies_container()
+    enemy.create_enemy_at_location(300, 300)
+    .then(sprite => {
+      enemy.sight_line(sprite);
+      enemy.influence_box(sprite);
+    })
   });
-
 
   global.eventTriggers.addChild(
     create_grid,
@@ -1913,6 +1907,7 @@ module.exports.load = () => {
 },{"../../cutscene/cutscene_utils":4,"../level_utils.js":16,"../park/park_util.js":18,"./foyer_data.json":14,"pixi.js":252}],16:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
+const { create_level_grid } = require('../pathfinding/pathfind_util.js');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -1948,7 +1943,7 @@ const addToSegments = item => {
 }
 
 // Solid Black wall
-function render_wall (wallArray) {
+function render_wall (wallArray, tiles_object) {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
@@ -1959,8 +1954,8 @@ function render_wall (wallArray) {
     const background_image = {
       x: 0,
       y: 0,
-      height: debug_room_tiled_tiles.imageheight +500,
-      width: debug_room_tiled_tiles.imagewidth + 500,
+      height: tiles_object.imageheight + 500,
+      width:  tiles_object.imagewidth + 500,
     }
     addToSegments(background_image)
     addToSegments(wall)
@@ -2002,96 +1997,26 @@ module.exports.event_pad = (padArray, callback) => {
   global.viewport.addChild(global.eventTriggers);
 };
 
-const debug_room_tiled_data = require('./debug/playground/map2_output.json');
-const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
-
-global.grid_container = new PIXI.Container();
-global.grid_container.name = 'enemy_container';
-
 const easystarjs = require('easystarjs');
 global.easystar = new easystarjs.js();
 
-
 module.exports.load_debug_map_image = () => {
+  
+  const debug_room_tiled_data = require('./debug/playground/map2_output.json');
+  const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
+
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
   debug_room_image.position.set(100,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
 
   global.viewport.addChild(debug_room_image);
-  render_wall(debug_room_tiled_data.layers[1].objects);
+  render_wall(debug_room_tiled_data.layers[1].objects, debug_room_tiled_tiles);
+  create_level_grid(debug_room_tiled_tiles)
+
 }
 
-module.exports.create_level_grid = () => {
-  
-  return new Promise(resolve => {
-    
-    global.sprite_grid = [];
-    let line_grid = [];
-    
-    global.binary_grid_map = [];
-    let binary_line = [];
 
-    let current_x = 0;
-    let current_y = 0;
-    let current_grid_x = -1;
-    let current_grid_y = 0;
-    
-    for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
-      
-      if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
-        global.sprite_grid.push(line_grid);
-        global.binary_grid_map.push(binary_line);
-
-        line_grid = [];
-        binary_line = [];
-
-        current_y += 100;
-        current_x = 0;
-        current_grid_x = -1;
-        current_grid_y += 1;
-      }
-      current_x += 100;
-      current_grid_x += 1;
-      
-      const grid_cell = PIXI.Sprite.fromFrame('black_dot');
-      grid_cell.width = 100;
-      grid_cell.height = 100;
-      grid_cell.x = current_x;
-      grid_cell.y = current_y;
-      grid_cell.middle = {
-        x: grid_cell.x + 50,
-        y: grid_cell.y + 50,
-      }
-      grid_cell.cell_position = {
-        x: current_grid_x,
-        y: current_grid_y,
-      }
-     
-      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
-        // is a wall
-        grid_cell.alpha = 0.5
-        binary_line.push(1);
-      } else {
-        // is walkable ground
-        grid_cell.alpha = 0;
-        binary_line.push(0);
-      }
-  
-      line_grid.push(grid_cell);
-
-      global.line_grid = line_grid;
-   
-      global.grid_container.addChild(grid_cell);
-    }
-    
-    global.viewport.addChild(global.grid_container);
-    global.easystar.setGrid(global.binary_grid_map);
-    global.easystar.setAcceptableTiles([0]);
-    global.easystar.setIterationsPerCalculation(1000);
-    resolve()
-  })
-}
 
 
 // const grid_center = (path, grid_line) => {
@@ -2112,7 +2037,7 @@ module.exports.create_level_grid = () => {
 //   return grid_centers;
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./debug/playground/map2_output.json":12,"./debug/playground/map2_tiles.json":13,"easystarjs":70,"pixi.js":252}],17:[function(require,module,exports){
+},{"../pathfinding/pathfind_util.js":20,"./debug/playground/map2_output.json":12,"./debug/playground/map2_tiles.json":13,"easystarjs":70,"pixi.js":252}],17:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -2254,13 +2179,86 @@ const easystar = new easystarjs.js();
 global.grid_container = new PIXI.Container();
 global.grid_container.name = 'enemy_container';
 
-function get_sprite_position_on_grid(sprite) {
-  for (let i = 0; i < global.grid_container.children.length; i++) {
-    const grid = global.grid_container.children[i];
+global.sprite_grid = [];
+global.binary_grid_map = [];
+
+
+module.exports.create_level_grid = (tiles_object) => {
+    
+  let line_grid = [];
+  let binary_line = [];
+
+  let current_x = 0;
+  let current_y = 0;
+
+  let current_grid_x = -1;
+  let current_grid_y = 0;
+  
+  for (let i = 0; i < tiles_object.tilecount; i++) {
+    
+    if(i % tiles_object.columns === 0 && i !== 0){
+      global.sprite_grid.push(line_grid);
+      global.binary_grid_map.push(binary_line);
+
+      line_grid = [];
+      binary_line = [];
+
+      current_y += 100;
+      current_x = 0;
+      current_grid_x = -1;
+      current_grid_y += 1;
+    }
+    current_x += 100;
+    current_grid_x += 1;
+    
+    const grid_cell = PIXI.Sprite.fromFrame('black_dot');
+    grid_cell.width = 100;
+    grid_cell.height = 100;
+    grid_cell.x = current_x;
+    grid_cell.y = current_y;
+    grid_cell.middle = {
+      x: grid_cell.x + 50,
+      y: grid_cell.y + 50,
+    }
+    grid_cell.cell_position = {
+      x: current_grid_x,
+      y: current_grid_y,
+    }
+
+    if(tiles_object.tileproperties.hasOwnProperty(i)){
+      // is a wall
+      grid_cell.alpha = 0.5
+      binary_line.push(1);
+    } else {
+      // is walkable ground
+      grid_cell.alpha = 0;
+      binary_line.push(0);
+    }
+
+    line_grid.push(grid_cell);
+
+    global.line_grid = line_grid;
+  
+    global.grid_container.addChild(grid_cell);
+  }
+  
+  global.viewport.addChild(global.grid_container);
+  global.easystar.setGrid(global.binary_grid_map);
+  global.easystar.setAcceptableTiles([0]);
+  global.easystar.setIterationsPerCalculation(1000);
+}
+
+function get_sprite_position_on_grid(sprite, container) {
+  
+  for (let i = 0; i < container.children.length; i++) {
+    const grid = container.children[i];
+
     if(grid.containsPoint(sprite.getGlobalPosition())){
+      console.log(`${sprite.tag} is on grid`)    
       return grid.cell_position;
     }
   }
+  throw `${sprite.tag} not on grid`
 }
 
 function highlight_grid_cell_from_path(path) {
@@ -2269,13 +2267,10 @@ function highlight_grid_cell_from_path(path) {
   })
 }
 
-function create_path_from_two_points(sprite_one, sprite_two) {
+function create_path_from_two_grid_points(sprite_one, sprite_two) {
   return new Promise((resolve) => {
-
-    const enemy_point = get_sprite_position_on_grid(sprite_one);
-    const player_point = get_sprite_position_on_grid(sprite_two);
     
-    global.easystar.findPath(enemy_point.x, enemy_point.y, player_point.x, player_point.y, (path) => {
+    global.easystar.findPath(sprite_one.x, sprite_one.y, sprite_two.x, sprite_two.y, (path) => {
       if(path === null) {
         console.log('no path found');
       } else {
@@ -2290,8 +2285,6 @@ function create_path_from_two_points(sprite_one, sprite_two) {
 function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
   
   highlight_grid_cell_from_path(point_array);
-
-  let grid_positions = [];
   let path_to_follow = [];
   
   point_array.forEach(grid => {
@@ -2314,25 +2307,29 @@ function create_tween_on_point_array_with_options(sprite, point_array, {time_to_
 }
 
 
-function create_path_tween_to_from_sprite_to_player(sprite, path_data) {
+function run_pathfinding_test() {
+  
+  const enemy_sprite = global.enemy_container.children[0];
+  const player_sprite = global.Player.sprite;
+
+  const enemy_point = get_sprite_position_on_grid(enemy_sprite, global.grid_container);
+  const player_point = get_sprite_position_on_grid(player_sprite, global.grid_container);
 
   const options = {
     time_to_wait : 500,
     time_to_point: 2000
   }
 
-  const tween_to_add = create_tween_on_point_array_with_options(sprite, path_data, options);
-
-  console.log(tween_to_add);
-  return tween_to_add;
+  create_path_from_two_grid_points(enemy_point, player_point)
+  .then(path_data => {
+    create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+  })
 }
 
 
+
 setInterval(()=>{
-  create_path_from_two_points(global.enemy_container.children[0], global.Player.sprite)
-  .then(path_data => {
-    create_path_tween_to_from_sprite_to_player(global.enemy_container.children[0], path_data);
-  })
+  run_pathfinding_test()
 },2000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -2549,7 +2546,7 @@ module.exports.add_player = () => {
   global.Player.sprite.animationSpeed = 0.4;
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
-  global.Player.sprite.name = 'player';
+  global.Player.sprite.tag = 'player';
 
   global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);

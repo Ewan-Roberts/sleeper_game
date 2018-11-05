@@ -47,6 +47,7 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.animationSpeed = 0.4;
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
+    enemy_sprite.tag = 'enemy';
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
     resolve(enemy_sprite)

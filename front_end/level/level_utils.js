@@ -1,4 +1,5 @@
 const PIXI = require('pixi.js');
+const { create_level_grid } = require('../pathfinding/pathfind_util.js');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -34,7 +35,7 @@ const addToSegments = item => {
 }
 
 // Solid Black wall
-function render_wall (wallArray) {
+function render_wall (wallArray, tiles_object) {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
@@ -45,8 +46,8 @@ function render_wall (wallArray) {
     const background_image = {
       x: 0,
       y: 0,
-      height: debug_room_tiled_tiles.imageheight +500,
-      width: debug_room_tiled_tiles.imagewidth + 500,
+      height: tiles_object.imageheight + 500,
+      width:  tiles_object.imagewidth + 500,
     }
     addToSegments(background_image)
     addToSegments(wall)
@@ -88,96 +89,26 @@ module.exports.event_pad = (padArray, callback) => {
   global.viewport.addChild(global.eventTriggers);
 };
 
-const debug_room_tiled_data = require('./debug/playground/map2_output.json');
-const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
-
-global.grid_container = new PIXI.Container();
-global.grid_container.name = 'enemy_container';
-
 const easystarjs = require('easystarjs');
 global.easystar = new easystarjs.js();
 
-
 module.exports.load_debug_map_image = () => {
+  
+  const debug_room_tiled_data = require('./debug/playground/map2_output.json');
+  const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
+
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
   debug_room_image.position.set(100,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
 
   global.viewport.addChild(debug_room_image);
-  render_wall(debug_room_tiled_data.layers[1].objects);
+  render_wall(debug_room_tiled_data.layers[1].objects, debug_room_tiled_tiles);
+  create_level_grid(debug_room_tiled_tiles)
+
 }
 
-module.exports.create_level_grid = () => {
-  
-  return new Promise(resolve => {
-    
-    global.sprite_grid = [];
-    let line_grid = [];
-    
-    global.binary_grid_map = [];
-    let binary_line = [];
 
-    let current_x = 0;
-    let current_y = 0;
-    let current_grid_x = -1;
-    let current_grid_y = 0;
-    
-    for (let i = 0; i < debug_room_tiled_tiles.tilecount; i++) {
-      
-      if(i % debug_room_tiled_tiles.columns === 0 && i !== 0){
-        global.sprite_grid.push(line_grid);
-        global.binary_grid_map.push(binary_line);
-
-        line_grid = [];
-        binary_line = [];
-
-        current_y += 100;
-        current_x = 0;
-        current_grid_x = -1;
-        current_grid_y += 1;
-      }
-      current_x += 100;
-      current_grid_x += 1;
-      
-      const grid_cell = PIXI.Sprite.fromFrame('black_dot');
-      grid_cell.width = 100;
-      grid_cell.height = 100;
-      grid_cell.x = current_x;
-      grid_cell.y = current_y;
-      grid_cell.middle = {
-        x: grid_cell.x + 50,
-        y: grid_cell.y + 50,
-      }
-      grid_cell.cell_position = {
-        x: current_grid_x,
-        y: current_grid_y,
-      }
-     
-      if(debug_room_tiled_tiles.tileproperties.hasOwnProperty(i)){
-        // is a wall
-        grid_cell.alpha = 0.5
-        binary_line.push(1);
-      } else {
-        // is walkable ground
-        grid_cell.alpha = 0;
-        binary_line.push(0);
-      }
-  
-      line_grid.push(grid_cell);
-
-      global.line_grid = line_grid;
-   
-      global.grid_container.addChild(grid_cell);
-    }
-    
-    global.viewport.addChild(global.grid_container);
-    global.easystar.setGrid(global.binary_grid_map);
-    global.easystar.setAcceptableTiles([0]);
-    global.easystar.setIterationsPerCalculation(1000);
-    resolve()
-  })
-}
 
 
 // const grid_center = (path, grid_line) => {
