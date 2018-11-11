@@ -163,19 +163,17 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
       angle_iterator = 0
     }
 
+    //TODO stop  spinning 360, minus it from the factorial
     const angle_to_face = Math.atan2(path_array[angle_iterator].y - path_array[i].y, path_array[angle_iterator].x - path_array[i].x) || 0;
     
     tween.to({
       x:path_array[i].x +50,
       y:path_array[i].y +50,
     }, walk_time, createjs.Ease.sineInOut)
-
     .wait(random_wait_time_with_threshold)
-
     .to({
       rotation: angle_to_face,
     }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-
     .wait(random_wait_time_with_threshold);
   }
 
@@ -185,7 +183,7 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
 
   sprite.path = tween;
 }
-
+// TODO one time the tween 
 let boolean_time = true;
 
 function create_tween_on_point_array_with_options(sprite, point_array) { 
@@ -241,12 +239,12 @@ function run_pathfinding_test() {
     time_to_point: 2000
   }
 
-  // if(enemy_sprite.sees_player) {
+  if(enemy_sprite.sees_player) {
     create_path_from_two_grid_points(enemy_point, player_point)
     .then(path_data => {
       create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
     })
-  // }
+  }
 }
 
 setInterval(()=>{

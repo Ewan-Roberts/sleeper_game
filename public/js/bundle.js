@@ -463,7 +463,7 @@ function add_enemy_raycasting(enemy_sprite) {
     
     raycast.clear()
     
-    raycast.beginFill(0xfffffff, 0.14);
+    raycast.beginFill(0xfffffff, 0.1);
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
       elem.angle = angle;
@@ -501,23 +501,25 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    raycast.lineStyle(0.5, 0xffd900, 5);
+    raycast.lineStyle(0, 0xffd900, 0.5);
     for (let i = 1; i < intersects.length; i++) {
-      raycast.lineTo(intersects[i].x, intersects[i].y);
+      raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
     
     aimingLine.clear()
     // TODO: abstract
     if(raycast.containsPoint(global.Player.sprite.getGlobalPosition())){  
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-
+      enemy_sprite.sees_player = true;
       const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
       enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
       enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
   
-      aimingLine.lineStyle(3, 0xffffff, 1)
+      aimingLine.lineStyle(2, 0xffffff, 1)
         .moveTo(0, 0)
         .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
+    } else {
+      enemy_sprite.sees_player = false;
     }
     
   });
@@ -564,7 +566,7 @@ global.app = new PIXI.Application({
   height: global.window.innerHeight,
   antialias: false,
   autoResize: true,
-  backgroundColor: 0xC1C1C1,
+  backgroundColor: 0x000000, //0xC1C1C1
 });
 
 global.document.body.appendChild(global.app.view);
@@ -6574,6 +6576,7 @@ module.exports.load_bedroom_map = () => {
   const bedroom_room_tiled_tiles = require('./bedroom/level_data/flat_floor_data.json');
 
   const bedroom_room_image = PIXI.Sprite.fromFrame('flat_floor2');
+  bedroom_room_image.alpha = 0.8;
   bedroom_room_image.position.set(100,0);
   bedroom_room_image.width = bedroom_room_tiled_tiles.imagewidth;
   bedroom_room_image.height = bedroom_room_tiled_tiles.imageheight;
@@ -6918,19 +6921,17 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
       angle_iterator = 0
     }
 
+    //TODO stop  spinning 360, minus it from the factorial
     const angle_to_face = Math.atan2(path_array[angle_iterator].y - path_array[i].y, path_array[angle_iterator].x - path_array[i].x) || 0;
     
     tween.to({
       x:path_array[i].x +50,
       y:path_array[i].y +50,
     }, walk_time, createjs.Ease.sineInOut)
-
     .wait(random_wait_time_with_threshold)
-
     .to({
       rotation: angle_to_face,
     }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-
     .wait(random_wait_time_with_threshold);
   }
 
@@ -6940,7 +6941,7 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
 
   sprite.path = tween;
 }
-
+// TODO one time the tween 
 let boolean_time = true;
 
 function create_tween_on_point_array_with_options(sprite, point_array) { 
@@ -6996,12 +6997,12 @@ function run_pathfinding_test() {
     time_to_point: 2000
   }
 
-  // if(enemy_sprite.sees_player) {
+  if(enemy_sprite.sees_player) {
     create_path_from_two_grid_points(enemy_point, player_point)
     .then(path_data => {
       create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
     })
-  // }
+  }
 }
 
 setInterval(()=>{

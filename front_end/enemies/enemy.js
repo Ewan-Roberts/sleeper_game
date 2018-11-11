@@ -145,7 +145,7 @@ function add_enemy_raycasting(enemy_sprite) {
     
     raycast.clear()
     
-    raycast.beginFill(0xfffffff, 0.14);
+    raycast.beginFill(0xfffffff, 0.1);
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
       elem.angle = angle;
@@ -183,23 +183,25 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    raycast.lineStyle(0.5, 0xffd900, 5);
+    raycast.lineStyle(0, 0xffd900, 0.5);
     for (let i = 1; i < intersects.length; i++) {
-      raycast.lineTo(intersects[i].x, intersects[i].y);
+      raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
     
     aimingLine.clear()
     // TODO: abstract
     if(raycast.containsPoint(global.Player.sprite.getGlobalPosition())){  
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-
+      enemy_sprite.sees_player = true;
       const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
       enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
       enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
   
-      aimingLine.lineStyle(3, 0xffffff, 1)
+      aimingLine.lineStyle(2, 0xffffff, 1)
         .moveTo(0, 0)
         .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
+    } else {
+      enemy_sprite.sees_player = false;
     }
     
   });

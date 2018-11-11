@@ -131,6 +131,7 @@ module.exports.load_bedroom_map = () => {
   const bedroom_room_tiled_tiles = require('./bedroom/level_data/flat_floor_data.json');
 
   const bedroom_room_image = PIXI.Sprite.fromFrame('flat_floor2');
+  bedroom_room_image.alpha = 0.8;
   bedroom_room_image.position.set(100,0);
   bedroom_room_image.width = bedroom_room_tiled_tiles.imagewidth;
   bedroom_room_image.height = bedroom_room_tiled_tiles.imageheight;
