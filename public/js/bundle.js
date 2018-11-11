@@ -322,7 +322,7 @@ const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
-const { get_sprite_point_on_grid } = require('../pathfinding/pathfind_util');
+const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
@@ -410,98 +410,27 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   global.viewport.addChild(blood_stain);
 }
 
+module.exports.pathing = (sprite, path_data) => {
+  console.log(path_data);
+  console.log('path_data23234');
+  console.log(path_data.objects[0].polyline);
 
-module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
+  const formatted_path_array = [];
 
-  const player =  global.Player.sprite;
-  const sight_line = enemy_sprite.children[0];
-  const influence_box = enemy_sprite.children[1];
-  let one_time = false;
+  console.log('fwefewfew123');
+  console.log(path_data);
 
-  let new_grid = [];
+  //this is bad, feel bad
+  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
+    const element = path_data.objects[0].polyline[i];
+    const path_data2 = {
+      x: element.x + path_data.objects[0].x,
+      y: element.y + path_data.objects[0].y,
+    } 
+    formatted_path_array.push(path_data2);
+  }
 
-  // tween.addEventListener("change", () =>{
-  //   if(sight_line.containsPoint(player.getGlobalPosition())){
-  //     dialog_util.renderText(enemy_sprite, 'sight line');
-  //     module.exports.move_to_player(enemy_sprite)
-  //   }
-  //   if(influence_box.containsPoint(player.getGlobalPosition())){
-  //     if(one_time === false) {
-        
-  //       one_time = true;
-  //       dialog_util.renderText(enemy_sprite, 'influence zone');
-        
-  //       // let new_path = [];
-  //       // global.easystar.findPath(0, 0, 1, 5, (path) => {
-          
-  //       //   path.forEach(path_node => {
-            
-  //       //     const current_x = path_node.x;
-  //       //     const current_y = path_node.y;
-            
-  //       //     const current = global.sprite_grid[current_x][current_y];
-  //       //     new_path.push(current)
-  //       //   })
-  //       //   var tweenA = new createjs.Tween(enemy_sprite)
-  //       //   .to({
-  //       //     x:new_path[4].x,
-  //       //     y:new_path[4].y,
-  //       //   }, 1000)
-  //       //   .wait(500)
-  //       //   .to({ 
-  //       //     x:new_path[5].x,
-  //       //     y:new_path[5].y,
-  //       //   }, 1000)
-  //       //   .to({ 
-  //       //     x:new_path[6].x,
-  //       //     y:new_path[6].y,
-  //       //   }, 1000)
-  //       //   .to({ 
-  //       //     x:new_path[7].x,
-  //       //     y:new_path[7].y,
-  //       //   }, 1000)
-          
-          
-  //       //   tween.chain(tweenA)
-  //       // })
-  //       // global.easystar.calculate() 
-  //     }
-  //   }
-  // });
-}
-
-module.exports.create_path_tween = (sprite, path_data) => {
-
-  // write it simple for now Ewan
-  // const tween = createjs.Tween.get(sprite)
-  // .to({
-  //   x:path_data[0].x,
-  //   y:path_data[0].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[0]),
-  // },1000)
-  // .wait(500)
-  // .to({
-  //   x:path_data[1].x,
-  //   y:path_data[1].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[1]),
-  // },1000)
-  // .to({
-  //   x:path_data[2].x,
-  //   y:path_data[2].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[2])-1,
-  // },1000)
-  // .to({
-  //   rotation: sprite_helper.angle(sprite, path_data[4]),
-  // },1000)
-  // .to({
-  //   x:path_data[3].x,
-  //   y:path_data[3].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[4]),
-  // },1000)
-  // // .to({alpha:0,visible:false},1000)
-  // .call(()=>{
-  // });
-  // module.exports.enemy_logic_on_path(sprite, tween)
+  move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
 function add_enemy_raycasting(enemy_sprite) {
@@ -1080,8 +1009,274 @@ module.exports={ "height":100,
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"Object Layer 2",
+         "objects":[
+                {
+                 "height":0,
+                 "id":6,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-1236.9109947644,
+                         "y":19.633507853403
+                        }, 
+                        {
+                         "x":-1217.27748691099,
+                         "y":726.439790575916
+                        }, 
+                        {
+                         "x":-157.068062827225,
+                         "y":752.61780104712
+                        }, 
+                        {
+                         "x":-176.701570680628,
+                         "y":1341.62303664921
+                        }, 
+                        {
+                         "x":-320.680628272251,
+                         "y":1498.69109947644
+                        }, 
+                        {
+                         "x":-287.958115183246,
+                         "y":1786.64921465969
+                        }, 
+                        {
+                         "x":-26.1780104712043,
+                         "y":1747.38219895288
+                        }, 
+                        {
+                         "x":150.523560209424,
+                         "y":1361.25654450262
+                        }, 
+                        {
+                         "x":-65.4450261780105,
+                         "y":1191.09947643979
+                        }, 
+                        {
+                         "x":-346.858638743455,
+                         "y":575.916230366492
+                        }, 
+                        {
+                         "x":-536.649214659686,
+                         "y":510.471204188482
+                        }, 
+                        {
+                         "x":-726.439790575916,
+                         "y":759.162303664921
+                        }, 
+                        {
+                         "x":-778.795811518325,
+                         "y":1832.46073298429
+                        }, 
+                        {
+                         "x":-1191.09947643979,
+                         "y":2257.85340314136
+                        }, 
+                        {
+                         "x":-1204.18848167539,
+                         "y":2074.60732984293
+                        }, 
+                        {
+                         "x":-1204.18848167539,
+                         "y":1839.00523560209
+                        }, 
+                        {
+                         "x":-1204.18848167539,
+                         "y":1551.04712041885
+                        }, 
+                        {
+                         "x":-1282.72251308901,
+                         "y":1590.31413612565
+                        }, 
+                        {
+                         "x":-1341.62303664921,
+                         "y":2126.96335078534
+                        }, 
+                        {
+                         "x":-1295.81151832461,
+                         "y":2676.70157068063
+                        }, 
+                        {
+                         "x":-1060.20942408377,
+                         "y":3017.01570680628
+                        }, 
+                        {
+                         "x":-647.905759162304,
+                         "y":2565.44502617801
+                        }, 
+                        {
+                         "x":-32.7225130890054,
+                         "y":2303.66492146597
+                        }, 
+                        {
+                         "x":117.801047120419,
+                         "y":3102.0942408377
+                        }, 
+                        {
+                         "x":78.5340314136124,
+                         "y":3481.67539267016
+                        }, 
+                        {
+                         "x":45.8115183246073,
+                         "y":4149.21465968586
+                        }, 
+                        {
+                         "x":-327.225130890052,
+                         "y":4188.48167539267
+                        }, 
+                        {
+                         "x":-680.628272251309,
+                         "y":4077.22513089005
+                        }, 
+                        {
+                         "x":-693.717277486911,
+                         "y":4149.21465968586
+                        }, 
+                        {
+                         "x":-615.183246073299,
+                         "y":4240.83769633508
+                        }, 
+                        {
+                         "x":-425.392670157068,
+                         "y":4319.37172774869
+                        }, 
+                        {
+                         "x":-111.256544502618,
+                         "y":4319.37172774869
+                        }, 
+                        {
+                         "x":111.256544502618,
+                         "y":4260.47120418848
+                        }, 
+                        {
+                         "x":157.068062827225,
+                         "y":4109.94764397906
+                        }, 
+                        {
+                         "x":209.424083769634,
+                         "y":3527.48691099476
+                        }, 
+                        {
+                         "x":575.916230366492,
+                         "y":3160.99476439791
+                        }, 
+                        {
+                         "x":1007.85340314136,
+                         "y":2545.81151832461
+                        }, 
+                        {
+                         "x":975.130890052356,
+                         "y":2041.88481675393
+                        }, 
+                        {
+                         "x":981.675392670157,
+                         "y":1714.65968586387
+                        }, 
+                        {
+                         "x":1034.03141361257,
+                         "y":1295.81151832461
+                        }, 
+                        {
+                         "x":824.607329842932,
+                         "y":948.952879581152
+                        }, 
+                        {
+                         "x":641.361256544503,
+                         "y":458.115183246073
+                        }, 
+                        {
+                         "x":680.628272251309,
+                         "y":45.8115183246073
+                        }, 
+                        {
+                         "x":1086.38743455497,
+                         "y":13.0890052356019
+                        }, 
+                        {
+                         "x":1407.06806282723,
+                         "y":130.890052356021
+                        }, 
+                        {
+                         "x":1439.79057591623,
+                         "y":510.471204188482
+                        }, 
+                        {
+                         "x":1439.79057591623,
+                         "y":1047.12041884817
+                        }, 
+                        {
+                         "x":1263.0890052356,
+                         "y":1393.97905759162
+                        }, 
+                        {
+                         "x":1125.65445026178,
+                         "y":1583.76963350785
+                        }, 
+                        {
+                         "x":1073.29842931937,
+                         "y":2454.18848167539
+                        }, 
+                        {
+                         "x":981.675392670157,
+                         "y":3154.4502617801
+                        }, 
+                        {
+                         "x":431.937172774869,
+                         "y":3507.85340314136
+                        }, 
+                        {
+                         "x":-215.968586387435,
+                         "y":3115.1832460733
+                        }, 
+                        {
+                         "x":-242.146596858639,
+                         "y":2598.16753926702
+                        }, 
+                        {
+                         "x":-719.895287958115,
+                         "y":2329.84293193717
+                        }, 
+                        {
+                         "x":-765.706806282722,
+                         "y":2022.25130890052
+                        }, 
+                        {
+                         "x":-935.86387434555,
+                         "y":582.460732984293
+                        }, 
+                        {
+                         "x":-647.905759162304,
+                         "y":477.748691099476
+                        }, 
+                        {
+                         "x":-189.79057591623,
+                         "y":477.748691099476
+                        }, 
+                        {
+                         "x":0,
+                         "y":13.0890052356019
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1871.7277486911,
+                 "y":1099.47643979058
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":6,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -5258,20 +5453,20 @@ module.exports.add_floor = () => {
   //     })
   // });
   //level_util.load_debug_map_image()
-  level_util.load_bedroom_map_image()
+  level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
-  create_grid.on('click', () => {
-    //TODO
-    // level_util.load_debug_map_image()
-    enemy.init_enemies_container()
-    enemy.create_enemy_at_location(100, 100)
-    .then(sprite => {
-      enemy.sight_line(sprite);
-      enemy.influence_box(sprite);
-    })
-  });
+  // create_grid.on('click', () => {
+  //   //TODO
+  //   // level_util.load_debug_map_image()
+  //   enemy.init_enemies_container()
+  //   enemy.create_enemy_at_location(100, 100)
+  //   .then(sprite => {
+  //     enemy.sight_line(sprite);
+  //     enemy.influence_box(sprite);
+  //   })
+  // });
 
   global.eventTriggers.addChild(
     create_grid,
@@ -6141,6 +6336,13 @@ module.exports.load = () => {
 (function (global){
 const PIXI = require('pixi.js');
 const { create_level_grid } = require('../pathfinding/pathfind_util.js');
+const {
+  init_enemies_container,
+  create_enemy_at_location, 
+  sight_line,
+  influence_box,
+  pathing,
+} = require('../enemies/enemy.js');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -6257,7 +6459,7 @@ module.exports.load_debug_map_image = () => {
 
 }
 
-module.exports.load_bedroom_map_image = () => {
+module.exports.load_bedroom_map = () => {
   
   const bedroom_room_tiled_data = require('./bedroom/level_data/bedroom_level_data.json');
   const bedroom_room_tiled_tiles = require('./bedroom/level_data/flat_floor_data.json');
@@ -6277,6 +6479,16 @@ module.exports.load_bedroom_map_image = () => {
   global.viewport.addChild(bedroom_room_image);
   render_wall(bedroom_room_tiled_data.layers[1], bedroom_room_tiled_tiles, options);
   create_level_grid(bedroom_room_tiled_tiles)
+  
+  init_enemies_container();
+
+  create_enemy_at_location(100, 100)
+  .then(sprite => {
+    sight_line(sprite);
+    influence_box(sprite);
+    console.log('HELLO')
+    pathing(sprite, bedroom_room_tiled_data.layers[2]);
+  })
 
 }
 
@@ -6299,7 +6511,7 @@ module.exports.load_bedroom_map_image = () => {
 //   return grid_centers;
 // }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../pathfinding/pathfind_util.js":22,"./bedroom/level_data/bedroom_level_data.json":10,"./bedroom/level_data/flat_floor_data.json":11,"./debug/playground/map2_output.json":14,"./debug/playground/map2_tiles.json":15,"easystarjs":72,"pixi.js":254}],19:[function(require,module,exports){
+},{"../enemies/enemy.js":6,"../pathfinding/pathfind_util.js":22,"./bedroom/level_data/bedroom_level_data.json":10,"./bedroom/level_data/flat_floor_data.json":11,"./debug/playground/map2_output.json":14,"./debug/playground/map2_tiles.json":15,"easystarjs":72,"pixi.js":254}],19:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -6511,15 +6723,34 @@ module.exports.create_level_grid = (tiles_object) => {
 
 function get_sprite_position_on_grid(sprite, container) {
   
-  for (let i = 0; i < container.children.length; i++) {
-    const grid = container.children[i];
+  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
+  // console.log(sprite.getGlobalPosition())
+  for (let i = 0; i < container.length; i++) {
+    const grid = container[i];
 
     if(grid.containsPoint(sprite.getGlobalPosition())){
       console.log(`${sprite.tag} is on grid`)    
+      // console.log(sprite.getGlobalPosition())    
       return grid.cell_position;
     }
   }
   throw `${sprite.tag} not on grid`
+}
+
+function get_point_position_on_grid(point, container) {
+
+  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
+  // console.log(sprite.getGlobalPosition())
+  for (let i = 0; i < container.length; i++) {
+    const grid = container[i];
+
+    if(grid.containsPoint(point)){
+      console.log(`point is on grid`)    
+      // console.log(sprite.getGlobalPosition())
+      return grid.cell_position;
+    }
+  }
+  throw `point is not on grid`
 }
 
 function highlight_grid_cell_from_path(path) {
@@ -6542,6 +6773,39 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
     global.easystar.calculate()
   })
 }
+
+function move_sprite_to_point(sprite, point) {
+
+  return new Promise((resolve) => {
+
+    const tween = createjs.Tween.get(sprite)
+    tween.to({
+      x:point.x,
+      y:point.y,
+    },2000)
+  
+    tween.call(()=>{
+      console.log('end of tween')
+      resolve()
+    });
+
+  })
+}
+
+module.exports.move_sprite_on_path = (sprite, path_array) => {
+
+  let interator = 0;
+
+  move_sprite_to_point(sprite, path_array[interator])
+  .then(()=>{
+    interator++
+    move_sprite_to_point(sprite, path_array[interator])
+  })
+
+
+}
+
+
 
 function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
   
@@ -6574,8 +6838,8 @@ function run_pathfinding_test() {
   const enemy_sprite = global.enemy_container.children[0];
   const player_sprite = global.Player.sprite;
 
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid_container);
+  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
+  const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
 
   const options = {
     time_to_wait : 500,
@@ -6590,9 +6854,9 @@ function run_pathfinding_test() {
 
 
 
-setInterval(()=>{
-  run_pathfinding_test()
-},2000)
+// setInterval(()=>{
+//   run_pathfinding_test()
+// },2000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"@createjs/tweenjs":30,"easystarjs":72,"pixi.js":254}],23:[function(require,module,exports){

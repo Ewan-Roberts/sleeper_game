@@ -4,7 +4,7 @@ const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
-const { get_sprite_point_on_grid } = require('../pathfinding/pathfind_util');
+const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
@@ -92,98 +92,27 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   global.viewport.addChild(blood_stain);
 }
 
+module.exports.pathing = (sprite, path_data) => {
+  console.log(path_data);
+  console.log('path_data23234');
+  console.log(path_data.objects[0].polyline);
 
-module.exports.enemy_logic_on_path = (enemy_sprite, tween) => {
+  const formatted_path_array = [];
 
-  const player =  global.Player.sprite;
-  const sight_line = enemy_sprite.children[0];
-  const influence_box = enemy_sprite.children[1];
-  let one_time = false;
+  console.log('fwefewfew123');
+  console.log(path_data);
 
-  let new_grid = [];
+  //this is bad, feel bad
+  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
+    const element = path_data.objects[0].polyline[i];
+    const path_data2 = {
+      x: element.x + path_data.objects[0].x,
+      y: element.y + path_data.objects[0].y,
+    } 
+    formatted_path_array.push(path_data2);
+  }
 
-  // tween.addEventListener("change", () =>{
-  //   if(sight_line.containsPoint(player.getGlobalPosition())){
-  //     dialog_util.renderText(enemy_sprite, 'sight line');
-  //     module.exports.move_to_player(enemy_sprite)
-  //   }
-  //   if(influence_box.containsPoint(player.getGlobalPosition())){
-  //     if(one_time === false) {
-        
-  //       one_time = true;
-  //       dialog_util.renderText(enemy_sprite, 'influence zone');
-        
-  //       // let new_path = [];
-  //       // global.easystar.findPath(0, 0, 1, 5, (path) => {
-          
-  //       //   path.forEach(path_node => {
-            
-  //       //     const current_x = path_node.x;
-  //       //     const current_y = path_node.y;
-            
-  //       //     const current = global.sprite_grid[current_x][current_y];
-  //       //     new_path.push(current)
-  //       //   })
-  //       //   var tweenA = new createjs.Tween(enemy_sprite)
-  //       //   .to({
-  //       //     x:new_path[4].x,
-  //       //     y:new_path[4].y,
-  //       //   }, 1000)
-  //       //   .wait(500)
-  //       //   .to({ 
-  //       //     x:new_path[5].x,
-  //       //     y:new_path[5].y,
-  //       //   }, 1000)
-  //       //   .to({ 
-  //       //     x:new_path[6].x,
-  //       //     y:new_path[6].y,
-  //       //   }, 1000)
-  //       //   .to({ 
-  //       //     x:new_path[7].x,
-  //       //     y:new_path[7].y,
-  //       //   }, 1000)
-          
-          
-  //       //   tween.chain(tweenA)
-  //       // })
-  //       // global.easystar.calculate() 
-  //     }
-  //   }
-  // });
-}
-
-module.exports.create_path_tween = (sprite, path_data) => {
-
-  // write it simple for now Ewan
-  // const tween = createjs.Tween.get(sprite)
-  // .to({
-  //   x:path_data[0].x,
-  //   y:path_data[0].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[0]),
-  // },1000)
-  // .wait(500)
-  // .to({
-  //   x:path_data[1].x,
-  //   y:path_data[1].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[1]),
-  // },1000)
-  // .to({
-  //   x:path_data[2].x,
-  //   y:path_data[2].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[2])-1,
-  // },1000)
-  // .to({
-  //   rotation: sprite_helper.angle(sprite, path_data[4]),
-  // },1000)
-  // .to({
-  //   x:path_data[3].x,
-  //   y:path_data[3].y,
-  //   rotation: sprite_helper.angle(sprite, path_data[4]),
-  // },1000)
-  // // .to({alpha:0,visible:false},1000)
-  // .call(()=>{
-  // });
-  // module.exports.enemy_logic_on_path(sprite, tween)
+  move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
 function add_enemy_raycasting(enemy_sprite) {

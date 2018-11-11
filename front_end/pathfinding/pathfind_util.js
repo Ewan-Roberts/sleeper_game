@@ -77,15 +77,34 @@ module.exports.create_level_grid = (tiles_object) => {
 
 function get_sprite_position_on_grid(sprite, container) {
   
-  for (let i = 0; i < container.children.length; i++) {
-    const grid = container.children[i];
+  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
+  // console.log(sprite.getGlobalPosition())
+  for (let i = 0; i < container.length; i++) {
+    const grid = container[i];
 
     if(grid.containsPoint(sprite.getGlobalPosition())){
       console.log(`${sprite.tag} is on grid`)    
+      // console.log(sprite.getGlobalPosition())    
       return grid.cell_position;
     }
   }
   throw `${sprite.tag} not on grid`
+}
+
+function get_point_position_on_grid(point, container) {
+
+  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
+  // console.log(sprite.getGlobalPosition())
+  for (let i = 0; i < container.length; i++) {
+    const grid = container[i];
+
+    if(grid.containsPoint(point)){
+      console.log(`point is on grid`)    
+      // console.log(sprite.getGlobalPosition())
+      return grid.cell_position;
+    }
+  }
+  throw `point is not on grid`
 }
 
 function highlight_grid_cell_from_path(path) {
@@ -108,6 +127,39 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
     global.easystar.calculate()
   })
 }
+
+function move_sprite_to_point(sprite, point) {
+
+  return new Promise((resolve) => {
+
+    const tween = createjs.Tween.get(sprite)
+    tween.to({
+      x:point.x,
+      y:point.y,
+    },2000)
+  
+    tween.call(()=>{
+      console.log('end of tween')
+      resolve()
+    });
+
+  })
+}
+
+module.exports.move_sprite_on_path = (sprite, path_array) => {
+
+  let interator = 0;
+
+  move_sprite_to_point(sprite, path_array[interator])
+  .then(()=>{
+    interator++
+    move_sprite_to_point(sprite, path_array[interator])
+  })
+
+
+}
+
+
 
 function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
   
@@ -140,8 +192,8 @@ function run_pathfinding_test() {
   const enemy_sprite = global.enemy_container.children[0];
   const player_sprite = global.Player.sprite;
 
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid_container);
+  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
+  const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
 
   const options = {
     time_to_wait : 500,
@@ -156,6 +208,6 @@ function run_pathfinding_test() {
 
 
 
-setInterval(()=>{
-  run_pathfinding_test()
-},2000)
+// setInterval(()=>{
+//   run_pathfinding_test()
+// },2000)

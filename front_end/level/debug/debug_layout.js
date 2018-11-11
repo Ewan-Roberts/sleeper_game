@@ -64,20 +64,20 @@ module.exports.add_floor = () => {
   //     })
   // });
   //level_util.load_debug_map_image()
-  level_util.load_bedroom_map_image()
+  level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
-  create_grid.on('click', () => {
-    //TODO
-    // level_util.load_debug_map_image()
-    enemy.init_enemies_container()
-    enemy.create_enemy_at_location(100, 100)
-    .then(sprite => {
-      enemy.sight_line(sprite);
-      enemy.influence_box(sprite);
-    })
-  });
+  // create_grid.on('click', () => {
+  //   //TODO
+  //   // level_util.load_debug_map_image()
+  //   enemy.init_enemies_container()
+  //   enemy.create_enemy_at_location(100, 100)
+  //   .then(sprite => {
+  //     enemy.sight_line(sprite);
+  //     enemy.influence_box(sprite);
+  //   })
+  // });
 
   global.eventTriggers.addChild(
     create_grid,

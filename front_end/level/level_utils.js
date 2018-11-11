@@ -1,5 +1,12 @@
 const PIXI = require('pixi.js');
 const { create_level_grid } = require('../pathfinding/pathfind_util.js');
+const {
+  init_enemies_container,
+  create_enemy_at_location, 
+  sight_line,
+  influence_box,
+  pathing,
+} = require('../enemies/enemy.js');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -116,7 +123,7 @@ module.exports.load_debug_map_image = () => {
 
 }
 
-module.exports.load_bedroom_map_image = () => {
+module.exports.load_bedroom_map = () => {
   
   const bedroom_room_tiled_data = require('./bedroom/level_data/bedroom_level_data.json');
   const bedroom_room_tiled_tiles = require('./bedroom/level_data/flat_floor_data.json');
@@ -136,6 +143,16 @@ module.exports.load_bedroom_map_image = () => {
   global.viewport.addChild(bedroom_room_image);
   render_wall(bedroom_room_tiled_data.layers[1], bedroom_room_tiled_tiles, options);
   create_level_grid(bedroom_room_tiled_tiles)
+  
+  init_enemies_container();
+
+  create_enemy_at_location(100, 100)
+  .then(sprite => {
+    sight_line(sprite);
+    influence_box(sprite);
+    console.log('HELLO')
+    pathing(sprite, bedroom_room_tiled_data.layers[2]);
+  })
 
 }
 
