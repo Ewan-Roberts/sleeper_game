@@ -1,8 +1,17 @@
 const PIXI = require('pixi.js');
-const easystarjs = require('easystarjs');
+// const easystarjs = require('easystarjs');
 const { createjs } = require('@createjs/tweenjs');
+const rotation_plugin = require('../utils/RotationPlugin.js');
 
-const easystar = new easystarjs.js();
+// rotation_plugin.install();
+
+// const easystar = new easystarjs.js();
+
+// RotationPlugin.install(props);
+//
+console.log(createjs);
+createjs.RotationPlugin.install()
+// createjs.Tween._installPlugin(rotation_plugin);
 
 const grid_container = new PIXI.Container();
 grid_container.name = 'enemy_container';
@@ -11,7 +20,7 @@ const sprite_grid = [];
 const binary_grid_map = [];
 
 module.exports.create_level_grid = (tiles_object) => {
-    
+  console.log(rotation_plugin)
   let line_grid = [];
   let binary_line = [];
 
@@ -77,7 +86,6 @@ module.exports.create_level_grid = (tiles_object) => {
 
 function get_sprite_position_on_grid(sprite, container) {
   if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
-  if(!sprite) throw 'gimme a fucking sprite: get_point_position_on_grid'
 
   for (let i = 0; i < container.length; i++) {
     const grid = container[i];
@@ -147,12 +155,18 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
     const walk_time = create_relative_walk_time(path_array[i-1] || path_array[0], path_array[i])
 
     const random_wait_time = generate_wait_time_with_threshold(2000, 300)
+    
+    const angle_to_face = Math.atan2(path_array[i+1].y - path_array[i].y, path_array[i+1].x - path_array[i].x);
 
     tween.to({
       x:path_array[i].x,
       y:path_array[i].y,
     }, walk_time, createjs.Ease.sineInOut)
-    .wait(random_wait_time)
+    .wait(random_wait_time/2)
+    .to({
+      rotation: angle_to_face
+    }, random_wait_time*2, createjs.Ease.backInOut)
+    .wait(random_wait_time/2)
   }
 
   tween.call(()=>{
