@@ -76,35 +76,17 @@ module.exports.create_level_grid = (tiles_object) => {
 }
 
 function get_sprite_position_on_grid(sprite, container) {
-  
   if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
-  // console.log(sprite.getGlobalPosition())
+  if(!sprite) throw 'gimme a fucking sprite: get_point_position_on_grid'
+
   for (let i = 0; i < container.length; i++) {
     const grid = container[i];
 
     if(grid.containsPoint(sprite.getGlobalPosition())){
-      console.log(`${sprite.tag} is on grid`)    
-      // console.log(sprite.getGlobalPosition())    
       return grid.cell_position;
     }
   }
   throw `${sprite.tag} not on grid`
-}
-
-function get_point_position_on_grid(point, container) {
-
-  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid'
-  // console.log(sprite.getGlobalPosition())
-  for (let i = 0; i < container.length; i++) {
-    const grid = container[i];
-
-    if(grid.containsPoint(point)){
-      console.log(`point is on grid`)    
-      // console.log(sprite.getGlobalPosition())
-      return grid.cell_position;
-    }
-  }
-  throw `point is not on grid`
 }
 
 function highlight_grid_cell_from_path(path) {
@@ -118,7 +100,7 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
     
     global.easystar.findPath(sprite_one.x, sprite_one.y, sprite_two.x, sprite_two.y, (path) => {
       if(path === null) {
-        console.log('no path found');
+        throw 'no path found';
       } else {
         resolve(path)
       }
@@ -128,38 +110,55 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
   })
 }
 
-function move_sprite_to_point(sprite, point) {
+const distance_between_two_points = (point_one, point_two) => Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y)
 
-  return new Promise((resolve) => {
+const generate_wait_time_with_threshold = (max, threshold) => {
 
-    const tween = createjs.Tween.get(sprite)
-    tween.to({
-      x:point.x,
-      y:point.y,
-    },2000)
+  const random_number = Math.floor(Math.random() * max);
+  console.log(random_number < threshold)
+  // sometimes skip a wait at a point for the shits and giggles
+  if(threshold && random_number < threshold) {
+    return 0;
+  }
+
+  return random_number;
+}
+
+function create_relative_walk_time(point_one, point_two) {
+
+  const distance = distance_between_two_points(point_one, point_two);
   
-    tween.call(()=>{
-      console.log('end of tween')
-      resolve()
-    });
+  //produce a little randomness in speed between points 
+  const speed = 5 + Math.random();
 
-  })
+  const time_or_tween = distance * speed;
+
+  const rounded_time = Math.round(time_or_tween)
+  
+  return rounded_time;
 }
 
 module.exports.move_sprite_on_path = (sprite, path_array) => {
 
-  let interator = 0;
+  const tween = createjs.Tween.get(sprite);
 
-  move_sprite_to_point(sprite, path_array[interator])
-  .then(()=>{
-    interator++
-    move_sprite_to_point(sprite, path_array[interator])
-  })
+  for (let i = 0; i < path_array.length; i++) {
 
+    const walk_time = create_relative_walk_time(path_array[i-1] || path_array[0], path_array[i])
 
+    const random_wait_time = generate_wait_time_with_threshold(2000, 300)
+
+    tween.to({
+      x:path_array[i].x,
+      y:path_array[i].y,
+    }, walk_time)
+    .wait(random_wait_time)
+  }
+
+  tween.call(()=>{
+    console.log('end of tween')
+  });
 }
-
-
 
 function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
   
@@ -205,8 +204,6 @@ function run_pathfinding_test() {
     create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
   })
 }
-
-
 
 // setInterval(()=>{
 //   run_pathfinding_test()
