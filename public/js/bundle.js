@@ -6645,19 +6645,11 @@ module.exports.load_network_sprite = () => {
 },{"pixi.js":255}],22:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-// const easystarjs = require('easystarjs');
 const { createjs } = require('@createjs/tweenjs');
+
+//TODO needed to load the plugin
 const rotation_plugin = require('../utils/RotationPlugin.js');
-
-// rotation_plugin.install();
-
-// const easystar = new easystarjs.js();
-
-// RotationPlugin.install(props);
-//
-console.log(createjs);
 createjs.RotationPlugin.install()
-// createjs.Tween._installPlugin(rotation_plugin);
 
 const grid_container = new PIXI.Container();
 grid_container.name = 'enemy_container';
@@ -6666,7 +6658,7 @@ const sprite_grid = [];
 const binary_grid_map = [];
 
 module.exports.create_level_grid = (tiles_object) => {
-  console.log(rotation_plugin)
+
   let line_grid = [];
   let binary_line = [];
 
@@ -6778,12 +6770,18 @@ const generate_wait_time_with_threshold = (max, threshold) => {
   return random_number;
 }
 
-function create_relative_walk_time(point_one, point_two) {
+// TODO abstract this maths shiattttt
+const generate_wait_time_with_minimum = (max, min) => {
+
+  return Math.floor(Math.random() * max) + min;
+}
+
+function create_relative_walk_time(point_one, point_two, velocity) {
 
   const distance = distance_between_two_points(point_one, point_two);
   
   //produce a little randomness in speed between points 
-  const speed = 15 + Math.random();
+  const speed = (velocity || 15) + Math.random();
 
   const time_or_tween = distance * speed;
 
@@ -6797,11 +6795,13 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
   const tween = createjs.Tween.get(sprite);
 
   for (let i = 0; i < path_array.length; i++) {
+    // TODO
+    const walk_time = create_relative_walk_time(path_array[i-1] || path_array[0], path_array[i], 10)
 
-    const walk_time = create_relative_walk_time(path_array[i-1] || path_array[0], path_array[i])
-
-    const random_wait_time = generate_wait_time_with_threshold(2000, 300)
+    const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300)
     
+    const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000)
+
     let angle_iterator = i + 1;
     
     // TODO: you're a monster
@@ -6815,40 +6815,61 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
       x:path_array[i].x,
       y:path_array[i].y,
     }, walk_time, createjs.Ease.sineInOut)
-    .wait(random_wait_time/2)
+
+    .wait(random_wait_time_with_threshold)
+
     .to({
-      rotation: angle_to_face
-    }, random_wait_time*2, createjs.Ease.backInOut)
-    .wait(random_wait_time/2)
+      rotation: angle_to_face,
+    }, random_wait_time_with_minimum, createjs.Ease.backInOut)
+
+    .wait(random_wait_time_with_threshold);
   }
 
   tween.call(()=>{
     console.log('end of tween')
   });
+
+  sprite.path = tween;
 }
 
-function create_tween_on_point_array_with_options(sprite, point_array, {time_to_wait, time_to_point}) { 
-  
+let boolean_time = true;
+
+function create_tween_on_point_array_with_options(sprite, point_array) { 
+  if( boolean_time === false ) return;
+
+  sprite.path.paused = true;
+
+  boolean_time = false;
+
   highlight_grid_cell_from_path(point_array);
-  let path_to_follow = [];
   
+  let path_array = [];
   point_array.forEach(grid => {
-    path_to_follow.push(sprite_grid[grid.y][grid.x]);
+    path_array.push(sprite_grid[grid.y][grid.x]);
   })
 
-  const time_length_total = 2000 / point_array.length
-
   const tween = createjs.Tween.get(sprite)
+  const walk_time = 300;
 
-  for (let i = 1; i < path_to_follow.length; i++) {
+  for (let i = 0; i < path_array.length; i++) {
+
     tween.to({
-      x:path_to_follow[i].middle.x,
-      y:path_to_follow[i].middle.y,
-    },time_length_total)
+      x:path_array[i].x,
+      y:path_array[i].y,
+    }, walk_time)
   }
+  
+  for(var a = path_array.length; a--;) {
+    const walk_time = 300
 
-  tween.call(()=>{
-    console.log('end of tween')
+    tween.to({
+      x:path_array[a].x,
+      y:path_array[a].y,
+    },walk_time)  
+  }
+  
+  tween.call(() => {
+    sprite.path.paused = false;
   });
 }
 
@@ -6872,9 +6893,9 @@ function run_pathfinding_test() {
   })
 }
 
-// setInterval(()=>{
-//   run_pathfinding_test()
-// },2000)
+setInterval(()=>{
+  run_pathfinding_test()
+},2000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../utils/RotationPlugin.js":24,"@createjs/tweenjs":31,"pixi.js":255}],23:[function(require,module,exports){
