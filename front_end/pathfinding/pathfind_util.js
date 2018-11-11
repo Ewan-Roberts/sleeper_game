@@ -115,7 +115,7 @@ const distance_between_two_points = (point_one, point_two) => Math.hypot(point_t
 const generate_wait_time_with_threshold = (max, threshold) => {
 
   const random_number = Math.floor(Math.random() * max);
-  console.log(random_number < threshold)
+
   // sometimes skip a wait at a point for the shits and giggles
   if(threshold && random_number < threshold) {
     return 0;
@@ -129,7 +129,7 @@ function create_relative_walk_time(point_one, point_two) {
   const distance = distance_between_two_points(point_one, point_two);
   
   //produce a little randomness in speed between points 
-  const speed = 5 + Math.random();
+  const speed = 15 + Math.random();
 
   const time_or_tween = distance * speed;
 
@@ -151,7 +151,7 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
     tween.to({
       x:path_array[i].x,
       y:path_array[i].y,
-    }, walk_time)
+    }, walk_time, createjs.Ease.sineInOut)
     .wait(random_wait_time)
   }
 
