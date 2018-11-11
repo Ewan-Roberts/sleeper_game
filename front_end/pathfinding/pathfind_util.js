@@ -18,12 +18,12 @@ module.exports.create_level_grid = (tiles_object) => {
   let current_x = 0;
   let current_y = 0;
 
-  let current_grid_x = -1;
+  let current_grid_x = 0;
   let current_grid_y = 0;
   
   for (let i = 0; i < tiles_object.tilecount; i++) {
     
-    if(i % tiles_object.columns === 0 && i !== 0){
+    if(i % tiles_object.columns === 0 && i){
       sprite_grid.push(line_grid);
       binary_grid_map.push(binary_line);
 
@@ -32,7 +32,7 @@ module.exports.create_level_grid = (tiles_object) => {
 
       current_y += 100;
       current_x = 0;
-      current_grid_x = -1;
+      current_grid_x = 0;
       current_grid_y += 1;
     }
     current_x += 100;

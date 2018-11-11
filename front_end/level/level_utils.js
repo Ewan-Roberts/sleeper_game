@@ -35,25 +35,33 @@ const addToSegments = item => {
 }
 
 // Solid Black wall
-function render_wall (wallArray, tiles_object) {
-  wallArray.forEach((wallData) => {
+
+function render_background_segment(tiles_object) {
+
+  const background_image = {
+    x: 0,
+    y: 0,
+    height: tiles_object.imageheight,
+    width:  tiles_object.imagewidth,
+  }
+  addToSegments(background_image)
+
+}
+
+function render_wall (wall_array, tiles_object, options) {
+  
+  render_background_segment(tiles_object)
+  
+  wall_array.objects.forEach((wall_data) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
-    wall.position.set(wallData.x +100, wallData.y);
-    wall.width = wallData.width;
-    wall.height = wallData.height;
+    wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
+    wall.width = wall_data.width;
+    wall.height = wall_data.height;
     
-    const background_image = {
-      x: 0,
-      y: 0,
-      height: tiles_object.imageheight + 500,
-      width:  tiles_object.imagewidth + 500,
-    }
-    addToSegments(background_image)
     addToSegments(wall)
     global.collisionItems.addChild(wall);
 
-    
   });
   global.viewport.addChild(global.collisionItems);
 };
@@ -63,7 +71,7 @@ module.exports.hit_areas = (wallArray, x, y) => {
   wallArray.forEach((wallData) => {
     const wall = PIXI.Sprite.fromFrame('black_dot');
 
-    wall.position.set(wallData.x + x, wallData.y + y);
+    wall.position.set(wallData.x, wallData.y);
     wall.width = wallData.width;
     wall.height = wallData.height;
     wall.alpha = 0.01;
@@ -98,7 +106,7 @@ module.exports.load_debug_map_image = () => {
   const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
 
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-  debug_room_image.position.set(100,0);
+  debug_room_image.position.set(0,0);
   debug_room_image.width = debug_room_tiled_tiles.imagewidth;
   debug_room_image.height = debug_room_tiled_tiles.imageheight;
 
@@ -108,7 +116,28 @@ module.exports.load_debug_map_image = () => {
 
 }
 
+module.exports.load_bedroom_map_image = () => {
+  
+  const bedroom_room_tiled_data = require('./bedroom/level_data/bedroom_level_data.json');
+  const bedroom_room_tiled_tiles = require('./bedroom/level_data/flat_floor_data.json');
 
+  const bedroom_room_image = PIXI.Sprite.fromFrame('flat_floor2');
+  bedroom_room_image.position.set(100,0);
+  bedroom_room_image.width = bedroom_room_tiled_tiles.imagewidth;
+  bedroom_room_image.height = bedroom_room_tiled_tiles.imageheight;
+
+  const options = {
+    wall_offset: {
+      x: 280,
+      y: 280,
+    }
+  }
+
+  global.viewport.addChild(bedroom_room_image);
+  render_wall(bedroom_room_tiled_data.layers[1], bedroom_room_tiled_tiles, options);
+  create_level_grid(bedroom_room_tiled_tiles)
+
+}
 
 
 // const grid_center = (path, grid_line) => {

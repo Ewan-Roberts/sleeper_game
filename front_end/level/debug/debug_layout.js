@@ -63,7 +63,8 @@ module.exports.add_floor = () => {
   //       })
   //     })
   // });
-  level_util.load_debug_map_image()
+  //level_util.load_debug_map_image()
+  level_util.load_bedroom_map_image()
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
@@ -71,7 +72,7 @@ module.exports.add_floor = () => {
     //TODO
     // level_util.load_debug_map_image()
     enemy.init_enemies_container()
-    enemy.create_enemy_at_location(300, 300)
+    enemy.create_enemy_at_location(100, 100)
     .then(sprite => {
       enemy.sight_line(sprite);
       enemy.influence_box(sprite);
