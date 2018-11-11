@@ -37,7 +37,7 @@ module.exports.add_floor = () => {
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
-
+  player.add_player();
   // const enemy_pathing = createPad(-200, -200);
   // enemy_pathing.interactive = true;
   // enemy_pathing.alpha = 0.8;
@@ -99,6 +99,6 @@ module.exports.add_floor = () => {
   global.collisionItems.addChild( /* slantedWall */ collisionWall);
   global.viewport.updateLayersOrder();
 
-  player.add_player();
+  
   items.add_items();
 };

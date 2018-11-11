@@ -6,6 +6,7 @@ const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
 const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
+
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
 
@@ -50,6 +51,7 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.tag = 'enemy';
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
+    
     resolve(enemy_sprite)
     
   })
@@ -93,14 +95,8 @@ module.exports.put_blood_splatter_on_ground = sprite => {
 }
 
 module.exports.pathing = (sprite, path_data) => {
-  console.log(path_data);
-  console.log('path_data23234');
-  console.log(path_data.objects[0].polyline);
 
   const formatted_path_array = [];
-
-  console.log('fwefewfew123');
-  console.log(path_data);
 
   //this is bad, feel bad
   for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
@@ -115,7 +111,10 @@ module.exports.pathing = (sprite, path_data) => {
   move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
+
 function add_enemy_raycasting(enemy_sprite) {
+
+  const aimingLine = new PIXI.Graphics();
 
   const raycast = new PIXI.Graphics();
   const points = (segments=>{
@@ -139,12 +138,13 @@ function add_enemy_raycasting(enemy_sprite) {
   })(points);
 
   global.app.ticker.add(delta => {
-
+    
     const uniqueAngles = [];
     let intersects = [];
     PIXI.tweenManager.update();
-
+    
     raycast.clear()
+    
     raycast.beginFill(0xfffffff, 0.14);
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
@@ -183,13 +183,29 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    raycast.lineStyle(1, 0xffd900, 1);
+    raycast.lineStyle(0.5, 0xffd900, 5);
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y);
     }
-  });
+    
+    aimingLine.clear()
+    // TODO: abstract
+    if(raycast.containsPoint(global.Player.sprite.getGlobalPosition())){  
+      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
 
+      const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
+      enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
+      enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
+  
+      aimingLine.lineStyle(3, 0xffffff, 1)
+        .moveTo(0, 0)
+        .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
+    }
+    
+  });
+  global.viewport.addChild(aimingLine);
   global.viewport.addChild(raycast)
+  
 }
 
 // walk towards player

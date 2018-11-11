@@ -65,7 +65,7 @@ function mouseMove() {
 
       aimingLine.clear();
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-      aimingLine.lineStyle(3, 0xffffff, 0)
+      aimingLine.lineStyle(3, 0xffffff, 1)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
       global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);

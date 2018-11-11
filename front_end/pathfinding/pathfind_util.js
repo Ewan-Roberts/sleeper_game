@@ -166,8 +166,8 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
     const angle_to_face = Math.atan2(path_array[angle_iterator].y - path_array[i].y, path_array[angle_iterator].x - path_array[i].x) || 0;
     
     tween.to({
-      x:path_array[i].x,
-      y:path_array[i].y,
+      x:path_array[i].x +50,
+      y:path_array[i].y +50,
     }, walk_time, createjs.Ease.sineInOut)
 
     .wait(random_wait_time_with_threshold)
@@ -208,8 +208,8 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
   for (let i = 0; i < path_array.length; i++) {
 
     tween.to({
-      x:path_array[i].x,
-      y:path_array[i].y,
+      x:path_array[i].middle.x,
+      y:path_array[i].middle.y,
     }, walk_time)
   }
   
@@ -217,8 +217,8 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
     const walk_time = 300
 
     tween.to({
-      x:path_array[a].x,
-      y:path_array[a].y,
+      x:path_array[a].middle.x,
+      y:path_array[a].middle.y,
     },walk_time)  
   }
   
@@ -241,10 +241,12 @@ function run_pathfinding_test() {
     time_to_point: 2000
   }
 
-  create_path_from_two_grid_points(enemy_point, player_point)
-  .then(path_data => {
-    create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
-  })
+  // if(enemy_sprite.sees_player) {
+    create_path_from_two_grid_points(enemy_point, player_point)
+    .then(path_data => {
+      create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+    })
+  // }
 }
 
 setInterval(()=>{

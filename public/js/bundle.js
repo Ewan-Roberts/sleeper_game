@@ -324,6 +324,7 @@ const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
 const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
+
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
 
@@ -368,6 +369,7 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.tag = 'enemy';
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
+    
     resolve(enemy_sprite)
     
   })
@@ -411,14 +413,8 @@ module.exports.put_blood_splatter_on_ground = sprite => {
 }
 
 module.exports.pathing = (sprite, path_data) => {
-  console.log(path_data);
-  console.log('path_data23234');
-  console.log(path_data.objects[0].polyline);
 
   const formatted_path_array = [];
-
-  console.log('fwefewfew123');
-  console.log(path_data);
 
   //this is bad, feel bad
   for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
@@ -433,7 +429,10 @@ module.exports.pathing = (sprite, path_data) => {
   move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
+
 function add_enemy_raycasting(enemy_sprite) {
+
+  const aimingLine = new PIXI.Graphics();
 
   const raycast = new PIXI.Graphics();
   const points = (segments=>{
@@ -457,12 +456,13 @@ function add_enemy_raycasting(enemy_sprite) {
   })(points);
 
   global.app.ticker.add(delta => {
-
+    
     const uniqueAngles = [];
     let intersects = [];
     PIXI.tweenManager.update();
-
+    
     raycast.clear()
+    
     raycast.beginFill(0xfffffff, 0.14);
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
@@ -501,13 +501,29 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    raycast.lineStyle(1, 0xffd900, 1);
+    raycast.lineStyle(0.5, 0xffd900, 5);
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y);
     }
-  });
+    
+    aimingLine.clear()
+    // TODO: abstract
+    if(raycast.containsPoint(global.Player.sprite.getGlobalPosition())){  
+      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
 
+      const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
+      enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
+      enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
+  
+      aimingLine.lineStyle(3, 0xffffff, 1)
+        .moveTo(0, 0)
+        .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
+    }
+    
+  });
+  global.viewport.addChild(aimingLine);
   global.viewport.addChild(raycast)
+  
 }
 
 // walk towards player
@@ -1001,6 +1017,105 @@ module.exports={ "height":100,
                  "width":329.924150524603,
                  "x":199.293924777487,
                  "y":365.842023884545
+                }, 
+                {
+                 "height":60.8779237423901,
+                 "id":7,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":541.493111182313,
+                 "x":208.498744384242,
+                 "y":1675.95589748723
+                }, 
+                {
+                 "height":57.6738224927908,
+                 "id":8,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":358.859339955143,
+                 "x":1051.17737302891,
+                 "y":1685.56820123603
+                }, 
+                {
+                 "height":1288.04870233899,
+                 "id":9,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":60.8779237423903,
+                 "x":1121.46,
+                 "y":1742.85
+                }, 
+                {
+                 "height":67.2861262415893,
+                 "id":10,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":615.187439923102,
+                 "x":794.849273060948,
+                 "y":362.274385151444
+                }, 
+                {
+                 "height":60.8779237423903,
+                 "id":11,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":330.022428708747,
+                 "x":1717.6304329456,
+                 "y":368.682587650643
+                }, 
+                {
+                 "height":352.451137455944,
+                 "id":12,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":51.2656199935918,
+                 "x":2002.79544415995,
+                 "y":439.172815141831
+                }, 
+                {
+                 "height":695.289971163089,
+                 "id":13,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":57.6738224927908,
+                 "x":2002.79544415995,
+                 "y":1057.56435631453
+                }, 
+                {
+                 "height":62.69,
+                 "id":14,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":301.185517462352,
+                 "x":1700.61,
+                 "y":1683.16
+                }, 
+                {
+                 "height":0,
+                 "id":15,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1035.15686678091,
+                 "y":1028.72744506814
                 }],
          "offsetx":179.197506817296,
          "offsety":377.873003506038,
@@ -1276,7 +1391,7 @@ module.exports={ "height":100,
          "x":0,
          "y":0
         }],
- "nextobjectid":7,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -2447,14 +2562,6 @@ module.exports={ "columns":38,
         {
          "wall":"true"
         },
-     "235":
-        {
-         "wall":"true"
-        },
-     "236":
-        {
-         "wall":"true"
-        },
      "237":
         {
          "wall":"true"
@@ -2462,6 +2569,10 @@ module.exports={ "columns":38,
      "238":
         {
          "wall":"true"
+        },
+     "239":
+        {
+         "wall":true
         },
      "240":
         {
@@ -4470,14 +4581,6 @@ module.exports={ "columns":38,
         {
          "wall":"string"
         },
-     "235":
-        {
-         "wall":"string"
-        },
-     "236":
-        {
-         "wall":"string"
-        },
      "237":
         {
          "wall":"string"
@@ -4485,6 +4588,10 @@ module.exports={ "columns":38,
      "238":
         {
          "wall":"string"
+        },
+     "239":
+        {
+         "wall":"bool"
         },
      "240":
         {
@@ -5426,7 +5533,7 @@ module.exports.add_floor = () => {
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
-
+  player.add_player();
   // const enemy_pathing = createPad(-200, -200);
   // enemy_pathing.interactive = true;
   // enemy_pathing.alpha = 0.8;
@@ -5488,7 +5595,7 @@ module.exports.add_floor = () => {
   global.collisionItems.addChild( /* slantedWall */ collisionWall);
   global.viewport.updateLayersOrder();
 
-  player.add_player();
+  
   items.add_items();
 };
 
@@ -6344,6 +6451,8 @@ const {
   pathing,
 } = require('../enemies/enemy.js');
 
+// const Intersects = require('yy-intersects');
+
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
     console.log(global.viewport.children[i].name)
@@ -6401,7 +6510,7 @@ function render_wall (wall_array, tiles_object, options) {
     wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
     wall.width = wall_data.width;
     wall.height = wall_data.height;
-    
+
     addToSegments(wall)
     global.collisionItems.addChild(wall);
 
@@ -6812,8 +6921,8 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
     const angle_to_face = Math.atan2(path_array[angle_iterator].y - path_array[i].y, path_array[angle_iterator].x - path_array[i].x) || 0;
     
     tween.to({
-      x:path_array[i].x,
-      y:path_array[i].y,
+      x:path_array[i].x +50,
+      y:path_array[i].y +50,
     }, walk_time, createjs.Ease.sineInOut)
 
     .wait(random_wait_time_with_threshold)
@@ -6854,8 +6963,8 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
   for (let i = 0; i < path_array.length; i++) {
 
     tween.to({
-      x:path_array[i].x,
-      y:path_array[i].y,
+      x:path_array[i].middle.x,
+      y:path_array[i].middle.y,
     }, walk_time)
   }
   
@@ -6863,8 +6972,8 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
     const walk_time = 300
 
     tween.to({
-      x:path_array[a].x,
-      y:path_array[a].y,
+      x:path_array[a].middle.x,
+      y:path_array[a].middle.y,
     },walk_time)  
   }
   
@@ -6887,10 +6996,12 @@ function run_pathfinding_test() {
     time_to_point: 2000
   }
 
-  create_path_from_two_grid_points(enemy_point, player_point)
-  .then(path_data => {
-    create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
-  })
+  // if(enemy_sprite.sees_player) {
+    create_path_from_two_grid_points(enemy_point, player_point)
+    .then(path_data => {
+      create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+    })
+  // }
 }
 
 setInterval(()=>{
@@ -6967,7 +7078,7 @@ function mouseMove() {
 
       aimingLine.clear();
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-      aimingLine.lineStyle(3, 0xffffff, 0)
+      aimingLine.lineStyle(3, 0xffffff, 1)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
       global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);

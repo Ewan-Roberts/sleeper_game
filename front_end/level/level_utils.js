@@ -8,6 +8,8 @@ const {
   pathing,
 } = require('../enemies/enemy.js');
 
+// const Intersects = require('yy-intersects');
+
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
     console.log(global.viewport.children[i].name)
@@ -65,7 +67,7 @@ function render_wall (wall_array, tiles_object, options) {
     wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
     wall.width = wall_data.width;
     wall.height = wall_data.height;
-    
+
     addToSegments(wall)
     global.collisionItems.addChild(wall);
 
