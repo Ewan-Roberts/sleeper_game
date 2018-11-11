@@ -156,8 +156,13 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
 
     const random_wait_time = generate_wait_time_with_threshold(2000, 300)
     
-    const angle_to_face = Math.atan2(path_array[i+1].y - path_array[i].y, path_array[i+1].x - path_array[i].x);
+    // youre a monster
+    if(path_array[i+1] === undefined) {
+      continue
+    }
 
+    const angle_to_face = Math.atan2(path_array[i+1].y - path_array[i].y, path_array[i+1].x - path_array[i].x) || 0;
+    
     tween.to({
       x:path_array[i].x,
       y:path_array[i].y,
