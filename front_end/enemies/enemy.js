@@ -221,22 +221,21 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     
     aimingLine.clear()
-
-    // TODO: abstract
     const player_info = global.Player.sprite.getGlobalPosition()
-    if(raycast.containsPoint(player_info)){  
-      
-      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-      enemy_sprite.sees_player = true;
-      const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
-      enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
-      enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
-  
-      aimingLine.lineStyle(0, 0xffffff, 0.1)
-        .moveTo(0, 0)
-        .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
-    } else {
-      enemy_sprite.sees_player = false;
+    // TODO : move all this logic into enemy function
+    if(enemy_sprite.children[1].containsPoint(player_info)){
+      if(raycast.containsPoint(player_info)) {
+        aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
+        enemy_sprite.sees_player = true;
+        const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
+        enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
+        enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
+    
+        aimingLine.lineStyle(2, 0xffffff, 0.5)
+          .moveTo(0, 0)
+          .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
+        bow_helper.arrow_shoot_from_sprite_to_sprite(1000, enemy_sprite, global.Player.sprite.position)
+      }
     }
   });
   
@@ -265,5 +264,5 @@ module.exports.kill_enemy = (enemy_sprite) => {
   enemy_sprite.stop()
   enemy_sprite.path.paused = true;
   enemy_sprite.vitals.status = 'dead';
-  
+  module.exports.put_blood_splatter_on_ground(enemy_sprite);
 }

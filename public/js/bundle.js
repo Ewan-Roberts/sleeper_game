@@ -539,22 +539,21 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     
     aimingLine.clear()
-
-    // TODO: abstract
     const player_info = global.Player.sprite.getGlobalPosition()
-    if(raycast.containsPoint(player_info)){  
-      
-      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-      enemy_sprite.sees_player = true;
-      const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
-      enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
-      enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
-  
-      aimingLine.lineStyle(0, 0xffffff, 0.1)
-        .moveTo(0, 0)
-        .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
-    } else {
-      enemy_sprite.sees_player = false;
+    // TODO : move all this logic into enemy function
+    if(enemy_sprite.children[1].containsPoint(player_info)){
+      if(raycast.containsPoint(player_info)) {
+        aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
+        enemy_sprite.sees_player = true;
+        const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
+        enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
+        enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
+    
+        aimingLine.lineStyle(2, 0xffffff, 0.5)
+          .moveTo(0, 0)
+          .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
+        bow_helper.arrow_shoot_from_sprite_to_sprite(1000, enemy_sprite, global.Player.sprite.position)
+      }
     }
   });
   
@@ -583,7 +582,7 @@ module.exports.kill_enemy = (enemy_sprite) => {
   enemy_sprite.stop()
   enemy_sprite.path.paused = true;
   enemy_sprite.vitals.status = 'dead';
-  
+  module.exports.put_blood_splatter_on_ground(enemy_sprite);
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../dialog/dialog_util.js":5,"../pathfinding/pathfind_util":22,"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
@@ -7083,7 +7082,10 @@ global.Player = {
   power: 900,
   ammo: 10,
   inventory: [],
-
+  vitals: {
+    health: 100,
+    status: 'alive',
+  }
 };
 
 const aimingLine = new PIXI.Graphics();
@@ -7732,6 +7734,7 @@ const { kill_enemy } = require('../../enemies/enemy.js');
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
 
+
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
   new Audio('audio/arrow_hit_01.wav'),
@@ -7812,28 +7815,24 @@ module.exports.arrowManagement = (power, origin, target) => {
         const arrow_in_enemy = module.exports.create_embedded_arrow();
         arrow_tween.stop();
         
-        // TODO 
-        arrow_in_enemy.rotation = arrow.rotation -3.1;
+        // TODO add emeny rotation 
+        arrow_in_enemy.rotation = arrow.rotation -=3.1;
         // TDOO can i retrofit this
         arrow.destroy();
         if(sprite_in_container.vitals.health < 40) {
           
           if(global.is_development) {
-
             dialog_util.renderText(sprite_in_container, 'I am dead home slice');
 
             kill_enemy(sprite_in_container);
-            
           } else {
             dialog_util.renderText(sprite_in_container, 'I am hit');
             kill_enemy(sprite_in_container);
             sprite_in_container.destroy()
           }
-          
         }
 
         sprite_in_container.vitals.health -= 40;
-
         sprite_in_container.addChild(arrow_in_enemy)
       }
     }
@@ -7847,8 +7846,51 @@ module.exports.arrowManagement = (power, origin, target) => {
     //   }
     // }
   });
+};
 
+// todo move enemy shout out of global 
+module.exports.arrow_shoot_from_sprite_to_sprite = (power, origin, target) => {
   
+  if(!global.is_development) return;
+  
+  const arrow = module.exports.create_arrow();
+  arrow.name = 'arrow';
+  arrow.rotation = sprite_helper.angle(origin, target);
+
+  const arrow_path = module.exports.create_path(origin,target)
+  const arrow_tween = module.exports.create_arrow_tween(arrow, power, arrow_path)
+  arrow_tween.start();
+
+  arrow_tween.on('update', () => {
+
+    if(global.Player.sprite.containsPoint(arrow.getGlobalPosition())) {
+      console.log('hitiung player')
+      global.Player.vitals.health -=40
+      
+      const arrow_in_player = module.exports.create_embedded_arrow();
+      arrow_tween.stop();
+      
+      // TODO add emeny rotation 
+      arrow_in_player.rotation = arrow.rotation -=3.1;
+      // TDOO can i retrofit this
+      arrow.destroy();
+      if(global.Player.vitals.health < 40) {
+        
+        if(global.is_development) {
+          dialog_util.renderText(global.Player.sprite, 'I am dead home slice');
+        } else {
+          // end the game
+          debugger;
+        }
+      }
+
+      global.Player.vitals.health -= 40;
+      global.Player.sprite.addChild(arrow_in_player)
+    }
+
+  })
+
+  global.viewport.addChild(arrow)
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})

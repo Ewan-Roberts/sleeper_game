@@ -25,7 +25,10 @@ global.Player = {
   power: 900,
   ammo: 10,
   inventory: [],
-
+  vitals: {
+    health: 100,
+    status: 'alive',
+  }
 };
 
 const aimingLine = new PIXI.Graphics();
