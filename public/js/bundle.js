@@ -382,7 +382,7 @@ module.exports.sight_line = (sprite) => {
   sight_line_box.width = 300;
   sight_line_box.height = 300;
   sight_line_box.rotation = -0.5;
-  sight_line_box.alpha = 0;
+  sight_line_box.alpha = 0
 
   sprite.addChild(sight_line_box);
 }
@@ -460,11 +460,11 @@ function add_enemy_raycasting(enemy_sprite) {
   light.width =6000
   light.height =6000
   light.alpha = 0.2
-  light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-  // global.viewport.addChild(light)
+  // This TANKS the performance but is pretty 
+  // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
   
   enemy_sprite.addChild(light);
-
+  
   global.app.ticker.add(delta => {
     
     const uniqueAngles = [];
@@ -607,7 +607,6 @@ global.loader.load(() => {
   const pathfinding = require('./pathfinding/pathfind_util.js');
 });
 
-global.app.ticker.add(() => PIXI.tweenManager.update());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./level/debug/debug_layout.js":13,"./pathfinding/pathfind_util.js":22,"pixi-layers":123,"pixi-packer-parser":124,"pixi-tween":125,"pixi-viewport":138,"pixi.js":255,"socket.io-client":297}],8:[function(require,module,exports){
@@ -6961,7 +6960,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 
   boolean_time = false;
 
-  // highlight_grid_cell_from_path(point_array);
+  highlight_grid_cell_from_path(point_array);
   
   let path_array = [];
   point_array.forEach(grid => {
@@ -7089,7 +7088,7 @@ function mouseMove() {
 
       aimingLine.clear();
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-      aimingLine.lineStyle(3, 0xffffff, 1)
+      aimingLine.lineStyle(3, 0xffffff, 0)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
       global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);

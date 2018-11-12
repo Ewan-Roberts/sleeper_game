@@ -64,7 +64,7 @@ module.exports.sight_line = (sprite) => {
   sight_line_box.width = 300;
   sight_line_box.height = 300;
   sight_line_box.rotation = -0.5;
-  sight_line_box.alpha = 0;
+  sight_line_box.alpha = 0
 
   sprite.addChild(sight_line_box);
 }
@@ -142,11 +142,11 @@ function add_enemy_raycasting(enemy_sprite) {
   light.width =6000
   light.height =6000
   light.alpha = 0.2
-  light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-  // global.viewport.addChild(light)
+  // This TANKS the performance but is pretty 
+  // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
   
   enemy_sprite.addChild(light);
-
+  
   global.app.ticker.add(delta => {
     
     const uniqueAngles = [];

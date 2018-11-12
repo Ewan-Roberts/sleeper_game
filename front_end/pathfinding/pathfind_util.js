@@ -193,7 +193,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 
   boolean_time = false;
 
-  // highlight_grid_cell_from_path(point_array);
+  highlight_grid_cell_from_path(point_array);
   
   let path_array = [];
   point_array.forEach(grid => {

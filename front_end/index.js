@@ -48,4 +48,3 @@ global.loader.load(() => {
   const pathfinding = require('./pathfinding/pathfind_util.js');
 });
 
-global.app.ticker.add(() => PIXI.tweenManager.update());
