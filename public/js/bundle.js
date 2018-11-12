@@ -317,7 +317,7 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 },{"pixi.js":255}],6:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const sprite_helper = require('../utils/sprite_helper.js');
+const { get_angle_from_point_to_point, put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const { createjs } = require('@createjs/tweenjs');
 
@@ -365,6 +365,41 @@ function get_intersection(ray, segment){
 	};
 }
 
+function create_enemy_sight_line(sprite) {
+  const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
+
+  sight_line_box.name = 'sight_line';
+  sight_line_box.width = 3000;
+  sight_line_box.height = 600;
+  sight_line_box.anchor.y = 0.5;
+  sight_line_box.alpha = 0.2;
+  
+  if(global.is_development) {
+    sight_line_box.alpha = 0.2;
+  } else {
+    sight_line_box.alpha = 0;
+  }
+
+  sprite.addChild(sight_line_box);
+}
+
+function create_enemy_influence_box(sprite) {
+  const influence_box = PIXI.Sprite.fromFrame('black_dot');
+
+  influence_box.name = 'influence_box';
+  influence_box.width = 2000;
+  influence_box.height = 2000;
+
+  if(global.is_development) {
+    influence_box.alpha = 0.4;
+  } else {
+    influence_box.alpha = 0;
+  }
+  
+  influence_box.anchor.set(0.5);
+  sprite.addChild(influence_box);
+}
+
 module.exports.create_enemy_at_location = (x, y) => {
   const enemy_frames = []
 
@@ -385,59 +420,14 @@ module.exports.create_enemy_at_location = (x, y) => {
     health: 100,
     status: 'alive',
   }
-  enemy_container.addChild(enemy_sprite);
+  
   add_enemy_raycasting(enemy_sprite)
+  create_enemy_sight_line(enemy_sprite)
+  create_enemy_influence_box(enemy_sprite)
+  enemy_container.addChild(enemy_sprite);
   
   return enemy_sprite;
 };
-
-module.exports.sight_line = sprite => {
-  const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
-
-  sight_line_box.name = 'sight_line';
-  sight_line_box.width = 3000;
-  sight_line_box.height = 600;
-  sight_line_box.anchor.y = 0.5;
-  sight_line_box.alpha = 0.2;
-  
-  if(global.is_development) {
-    sight_line_box.alpha = 0.2;
-  } else {
-    sight_line_box.alpha = 0;
-  }
-
-  sprite.addChild(sight_line_box);
-}
-
-module.exports.influence_box = sprite => {
-  const influence_box = PIXI.Sprite.fromFrame('black_dot');
-
-  influence_box.name = 'influence_box';
-  influence_box.width = 2000;
-  influence_box.height = 2000;
-
-  if(global.is_development) {
-    influence_box.alpha = 0.4;
-  } else {
-    influence_box.alpha = 0;
-  }
-  
-  influence_box.anchor.set(0.5);
-  sprite.addChild(influence_box);
-}
-
-// TODO put under the enemy sprite
-module.exports.put_blood_splatter_on_ground = sprite => {
-  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
-  
-  blood_stain.width /= 2;
-  blood_stain.height /= 2;
-  blood_stain.position.set(sprite.x, sprite.y);
-  blood_stain.anchor.set(0.5);
-  blood_stain.alpha = 0.4;
-
-  global.viewport.addChild(blood_stain);
-}
 
 function add_enemy_raycasting(enemy_sprite) {
 
@@ -561,7 +551,7 @@ module.exports.tween_enemy_to_player = (enemy_sprite) => {
   .to({
     x:player.x,
     y:player.y,
-    rotation: sprite_helper.angle(enemy_sprite, player),
+    rotation: get_angle_from_point_to_point(enemy_sprite, player),
   },2000)
   .wait(500)
 }
@@ -571,7 +561,7 @@ module.exports.kill_enemy = (enemy_sprite) => {
   enemy_sprite.stop()
   enemy_sprite.path.paused = true;
   enemy_sprite.vitals.status = 'dead';
-  module.exports.put_blood_splatter_on_ground(enemy_sprite);
+  put_blood_splatter_under_sprite(enemy_sprite);
 }
 
 module.exports.point_hits_enemy_in_container = (point) => {
@@ -6464,8 +6454,6 @@ const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathf
 const {
   create_enemy_at_location,
   init_enemies_container,
-  sight_line,
-  influence_box,
   pathing,
 } = require('../enemies/enemy.js');
 
@@ -6626,8 +6614,6 @@ module.exports.load_bedroom_map = () => {
   init_enemies_container();
 
   const sprite = create_enemy_at_location(100, 100)
-  sight_line(sprite);
-  influence_box(sprite);
 
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
   
@@ -7118,7 +7104,7 @@ function mouseMove() {
       aimingLine.lineStyle(3, 0xffffff, 0)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
-      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);
+      global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePositionPlayer);
     }
   });
 }
@@ -7133,7 +7119,7 @@ function mouseDown() {
       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
       global.Player.sprite._textures = global.Player.sprite.ready._textures;
-      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePosition);
+      global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePosition);
       global.Player.sprite.gotoAndPlay(0);
     }
   });
@@ -7524,7 +7510,6 @@ function linePoint(x1, y1, x2, y2, xp, yp, tolerance) {
   return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance;
 }
 
-
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {
     if (o.anchor[axis] !== 0) {
@@ -7535,7 +7520,21 @@ function getCenter(o, dimension, axis) {
   return dimension;
 }
 
-module.exports.angle = (sprite, point) => Math.atan2(
+
+module.exports.put_blood_splatter_under_sprite = (sprite) => {
+  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  
+  blood_stain.width /= 2;
+  blood_stain.height /= 2;
+  blood_stain.position.set(sprite.x, sprite.y);
+  blood_stain.anchor.set(0.5);
+  blood_stain.alpha = 0.4;
+
+  global.viewport.addChild(blood_stain);
+}
+
+
+module.exports.get_angle_from_point_to_point = (sprite, point) => Math.atan2(
   (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
   (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x')),
 );

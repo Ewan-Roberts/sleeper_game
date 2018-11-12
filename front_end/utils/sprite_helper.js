@@ -12,7 +12,6 @@ function linePoint(x1, y1, x2, y2, xp, yp, tolerance) {
   return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance;
 }
 
-
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {
     if (o.anchor[axis] !== 0) {
@@ -23,7 +22,21 @@ function getCenter(o, dimension, axis) {
   return dimension;
 }
 
-module.exports.angle = (sprite, point) => Math.atan2(
+
+module.exports.put_blood_splatter_under_sprite = (sprite) => {
+  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
+  
+  blood_stain.width /= 2;
+  blood_stain.height /= 2;
+  blood_stain.position.set(sprite.x, sprite.y);
+  blood_stain.anchor.set(0.5);
+  blood_stain.alpha = 0.4;
+
+  global.viewport.addChild(blood_stain);
+}
+
+
+module.exports.get_angle_from_point_to_point = (sprite, point) => Math.atan2(
   (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
   (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x')),
 );

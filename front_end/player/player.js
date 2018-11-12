@@ -71,7 +71,7 @@ function mouseMove() {
       aimingLine.lineStyle(3, 0xffffff, 0)
         .moveTo(0, 0)
         .lineTo(mousePosition.x, mousePosition.y);
-      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePositionPlayer);
+      global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePositionPlayer);
     }
   });
 }
@@ -86,7 +86,7 @@ function mouseDown() {
       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
       global.Player.sprite._textures = global.Player.sprite.ready._textures;
-      global.Player.sprite.rotation = sprite_helper.angle(global.Player.sprite, mousePosition);
+      global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePosition);
       global.Player.sprite.gotoAndPlay(0);
     }
   });

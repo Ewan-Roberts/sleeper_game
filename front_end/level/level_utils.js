@@ -3,8 +3,6 @@ const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathf
 const {
   create_enemy_at_location,
   init_enemies_container,
-  sight_line,
-  influence_box,
   pathing,
 } = require('../enemies/enemy.js');
 
@@ -165,8 +163,6 @@ module.exports.load_bedroom_map = () => {
   init_enemies_container();
 
   const sprite = create_enemy_at_location(100, 100)
-  sight_line(sprite);
-  influence_box(sprite);
 
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
   
