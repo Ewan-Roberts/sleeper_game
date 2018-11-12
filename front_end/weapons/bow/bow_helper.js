@@ -39,7 +39,7 @@ function create_arrow() {
 
 function create_rotated_arrow(origin, target) {
   const arrow = create_arrow();
-  arrow.rotation = sprite_helper.angle(origin, target);
+  arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
   return arrow;
 }
 

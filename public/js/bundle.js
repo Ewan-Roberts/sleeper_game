@@ -400,12 +400,18 @@ function create_enemy_influence_box(sprite) {
   sprite.addChild(influence_box);
 }
 
-module.exports.create_enemy_at_location = (x, y) => {
+function create_knife_enemy_frames() {
   const enemy_frames = []
 
   for (let i = 0; i < 19; i++) {
     enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
   }
+  return enemy_frames
+}
+
+module.exports.create_enemy_at_location = (x, y) => {
+
+  const enemy_frames = create_knife_enemy_frames();
 
   const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
   enemy_sprite.height /= 2;
@@ -416,16 +422,18 @@ module.exports.create_enemy_at_location = (x, y) => {
   enemy_sprite.rotation = -0.5;
   enemy_sprite.play();
   enemy_sprite.tag = 'enemy';
+
   enemy_sprite.vitals = {
     health: 100,
     status: 'alive',
   }
-  
+
+  // TODO make class 
   add_enemy_raycasting(enemy_sprite)
   create_enemy_sight_line(enemy_sprite)
   create_enemy_influence_box(enemy_sprite)
   enemy_container.addChild(enemy_sprite);
-  
+
   return enemy_sprite;
 };
 
@@ -7755,7 +7763,7 @@ function create_arrow() {
 
 function create_rotated_arrow(origin, target) {
   const arrow = create_arrow();
-  arrow.rotation = sprite_helper.angle(origin, target);
+  arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
   return arrow;
 }
 
