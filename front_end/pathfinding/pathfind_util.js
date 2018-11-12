@@ -227,10 +227,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 }
 
 
-function run_pathfinding_test() {
-  
-  const enemy_sprite = get_first_enemy_in_container();
-  const player_sprite = global.Player.sprite;
+module.exports.pathfind_from_enemy_to_player = (enemy_sprite, player_sprite) => {
 
   const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
   const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
@@ -239,14 +236,34 @@ function run_pathfinding_test() {
     time_to_wait : 500,
     time_to_point: 2000
   }
-
-  if(enemy_sprite.sees_player) {
-    create_path_from_two_grid_points(enemy_point, player_point)
-    .then(path_data => {
-      create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
-    })
-  }
+  
+  create_path_from_two_grid_points(enemy_point, player_point)
+  .then(path_data => {
+    create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+  })
+  
 }
+
+
+// function run_pathfinding_test() {
+  
+//   const enemy_sprite = get_first_enemy_in_container();
+//   const player_sprite = global.Player.sprite;
+
+//   const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
+//   const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
+
+//   const options = {
+//     time_to_wait : 500,
+//     time_to_point: 2000
+//   }
+  
+//   create_path_from_two_grid_points(enemy_point, player_point)
+//   .then(path_data => {
+//     create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+//   })
+  
+// }
 
 // setInterval(()=>{
 //   run_pathfinding_test()

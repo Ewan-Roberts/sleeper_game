@@ -22,7 +22,7 @@ global.viewport.addChild(arrow_container);
 function create_arrow() {
   const arrow = PIXI.Sprite.fromFrame('arrow');
   arrow.name = 'arrow';
-  
+  arrow.anchor.set(0.9);
   if(global.is_development){
     // make em huge, easier to see  
     arrow.height *= 3
@@ -107,14 +107,13 @@ module.exports.arrow_management = (power, origin, target) => {
     }
 
     // bring back in
-    // for (let i = 0; i < global.collisionItems.children.length; i++) {
-    //   const sprite_in_container = global.collisionItems.children[i];
-  
-    //   if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-    //     console.log('hit on collision item');
-    //     arrow_tween.stop()
-    //   }
-    // }
+    for (let i = 0; i < global.collisionItems.children.length; i++) {
+      const sprite_in_container = global.collisionItems.children[i];
+      if(sprite_in_container.containsPoint(arrow_point)){
+        console.log('hit on collision item');
+        arrow_tween.stop()
+      }
+    }
   });
 };
 
@@ -128,7 +127,9 @@ module.exports.arrow_shoot_from_sprite_to_sprite = (origin, target, power) => {
 
   arrow_tween.on('update', () => {
 
-    if(global.Player.sprite.containsPoint(arrow.getGlobalPosition())) {
+    const arrow_point = arrow.getGlobalPosition()
+
+    if(global.Player.sprite.containsPoint(arrow_point)) {
       console.log('hitting player')
       arrow_tween.stop();
 
@@ -150,6 +151,14 @@ module.exports.arrow_shoot_from_sprite_to_sprite = (origin, target, power) => {
 
       global.Player.vitals.health -= 40;
       global.Player.sprite.addChild(arrow_in_player)
+    }
+
+    for (let i = 0; i < global.collisionItems.children.length; i++) {
+      const sprite_in_container = global.collisionItems.children[i];
+      if(sprite_in_container.containsPoint(arrow_point)){
+        console.log('enemy arrow on collision item');
+        arrow_tween.stop()
+      }
     }
   })
 };

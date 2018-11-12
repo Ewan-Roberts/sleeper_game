@@ -1,5 +1,6 @@
 const PIXI = require('pixi.js');
 const { get_angle_from_point_to_point, put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
+const { pathfind_from_enemy_to_player } = require('../pathfinding/pathfind_util.js')
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const { createjs } = require('@createjs/tweenjs');
 
@@ -121,8 +122,6 @@ module.exports.create_enemy_at_location = (x, y) => {
 
 function add_enemy_raycasting(enemy_sprite) {
 
-  const aimingLine = new PIXI.Graphics();
-
   const raycast = new PIXI.Graphics()
   
   const points = (segments=>{
@@ -210,24 +209,23 @@ function add_enemy_raycasting(enemy_sprite) {
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
-    
-    aimingLine.clear()
 
     const player_sprite = global.Player.sprite;
     const player_position = player_sprite.getGlobalPosition();
 
     if(enemy_sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      
-      action_on_seeing_player(enemy_sprite, player_sprite)
+      action_on_seeing_player(enemy_sprite, player_sprite);
     }
   });
   
-  global.viewport.addChild(aimingLine);
   global.viewport.addChild(raycast)
 }
 
 function action_on_seeing_player(enemy_sprite, player_sprite) {
   bow_helper.arrow_shoot_from_sprite_to_sprite(enemy_sprite, player_sprite)
+  pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
+  enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
+  
 }
 
 module.exports.tween_enemy_to_player = (enemy_sprite) => {

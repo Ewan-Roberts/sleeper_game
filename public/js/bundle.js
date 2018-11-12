@@ -318,6 +318,7 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 (function (global){
 const PIXI = require('pixi.js');
 const { get_angle_from_point_to_point, put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
+const { pathfind_from_enemy_to_player } = require('../pathfinding/pathfind_util.js')
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const { createjs } = require('@createjs/tweenjs');
 
@@ -439,8 +440,6 @@ module.exports.create_enemy_at_location = (x, y) => {
 
 function add_enemy_raycasting(enemy_sprite) {
 
-  const aimingLine = new PIXI.Graphics();
-
   const raycast = new PIXI.Graphics()
   
   const points = (segments=>{
@@ -528,24 +527,23 @@ function add_enemy_raycasting(enemy_sprite) {
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
-    
-    aimingLine.clear()
 
     const player_sprite = global.Player.sprite;
     const player_position = player_sprite.getGlobalPosition();
 
     if(enemy_sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      
-      action_on_seeing_player(enemy_sprite, player_sprite)
+      action_on_seeing_player(enemy_sprite, player_sprite);
     }
   });
   
-  global.viewport.addChild(aimingLine);
   global.viewport.addChild(raycast)
 }
 
 function action_on_seeing_player(enemy_sprite, player_sprite) {
   bow_helper.arrow_shoot_from_sprite_to_sprite(enemy_sprite, player_sprite)
+  pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
+  enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
+  
 }
 
 module.exports.tween_enemy_to_player = (enemy_sprite) => {
@@ -584,7 +582,7 @@ module.exports.get_first_enemy_in_container = () => {
   return enemy_container.children[0];
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
+},{"../pathfinding/pathfind_util.js":22,"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -7007,10 +7005,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 }
 
 
-function run_pathfinding_test() {
-  
-  const enemy_sprite = get_first_enemy_in_container();
-  const player_sprite = global.Player.sprite;
+module.exports.pathfind_from_enemy_to_player = (enemy_sprite, player_sprite) => {
 
   const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
   const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
@@ -7019,14 +7014,34 @@ function run_pathfinding_test() {
     time_to_wait : 500,
     time_to_point: 2000
   }
-
-  if(enemy_sprite.sees_player) {
-    create_path_from_two_grid_points(enemy_point, player_point)
-    .then(path_data => {
-      create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
-    })
-  }
+  
+  create_path_from_two_grid_points(enemy_point, player_point)
+  .then(path_data => {
+    create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+  })
+  
 }
+
+
+// function run_pathfinding_test() {
+  
+//   const enemy_sprite = get_first_enemy_in_container();
+//   const player_sprite = global.Player.sprite;
+
+//   const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
+//   const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
+
+//   const options = {
+//     time_to_wait : 500,
+//     time_to_point: 2000
+//   }
+  
+//   create_path_from_two_grid_points(enemy_point, player_point)
+//   .then(path_data => {
+//     create_tween_on_point_array_with_options(enemy_sprite, path_data, options);
+//   })
+  
+// }
 
 // setInterval(()=>{
 //   run_pathfinding_test()
@@ -7740,7 +7755,7 @@ global.viewport.addChild(arrow_container);
 function create_arrow() {
   const arrow = PIXI.Sprite.fromFrame('arrow');
   arrow.name = 'arrow';
-  
+  arrow.anchor.set(0.9);
   if(global.is_development){
     // make em huge, easier to see  
     arrow.height *= 3
@@ -7825,14 +7840,13 @@ module.exports.arrow_management = (power, origin, target) => {
     }
 
     // bring back in
-    // for (let i = 0; i < global.collisionItems.children.length; i++) {
-    //   const sprite_in_container = global.collisionItems.children[i];
-  
-    //   if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-    //     console.log('hit on collision item');
-    //     arrow_tween.stop()
-    //   }
-    // }
+    for (let i = 0; i < global.collisionItems.children.length; i++) {
+      const sprite_in_container = global.collisionItems.children[i];
+      if(sprite_in_container.containsPoint(arrow_point)){
+        console.log('hit on collision item');
+        arrow_tween.stop()
+      }
+    }
   });
 };
 
@@ -7846,7 +7860,9 @@ module.exports.arrow_shoot_from_sprite_to_sprite = (origin, target, power) => {
 
   arrow_tween.on('update', () => {
 
-    if(global.Player.sprite.containsPoint(arrow.getGlobalPosition())) {
+    const arrow_point = arrow.getGlobalPosition()
+
+    if(global.Player.sprite.containsPoint(arrow_point)) {
       console.log('hitting player')
       arrow_tween.stop();
 
@@ -7868,6 +7884,14 @@ module.exports.arrow_shoot_from_sprite_to_sprite = (origin, target, power) => {
 
       global.Player.vitals.health -= 40;
       global.Player.sprite.addChild(arrow_in_player)
+    }
+
+    for (let i = 0; i < global.collisionItems.children.length; i++) {
+      const sprite_in_container = global.collisionItems.children[i];
+      if(sprite_in_container.containsPoint(arrow_point)){
+        console.log('enemy arrow on collision item');
+        arrow_tween.stop()
+      }
     }
   })
 };
