@@ -24,8 +24,18 @@ module.exports.init_arrow_container = () => {
 module.exports.create_arrow = () => {
   const arrow = PIXI.Sprite.fromFrame('arrow');
 
-  arrow.width /= 2;
-  arrow.height /= 3;
+  // arrow.width /= 2;
+  // arrow.height /= 3;
+  arrow.anchor.set(0.9);
+
+  return arrow;
+}
+
+module.exports.create_embedded_arrow = () => {
+  const arrow = PIXI.Sprite.fromFrame('arrow_embedded');
+
+  // arrow.width /= 2;
+  // arrow.height /= 3;
   arrow.anchor.set(0.9);
 
   return arrow;
@@ -72,18 +82,27 @@ module.exports.arrowManagement = (power, origin, target) => {
       
       if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
         dialog_util.renderText(sprite_in_container, 'I am hit');
+
+        const arrow_in_enemy = module.exports.create_embedded_arrow();
+        arrow_in_enemy.zIndex = -30;
         arrow_tween.stop();
+        arrow_in_enemy.rotation = arrow.rotation -3.1;
+        // arrow_in_enemy.anchor.x = 1.
+        arrow.destroy();
+        
+
+        sprite_in_container.addChild(arrow_in_enemy)
       }
     }
 
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
+    // for (let i = 0; i < global.collisionItems.children.length; i++) {
+    //   const sprite_in_container = global.collisionItems.children[i];
   
-      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log('hit on collision item');
-        arrow_tween.stop()
-      }
-    }
+    //   if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+    //     console.log('hit on collision item');
+    //     arrow_tween.stop()
+    //   }
+    // }
   });
 
   

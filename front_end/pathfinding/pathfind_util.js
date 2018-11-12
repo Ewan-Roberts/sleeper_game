@@ -247,6 +247,6 @@ function run_pathfinding_test() {
   }
 }
 
-setInterval(()=>{
-  run_pathfinding_test()
-},2000)
+// setInterval(()=>{
+//   run_pathfinding_test()
+// },2000)

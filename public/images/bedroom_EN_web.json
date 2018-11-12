@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "aae6686bb316e8cb026c2288ecb79df6f6fb810e.png",
-            "filesize": 9166269,
+            "image": "288095c9455c051fa2b22a061cfbd737ab88c501.png",
+            "filesize": 9146901,
             "sprites": [
                 {
                     "name": "park",
@@ -1401,7 +1401,18 @@
                     }
                 },
                 {
-                    "name": "raindrop_01",
+                    "name": "arrow_embedded",
+                    "position": {
+                        "x": 100,
+                        "y": 5493
+                    },
+                    "dimension": {
+                        "w": 100,
+                        "h": 5
+                    }
+                },
+                {
+                    "name": "raindrop_13",
                     "position": {
                         "x": 1354,
                         "y": 5186
@@ -1456,7 +1467,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_08",
+                    "name": "raindrop_01",
                     "position": {
                         "x": 1629,
                         "y": 5186
@@ -1467,7 +1478,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_13",
+                    "name": "raindrop_07",
                     "position": {
                         "x": 1684,
                         "y": 5186
@@ -1533,7 +1544,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_07",
+                    "name": "raindrop_08",
                     "position": {
                         "x": 2014,
                         "y": 5186
@@ -1544,7 +1555,7 @@
                     }
                 },
                 {
-                    "name": "chest_empty",
+                    "name": "chest_full",
                     "position": {
                         "x": 350,
                         "y": 5468
@@ -1555,7 +1566,7 @@
                     }
                 },
                 {
-                    "name": "chest_full",
+                    "name": "chest_empty",
                     "position": {
                         "x": 400,
                         "y": 5468
@@ -1566,7 +1577,7 @@
                     }
                 },
                 {
-                    "name": "rat_48",
+                    "name": "rat_50",
                     "position": {
                         "x": 2069,
                         "y": 5186
@@ -1577,7 +1588,7 @@
                     }
                 },
                 {
-                    "name": "rat_44",
+                    "name": "rat_48",
                     "position": {
                         "x": 2084,
                         "y": 5186
@@ -1588,7 +1599,7 @@
                     }
                 },
                 {
-                    "name": "rat_43",
+                    "name": "rat_44",
                     "position": {
                         "x": 2099,
                         "y": 5186
@@ -1599,7 +1610,7 @@
                     }
                 },
                 {
-                    "name": "rat_42",
+                    "name": "rat_43",
                     "position": {
                         "x": 2114,
                         "y": 5186
@@ -1610,7 +1621,7 @@
                     }
                 },
                 {
-                    "name": "rat_02",
+                    "name": "rat_42",
                     "position": {
                         "x": 2129,
                         "y": 5186
@@ -1621,7 +1632,7 @@
                     }
                 },
                 {
-                    "name": "rat_50",
+                    "name": "rat_02",
                     "position": {
                         "x": 2144,
                         "y": 5186
@@ -1665,7 +1676,7 @@
                     }
                 },
                 {
-                    "name": "rat_07",
+                    "name": "rat_01",
                     "position": {
                         "x": 2204,
                         "y": 5186
@@ -1698,20 +1709,9 @@
                     }
                 },
                 {
-                    "name": "rat_21",
-                    "position": {
-                        "x": 2249,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 18,
-                        "h": 47
-                    }
-                },
-                {
                     "name": "rat_24",
                     "position": {
-                        "x": 2267,
+                        "x": 2249,
                         "y": 5186
                     },
                     "dimension": {
@@ -1720,20 +1720,9 @@
                     }
                 },
                 {
-                    "name": "rat_25",
+                    "name": "rat_05",
                     "position": {
-                        "x": 2286,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 17,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_10",
-                    "position": {
-                        "x": 2303,
+                        "x": 2268,
                         "y": 5186
                     },
                     "dimension": {
@@ -1744,7 +1733,7 @@
                 {
                     "name": "rat_47",
                     "position": {
-                        "x": 2318,
+                        "x": 2283,
                         "y": 5186
                     },
                     "dimension": {
@@ -1753,31 +1742,9 @@
                     }
                 },
                 {
-                    "name": "rat_05",
+                    "name": "rat_07",
                     "position": {
-                        "x": 2333,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_46",
-                    "position": {
-                        "x": 2348,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_01",
-                    "position": {
-                        "x": 2363,
+                        "x": 2298,
                         "y": 5186
                     },
                     "dimension": {
@@ -1788,7 +1755,7 @@
                 {
                     "name": "rat_08",
                     "position": {
-                        "x": 2378,
+                        "x": 2313,
                         "y": 5186
                     },
                     "dimension": {
@@ -1799,7 +1766,7 @@
                 {
                     "name": "rat_09",
                     "position": {
-                        "x": 2393,
+                        "x": 2328,
                         "y": 5186
                     },
                     "dimension": {
@@ -1808,9 +1775,64 @@
                     }
                 },
                 {
-                    "name": "rat_14",
+                    "name": "rat_10",
+                    "position": {
+                        "x": 2343,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_21",
+                    "position": {
+                        "x": 2358,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 18,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_46",
+                    "position": {
+                        "x": 2376,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_25",
+                    "position": {
+                        "x": 2391,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 17,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_36",
                     "position": {
                         "x": 2408,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 16,
+                        "h": 46
+                    }
+                },
+                {
+                    "name": "rat_11",
+                    "position": {
+                        "x": 2424,
                         "y": 5186
                     },
                     "dimension": {
@@ -1819,31 +1841,9 @@
                     }
                 },
                 {
-                    "name": "rat_12",
-                    "position": {
-                        "x": 2423,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 16,
-                        "h": 46
-                    }
-                },
-                {
-                    "name": "rat_36",
-                    "position": {
-                        "x": 2439,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 16,
-                        "h": 46
-                    }
-                },
-                {
                     "name": "rat_23",
                     "position": {
-                        "x": 2455,
+                        "x": 2439,
                         "y": 5186
                     },
                     "dimension": {
@@ -1852,7 +1852,18 @@
                     }
                 },
                 {
-                    "name": "rat_11",
+                    "name": "rat_12",
+                    "position": {
+                        "x": 2460,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 16,
+                        "h": 46
+                    }
+                },
+                {
+                    "name": "rat_14",
                     "position": {
                         "x": 2476,
                         "y": 5186
@@ -1885,7 +1896,7 @@
                     }
                 },
                 {
-                    "name": "rat_16",
+                    "name": "rat_15",
                     "position": {
                         "x": 2529,
                         "y": 5186
@@ -1896,7 +1907,7 @@
                     }
                 },
                 {
-                    "name": "rat_15",
+                    "name": "rat_16",
                     "position": {
                         "x": 2545,
                         "y": 5186
@@ -1929,7 +1940,7 @@
                     }
                 },
                 {
-                    "name": "rat_20",
+                    "name": "rat_19",
                     "position": {
                         "x": 2825,
                         "y": 5427
@@ -1940,7 +1951,7 @@
                     }
                 },
                 {
-                    "name": "rat_19",
+                    "name": "rat_20",
                     "position": {
                         "x": 2844,
                         "y": 5427
@@ -1984,7 +1995,7 @@
                     }
                 },
                 {
-                    "name": "rat_51",
+                    "name": "rat_38",
                     "position": {
                         "x": 2912,
                         "y": 5427
@@ -1995,7 +2006,7 @@
                     }
                 },
                 {
-                    "name": "rat_38",
+                    "name": "rat_51",
                     "position": {
                         "x": 2928,
                         "y": 5427
@@ -2061,7 +2072,7 @@
                     }
                 },
                 {
-                    "name": "rat_26",
+                    "name": "rat_30",
                     "position": {
                         "x": 465,
                         "y": 5468
@@ -2072,7 +2083,7 @@
                     }
                 },
                 {
-                    "name": "rat_30",
+                    "name": "rat_26",
                     "position": {
                         "x": 480,
                         "y": 5468
@@ -2083,24 +2094,24 @@
                     }
                 },
                 {
-                    "name": "rat_31",
+                    "name": "rat_32",
                     "position": {
                         "x": 495,
                         "y": 5468
                     },
                     "dimension": {
-                        "w": 14,
+                        "w": 13,
                         "h": 23
                     }
                 },
                 {
-                    "name": "rat_32",
+                    "name": "rat_31",
                     "position": {
-                        "x": 509,
+                        "x": 508,
                         "y": 5468
                     },
                     "dimension": {
-                        "w": 13,
+                        "w": 14,
                         "h": 23
                     }
                 },
@@ -2140,7 +2151,7 @@
             ]
         },
         {
-            "image": "1fd907416f47066296d9c1eb6fa441ef3232672c.png",
+            "image": "b6626dd377ac719f894902d2571c5b8e66075fbd.png",
             "filesize": 5790592,
             "sprites": [
                 {
@@ -4940,7 +4951,7 @@
             ]
         },
         {
-            "image": "96f4196b79da66a3b5bc8569db01d6e0788e4761.png",
+            "image": "25a7c5171c93f1264a069b5649b09eff2188bfcc.png",
             "filesize": 367463,
             "sprites": [
                 {

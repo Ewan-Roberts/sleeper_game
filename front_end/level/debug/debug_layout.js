@@ -37,7 +37,7 @@ module.exports.add_floor = () => {
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
-  player.add_player();
+  player.add_player_with_position(1000,1000);
   // const enemy_pathing = createPad(-200, -200);
   // enemy_pathing.interactive = true;
   // enemy_pathing.alpha = 0.8;

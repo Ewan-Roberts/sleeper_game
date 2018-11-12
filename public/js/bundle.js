@@ -379,10 +379,10 @@ module.exports.sight_line = (sprite) => {
   const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
   sight_line_box.name = 'sight_line';
-  sight_line_box.width = 300;
-  sight_line_box.height = 300;
-  sight_line_box.rotation = -0.5;
-  sight_line_box.alpha = 0
+  sight_line_box.width = 3000;
+  sight_line_box.height = 600;
+  sight_line_box.anchor.y = 0.5;
+  sight_line_box.alpha = 0.2;
 
   sprite.addChild(sight_line_box);
 }
@@ -393,7 +393,7 @@ module.exports.influence_box = sprite => {
   influence_box.name = 'influence_box';
   influence_box.width = 2000;
   influence_box.height = 2000;
-  influence_box.alpha = 0
+  influence_box.alpha = 0.4;
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
@@ -459,7 +459,10 @@ function add_enemy_raycasting(enemy_sprite) {
   light.anchor.set(0.5)
   light.width =6000
   light.height =6000
-  light.alpha = 0.2
+  light.alpha = 0.1
+  // for dev
+  // light.mask = raycast
+
   // This TANKS the performance but is pretty 
   // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
   
@@ -472,9 +475,7 @@ function add_enemy_raycasting(enemy_sprite) {
     PIXI.tweenManager.update();
     
     raycast.clear()
-    raycast.beginFill(0xfffffff, 0);
-
-    light.mask = raycast
+    raycast.beginFill(0xfffffff, 0.05);
 
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
@@ -513,21 +514,24 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    // raycast.lineStyle(0, 0xffd900, 0.5);
+    raycast.lineStyle(0.5, 0xffd900, 5);
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
     
     aimingLine.clear()
+
     // TODO: abstract
-    if(raycast.containsPoint(global.Player.sprite.getGlobalPosition())){  
+    const player_info = global.Player.sprite.getGlobalPosition()
+    if(raycast.containsPoint(player_info)){  
+      
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
       enemy_sprite.sees_player = true;
       const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
       enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
       enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
   
-      aimingLine.lineStyle(2, 0xffffff, 0)
+      aimingLine.lineStyle(0, 0xffffff, 0.1)
         .moveTo(0, 0)
         .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
     } else {
@@ -545,7 +549,7 @@ module.exports.move_to_player = (enemy_sprite) => {
 
   // global.viewport.addChild(path_to_player_visual_guide);
 
-  const tween = createjs.Tween.get(enemy_sprite)
+  createjs.Tween.get(enemy_sprite)
   .to({
     x:player.x,
     y:player.y,
@@ -5545,7 +5549,7 @@ module.exports.add_floor = () => {
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
-  player.add_player();
+  player.add_player_with_position(1000,1000);
   // const enemy_pathing = createPad(-200, -200);
   // enemy_pathing.interactive = true;
   // enemy_pathing.alpha = 0.8;
@@ -7014,9 +7018,9 @@ function run_pathfinding_test() {
   }
 }
 
-setInterval(()=>{
-  run_pathfinding_test()
-},2000)
+// setInterval(()=>{
+//   run_pathfinding_test()
+// },2000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../utils/RotationPlugin.js":24,"@createjs/tweenjs":31,"pixi.js":255}],23:[function(require,module,exports){
@@ -7200,7 +7204,7 @@ function addPlayerControls() {
   global.viewport.addChild(aimingLine);
 }
 
-module.exports.add_player = () => {
+module.exports.add_player_with_position = (x,y) => {
   for (let i = 0; i <= 21; i += 1) {
     let name = `survivor-bow-idle-0${i}`;
 
@@ -7233,6 +7237,7 @@ module.exports.add_player = () => {
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
   global.Player.sprite.tag = 'player';
+  global.Player.sprite.position.set(x,y)
 
   global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
@@ -7256,6 +7261,11 @@ module.exports.remove_controls = () => {
   global.document.removeEventListener('keydown', () => {});
 };
 
+
+module.exports.move_player_to = (x,y)=>{
+
+  global.Player.sprite.position.set(x,y)
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../utils/document_helper.js":25,"../utils/door_helper.js":26,"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"pixi.js":255}],24:[function(require,module,exports){
 /*
@@ -7708,8 +7718,18 @@ module.exports.init_arrow_container = () => {
 module.exports.create_arrow = () => {
   const arrow = PIXI.Sprite.fromFrame('arrow');
 
-  arrow.width /= 2;
-  arrow.height /= 3;
+  // arrow.width /= 2;
+  // arrow.height /= 3;
+  arrow.anchor.set(0.9);
+
+  return arrow;
+}
+
+module.exports.create_embedded_arrow = () => {
+  const arrow = PIXI.Sprite.fromFrame('arrow_embedded');
+
+  // arrow.width /= 2;
+  // arrow.height /= 3;
   arrow.anchor.set(0.9);
 
   return arrow;
@@ -7756,18 +7776,27 @@ module.exports.arrowManagement = (power, origin, target) => {
       
       if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
         dialog_util.renderText(sprite_in_container, 'I am hit');
+
+        const arrow_in_enemy = module.exports.create_embedded_arrow();
+        arrow_in_enemy.zIndex = -30;
         arrow_tween.stop();
+        arrow_in_enemy.rotation = arrow.rotation -3.1;
+        // arrow_in_enemy.anchor.x = 1.
+        arrow.destroy();
+        
+
+        sprite_in_container.addChild(arrow_in_enemy)
       }
     }
 
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
+    // for (let i = 0; i < global.collisionItems.children.length; i++) {
+    //   const sprite_in_container = global.collisionItems.children[i];
   
-      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log('hit on collision item');
-        arrow_tween.stop()
-      }
-    }
+    //   if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+    //     console.log('hit on collision item');
+    //     arrow_tween.stop()
+    //   }
+    // }
   });
 
   

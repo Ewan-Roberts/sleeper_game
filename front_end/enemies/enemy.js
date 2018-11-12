@@ -61,10 +61,10 @@ module.exports.sight_line = (sprite) => {
   const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
   sight_line_box.name = 'sight_line';
-  sight_line_box.width = 300;
-  sight_line_box.height = 300;
-  sight_line_box.rotation = -0.5;
-  sight_line_box.alpha = 0
+  sight_line_box.width = 3000;
+  sight_line_box.height = 600;
+  sight_line_box.anchor.y = 0.5;
+  sight_line_box.alpha = 0.2;
 
   sprite.addChild(sight_line_box);
 }
@@ -75,7 +75,7 @@ module.exports.influence_box = sprite => {
   influence_box.name = 'influence_box';
   influence_box.width = 2000;
   influence_box.height = 2000;
-  influence_box.alpha = 0
+  influence_box.alpha = 0.4;
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
@@ -141,7 +141,10 @@ function add_enemy_raycasting(enemy_sprite) {
   light.anchor.set(0.5)
   light.width =6000
   light.height =6000
-  light.alpha = 0.2
+  light.alpha = 0.1
+  // for dev
+  // light.mask = raycast
+
   // This TANKS the performance but is pretty 
   // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
   
@@ -154,9 +157,7 @@ function add_enemy_raycasting(enemy_sprite) {
     PIXI.tweenManager.update();
     
     raycast.clear()
-    raycast.beginFill(0xfffffff, 0);
-
-    light.mask = raycast
+    raycast.beginFill(0xfffffff, 0.05);
 
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
@@ -195,21 +196,24 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    // raycast.lineStyle(0, 0xffd900, 0.5);
+    raycast.lineStyle(0.5, 0xffd900, 5);
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
     
     aimingLine.clear()
+
     // TODO: abstract
-    if(raycast.containsPoint(global.Player.sprite.getGlobalPosition())){  
+    const player_info = global.Player.sprite.getGlobalPosition()
+    if(raycast.containsPoint(player_info)){  
+      
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
       enemy_sprite.sees_player = true;
       const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
       enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
       enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
   
-      aimingLine.lineStyle(2, 0xffffff, 0)
+      aimingLine.lineStyle(0, 0xffffff, 0.1)
         .moveTo(0, 0)
         .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
     } else {
@@ -227,7 +231,7 @@ module.exports.move_to_player = (enemy_sprite) => {
 
   // global.viewport.addChild(path_to_player_visual_guide);
 
-  const tween = createjs.Tween.get(enemy_sprite)
+  createjs.Tween.get(enemy_sprite)
   .to({
     x:player.x,
     y:player.y,

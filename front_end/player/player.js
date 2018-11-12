@@ -177,7 +177,7 @@ function addPlayerControls() {
   global.viewport.addChild(aimingLine);
 }
 
-module.exports.add_player = () => {
+module.exports.add_player_with_position = (x,y) => {
   for (let i = 0; i <= 21; i += 1) {
     let name = `survivor-bow-idle-0${i}`;
 
@@ -210,6 +210,7 @@ module.exports.add_player = () => {
   global.Player.sprite.play();
   global.Player.sprite.zIndex = -20;
   global.Player.sprite.tag = 'player';
+  global.Player.sprite.position.set(x,y)
 
   global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
   global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
@@ -232,3 +233,9 @@ module.exports.remove_controls = () => {
 
   global.document.removeEventListener('keydown', () => {});
 };
+
+
+module.exports.move_player_to = (x,y)=>{
+
+  global.Player.sprite.position.set(x,y)
+}
