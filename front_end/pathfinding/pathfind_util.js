@@ -164,7 +164,7 @@ module.exports.move_sprite_on_path = (sprite, path_array) => {
 
     //TODO stop  spinning 360, minus it from the factorial
     const angle_to_face = Math.atan2(path_array[angle_iterator].y - path_array[i].y, path_array[angle_iterator].x - path_array[i].x) || 0;
-    
+
     tween.to({
       x:path_array[i].x +50,
       y:path_array[i].y +50,
@@ -204,7 +204,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
   const tween = createjs.Tween.get(sprite)
   const walk_time = 300;
 
-  for (let i = 0; i < path_array.length; i++) {
+  for (let i = 1; i < path_array.length; i++) {
 
     tween.to({
       x:path_array[i].middle.x,
@@ -212,9 +212,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
     }, walk_time)
   }
   
-  for(var a = path_array.length; a--;) {
-    const walk_time = 300
-
+  for(let a = path_array.length; a--;) {
     tween.to({
       x:path_array[a].middle.x,
       y:path_array[a].middle.y,
@@ -229,8 +227,10 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 
 module.exports.pathfind_from_enemy_to_player = (enemy_sprite, player_sprite) => {
 
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid_container.children);
+  const grid = grid_container.children;
+
+  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
+  const player_point = get_sprite_position_on_grid(player_sprite, grid);
 
   const options = {
     time_to_wait : 500,
