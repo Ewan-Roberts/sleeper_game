@@ -325,6 +325,7 @@ const { createjs } = require('@createjs/tweenjs');
 const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
 
+
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
 
@@ -367,6 +368,10 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
     enemy_sprite.tag = 'enemy';
+    enemy_sprite.vitals = {
+      health: 100,
+      status: 'alive',
+    }
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
     
@@ -383,6 +388,12 @@ module.exports.sight_line = (sprite) => {
   sight_line_box.height = 600;
   sight_line_box.anchor.y = 0.5;
   sight_line_box.alpha = 0.2;
+  
+  if(global.is_development) {
+    sight_line_box.alpha = 0.2;
+  } else {
+    sight_line_box.alpha = 0;
+  }
 
   sprite.addChild(sight_line_box);
 }
@@ -393,7 +404,13 @@ module.exports.influence_box = sprite => {
   influence_box.name = 'influence_box';
   influence_box.width = 2000;
   influence_box.height = 2000;
-  influence_box.alpha = 0.4;
+
+  if(global.is_development) {
+    influence_box.alpha = 0.4;
+  } else {
+    influence_box.alpha = 0;
+  }
+  
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
@@ -459,12 +476,14 @@ function add_enemy_raycasting(enemy_sprite) {
   light.anchor.set(0.5)
   light.width =6000
   light.height =6000
-  light.alpha = 0.1
-  // for dev
-  // light.mask = raycast
 
-  // This TANKS the performance but is pretty 
-  // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+  light.alpha = 0.2
+  if(global.is_development) {
+    // things
+  } else {
+    light.mask = raycast
+    light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+  }
   
   enemy_sprite.addChild(light);
   
@@ -558,6 +577,14 @@ module.exports.move_to_player = (enemy_sprite) => {
   .wait(500)
 }
 
+
+module.exports.kill_enemy = (enemy_sprite) => {
+  
+  enemy_sprite.stop()
+  enemy_sprite.path.paused = true;
+  enemy_sprite.vitals.status = 'dead';
+  
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../dialog/dialog_util.js":5,"../pathfinding/pathfind_util":22,"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
 (function (global){
@@ -569,6 +596,7 @@ const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
 const debug = require('./level/debug/debug_layout.js');
 
+global.is_development = true;
 
 global.socket = io.connect();
 // global.socket.on('thing', (res) => {
@@ -6963,8 +6991,11 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
   sprite.path.paused = true;
 
   boolean_time = false;
-
-  highlight_grid_cell_from_path(point_array);
+  
+  if(global.is_development) {
+    highlight_grid_cell_from_path(point_array);
+  }
+  
   
   let path_array = [];
   point_array.forEach(grid => {
@@ -7696,9 +7727,10 @@ module.exports.clear = () => {
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
 const dialog_util = require('../../dialog/dialog_util.js');
+const { kill_enemy } = require('../../enemies/enemy.js');
 
-global.arrow_container = new PIXI.Container();
-global.arrow_container.name = 'arrow containter';
+const arrow_container = new PIXI.Container();
+arrow_container.name = 'arrow containter';
 
 const arrowSounds = [
   new Audio('audio/arrow_hit_00.wav'),
@@ -7712,7 +7744,7 @@ const arrowSounds = [
 ];
 
 module.exports.init_arrow_container = () => {
-  global.viewport.addChild(global.arrow_container);
+  global.viewport.addChild(arrow_container);
 }
 
 module.exports.create_arrow = () => {
@@ -7753,6 +7785,7 @@ module.exports.create_arrow_tween = (arrow, power, arrow_path) => {
   return arrow_tween;
 }
 
+// todo move enemy shout out of global 
 module.exports.arrowManagement = (power, origin, target) => {
   // make this not fire each time
   module.exports.init_arrow_container()
@@ -7768,22 +7801,38 @@ module.exports.arrowManagement = (power, origin, target) => {
   // arrow_tween.on('end', () => {
   //   arrow.pickup = true;
   // });
-  global.arrow_container.addChild(arrow);
+  arrow_container.addChild(arrow);
   arrow_tween.on('update', () => {
 
     for (let i = 0; i < global.enemy_container.children.length; i++) {
       const sprite_in_container = global.enemy_container.children[i];
       
       if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        dialog_util.renderText(sprite_in_container, 'I am hit');
 
         const arrow_in_enemy = module.exports.create_embedded_arrow();
-        arrow_in_enemy.zIndex = -30;
         arrow_tween.stop();
-        arrow_in_enemy.rotation = arrow.rotation -3.1;
-        // arrow_in_enemy.anchor.x = 1.
-        arrow.destroy();
         
+        // TODO 
+        arrow_in_enemy.rotation = arrow.rotation -3.1;
+        // TDOO can i retrofit this
+        arrow.destroy();
+        if(sprite_in_container.vitals.health < 40) {
+          
+          if(global.is_development) {
+
+            dialog_util.renderText(sprite_in_container, 'I am dead home slice');
+
+            kill_enemy(sprite_in_container);
+            
+          } else {
+            dialog_util.renderText(sprite_in_container, 'I am hit');
+            kill_enemy(sprite_in_container);
+            sprite_in_container.destroy()
+          }
+          
+        }
+
+        sprite_in_container.vitals.health -= 40;
 
         sprite_in_container.addChild(arrow_in_enemy)
       }
@@ -7803,7 +7852,7 @@ module.exports.arrowManagement = (power, origin, target) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../dialog/dialog_util.js":5,"../../utils/sprite_helper.js":27,"pixi.js":255}],30:[function(require,module,exports){
+},{"../../dialog/dialog_util.js":5,"../../enemies/enemy.js":6,"../../utils/sprite_helper.js":27,"pixi.js":255}],30:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 

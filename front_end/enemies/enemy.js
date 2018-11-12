@@ -7,6 +7,7 @@ const { createjs } = require('@createjs/tweenjs');
 const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
 
+
 global.enemy_container = new PIXI.Container();
 global.enemy_container.name = 'enemy_container';
 
@@ -49,6 +50,10 @@ module.exports.create_enemy_at_location = (x, y) => {
     enemy_sprite.rotation = -0.5;
     enemy_sprite.play();
     enemy_sprite.tag = 'enemy';
+    enemy_sprite.vitals = {
+      health: 100,
+      status: 'alive',
+    }
     global.enemy_container.addChild(enemy_sprite);
     add_enemy_raycasting(enemy_sprite)
     
@@ -65,6 +70,12 @@ module.exports.sight_line = (sprite) => {
   sight_line_box.height = 600;
   sight_line_box.anchor.y = 0.5;
   sight_line_box.alpha = 0.2;
+  
+  if(global.is_development) {
+    sight_line_box.alpha = 0.2;
+  } else {
+    sight_line_box.alpha = 0;
+  }
 
   sprite.addChild(sight_line_box);
 }
@@ -75,7 +86,13 @@ module.exports.influence_box = sprite => {
   influence_box.name = 'influence_box';
   influence_box.width = 2000;
   influence_box.height = 2000;
-  influence_box.alpha = 0.4;
+
+  if(global.is_development) {
+    influence_box.alpha = 0.4;
+  } else {
+    influence_box.alpha = 0;
+  }
+  
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
@@ -141,12 +158,14 @@ function add_enemy_raycasting(enemy_sprite) {
   light.anchor.set(0.5)
   light.width =6000
   light.height =6000
-  light.alpha = 0.1
-  // for dev
-  // light.mask = raycast
 
-  // This TANKS the performance but is pretty 
-  // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+  light.alpha = 0.2
+  if(global.is_development) {
+    // things
+  } else {
+    light.mask = raycast
+    light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+  }
   
   enemy_sprite.addChild(light);
   
@@ -238,4 +257,13 @@ module.exports.move_to_player = (enemy_sprite) => {
     rotation: sprite_helper.angle(enemy_sprite, player),
   },2000)
   .wait(500)
+}
+
+
+module.exports.kill_enemy = (enemy_sprite) => {
+  
+  enemy_sprite.stop()
+  enemy_sprite.path.paused = true;
+  enemy_sprite.vitals.status = 'dead';
+  
 }

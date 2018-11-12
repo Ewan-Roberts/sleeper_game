@@ -6,6 +6,7 @@ const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
 const debug = require('./level/debug/debug_layout.js');
 
+global.is_development = true;
 
 global.socket = io.connect();
 // global.socket.on('thing', (res) => {
