@@ -359,8 +359,8 @@ module.exports.create_enemy_at_location = (x, y) => {
     }
 
     const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    enemy_sprite.height /= 3;
-    enemy_sprite.width /= 3;
+    enemy_sprite.height /= 2;
+    enemy_sprite.width /= 2;
     enemy_sprite.anchor.set(0.5);
     enemy_sprite.position.set(x, y);
     enemy_sprite.animationSpeed = 0.4;
@@ -382,7 +382,7 @@ module.exports.sight_line = (sprite) => {
   sight_line_box.width = 300;
   sight_line_box.height = 300;
   sight_line_box.rotation = -0.5;
-  sight_line_box.alpha = 0.3;
+  sight_line_box.alpha = 0;
 
   sprite.addChild(sight_line_box);
 }
@@ -393,7 +393,7 @@ module.exports.influence_box = sprite => {
   influence_box.name = 'influence_box';
   influence_box.width = 2000;
   influence_box.height = 2000;
-  influence_box.alpha = 0.2
+  influence_box.alpha = 0
   influence_box.anchor.set(0.5);
 
   sprite.addChild(influence_box);
@@ -433,15 +433,7 @@ function add_enemy_raycasting(enemy_sprite) {
 
   const aimingLine = new PIXI.Graphics();
 
-  const c = document.createElement("canvas");
-  const ctx = c.getContext("2d");
-  var gradient = ctx.createLinearGradient(20,0, 220,0);
-  gradient.addColorStop(0, 'green');
-  gradient.addColorStop(.5, 'cyan');
-  gradient.addColorStop(1, 'green');
-
   const raycast = new PIXI.Graphics()
-  raycast._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
   
   const points = (segments=>{
     const a = [];
@@ -462,6 +454,16 @@ function add_enemy_raycasting(enemy_sprite) {
       }
     });
   })(points);
+  
+  const light = PIXI.Sprite.fromFrame('light_gradient');
+  light.anchor.set(0.5)
+  light.width =6000
+  light.height =6000
+  light.alpha = 0.2
+  light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+  // global.viewport.addChild(light)
+  
+  enemy_sprite.addChild(light);
 
   global.app.ticker.add(delta => {
     
@@ -470,8 +472,10 @@ function add_enemy_raycasting(enemy_sprite) {
     PIXI.tweenManager.update();
     
     raycast.clear()
-    raycast.beginFill(0xfffffff, 0.1);
-    
+    raycast.beginFill(0xfffffff, 0);
+
+    light.mask = raycast
+
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
       elem.angle = angle;
@@ -509,7 +513,7 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
-    raycast.lineStyle(0, 0xffd900, 0.5);
+    // raycast.lineStyle(0, 0xffd900, 0.5);
     for (let i = 1; i < intersects.length; i++) {
       raycast.lineTo(intersects[i].x, intersects[i].y); 
     }
@@ -523,7 +527,7 @@ function add_enemy_raycasting(enemy_sprite) {
       enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
       enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
   
-      aimingLine.lineStyle(2, 0xffffff, 1)
+      aimingLine.lineStyle(2, 0xffffff, 0)
         .moveTo(0, 0)
         .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
     } else {
@@ -6957,7 +6961,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 
   boolean_time = false;
 
-  highlight_grid_cell_from_path(point_array);
+  // highlight_grid_cell_from_path(point_array);
   
   let path_array = [];
   point_array.forEach(grid => {

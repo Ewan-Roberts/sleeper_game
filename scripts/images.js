@@ -51,8 +51,8 @@ module.exports = {
       loading_stage: 'bedroom',
       compressor: pngQuant(),
       sprites: [
-        'assets/**/*.jpg',
-        'assets/**/*.png',
+        '../assets/**/*.jpg',
+        '../assets/**/*.png',
       ],
     },
   ],
