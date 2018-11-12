@@ -119,12 +119,12 @@ module.exports.arrow_management = (power, origin, target) => {
 };
 
 // todo move enemy out out of global 
-module.exports.arrow_shoot_from_sprite_to_sprite = (power, origin, target) => {
+module.exports.arrow_shoot_from_sprite_to_sprite = (origin, target, power) => {
   if(!global.is_development) return;
   
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
-  const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
 
   arrow_tween.on('update', () => {
 

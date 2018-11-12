@@ -449,7 +449,7 @@ function add_enemy_raycasting(enemy_sprite) {
     return a;
   })(segments);
 
-  const uniquePoints = (points=>{
+  const unique_points = (points=>{
     const set = {};
     return points.filter(p=>{
       const key = p.x+","+p.y;
@@ -480,21 +480,21 @@ function add_enemy_raycasting(enemy_sprite) {
   
   global.app.ticker.add(delta => {
     
-    const uniqueAngles = [];
+    const unique_angles = [];
     let intersects = [];
     PIXI.tweenManager.update();
     
     raycast.clear()
     raycast.beginFill(0xfffffff, 0.05);
 
-    uniquePoints.forEach(elem => {
+    unique_points.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
       elem.angle = angle;
-      uniqueAngles.push(angle-0.00001, angle-0.00001, angle+0.00001);
+      unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
     })
 
-    for(let k=0; k < uniqueAngles.length; k++){
-      const angle = uniqueAngles[k];
+    for(let k=0; k < unique_angles.length; k++){
+      const angle = unique_angles[k];
       const dx = Math.cos(angle);
       const dy = Math.sin(angle);
       const ray = {
@@ -508,19 +508,19 @@ function add_enemy_raycasting(enemy_sprite) {
         }
       };
 
-      let closestIntersect = null;
+      let closest_intersect = null;
 
       for(let i=0; i < global.segments.length; i++){
         const intersect = get_intersection(ray, global.segments[i]);
         if(!intersect) continue;
-        if(!closestIntersect || intersect.param<closestIntersect.param){
-          closestIntersect = intersect;
+        if(!closest_intersect || intersect.param<closest_intersect.param){
+          closest_intersect = intersect;
         }
       }
-      if(!closestIntersect) continue;
+      if(!closest_intersect) continue;
 
-      closestIntersect.angle = angle;
-      intersects.push(closestIntersect);
+      closest_intersect.angle = angle;
+      intersects.push(closest_intersect);
     }
     intersects = intersects.sort((a,b) => a.angle - b.angle);
     raycast.moveTo(intersects[0].x, intersects[0].y);
@@ -530,26 +530,22 @@ function add_enemy_raycasting(enemy_sprite) {
     }
     
     aimingLine.clear()
-    const player_info = global.Player.sprite.getGlobalPosition()
-    // TODO : move all this logic into enemy function
-    if(enemy_sprite.children[1].containsPoint(player_info)){
-      if(raycast.containsPoint(player_info)) {
-        aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-        enemy_sprite.sees_player = true;
-        const enemy_position_based_on_screen = enemy_sprite.getGlobalPosition()
-        enemy_position_based_on_screen.x = enemy_position_based_on_screen.x-global.viewport.screenWidth/2;
-        enemy_position_based_on_screen.y = enemy_position_based_on_screen.y-global.viewport.screenHeight/2;
-    
-        aimingLine.lineStyle(2, 0xffffff, 0.5)
-          .moveTo(0, 0)
-          .lineTo(enemy_position_based_on_screen.x, enemy_position_based_on_screen.y);
-        bow_helper.arrow_shoot_from_sprite_to_sprite(1000, enemy_sprite, global.Player.sprite.position)
-      }
+
+    const player_sprite = global.Player.sprite;
+    const player_position = player_sprite.getGlobalPosition();
+
+    if(enemy_sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+      
+      action_on_seeing_player(enemy_sprite, player_sprite)
     }
   });
   
   global.viewport.addChild(aimingLine);
   global.viewport.addChild(raycast)
+}
+
+function action_on_seeing_player(enemy_sprite, player_sprite) {
+  bow_helper.arrow_shoot_from_sprite_to_sprite(enemy_sprite, player_sprite)
 }
 
 module.exports.tween_enemy_to_player = (enemy_sprite) => {
@@ -7504,8 +7500,6 @@ module.exports.hit = (player, door) => {
 
 },{"./sprite_helper.js":27,"pixi.js":255}],27:[function(require,module,exports){
 (function (global){
-
-
 const PIXI = require('pixi.js');
 // const intersect = require('yy-intersects');
 
@@ -7843,12 +7837,12 @@ module.exports.arrow_management = (power, origin, target) => {
 };
 
 // todo move enemy out out of global 
-module.exports.arrow_shoot_from_sprite_to_sprite = (power, origin, target) => {
+module.exports.arrow_shoot_from_sprite_to_sprite = (origin, target, power) => {
   if(!global.is_development) return;
   
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
-  const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
 
   arrow_tween.on('update', () => {
 

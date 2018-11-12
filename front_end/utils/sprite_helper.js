@@ -1,5 +1,3 @@
-
-
 const PIXI = require('pixi.js');
 // const intersect = require('yy-intersects');
 
