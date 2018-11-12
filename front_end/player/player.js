@@ -55,7 +55,7 @@ function mouseUp() {
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
-      bow_helper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
+      bow_helper.arrow_management(global.Player.power, global.Player.sprite, mousePosition);
     }
   });
 }

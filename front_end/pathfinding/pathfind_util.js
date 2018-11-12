@@ -1,5 +1,6 @@
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
+const { get_first_enemy_in_container } = require('../enemies/enemy.js');
 
 //TODO needed to load the plugin
 const rotation_plugin = require('../utils/RotationPlugin.js');
@@ -126,12 +127,10 @@ const generate_wait_time_with_threshold = (max, threshold) => {
 
 // TODO abstract this maths shiattttt
 const generate_wait_time_with_minimum = (max, min) => {
-
   return Math.floor(Math.random() * max) + min;
 }
 
 function create_relative_walk_time(point_one, point_two, velocity) {
-
   const distance = distance_between_two_points(point_one, point_two);
   
   //produce a little randomness in speed between points 
@@ -197,7 +196,6 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
     highlight_grid_cell_from_path(point_array);
   }
   
-  
   let path_array = [];
   point_array.forEach(grid => {
     path_array.push(sprite_grid[grid.y][grid.x]);
@@ -231,7 +229,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 
 function run_pathfinding_test() {
   
-  const enemy_sprite = global.enemy_container.children[0];
+  const enemy_sprite = get_first_enemy_in_container();
   const player_sprite = global.Player.sprite;
 
   const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);

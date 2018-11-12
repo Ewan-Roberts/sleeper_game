@@ -316,71 +316,82 @@ module.exports.enemySurprised = () => enemyDialogOptions[
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"pixi.js":255}],6:[function(require,module,exports){
 (function (global){
-
 const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
-const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
-const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
-
-
-global.enemy_container = new PIXI.Container();
-global.enemy_container.name = 'enemy_container';
+const enemy_container = new PIXI.Container();
+enemy_container.name = 'enemy_container';
 
 module.exports.init_enemies_container = () => {
-  global.viewport.addChild(global.enemy_container);
+  global.viewport.addChild(enemy_container);
 }
 
-function get_intersection(a,b){
-  
-  const c=a.a.x,
-  d=a.a.y,
-  e=a.b.x-a.a.x,
-  f=a.b.y-a.a.y,
-  g=b.a.x,
-  h=b.a.y,
-  i=b.b.x-b.a.x,
-  j=b.b.y-b.a.y,
-  k=Math.sqrt(e*e+f*f),
-  l=Math.sqrt(i*i+j*j);
-  if(e/k==i/l&&f/k==j/l)return null;
-  const m=(e*(h-d)+f*(c-g))/(i*f-j*e),
-  n=(g+i*m-c)/e;
-  return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
+function get_intersection(ray, segment){
+
+	// RAY in parametric: Point + Delta*T1
+	const r_px = ray.a.x;
+	const r_py = ray.a.y;
+	const r_dx = ray.b.x-ray.a.x;
+	const r_dy = ray.b.y-ray.a.y;
+
+	// SEGMENT in parametric: Point + Delta*T2
+	const s_px = segment.a.x;
+	const s_py = segment.a.y;
+	const s_dx = segment.b.x-segment.a.x;
+	const s_dy = segment.b.y-segment.a.y;
+
+	// Are they parallel? If so, no intersect
+	const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
+	const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
+	if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
+		// Unit vectors are the same.
+		return null;
+	}
+
+	const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
+	const T1 = (s_px+s_dx*T2-r_px)/r_dx;
+
+	// Must be within parametic whatevers for RAY/SEGMENT
+	if(T1<0) return null;
+	if(T2<0 || T2>1) return null;
+
+	// Return the POINT OF INTERSECTION
+	return {
+		x: r_px+r_dx*T1,
+		y: r_py+r_dy*T1,
+		param: T1
+	};
 }
 
 module.exports.create_enemy_at_location = (x, y) => {
-  return new Promise (resolve => {
+  const enemy_frames = []
 
-    const enemy_frames = []
-    for (let i = 0; i < 19; i++) {
-      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-    }
+  for (let i = 0; i < 19; i++) {
+    enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+  }
 
-    const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    enemy_sprite.height /= 2;
-    enemy_sprite.width /= 2;
-    enemy_sprite.anchor.set(0.5);
-    enemy_sprite.position.set(x, y);
-    enemy_sprite.animationSpeed = 0.4;
-    enemy_sprite.rotation = -0.5;
-    enemy_sprite.play();
-    enemy_sprite.tag = 'enemy';
-    enemy_sprite.vitals = {
-      health: 100,
-      status: 'alive',
-    }
-    global.enemy_container.addChild(enemy_sprite);
-    add_enemy_raycasting(enemy_sprite)
-    
-    resolve(enemy_sprite)
-    
-  })
+  const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+  enemy_sprite.height /= 2;
+  enemy_sprite.width /= 2;
+  enemy_sprite.anchor.set(0.5);
+  enemy_sprite.position.set(x, y);
+  enemy_sprite.animationSpeed = 0.4;
+  enemy_sprite.rotation = -0.5;
+  enemy_sprite.play();
+  enemy_sprite.tag = 'enemy';
+  enemy_sprite.vitals = {
+    health: 100,
+    status: 'alive',
+  }
+  enemy_container.addChild(enemy_sprite);
+  add_enemy_raycasting(enemy_sprite)
+  
+  return enemy_sprite;
 };
 
-module.exports.sight_line = (sprite) => {
+module.exports.sight_line = sprite => {
   const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
   sight_line_box.name = 'sight_line';
@@ -412,7 +423,6 @@ module.exports.influence_box = sprite => {
   }
   
   influence_box.anchor.set(0.5);
-
   sprite.addChild(influence_box);
 }
 
@@ -427,23 +437,6 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   blood_stain.alpha = 0.4;
 
   global.viewport.addChild(blood_stain);
-}
-
-module.exports.pathing = (sprite, path_data) => {
-
-  const formatted_path_array = [];
-
-  //this is bad, feel bad
-  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
-    const element = path_data.objects[0].polyline[i];
-    const path_data2 = {
-      x: element.x + path_data.objects[0].x,
-      y: element.y + path_data.objects[0].y,
-    } 
-    formatted_path_array.push(path_data2);
-  }
-
-  move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
 function add_enemy_raycasting(enemy_sprite) {
@@ -561,11 +554,8 @@ function add_enemy_raycasting(enemy_sprite) {
   global.viewport.addChild(raycast)
 }
 
-// walk towards player
-module.exports.move_to_player = (enemy_sprite) => {
+module.exports.tween_enemy_to_player = (enemy_sprite) => {
   const player =  global.Player.sprite;
-
-  // global.viewport.addChild(path_to_player_visual_guide);
 
   createjs.Tween.get(enemy_sprite)
   .to({
@@ -576,7 +566,6 @@ module.exports.move_to_player = (enemy_sprite) => {
   .wait(500)
 }
 
-
 module.exports.kill_enemy = (enemy_sprite) => {
   
   enemy_sprite.stop()
@@ -584,8 +573,24 @@ module.exports.kill_enemy = (enemy_sprite) => {
   enemy_sprite.vitals.status = 'dead';
   module.exports.put_blood_splatter_on_ground(enemy_sprite);
 }
+
+module.exports.point_hits_enemy_in_container = (point) => {
+  
+  for (let i = 0; i < enemy_container.children.length; i++) {
+    const enemy_in_container = enemy_container.children[i];
+
+    if(enemy_in_container.containsPoint(point)){
+      return enemy_in_container;
+    }
+  }
+}
+
+// TODO move to helper function
+module.exports.get_first_enemy_in_container = () => {
+  return enemy_container.children[0];
+}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialog_util.js":5,"../pathfinding/pathfind_util":22,"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
+},{"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
@@ -5583,50 +5588,15 @@ module.exports.add_floor = () => {
   door.width /= 2;
   door.position.set(-100, -200);
   player.add_player_with_position(1000,1000);
-  // const enemy_pathing = createPad(-200, -200);
-  // enemy_pathing.interactive = true;
-  // enemy_pathing.alpha = 0.8;
-  // enemy_pathing.on('click', () => {
-  //   enemy.init_enemies_container()
-  //   enemy.create_enemy_at_location(200, 0)
-  //     .then( sprite => {
-  //       enemy.sight_line(sprite);
-  //       enemy.influence_box(sprite);
-  //       enemy.create_path(sprite, [
-  //         {x: 200, y:-200},
-  //         {x: 200,y: -200},
-  //         {x: 300,y:-600},
-  //         {x: 800,y:-600},
-  //         {x: 400,y:-100},
-  //         {x: 200,y:-100},
-  //         {x: 100,y:-100},
-  //         {x: 200, y:-200},
-  //       ])
-  //       .then(path => {
-  //         const enemy_tween = enemy.create_path_tween(sprite, path);
-  //         enemy.enemy_logic_on_path(sprite, enemy_tween, path)
-  //       })
-  //     })
-  // });
-  //level_util.load_debug_map_image()
+
   level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
-  // create_grid.on('click', () => {
-  //   //TODO
-  //   // level_util.load_debug_map_image()
-  //   enemy.init_enemies_container()
-  //   enemy.create_enemy_at_location(100, 100)
-  //   .then(sprite => {
-  //     enemy.sight_line(sprite);
-  //     enemy.influence_box(sprite);
-  //   })
-  // });
+  create_grid.on('click', () => console.log('clicky'))
 
   global.eventTriggers.addChild(
     create_grid,
-    // enemy_pathing,
   );
 
   global.doors.addChild(door);
@@ -5644,7 +5614,6 @@ module.exports.add_floor = () => {
   global.collisionItems.addChild( /* slantedWall */ collisionWall);
   global.viewport.updateLayersOrder();
 
-  
   items.add_items();
 };
 
@@ -6491,10 +6460,10 @@ module.exports.load = () => {
 },{"../../cutscene/cutscene_utils":4,"../level_utils.js":18,"../park/park_util.js":20,"./foyer_data.json":16,"pixi.js":255}],18:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const { create_level_grid } = require('../pathfinding/pathfind_util.js');
+const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathfind_util.js');
 const {
+  create_enemy_at_location,
   init_enemies_container,
-  create_enemy_at_location, 
   sight_line,
   influence_box,
   pathing,
@@ -6534,8 +6503,6 @@ const addToSegments = item => {
       {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
   )
 }
-
-// Solid Black wall
 
 function render_background_segment(tiles_object) {
 
@@ -6617,6 +6584,23 @@ module.exports.load_debug_map_image = () => {
 
 }
 
+function format_path_data(path_data){
+
+  const formatted_path_array = [];
+
+  //this is bad, feel bad
+  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
+    const element = path_data.objects[0].polyline[i];
+    const path_data2 = {
+      x: element.x + path_data.objects[0].x,
+      y: element.y + path_data.objects[0].y,
+    } 
+    formatted_path_array.push(path_data2);
+  }
+
+  return formatted_path_array;
+}
+
 module.exports.load_bedroom_map = () => {
   
   const bedroom_room_tiled_data = require('./bedroom/level_data/bedroom_level_data.json');
@@ -6641,14 +6625,16 @@ module.exports.load_bedroom_map = () => {
   
   init_enemies_container();
 
-  create_enemy_at_location(100, 100)
-  .then(sprite => {
-    sight_line(sprite);
-    influence_box(sprite);
-    pathing(sprite, bedroom_room_tiled_data.layers[2]);
-  })
+  const sprite = create_enemy_at_location(100, 100)
+  sight_line(sprite);
+  influence_box(sprite);
 
+  const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
+  
+  move_sprite_on_path(sprite, formatted_path_data)
 }
+
+
 
 
 // const grid_center = (path, grid_line) => {
@@ -6804,6 +6790,7 @@ module.exports.load_network_sprite = () => {
 (function (global){
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
+const { get_first_enemy_in_container } = require('../enemies/enemy.js');
 
 //TODO needed to load the plugin
 const rotation_plugin = require('../utils/RotationPlugin.js');
@@ -6930,12 +6917,10 @@ const generate_wait_time_with_threshold = (max, threshold) => {
 
 // TODO abstract this maths shiattttt
 const generate_wait_time_with_minimum = (max, min) => {
-
   return Math.floor(Math.random() * max) + min;
 }
 
 function create_relative_walk_time(point_one, point_two, velocity) {
-
   const distance = distance_between_two_points(point_one, point_two);
   
   //produce a little randomness in speed between points 
@@ -7001,7 +6986,6 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
     highlight_grid_cell_from_path(point_array);
   }
   
-  
   let path_array = [];
   point_array.forEach(grid => {
     path_array.push(sprite_grid[grid.y][grid.x]);
@@ -7035,7 +7019,7 @@ function create_tween_on_point_array_with_options(sprite, point_array) {
 
 function run_pathfinding_test() {
   
-  const enemy_sprite = global.enemy_container.children[0];
+  const enemy_sprite = get_first_enemy_in_container();
   const player_sprite = global.Player.sprite;
 
   const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid_container.children);
@@ -7059,7 +7043,7 @@ function run_pathfinding_test() {
 // },2000)
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/RotationPlugin.js":24,"@createjs/tweenjs":31,"pixi.js":255}],23:[function(require,module,exports){
+},{"../enemies/enemy.js":6,"../utils/RotationPlugin.js":24,"@createjs/tweenjs":31,"pixi.js":255}],23:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
@@ -7118,7 +7102,7 @@ function mouseUp() {
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
 
-      bow_helper.arrowManagement(global.Player.power, global.Player.sprite, mousePosition);
+      bow_helper.arrow_management(global.Player.power, global.Player.sprite, mousePosition);
     }
   });
 }
@@ -7735,7 +7719,7 @@ module.exports.clear = () => {
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
 const dialog_util = require('../../dialog/dialog_util.js');
-const { kill_enemy } = require('../../enemies/enemy.js');
+const { kill_enemy, point_hits_enemy_in_container } = require('../../enemies/enemy.js');
 
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
@@ -7804,54 +7788,54 @@ function create_arrow_tween(arrow, power, arrow_path) {
 }
 
 // todo move enemy out out of global 
-module.exports.arrowManagement = (power, origin, target) => {
+module.exports.arrow_management = (power, origin, target) => {
 
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
   
   arrow_tween.on('update', () => {
+    
+    const arrow_point = arrow.getGlobalPosition()
 
-    for (let i = 0; i < global.enemy_container.children.length; i++) {
-      const sprite_in_container = global.enemy_container.children[i];
-      
-      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        arrow_tween.stop();
+    const hit_enemy = point_hits_enemy_in_container(arrow_point);
 
-        const arrow_in_enemy = create_embedded_arrow(arrow.rotation -=3.1);
+    if(hit_enemy) {
+      arrow_tween.stop();
+      const arrow_in_enemy = create_embedded_arrow(arrow.rotation -=3.1);
         
-        // TDOO can i retrofit this
-        arrow.destroy();
-        if(sprite_in_container.vitals.health < 40) {
-          
-          if(global.is_development) {
-            dialog_util.renderText(sprite_in_container, 'I am dead home slice');
+      // TDOO can i retrofit this
+      arrow.destroy();
+      if(hit_enemy.vitals.health < 40) {
+        
+        if(global.is_development) {
+          dialog_util.renderText(hit_enemy, 'I am dead home slice');
 
-            kill_enemy(sprite_in_container);
-          } else {
-            dialog_util.renderText(sprite_in_container, 'I am hit');
-            kill_enemy(sprite_in_container);
-            sprite_in_container.destroy()
-          }
+          kill_enemy(hit_enemy);
+        } else {
+          dialog_util.renderText(hit_enemy, 'I am hit');
+          kill_enemy(hit_enemy);
+          hit_enemy.destroy()
         }
-
-        sprite_in_container.vitals.health -= 40;
-        sprite_in_container.addChild(arrow_in_enemy)
       }
+
+      hit_enemy.vitals.health -= 40;
+      hit_enemy.addChild(arrow_in_enemy)
     }
 
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
+    // bring back in
+    // for (let i = 0; i < global.collisionItems.children.length; i++) {
+    //   const sprite_in_container = global.collisionItems.children[i];
   
-      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log('hit on collision item');
-        arrow_tween.stop()
-      }
-    }
+    //   if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+    //     console.log('hit on collision item');
+    //     arrow_tween.stop()
+    //   }
+    // }
   });
 };
 
-// todo move enemy shout out of global 
+// todo move enemy out out of global 
 module.exports.arrow_shoot_from_sprite_to_sprite = (power, origin, target) => {
   if(!global.is_development) return;
   

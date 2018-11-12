@@ -38,50 +38,15 @@ module.exports.add_floor = () => {
   door.width /= 2;
   door.position.set(-100, -200);
   player.add_player_with_position(1000,1000);
-  // const enemy_pathing = createPad(-200, -200);
-  // enemy_pathing.interactive = true;
-  // enemy_pathing.alpha = 0.8;
-  // enemy_pathing.on('click', () => {
-  //   enemy.init_enemies_container()
-  //   enemy.create_enemy_at_location(200, 0)
-  //     .then( sprite => {
-  //       enemy.sight_line(sprite);
-  //       enemy.influence_box(sprite);
-  //       enemy.create_path(sprite, [
-  //         {x: 200, y:-200},
-  //         {x: 200,y: -200},
-  //         {x: 300,y:-600},
-  //         {x: 800,y:-600},
-  //         {x: 400,y:-100},
-  //         {x: 200,y:-100},
-  //         {x: 100,y:-100},
-  //         {x: 200, y:-200},
-  //       ])
-  //       .then(path => {
-  //         const enemy_tween = enemy.create_path_tween(sprite, path);
-  //         enemy.enemy_logic_on_path(sprite, enemy_tween, path)
-  //       })
-  //     })
-  // });
-  //level_util.load_debug_map_image()
+
   level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
-  // create_grid.on('click', () => {
-  //   //TODO
-  //   // level_util.load_debug_map_image()
-  //   enemy.init_enemies_container()
-  //   enemy.create_enemy_at_location(100, 100)
-  //   .then(sprite => {
-  //     enemy.sight_line(sprite);
-  //     enemy.influence_box(sprite);
-  //   })
-  // });
+  create_grid.on('click', () => console.log('clicky'))
 
   global.eventTriggers.addChild(
     create_grid,
-    // enemy_pathing,
   );
 
   global.doors.addChild(door);
@@ -99,6 +64,5 @@ module.exports.add_floor = () => {
   global.collisionItems.addChild( /* slantedWall */ collisionWall);
   global.viewport.updateLayersOrder();
 
-  
   items.add_items();
 };

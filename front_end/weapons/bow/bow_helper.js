@@ -2,7 +2,7 @@
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
 const dialog_util = require('../../dialog/dialog_util.js');
-const { kill_enemy } = require('../../enemies/enemy.js');
+const { kill_enemy, point_hits_enemy_in_container } = require('../../enemies/enemy.js');
 
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
@@ -71,54 +71,54 @@ function create_arrow_tween(arrow, power, arrow_path) {
 }
 
 // todo move enemy out out of global 
-module.exports.arrowManagement = (power, origin, target) => {
+module.exports.arrow_management = (power, origin, target) => {
 
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
   
   arrow_tween.on('update', () => {
+    
+    const arrow_point = arrow.getGlobalPosition()
 
-    for (let i = 0; i < global.enemy_container.children.length; i++) {
-      const sprite_in_container = global.enemy_container.children[i];
-      
-      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        arrow_tween.stop();
+    const hit_enemy = point_hits_enemy_in_container(arrow_point);
 
-        const arrow_in_enemy = create_embedded_arrow(arrow.rotation -=3.1);
+    if(hit_enemy) {
+      arrow_tween.stop();
+      const arrow_in_enemy = create_embedded_arrow(arrow.rotation -=3.1);
         
-        // TDOO can i retrofit this
-        arrow.destroy();
-        if(sprite_in_container.vitals.health < 40) {
-          
-          if(global.is_development) {
-            dialog_util.renderText(sprite_in_container, 'I am dead home slice');
+      // TDOO can i retrofit this
+      arrow.destroy();
+      if(hit_enemy.vitals.health < 40) {
+        
+        if(global.is_development) {
+          dialog_util.renderText(hit_enemy, 'I am dead home slice');
 
-            kill_enemy(sprite_in_container);
-          } else {
-            dialog_util.renderText(sprite_in_container, 'I am hit');
-            kill_enemy(sprite_in_container);
-            sprite_in_container.destroy()
-          }
+          kill_enemy(hit_enemy);
+        } else {
+          dialog_util.renderText(hit_enemy, 'I am hit');
+          kill_enemy(hit_enemy);
+          hit_enemy.destroy()
         }
-
-        sprite_in_container.vitals.health -= 40;
-        sprite_in_container.addChild(arrow_in_enemy)
       }
+
+      hit_enemy.vitals.health -= 40;
+      hit_enemy.addChild(arrow_in_enemy)
     }
 
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
+    // bring back in
+    // for (let i = 0; i < global.collisionItems.children.length; i++) {
+    //   const sprite_in_container = global.collisionItems.children[i];
   
-      if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
-        console.log('hit on collision item');
-        arrow_tween.stop()
-      }
-    }
+    //   if(sprite_in_container.containsPoint(arrow.getGlobalPosition())){
+    //     console.log('hit on collision item');
+    //     arrow_tween.stop()
+    //   }
+    // }
   });
 };
 
-// todo move enemy shout out of global 
+// todo move enemy out out of global 
 module.exports.arrow_shoot_from_sprite_to_sprite = (power, origin, target) => {
   if(!global.is_development) return;
   

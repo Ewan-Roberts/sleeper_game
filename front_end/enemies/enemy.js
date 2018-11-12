@@ -1,68 +1,79 @@
-
 const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
-const dialog_util = require('../dialog/dialog_util.js');
 const { createjs } = require('@createjs/tweenjs');
-const { move_sprite_on_path } = require('../pathfinding/pathfind_util');
 
-
-
-global.enemy_container = new PIXI.Container();
-global.enemy_container.name = 'enemy_container';
+const enemy_container = new PIXI.Container();
+enemy_container.name = 'enemy_container';
 
 module.exports.init_enemies_container = () => {
-  global.viewport.addChild(global.enemy_container);
+  global.viewport.addChild(enemy_container);
 }
 
-function get_intersection(a,b){
-  
-  const c=a.a.x,
-  d=a.a.y,
-  e=a.b.x-a.a.x,
-  f=a.b.y-a.a.y,
-  g=b.a.x,
-  h=b.a.y,
-  i=b.b.x-b.a.x,
-  j=b.b.y-b.a.y,
-  k=Math.sqrt(e*e+f*f),
-  l=Math.sqrt(i*i+j*j);
-  if(e/k==i/l&&f/k==j/l)return null;
-  const m=(e*(h-d)+f*(c-g))/(i*f-j*e),
-  n=(g+i*m-c)/e;
-  return 0>n||0>m||1<m?null:{x:c+e*n,y:d+f*n,param:n}
+function get_intersection(ray, segment){
+
+	// RAY in parametric: Point + Delta*T1
+	const r_px = ray.a.x;
+	const r_py = ray.a.y;
+	const r_dx = ray.b.x-ray.a.x;
+	const r_dy = ray.b.y-ray.a.y;
+
+	// SEGMENT in parametric: Point + Delta*T2
+	const s_px = segment.a.x;
+	const s_py = segment.a.y;
+	const s_dx = segment.b.x-segment.a.x;
+	const s_dy = segment.b.y-segment.a.y;
+
+	// Are they parallel? If so, no intersect
+	const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
+	const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
+	if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
+		// Unit vectors are the same.
+		return null;
+	}
+
+	const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
+	const T1 = (s_px+s_dx*T2-r_px)/r_dx;
+
+	// Must be within parametic whatevers for RAY/SEGMENT
+	if(T1<0) return null;
+	if(T2<0 || T2>1) return null;
+
+	// Return the POINT OF INTERSECTION
+	return {
+		x: r_px+r_dx*T1,
+		y: r_py+r_dy*T1,
+		param: T1
+	};
 }
 
 module.exports.create_enemy_at_location = (x, y) => {
-  return new Promise (resolve => {
+  const enemy_frames = []
 
-    const enemy_frames = []
-    for (let i = 0; i < 19; i++) {
-      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-    }
+  for (let i = 0; i < 19; i++) {
+    enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+  }
 
-    const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    enemy_sprite.height /= 2;
-    enemy_sprite.width /= 2;
-    enemy_sprite.anchor.set(0.5);
-    enemy_sprite.position.set(x, y);
-    enemy_sprite.animationSpeed = 0.4;
-    enemy_sprite.rotation = -0.5;
-    enemy_sprite.play();
-    enemy_sprite.tag = 'enemy';
-    enemy_sprite.vitals = {
-      health: 100,
-      status: 'alive',
-    }
-    global.enemy_container.addChild(enemy_sprite);
-    add_enemy_raycasting(enemy_sprite)
-    
-    resolve(enemy_sprite)
-    
-  })
+  const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+  enemy_sprite.height /= 2;
+  enemy_sprite.width /= 2;
+  enemy_sprite.anchor.set(0.5);
+  enemy_sprite.position.set(x, y);
+  enemy_sprite.animationSpeed = 0.4;
+  enemy_sprite.rotation = -0.5;
+  enemy_sprite.play();
+  enemy_sprite.tag = 'enemy';
+  enemy_sprite.vitals = {
+    health: 100,
+    status: 'alive',
+  }
+  enemy_container.addChild(enemy_sprite);
+  add_enemy_raycasting(enemy_sprite)
+  
+  return enemy_sprite;
 };
 
-module.exports.sight_line = (sprite) => {
+module.exports.sight_line = sprite => {
   const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
   sight_line_box.name = 'sight_line';
@@ -94,7 +105,6 @@ module.exports.influence_box = sprite => {
   }
   
   influence_box.anchor.set(0.5);
-
   sprite.addChild(influence_box);
 }
 
@@ -109,23 +119,6 @@ module.exports.put_blood_splatter_on_ground = sprite => {
   blood_stain.alpha = 0.4;
 
   global.viewport.addChild(blood_stain);
-}
-
-module.exports.pathing = (sprite, path_data) => {
-
-  const formatted_path_array = [];
-
-  //this is bad, feel bad
-  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
-    const element = path_data.objects[0].polyline[i];
-    const path_data2 = {
-      x: element.x + path_data.objects[0].x,
-      y: element.y + path_data.objects[0].y,
-    } 
-    formatted_path_array.push(path_data2);
-  }
-
-  move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
 function add_enemy_raycasting(enemy_sprite) {
@@ -243,11 +236,8 @@ function add_enemy_raycasting(enemy_sprite) {
   global.viewport.addChild(raycast)
 }
 
-// walk towards player
-module.exports.move_to_player = (enemy_sprite) => {
+module.exports.tween_enemy_to_player = (enemy_sprite) => {
   const player =  global.Player.sprite;
-
-  // global.viewport.addChild(path_to_player_visual_guide);
 
   createjs.Tween.get(enemy_sprite)
   .to({
@@ -258,11 +248,26 @@ module.exports.move_to_player = (enemy_sprite) => {
   .wait(500)
 }
 
-
 module.exports.kill_enemy = (enemy_sprite) => {
   
   enemy_sprite.stop()
   enemy_sprite.path.paused = true;
   enemy_sprite.vitals.status = 'dead';
   module.exports.put_blood_splatter_on_ground(enemy_sprite);
+}
+
+module.exports.point_hits_enemy_in_container = (point) => {
+  
+  for (let i = 0; i < enemy_container.children.length; i++) {
+    const enemy_in_container = enemy_container.children[i];
+
+    if(enemy_in_container.containsPoint(point)){
+      return enemy_in_container;
+    }
+  }
+}
+
+// TODO move to helper function
+module.exports.get_first_enemy_in_container = () => {
+  return enemy_container.children[0];
 }

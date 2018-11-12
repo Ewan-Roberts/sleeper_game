@@ -1,8 +1,8 @@
 const PIXI = require('pixi.js');
-const { create_level_grid } = require('../pathfinding/pathfind_util.js');
+const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathfind_util.js');
 const {
+  create_enemy_at_location,
   init_enemies_container,
-  create_enemy_at_location, 
   sight_line,
   influence_box,
   pathing,
@@ -42,8 +42,6 @@ const addToSegments = item => {
       {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
   )
 }
-
-// Solid Black wall
 
 function render_background_segment(tiles_object) {
 
@@ -125,6 +123,23 @@ module.exports.load_debug_map_image = () => {
 
 }
 
+function format_path_data(path_data){
+
+  const formatted_path_array = [];
+
+  //this is bad, feel bad
+  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
+    const element = path_data.objects[0].polyline[i];
+    const path_data2 = {
+      x: element.x + path_data.objects[0].x,
+      y: element.y + path_data.objects[0].y,
+    } 
+    formatted_path_array.push(path_data2);
+  }
+
+  return formatted_path_array;
+}
+
 module.exports.load_bedroom_map = () => {
   
   const bedroom_room_tiled_data = require('./bedroom/level_data/bedroom_level_data.json');
@@ -149,14 +164,16 @@ module.exports.load_bedroom_map = () => {
   
   init_enemies_container();
 
-  create_enemy_at_location(100, 100)
-  .then(sprite => {
-    sight_line(sprite);
-    influence_box(sprite);
-    pathing(sprite, bedroom_room_tiled_data.layers[2]);
-  })
+  const sprite = create_enemy_at_location(100, 100)
+  sight_line(sprite);
+  influence_box(sprite);
 
+  const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
+  
+  move_sprite_on_path(sprite, formatted_path_data)
 }
+
+
 
 
 // const grid_center = (path, grid_line) => {
