@@ -4,7 +4,12 @@ const Viewport = require('pixi-viewport');
 const tween = require('pixi-tween');
 const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
-const debug = require('./level/debug/debug_layout.js');
+
+
+
+
+
+
 
 global.is_development = true;
 
@@ -45,6 +50,7 @@ global.loader = new PIXI.loaders.Loader();
 global.loader.use(pixiPackerParser(PIXI));
 global.loader.add('../../images/bedroom_EN_web.json');
 global.loader.load(() => {
+  const debug = require('./level/debug/debug_layout.js');
   debug.add_floor();
   const pathfinding = require('./pathfinding/pathfind_util.js');
 });
