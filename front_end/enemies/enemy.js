@@ -111,12 +111,20 @@ module.exports.pathing = (sprite, path_data) => {
   move_sprite_on_path(sprite, formatted_path_array, {});
 }
 
-
 function add_enemy_raycasting(enemy_sprite) {
 
   const aimingLine = new PIXI.Graphics();
 
-  const raycast = new PIXI.Graphics();
+  const c = document.createElement("canvas");
+  const ctx = c.getContext("2d");
+  var gradient = ctx.createLinearGradient(20,0, 220,0);
+  gradient.addColorStop(0, 'green');
+  gradient.addColorStop(.5, 'cyan');
+  gradient.addColorStop(1, 'green');
+
+  const raycast = new PIXI.Graphics()
+  raycast._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+  
   const points = (segments=>{
     const a = [];
     global.segments.forEach(seg=>a.push(seg.a,seg.b));
@@ -144,8 +152,8 @@ function add_enemy_raycasting(enemy_sprite) {
     PIXI.tweenManager.update();
     
     raycast.clear()
-    
     raycast.beginFill(0xfffffff, 0.1);
+    
     uniquePoints.forEach(elem => {
       const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
       elem.angle = angle;
@@ -203,11 +211,10 @@ function add_enemy_raycasting(enemy_sprite) {
     } else {
       enemy_sprite.sees_player = false;
     }
-    
   });
+  
   global.viewport.addChild(aimingLine);
   global.viewport.addChild(raycast)
-  
 }
 
 // walk towards player

@@ -153,7 +153,6 @@ module.exports.load_bedroom_map = () => {
   .then(sprite => {
     sight_line(sprite);
     influence_box(sprite);
-    console.log('HELLO')
     pathing(sprite, bedroom_room_tiled_data.layers[2]);
   })
 
