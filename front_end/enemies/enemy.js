@@ -49,16 +49,6 @@ function get_intersection(ray, segment){
 	};
 }
 
-function* generate_thing(i) {
-  yield i;
-  yield i+1;
-
-}
-
-let generate = generate_thing(2)
-
-console.log(generate.next())
-
 function create_knife_enemy_frames() {
   const enemy_frames = []
 
@@ -66,27 +56,6 @@ function create_knife_enemy_frames() {
     enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
   }
   return enemy_frames
-}
-
-const addToSegments = item => {
-
-  global.segments.push(
-      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
-  )
-}
-
-const create_a_segment = item => {
-
-  return [
-    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
-  ]
-  
 }
 
 function create_enemy_at_location(x, y) {
@@ -164,12 +133,10 @@ function create_enemy_at_location(x, y) {
   enemy_sprite.add_raycasting = function () {
 
     const raycast = new PIXI.Graphics()
-    // const influence_box = this.getChildByName('influence_box')
-    // addToSegments(influence_box)
 
-    const points = (segments=>{
+    const points = (segments => {
       const a = [];
-      global.segments.forEach(seg=>a.push(seg.a,seg.b));
+      global.segments.forEach(seg => a.push(seg.a,seg.b));
       return a;
     })(segments);
   
@@ -233,9 +200,6 @@ function create_enemy_at_location(x, y) {
         };
   
         let closest_intersect = null;
-        // influence_box.getBounds()
-        // global.segments[0] = create_a_segment(influence_box.getBounds())[0];
-        // global.segments[0] = create_a_segment(influence_box.getBounds());
         for(let i=0; i < global.segments.length; i++){
           const intersect = get_intersection(ray, global.segments[i]);
           if(!intersect) continue;
@@ -257,7 +221,6 @@ function create_enemy_at_location(x, y) {
   
       // const player_sprite = global.Player.sprite;
       // const player_position = player_sprite.getGlobalPosition();
-  
       // if(this.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
       //   action_on_seeing_player(this, player_sprite);
       //   player_seen = true;

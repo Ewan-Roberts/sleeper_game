@@ -38,7 +38,7 @@ function create_level_grid(tiles_object) {
       line_grid = [];
       binary_line = [];
 
-      current_y +=  grid_dimension;
+      current_y += grid_dimension;
       current_x = 0;
       current_grid_x = 0;
       current_grid_y += 1;
@@ -46,11 +46,11 @@ function create_level_grid(tiles_object) {
     current_x += grid_dimension;
     current_grid_x += 1;
 
-    grid_cell.width = grid_dimension;
-    grid_cell.height = grid_dimension;
-    grid_cell.x = current_x;
-    grid_cell.y = current_y;
-    grid_cell.middle = {
+    grid_cell.width   = grid_dimension;
+    grid_cell.height  = grid_dimension;
+    grid_cell.x       = current_x;
+    grid_cell.y       = current_y;
+    grid_cell.middle  = {
       x: grid_cell.x + grid_dimension/2,
       y: grid_cell.y + grid_dimension/2,
     };
@@ -71,6 +71,7 @@ function create_level_grid(tiles_object) {
 
     grid_container.addChild(grid_cell);
   }
+
   //TODO remove into an easystar function
   global.viewport.addChild(grid_container);
   global.easystar.setGrid(binary_grid_map);
@@ -79,15 +80,16 @@ function create_level_grid(tiles_object) {
 }
 
 function get_sprite_position_on_grid(sprite, container) {
-  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid';
+  if(!container) throw 'gimme a container';
 
-  // TODO: throw `${sprite.tag} not on grid`
   const grid_containing_sprite = container.find(grid => (
     grid.containsPoint(sprite.getGlobalPosition())
   ));
 
   if(grid_containing_sprite){
     return grid_containing_sprite;
+  } else {
+    throw `${sprite.tag} not on grid`
   }
 }
 
@@ -113,7 +115,9 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
   });
 }
 
-const distance_between_two_points = (point_one, point_two) => Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
+const distance_between_two_points = (point_one, point_two) => {
+  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y)
+};
 
 const generate_wait_time_with_threshold = (max, threshold) => {
 
@@ -159,7 +163,6 @@ function move_sprite_on_path(sprite, path_array) {
     },500);
 
     for (let i = 1; i < path_array.length; i++) {
-      //TODO
       const angle_to_face = Math.atan2(path_array[i].middle.y - path_array[i-1].middle.y, path_array[i].middle.x - path_array[i-1].middle.x);
 
       tween.to({
@@ -168,6 +171,7 @@ function move_sprite_on_path(sprite, path_array) {
         rotation: angle_to_face,
       }, walk_time);
     }
+
     tween.call(()=>resolve());
   });
 }
@@ -187,53 +191,14 @@ function move_enemy_to_point(sprite, point) {
         y: point.middle.y,
       }, walk_time, createjs.Ease.sineInOut);
 
-    tween.call(()=>{
-      resolve();
-    });
+    tween.call(()=>resolve());
   });
 }
 
-function continue_sprite_on_default_path(sprite) {
-  console.log(sprite);
-  const tween = sprite.path;
-
-  for (let i = 0; i < sprite.path.length; i++) {
-    // TODO
-    const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
-
-    const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
-
-    const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-
-    let angle_iterator = i + 1;
-
-    // TODO: you're a monster
-    if(sprite.path[i+1] === undefined) {
-      angle_iterator = 0;
-    }
-
-    //TODO stop  spinning 360, minus it from the factorial
-    const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
-
-    tween.to({
-      x:sprite.path[i].x +50,
-      y:sprite.path[i].y +50,
-    }, walk_time, createjs.Ease.sineInOut)
-      .wait(random_wait_time_with_threshold)
-      .to({
-        rotation: angle_to_face,
-      }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-      .wait(random_wait_time_with_threshold);
-  }
-  tween.call(()=>{
-    console.log('end of tween');
-  });
-
-}
 
 let boolean_time = true;
 
-function path_enemy_on_points(sprite, point_array, options) {
+function path_enemy_on_points(enemy_sprite, point_array, options) {
   if( boolean_time === false ) return;
 
   boolean_time = false;
@@ -247,11 +212,12 @@ function path_enemy_on_points(sprite, point_array, options) {
   ));
 
   // move from the current position to the start of the path
-  move_enemy_to_point(sprite, path_array[0])
-    .then(() => move_sprite_on_path(sprite, path_array))
-    .then(() => look_around_sprite(sprite, 6000, 1))
-    .then(() => move_sprite_on_path(sprite, path_array.reverse()))
-    .then(() => move_sprite_on_route(sprite))
+  move_enemy_to_point(enemy_sprite, path_array[0])
+    .then(() => move_sprite_on_path(enemy_sprite, path_array))
+    .then(() => wait_sprite(enemy_sprite, 500))
+    .then(() => look_around_sprite(enemy_sprite, 6000, 1))
+    .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
+    .then(() => move_sprite_on_route(enemy_sprite))
 
 }
 
@@ -352,7 +318,6 @@ function run_pathfinding_test() {
 }
 
 setInterval(()=>{
-  console.log('find');
   // highlight_start_grid()
 
   run_pathfinding_test();
@@ -360,6 +325,42 @@ setInterval(()=>{
 
 
 
+// function continue_sprite_on_default_path(sprite) {
+//   const tween = sprite.path;
+
+//   for (let i = 0; i < sprite.path.length; i++) {
+//     // TODO
+//     const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
+
+//     const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
+
+//     const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
+
+//     let angle_iterator = i + 1;
+
+//     // TODO: you're a monster
+//     if(sprite.path[i+1] === undefined) {
+//       angle_iterator = 0;
+//     }
+
+//     //TODO stop  spinning 360, minus it from the factorial
+//     const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
+
+//     tween.to({
+//       x:sprite.path[i].x +50,
+//       y:sprite.path[i].y +50,
+//     }, walk_time, createjs.Ease.sineInOut)
+//       .wait(random_wait_time_with_threshold)
+//       .to({
+//         rotation: angle_to_face,
+//       }, random_wait_time_with_minimum, createjs.Ease.backInOut)
+//       .wait(random_wait_time_with_threshold);
+//   }
+//   tween.call(()=>{
+//     console.log('end of tween');
+//   });
+
+// }
 
 
 
