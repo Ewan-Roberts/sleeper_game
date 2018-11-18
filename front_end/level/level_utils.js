@@ -167,10 +167,6 @@ module.exports.load_bedroom_map = () => {
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
   sprite.patrol_path = formatted_path_data;
 }
-
-
-
-
 // const grid_center = (path, grid_line) => {
 //   let grid_centers = [];
 //   for (let i = 0; i < path.length; i++) {
