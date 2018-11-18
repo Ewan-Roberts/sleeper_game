@@ -4,6 +4,8 @@ const server = require('http').Server(app);
 const port = process.env.PORT || 3000;
 const io = require('socket.io')(server, {});
 
+const environment = 'dev';
+
 app.use(express.static('./public'));
 
 app.get('/', (req, res) => {

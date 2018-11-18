@@ -5,12 +5,6 @@ const tween = require('pixi-tween');
 const Layer = require('pixi-layers');
 const pixiPackerParser = require('pixi-packer-parser');
 
-
-
-
-
-
-
 global.is_development = true;
 
 global.socket = io.connect();
@@ -30,10 +24,10 @@ global.app = new PIXI.Application({
 global.document.body.appendChild(global.app.view);
 
 global.viewport = new Viewport({
-  screenWidth: global.window.innerWidth,
+  screenWidth:  global.window.innerWidth,
   screenHeight: global.window.innerHeight,
-  worldWidth: global.window.innerWidth,
-  worldHeight: global.window.innerHeight,
+  worldWidth:   global.window.innerWidth,
+  worldHeight:  global.window.innerHeight,
 });
 
 global.app.stage.addChild(global.viewport);

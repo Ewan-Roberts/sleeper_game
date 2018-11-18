@@ -4,8 +4,8 @@
   "description": "socket game",
   "main": "app.js",
   "scripts": {
-    "watch": "watchify front_end/index.js -o ./public/js/bundle.js", 
-    "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.min.js --compress --mangle",
+    "watch": "watchify front_end/index.js -o ./public/js/bundle.js",
+    "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.js --compress --mangle",
     "start": "nodemon server",
     "spritesheet": "pixi-packer ./scripts/images.js public/images/",
     "watch:js": "coffee -c -b -w -o ./ src/",
@@ -33,13 +33,13 @@
     "socket.io-client": "2.1.1"
   },
   "devDependencies": {
-    "eslint": "5.7.0",
+    "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-node": "7.0.1",
-    "eslint-plugin-promise": "4.0.1",
-    "eslint-plugin-standard": "4.0.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "gulp": "4.0.0",
     "npm-run-all": "3.1.1"
   }

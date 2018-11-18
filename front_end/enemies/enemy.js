@@ -7,7 +7,8 @@ const { createjs } = require('@createjs/tweenjs');
 const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
 
-module.exports.init_enemies_container = () => {
+// this has to go
+function init_enemies_container() {
   global.viewport.addChild(enemy_container);
 }
 
@@ -48,40 +49,15 @@ function get_intersection(ray, segment){
 	};
 }
 
-function create_enemy_sight_line(sprite) {
-  const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
+function* generate_thing(i) {
+  yield i;
+  yield i+1;
 
-  sight_line_box.name = 'sight_line';
-  sight_line_box.width = 3000;
-  sight_line_box.height = 600;
-  sight_line_box.anchor.y = 0.5;
-  sight_line_box.alpha = 0.2;
-  
-  if(global.is_development) {
-    sight_line_box.alpha = 0.2;
-  } else {
-    sight_line_box.alpha = 0;
-  }
-
-  sprite.addChild(sight_line_box);
 }
 
-function create_enemy_influence_box(sprite) {
-  const influence_box = PIXI.Sprite.fromFrame('black_dot');
+let generate = generate_thing(2)
 
-  influence_box.name = 'influence_box';
-  influence_box.width = 2000;
-  influence_box.height = 2000;
-
-  if(global.is_development) {
-    influence_box.alpha = 0.4;
-  } else {
-    influence_box.alpha = 0;
-  }
-  
-  influence_box.anchor.set(0.5);
-  sprite.addChild(influence_box);
-}
+console.log(generate.next())
 
 function create_knife_enemy_frames() {
   const enemy_frames = []
@@ -92,7 +68,28 @@ function create_knife_enemy_frames() {
   return enemy_frames
 }
 
-module.exports.create_enemy_at_location = (x, y) => {
+const addToSegments = item => {
+
+  global.segments.push(
+      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+  )
+}
+
+const create_a_segment = item => {
+
+  return [
+    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
+  ]
+  
+}
+
+function create_enemy_at_location(x, y) {
 
   const enemy_frames = create_knife_enemy_frames();
 
@@ -111,168 +108,214 @@ module.exports.create_enemy_at_location = (x, y) => {
     status: 'alive',
   }
 
-  // TODO make class 
-  add_enemy_raycasting(enemy_sprite)
-  create_enemy_sight_line(enemy_sprite)
-  create_enemy_influence_box(enemy_sprite)
+  enemy_sprite.add_sight_line = function() {
+    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
+
+    sight_line_box.name = 'sight_line';
+    sight_line_box.width = 3000;
+    sight_line_box.height = 600;
+    sight_line_box.anchor.y = 0.5;
+    sight_line_box.alpha = 0.2;
+    
+    if(global.is_development) {
+      sight_line_box.alpha = 0.2;
+    } else {
+      sight_line_box.alpha = 0;
+    }
+    this.addChild(sight_line_box);
+  }
+  
+  enemy_sprite.add_influence_box = function () {
+    const influence_box = PIXI.Sprite.fromFrame('black_dot');
+
+    influence_box.name = 'influence_box';
+    influence_box.width = 2000;
+    influence_box.height = 2000;
+  
+    if(global.is_development) {
+      influence_box.alpha = 0.4;
+    } else {
+      influence_box.alpha = 0;
+    }
+    
+    influence_box.anchor.set(0.5);
+    this.addChild(influence_box);
+  }
+
+  enemy_sprite.stop_and_shoot_player = function(player_sprite) {
+    this.path.paused = true;
+    if(!shot) {
+      bow_helper.arrow_shoot_from_sprite_to_sprite(this, player_sprite)
+      shot = true;
+    }
+  }
+
+  enemy_sprite.create_direction_line = function () {
+    const direction_line = PIXI.Sprite.fromFrame('black_dot');
+
+    direction_line.width = 200;
+    direction_line.height = 15;
+    direction_line.anchor.x =0
+    direction_line.anchor.y =0.5
+
+    this.addChild(direction_line);
+  }
+
+  enemy_sprite.add_raycasting = function () {
+
+    const raycast = new PIXI.Graphics()
+    // const influence_box = this.getChildByName('influence_box')
+    // addToSegments(influence_box)
+
+    const points = (segments=>{
+      const a = [];
+      global.segments.forEach(seg=>a.push(seg.a,seg.b));
+      return a;
+    })(segments);
+  
+    const unique_points = (points=>{
+      const set = {};
+      return points.filter(p=>{
+        const key = p.x+","+p.y;
+        if(key in set){
+          return false;
+        }
+        else{
+          set[key]=true;
+          return true;
+        }
+      });
+    })(points);
+    
+    const light = PIXI.Sprite.fromFrame('light_gradient');
+    light.anchor.set(0.5)
+    light.width =6000
+    light.height =6000
+  
+    light.alpha = 0.2
+    if(global.is_development) {
+      // things
+    } else {
+      light.mask = raycast
+      light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+    }
+    
+    this.addChild(light);
+    
+    global.app.ticker.add(delta => {
+      
+      const unique_angles = [];
+      let intersects = [];
+      PIXI.tweenManager.update();
+      
+      raycast.clear()
+      raycast.beginFill(0xfffffff, 0.05);
+  
+      unique_points.forEach(elem => {
+        const angle = Math.atan2(elem.y - this.y, elem.x - this.x);
+        elem.angle = angle;
+        unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
+      })
+  
+      for(let k=0; k < unique_angles.length; k++){
+        const angle = unique_angles[k];
+        const dx = Math.cos(angle);
+        const dy = Math.sin(angle);
+        const ray = {
+          a: {
+            x: this.x, 
+            y: this.y
+          },
+          b: {
+            x: this.x + dx,
+            y: this.y + dy
+          }
+        };
+  
+        let closest_intersect = null;
+        // influence_box.getBounds()
+        // global.segments[0] = create_a_segment(influence_box.getBounds())[0];
+        // global.segments[0] = create_a_segment(influence_box.getBounds());
+        for(let i=0; i < global.segments.length; i++){
+          const intersect = get_intersection(ray, global.segments[i]);
+          if(!intersect) continue;
+          if(!closest_intersect || intersect.param<closest_intersect.param){
+            closest_intersect = intersect;
+          }
+        }
+        if(!closest_intersect) continue;
+  
+        closest_intersect.angle = angle;
+        intersects.push(closest_intersect);
+      }
+      intersects = intersects.sort((a,b) => a.angle - b.angle);
+      raycast.moveTo(intersects[0].x, intersects[0].y);
+      raycast.lineStyle(0.5, 0xffd900, 5);
+      for (let i = 1; i < intersects.length; i++) {
+        raycast.lineTo(intersects[i].x, intersects[i].y); 
+      }
+  
+      // const player_sprite = global.Player.sprite;
+      // const player_position = player_sprite.getGlobalPosition();
+  
+      // if(this.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+      //   action_on_seeing_player(this, player_sprite);
+      //   player_seen = true;
+      //   console.log(global.viewport)
+      // } else {
+      //   if(player_seen) {
+      //     pathfind_from_enemy_to_player(this, player_sprite)
+      //   }
+      // }
+    });
+    
+    global.viewport.addChild(raycast)
+  }
+
+  enemy_sprite.kill_enemy = function () {
+    this.stop();
+    const tween = createjs.Tween.get(this);
+    tween.pause();
+    this.vitals.status = 'dead';
+    put_blood_splatter_under_sprite(enemy_sprite);
+  }
+
+  enemy_sprite.tween_enemy_to_player = function() {
+    const player =  global.Player.sprite;
+  
+    createjs.Tween.get(this)
+    .to({
+      x:player.x,
+      y:player.y,
+      rotation: get_angle_from_point_to_point(this, player),
+    },2000)
+    .wait(500)
+  }
+
+  
+  enemy_sprite.add_sight_line();
+  enemy_sprite.add_influence_box();
+  enemy_sprite.create_direction_line();
+
+  enemy_sprite.add_raycasting(enemy_sprite)
   enemy_container.addChild(enemy_sprite);
 
   return enemy_sprite;
 };
 
-function add_enemy_raycasting(enemy_sprite) {
-
-  const raycast = new PIXI.Graphics()
-  
-  const points = (segments=>{
-    const a = [];
-    global.segments.forEach(seg=>a.push(seg.a,seg.b));
-    return a;
-  })(segments);
-
-  const unique_points = (points=>{
-    const set = {};
-    return points.filter(p=>{
-      const key = p.x+","+p.y;
-      if(key in set){
-        return false;
-      }
-      else{
-        set[key]=true;
-        return true;
-      }
-    });
-  })(points);
-  
-  const light = PIXI.Sprite.fromFrame('light_gradient');
-  light.anchor.set(0.5)
-  light.width =6000
-  light.height =6000
-
-  light.alpha = 0.2
-  if(global.is_development) {
-    // things
-  } else {
-    light.mask = raycast
-    light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-  }
-  
-  enemy_sprite.addChild(light);
-  
-  global.app.ticker.add(delta => {
-    
-    const unique_angles = [];
-    let intersects = [];
-    PIXI.tweenManager.update();
-    
-    raycast.clear()
-    raycast.beginFill(0xfffffff, 0.05);
-
-    unique_points.forEach(elem => {
-      const angle = Math.atan2(elem.y - enemy_sprite.y, elem.x - enemy_sprite.x);
-      elem.angle = angle;
-      unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
-    })
-
-    for(let k=0; k < unique_angles.length; k++){
-      const angle = unique_angles[k];
-      const dx = Math.cos(angle);
-      const dy = Math.sin(angle);
-      const ray = {
-        a: {
-          x: enemy_sprite.x, 
-          y: enemy_sprite.y
-        },
-        b: {
-          x: enemy_sprite.x + dx,
-          y: enemy_sprite.y + dy
-        }
-      };
-
-      let closest_intersect = null;
-
-      for(let i=0; i < global.segments.length; i++){
-        const intersect = get_intersection(ray, global.segments[i]);
-        if(!intersect) continue;
-        if(!closest_intersect || intersect.param<closest_intersect.param){
-          closest_intersect = intersect;
-        }
-      }
-      if(!closest_intersect) continue;
-
-      closest_intersect.angle = angle;
-      intersects.push(closest_intersect);
-    }
-    intersects = intersects.sort((a,b) => a.angle - b.angle);
-    raycast.moveTo(intersects[0].x, intersects[0].y);
-    raycast.lineStyle(0.5, 0xffd900, 5);
-    for (let i = 1; i < intersects.length; i++) {
-      raycast.lineTo(intersects[i].x, intersects[i].y); 
-    }
-
-    const player_sprite = global.Player.sprite;
-    const player_position = player_sprite.getGlobalPosition();
-
-    if(enemy_sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      action_on_seeing_player(enemy_sprite, player_sprite);
-      player_seen = true;
-    } else {
-      if(player_seen) {
-        pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
-      }
-    }
-
-    
-
-  });
-  
-  global.viewport.addChild(raycast)
-}
-
 let shot = false;
 let player_seen = false;
 
-function stop_and_shoot_player(enemy_sprite, player_sprite) {
-
-  enemy_sprite.path.paused = true;
-  if(!shot) {
-    bow_helper.arrow_shoot_from_sprite_to_sprite(enemy_sprite, player_sprite)
-    shot = true;
-  }
-  
-
-}
-
 function action_on_seeing_player(enemy_sprite, player_sprite) {
   player_seen = true;
-  stop_and_shoot_player(enemy_sprite, player_sprite)
+  enemy_sprite.stop_and_shoot_player(player_sprite)
 
   // pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
   enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
   
 }
 
-module.exports.tween_enemy_to_player = (enemy_sprite) => {
-  const player =  global.Player.sprite;
-
-  createjs.Tween.get(enemy_sprite)
-  .to({
-    x:player.x,
-    y:player.y,
-    rotation: get_angle_from_point_to_point(enemy_sprite, player),
-  },2000)
-  .wait(500)
-}
-
-module.exports.kill_enemy = (enemy_sprite) => {
-  
-  enemy_sprite.stop()
-  enemy_sprite.path.paused = true;
-  enemy_sprite.vitals.status = 'dead';
-  put_blood_splatter_under_sprite(enemy_sprite);
-}
-
-module.exports.point_hits_enemy_in_container = (point) => {
+function point_hits_enemy_in_container(point) {
   
   for (let i = 0; i < enemy_container.children.length; i++) {
     const enemy_in_container = enemy_container.children[i];
@@ -283,7 +326,8 @@ module.exports.point_hits_enemy_in_container = (point) => {
   }
 }
 
-// TODO move to helper function
-module.exports.get_first_enemy_in_container = () => {
-  return enemy_container.children[0];
+module.exports = {
+  create_enemy_at_location,
+  init_enemies_container,
+  point_hits_enemy_in_container,
 }

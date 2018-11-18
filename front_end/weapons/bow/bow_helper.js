@@ -73,6 +73,7 @@ function create_arrow_tween(arrow, power, arrow_path) {
 // todo move enemy out out of global 
 module.exports.arrow_management = (power, origin, target) => {
 
+  // make oop
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
@@ -85,19 +86,18 @@ module.exports.arrow_management = (power, origin, target) => {
 
     if(hit_enemy) {
       arrow_tween.stop();
-      const arrow_in_enemy = create_embedded_arrow(arrow.rotation -=3.1);
-        
+      const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
+
       // TDOO can i retrofit this
       arrow.destroy();
       if(hit_enemy.vitals.health < 40) {
         
         if(global.is_development) {
           dialog_util.renderText(hit_enemy, 'I am dead home slice');
-
-          kill_enemy(hit_enemy);
+          hit_enemy.kill_enemy()
         } else {
           dialog_util.renderText(hit_enemy, 'I am hit');
-          kill_enemy(hit_enemy);
+          hit_enemy.kill_enemy()
           hit_enemy.destroy()
         }
       }
