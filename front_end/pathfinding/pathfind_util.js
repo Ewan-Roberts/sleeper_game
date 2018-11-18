@@ -305,6 +305,7 @@ module.exports = {
 function run_pathfinding_test() {
 
   const enemy_sprite = global.viewport.children[7].children[0];
+  console.log(global.viewport.children)
   const player_sprite = global.Player.sprite;
 
   const grid = grid_container.children;

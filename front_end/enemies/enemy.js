@@ -58,26 +58,32 @@ function create_knife_enemy_frames() {
   return enemy_frames
 }
 
-function create_enemy_at_location(x, y) {
+class Enemy {
+  constructor(x,y) {
+    const enemy_frames = create_knife_enemy_frames();
 
-  const enemy_frames = create_knife_enemy_frames();
-
-  const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-  enemy_sprite.height /= 2;
-  enemy_sprite.width /= 2;
-  enemy_sprite.anchor.set(0.5);
-  enemy_sprite.position.set(x, y);
-  enemy_sprite.animationSpeed = 0.4;
-  enemy_sprite.rotation = -0.5;
-  enemy_sprite.play();
-  enemy_sprite.tag = 'enemy';
-
-  enemy_sprite.vitals = {
-    health: 100,
-    status: 'alive',
+    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    this.sprite.height /= 2;
+    this.sprite.width /= 2;
+    this.sprite.anchor.set(0.5);
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.rotation = -0.5;
+    this.sprite.play();
+    this.sprite.tag = 'enemy';
   }
 
-  enemy_sprite.add_sight_line = function() {
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
+  add_vitals() {
+    this.sprite.vitals = {
+      health: 100,
+      status: 'alive',
+    }
+  }
+
+  add_sight_line() {
     const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
     sight_line_box.name = 'sight_line';
@@ -91,10 +97,10 @@ function create_enemy_at_location(x, y) {
     } else {
       sight_line_box.alpha = 0;
     }
-    this.addChild(sight_line_box);
+    this.sprite.addChild(sight_line_box);
   }
-  
-  enemy_sprite.add_influence_box = function () {
+
+  add_influence_box() {
     const influence_box = PIXI.Sprite.fromFrame('black_dot');
 
     influence_box.name = 'influence_box';
@@ -108,18 +114,18 @@ function create_enemy_at_location(x, y) {
     }
     
     influence_box.anchor.set(0.5);
-    this.addChild(influence_box);
+    this.sprite.addChild(influence_box);
   }
 
-  enemy_sprite.stop_and_shoot_player = function(player_sprite) {
+  stop_and_shoot_player(player_sprite) {
     this.path.paused = true;
     if(!shot) {
-      bow_helper.arrow_shoot_from_sprite_to_sprite(this, player_sprite)
+      bow_helper.arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
       shot = true;
     }
   }
 
-  enemy_sprite.create_direction_line = function () {
+  create_direction_line() {
     const direction_line = PIXI.Sprite.fromFrame('black_dot');
 
     direction_line.width = 200;
@@ -127,11 +133,10 @@ function create_enemy_at_location(x, y) {
     direction_line.anchor.x =0
     direction_line.anchor.y =0.5
 
-    this.addChild(direction_line);
+    this.sprite.addChild(direction_line);
   }
 
-  enemy_sprite.add_raycasting = function () {
-
+  add_raycasting() {
     const raycast = new PIXI.Graphics()
 
     const points = (segments => {
@@ -167,7 +172,7 @@ function create_enemy_at_location(x, y) {
       light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
     }
     
-    this.addChild(light);
+    this.sprite.addChild(light);
     
     global.app.ticker.add(delta => {
       
@@ -179,7 +184,7 @@ function create_enemy_at_location(x, y) {
       raycast.beginFill(0xfffffff, 0.05);
   
       unique_points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.y, elem.x - this.x);
+        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
         elem.angle = angle;
         unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
       })
@@ -190,12 +195,12 @@ function create_enemy_at_location(x, y) {
         const dy = Math.sin(angle);
         const ray = {
           a: {
-            x: this.x, 
-            y: this.y
+            x: this.sprite.x, 
+            y: this.sprite.y
           },
           b: {
-            x: this.x + dx,
-            y: this.y + dy
+            x: this.sprite.x + dx,
+            y: this.sprite.y + dy
           }
         };
   
@@ -231,40 +236,35 @@ function create_enemy_at_location(x, y) {
       //   }
       // }
     });
-    
     global.viewport.addChild(raycast)
   }
 
-  enemy_sprite.kill_enemy = function () {
-    this.stop();
-    const tween = createjs.Tween.get(this);
+  kill_enemy() {
+    this.sprite.stop();
+    const tween = createjs.Tween.get(this.sprite);
     tween.pause();
     this.vitals.status = 'dead';
     put_blood_splatter_under_sprite(enemy_sprite);
   }
 
-  enemy_sprite.tween_enemy_to_player = function() {
+  tween_enemy_to_player() {
+    //todo no reference to player in this function
     const player =  global.Player.sprite;
   
-    createjs.Tween.get(this)
+    createjs.Tween.get(this.sprite)
     .to({
       x:player.x,
       y:player.y,
-      rotation: get_angle_from_point_to_point(this, player),
+      rotation: get_angle_from_point_to_point(this.sprite, player),
     },2000)
     .wait(500)
   }
 
-  
-  enemy_sprite.add_sight_line();
-  enemy_sprite.add_influence_box();
-  enemy_sprite.create_direction_line();
+  add_to_container() {
+    enemy_container.addChild(this.sprite);
+  }
 
-  enemy_sprite.add_raycasting(enemy_sprite)
-  enemy_container.addChild(enemy_sprite);
-
-  return enemy_sprite;
-};
+}
 
 let shot = false;
 let player_seen = false;
@@ -290,7 +290,7 @@ function point_hits_enemy_in_container(point) {
 }
 
 module.exports = {
-  create_enemy_at_location,
   init_enemies_container,
   point_hits_enemy_in_container,
+  Enemy,
 }

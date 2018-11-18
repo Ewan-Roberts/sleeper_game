@@ -84,6 +84,8 @@ module.exports.arrow_management = (power, origin, target) => {
 
     const hit_enemy = point_hits_enemy_in_container(arrow_point);
 
+    console.log(hit_enemy);
+
     if(hit_enemy) {
       arrow_tween.stop();
       const arrow_in_enemy = create_embedded_arrow(arrow.rotation);

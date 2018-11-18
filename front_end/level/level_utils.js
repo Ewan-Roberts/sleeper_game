@@ -1,9 +1,9 @@
 const PIXI = require('pixi.js');
 const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathfind_util.js');
 const {
-  create_enemy_at_location,
   init_enemies_container,
   create_enemy_patrol_path,
+  Enemy,
 } = require('../enemies/enemy.js');
 
 // const Intersects = require('yy-intersects');
@@ -162,10 +162,21 @@ module.exports.load_bedroom_map = () => {
   
   init_enemies_container();
 
-  const sprite = create_enemy_at_location(1800, 1000)
+  // const sprite = create_enemy_at_location(1800, 1000)
+  const enemy = new Enemy();
+  enemy.set_position(1800, 1000)
+  enemy.create_direction_line()
+  enemy.add_vitals()
+  enemy.add_sight_line()
+  enemy.add_influence_box()
+  enemy.add_raycasting()
+  enemy.add_to_container()
+
+  console.log(enemy)
+  console.log('enemy')
 
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
-  sprite.patrol_path = formatted_path_data;
+  enemy.sprite.patrol_path = formatted_path_data;
 }
 // const grid_center = (path, grid_line) => {
 //   let grid_centers = [];

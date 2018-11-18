@@ -367,16 +367,6 @@ function get_intersection(ray, segment){
 	};
 }
 
-function* generate_thing(i) {
-  yield i;
-  yield i+1;
-
-}
-
-let generate = generate_thing(2)
-
-console.log(generate.next())
-
 function create_knife_enemy_frames() {
   const enemy_frames = []
 
@@ -386,47 +376,32 @@ function create_knife_enemy_frames() {
   return enemy_frames
 }
 
-const addToSegments = item => {
+class Enemy {
+  constructor(x,y) {
+    const enemy_frames = create_knife_enemy_frames();
 
-  global.segments.push(
-      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
-  )
-}
-
-const create_a_segment = item => {
-
-  return [
-    {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-    {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-    {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
-  ]
-  
-}
-
-function create_enemy_at_location(x, y) {
-
-  const enemy_frames = create_knife_enemy_frames();
-
-  const enemy_sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-  enemy_sprite.height /= 2;
-  enemy_sprite.width /= 2;
-  enemy_sprite.anchor.set(0.5);
-  enemy_sprite.position.set(x, y);
-  enemy_sprite.animationSpeed = 0.4;
-  enemy_sprite.rotation = -0.5;
-  enemy_sprite.play();
-  enemy_sprite.tag = 'enemy';
-
-  enemy_sprite.vitals = {
-    health: 100,
-    status: 'alive',
+    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    this.sprite.height /= 2;
+    this.sprite.width /= 2;
+    this.sprite.anchor.set(0.5);
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.rotation = -0.5;
+    this.sprite.play();
+    this.sprite.tag = 'enemy';
   }
 
-  enemy_sprite.add_sight_line = function() {
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
+  add_vitals() {
+    this.sprite.vitals = {
+      health: 100,
+      status: 'alive',
+    }
+  }
+
+  add_sight_line() {
     const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
     sight_line_box.name = 'sight_line';
@@ -440,10 +415,10 @@ function create_enemy_at_location(x, y) {
     } else {
       sight_line_box.alpha = 0;
     }
-    this.addChild(sight_line_box);
+    this.sprite.addChild(sight_line_box);
   }
-  
-  enemy_sprite.add_influence_box = function () {
+
+  add_influence_box() {
     const influence_box = PIXI.Sprite.fromFrame('black_dot');
 
     influence_box.name = 'influence_box';
@@ -457,18 +432,18 @@ function create_enemy_at_location(x, y) {
     }
     
     influence_box.anchor.set(0.5);
-    this.addChild(influence_box);
+    this.sprite.addChild(influence_box);
   }
 
-  enemy_sprite.stop_and_shoot_player = function(player_sprite) {
+  stop_and_shoot_player(player_sprite) {
     this.path.paused = true;
     if(!shot) {
-      bow_helper.arrow_shoot_from_sprite_to_sprite(this, player_sprite)
+      bow_helper.arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
       shot = true;
     }
   }
 
-  enemy_sprite.create_direction_line = function () {
+  create_direction_line() {
     const direction_line = PIXI.Sprite.fromFrame('black_dot');
 
     direction_line.width = 200;
@@ -476,18 +451,15 @@ function create_enemy_at_location(x, y) {
     direction_line.anchor.x =0
     direction_line.anchor.y =0.5
 
-    this.addChild(direction_line);
+    this.sprite.addChild(direction_line);
   }
 
-  enemy_sprite.add_raycasting = function () {
-
+  add_raycasting() {
     const raycast = new PIXI.Graphics()
-    // const influence_box = this.getChildByName('influence_box')
-    // addToSegments(influence_box)
 
-    const points = (segments=>{
+    const points = (segments => {
       const a = [];
-      global.segments.forEach(seg=>a.push(seg.a,seg.b));
+      global.segments.forEach(seg => a.push(seg.a,seg.b));
       return a;
     })(segments);
   
@@ -518,7 +490,7 @@ function create_enemy_at_location(x, y) {
       light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
     }
     
-    this.addChild(light);
+    this.sprite.addChild(light);
     
     global.app.ticker.add(delta => {
       
@@ -530,7 +502,7 @@ function create_enemy_at_location(x, y) {
       raycast.beginFill(0xfffffff, 0.05);
   
       unique_points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.y, elem.x - this.x);
+        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
         elem.angle = angle;
         unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
       })
@@ -541,19 +513,16 @@ function create_enemy_at_location(x, y) {
         const dy = Math.sin(angle);
         const ray = {
           a: {
-            x: this.x, 
-            y: this.y
+            x: this.sprite.x, 
+            y: this.sprite.y
           },
           b: {
-            x: this.x + dx,
-            y: this.y + dy
+            x: this.sprite.x + dx,
+            y: this.sprite.y + dy
           }
         };
   
         let closest_intersect = null;
-        // influence_box.getBounds()
-        // global.segments[0] = create_a_segment(influence_box.getBounds())[0];
-        // global.segments[0] = create_a_segment(influence_box.getBounds());
         for(let i=0; i < global.segments.length; i++){
           const intersect = get_intersection(ray, global.segments[i]);
           if(!intersect) continue;
@@ -575,7 +544,6 @@ function create_enemy_at_location(x, y) {
   
       // const player_sprite = global.Player.sprite;
       // const player_position = player_sprite.getGlobalPosition();
-  
       // if(this.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
       //   action_on_seeing_player(this, player_sprite);
       //   player_seen = true;
@@ -586,40 +554,35 @@ function create_enemy_at_location(x, y) {
       //   }
       // }
     });
-    
     global.viewport.addChild(raycast)
   }
 
-  enemy_sprite.kill_enemy = function () {
-    this.stop();
-    const tween = createjs.Tween.get(this);
+  kill_enemy() {
+    this.sprite.stop();
+    const tween = createjs.Tween.get(this.sprite);
     tween.pause();
     this.vitals.status = 'dead';
     put_blood_splatter_under_sprite(enemy_sprite);
   }
 
-  enemy_sprite.tween_enemy_to_player = function() {
+  tween_enemy_to_player() {
+    //todo no reference to player in this function
     const player =  global.Player.sprite;
   
-    createjs.Tween.get(this)
+    createjs.Tween.get(this.sprite)
     .to({
       x:player.x,
       y:player.y,
-      rotation: get_angle_from_point_to_point(this, player),
+      rotation: get_angle_from_point_to_point(this.sprite, player),
     },2000)
     .wait(500)
   }
 
-  
-  enemy_sprite.add_sight_line();
-  enemy_sprite.add_influence_box();
-  enemy_sprite.create_direction_line();
+  add_to_container() {
+    enemy_container.addChild(this.sprite);
+  }
 
-  enemy_sprite.add_raycasting(enemy_sprite)
-  enemy_container.addChild(enemy_sprite);
-
-  return enemy_sprite;
-};
+}
 
 let shot = false;
 let player_seen = false;
@@ -645,9 +608,9 @@ function point_hits_enemy_in_container(point) {
 }
 
 module.exports = {
-  create_enemy_at_location,
   init_enemies_container,
   point_hits_enemy_in_container,
+  Enemy,
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../pathfinding/pathfind_util.js":22,"../utils/sprite_helper.js":27,"../weapons/bow/bow_helper.js":29,"@createjs/tweenjs":31,"pixi.js":255}],7:[function(require,module,exports){
@@ -5647,7 +5610,6 @@ module.exports.add_floor = () => {
   const create_grid = createPad(-500, -200);
   create_grid.interactive = true;
   create_grid.alpha = 0.8;
-  create_grid.on('click', () => console.log('clicky'))
 
   global.eventTriggers.addChild(
     create_grid,
@@ -6516,9 +6478,9 @@ module.exports.load = () => {
 const PIXI = require('pixi.js');
 const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathfind_util.js');
 const {
-  create_enemy_at_location,
   init_enemies_container,
   create_enemy_patrol_path,
+  Enemy,
 } = require('../enemies/enemy.js');
 
 // const Intersects = require('yy-intersects');
@@ -6677,10 +6639,21 @@ module.exports.load_bedroom_map = () => {
   
   init_enemies_container();
 
-  const sprite = create_enemy_at_location(1800, 1000)
+  // const sprite = create_enemy_at_location(1800, 1000)
+  const enemy = new Enemy();
+  enemy.set_position(1800, 1000)
+  enemy.create_direction_line()
+  enemy.add_vitals()
+  enemy.add_sight_line()
+  enemy.add_influence_box()
+  enemy.add_raycasting()
+  enemy.add_to_container()
+
+  console.log(enemy)
+  console.log('enemy')
 
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
-  sprite.patrol_path = formatted_path_data;
+  enemy.sprite.patrol_path = formatted_path_data;
 }
 // const grid_center = (path, grid_line) => {
 //   let grid_centers = [];
@@ -6873,7 +6846,7 @@ function create_level_grid(tiles_object) {
       line_grid = [];
       binary_line = [];
 
-      current_y +=  grid_dimension;
+      current_y += grid_dimension;
       current_x = 0;
       current_grid_x = 0;
       current_grid_y += 1;
@@ -6881,11 +6854,11 @@ function create_level_grid(tiles_object) {
     current_x += grid_dimension;
     current_grid_x += 1;
 
-    grid_cell.width = grid_dimension;
-    grid_cell.height = grid_dimension;
-    grid_cell.x = current_x;
-    grid_cell.y = current_y;
-    grid_cell.middle = {
+    grid_cell.width   = grid_dimension;
+    grid_cell.height  = grid_dimension;
+    grid_cell.x       = current_x;
+    grid_cell.y       = current_y;
+    grid_cell.middle  = {
       x: grid_cell.x + grid_dimension/2,
       y: grid_cell.y + grid_dimension/2,
     };
@@ -6906,6 +6879,7 @@ function create_level_grid(tiles_object) {
 
     grid_container.addChild(grid_cell);
   }
+
   //TODO remove into an easystar function
   global.viewport.addChild(grid_container);
   global.easystar.setGrid(binary_grid_map);
@@ -6914,15 +6888,16 @@ function create_level_grid(tiles_object) {
 }
 
 function get_sprite_position_on_grid(sprite, container) {
-  if(!container) throw 'dude, gimme a container ya dumb dumb: get_point_position_on_grid';
+  if(!container) throw 'gimme a container';
 
-  // TODO: throw `${sprite.tag} not on grid`
   const grid_containing_sprite = container.find(grid => (
     grid.containsPoint(sprite.getGlobalPosition())
   ));
 
   if(grid_containing_sprite){
     return grid_containing_sprite;
+  } else {
+    throw `${sprite.tag} not on grid`
   }
 }
 
@@ -6948,7 +6923,9 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
   });
 }
 
-const distance_between_two_points = (point_one, point_two) => Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
+const distance_between_two_points = (point_one, point_two) => {
+  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y)
+};
 
 const generate_wait_time_with_threshold = (max, threshold) => {
 
@@ -6994,7 +6971,6 @@ function move_sprite_on_path(sprite, path_array) {
     },500);
 
     for (let i = 1; i < path_array.length; i++) {
-      //TODO
       const angle_to_face = Math.atan2(path_array[i].middle.y - path_array[i-1].middle.y, path_array[i].middle.x - path_array[i-1].middle.x);
 
       tween.to({
@@ -7003,6 +6979,7 @@ function move_sprite_on_path(sprite, path_array) {
         rotation: angle_to_face,
       }, walk_time);
     }
+
     tween.call(()=>resolve());
   });
 }
@@ -7022,53 +6999,14 @@ function move_enemy_to_point(sprite, point) {
         y: point.middle.y,
       }, walk_time, createjs.Ease.sineInOut);
 
-    tween.call(()=>{
-      resolve();
-    });
+    tween.call(()=>resolve());
   });
 }
 
-function continue_sprite_on_default_path(sprite) {
-  console.log(sprite);
-  const tween = sprite.path;
-
-  for (let i = 0; i < sprite.path.length; i++) {
-    // TODO
-    const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
-
-    const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
-
-    const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-
-    let angle_iterator = i + 1;
-
-    // TODO: you're a monster
-    if(sprite.path[i+1] === undefined) {
-      angle_iterator = 0;
-    }
-
-    //TODO stop  spinning 360, minus it from the factorial
-    const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
-
-    tween.to({
-      x:sprite.path[i].x +50,
-      y:sprite.path[i].y +50,
-    }, walk_time, createjs.Ease.sineInOut)
-      .wait(random_wait_time_with_threshold)
-      .to({
-        rotation: angle_to_face,
-      }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-      .wait(random_wait_time_with_threshold);
-  }
-  tween.call(()=>{
-    console.log('end of tween');
-  });
-
-}
 
 let boolean_time = true;
 
-function path_enemy_on_points(sprite, point_array, options) {
+function path_enemy_on_points(enemy_sprite, point_array, options) {
   if( boolean_time === false ) return;
 
   boolean_time = false;
@@ -7082,11 +7020,12 @@ function path_enemy_on_points(sprite, point_array, options) {
   ));
 
   // move from the current position to the start of the path
-  move_enemy_to_point(sprite, path_array[0])
-    .then(() => move_sprite_on_path(sprite, path_array))
-    .then(() => look_around_sprite(sprite, 6000, 1))
-    .then(() => move_sprite_on_path(sprite, path_array.reverse()))
-    .then(() => move_sprite_on_route(sprite))
+  move_enemy_to_point(enemy_sprite, path_array[0])
+    .then(() => move_sprite_on_path(enemy_sprite, path_array))
+    .then(() => wait_sprite(enemy_sprite, 500))
+    .then(() => look_around_sprite(enemy_sprite, 6000, 1))
+    .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
+    .then(() => move_sprite_on_route(enemy_sprite))
 
 }
 
@@ -7174,6 +7113,7 @@ module.exports = {
 function run_pathfinding_test() {
 
   const enemy_sprite = global.viewport.children[7].children[0];
+  console.log(global.viewport.children)
   const player_sprite = global.Player.sprite;
 
   const grid = grid_container.children;
@@ -7187,7 +7127,6 @@ function run_pathfinding_test() {
 }
 
 setInterval(()=>{
-  console.log('find');
   // highlight_start_grid()
 
   run_pathfinding_test();
@@ -7195,6 +7134,42 @@ setInterval(()=>{
 
 
 
+// function continue_sprite_on_default_path(sprite) {
+//   const tween = sprite.path;
+
+//   for (let i = 0; i < sprite.path.length; i++) {
+//     // TODO
+//     const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
+
+//     const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
+
+//     const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
+
+//     let angle_iterator = i + 1;
+
+//     // TODO: you're a monster
+//     if(sprite.path[i+1] === undefined) {
+//       angle_iterator = 0;
+//     }
+
+//     //TODO stop  spinning 360, minus it from the factorial
+//     const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
+
+//     tween.to({
+//       x:sprite.path[i].x +50,
+//       y:sprite.path[i].y +50,
+//     }, walk_time, createjs.Ease.sineInOut)
+//       .wait(random_wait_time_with_threshold)
+//       .to({
+//         rotation: angle_to_face,
+//       }, random_wait_time_with_minimum, createjs.Ease.backInOut)
+//       .wait(random_wait_time_with_threshold);
+//   }
+//   tween.call(()=>{
+//     console.log('end of tween');
+//   });
+
+// }
 
 
 
@@ -8016,6 +7991,8 @@ module.exports.arrow_management = (power, origin, target) => {
     const arrow_point = arrow.getGlobalPosition()
 
     const hit_enemy = point_hits_enemy_in_container(arrow_point);
+
+    console.log(hit_enemy);
 
     if(hit_enemy) {
       arrow_tween.stop();
