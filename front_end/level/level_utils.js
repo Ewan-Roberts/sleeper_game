@@ -1,12 +1,10 @@
 const PIXI = require('pixi.js');
-const { create_level_grid, move_sprite_on_path } = require('../pathfinding/pathfind_util.js');
+const { create_level_grid } = require('../pathfinding/pathfind_util.js');
 const {
   init_enemies_container,
-  create_enemy_patrol_path,
   Enemy,
 } = require('../enemies/enemy.js');
 
-// const Intersects = require('yy-intersects');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -27,49 +25,6 @@ module.exports.clearEventTriggers = () => {
   for (let i = global.eventTriggers.children.length - 1; i >= 0; i -= 1) {
     global.eventTriggers.removeChild(global.eventTriggers.children[i]);
   }
-};
-
-global.segments = [];
-
-const addToSegments = item => {
-
-  global.segments.push(
-      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
-  )
-}
-
-function render_background_segment(tiles_object) {
-
-  const background_image = {
-    x: 0,
-    y: 0,
-    height: tiles_object.imageheight,
-    width:  tiles_object.imagewidth,
-  }
-  addToSegments(background_image)
-
-}
-
-function render_wall (wall_array, tiles_object, options) {
-  
-  render_background_segment(tiles_object)
-  
-  wall_array.objects.forEach((wall_data) => {
-    const wall = PIXI.Sprite.fromFrame('black_dot');
-
-    wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
-    wall.width = wall_data.width;
-    wall.height = wall_data.height;
-
-    addToSegments(wall)
-
-    global.collisionItems.addChild(wall);
-
-  });
-  global.viewport.addChild(global.collisionItems);
 };
 
 // hit area that is transparent, kept a little tint for testing
@@ -110,6 +65,17 @@ class Level {
   constructor(level_data, level_tiles) {
     this.level_data = level_data;
     this.level_tiles = level_tiles;
+    this.segments = [];
+  }
+
+  add_to_segments(item) {
+
+    this.segments.push(
+        {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+        {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
+    )
   }
 
   set_background_image(image, x, y) {
@@ -121,7 +87,7 @@ class Level {
     this.background_image.width = this.level_tiles.imagewidth;
     this.background_image.height = this.level_tiles.imageheight;  
     
-    addToSegments(this.background_image);
+    this.add_to_segments(this.background_image);
     global.viewport.addChild(this.background_image);
   }
 
@@ -135,36 +101,34 @@ class Level {
       wall.width = wall_data.width;
       wall.height = wall_data.height;
   
-      addToSegments(wall)
+      this.add_to_segments(wall)
   
       global.collisionItems.addChild(wall);
-  
     });
-    global.viewport.addChild(global.collisionItems);
 
+    global.viewport.addChild(global.collisionItems);
   }
 
   create_grid() {
     this.grid = create_level_grid(this.level_tiles);
   }
 
-  create_enemies() {
-    
+  create_enemy(x, y) {
+    //TODO
     init_enemies_container();
 
     const enemy = new Enemy();
-    // bundle up
-    enemy.set_position(1800, 1000)
-    enemy.create_direction_line()
-    enemy.add_vitals()
-    enemy.add_sight_line()
-    enemy.add_influence_box()
-    enemy.create_light()
-    enemy.add_raycasting()
-    enemy.add_to_container()
+    enemy.set_position(x, y);
+    enemy.create_direction_line();
+    enemy.add_vitals();
+    enemy.add_sight_line();
+    enemy.add_influence_box();
+    enemy.create_light();
+    enemy.add_raycasting(this.segments);
+    enemy.add_to_container();
     
-    const formatted_path_data = format_path_data(this.level_data.layers[2])
-    enemy.sprite.patrol_path = formatted_path_data;
+    const formatted_path_data = format_path_data(this.level_data.layers[2]);
+    enemy.create_patrol_path(formatted_path_data);
   }
 
 }
@@ -174,14 +138,20 @@ module.exports.load_debug_map_image = () => {
   const debug_room_tiled_data = require('./debug/playground/map2_output.json');
   const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-  debug_room_image.position.set(0,0);
-  debug_room_image.width = debug_room_tiled_tiles.imagewidth;
-  debug_room_image.height = debug_room_tiled_tiles.imageheight;
 
-  global.viewport.addChild(debug_room_image);
-  render_wall(debug_room_tiled_data.layers[1].objects, debug_room_tiled_tiles);
-  create_level_grid(debug_room_tiled_tiles)
+  const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
 
+  const options = {
+    wall_offset: {
+      x: 0,
+      y: 0,
+    }
+  }
+
+  debug_room.set_background_image(debug_room_image, 0, 0);
+  debug_room.render_walls(options);
+  debug_room.create_grid();
+  // debug_room.create_enemies();
 }
 
 function format_path_data(path_data){
@@ -219,23 +189,5 @@ module.exports.load_bedroom_map = () => {
   bedroom.set_background_image(bedroom_room_image, 100, 0);
   bedroom.render_walls(options);
   bedroom.create_grid();
-  bedroom.create_enemies();
-
+  bedroom.create_enemy(1800, 1000);
 }
-// const grid_center = (path, grid_line) => {
-//   let grid_centers = [];
-//   for (let i = 0; i < path.length; i++) {
-//     const position = path[i];
-
-//     const block_found = grid_line[position.y][position.x];
-    
-//     //TODO for testing
-//     block_found.alpha = 0.3;
-
-//     grid_centers.push({
-//       x: block_found.x + (debug_room_tiled_tiles.tilewidth/2), 
-//       y: block_found.y + (debug_room_tiled_tiles.tileheight/2)
-//     })
-//   }
-//   return grid_centers;
-// }

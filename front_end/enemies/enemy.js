@@ -125,6 +125,12 @@ class Enemy {
     }
   }
 
+  create_patrol_path(path_data) {
+
+    this.sprite.patrol_path = path_data;
+
+  }
+
   create_direction_line() {
     const direction_line = PIXI.Sprite.fromFrame('black_dot');
 
@@ -138,7 +144,7 @@ class Enemy {
     } else {
       direction_line.alpha = 0;
     }
-    
+
     this.sprite.addChild(direction_line);
   }
 
@@ -154,11 +160,11 @@ class Enemy {
     this.sprite.addChild(light);
   }
 
-  add_raycasting() {
+  add_raycasting(level_segments) {
     const raycast = new PIXI.Graphics()
     
     const points = [];
-    global.segments.forEach(seg => points.push(seg.a,seg.b));
+    level_segments.forEach(seg => points.push(seg.a,seg.b));
 
     if(global.is_development) {
       // things
@@ -197,8 +203,8 @@ class Enemy {
         };
   
         let closest_intersect = null;
-        for(let i=0; i < global.segments.length; i++){
-          const intersect = get_intersection(ray, global.segments[i]);
+        for(let i=0; i < level_segments.length; i++){
+          const intersect = get_intersection(ray, level_segments[i]);
           if(!intersect) continue;
           if(!closest_intersect || intersect.param<closest_intersect.param){
             closest_intersect = intersect;
