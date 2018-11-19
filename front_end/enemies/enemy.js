@@ -132,7 +132,13 @@ class Enemy {
     direction_line.height = 15;
     direction_line.anchor.x =0
     direction_line.anchor.y =0.5
-
+    
+    if(global.is_development) {
+      //nothing
+    } else {
+      direction_line.alpha = 0;
+    }
+    
     this.sprite.addChild(direction_line);
   }
 
