@@ -367,18 +367,9 @@ function get_intersection(ray, segment){
 	};
 }
 
-function create_knife_enemy_frames() {
-  const enemy_frames = []
-
-  for (let i = 0; i < 19; i++) {
-    enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-  }
-  return enemy_frames
-}
-
 class Enemy {
   constructor() {
-    const enemy_frames = create_knife_enemy_frames();
+    const enemy_frames = this.create_knife_enemy_frames();
 
     this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
     this.sprite.height /= 2;
@@ -392,6 +383,15 @@ class Enemy {
 
   set_position(x,y) {
     this.sprite.position.set(x, y);
+  }
+
+  create_knife_enemy_frames() {
+    const enemy_frames = []
+  
+    for (let i = 0; i < 19; i++) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+    }
+    return enemy_frames
   }
 
   add_vitals() {
