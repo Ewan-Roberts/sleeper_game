@@ -2,7 +2,7 @@
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
 const dialog_util = require('../../dialog/dialog_util.js');
-const { kill_enemy, point_hits_enemy_in_container } = require('../../enemies/enemy.js');
+const { point_hits_enemy_in_container } = require('../../enemies/enemy.js');
 
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
@@ -96,10 +96,10 @@ module.exports.arrow_management = (power, origin, target) => {
         
         if(global.is_development) {
           dialog_util.renderText(hit_enemy, 'I am dead home slice');
-          hit_enemy.kill_enemy()
+          hit_enemy.kill()
         } else {
           dialog_util.renderText(hit_enemy, 'I am hit');
-          hit_enemy.kill_enemy()
+          hit_enemy.kill()
           hit_enemy.destroy()
         }
       }

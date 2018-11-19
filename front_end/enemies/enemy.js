@@ -59,7 +59,7 @@ function create_knife_enemy_frames() {
 }
 
 class Enemy {
-  constructor(x,y) {
+  constructor() {
     const enemy_frames = create_knife_enemy_frames();
 
     this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
@@ -136,57 +136,43 @@ class Enemy {
     this.sprite.addChild(direction_line);
   }
 
+  create_light() {
+    const light = PIXI.Sprite.fromFrame('light_gradient');
+    light.name = 'light';
+
+    light.anchor.set(0.5);
+    light.width   = 6000;
+    light.height  = 6000;
+    light.alpha   = 0.2;
+
+    this.sprite.addChild(light);
+  }
+
   add_raycasting() {
     const raycast = new PIXI.Graphics()
-
-    const points = (segments => {
-      const a = [];
-      global.segments.forEach(seg => a.push(seg.a,seg.b));
-      return a;
-    })(segments);
-  
-    const unique_points = (points=>{
-      const set = {};
-      return points.filter(p=>{
-        const key = p.x+","+p.y;
-        if(key in set){
-          return false;
-        }
-        else{
-          set[key]=true;
-          return true;
-        }
-      });
-    })(points);
     
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.anchor.set(0.5)
-    light.width =6000
-    light.height =6000
-  
-    light.alpha = 0.2
+    const points = [];
+    global.segments.forEach(seg => points.push(seg.a,seg.b));
+
     if(global.is_development) {
       // things
     } else {
+      const light = this.sprite.getChildByName('light');
       light.mask = raycast
       light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
     }
     
-    this.sprite.addChild(light);
-    
-    global.app.ticker.add(delta => {
-      
+    global.app.ticker.add(() => {
       const unique_angles = [];
       let intersects = [];
-      PIXI.tweenManager.update();
       
       raycast.clear()
       raycast.beginFill(0xfffffff, 0.05);
   
-      unique_points.forEach(elem => {
+      points.forEach(elem => {
         const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
         elem.angle = angle;
-        unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
+        unique_angles.push(angle - 0.00001, angle + 0.00001);
       })
   
       for(let k=0; k < unique_angles.length; k++){
@@ -217,9 +203,11 @@ class Enemy {
         closest_intersect.angle = angle;
         intersects.push(closest_intersect);
       }
+
       intersects = intersects.sort((a,b) => a.angle - b.angle);
-      raycast.moveTo(intersects[0].x, intersects[0].y);
-      raycast.lineStyle(0.5, 0xffd900, 5);
+
+      raycast.moveTo(intersects[0].x, intersects[0].y)
+      .lineStyle(0.5, 0xffd900, 5);
       for (let i = 1; i < intersects.length; i++) {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
@@ -239,31 +227,19 @@ class Enemy {
     global.viewport.addChild(raycast)
   }
 
-  kill_enemy() {
+  kill() {
     this.sprite.stop();
+
     const tween = createjs.Tween.get(this.sprite);
     tween.pause();
+
     this.vitals.status = 'dead';
     put_blood_splatter_under_sprite(enemy_sprite);
-  }
-
-  tween_enemy_to_player() {
-    //todo no reference to player in this function
-    const player =  global.Player.sprite;
-  
-    createjs.Tween.get(this.sprite)
-    .to({
-      x:player.x,
-      y:player.y,
-      rotation: get_angle_from_point_to_point(this.sprite, player),
-    },2000)
-    .wait(500)
   }
 
   add_to_container() {
     enemy_container.addChild(this.sprite);
   }
-
 }
 
 let shot = false;

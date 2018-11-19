@@ -377,7 +377,7 @@ function create_knife_enemy_frames() {
 }
 
 class Enemy {
-  constructor(x,y) {
+  constructor() {
     const enemy_frames = create_knife_enemy_frames();
 
     this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
@@ -454,57 +454,43 @@ class Enemy {
     this.sprite.addChild(direction_line);
   }
 
+  create_light() {
+    const light = PIXI.Sprite.fromFrame('light_gradient');
+    light.name = 'light';
+
+    light.anchor.set(0.5);
+    light.width   = 6000;
+    light.height  = 6000;
+    light.alpha   = 0.2;
+
+    this.sprite.addChild(light);
+  }
+
   add_raycasting() {
     const raycast = new PIXI.Graphics()
-
-    const points = (segments => {
-      const a = [];
-      global.segments.forEach(seg => a.push(seg.a,seg.b));
-      return a;
-    })(segments);
-  
-    const unique_points = (points=>{
-      const set = {};
-      return points.filter(p=>{
-        const key = p.x+","+p.y;
-        if(key in set){
-          return false;
-        }
-        else{
-          set[key]=true;
-          return true;
-        }
-      });
-    })(points);
     
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.anchor.set(0.5)
-    light.width =6000
-    light.height =6000
-  
-    light.alpha = 0.2
+    const points = [];
+    global.segments.forEach(seg => points.push(seg.a,seg.b));
+
     if(global.is_development) {
       // things
     } else {
+      const light = this.sprite.getChildByName('light');
       light.mask = raycast
       light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
     }
     
-    this.sprite.addChild(light);
-    
-    global.app.ticker.add(delta => {
-      
+    global.app.ticker.add(() => {
       const unique_angles = [];
       let intersects = [];
-      PIXI.tweenManager.update();
       
       raycast.clear()
       raycast.beginFill(0xfffffff, 0.05);
   
-      unique_points.forEach(elem => {
+      points.forEach(elem => {
         const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
         elem.angle = angle;
-        unique_angles.push(angle-0.00001, angle-0.00001, angle+0.00001);
+        unique_angles.push(angle - 0.00001, angle + 0.00001);
       })
   
       for(let k=0; k < unique_angles.length; k++){
@@ -535,9 +521,11 @@ class Enemy {
         closest_intersect.angle = angle;
         intersects.push(closest_intersect);
       }
+
       intersects = intersects.sort((a,b) => a.angle - b.angle);
-      raycast.moveTo(intersects[0].x, intersects[0].y);
-      raycast.lineStyle(0.5, 0xffd900, 5);
+
+      raycast.moveTo(intersects[0].x, intersects[0].y)
+      .lineStyle(0.5, 0xffd900, 5);
       for (let i = 1; i < intersects.length; i++) {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
@@ -557,31 +545,19 @@ class Enemy {
     global.viewport.addChild(raycast)
   }
 
-  kill_enemy() {
+  kill() {
     this.sprite.stop();
+
     const tween = createjs.Tween.get(this.sprite);
     tween.pause();
+
     this.vitals.status = 'dead';
     put_blood_splatter_under_sprite(enemy_sprite);
-  }
-
-  tween_enemy_to_player() {
-    //todo no reference to player in this function
-    const player =  global.Player.sprite;
-  
-    createjs.Tween.get(this.sprite)
-    .to({
-      x:player.x,
-      y:player.y,
-      rotation: get_angle_from_point_to_point(this.sprite, player),
-    },2000)
-    .wait(500)
   }
 
   add_to_container() {
     enemy_container.addChild(this.sprite);
   }
-
 }
 
 let shot = false;
@@ -637,6 +613,10 @@ global.app = new PIXI.Application({
   autoResize: true,
   backgroundColor: 0x000000, //0xC1C1C1
 });
+
+global.app.ticker.add(() =>{
+  PIXI.tweenManager.update();
+})
 
 global.document.body.appendChild(global.app.view);
 
@@ -6542,6 +6522,7 @@ function render_wall (wall_array, tiles_object, options) {
     wall.height = wall_data.height;
 
     addToSegments(wall)
+
     global.collisionItems.addChild(wall);
 
   });
@@ -6581,6 +6562,68 @@ module.exports.event_pad = (padArray, callback) => {
 
 const easystarjs = require('easystarjs');
 global.easystar = new easystarjs.js();
+
+class Level {
+  constructor(level_data, level_tiles) {
+    this.level_data = level_data;
+    this.level_tiles = level_tiles;
+  }
+
+  set_background_image(image) {
+    
+    this.background_image = image;
+    this.background_image.position.set(0,0);
+    
+    // why is this is tiles data? rename?
+    this.background_image.width = this.level_tiles.imagewidth;
+    this.background_image.height = this.level_tiles.imageheight;  
+    
+    addToSegments(background_image);
+  }
+
+  render_walls() {
+    const wall_array = this.level_data.layers[1];
+  
+    wall_array.objects.forEach((wall_data) => {
+      const wall = PIXI.Sprite.fromFrame('black_dot');
+  
+      wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
+      wall.width = wall_data.width;
+      wall.height = wall_data.height;
+  
+      addToSegments(wall)
+  
+      global.collisionItems.addChild(wall);
+  
+    });
+    global.viewport.addChild(global.collisionItems);
+
+  }
+
+  create_grid() {
+    this.grid = create_level_grid(this.level_tiles);
+  }
+
+  create_enemies() {
+    
+    init_enemies_container();
+
+    const enemy = new Enemy();
+    // bundle up
+    enemy.set_position(1800, 1000)
+    enemy.create_direction_line()
+    enemy.add_vitals()
+    enemy.add_sight_line()
+    enemy.add_influence_box()
+    enemy.create_light()
+    enemy.add_raycasting()
+    enemy.add_to_container()
+    
+    const formatted_path_data = format_path_data(this.level_data.layers[2])
+    enemy.sprite.patrol_path = formatted_path_data;
+  }
+
+}
 
 module.exports.load_debug_map_image = () => {
   
@@ -6639,18 +6682,17 @@ module.exports.load_bedroom_map = () => {
   
   init_enemies_container();
 
-  // const sprite = create_enemy_at_location(1800, 1000)
   const enemy = new Enemy();
+  // bundle up
   enemy.set_position(1800, 1000)
   enemy.create_direction_line()
   enemy.add_vitals()
   enemy.add_sight_line()
   enemy.add_influence_box()
+  enemy.create_light()
   enemy.add_raycasting()
   enemy.add_to_container()
 
-  console.log(enemy)
-  console.log('enemy')
 
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
   enemy.sprite.patrol_path = formatted_path_data;
@@ -7910,7 +7952,7 @@ module.exports.clear = () => {
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
 const dialog_util = require('../../dialog/dialog_util.js');
-const { kill_enemy, point_hits_enemy_in_container } = require('../../enemies/enemy.js');
+const { point_hits_enemy_in_container } = require('../../enemies/enemy.js');
 
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
@@ -8004,10 +8046,10 @@ module.exports.arrow_management = (power, origin, target) => {
         
         if(global.is_development) {
           dialog_util.renderText(hit_enemy, 'I am dead home slice');
-          hit_enemy.kill_enemy()
+          hit_enemy.kill()
         } else {
           dialog_util.renderText(hit_enemy, 'I am hit');
-          hit_enemy.kill_enemy()
+          hit_enemy.kill()
           hit_enemy.destroy()
         }
       }

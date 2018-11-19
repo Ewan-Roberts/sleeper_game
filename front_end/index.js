@@ -21,6 +21,10 @@ global.app = new PIXI.Application({
   backgroundColor: 0x000000, //0xC1C1C1
 });
 
+global.app.ticker.add(() =>{
+  PIXI.tweenManager.update();
+})
+
 global.document.body.appendChild(global.app.view);
 
 global.viewport = new Viewport({

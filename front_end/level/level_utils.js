@@ -65,6 +65,7 @@ function render_wall (wall_array, tiles_object, options) {
     wall.height = wall_data.height;
 
     addToSegments(wall)
+
     global.collisionItems.addChild(wall);
 
   });
@@ -104,6 +105,68 @@ module.exports.event_pad = (padArray, callback) => {
 
 const easystarjs = require('easystarjs');
 global.easystar = new easystarjs.js();
+
+class Level {
+  constructor(level_data, level_tiles) {
+    this.level_data = level_data;
+    this.level_tiles = level_tiles;
+  }
+
+  set_background_image(image) {
+    
+    this.background_image = image;
+    this.background_image.position.set(0,0);
+    
+    // why is this is tiles data? rename?
+    this.background_image.width = this.level_tiles.imagewidth;
+    this.background_image.height = this.level_tiles.imageheight;  
+    
+    addToSegments(background_image);
+  }
+
+  render_walls() {
+    const wall_array = this.level_data.layers[1];
+  
+    wall_array.objects.forEach((wall_data) => {
+      const wall = PIXI.Sprite.fromFrame('black_dot');
+  
+      wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
+      wall.width = wall_data.width;
+      wall.height = wall_data.height;
+  
+      addToSegments(wall)
+  
+      global.collisionItems.addChild(wall);
+  
+    });
+    global.viewport.addChild(global.collisionItems);
+
+  }
+
+  create_grid() {
+    this.grid = create_level_grid(this.level_tiles);
+  }
+
+  create_enemies() {
+    
+    init_enemies_container();
+
+    const enemy = new Enemy();
+    // bundle up
+    enemy.set_position(1800, 1000)
+    enemy.create_direction_line()
+    enemy.add_vitals()
+    enemy.add_sight_line()
+    enemy.add_influence_box()
+    enemy.create_light()
+    enemy.add_raycasting()
+    enemy.add_to_container()
+    
+    const formatted_path_data = format_path_data(this.level_data.layers[2])
+    enemy.sprite.patrol_path = formatted_path_data;
+  }
+
+}
 
 module.exports.load_debug_map_image = () => {
   
@@ -162,18 +225,17 @@ module.exports.load_bedroom_map = () => {
   
   init_enemies_container();
 
-  // const sprite = create_enemy_at_location(1800, 1000)
   const enemy = new Enemy();
+  // bundle up
   enemy.set_position(1800, 1000)
   enemy.create_direction_line()
   enemy.add_vitals()
   enemy.add_sight_line()
   enemy.add_influence_box()
+  enemy.create_light()
   enemy.add_raycasting()
   enemy.add_to_container()
 
-  console.log(enemy)
-  console.log('enemy')
 
   const formatted_path_data = format_path_data(bedroom_room_tiled_data.layers[2])
   enemy.sprite.patrol_path = formatted_path_data;
