@@ -15,6 +15,8 @@ const bedroomUtil = require('../bedroom/bedroom_util.js');
 const parkUtil = require('../park/park_util.js');
 const pathfinding_util = require('../../pathfinding/pathfind_util.js');
 const level_util = require('../level_utils.js');
+const viewport = require('../../engine/viewport');
+
 
 global.collisionItems = new PIXI.Container();
 global.eventTriggers = new PIXI.Container();
@@ -50,18 +52,18 @@ module.exports.add_floor = () => {
 
   global.doors.addChild(door);
 
-  global.viewport.updateLayersOrder = () => {
-    global.viewport.children.sort((a, b) => {
+  viewport.updateLayersOrder = () => {
+    viewport.children.sort((a, b) => {
       a.zIndex = a.zIndex || 0;
       b.zIndex = b.zIndex || 0;
       return b.zIndex - a.zIndex;
     });
   };
 
-  global.viewport.addChild(global.eventTriggers);
+  viewport.addChild(global.eventTriggers);
   global.collisionItems.zIndex = 1;
   global.collisionItems.addChild( /* slantedWall */ collisionWall);
-  global.viewport.updateLayersOrder();
+  viewport.updateLayersOrder();
 
   items.add_items();
 };

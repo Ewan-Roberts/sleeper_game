@@ -1,5 +1,6 @@
 
 const PIXI = require('pixi.js');
+const viewport = require('../../engine/viewport');
 
 module.exports.add_items = () => {
   const boxFull = PIXI.Sprite.fromFrame('chest_full');
@@ -27,5 +28,5 @@ module.exports.add_items = () => {
 
   global.movableItems.addChild(movableBox);
   global.collisionItems.addChild(boxFull);
-  global.viewport.addChild(global.collisionItems);
+  viewport.addChild(global.collisionItems);
 };

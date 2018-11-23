@@ -1,3 +1,8 @@
+//load in the env file
+require('dotenv').config()
+
+console.log(process.env.NODE_ENV);
+
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);

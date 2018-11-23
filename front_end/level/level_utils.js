@@ -1,9 +1,8 @@
 const PIXI = require('pixi.js');
 const { create_level_grid } = require('../pathfinding/pathfind_util.js');
-const {
-  init_enemies_container,
-  Enemy,
-} = require('../enemies/enemy.js');
+const { Enemy } = require('../enemies/enemy.js');
+const viewport = require('../engine/viewport');
+
 
 
 module.exports.clearViewport = () => {
@@ -88,7 +87,7 @@ class Level {
     this.background_image.height = this.level_tiles.imageheight;  
     
     this.add_to_segments(this.background_image);
-    global.viewport.addChild(this.background_image);
+    viewport.addChild(this.background_image);
   }
 
   render_walls(options) {
@@ -106,7 +105,7 @@ class Level {
       global.collisionItems.addChild(wall);
     });
 
-    global.viewport.addChild(global.collisionItems);
+    viewport.addChild(global.collisionItems);
   }
 
   create_grid() {
@@ -114,8 +113,6 @@ class Level {
   }
 
   create_enemy(x, y) {
-    //TODO
-    init_enemies_container();
 
     const enemy = new Enemy();
     enemy.set_position(x, y);

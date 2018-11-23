@@ -1,5 +1,6 @@
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
+const viewport = require('../engine/viewport');
 
 //TODO needed to load the plugin
 const rotation_plugin = require('../utils/RotationPlugin.js');
@@ -73,7 +74,7 @@ function create_level_grid(tiles_object) {
   }
 
   //TODO remove into an easystar function
-  global.viewport.addChild(grid_container);
+  viewport.addChild(grid_container);
   global.easystar.setGrid(binary_grid_map);
   global.easystar.setAcceptableTiles([0]);
   global.easystar.setIterationsPerCalculation(1000);
@@ -151,24 +152,37 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 
 function move_sprite_on_path(sprite, path_array) {
   return new Promise((resolve, reject) => {
-
+    
     const tween = createjs.Tween.get(sprite);
 
     const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
 
     const initial_angle_to_face = Math.atan2(path_array[1].middle.y - sprite.y, path_array[1].middle.x - sprite.x);
 
+    console.log('hi2');
+
     tween.to({
       rotation: initial_angle_to_face,
     },500);
 
     for (let i = 1; i < path_array.length; i++) {
-      const angle_to_face = Math.atan2(path_array[i].middle.y - path_array[i-1].middle.y, path_array[i].middle.x - path_array[i-1].middle.x);
+      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y, path_array[i].middle.x-path_array[i-1].middle.x);
+      
+      //TODO
+      if(angle_to_face <= 3.14) {
+        angle_to_face = angle_to_face +6.28
+      }
 
+      if(angle_to_face >6){
+        angle_to_face = angle_to_face ;
+      }
+      
+      tween.to({
+        rotation: angle_to_face,
+      })
       tween.to({
         x:path_array[i].middle.x,
         y:path_array[i].middle.y,
-        rotation: angle_to_face,
       }, walk_time);
     }
 
@@ -184,12 +198,12 @@ function move_enemy_to_point(sprite, point) {
     const angle_to_face = Math.atan2(point.middle.y - sprite.y, point.middle.x -sprite.x);
 
     tween.to({
-      rotation: angle_to_face,
-    },300)
-      .to({
-        x: point.middle.x,
-        y: point.middle.y,
-      }, walk_time, createjs.Ease.sineInOut);
+      rotation: Math.abs(angle_to_face),
+    })
+    .to({
+      x: point.middle.x,
+      y: point.middle.y,
+    }, walk_time, createjs.Ease.sineInOut);
 
     tween.call(()=>resolve());
   });
@@ -210,7 +224,7 @@ function path_enemy_on_points(enemy_sprite, point_array, options) {
   const path_array = point_array.map(grid => (
     sprite_grid[grid.y][grid.x]
   ));
-
+  console.log('hi');
   // move from the current position to the start of the path
   move_enemy_to_point(enemy_sprite, path_array[0])
     .then(() => move_sprite_on_path(enemy_sprite, path_array))
@@ -304,8 +318,8 @@ module.exports = {
 
 function run_pathfinding_test() {
 
-  const enemy_sprite = global.viewport.children[7].children[0];
-  console.log(global.viewport.children)
+  const enemy_sprite = viewport.children[7].children[0];
+  // console.log(global.viewport.children)
   const player_sprite = global.Player.sprite;
 
   const grid = grid_container.children;
@@ -313,9 +327,7 @@ function run_pathfinding_test() {
   const player_point = get_sprite_position_on_grid(player_sprite, grid);
 
   create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-    .then(path_data => {
-      path_enemy_on_points(enemy_sprite, path_data);
-    });
+    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
 }
 
 setInterval(()=>{

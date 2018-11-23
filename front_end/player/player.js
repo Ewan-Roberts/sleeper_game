@@ -3,6 +3,8 @@ const sprite_helper = require('../utils/sprite_helper.js');
 const door_helper = require('../utils/door_helper.js');
 const bow_helper = require('../weapons/bow/bow_helper.js');
 const document_helper = require('../utils/document_helper.js');
+const ticker = require('../engine/ticker');
+const viewport = require('../engine/viewport.js');
 
 global.Player = {
 
@@ -45,15 +47,15 @@ function countDown() {
 }
 
 function mouseUp() {
-  global.viewport.on('mouseup', (event) => {
+  viewport.on('mouseup', (event) => {
     global.Player.sprite._textures = global.Player.sprite.idle._textures;
     global.Player.moveable = true;
     global.Player.sprite.play();
 
-    global.app.ticker.remove(countDown);
+    ticker.remove(countDown);
 
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
-      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
 
       bow_helper.arrow_management(global.Player.power, global.Player.sprite, mousePosition);
     }
@@ -61,10 +63,10 @@ function mouseUp() {
 }
 
 function mouseMove() {
-  global.viewport.on('mousemove', (event) => {
+  viewport.on('mousemove', (event) => {
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = document_helper.mousePositionFromScreen(event.data.global, global.viewport);
-      const mousePositionPlayer = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite, global.viewport);
+      const mousePosition = document_helper.mousePositionFromScreen(event.data.global, viewport);
+      const mousePositionPlayer = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite, viewport);
 
       aimingLine.clear();
       aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
@@ -77,13 +79,13 @@ function mouseMove() {
 }
 
 function mouseDown() {
-  global.viewport.on('mousedown', (event) => {
+  viewport.on('mousedown', (event) => {
     global.Player.power = 900;
     global.Player.moveable = false;
-    global.app.ticker.add(countDown);
+    ticker.add(countDown);
 
     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, global.viewport);
+      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
 
       global.Player.sprite._textures = global.Player.sprite.ready._textures;
       global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePosition);
@@ -177,7 +179,7 @@ function addPlayerControls() {
       });
   }, true);
 
-  global.viewport.addChild(aimingLine);
+  viewport.addChild(aimingLine);
 }
 
 module.exports.add_player_with_position = (x,y) => {
@@ -220,8 +222,8 @@ module.exports.add_player_with_position = (x,y) => {
   global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
   global.Player.sprite._textures = global.Player.sprite.idle._textures;
 
-  global.viewport.follow(global.Player.sprite);
-  global.viewport.addChild(global.Player.sprite);
+  viewport.follow(global.Player.sprite);
+  viewport.addChild(global.Player.sprite);
   // global.viewport.addChild(global.Player.sprite.idle)
   // global.viewport.updateLayersOrder();
 

@@ -1,19 +1,15 @@
 const PIXI = require('pixi.js');
-const { get_angle_from_point_to_point, put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
+const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
 const { pathfind_from_enemy_to_player } = require('../pathfinding/pathfind_util.js')
-const bow_helper = require('../weapons/bow/bow_helper.js');
+const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow/bow_helper.js');
 const { createjs } = require('@createjs/tweenjs');
+const ticker = require('../engine/ticker');
+const viewport = require('../engine/viewport');
 
 const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
 
-// this has to go
-function init_enemies_container() {
-  global.viewport.addChild(enemy_container);
-}
-
 function get_intersection(ray, segment){
-
 	// RAY in parametric: Point + Delta*T1
 	const r_px = ray.a.x;
 	const r_py = ray.a.y;
@@ -51,6 +47,8 @@ function get_intersection(ray, segment){
 
 class Enemy {
   constructor() {
+    viewport.addChild(enemy_container);
+
     const enemy_frames = this.create_knife_enemy_frames();
 
     this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
@@ -68,19 +66,20 @@ class Enemy {
   }
 
   create_knife_enemy_frames() {
-    const enemy_frames = []
+    const enemy_frames = [];
   
     for (let i = 0; i < 19; i++) {
       enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
     }
-    return enemy_frames
+
+    return enemy_frames;
   }
 
   add_vitals() {
     this.sprite.vitals = {
       health: 100,
       status: 'alive',
-    }
+    };
   }
 
   add_sight_line() {
@@ -91,10 +90,8 @@ class Enemy {
     sight_line_box.height = 600;
     sight_line_box.anchor.y = 0.5;
     sight_line_box.alpha = 0.2;
-    
-    if(global.is_development) {
-      sight_line_box.alpha = 0.2;
-    } else {
+
+    if (!global.is_development) {
       sight_line_box.alpha = 0;
     }
     this.sprite.addChild(sight_line_box);
@@ -106,29 +103,27 @@ class Enemy {
     influence_box.name = 'influence_box';
     influence_box.width = 2000;
     influence_box.height = 2000;
-  
-    if(global.is_development) {
-      influence_box.alpha = 0.4;
-    } else {
+    influence_box.alpha = 0.4;
+    influence_box.anchor.set(0.5);
+
+    if(!global.is_development) {
       influence_box.alpha = 0;
     }
-    
-    influence_box.anchor.set(0.5);
     this.sprite.addChild(influence_box);
   }
 
   stop_and_shoot_player(player_sprite) {
     this.path.paused = true;
+    let shot = false;
+
     if(!shot) {
-      bow_helper.arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
+      arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
       shot = true;
     }
   }
 
   create_patrol_path(path_data) {
-
     this.sprite.patrol_path = path_data;
-
   }
 
   create_direction_line() {
@@ -139,9 +134,7 @@ class Enemy {
     direction_line.anchor.x =0
     direction_line.anchor.y =0.5
     
-    if(global.is_development) {
-      //nothing
-    } else {
+    if(!global.is_development) {
       direction_line.alpha = 0;
     }
 
@@ -166,15 +159,13 @@ class Enemy {
     const points = [];
     level_segments.forEach(seg => points.push(seg.a,seg.b));
 
-    if(global.is_development) {
-      // things
-    } else {
+    if(!global.is_development) {
       const light = this.sprite.getChildByName('light');
       light.mask = raycast
-      light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
     }
     
-    global.app.ticker.add(() => {
+    ticker.add(() => {
       const unique_angles = [];
       let intersects = [];
       
@@ -192,14 +183,8 @@ class Enemy {
         const dx = Math.cos(angle);
         const dy = Math.sin(angle);
         const ray = {
-          a: {
-            x: this.sprite.x, 
-            y: this.sprite.y
-          },
-          b: {
-            x: this.sprite.x + dx,
-            y: this.sprite.y + dy
-          }
+          a: {x: this.sprite.x,       y: this.sprite.y},
+          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
         };
   
         let closest_intersect = null;
@@ -219,7 +204,7 @@ class Enemy {
       intersects = intersects.sort((a,b) => a.angle - b.angle);
 
       raycast.moveTo(intersects[0].x, intersects[0].y)
-      .lineStyle(0.5, 0xffd900, 5);
+        .lineStyle(0.5, 0xffd900, 5);
       for (let i = 1; i < intersects.length; i++) {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
@@ -236,7 +221,7 @@ class Enemy {
       //   }
       // }
     });
-    global.viewport.addChild(raycast)
+    viewport.addChild(raycast)
   }
 
   kill() {
@@ -253,18 +238,16 @@ class Enemy {
     enemy_container.addChild(this.sprite);
   }
 }
+// let player_seen = false;
 
-let shot = false;
-let player_seen = false;
+// function action_on_seeing_player(enemy_sprite, player_sprite) {
+//   player_seen = true;
+//   enemy_sprite.stop_and_shoot_player(player_sprite)
 
-function action_on_seeing_player(enemy_sprite, player_sprite) {
-  player_seen = true;
-  enemy_sprite.stop_and_shoot_player(player_sprite)
-
-  // pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
-  enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
+//   // pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
+//   enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
   
-}
+// }
 
 function point_hits_enemy_in_container(point) {
   
@@ -278,7 +261,6 @@ function point_hits_enemy_in_container(point) {
 }
 
 module.exports = {
-  init_enemies_container,
   point_hits_enemy_in_container,
   Enemy,
 }

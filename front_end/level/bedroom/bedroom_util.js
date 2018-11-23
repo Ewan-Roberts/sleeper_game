@@ -3,6 +3,7 @@ const bedroomData = require('./bedroom_data_5.json');
 const levelUtil = require('../level_utils.js');
 const foyerUtil = require('../foyer/foyer_util.js');
 const cutsceneUtils = require('../../cutscene/cutscene_utils');
+const viewport = require('../../engine/viewport');
 
 module.exports.load = () => {
   levelUtil.clearViewport();
@@ -21,7 +22,7 @@ module.exports.load = () => {
     foyerUtil.load();
   });
   // levelUtil.hitAreas(bedroomData.tiles[2].objectgroup.objects);
-  global.viewport.addChild(flatBackground);
+  viewport.addChild(flatBackground);
 
-  global.viewport.updateLayersOrder();
+  viewport.updateLayersOrder();
 };
