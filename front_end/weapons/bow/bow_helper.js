@@ -1,8 +1,7 @@
 
 const PIXI = require('pixi.js');
 const sprite_helper = require('../../utils/sprite_helper.js');
-const dialog_util = require('../../dialog/dialog_util.js');
-const { kill_enemy, point_hits_enemy_in_container } = require('../../enemies/enemy.js');
+const { point_hits_enemy_in_container } = require('../../enemies/enemy.js');
 const viewport = require('../../engine/viewport.js');
 
 const arrow_container = new PIXI.Container();
@@ -73,14 +72,12 @@ function create_arrow_tween(arrow, power, arrow_path) {
 
 // todo move enemy out out of global 
 module.exports.arrow_management = (power, origin, target) => {
-
   // make oop
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
   
   arrow_tween.on('update', () => {
-    
     const arrow_point = arrow.getGlobalPosition()
 
     const hit_enemy = point_hits_enemy_in_container(arrow_point);
@@ -108,13 +105,12 @@ module.exports.arrow_management = (power, origin, target) => {
     }
 
     // bring back in
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
-      if(sprite_in_container.containsPoint(arrow_point)){
-        console.log('hit on collision item');
+    const collision_objects = viewport.getChildByName('collision_items');
+    collision_objects.children.forEach(object => {
+      if(object.containsPoint(arrow_point)){
         arrow_tween.stop()
       }
-    }
+    })
   });
 };
 

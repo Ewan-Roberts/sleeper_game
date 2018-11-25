@@ -2,10 +2,6 @@ const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
 const viewport = require('../engine/viewport');
 
-//TODO needed to load the plugin
-const rotation_plugin = require('../utils/RotationPlugin.js');
-createjs.RotationPlugin.install();
-
 const grid_container = new PIXI.Container();
 grid_container.name = 'grid_container';
 

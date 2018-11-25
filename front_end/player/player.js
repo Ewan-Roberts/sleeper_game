@@ -5,7 +5,6 @@ const document_helper = require('../utils/document_helper.js');
 const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport.js');
 
-
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
   y: event.data.global.y - viewport.screenHeight / 2,
@@ -16,6 +15,7 @@ const get_mouse_position_from_player = (event, sprite, viewport) => {
 
   mouse_position.x += sprite.x
   mouse_position.y += sprite.y;
+
   return mouse_position;
 }
 

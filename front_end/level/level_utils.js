@@ -34,7 +34,7 @@ module.exports.hit_areas = (wallArray, x, y) => {
     wall.height = wallData.height;
     wall.alpha = 0.01;
 
-    global.collisionItems.addChild(wall);
+    this.collision_items.addChild(wall);
   });
 };
 
@@ -63,6 +63,11 @@ class Level {
     this.level_data = level_data;
     this.level_tiles = level_tiles;
     this.segments = [];
+    this.collision_items = new PIXI.Container();
+    this.collision_items.zIndex = -2;
+    this.collision_items.name = 'collision_items'
+
+    viewport.addChild(this.collision_items);
   }
 
   add_to_segments(item) {
@@ -100,10 +105,8 @@ class Level {
   
       this.add_to_segments(wall)
   
-      global.collisionItems.addChild(wall);
+      this.collision_items.addChild(wall);
     });
-
-    viewport.addChild(global.collisionItems);
   }
 
   create_grid() {
@@ -176,12 +179,12 @@ module.exports.load_bedroom_map = () => {
 
   const options = {
     wall_offset: {
-      x: 280,
-      y: 280,
+      x: 320,
+      y: 260,
     }
   }
 
-  bedroom.set_background_image(bedroom_room_image, 100, 0);
+  bedroom.set_background_image(bedroom_room_image, 140, -20);
   bedroom.render_walls(options);
   bedroom.create_grid();
   bedroom.create_enemy(1800, 1000);

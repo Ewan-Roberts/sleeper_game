@@ -17,48 +17,26 @@ const pathfinding_util = require('../../pathfinding/pathfind_util.js');
 const level_util = require('../level_utils.js');
 const viewport = require('../../engine/viewport');
 
-
-global.collisionItems = new PIXI.Container();
-global.eventTriggers = new PIXI.Container();
-
-function createPad(x, y) {
-  const pad = PIXI.Sprite.fromFrame('black_wall');
-
-  pad.width = 200;
-  pad.height = 100;
-  pad.position.set(x, y);
-
-  return pad;
-}
+// global.collisionItems = new PIXI.Container();
 
 module.exports.add_floor = () => {
 
-  const collisionWall = PIXI.Sprite.fromFrame('black_wall');
-  collisionWall.position.set(100, 600);
+  // const collisionWall = PIXI.Sprite.fromFrame('black_wall');
+  // collisionWall.position.set(100, 600);
 
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
 
-  const character = new Player()
-  character.set_position(1000,1000)
+  const character = new Player();
+  character.set_position(1000,1000);
   character.mouse_move();
-  character.mouse_down()
-  character.mouse_up()
-  character.add_controls()
-  character.follow_player()
-  // character.switch_walk_bow_frames()
+  character.mouse_down();
+  character.mouse_up();
+  character.add_controls();
+  character.follow_player();
 
   level_util.load_bedroom_map()
-  const create_grid = createPad(-500, -200);
-  create_grid.interactive = true;
-  create_grid.alpha = 0.8;
-
-  global.eventTriggers.addChild(
-    create_grid,
-  );
-
-  global.doors.addChild(door);
 
   viewport.updateLayersOrder = () => {
     viewport.children.sort((a, b) => {
@@ -68,9 +46,8 @@ module.exports.add_floor = () => {
     });
   };
 
-  viewport.addChild(global.eventTriggers);
-  global.collisionItems.zIndex = 1;
-  global.collisionItems.addChild( /* slantedWall */ collisionWall);
+  // global.collisionItems.zIndex = 1;
+  // global.collisionItems.addChild( /* slantedWall */ collisionWall);
   viewport.updateLayersOrder();
 
   items.add_items();
