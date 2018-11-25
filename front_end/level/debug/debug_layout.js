@@ -40,8 +40,6 @@ module.exports.add_floor = () => {
   door.width /= 2;
   door.position.set(-100, -200);
 
-  console.log(Player)
-
   const character = new Player()
   character.set_position(1000,1000)
   character.mouse_move();
