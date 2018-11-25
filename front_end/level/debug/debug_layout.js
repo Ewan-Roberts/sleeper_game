@@ -1,6 +1,6 @@
 
 const PIXI = require('pixi.js');
-const player = require('../../player/player.js');
+const { Player } = require('../../player/player.js');
 const enemy = require('../../enemies/enemy.js');
 const items = require('./debug_items.js');
 const filterUtil = require('../../visual_effects/filter_utils.js');
@@ -39,7 +39,16 @@ module.exports.add_floor = () => {
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
-  player.add_player_with_position(1000,1000);
+
+  console.log(Player)
+
+  const character = new Player()
+  character.set_position(1000,1000)
+  character.mouse_move();
+  character.mouse_down()
+  character.mouse_up()
+  character.add_controls()
+  character.follow_player()
 
   level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);

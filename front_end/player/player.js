@@ -237,6 +237,5 @@ function add_player_with_position(x,y) {
 };
 
 module.exports = {
-  add_player_with_position,
   Player,
 }
