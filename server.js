@@ -1,15 +1,10 @@
 //load in the env file
 require('dotenv').config()
-
-console.log(process.env.NODE_ENV);
-
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const port = process.env.PORT || 3000;
 const io = require('socket.io')(server, {});
-
-const environment = 'dev';
 
 app.use(express.static('./public'));
 

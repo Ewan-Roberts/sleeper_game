@@ -298,7 +298,3 @@ module.exports = {
   point_hits_enemy_in_container,
   Enemy,
 }
-
-
-
-

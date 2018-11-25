@@ -79,8 +79,15 @@ module.exports.arrow_management = (power, origin, target) => {
   
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition()
+    const enemy_container = viewport.getChildByName('enemy_container');
 
-    const hit_enemy = point_hits_enemy_in_container(arrow_point);
+    let hit_enemy;
+    enemy_container.children.forEach(enemy => {
+      if(enemy.containsPoint(arrow_point)){
+        hit_enemy = enemy;
+        return;
+      }
+    })
 
     if(hit_enemy) {
       arrow_tween.stop();

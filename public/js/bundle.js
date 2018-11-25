@@ -617,10 +617,6 @@ module.exports = {
   Enemy,
 }
 
-
-
-
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../engine/ticker":8,"../engine/viewport":9,"../pathfinding/pathfind_util.js":26,"../utils/sprite_helper.js":29,"../weapons/bow/bow_helper.js":31,"@createjs/tweenjs":33,"pixi.js":256}],7:[function(require,module,exports){
 (function (global){
@@ -7794,8 +7790,15 @@ module.exports.arrow_management = (power, origin, target) => {
   
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition()
+    const enemy_container = viewport.getChildByName('enemy_container');
 
-    const hit_enemy = point_hits_enemy_in_container(arrow_point);
+    let hit_enemy;
+    enemy_container.children.forEach(enemy => {
+      if(enemy.containsPoint(arrow_point)){
+        hit_enemy = enemy;
+        return;
+      }
+    })
 
     if(hit_enemy) {
       arrow_tween.stop();
