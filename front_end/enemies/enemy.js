@@ -208,9 +208,9 @@ class Enemy {
 
       intersects = intersects.sort((a,b) => a.angle - b.angle);
 
-      raycast.moveTo(intersects[0].x, intersects[0].y)
-        .lineStyle(0.5, 0xffd900, 5);
-      for (let i = 1; i < intersects.length; i++) {
+      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
+
+      for (let i = 0; i < intersects.length; i++) {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
       
@@ -224,16 +224,13 @@ class Enemy {
       if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
         this.action_on_hearing_player(player_sprite);
       }
-
     });
     viewport.addChild(raycast)
   }
 
   action_on_seeing_player(player_sprite) {
-
     // first time you're seen 
     if(!this.player_seen) {
-      console.log('hi')
       this.speak('now, calm down, dont move');
       this.sprite.stop()
       createjs.Tween.removeTweens(this.sprite)

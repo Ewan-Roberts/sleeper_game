@@ -1,141 +1,104 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-(function (global){
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/sprite_helper.js');
 
-global.critterContainer = new PIXI.Container();
+const critter_container = new PIXI.Container();
+critter_container.name = 'critter_container';
 
-const Rat = {
+class Rat {
+  constructor() {
+    viewport.addChild(critter_container);
 
-  animation: {
-    moving: [],
-    waiting: [],
-    eating: [],
-  },
-  sprite: {
-    moving: {},
-    waiting: {},
-    eating: {},
-  },
-  // noise: new Audio('audio/rat_noise_edited.wav')
+    this.animations = {
+      moving: this.create_move_frames(),
+      wait: this.create_wait_frames(),
+      dead: this.create_dead_frames(),
+      eat: this.create_eat_frames(),
+    };
 
-};
+    const enemy_frames = this.create_knife_enemy_frames();
 
-module.exports.load_rat = () => new Promise((resolve) => {
-  for (let i = 1; i < 15; i += 1) {
-    const val = i < 10 ? `0${i}` : i;
-    Rat.animation.moving.push(PIXI.Texture.fromFrame(`rat_${val}`));
+    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
+    this.sprite.height /= 2;
+    this.sprite.width /= 2;
+    this.sprite.anchor.set(0.5);
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.rotation = -0.5;
+    this.sprite.play();
+    this.sprite.tag = 'enemy';
+
+    this.player_seen = false;
   }
 
-  for (let i = 15; i > 0; i -= 1) {
-    const val = i < 10 ? `0${i}` : i;
-    Rat.animation.moving.push(PIXI.Texture.fromFrame(`rat_${val}`));
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
   }
 
-  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
-  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_49'));
-  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_50'));
-  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_49'));
-  Rat.animation.moving.push(PIXI.Texture.fromFrame('rat_48'));
+  create_move_frames() {
+    const moving_frames = [];
 
-  Rat.animation.waiting = [
-    PIXI.Texture.fromFrame('rat_36'),
-    PIXI.Texture.fromFrame('rat_37'),
-    PIXI.Texture.fromFrame('rat_38'),
-    PIXI.Texture.fromFrame('rat_51'),
-    PIXI.Texture.fromFrame('rat_37'),
-    PIXI.Texture.fromFrame('rat_36'),
-    PIXI.Texture.fromFrame('rat_01'),
-  ];
+    for (let i = 1; i < 15; i += 1) {
+      const val = i < 10 ? `0${i}` : i;
+      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
+    }
+  
+    for (let i = 15; i > 0; i -= 1) {
+      const val = i < 10 ? `0${i}` : i;
+      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
+    }
+  
+    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
+    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
+    moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
+    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
+    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
 
-  Rat.animation.dead = PIXI.Texture.fromFrame('rat_35');
+    return moving_frames;
+  }
 
-  Rat.animation.eating = [
-    PIXI.Texture.fromFrame('rat_37'),
-    PIXI.Texture.fromFrame('rat_38'),
-    PIXI.Texture.fromFrame('rat_39'),
-    PIXI.Texture.fromFrame('rat_40'),
-    PIXI.Texture.fromFrame('rat_39'),
-    PIXI.Texture.fromFrame('rat_40'),
-    PIXI.Texture.fromFrame('rat_41'),
-    PIXI.Texture.fromFrame('rat_40'),
-    PIXI.Texture.fromFrame('rat_39'),
-    PIXI.Texture.fromFrame('rat_38'),
-    PIXI.Texture.fromFrame('rat_37'),
-  ];
-  resolve();
-});
+  create_wait_frames() {
 
-module.exports.mouseMove = (start, finish) => {
-  // Rat.noise.volume = 0.5
-  // Rat.noise.play();
-  const mouseDeathSound = new Audio('audio/mouse_death_00.wav');
-  // Create a custom path the graphic will follow
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(start.x, start.y)
-    .lineTo(finish.x, finish.y);
+    const waiting_frames = [
+      PIXI.Texture.fromFrame('rat_36'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_51'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_36'),
+      PIXI.Texture.fromFrame('rat_01'),
+    ];
 
-  spriteHelper.drawPathAndShow(pathOne);
+    return waiting_frames
+  }
 
-  const animatedRat = new PIXI.extras.AnimatedSprite(Rat.animation.moving);
-  animatedRat.height /= 2;
-  animatedRat.width /= 2;
-  animatedRat.animationSpeed = 0.4;
-  animatedRat.play();
-  animatedRat.mouseDeathSound = mouseDeathSound;
-  animatedRat.dead = PIXI.Texture.fromFrame('rat_35');
+  create_dead_frames() {
+    return PIXI.Texture.fromFrame('rat_35');;
+  }
 
-  const animatedRatTween = PIXI.tweenManager.createTween(animatedRat);
-  animatedRatTween.name = 'tween';
-  animatedRatTween.path = pathOne;
-  animatedRatTween.target.rotation = spriteHelper.angle(animatedRat, pathOne._tmpPoint2);
-  animatedRatTween.time = 3000;
-  animatedRatTween.easing = PIXI.tween.Easing.inOutQuad();
-  animatedRatTween.name = 'tween path';
-  animatedRatTween.start();
+  create_eat_frames() {
+    
+    const eating_frames = [
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_41'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_37'),
+    ];
 
-  global.critterContainer.addChild(animatedRat);
-  global.viewport.addChild(global.critterContainer);
+    return eating_frames;
+  }
+}
 
-  Rat.sprite.moving = animatedRat;
-};
+module.exports = {
+  Rat,
+}
 
-module.exports.mousePause = () => new Promise((resolve) => {
-  const pathWaiting = new PIXI.tween.TweenPath()
-    .moveTo(90, 720)
-    .lineTo(90, 721);
-
-  const waitingRat = new PIXI.extras.AnimatedSprite(Rat.animation.waiting);
-  waitingRat.alpha = 0;
-  waitingRat.rotation = 2.1;
-  waitingRat.anchor.set(0.5);
-  waitingRat.height /= 2;
-  waitingRat.width /= 2;
-  waitingRat.animationSpeed = 0.1;
-  waitingRat.play();
-  global.viewport.addChild(waitingRat);
-
-  const waitingRatTween = PIXI.tweenManager.createTween(waitingRat);
-  waitingRatTween.path = pathWaiting;
-  waitingRatTween.time = 1000;
-  waitingRatTween.easing = PIXI.tween.Easing.inOutQuad();
-  waitingRatTween.start();
-
-  waitingRatTween.on('start', () => {
-    waitingRat.alpha = 1;
-  });
-
-  waitingRatTween.on('end', () => {
-    waitingRat.destroy();
-    Rat.sprite.moving.alpha = 1;
-    resolve();
-  });
-
-  Rat.sprite.waiting = waitingRat;
-});
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/sprite_helper.js":29,"pixi.js":256}],2:[function(require,module,exports){
+},{"pixi.js":256}],2:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -526,9 +489,9 @@ class Enemy {
 
       intersects = intersects.sort((a,b) => a.angle - b.angle);
 
-      raycast.moveTo(intersects[0].x, intersects[0].y)
-        .lineStyle(0.5, 0xffd900, 5);
-      for (let i = 1; i < intersects.length; i++) {
+      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
+
+      for (let i = 0; i < intersects.length; i++) {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
       
@@ -542,16 +505,13 @@ class Enemy {
       if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
         this.action_on_hearing_player(player_sprite);
       }
-
     });
     viewport.addChild(raycast)
   }
 
   action_on_seeing_player(player_sprite) {
-
     // first time you're seen 
     if(!this.player_seen) {
-      console.log('hi')
       this.speak('now, calm down, dont move');
       this.sprite.stop()
       createjs.Tween.removeTweens(this.sprite)
