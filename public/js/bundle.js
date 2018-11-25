@@ -377,6 +377,8 @@ class Enemy {
     this.sprite.rotation = -0.5;
     this.sprite.play();
     this.sprite.tag = 'enemy';
+
+    this.player_seen = false;
   }
 
   set_position(x,y) {
@@ -527,19 +529,60 @@ class Enemy {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
   
-      // const player_sprite = global.Player.sprite;
-      // const player_position = player_sprite.getGlobalPosition();
-      // if(this.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      //   action_on_seeing_player(this, player_sprite);
-      //   player_seen = true;
-      //   console.log(global.viewport)
-      // } else {
-      //   if(player_seen) {
-      //     pathfind_from_enemy_to_player(this, player_sprite)
-      //   }
-      // }
+      const player_sprite = global.Player.sprite;
+      const player_position = player_sprite.getGlobalPosition();
+
+      // console.log(this)
+
+      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+        this.action_on_seeing_player(player_sprite);
+      }
+
+      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
+        this.action_on_hearing_player(player_sprite);
+      }
+
     });
     viewport.addChild(raycast)
+  }
+
+  action_on_seeing_player(player_sprite) {
+
+    // first time you're seen 
+    if(!this.player_seen) {
+      console.log('hi')
+      this.speak('now, calm down, dont move');
+      this.sprite.stop()
+      createjs.Tween.removeTweens(this.sprite)
+    }
+
+    this.player_seen = true;
+
+    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
+  }
+
+  action_on_hearing_player(player_sprite) {
+
+    pathfind_from_enemy_to_player(this.sprite, player_sprite)
+
+  }
+
+  speak(text) {
+    const renderText = new PIXI.Text(text);
+    renderText.x = this.sprite.x - 100;
+    renderText.y = this.sprite.y - 80;
+  
+    viewport.addChild(renderText);
+  
+    function fadeOut() {
+      if (renderText.alpha > 0) {
+        renderText.alpha -= 0.01;
+      } else {
+        ticker.remove(fadeOut);
+      }
+    }
+  
+    ticker.add(fadeOut);
   }
 
   kill() {
@@ -556,16 +599,6 @@ class Enemy {
     enemy_container.addChild(this.sprite);
   }
 }
-// let player_seen = false;
-
-// function action_on_seeing_player(enemy_sprite, player_sprite) {
-//   player_seen = true;
-//   enemy_sprite.stop_and_shoot_player(player_sprite)
-
-//   // pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
-//   enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
-  
-// }
 
 function point_hits_enemy_in_container(point) {
   
@@ -582,6 +615,11 @@ module.exports = {
   point_hits_enemy_in_container,
   Enemy,
 }
+
+
+
+
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../engine/ticker":8,"../engine/viewport":9,"../pathfinding/pathfind_util.js":26,"../utils/sprite_helper.js":31,"../weapons/bow/bow_helper.js":33,"@createjs/tweenjs":35,"pixi.js":258}],7:[function(require,module,exports){
 (function (global){
@@ -6472,8 +6510,6 @@ const { create_level_grid } = require('../pathfinding/pathfind_util.js');
 const { Enemy } = require('../enemies/enemy.js');
 const viewport = require('../engine/viewport');
 
-
-
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
     console.log(global.viewport.children[i].name)
@@ -6959,34 +6995,19 @@ function move_sprite_on_path(sprite, path_array) {
     const tween = createjs.Tween.get(sprite);
 
     const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
-
-    const initial_angle_to_face = Math.atan2(path_array[1].middle.y - sprite.y, path_array[1].middle.x - sprite.x);
-
-    console.log('hi2');
-
-    tween.to({
-      rotation: initial_angle_to_face,
-    },500);
-
-    for (let i = 1; i < path_array.length; i++) {
-      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y, path_array[i].middle.x-path_array[i-1].middle.x);
+    //TODO
+    for (let i = 0; i < path_array.length; i++) {
+      if(path_array[i-1] === undefined) continue;
       
-      //TODO
-      if(angle_to_face <= 3.14) {
-        angle_to_face = angle_to_face +6.28
-      }
+      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
 
-      if(angle_to_face >6){
-        angle_to_face = angle_to_face ;
-      }
-      
       tween.to({
         rotation: angle_to_face,
-      })
-      tween.to({
+      }).to({
         x:path_array[i].middle.x,
         y:path_array[i].middle.y,
-      }, walk_time);
+        rotation: angle_to_face,
+      }, walk_time/2);
     }
 
     tween.call(()=>resolve());
@@ -7012,7 +7033,6 @@ function move_enemy_to_point(sprite, point) {
   });
 }
 
-
 let boolean_time = true;
 
 function path_enemy_on_points(enemy_sprite, point_array, options) {
@@ -7027,12 +7047,12 @@ function path_enemy_on_points(enemy_sprite, point_array, options) {
   const path_array = point_array.map(grid => (
     sprite_grid[grid.y][grid.x]
   ));
-  console.log('hi');
+
   // move from the current position to the start of the path
   move_enemy_to_point(enemy_sprite, path_array[0])
     .then(() => move_sprite_on_path(enemy_sprite, path_array))
     .then(() => wait_sprite(enemy_sprite, 500))
-    .then(() => look_around_sprite(enemy_sprite, 6000, 1))
+    .then(() => look_around_sprite(enemy_sprite, 1000, 1))
     .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
     .then(() => move_sprite_on_route(enemy_sprite))
 
@@ -7077,10 +7097,8 @@ function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
   const player_point = get_sprite_position_on_grid(player_sprite, grid);
 
   if(enemy_point && player_point){
-    create_path_from_two_grid_points(enemy_point, player_point)
-      .then(path_data => {
-        create_tween_on_point_array(enemy_sprite, path_data);
-      });
+    create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+      .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
   }
 }
 
@@ -7112,17 +7130,10 @@ function move_sprite_on_route(sprite) {
   })
 };
 
-module.exports = {
-  create_level_grid,
-  pathfind_from_enemy_to_player,
-  move_sprite_on_path,
-  
-};
-
+//testing
 function run_pathfinding_test() {
 
   const enemy_sprite = viewport.children[7].children[0];
-  // console.log(global.viewport.children)
   const player_sprite = global.Player.sprite;
 
   const grid = grid_container.children;
@@ -7133,13 +7144,30 @@ function run_pathfinding_test() {
     .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
 }
 
-setInterval(()=>{
-  // highlight_start_grid()
+// function path_from_enemy_to_player(enemy, player) {
 
-  run_pathfinding_test();
-},2000);
+//   const grid = grid_container.children;
+
+//   const enemy_point = get_sprite_position_on_grid(enemy, grid);
+//   const player_point = get_sprite_position_on_grid(player, grid);
+
+//   create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+//     .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
+// }
 
 
+// setInterval(()=>{
+//   // highlight_start_grid()
+
+//   run_pathfinding_test();
+// },2000);
+
+
+module.exports = {
+  create_level_grid,
+  pathfind_from_enemy_to_player,
+  move_sprite_on_path,
+};
 
 // function continue_sprite_on_default_path(sprite) {
 //   const tween = sprite.path;
@@ -7240,6 +7268,271 @@ const document_helper = require('../utils/document_helper.js');
 const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport.js');
 
+
+class Player {
+  constructor() {
+    const bow_frames = this.create_bow_frames();
+
+    this.sprite = new PIXI.extras.AnimatedSprite(bow_frames);
+
+    this.sprite.anchor.set(0.5);
+    this.sprite.width /= 2;
+    this.sprite.height /= 2;
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.play();
+    this.sprite.zIndex = -20;
+    this.sprite.tag = 'player';
+    this.weapon = 'bow';
+    this.ammo = 4;
+    this.power = 0;
+    this.allow_shoot = true;
+    this.movement_speed = 15;
+
+    viewport.follow(this.sprite);
+    viewport.addChild(this.sprite);
+
+  }
+
+  create_bow_frames() {
+    const bow_frames = [];
+  
+    for (let i = 0; i <= 21; i += 1) {
+      let name = `survivor-bow-idle-0${i}`;
+
+      if (i >= 10) {
+        name = `survivor-bow-idle-${i}`;
+      }
+      bow_frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return bow_frames;
+  }
+
+  create_idle_frames() {
+    const bow_frames = [];
+  
+    for (let i = 0; i <= 21; i += 1) {
+      let name = `survivor-bow-idle-0${i}`;
+
+      if (i >= 10) {
+        name = `survivor-bow-idle-${i}`;
+      }
+      bow_frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    this.animation.idle = bow_frames;
+  }
+
+
+  create_ready_frames() {
+    const ready_frames = [];
+  
+    for (let i = 0; i <= 38; i += 1) {
+      let name = `survivor-bow-pull-0${i}`;
+  
+      if (i >= 10) name = `survivor-bow-pull-${i}`;
+  
+      ready_frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    this.animation.ready = ready_frames;
+  }
+
+  create_walk_frames() {
+    const walk_frames = [];
+
+    for (let i = 0; i <= 20; i += 1) {
+      let name = `survivor-walk_bow_0${i}`;
+  
+      if (i >= 10) name = `survivor-walk_bow_${i}`;
+      
+      walk_frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    this.animation.walk = walk_frames;
+  }
+
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
+  mouse_move() {
+    const aimingLine = new PIXI.Graphics();
+
+    viewport.on('mousemove', (event) => {
+      if (this.weapon === 'bow' && this.ammo > 0) {
+
+        const mouse_position = ({
+          x: event.data.global.x - viewport.screenWidth / 2,
+          y: event.data.global.y - viewport.screenHeight / 2,
+        })
+
+        const mouse_position_player = ({
+          x: event.data.global.x + this.sprite.x - viewport.screenWidth / 2,
+          y: event.data.global.y + this.sprite.y - viewport.screenHeight / 2,
+        });
+
+        aimingLine.clear();
+        aimingLine.position.set(this.sprite.position.x, this.sprite.position.y);
+        aimingLine.lineStyle(3, 0xffffff, 1).moveTo(0, 0).lineTo(mouse_position.x, mouse_position.y);
+        viewport.addChild(aimingLine);
+        this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
+      }
+    }); 
+  }
+
+  count_down() {
+
+    // this.sprite._textures = this.sprite.ready._textures;
+
+    if (this.power > 750) {
+      this.allow_shoot = false;
+    }
+    else {
+      this.allow_shoot = true;
+    }
+  
+    if (this.power > 400) {
+      this.power -= 10;
+    }
+  
+    if (this.power < 410) {
+      this.sprite.gotoAndStop(34);
+    }
+
+  }
+
+  mouse_down() {
+
+    viewport.on('mousedown', (event) => {
+      this.power = 900;
+      this.moveable = false;
+      
+      ticker.add(this.count_down);
+  
+      if (this.weapon === 'bow' && this.ammo > 0) {
+        
+        const mouse_position_player = ({
+          x: event.data.global.x + this.sprite.x - viewport.screenWidth / 2,
+          y: event.data.global.y + this.sprite.y - viewport.screenHeight / 2,
+        });
+  
+        // global.Player.sprite._textures = global.Player.sprite.ready._textures;
+        global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mouse_position_player);
+        global.Player.sprite.gotoAndPlay(0);
+      }
+    });
+  }
+
+  mouse_up() {
+
+    viewport.on('mouseup', (event) => {
+      // global.Player.sprite._textures = global.Player.sprite.idle._textures;
+      this.moveable = true;
+      this.sprite.play();
+  
+      ticker.remove(this.count_down);
+  
+      if (this.weapon === 'bow' && this.ammo > 0 && this.allow_shoot) {
+        const mouse_position_player = ({
+          x: event.data.global.x + this.sprite.x - viewport.screenWidth / 2,
+          y: event.data.global.y + this.sprite.y - viewport.screenHeight / 2,
+        });
+  
+        bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
+      }
+    });
+  }
+  
+  add_controls() {
+  
+    global.document.addEventListener('keydown', (e) => {
+      const key = document_helper.getDirection(e.key);
+  
+      if (!this.moveable) return;
+  
+      if (key === 'up') {
+        this.sprite.y -= this.movement_speed;
+        this.sprite.rotation = -2;
+        // this.sprite._textures = this.sprite.walk._textures;
+      }
+  
+      if (key === 'down') {
+        this.sprite.y += this.movement_speed;
+        this.sprite.rotation = 2;
+        // this.sprite._textures = global.Player.sprite.walk._textures;
+      }
+  
+      if (key === 'left') {
+        this.sprite.x -= this.movement_speed;
+        this.sprite.rotation = -3;
+        // this.sprite._textures = global.Player.sprite.walk._textures;
+      }
+  
+      if (key === 'right') {
+        this.sprite.x += this.movement_speed;
+        this.sprite.rotation = 0;
+        // this.sprite._textures = global.Player.sprite.walk._textures;
+      }
+    })
+      // door_helper.hit(global.Player.sprite, global.doors.children[0]);
+  
+      // sprite_helper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
+      //   .then((arrow) => {
+      //     if (arrow.pickup) {
+      //       global.Player.ammo += 1;
+      //       arrow.destroy();
+      //     }
+      //   });
+  
+    //   sprite_helper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
+    //     .then(() => {
+    //       if (key === 'up') global.Player.sprite.y += global.Player.movement_speed;
+    //       if (key === 'down') global.Player.sprite.y -= global.Player.movement_speed;
+    //       if (key === 'left') global.Player.sprite.x += global.Player.movement_speed;
+    //       if (key === 'right') global.Player.sprite.x -= global.Player.movement_speed;
+    //     });
+  
+    //   sprite_helper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
+    //     .then(pad => pad.action());
+  
+    //   sprite_helper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
+    //     .then((critter) => {
+    //       global.Player.inventory.push(critter);
+  
+    //       PIXI.tweenManager.getTweensForTarget(critter)[0].clear();
+  
+    //       critter.destroy();
+    //     });
+  
+    //   sprite_helper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
+    //     .then((item) => {
+    //       if (key === 'up') {
+    //         global.Player.sprite.y += global.Player.movement_speed - item.weight;
+    //         item.y -= item.weight;
+    //       }
+    //       if (key === 'down') {
+    //         global.Player.sprite.y -= global.Player.movement_speed - item.weight;
+    //         item.y += item.weight;
+    //       }
+    //       if (key === 'left') {
+    //         global.Player.sprite.x += global.Player.movement_speed - item.weight;
+    //         item.x -= item.weight;
+    //       }
+    //       if (key === 'right') {
+    //         global.Player.sprite.x -= global.Player.movement_speed - item.weight;
+    //         item.x += item.weight;
+    //       }
+    //     });
+    // }, true);
+  
+    // viewport.addChild(aimingLine);
+
+  }
+
+}
+
+
 global.Player = {
 
   animation: {
@@ -7267,204 +7560,70 @@ global.Player = {
   }
 };
 
-const aimingLine = new PIXI.Graphics();
+// const aimingLine = new PIXI.Graphics();
 
-function countDown() {
-  global.Player.sprite._textures = global.Player.sprite.ready._textures;
+// function countDown() {
+//   global.Player.sprite._textures = global.Player.sprite.ready._textures;
 
-  if (global.Player.power > 750) global.Player.allowShoot = false;
-  else global.Player.allowShoot = true;
+//   if (global.Player.power > 750) global.Player.allowShoot = false;
+//   else global.Player.allowShoot = true;
 
-  if (global.Player.power > 400)global.Player.power -= 10;
+//   if (global.Player.power > 400)global.Player.power -= 10;
 
-  if (global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
-}
+//   if (global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
+// }
 
-function mouseUp() {
-  viewport.on('mouseup', (event) => {
-    global.Player.sprite._textures = global.Player.sprite.idle._textures;
-    global.Player.moveable = true;
-    global.Player.sprite.play();
+// function mouseUp() {
+//   viewport.on('mouseup', (event) => {
+//     global.Player.sprite._textures = global.Player.sprite.idle._textures;
+//     global.Player.moveable = true;
+//     global.Player.sprite.play();
 
-    ticker.remove(countDown);
+//     ticker.remove(countDown);
 
-    if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
-      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
+//     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
+//       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
 
-      bow_helper.arrow_management(global.Player.power, global.Player.sprite, mousePosition);
-    }
-  });
-}
+//       bow_helper.arrow_management(global.Player.power, global.Player.sprite, mousePosition);
+//     }
+//   });
+// }
 
-function mouseMove() {
-  viewport.on('mousemove', (event) => {
-    if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = document_helper.mousePositionFromScreen(event.data.global, viewport);
-      const mousePositionPlayer = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite, viewport);
 
-      aimingLine.clear();
-      aimingLine.position.set(global.Player.sprite.position.x, global.Player.sprite.position.y);
-      aimingLine.lineStyle(3, 0xffffff, 0)
-        .moveTo(0, 0)
-        .lineTo(mousePosition.x, mousePosition.y);
-      global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePositionPlayer);
-    }
-  });
-}
 
-function mouseDown() {
-  viewport.on('mousedown', (event) => {
-    global.Player.power = 900;
-    global.Player.moveable = false;
-    ticker.add(countDown);
+// function mouseDown() {
+//   viewport.on('mousedown', (event) => {
+//     global.Player.power = 900;
+//     global.Player.moveable = false;
+//     ticker.add(countDown);
 
-    if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-      const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
+//     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
+//       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
 
-      global.Player.sprite._textures = global.Player.sprite.ready._textures;
-      global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePosition);
-      global.Player.sprite.gotoAndPlay(0);
-    }
-  });
-}
+//       global.Player.sprite._textures = global.Player.sprite.ready._textures;
+//       global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePosition);
+//       global.Player.sprite.gotoAndPlay(0);
+//     }
+//   });
+// }
 
 function addPlayerControls() {
-  global.document.addEventListener('keyup', () => {
-    global.Player.sprite._textures = global.Player.sprite.idle._textures;
-  }, true);
 
-  global.document.addEventListener('keydown', (e) => {
-    const key = document_helper.getDirection(e.key);
-
-    if (!global.Player.moveable) return;
-
-    if (key === 'up') {
-      global.Player.sprite.y -= global.Player.movement_speed;
-      global.Player.sprite.rotation = -2;
-      global.Player.sprite._textures = global.Player.sprite.walk._textures;
-    }
-
-    if (key === 'down') {
-      global.Player.sprite.y += global.Player.movement_speed;
-      global.Player.sprite.rotation = 2;
-      global.Player.sprite._textures = global.Player.sprite.walk._textures;
-    }
-
-    if (key === 'left') {
-      global.Player.sprite.x -= global.Player.movement_speed;
-      global.Player.sprite.rotation = -3;
-      global.Player.sprite._textures = global.Player.sprite.walk._textures;
-    }
-
-    if (key === 'right') {
-      global.Player.sprite.x += global.Player.movement_speed;
-      global.Player.sprite.rotation = 0;
-      global.Player.sprite._textures = global.Player.sprite.walk._textures;
-    }
-
-    door_helper.hit(global.Player.sprite, global.doors.children[0]);
-
-    // sprite_helper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
-    //   .then((arrow) => {
-    //     if (arrow.pickup) {
-    //       global.Player.ammo += 1;
-    //       arrow.destroy();
-    //     }
-    //   });
-
-    sprite_helper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
-      .then(() => {
-        if (key === 'up') global.Player.sprite.y += global.Player.movement_speed;
-        if (key === 'down') global.Player.sprite.y -= global.Player.movement_speed;
-        if (key === 'left') global.Player.sprite.x += global.Player.movement_speed;
-        if (key === 'right') global.Player.sprite.x -= global.Player.movement_speed;
-      });
-
-    sprite_helper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
-      .then(pad => pad.action());
-
-    sprite_helper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
-      .then((critter) => {
-        global.Player.inventory.push(critter);
-
-        PIXI.tweenManager.getTweensForTarget(critter)[0].clear();
-
-        critter.destroy();
-      });
-
-    sprite_helper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
-      .then((item) => {
-        if (key === 'up') {
-          global.Player.sprite.y += global.Player.movement_speed - item.weight;
-          item.y -= item.weight;
-        }
-        if (key === 'down') {
-          global.Player.sprite.y -= global.Player.movement_speed - item.weight;
-          item.y += item.weight;
-        }
-        if (key === 'left') {
-          global.Player.sprite.x += global.Player.movement_speed - item.weight;
-          item.x -= item.weight;
-        }
-        if (key === 'right') {
-          global.Player.sprite.x -= global.Player.movement_speed - item.weight;
-          item.x += item.weight;
-        }
-      });
-  }, true);
-
-  viewport.addChild(aimingLine);
 }
 
 module.exports.add_player_with_position = (x,y) => {
-  for (let i = 0; i <= 21; i += 1) {
-    let name = `survivor-bow-idle-0${i}`;
 
-    if (i >= 10) name = `survivor-bow-idle-${i}`;
-
-    global.Player.animation.idle.push(PIXI.Texture.fromFrame(name));
-  }
-
-  for (let i = 0; i <= 20; i += 1) {
-    let name = `survivor-walk_bow_0${i}`;
-
-    if (i >= 10) name = `survivor-walk_bow_${i}`;
-
-    global.Player.animation.walk.push(PIXI.Texture.fromFrame(name));
-  }
-
-  for (let i = 0; i <= 38; i += 1) {
-    let name = `survivor-bow-pull-0${i}`;
-
-    if (i >= 10) name = `survivor-bow-pull-${i}`;
-
-    global.Player.animation.ready.push(PIXI.Texture.fromFrame(name));
-  }
-
-  global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  global.Player.sprite.anchor.set(0.5);
-  global.Player.sprite.width /= 2;
-  global.Player.sprite.height /= 2;
-  global.Player.sprite.animationSpeed = 0.4;
-  global.Player.sprite.play();
-  global.Player.sprite.zIndex = -20;
-  global.Player.sprite.tag = 'player';
-  global.Player.sprite.position.set(x,y)
-
-  global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
-  global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
-  global.Player.sprite._textures = global.Player.sprite.idle._textures;
-
-  viewport.follow(global.Player.sprite);
-  viewport.addChild(global.Player.sprite);
+  global.Player = new Player()
   // global.viewport.addChild(global.Player.sprite.idle)
   // global.viewport.updateLayersOrder();
-
-  addPlayerControls();
-  mouseMove();
-  mouseDown();
-  mouseUp();
+  
+  // addPlayerControls();
+  global.Player.mouse_move();
+  global.Player.mouse_down()
+  global.Player.mouse_up()
+  global.Player.add_controls()
+  // mouseDown();
+  // mouseUp();
 };
 
 module.exports.remove_controls = () => {

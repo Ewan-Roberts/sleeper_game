@@ -156,34 +156,19 @@ function move_sprite_on_path(sprite, path_array) {
     const tween = createjs.Tween.get(sprite);
 
     const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
-
-    const initial_angle_to_face = Math.atan2(path_array[1].middle.y - sprite.y, path_array[1].middle.x - sprite.x);
-
-    console.log('hi2');
-
-    tween.to({
-      rotation: initial_angle_to_face,
-    },500);
-
-    for (let i = 1; i < path_array.length; i++) {
-      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y, path_array[i].middle.x-path_array[i-1].middle.x);
+    //TODO
+    for (let i = 0; i < path_array.length; i++) {
+      if(path_array[i-1] === undefined) continue;
       
-      //TODO
-      if(angle_to_face <= 3.14) {
-        angle_to_face = angle_to_face +6.28
-      }
+      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
 
-      if(angle_to_face >6){
-        angle_to_face = angle_to_face ;
-      }
-      
       tween.to({
         rotation: angle_to_face,
-      })
-      tween.to({
+      }).to({
         x:path_array[i].middle.x,
         y:path_array[i].middle.y,
-      }, walk_time);
+        rotation: angle_to_face,
+      }, walk_time/2);
     }
 
     tween.call(()=>resolve());
@@ -209,7 +194,6 @@ function move_enemy_to_point(sprite, point) {
   });
 }
 
-
 let boolean_time = true;
 
 function path_enemy_on_points(enemy_sprite, point_array, options) {
@@ -224,12 +208,12 @@ function path_enemy_on_points(enemy_sprite, point_array, options) {
   const path_array = point_array.map(grid => (
     sprite_grid[grid.y][grid.x]
   ));
-  console.log('hi');
+
   // move from the current position to the start of the path
   move_enemy_to_point(enemy_sprite, path_array[0])
     .then(() => move_sprite_on_path(enemy_sprite, path_array))
     .then(() => wait_sprite(enemy_sprite, 500))
-    .then(() => look_around_sprite(enemy_sprite, 6000, 1))
+    .then(() => look_around_sprite(enemy_sprite, 1000, 1))
     .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
     .then(() => move_sprite_on_route(enemy_sprite))
 
@@ -274,10 +258,8 @@ function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
   const player_point = get_sprite_position_on_grid(player_sprite, grid);
 
   if(enemy_point && player_point){
-    create_path_from_two_grid_points(enemy_point, player_point)
-      .then(path_data => {
-        create_tween_on_point_array(enemy_sprite, path_data);
-      });
+    create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+      .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
   }
 }
 
@@ -309,17 +291,10 @@ function move_sprite_on_route(sprite) {
   })
 };
 
-module.exports = {
-  create_level_grid,
-  pathfind_from_enemy_to_player,
-  move_sprite_on_path,
-  
-};
-
+//testing
 function run_pathfinding_test() {
 
   const enemy_sprite = viewport.children[7].children[0];
-  // console.log(global.viewport.children)
   const player_sprite = global.Player.sprite;
 
   const grid = grid_container.children;
@@ -330,13 +305,30 @@ function run_pathfinding_test() {
     .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
 }
 
-setInterval(()=>{
-  // highlight_start_grid()
+// function path_from_enemy_to_player(enemy, player) {
 
-  run_pathfinding_test();
-},2000);
+//   const grid = grid_container.children;
+
+//   const enemy_point = get_sprite_position_on_grid(enemy, grid);
+//   const player_point = get_sprite_position_on_grid(player, grid);
+
+//   create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+//     .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
+// }
 
 
+// setInterval(()=>{
+//   // highlight_start_grid()
+
+//   run_pathfinding_test();
+// },2000);
+
+
+module.exports = {
+  create_level_grid,
+  pathfind_from_enemy_to_player,
+  move_sprite_on_path,
+};
 
 // function continue_sprite_on_default_path(sprite) {
 //   const tween = sprite.path;

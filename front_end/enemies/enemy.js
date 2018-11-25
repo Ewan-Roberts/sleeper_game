@@ -59,6 +59,8 @@ class Enemy {
     this.sprite.rotation = -0.5;
     this.sprite.play();
     this.sprite.tag = 'enemy';
+
+    this.player_seen = false;
   }
 
   set_position(x,y) {
@@ -209,19 +211,60 @@ class Enemy {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
   
-      // const player_sprite = global.Player.sprite;
-      // const player_position = player_sprite.getGlobalPosition();
-      // if(this.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      //   action_on_seeing_player(this, player_sprite);
-      //   player_seen = true;
-      //   console.log(global.viewport)
-      // } else {
-      //   if(player_seen) {
-      //     pathfind_from_enemy_to_player(this, player_sprite)
-      //   }
-      // }
+      const player_sprite = global.Player.sprite;
+      const player_position = player_sprite.getGlobalPosition();
+
+      // console.log(this)
+
+      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+        this.action_on_seeing_player(player_sprite);
+      }
+
+      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
+        this.action_on_hearing_player(player_sprite);
+      }
+
     });
     viewport.addChild(raycast)
+  }
+
+  action_on_seeing_player(player_sprite) {
+
+    // first time you're seen 
+    if(!this.player_seen) {
+      console.log('hi')
+      this.speak('now, calm down, dont move');
+      this.sprite.stop()
+      createjs.Tween.removeTweens(this.sprite)
+    }
+
+    this.player_seen = true;
+
+    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
+  }
+
+  action_on_hearing_player(player_sprite) {
+
+    pathfind_from_enemy_to_player(this.sprite, player_sprite)
+
+  }
+
+  speak(text) {
+    const renderText = new PIXI.Text(text);
+    renderText.x = this.sprite.x - 100;
+    renderText.y = this.sprite.y - 80;
+  
+    viewport.addChild(renderText);
+  
+    function fadeOut() {
+      if (renderText.alpha > 0) {
+        renderText.alpha -= 0.01;
+      } else {
+        ticker.remove(fadeOut);
+      }
+    }
+  
+    ticker.add(fadeOut);
   }
 
   kill() {
@@ -238,16 +281,6 @@ class Enemy {
     enemy_container.addChild(this.sprite);
   }
 }
-// let player_seen = false;
-
-// function action_on_seeing_player(enemy_sprite, player_sprite) {
-//   player_seen = true;
-//   enemy_sprite.stop_and_shoot_player(player_sprite)
-
-//   // pathfind_from_enemy_to_player(enemy_sprite, player_sprite)
-//   enemy_sprite.rotation = Math.atan2(player_sprite.y - enemy_sprite.y, player_sprite.x - enemy_sprite.x);
-  
-// }
 
 function point_hits_enemy_in_container(point) {
   
@@ -264,3 +297,7 @@ module.exports = {
   point_hits_enemy_in_container,
   Enemy,
 }
+
+
+
+

@@ -3,8 +3,6 @@ const { create_level_grid } = require('../pathfinding/pathfind_util.js');
 const { Enemy } = require('../enemies/enemy.js');
 const viewport = require('../engine/viewport');
 
-
-
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
     console.log(global.viewport.children[i].name)
