@@ -7290,7 +7290,6 @@ class Player {
 
     viewport.follow(this.sprite);
     viewport.addChild(this.sprite);
-
   }
 
   create_bow_frames() {
@@ -7475,59 +7474,6 @@ class Player {
         // this.sprite._textures = global.Player.sprite.walk._textures;
       }
     })
-      // door_helper.hit(global.Player.sprite, global.doors.children[0]);
-  
-      // sprite_helper.hitBoxContainerObj(global.arrowContainer.children, global.Player.sprite)
-      //   .then((arrow) => {
-      //     if (arrow.pickup) {
-      //       global.Player.ammo += 1;
-      //       arrow.destroy();
-      //     }
-      //   });
-  
-    //   sprite_helper.hitBoxContainerObj(global.collisionItems.children, global.Player.sprite)
-    //     .then(() => {
-    //       if (key === 'up') global.Player.sprite.y += global.Player.movement_speed;
-    //       if (key === 'down') global.Player.sprite.y -= global.Player.movement_speed;
-    //       if (key === 'left') global.Player.sprite.x += global.Player.movement_speed;
-    //       if (key === 'right') global.Player.sprite.x -= global.Player.movement_speed;
-    //     });
-  
-    //   sprite_helper.hitBoxContainerObj(global.eventTriggers.children, global.Player.sprite)
-    //     .then(pad => pad.action());
-  
-    //   sprite_helper.hitBoxContainerObj(global.critterContainer.children, global.Player.sprite)
-    //     .then((critter) => {
-    //       global.Player.inventory.push(critter);
-  
-    //       PIXI.tweenManager.getTweensForTarget(critter)[0].clear();
-  
-    //       critter.destroy();
-    //     });
-  
-    //   sprite_helper.hitBoxContainerObj(global.movableItems.children, global.Player.sprite)
-    //     .then((item) => {
-    //       if (key === 'up') {
-    //         global.Player.sprite.y += global.Player.movement_speed - item.weight;
-    //         item.y -= item.weight;
-    //       }
-    //       if (key === 'down') {
-    //         global.Player.sprite.y -= global.Player.movement_speed - item.weight;
-    //         item.y += item.weight;
-    //       }
-    //       if (key === 'left') {
-    //         global.Player.sprite.x += global.Player.movement_speed - item.weight;
-    //         item.x -= item.weight;
-    //       }
-    //       if (key === 'right') {
-    //         global.Player.sprite.x -= global.Player.movement_speed - item.weight;
-    //         item.x += item.weight;
-    //       }
-    //     });
-    // }, true);
-  
-    // viewport.addChild(aimingLine);
-
   }
 
 }
@@ -7560,70 +7506,14 @@ global.Player = {
   }
 };
 
-// const aimingLine = new PIXI.Graphics();
-
-// function countDown() {
-//   global.Player.sprite._textures = global.Player.sprite.ready._textures;
-
-//   if (global.Player.power > 750) global.Player.allowShoot = false;
-//   else global.Player.allowShoot = true;
-
-//   if (global.Player.power > 400)global.Player.power -= 10;
-
-//   if (global.Player.power < 410) global.Player.sprite.gotoAndStop(34);
-// }
-
-// function mouseUp() {
-//   viewport.on('mouseup', (event) => {
-//     global.Player.sprite._textures = global.Player.sprite.idle._textures;
-//     global.Player.moveable = true;
-//     global.Player.sprite.play();
-
-//     ticker.remove(countDown);
-
-//     if (global.Player.weapon === 'bow' && global.Player.ammo > 0 && global.Player.allowShoot) {
-//       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
-
-//       bow_helper.arrow_management(global.Player.power, global.Player.sprite, mousePosition);
-//     }
-//   });
-// }
-
-
-
-// function mouseDown() {
-//   viewport.on('mousedown', (event) => {
-//     global.Player.power = 900;
-//     global.Player.moveable = false;
-//     ticker.add(countDown);
-
-//     if (global.Player.weapon === 'bow' && global.Player.ammo > 0) {
-//       const mousePosition = document_helper.mousePositionFromPlayer(event.data.global, global.Player.sprite.position, viewport);
-
-//       global.Player.sprite._textures = global.Player.sprite.ready._textures;
-//       global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mousePosition);
-//       global.Player.sprite.gotoAndPlay(0);
-//     }
-//   });
-// }
-
-function addPlayerControls() {
-
-}
-
 module.exports.add_player_with_position = (x,y) => {
 
   global.Player = new Player()
-  // global.viewport.addChild(global.Player.sprite.idle)
-  // global.viewport.updateLayersOrder();
-  
-  // addPlayerControls();
   global.Player.mouse_move();
   global.Player.mouse_down()
   global.Player.mouse_up()
   global.Player.add_controls()
-  // mouseDown();
-  // mouseUp();
+
 };
 
 module.exports.remove_controls = () => {
