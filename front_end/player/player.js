@@ -18,16 +18,24 @@ class Player {
     this.sprite.height /= 2;
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
-    this.sprite.zIndex = -20;
+    this.sprite.zIndex = -1;
     this.sprite.tag = 'player';
+    this.sprite.name = 'player';
     this.weapon = 'bow';
     this.ammo = 4;
-    this.power = 0;
+    this.power = 1000;
     this.allow_shoot = true;
     this.movement_speed = 15;
 
-    viewport.follow(this.sprite);
     viewport.addChild(this.sprite);
+  }
+
+  follow_player() {
+    viewport.follow(this.sprite);
+  }
+
+  get_position() {
+    return this.sprite.getGlobalPosition()
   }
 
   create_bow_frames() {
@@ -125,6 +133,7 @@ class Player {
     if (this.power > 750) {
       this.allow_shoot = false;
     }
+    
     else {
       this.allow_shoot = true;
     }
@@ -140,7 +149,6 @@ class Player {
   }
 
   mouse_down() {
-
     viewport.on('mousedown', (event) => {
       this.power = 900;
       this.moveable = false;
@@ -155,8 +163,8 @@ class Player {
         });
   
         // global.Player.sprite._textures = global.Player.sprite.ready._textures;
-        global.Player.sprite.rotation = sprite_helper.get_angle_from_point_to_point(global.Player.sprite, mouse_position_player);
-        global.Player.sprite.gotoAndPlay(0);
+        this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
+        this.sprite.gotoAndPlay(0);
       }
     });
   }
@@ -216,52 +224,19 @@ class Player {
 
 }
 
+function add_player_with_position(x,y) {
 
-global.Player = {
-
-  animation: {
-    walk: [],
-    idle: [],
-    pullback: [],
-    ready: [],
-  },
-
-  sprite: {
-    moving: {},
-    idle: {},
-    walk: {},
-    pullback: {},
-  },
-  movement_speed: 15,
-  weapon: 'bow',
-  moveable: true,
-  power: 900,
-  ammo: 10,
-  inventory: [],
-  vitals: {
-    health: 100,
-    status: 'alive',
-  }
-};
-
-module.exports.add_player_with_position = (x,y) => {
-
-  global.Player = new Player()
-  global.Player.mouse_move();
-  global.Player.mouse_down()
-  global.Player.mouse_up()
-  global.Player.add_controls()
+  character = new Player()
+  character.set_position(x,y)
+  character.mouse_move();
+  character.mouse_down()
+  character.mouse_up()
+  character.add_controls()
+  character.follow_player()
 
 };
 
-module.exports.remove_controls = () => {
-  global.document.removeEventListener('keyup', () => {});
-
-  global.document.removeEventListener('keydown', () => {});
-};
-
-
-module.exports.move_player_to = (x,y)=>{
-
-  global.Player.sprite.position.set(x,y)
+module.exports = {
+  add_player_with_position,
+  Player,
 }

@@ -1,10 +1,13 @@
 const PIXI = require('pixi.js');
 const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
+// const Player = require('../player/player.js');
 const { pathfind_from_enemy_to_player } = require('../pathfinding/pathfind_util.js')
 const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow/bow_helper.js');
 const { createjs } = require('@createjs/tweenjs');
 const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
+
+// console.log(Player)
 
 const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
@@ -210,11 +213,9 @@ class Enemy {
       for (let i = 1; i < intersects.length; i++) {
         raycast.lineTo(intersects[i].x, intersects[i].y); 
       }
-  
-      const player_sprite = global.Player.sprite;
-      const player_position = player_sprite.getGlobalPosition();
-
-      // console.log(this)
+      
+      const player_sprite = viewport.getChildByName('player')
+      const player_position = player_sprite.getGlobalPosition() 
 
       if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
         this.action_on_seeing_player(player_sprite);
