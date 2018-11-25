@@ -1,5 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const PIXI = require('pixi.js');
+const viewport = require('../engine/viewport');
 
 const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';
@@ -9,24 +10,28 @@ class Rat {
     viewport.addChild(critter_container);
 
     this.animations = {
-      moving: this.create_move_frames(),
+      move: this.create_move_frames(),
       wait: this.create_wait_frames(),
       dead: this.create_dead_frames(),
       eat: this.create_eat_frames(),
     };
+    console.log(this.animations)
+    const rat_frames = this.animations.move;
 
-    const enemy_frames = this.create_knife_enemy_frames();
-
-    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
+    this.sprite = new PIXI.extras.AnimatedSprite(rat_frames);
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.rotation = -0.5;
     this.sprite.play();
-    this.sprite.tag = 'enemy';
+    this.sprite.name = 'rat';
+    this.sprite.zIndex = -3
 
-    this.player_seen = false;
+    critter_container.addChild(this.sprite);
+    console.log(viewport);
+  }
+
+  create_patrol_path(path_data) {
+    this.sprite.patrol_path = path_data;
   }
 
   set_position(x,y) {
@@ -98,7 +103,7 @@ module.exports = {
   Rat,
 }
 
-},{"pixi.js":256}],2:[function(require,module,exports){
+},{"../engine/viewport":9,"pixi.js":256}],2:[function(require,module,exports){
 (function (global){
 
 const PIXI = require('pixi.js');
@@ -1030,70 +1035,70 @@ module.exports={ "height":100,
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "height":4364.74718633209,
+                 "height":4287.99483470341,
                  "id":1,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":61.08,
+                 "width":71.1878167115903,
                  "x":140.908152873722,
-                 "y":365.595324730826
+                 "y":352.118235782039
                 }, 
                 {
-                 "height":75.6059517586655,
+                 "height":98.8078079071574,
                  "id":2,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1363.88412910945,
-                 "x":201.071988323069,
-                 "y":4654.72022682971
+                 "width":1745.42576355132,
+                 "x":-180.469646118797,
+                 "y":4636.83030674721
                 }, 
                 {
-                 "height":1306.23100941178,
+                 "height":1295.91907334578,
                  "id":3,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":63.4638553374909,
-                 "x":1115.40853718636,
+                 "width":96.9776475519793,
+                 "x":1098.40853718636,
                  "y":3349.16300278899
                 }, 
                 {
-                 "height":57.7035772605796,
+                 "height":72.8653023279652,
                  "id":4,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":329.924150524603,
-                 "x":199.293924777487,
-                 "y":365.842023884545
+                 "x":209.771013726274,
+                 "y":351.680298817159
                 }, 
                 {
-                 "height":60.8779237423901,
+                 "height":87.0770370031721,
                  "id":7,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":541.493111182313,
-                 "x":208.498744384242,
-                 "y":1675.95589748723
+                 "width":610.013868941281,
+                 "x":206.483427979566,
+                 "y":1656.8486826545
                 }, 
                 {
-                 "height":57.6738224927908,
+                 "height":84.1867907925027,
                  "id":8,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":358.859339955143,
-                 "x":1051.17737302891,
-                 "y":1685.56820123603
+                 "width":399.205161280792,
+                 "x":1020.00417867435,
+                 "y":1657.90249518416
                 }, 
                 {
                  "height":1288.04870233899,
@@ -1102,64 +1107,64 @@ module.exports={ "height":100,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":60.8779237423903,
-                 "x":1121.46,
+                 "width":96.9696999733776,
+                 "x":1098.25814385151,
                  "y":1742.85
                 }, 
                 {
-                 "height":67.2861262415893,
+                 "height":80.3395577022284,
                  "id":10,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":615.187439923102,
-                 "x":794.849273060948,
-                 "y":362.274385151444
+                 "width":668.420569717998,
+                 "x":776.061109603926,
+                 "y":354.483674843146
                 }, 
                 {
-                 "height":60.8779237423903,
+                 "height":80.8512925839349,
                  "id":11,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":330.022428708747,
-                 "x":1717.6304329456,
-                 "y":368.682587650643
+                 "width":1702.69133624533,
+                 "x":1677.71698020668,
+                 "y":350.838425015004
                 }, 
                 {
-                 "height":352.451137455944,
+                 "height":369.592008067473,
                  "id":12,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":51.2656199935918,
-                 "x":2002.79544415995,
-                 "y":439.172815141831
+                 "width":73.499527744058,
+                 "x":1992.79544415995,
+                 "y":429.031944530302
                 }, 
                 {
-                 "height":695.289971163089,
+                 "height":2396.01591579894,
                  "id":13,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":57.6738224927908,
-                 "x":2002.79544415995,
-                 "y":1057.56435631453
+                 "width":72.9392053016209,
+                 "x":1993.40136243144,
+                 "y":1045.88
                 }, 
                 {
-                 "height":62.69,
+                 "height":89.202968299712,
                  "id":14,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":301.185517462352,
-                 "x":1700.61,
-                 "y":1683.16
+                 "width":310.407419479643,
+                 "x":1682.16619596542,
+                 "y":1657.79976945245
                 }, 
                 {
                  "height":0,
@@ -1171,6 +1176,72 @@ module.exports={ "height":100,
                  "width":0,
                  "x":1035.15686678091,
                  "y":1028.72744506814
+                }, 
+                {
+                 "height":84.1868,
+                 "id":16,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":525.526216808456,
+                 "x":2063.86746648621,
+                 "y":2190.44075828822
+                }, 
+                {
+                 "height":84.1868,
+                 "id":17,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":350.223086878061,
+                 "x":2939.09314849188,
+                 "y":2187.86277427172
+                }, 
+                {
+                 "height":4298.56489559165,
+                 "id":18,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":90.9850881154937,
+                 "x":3289.12978128384,
+                 "y":432.568544728022
+                }, 
+                {
+                 "height":93.6518881154936,
+                 "id":19,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1363.88,
+                 "x":1929.29176076308,
+                 "y":4638.66000592936
+                }, 
+                {
+                 "height":89.203,
+                 "id":20,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":797.645979118329,
+                 "x":1198.23810866203,
+                 "y":2535.9605005156
+                }, 
+                {
+                 "height":89.203,
+                 "id":21,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":869.829552461975,
+                 "x":1196.94910621294,
+                 "y":3443.41087432328
                 }],
          "offsetx":179.197506817296,
          "offsety":377.873003506038,
@@ -1445,8 +1516,118 @@ module.exports={ "height":100,
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"Object Layer 3",
+         "objects":[
+                {
+                 "height":0,
+                 "id":22,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-835.266821345708,
+                         "y":-5.1559680329982
+                        }, 
+                        {
+                         "x":-889.404485692189,
+                         "y":-2.57798401649916
+                        }, 
+                        {
+                         "x":-920.340293890178,
+                         "y":28.3578241814901
+                        }, 
+                        {
+                         "x":-925.496261923176,
+                         "y":85.0734725444702
+                        }, 
+                        {
+                         "x":-925.496261923176,
+                         "y":1185.87264758958
+                        }, 
+                        {
+                         "x":-915.18432585718,
+                         "y":1198.76256767208
+                        }, 
+                        {
+                         "x":-876.514565609693,
+                         "y":1198.76256767208
+                        }, 
+                        {
+                         "x":-794.019077081722,
+                         "y":1188.45063160608
+                        }, 
+                        {
+                         "x":-747.615364784738,
+                         "y":1216.80845578757
+                        }, 
+                        {
+                         "x":-770.81722093323,
+                         "y":1252.90023201856
+                        }, 
+                        {
+                         "x":-902.294405774684,
+                         "y":1252.90023201856
+                        }, 
+                        {
+                         "x":-933.230213972673,
+                         "y":1317.34983243104
+                        }, 
+                        {
+                         "x":-933.230213972673,
+                         "y":1417.8912090745
+                        }, 
+                        {
+                         "x":-922.918277906677,
+                         "y":2549.62619231761
+                        }, 
+                        {
+                         "x":-928.074245939675,
+                         "y":4166.02217066254
+                        }, 
+                        {
+                         "x":-904.872389791183,
+                         "y":4186.64604279453
+                        }, 
+                        {
+                         "x":-879.092549626192,
+                         "y":4263.98556328951
+                        }, 
+                        {
+                         "x":-884.24851765919,
+                         "y":4431.55452436195
+                        }, 
+                        {
+                         "x":-917.762309873679,
+                         "y":4483.11420469193
+                        }, 
+                        {
+                         "x":-1142.0469193091,
+                         "y":4573.3436452694
+                        }, 
+                        {
+                         "x":-1299.30394431555,
+                         "y":4547.56380510441
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1484.91879350348,
+                 "y":734.725444702243
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":16,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -6447,9 +6628,10 @@ module.exports.load = () => {
 },{"../../cutscene/cutscene_utils":4,"../level_utils.js":21,"../park/park_util.js":23,"./foyer_data.json":19,"pixi.js":256}],21:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
-const { create_level_grid } = require('../pathfinding/pathfind_util.js');
+const { create_level_grid, move_sprite_on_route, move_sprite_on_route_straight } = require('../pathfinding/pathfind_util.js');
 const { Enemy } = require('../enemies/enemy.js');
 const viewport = require('../engine/viewport');
+const { Rat } = require('../animals/rat');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -6577,6 +6759,20 @@ class Level {
     enemy.create_patrol_path(formatted_path_data);
   }
 
+  create_rat(x, y) {
+
+    const rat = new Rat();
+    rat.set_position(x, y);
+    
+    const formatted_path_data = format_path_data(this.level_data.layers[3]);
+
+    rat.create_patrol_path(formatted_path_data)
+
+    console.log(rat)
+
+    move_sprite_on_route_straight(rat.sprite).then(res => console.log(res));
+  }
+
 }
 
 module.exports.load_debug_map_image = () => {
@@ -6636,10 +6832,11 @@ module.exports.load_bedroom_map = () => {
   bedroom.render_walls(options);
   bedroom.create_grid();
   bedroom.create_enemy(1800, 1000);
+  bedroom.create_rat(2300, 1800)
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../enemies/enemy.js":6,"../engine/viewport":9,"../pathfinding/pathfind_util.js":26,"./bedroom/level_data/bedroom_level_data.json":13,"./bedroom/level_data/flat_floor_data.json":14,"./debug/playground/map2_output.json":17,"./debug/playground/map2_tiles.json":18,"easystarjs":75,"pixi.js":256}],22:[function(require,module,exports){
+},{"../animals/rat":1,"../enemies/enemy.js":6,"../engine/viewport":9,"../pathfinding/pathfind_util.js":26,"./bedroom/level_data/bedroom_level_data.json":13,"./bedroom/level_data/flat_floor_data.json":14,"./debug/playground/map2_output.json":17,"./debug/playground/map2_tiles.json":18,"easystarjs":75,"pixi.js":256}],22:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -7042,6 +7239,27 @@ function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
   }
 }
 
+function move_sprite_on_route_straight(sprite) {
+  return new Promise((resolve, reject) => {
+
+    const tween = createjs.Tween.get(sprite);
+    sprite.position.set(sprite.patrol_path[0].x,sprite.patrol_path[0].y);
+    
+    for (let i = 1; i < sprite.patrol_path.length; i++) {
+      const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 5);
+      const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
+  
+      tween.to({
+        x:sprite.patrol_path[i].x,
+        y:sprite.patrol_path[i].y,
+        rotation: angle_to_face,
+      }, walk_time)
+    }
+
+    tween.call(()=>resolve());
+  })
+};
+
 function move_sprite_on_route(sprite) {
   return new Promise((resolve, reject) => {
 
@@ -7107,6 +7325,8 @@ module.exports = {
   create_level_grid,
   pathfind_from_enemy_to_player,
   move_sprite_on_path,
+  move_sprite_on_route,
+  move_sprite_on_route_straight,
 };
 
 // function continue_sprite_on_default_path(sprite) {

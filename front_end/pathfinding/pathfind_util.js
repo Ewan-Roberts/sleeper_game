@@ -259,6 +259,27 @@ function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
   }
 }
 
+function move_sprite_on_route_straight(sprite) {
+  return new Promise((resolve, reject) => {
+
+    const tween = createjs.Tween.get(sprite);
+    sprite.position.set(sprite.patrol_path[0].x,sprite.patrol_path[0].y);
+    
+    for (let i = 1; i < sprite.patrol_path.length; i++) {
+      const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 5);
+      const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
+  
+      tween.to({
+        x:sprite.patrol_path[i].x,
+        y:sprite.patrol_path[i].y,
+        rotation: angle_to_face,
+      }, walk_time)
+    }
+
+    tween.call(()=>resolve());
+  })
+};
+
 function move_sprite_on_route(sprite) {
   return new Promise((resolve, reject) => {
 
@@ -324,6 +345,8 @@ module.exports = {
   create_level_grid,
   pathfind_from_enemy_to_player,
   move_sprite_on_path,
+  move_sprite_on_route,
+  move_sprite_on_route_straight,
 };
 
 // function continue_sprite_on_default_path(sprite) {

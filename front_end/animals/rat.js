@@ -1,4 +1,5 @@
 const PIXI = require('pixi.js');
+const viewport = require('../engine/viewport');
 
 const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';
@@ -8,24 +9,28 @@ class Rat {
     viewport.addChild(critter_container);
 
     this.animations = {
-      moving: this.create_move_frames(),
+      move: this.create_move_frames(),
       wait: this.create_wait_frames(),
       dead: this.create_dead_frames(),
       eat: this.create_eat_frames(),
     };
+    console.log(this.animations)
+    const rat_frames = this.animations.move;
 
-    const enemy_frames = this.create_knife_enemy_frames();
-
-    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
+    this.sprite = new PIXI.extras.AnimatedSprite(rat_frames);
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.rotation = -0.5;
     this.sprite.play();
-    this.sprite.tag = 'enemy';
+    this.sprite.name = 'rat';
+    this.sprite.zIndex = -3
 
-    this.player_seen = false;
+    critter_container.addChild(this.sprite);
+    console.log(viewport);
+  }
+
+  create_patrol_path(path_data) {
+    this.sprite.patrol_path = path_data;
   }
 
   set_position(x,y) {

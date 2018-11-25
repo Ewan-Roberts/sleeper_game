@@ -1,7 +1,8 @@
 const PIXI = require('pixi.js');
-const { create_level_grid } = require('../pathfinding/pathfind_util.js');
+const { create_level_grid, move_sprite_on_route, move_sprite_on_route_straight } = require('../pathfinding/pathfind_util.js');
 const { Enemy } = require('../enemies/enemy.js');
 const viewport = require('../engine/viewport');
+const { Rat } = require('../animals/rat');
 
 module.exports.clearViewport = () => {
   for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
@@ -129,6 +130,20 @@ class Level {
     enemy.create_patrol_path(formatted_path_data);
   }
 
+  create_rat(x, y) {
+
+    const rat = new Rat();
+    rat.set_position(x, y);
+    
+    const formatted_path_data = format_path_data(this.level_data.layers[3]);
+
+    rat.create_patrol_path(formatted_path_data)
+
+    console.log(rat)
+
+    move_sprite_on_route_straight(rat.sprite).then(res => console.log(res));
+  }
+
 }
 
 module.exports.load_debug_map_image = () => {
@@ -188,4 +203,5 @@ module.exports.load_bedroom_map = () => {
   bedroom.render_walls(options);
   bedroom.create_grid();
   bedroom.create_enemy(1800, 1000);
+  bedroom.create_rat(2300, 1800)
 }
