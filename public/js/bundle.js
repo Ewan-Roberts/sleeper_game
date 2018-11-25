@@ -7293,24 +7293,23 @@ const get_mouse_position_from_player = (event, sprite, viewport) => {
 
 class Player {
   constructor() {
-    const idle_frames = this.create_idle_frames()
-    const walking_frames = this.create_walk_frames()
-    //pull back
-    const ready_frames = this.create_ready_frames()
 
-    this.sprite = new PIXI.extras.AnimatedSprite(idle_frames);
-    
-    console.log(this.sprite);
+    this.animations = {
+      bow: {
+        idle: this.create_bow_idle_frames(),
+        walk: this.create_bow_walk_frames(),
+        read: this.create_bow_ready_frames(),
+      },
+    };
 
+    this.sprite = new PIXI.extras.AnimatedSprite(this.animations.bow.idle);
     this.sprite.anchor.set(0.5);
     this.sprite.width /= 2;
     this.sprite.height /= 2;
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
     this.sprite.zIndex = -1;
-    this.sprite.tag = 'player';
     this.sprite.name = 'player';
-    this.texture_holder = {}
 
     this.weapon = 'bow';
     this.ammo = 4;
@@ -7333,7 +7332,7 @@ class Player {
     // case for switching between frames
   }
 
-  create_idle_frames() {
+  create_bow_idle_frames() {
     const bow_frames = [];
   
     for (let i = 0; i <= 21; i += 1) {
@@ -7347,7 +7346,7 @@ class Player {
     return bow_frames;
   }
 
-  create_ready_frames() {
+  create_bow_ready_frames() {
     const ready_frames = [];
   
     for (let i = 0; i <= 38; i += 1) {
@@ -7361,7 +7360,7 @@ class Player {
     return ready_frames;
   }
 
-  create_walk_frames() {
+  create_bow_walk_frames() {
     const walk_frames = [];
 
     for (let i = 0; i <= 20; i += 1) {
@@ -7384,7 +7383,6 @@ class Player {
 
     viewport.on('mousemove', (event) => {
       if (this.weapon === 'bow' && this.ammo > 0) {
-
         const mouse_position = get_mouse_position(event,viewport)
 
         const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
@@ -7399,9 +7397,6 @@ class Player {
   }
 
   count_down() {
-
-    // this.sprite._textures = this.sprite.ready._textures;
-
     if (this.power > 750) {
       this.allow_shoot = false;
     }
@@ -7417,14 +7412,15 @@ class Player {
     if (this.power < 410) {
       this.sprite.gotoAndStop(34);
     }
-
   }
 
   mouse_down() {
     viewport.on('mousedown', (event) => {
       this.power = 900;
       this.moveable = false;
-      
+
+      this.sprite.textures = this.animations.bow.read;
+
       ticker.add(this.count_down);
   
       if (this.weapon === 'bow' && this.ammo > 0) {
@@ -7440,9 +7436,10 @@ class Player {
 
   mouse_up() {
     viewport.on('mouseup', (event) => {
-      // global.Player.sprite._textures = global.Player.sprite.idle._textures;
       this.moveable = true;
       this.sprite.play();
+
+      this.sprite.textures = this.animations.bow.idle;
   
       ticker.remove(this.count_down);
   
@@ -7453,39 +7450,45 @@ class Player {
       }
     });
   }
-  
+
   add_controls() {
     global.document.addEventListener('keydown', (e) => {
       const key = document_helper.getDirection(e.key);
-  
+
       if (!this.moveable) return;
-  
+
       if (key === 'up') {
         this.sprite.y -= this.movement_speed;
         this.sprite.rotation = -2;
-        // this.sprite._textures = this.sprite.walk._textures;
-      }
-  
+      };
+
       if (key === 'down') {
         this.sprite.y += this.movement_speed;
         this.sprite.rotation = 2;
-        // this.sprite._textures = global.Player.sprite.walk._textures;
-      }
-  
+      };
+
       if (key === 'left') {
         this.sprite.x -= this.movement_speed;
         this.sprite.rotation = -3;
-        // this.sprite._textures = global.Player.sprite.walk._textures;
-      }
-  
+      };
+
       if (key === 'right') {
         this.sprite.x += this.movement_speed;
         this.sprite.rotation = 0;
-        // this.sprite._textures = global.Player.sprite.walk._textures;
-      }
-    })
-  }
+      };
 
+      if(this.sprite.textures !== this.animations.bow.walk) {
+        this.sprite.textures = this.animations.bow.walk;
+        this.sprite.play();
+      };
+    });
+
+    global.document.addEventListener('keyup', () => {
+      this.sprite.textures = this.animations.bow.idle;
+
+      this.sprite.play();
+    });
+  };
 }
 
 module.exports = {
