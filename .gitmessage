@@ -1,6 +1,5 @@
 ; ==== Format of the commit message ====
 :type: <subject>
-;
 
 ; ==== Emoji list for the type ====
 ; :tada:              adding new features
