@@ -47,6 +47,7 @@ module.exports.add_floor = () => {
   character.mouse_up()
   character.add_controls()
   character.follow_player()
+  // character.switch_walk_bow_frames()
 
   level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);
@@ -73,4 +74,5 @@ module.exports.add_floor = () => {
   viewport.updateLayersOrder();
 
   items.add_items();
+  
 };

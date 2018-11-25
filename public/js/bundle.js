@@ -5643,6 +5643,7 @@ module.exports.add_floor = () => {
   character.mouse_up()
   character.add_controls()
   character.follow_player()
+  // character.switch_walk_bow_frames()
 
   level_util.load_bedroom_map()
   const create_grid = createPad(-500, -200);
@@ -5669,6 +5670,7 @@ module.exports.add_floor = () => {
   viewport.updateLayersOrder();
 
   items.add_items();
+  
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -7284,16 +7286,21 @@ const get_mouse_position = (event, viewport) => ({
 const get_mouse_position_from_player = (event, sprite, viewport) => {
   const mouse_position = get_mouse_position(event, viewport);
 
-  mouse_position.x += sprite.x;
+  mouse_position.x += sprite.x
   mouse_position.y += sprite.y;
   return mouse_position;
 }
 
 class Player {
   constructor() {
-    const bow_frames = this.create_bow_frames();
+    const idle_frames = this.create_idle_frames()
+    const walking_frames = this.create_walk_frames()
+    //pull back
+    const ready_frames = this.create_ready_frames()
 
-    this.sprite = new PIXI.extras.AnimatedSprite(bow_frames);
+    this.sprite = new PIXI.extras.AnimatedSprite(idle_frames);
+    
+    console.log(this.sprite);
 
     this.sprite.anchor.set(0.5);
     this.sprite.width /= 2;
@@ -7303,6 +7310,7 @@ class Player {
     this.sprite.zIndex = -1;
     this.sprite.tag = 'player';
     this.sprite.name = 'player';
+    this.texture_holder = {}
 
     this.weapon = 'bow';
     this.ammo = 4;
@@ -7321,7 +7329,11 @@ class Player {
     return this.sprite.getGlobalPosition()
   }
 
-  create_bow_frames() {
+  switch_walk_bow_frames() {
+    // case for switching between frames
+  }
+
+  create_idle_frames() {
     const bow_frames = [];
   
     for (let i = 0; i <= 21; i += 1) {
@@ -7332,8 +7344,35 @@ class Player {
       }
       bow_frames.push(PIXI.Texture.fromFrame(name));
     }
-
     return bow_frames;
+  }
+
+  create_ready_frames() {
+    const ready_frames = [];
+  
+    for (let i = 0; i <= 38; i += 1) {
+      let name = `survivor-bow-pull-0${i}`;
+  
+      if (i >= 10) name = `survivor-bow-pull-${i}`;
+  
+      ready_frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return ready_frames;
+  }
+
+  create_walk_frames() {
+    const walk_frames = [];
+
+    for (let i = 0; i <= 20; i += 1) {
+      let name = `survivor-walk_bow_0${i}`;
+  
+      if (i >= 10) name = `survivor-walk_bow_${i}`;
+      
+      walk_frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return walk_frames;
   }
 
   set_position(x,y) {
