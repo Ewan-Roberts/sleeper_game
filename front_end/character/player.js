@@ -4,9 +4,8 @@ const bow_helper        = require('../weapons/bow.js');
 const document_helper   = require('../utils/mouse.js');
 const ticker            = require('../engine/ticker');
 const viewport          = require('../engine/viewport.js');
-const { Character } = require('./character_model');
-const { GUI_HUD }       = require('../gui/hud')
-const gui = new GUI_HUD();
+const { Character }     = require('./character_model');
+const { Keyboard }      = require('../input/keyboard');
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -25,15 +24,16 @@ const get_mouse_position_from_player = (event, sprite, viewport) => {
 class Player extends Character{
   constructor() {
     super()
-    this.animations = {
+
+    this.sprite = new PIXI.extras.AnimatedSprite(this.create_bow_idle_frames()); 
+    this.sprite.animations = {
       bow: {
         idle:   this.create_bow_idle_frames(),
         walk:   this.create_bow_walk_frames(),
         ready:  this.create_bow_ready_frames(),
       },
     };
-
-    this.sprite = new PIXI.extras.AnimatedSprite(this.animations.bow.idle);
+    
     this.sprite.anchor.set(0.5);
     this.sprite.width /= 2;
     this.sprite.height /= 2;
@@ -139,14 +139,14 @@ class Player extends Character{
 
   mouse_down() {
     viewport.on('mousedown', (event) => {
-      if(!this.shift_pressed) returnnal
+      if(!this.shift_pressed) return
       this.aiming_cone.alpha = 0;
       this.aiming_cone.count = 10;
       this.aiming_cone.width = 500;
       this.aiming_cone.height = 300;
       this.power = 900;
 
-      this.sprite.textures = this.animations.bow.ready;
+      this.sprite.textures = this.sprite.animations.bow.ready;
       this.sprite.loop = false;
       /* perfomance!!!
       this.count_down = () => {
@@ -194,7 +194,7 @@ class Player extends Character{
       ticker.remove(this.count_down);
       this.aiming_cone.alpha = 0;
       if (this.weapon === 'bow' && this.allow_shoot && this.shift_pressed) {
-        this.sprite.textures = this.animations.bow.idle;
+        this.sprite.textures = this.sprite.animations.bow.idle;
         
         const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
         bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
@@ -203,101 +203,17 @@ class Player extends Character{
   }
 
   add_controls() {
-    
+    const keyboard = new Keyboard();
+    const player_position = this.sprite.getGlobalPosition()
+
     global.document.addEventListener('keydown', (e) => {
-      if(e.key === 'i'){
-        if(this.inventory_open === false) {
-          ticker.add(() =>gui.update_location());
-          this.inventory_open = true;
-          gui.show()
-        } else {
-          ticker.remove(() =>gui.update_location());
-          gui.hide();
-          this.inventory_open = false;
-        }
-        
-      }
-      if(e.key === 'Shift'){
-        this.shift_pressed = true;
-      }
-      const key = document_helper.getDirection(e.key);
-      const collision_objects = viewport.getChildByName('collision_items');
-      this.sprite.loop = true;
-
-      if (!this.moveable) return;
-
-      if (key === 'up') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-          const player_position = this.sprite.getGlobalPosition()
-
-          player_position.y -= this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1);
-            return;
-          }      
-        }
-
-        this.sprite.y -= this.movement_speed;
-        this.sprite.rotation = -2;
-      };
-
-      if (key === 'down') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.y += this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.y += this.movement_speed;
-        this.sprite.rotation = 2;
-      };
-
-      if (key === 'left') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.x -= this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.x -= this.movement_speed;
-        this.sprite.rotation = -3;
-      };
-
-      if (key === 'right') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.x += this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.x += this.movement_speed;
-        this.sprite.rotation = 0;
-      };
-
-      if(key === 'right' || key === 'up' || key === 'down' || key === 'left'){
-        if(this.sprite.textures !== this.animations.bow.walk) {
-          this.sprite.textures = this.animations.bow.walk;
-          this.sprite.play();
-        };
-      }
+      keyboard.player_position = this.sprite.position; 
+      console.log(player_position)
+      keyboard.key_down(e);
     });
 
     global.document.addEventListener('keyup', () => {
-      this.shift_pressed = false;
-      this.sprite.textures = this.animations.bow.idle;
-      this.sprite.play();
+      keyboard.key_down()
     });
   };
 }

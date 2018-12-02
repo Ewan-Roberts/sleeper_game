@@ -230,8 +230,7 @@ module.exports.load_bedroom_map = () => {
     item_data: level_data.layers[0].layers[5],
     grid_data: tiles_data,
   }
-  console.log(GUI_HUD)
-  new GUI_HUD();
+  
   new Bedroom(bedroom_schema, bedroom_image);
  };
 

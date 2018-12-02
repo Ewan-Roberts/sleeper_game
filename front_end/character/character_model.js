@@ -54,7 +54,6 @@ class Character {
       health: 100,
       status: 'alive',
     };
-
   }
   
   create_default_frames() {
@@ -67,14 +66,7 @@ class Character {
     return enemy_frames;
   }
   
-  speak(text) {
-    const render_text = new PIXI.Text(text);
-    render_text.x = this.sprite.x - 100;
-    render_text.y = this.sprite.y - 80;
-    render_text.alpha = 1;
-    this.container.addChild(render_text);
-  }
-
+  
   set_position(x,y) {
     this.sprite.position.set(x, y);
   }
