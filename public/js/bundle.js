@@ -496,7 +496,7 @@ class Player extends Character{
 
   mouse_down() {
     viewport.on('mousedown', (event) => {
-      if(!this.shift_pressed) return;
+      if(!this.shift_pressed) returnnal
       this.aiming_cone.alpha = 0;
       this.aiming_cone.count = 10;
       this.aiming_cone.width = 500;
@@ -547,14 +547,13 @@ class Player extends Character{
       viewport.addChild(poo)
       this.moveable = true;
       this.sprite.play();
-      this.sprite.textures = this.animations.bow.idle;
       
       ticker.remove(this.count_down);
       this.aiming_cone.alpha = 0;
-
-      if (this.weapon === 'bow' && this.allow_shoot) {
+      if (this.weapon === 'bow' && this.allow_shoot && this.shift_pressed) {
+        this.sprite.textures = this.animations.bow.idle;
+        
         const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-  
         bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
       }
     });
@@ -578,8 +577,6 @@ class Player extends Character{
       if(e.key === 'Shift'){
         this.shift_pressed = true;
       }
-      
-
       const key = document_helper.getDirection(e.key);
       const collision_objects = viewport.getChildByName('collision_items');
       this.sprite.loop = true;
