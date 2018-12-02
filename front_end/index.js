@@ -25,6 +25,6 @@ loader.add('../../images/bedroom_EN_web.json');
 loader.load(() => {
   const debug = require('./level/debug/debug_layout.js');
   debug.add_floor();
-  const pathfinding = require('./pathfinding/pathfind_util.js');
+  const pathfinding = require('./engine/pathfind.js');
 });
 

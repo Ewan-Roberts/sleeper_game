@@ -1,58 +1,47 @@
 const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/sprite_helper.js');
+const viewport = require('../engine/viewport');
+const ticker = require('../engine/ticker');
 
-module.exports.teleport = (x, y) => {
-  global.Player.sprite.x = x;
-  global.Player.sprite.y = y;
-};
+function fade_out_sprite(sprite, speed){
+  const count_down = () => {
+    if (sprite.alpha > 0) {
+      sprite.alpha -= speed || 0.005;
+    } else {
+      ticker.remove(count_down);
+    }
+  }
 
-module.exports.clearScene = () => global.viewport.removeChildren();
+  ticker.add(count_down);
+}
 
-module.exports.createPlayer = () => {
-  global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  global.Player.sprite.anchor.set(0.5);
-  global.Player.sprite.width /= 2;
-  global.Player.sprite.height /= 2;
-  global.Player.sprite.animationSpeed = 0.6;
-  global.Player.sprite.play();
-  global.Player.sprite.zIndex = -20;
+// todo: this could be running both
+function fade_in_sprite(sprite, speed, limit){
+  const count_up = () => {
+    if (sprite.alpha < limit) {
+      sprite.alpha += speed || 0.005;
+    } else {
+      ticker.remove(count_up);
+    }
+  }
 
-  global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
-  global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
+  ticker.add(count_up);
+}
 
-  global.viewport.addChild(global.Player.sprite);
-};
+class Effects {
 
-module.exports.movePlayer = (start, finish) => {
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(start.x, start.y)
-    .lineTo(finish.x, finish.y);
+  static fade_to_black(sprite) {
+    fade_out_sprite(sprite);
+  }
 
-  const pathOneVisualGuide = new PIXI.Graphics()
-    .lineStyle(1, 0xffffff, 1)
-    .drawPath(pathOne);
-  global.viewport.addChild(pathOneVisualGuide);
+  static fade_to_normal(sprite) {
+    fade_in_sprite(sprite);
+  }
+  
+}
 
-  const animatedPlayer = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  animatedPlayer.x = start.x;
-  animatedPlayer.y = start.y;
-  animatedPlayer.height /= 3;
-  animatedPlayer.width /= 3;
-  animatedPlayer.texture.width = 100;
-  animatedPlayer.texture.height = 100;
-  animatedPlayer.anchor.set(0);
-  animatedPlayer.animationSpeed = 0.4;
-  animatedPlayer.play();
+module.exports = {
+  Effects,
+}
 
-  const animatedPlayerTween = PIXI.tweenManager.createTween(animatedPlayer);
-  animatedPlayerTween.name = 'tween';
-  animatedPlayerTween.path = pathOne;
-  animatedPlayerTween.target.rotation = spriteHelper.angle(animatedPlayer, pathOne.tmpPoint2);
-  animatedPlayerTween.time = 3000;
-  animatedPlayerTween.easing = PIXI.tween.Easing.inOutQuad();
-  animatedPlayerTween.name = 'tween path';
-  animatedPlayerTween.start();
 
-  global.viewport.addChild(animatedPlayer);
-};
+
