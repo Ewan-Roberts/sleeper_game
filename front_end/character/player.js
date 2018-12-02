@@ -5,6 +5,8 @@ const document_helper   = require('../utils/mouse.js');
 const ticker            = require('../engine/ticker');
 const viewport          = require('../engine/viewport.js');
 const { Character } = require('./character_model');
+const { GUI_HUD }       = require('../gui/hud')
+const gui = new GUI_HUD();
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -39,7 +41,8 @@ class Player extends Character{
     this.sprite.play();
     this.sprite.zIndex = -1;
     this.sprite.name = 'player';
-    
+    this.shift_pressed = false;
+    this.inventory_open = false;
     this.weapon = 'bow';
     this.power = 1000;
     this.allow_shoot = true;
@@ -136,6 +139,7 @@ class Player extends Character{
 
   mouse_down() {
     viewport.on('mousedown', (event) => {
+      if(!this.shift_pressed) return;
       this.aiming_cone.alpha = 0;
       this.aiming_cone.count = 10;
       this.aiming_cone.width = 500;
@@ -180,6 +184,10 @@ class Player extends Character{
 
   mouse_up() {
     viewport.on('mouseup', (event) => {
+      const poo = new PIXI.Sprite.fromFrame('bunny')
+      poo.position.x = viewport.center.x;
+      poo.position.y = viewport.bottom;
+      viewport.addChild(poo)
       this.moveable = true;
       this.sprite.play();
       this.sprite.textures = this.animations.bow.idle;
@@ -196,7 +204,25 @@ class Player extends Character{
   }
 
   add_controls() {
+    
     global.document.addEventListener('keydown', (e) => {
+      if(e.key === 'i'){
+        if(this.inventory_open === false) {
+          ticker.add(() =>gui.update_location());
+          this.inventory_open = true;
+          gui.show()
+        } else {
+          ticker.remove(() =>gui.update_location());
+          gui.hide();
+          this.inventory_open = false;
+        }
+        
+      }
+      if(e.key === 'Shift'){
+        this.shift_pressed = true;
+      }
+      
+
       const key = document_helper.getDirection(e.key);
       const collision_objects = viewport.getChildByName('collision_items');
       this.sprite.loop = true;
@@ -272,8 +298,8 @@ class Player extends Character{
     });
 
     global.document.addEventListener('keyup', () => {
+      this.shift_pressed = false;
       this.sprite.textures = this.animations.bow.idle;
-
       this.sprite.play();
     });
   };

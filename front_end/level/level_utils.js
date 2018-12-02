@@ -14,6 +14,7 @@ const { Door } = require('../object_management/hard_furnishing/door.js');
 const { Chest } = require('../object_management/items/chest');
 const { Effects } = require('../cutscene/cutscene_utils');
 const { Merc } = require('../dialog/dialog_util');
+const { GUI_HUD } = require('../gui/hud')
 
 class Level {
   constructor() {
@@ -229,7 +230,8 @@ module.exports.load_bedroom_map = () => {
     item_data: level_data.layers[0].layers[5],
     grid_data: tiles_data,
   }
-
+  console.log(GUI_HUD)
+  new GUI_HUD();
   new Bedroom(bedroom_schema, bedroom_image);
  };
 
