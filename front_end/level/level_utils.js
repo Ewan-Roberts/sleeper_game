@@ -108,11 +108,10 @@ class Level {
     
     enemy.set_position(location.x, location.y);
     enemy.create_direction_line();
-    enemy.add_vitals();
     enemy.add_sight_line();
     enemy.add_influence_box();
     enemy.create_light();
-    //enemy.add_raycasting(this.segments);
+    enemy.add_raycasting(this.segments);
     
     const formatted_path_data = format_path_data(path);
     enemy.create_patrol_path(formatted_path_data);
