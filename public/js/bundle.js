@@ -3,8 +3,6 @@
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
-const { Dialog } = require('../dialog/dialog_util');
-
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1
@@ -59,8 +57,6 @@ class Character {
       status: 'alive',
     };
 
-    //this.container.addChild(this.sprite);
-    //viewport.addChild(this.container); 
   }
   
   create_default_frames() {
@@ -72,19 +68,7 @@ class Character {
 
     return enemy_frames;
   }
-
-  add_script(script) {
-    this.sprite.dialog = {
-      script: script,
-      current_step: 0,
-    }
-  }
   
-  add_dialog_handling() {
-    this.dialog = new Dialog();
-    this.dialog_open = false;
-  }
-
   speak(text) {
     const render_text = new PIXI.Text(text);
     render_text.x = this.sprite.x - 100;
@@ -235,23 +219,32 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../dialog/dialog_util":7,"../engine/ticker":10,"../engine/viewport":11,"pixi.js":223}],2:[function(require,module,exports){
+},{"../engine/ticker":10,"../engine/viewport":11,"pixi.js":223}],2:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
 const { pathfind_from_enemy_to_player } = require('../engine/pathfind.js')
 const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow.js');
 const { createjs } = require('@createjs/tweenjs');
-const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
 const { Character } = require('./character_model');
 
+const container = new PIXI.Container();
+container.name = 'enemy_container';
+container.zIndex = -10;
+viewport.addChild(container)
+
 class Enemy extends Character {
   constructor() {
-    super('enemy_container');
-
-    this.container.addChild(this.sprite)
-    viewport.addChild(this.container)
+    super();
+    this.sprite.speak = (text) => {
+      const render_text = new PIXI.Text(text);
+      render_text.x = this.sprite.x - 100;
+      render_text.y = this.sprite.y - 80;
+      render_text.alpha = 1;
+      container.addChild(render_text);
+    }
+    container.addChild(this.sprite)
   }
 
   stop_and_shoot_player(player_sprite) {
@@ -285,24 +278,19 @@ class Enemy extends Character {
   }
 
   action_on_seeing_player(player_sprite) {
-    // first time you're seen 
     if(!this.player_seen) {
-      this.speak('now, calm down, dont move');
+      this.sprite.speak('now, calm down, dont move');
       this.sprite.stop()
       createjs.Tween.removeTweens(this.sprite)
     }
 
     this.player_seen = true;
-
     this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
   }
 
   action_on_hearing_player(player_sprite) {
-
     pathfind_from_enemy_to_player(this.sprite, player_sprite)
-
   }
-
 }
 
 module.exports = {
@@ -310,24 +298,39 @@ module.exports = {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pathfind.js":9,"../engine/ticker":10,"../engine/viewport":11,"../utils/sprite_helper.js":29,"../weapons/bow.js":30,"./character_model":1,"@createjs/tweenjs":32,"pixi.js":223}],3:[function(require,module,exports){
+},{"../engine/pathfind.js":9,"../engine/viewport":11,"../utils/sprite_helper.js":29,"../weapons/bow.js":30,"./character_model":1,"@createjs/tweenjs":32,"pixi.js":223}],3:[function(require,module,exports){
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
 const { Character } = require('./character_model');
+const { Dialog } = require('../dialog/dialog_util');
+
+const container = new PIXI.Container();
+container.name = 'friend_container';
+container.zIndex = -10;
+viewport.addChild(container)
 
 class Friend extends Character {
   constructor() {
-    super('friend_container');
-    
+    super();
     const idle_frames = this.create_idle_frames();
     this.sprite = new PIXI.extras.AnimatedSprite(idle_frames);
     this.sprite.name = 'friendly';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
-    console.log(this)
-    this.container.addChild(this.sprite);
-    viewport.addChild(this.container);
+    container.addChild(this.sprite);
+  }
+  
+  add_script(script) {
+    this.sprite.dialog = {
+      script: script,
+      current_step: 0,
+    }
+  }
+  
+  add_dialog_handling() {
+    this.dialog = new Dialog();
+    this.dialog_open = false;
   }
 
   add_state_handling() {
@@ -342,7 +345,6 @@ class Friend extends Character {
       this.dialog.enter_dialog_slide(player);
     }
   }
-
 }
 
 module.exports = {
@@ -351,7 +353,7 @@ module.exports = {
 
 
 
-},{"../engine/ticker":10,"../engine/viewport":11,"./character_model":1,"pixi.js":223}],4:[function(require,module,exports){
+},{"../dialog/dialog_util":7,"../engine/ticker":10,"../engine/viewport":11,"./character_model":1,"pixi.js":223}],4:[function(require,module,exports){
 (function (global){
 const PIXI              = require('pixi.js');
 const sprite_helper     = require('../utils/sprite_helper.js');
@@ -359,6 +361,7 @@ const bow_helper        = require('../weapons/bow.js');
 const document_helper   = require('../utils/mouse.js');
 const ticker            = require('../engine/ticker');
 const viewport          = require('../engine/viewport.js');
+const { Character } = require('./character_model');
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -374,44 +377,9 @@ const get_mouse_position_from_player = (event, sprite, viewport) => {
   return mouse_position;
 }
 
-function get_intersection(ray, segment){
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
-
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
-
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
-  }
-
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1
-  };
-}
-
-class Player {
+class Player extends Character{
   constructor() {
+    super()
     this.animations = {
       bow: {
         idle:   this.create_bow_idle_frames(),
@@ -439,75 +407,6 @@ class Player {
 
   follow_player() {
     viewport.follow(this.sprite);
-  }
-
-  create_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    
-    light.name  = 'light';
-    light.anchor.set(0.5);
-    light.width   = 2000;
-    light.height  = 2000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-
-  add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics();
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast
-    }
-    
-    ticker.add(() => {
-      const unique_angles = [];
-      let intersects = [];
-      
-      raycast.clear()
-      raycast.beginFill(0xfffffff, 0.05);
-  
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
-  
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
-        };
-  
-        let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        }
-        if(!closest_intersect) continue;
-  
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      }
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
-      }
-    });
-
-    viewport.addChild(raycast)
   }
 
   create_bow_idle_frames() {
@@ -742,7 +641,7 @@ module.exports = {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/ticker":10,"../engine/viewport.js":11,"../utils/mouse.js":28,"../utils/sprite_helper.js":29,"../weapons/bow.js":30,"pixi.js":223}],5:[function(require,module,exports){
+},{"../engine/ticker":10,"../engine/viewport.js":11,"../utils/mouse.js":28,"../utils/sprite_helper.js":29,"../weapons/bow.js":30,"./character_model":1,"pixi.js":223}],5:[function(require,module,exports){
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 
@@ -1096,7 +995,6 @@ module.exports = {
 
 },{"../engine/ticker":10,"../engine/viewport":11,"pixi.js":223}],8:[function(require,module,exports){
 (function (global){
-// add the viewport to the stage
 module.exports = new PIXI.Application({
   width: global.window.innerWidth,
   height: global.window.innerHeight,
@@ -1549,15 +1447,12 @@ module.exports = {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./viewport":11,"@createjs/tweenjs":32,"easystarjs":43,"pixi.js":223}],10:[function(require,module,exports){
-
 const app = require('./app');
 
 module.exports = app.ticker;
 
 },{"./app":8}],11:[function(require,module,exports){
 (function (global){
-
-
 const Viewport = require('pixi-viewport');
 
 const viewport = new Viewport({
@@ -1566,8 +1461,6 @@ const viewport = new Viewport({
   worldWidth:   global.window.innerWidth,
   worldHeight:  global.window.innerHeight,
 });
-
-viewport.drag().decelerate();
 
 module.exports = viewport;
 
@@ -1689,8 +1582,6 @@ class GUI_Container {
 
     this.container.getChildByName('item_slot_4').addChild(item);
   }
-
-
 }
 
 module.exports = {
@@ -7840,15 +7731,15 @@ class Bedroom extends Level {
       friend_data,
     } = data;
     
-    super.create_grid(grid_data)
-    super.set_background_image(image, grid_data);
-    super.render_walls(wall_data);
-    super.render_doors(door_data);
-    super.render_items(item_data.layers[0])
-    super.create_player(player_data.position)
-    super.create_enemy(enemy_data.position, enemy_data.path_data);
-    super.create_rat(rat_data.position, rat_data.path_data);
-    super.create_friend(friend_data.position, friend_data.script);
+    this.create_grid(grid_data)
+    this.set_background_image(image, grid_data);
+    this.render_walls(wall_data);
+    this.render_doors(door_data);
+    this.render_items(item_data.layers[0])
+    this.create_player(player_data.position)
+    this.create_enemy(enemy_data.position, enemy_data.path_data);
+    this.create_rat(rat_data.position, rat_data.path_data);
+    this.create_friend(friend_data.position, friend_data.script);
   }
 }
 
@@ -7857,7 +7748,7 @@ module.exports.load_debug_map_image = () => {
   const debug_room_tiled_data = require('./debug/playground/map2_output.json');
   const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-
+  
   const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
 
   const options = {
@@ -7929,12 +7820,7 @@ module.exports.load_bedroom_map = () => {
   }
 
   new Bedroom(bedroom_schema, bedroom_image);
-  //const merk = new Merc();
-  //Effects.create_dialog_overlay();
-  // Effects.fade_to_black(0.005).then(()=> {
-    // Effects.fade_to_normal(0.001);
-  // })
-};
+ };
 
 
 
@@ -8056,14 +7942,14 @@ const PIXI              = require('pixi.js');
 const viewport          = require('../../engine/viewport');
 const { createjs }      = require('@createjs/tweenjs');
 
-const door_container    = new PIXI.Container();
+const door_container = new PIXI.Container();
 door_container.name     = 'door_container';
 door_container.zIndex   = -2;
+viewport.addChild(door_container);
 
 class Door {
   constructor(door_data) {
     this.sprite = PIXI.Sprite.fromFrame('black_dot');
-
     this.sprite.position.set(door_data.x, door_data.y);
     this.sprite.width = door_data.width;
     this.sprite.height = door_data.height;
@@ -8072,8 +7958,7 @@ class Door {
     this.sprite.name = 'door';
     this.state = 'closed';
     door_container.addChild(this.sprite);
-
-    viewport.addChild(door_container);
+    
   }
 
   add_state_handling() {
@@ -8144,12 +8029,13 @@ const io = require('socket.io-client');
 const viewport = require('../../engine/viewport.js');
 const { GUI_Container } = require('../../gui/container')
 
+const container = new PIXI.Container();
+container.name = 'item_container';
+container.zIndex = -6;
+viewport.addChild(container);
 
 class Chest {
   constructor(item_data) {
-    this.container = new PIXI.Container();
-    this.container.name = 'item_container';
-    this.container.zIndex = -6;
     this.image_cache = {
       state: {
         full:   PIXI.Texture.fromFrame('chest_full'),
@@ -8165,8 +8051,7 @@ class Chest {
     this.sprite.buttonMode = true;
     this.state = 'closed';
 
-    this.container.addChild(this.sprite);
-    viewport.addChild(this.container);
+    container.addChild(this.sprite);
   }
 
   add_state_handling() {
@@ -8216,7 +8101,6 @@ module.exports = {
 }
 
 },{"../../engine/viewport.js":11,"../../gui/container":12,"pixi.js":223,"socket.io-client":265}],28:[function(require,module,exports){
-
 const keymap = {
   w: 'up',
   a: 'left',
@@ -8271,6 +8155,7 @@ const viewport = require('../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
+arrow_container.zIndex = -10;
 viewport.addChild(arrow_container);
 
 // const arrowSounds = [
@@ -8283,6 +8168,19 @@ viewport.addChild(arrow_container);
 //   new Audio('audio/arrow_hit_06.wav'),
 //   new Audio('audio/arrow_hit_07.wav'),
 // ];
+
+class Arrow {
+  constructor() {
+    this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    this.sprite.name = 'arrow';
+    this.sprite.anchor.set(0.95)
+    this.sprite.height *= 3
+    this.sprite.zIndex = -40
+    console.log(this.container)
+    arrow_container.addChild(this.sprite);
+  }
+
+}
 
 function create_arrow() {
   const arrow = PIXI.Sprite.fromFrame('arrow');
@@ -8301,9 +8199,9 @@ function create_arrow() {
 }
 
 function create_rotated_arrow(origin, target) {
-  const arrow = create_arrow();
-  arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
-  return arrow;
+  const arrow = new Arrow();
+  arrow.sprite.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
+  return arrow.sprite;
 }
 
 function create_embedded_arrow(rotation) {
@@ -8348,6 +8246,7 @@ function arrow_management(power, origin, target) {
         
         const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
         arrow.destroy();
+        console.log(enemy)
         enemy.speak('I am hit');
         enemy.addChild(arrow_in_enemy)
 

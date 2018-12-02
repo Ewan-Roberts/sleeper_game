@@ -1,4 +1,3 @@
-
 const keymap = {
   w: 'up',
   a: 'left',

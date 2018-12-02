@@ -1,8 +1,6 @@
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
-const { Dialog } = require('../dialog/dialog_util');
-
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1
@@ -57,8 +55,6 @@ class Character {
       status: 'alive',
     };
 
-    //this.container.addChild(this.sprite);
-    //viewport.addChild(this.container); 
   }
   
   create_default_frames() {
@@ -70,19 +66,7 @@ class Character {
 
     return enemy_frames;
   }
-
-  add_script(script) {
-    this.sprite.dialog = {
-      script: script,
-      current_step: 0,
-    }
-  }
   
-  add_dialog_handling() {
-    this.dialog = new Dialog();
-    this.dialog_open = false;
-  }
-
   speak(text) {
     const render_text = new PIXI.Text(text);
     render_text.x = this.sprite.x - 100;

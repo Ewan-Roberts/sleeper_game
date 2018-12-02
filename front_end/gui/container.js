@@ -114,8 +114,6 @@ class GUI_Container {
 
     this.container.getChildByName('item_slot_4').addChild(item);
   }
-
-
 }
 
 module.exports = {

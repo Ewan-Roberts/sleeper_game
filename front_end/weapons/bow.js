@@ -5,6 +5,7 @@ const viewport = require('../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
+arrow_container.zIndex = -10;
 viewport.addChild(arrow_container);
 
 // const arrowSounds = [
@@ -17,6 +18,19 @@ viewport.addChild(arrow_container);
 //   new Audio('audio/arrow_hit_06.wav'),
 //   new Audio('audio/arrow_hit_07.wav'),
 // ];
+
+class Arrow {
+  constructor() {
+    this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    this.sprite.name = 'arrow';
+    this.sprite.anchor.set(0.95)
+    this.sprite.height *= 3
+    this.sprite.zIndex = -40
+    console.log(this.container)
+    arrow_container.addChild(this.sprite);
+  }
+
+}
 
 function create_arrow() {
   const arrow = PIXI.Sprite.fromFrame('arrow');
@@ -35,9 +49,9 @@ function create_arrow() {
 }
 
 function create_rotated_arrow(origin, target) {
-  const arrow = create_arrow();
-  arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
-  return arrow;
+  const arrow = new Arrow();
+  arrow.sprite.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
+  return arrow.sprite;
 }
 
 function create_embedded_arrow(rotation) {
@@ -82,6 +96,7 @@ function arrow_management(power, origin, target) {
         
         const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
         arrow.destroy();
+        console.log(enemy)
         enemy.speak('I am hit');
         enemy.addChild(arrow_in_enemy)
 

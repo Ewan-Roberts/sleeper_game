@@ -2,14 +2,14 @@ const PIXI              = require('pixi.js');
 const viewport          = require('../../engine/viewport');
 const { createjs }      = require('@createjs/tweenjs');
 
-const door_container    = new PIXI.Container();
+const door_container = new PIXI.Container();
 door_container.name     = 'door_container';
 door_container.zIndex   = -2;
+viewport.addChild(door_container);
 
 class Door {
   constructor(door_data) {
     this.sprite = PIXI.Sprite.fromFrame('black_dot');
-
     this.sprite.position.set(door_data.x, door_data.y);
     this.sprite.width = door_data.width;
     this.sprite.height = door_data.height;
@@ -18,8 +18,7 @@ class Door {
     this.sprite.name = 'door';
     this.state = 'closed';
     door_container.addChild(this.sprite);
-
-    viewport.addChild(door_container);
+    
   }
 
   add_state_handling() {

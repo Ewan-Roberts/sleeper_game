@@ -3,12 +3,13 @@ const io = require('socket.io-client');
 const viewport = require('../../engine/viewport.js');
 const { GUI_Container } = require('../../gui/container')
 
+const container = new PIXI.Container();
+container.name = 'item_container';
+container.zIndex = -6;
+viewport.addChild(container);
 
 class Chest {
   constructor(item_data) {
-    this.container = new PIXI.Container();
-    this.container.name = 'item_container';
-    this.container.zIndex = -6;
     this.image_cache = {
       state: {
         full:   PIXI.Texture.fromFrame('chest_full'),
@@ -24,8 +25,7 @@ class Chest {
     this.sprite.buttonMode = true;
     this.state = 'closed';
 
-    this.container.addChild(this.sprite);
-    viewport.addChild(this.container);
+    container.addChild(this.sprite);
   }
 
   add_state_handling() {

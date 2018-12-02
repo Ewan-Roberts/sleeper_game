@@ -142,15 +142,15 @@ class Bedroom extends Level {
       friend_data,
     } = data;
     
-    super.create_grid(grid_data)
-    super.set_background_image(image, grid_data);
-    super.render_walls(wall_data);
-    super.render_doors(door_data);
-    super.render_items(item_data.layers[0])
-    super.create_player(player_data.position)
-    super.create_enemy(enemy_data.position, enemy_data.path_data);
-    super.create_rat(rat_data.position, rat_data.path_data);
-    super.create_friend(friend_data.position, friend_data.script);
+    this.create_grid(grid_data)
+    this.set_background_image(image, grid_data);
+    this.render_walls(wall_data);
+    this.render_doors(door_data);
+    this.render_items(item_data.layers[0])
+    this.create_player(player_data.position)
+    this.create_enemy(enemy_data.position, enemy_data.path_data);
+    this.create_rat(rat_data.position, rat_data.path_data);
+    this.create_friend(friend_data.position, friend_data.script);
   }
 }
 
@@ -159,7 +159,7 @@ module.exports.load_debug_map_image = () => {
   const debug_room_tiled_data = require('./debug/playground/map2_output.json');
   const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-
+  
   const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
 
   const options = {
@@ -231,11 +231,6 @@ module.exports.load_bedroom_map = () => {
   }
 
   new Bedroom(bedroom_schema, bedroom_image);
-  //const merk = new Merc();
-  //Effects.create_dialog_overlay();
-  // Effects.fade_to_black(0.005).then(()=> {
-    // Effects.fade_to_normal(0.001);
-  // })
-};
+ };
 
 

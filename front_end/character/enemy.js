@@ -3,16 +3,25 @@ const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js')
 const { pathfind_from_enemy_to_player } = require('../engine/pathfind.js')
 const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow.js');
 const { createjs } = require('@createjs/tweenjs');
-const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
 const { Character } = require('./character_model');
 
+const container = new PIXI.Container();
+container.name = 'enemy_container';
+container.zIndex = -10;
+viewport.addChild(container)
+
 class Enemy extends Character {
   constructor() {
-    super('enemy_container');
-
-    this.container.addChild(this.sprite)
-    viewport.addChild(this.container)
+    super();
+    this.sprite.speak = (text) => {
+      const render_text = new PIXI.Text(text);
+      render_text.x = this.sprite.x - 100;
+      render_text.y = this.sprite.y - 80;
+      render_text.alpha = 1;
+      container.addChild(render_text);
+    }
+    container.addChild(this.sprite)
   }
 
   stop_and_shoot_player(player_sprite) {
@@ -46,24 +55,19 @@ class Enemy extends Character {
   }
 
   action_on_seeing_player(player_sprite) {
-    // first time you're seen 
     if(!this.player_seen) {
-      this.speak('now, calm down, dont move');
+      this.sprite.speak('now, calm down, dont move');
       this.sprite.stop()
       createjs.Tween.removeTweens(this.sprite)
     }
 
     this.player_seen = true;
-
     this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
   }
 
   action_on_hearing_player(player_sprite) {
-
     pathfind_from_enemy_to_player(this.sprite, player_sprite)
-
   }
-
 }
 
 module.exports = {
