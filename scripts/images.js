@@ -13,7 +13,7 @@ module.exports = {
     max_width: 3000, // default: 2048
     max_height: 5500, // default: 1024
     oversized_warning: true, // default: false
-    trim: true,
+    trim: false,
     padding: 0, // default: 1
   },
 

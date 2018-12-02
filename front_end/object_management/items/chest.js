@@ -1,6 +1,8 @@
 const PIXI = require('pixi.js');
 const io = require('socket.io-client');
 const viewport = require('../../engine/viewport.js');
+const { GUI_Container } = require('../../gui/container')
+
 
 class Chest {
   constructor(item_data) {
@@ -28,7 +30,6 @@ class Chest {
 
   add_state_handling() {
     this.sprite.click = () => {
-    
       switch(this.state) {
         case 'closed':
           this.open_inventory_box();
@@ -41,16 +42,18 @@ class Chest {
   }
 
   open_inventory_box() {
+    if(this.state === 'open') {
+      return;
+    }
     this.state = 'open';
     
-    const inventory_box = PIXI.Sprite.fromFrame('black_dot');
-    inventory_box.height = 200;
-    inventory_box.width = 600;
-    inventory_box.name = 'inventory_box';
-    inventory_box.anchor.set(0.5);
-    inventory_box.zIndex = -6;
-
-    this.sprite.addChild(inventory_box);
+    const inventory_box = new GUI_Container();
+    inventory_box.add_item_tiles();
+    inventory_box.populate_slot_1('bunny')
+    inventory_box.populate_slot_2('bunny')
+    inventory_box.populate_slot_3('bunny')
+    inventory_box.populate_slot_4('bunny')
+    this.sprite.addChild(inventory_box.container);
   }
 
   empty() {

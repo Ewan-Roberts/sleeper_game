@@ -19,7 +19,7 @@ class Level {
   constructor() {
     this.segments = [];
     this.collision_items = new PIXI.Container();
-    this.collision_items.zIndex = -2;
+    this.collision_items.zIndex = -10;
     this.collision_items.name = 'collision_items'
 
     viewport.addChild(this.collision_items);
@@ -57,6 +57,7 @@ class Level {
       wall.width = wall_data.width;
       wall.height = wall_data.height;
       wall.anchor.set(0); 
+      wall.zIndex = -20;
       this.add_to_segments(wall);
   
       this.collision_items.addChild(wall);
