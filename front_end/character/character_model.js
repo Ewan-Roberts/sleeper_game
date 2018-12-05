@@ -1,3 +1,5 @@
+'use strict';
+
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
@@ -18,7 +20,7 @@ function get_intersection(ray, segment){
   // Are they parallel? If so, no intersect
   const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
   const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
+  if(r_dx/r_mag===s_dx/s_mag && r_dy/r_mag===s_dy/s_mag){
     // Unit vectors are the same.
     return null;
   }
@@ -34,7 +36,7 @@ function get_intersection(ray, segment){
   return {
     x: r_px+r_dx*T1,
     y: r_py+r_dy*T1,
-    param: T1
+    param: T1,
   };
 }
 
@@ -42,7 +44,7 @@ class Character {
   constructor(name) {
     this.container = new PIXI.Container();
     this.container.name = name;
-    
+
     const default_frames = this.create_default_frames();
     this.sprite = new PIXI.extras.AnimatedSprite(default_frames);
     this.sprite.height /= 2;
@@ -55,7 +57,7 @@ class Character {
       status: 'alive',
     };
   }
-  
+
   create_default_frames() {
     const enemy_frames = [];
 
@@ -65,17 +67,17 @@ class Character {
 
     return enemy_frames;
   }
-  
-  
+
+
   set_position(x,y) {
     this.sprite.position.set(x, y);
   }
- 
+
   create_idle_frames() {
     const idle_frames = [];
     for (let i = 0; i <= 21; i += 1) {
       let name = `survivor-idle_0${i}`;
-      
+
       if (i >= 10) {
         name = `survivor-idle_${i}`;
       }
@@ -105,10 +107,10 @@ class Character {
     influence_box.height = 2000;
     influence_box.alpha = 0.4;
     influence_box.anchor.set(0.5);
-    
+
     this.sprite.addChild(influence_box);
   }
-  
+
   create_light() {
     const light = PIXI.Sprite.fromFrame('light_gradient');
     light.name = 'light';
@@ -120,16 +122,16 @@ class Character {
 
     this.sprite.addChild(light);
   }
-  
+
   add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics()
+    const raycast = new PIXI.Graphics();
 
     const points = [];
     level_segments.forEach(seg => points.push(seg.a,seg.b));
 
     if(!global.is_development) {
       const light = this.sprite.getChildByName('light');
-      light.mask = raycast
+      light.mask = raycast;
       // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
     }
 
@@ -137,14 +139,14 @@ class Character {
       const unique_angles = [];
       let intersects = [];
 
-      raycast.clear()
+      raycast.clear();
       raycast.beginFill(0xfffffff, 0.05);
 
       points.forEach(elem => {
         const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
         elem.angle = angle;
         unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
+      });
 
       for(let k=0; k < unique_angles.length; k++){
         const angle = unique_angles[k];
@@ -152,7 +154,7 @@ class Character {
         const dy = Math.sin(angle);
         const ray = {
           a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
+          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy},
         };
 
         let closest_intersect = null;
@@ -174,11 +176,11 @@ class Character {
       raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
 
       for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
+        raycast.lineTo(intersects[i].x, intersects[i].y);
       }
 
-      const player_sprite = viewport.getChildByName('player')
-      const player_position = player_sprite.getGlobalPosition() 
+      const player_sprite = viewport.getChildByName('player');
+      const player_position = player_sprite.getGlobalPosition();
 
       if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
         this.action_on_seeing_player(player_sprite);
@@ -188,22 +190,21 @@ class Character {
         this.action_on_hearing_player(player_sprite);
       }
     });
-    viewport.addChild(raycast)
+    viewport.addChild(raycast);
   }
-  
+
   kill() {
     this.sprite.stop();
 
-    const tween = createjs.Tween.get(this.sprite);
-    tween.pause();
+    //const tween = createjs.Tween.get(this.sprite);
+    //tween.pause();
 
     this.vitals.status = 'dead';
-    put_blood_splatter_under_sprite(this.sprite);
   }
 }
 
 module.exports = {
   Character,
-}
+};
 
 

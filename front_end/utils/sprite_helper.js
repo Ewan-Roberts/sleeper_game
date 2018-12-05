@@ -1,4 +1,3 @@
-
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {
     if (o.anchor[axis] !== 0) {
@@ -11,6 +10,6 @@ function getCenter(o, dimension, axis) {
 
 module.exports.get_angle_from_point_to_point = (sprite, point) => Math.atan2(
   (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x')),
+  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
 );
 

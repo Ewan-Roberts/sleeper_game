@@ -1,5 +1,5 @@
-const PIXI = require('pixi.js');
-const viewport = require('../engine/viewport');
+'use strict';
+
 const ticker = require('../engine/ticker');
 
 function fade_out_sprite(sprite, speed){
@@ -9,7 +9,7 @@ function fade_out_sprite(sprite, speed){
     } else {
       ticker.remove(count_down);
     }
-  }
+  };
 
   ticker.add(count_down);
 }
@@ -22,7 +22,7 @@ function fade_in_sprite(sprite, speed, limit){
     } else {
       ticker.remove(count_up);
     }
-  }
+  };
 
   ticker.add(count_up);
 }
@@ -36,12 +36,11 @@ class Effects {
   static fade_to_normal(sprite) {
     fade_in_sprite(sprite);
   }
-  
 }
 
 module.exports = {
   Effects,
-}
+};
 
 
 

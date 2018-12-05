@@ -1,13 +1,14 @@
+'use strict';
+
 const PIXI = require('pixi.js');
-const tween = require('pixi-tween');
 const pixiPackerParser = require('pixi-packer-parser');
 
-//engine set up 
+//engine set up
 const app = require('./engine/app');
 const ticker = require('./engine/ticker');
 const viewport = require('./engine/viewport');
 
-ticker.add(() => PIXI.tweenManager.update())
+ticker.add(() => PIXI.tweenManager.update());
 global.document.body.appendChild(app.view);
 
 global.is_development = true;

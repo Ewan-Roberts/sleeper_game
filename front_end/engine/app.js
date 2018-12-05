@@ -1,3 +1,7 @@
+'use strict';
+
+const PIXI = require('pixi.js');
+
 module.exports = new PIXI.Application({
   width: global.window.innerWidth,
   height: global.window.innerHeight,

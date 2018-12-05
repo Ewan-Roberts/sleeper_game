@@ -1,3 +1,5 @@
+'use strict';
+
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
 const viewport = require('./viewport');
@@ -113,7 +115,7 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
 }
 
 const distance_between_two_points = (point_one, point_two) => {
-  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y)
+  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
 };
 
 const generate_wait_time_with_threshold = (max, threshold) => {
@@ -147,16 +149,16 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 }
 
 function move_sprite_on_path(sprite, path_array) {
-  return new Promise((resolve, reject) => {
-    
+  return new Promise(resolve => {
+
     const tween = createjs.Tween.get(sprite);
 
     const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
     //TODO
     for (let i = 0; i < path_array.length; i++) {
       if(path_array[i-1] === undefined) continue;
-      
-      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
+
+      const angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
 
       tween.to({
         rotation: angle_to_face,
@@ -172,7 +174,7 @@ function move_sprite_on_path(sprite, path_array) {
 }
 
 function move_enemy_to_point(sprite, point) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
     const walk_time = create_relative_walk_time(sprite, point.middle);
@@ -181,10 +183,10 @@ function move_enemy_to_point(sprite, point) {
     tween.to({
       rotation: Math.abs(angle_to_face),
     })
-    .to({
-      x: point.middle.x,
-      y: point.middle.y,
-    }, walk_time, createjs.Ease.sineInOut);
+      .to({
+        x: point.middle.x,
+        y: point.middle.y,
+      }, walk_time, createjs.Ease.sineInOut);
 
     tween.call(()=>resolve());
   });
@@ -192,7 +194,7 @@ function move_enemy_to_point(sprite, point) {
 
 let boolean_time = true;
 
-function path_enemy_on_points(enemy_sprite, point_array, options) {
+function path_enemy_on_points(enemy_sprite, point_array) {
   if( boolean_time === false ) return;
 
   boolean_time = false;
@@ -211,7 +213,7 @@ function path_enemy_on_points(enemy_sprite, point_array, options) {
     .then(() => wait_sprite(enemy_sprite, 500))
     .then(() => look_around_sprite(enemy_sprite, 1000, 1))
     .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
-    .then(() => move_sprite_on_route(enemy_sprite))
+    .then(() => move_sprite_on_route(enemy_sprite));
 
 }
 
@@ -260,67 +262,67 @@ function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
 }
 
 function move_sprite_on_route_straight(sprite) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
     sprite.position.set(sprite.patrol_path[0].x,sprite.patrol_path[0].y);
-    
+
     for (let i = 1; i < sprite.patrol_path.length; i++) {
       const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 5);
       const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
-  
+
       tween.to({
         x:sprite.patrol_path[i].x,
         y:sprite.patrol_path[i].y,
         rotation: angle_to_face,
-      }, walk_time)
+      }, walk_time);
     }
 
     tween.call(()=>resolve());
-  })
-};
+  });
+}
 
 function move_sprite_on_route(sprite) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
 
     for (let i = 1; i < sprite.patrol_path.length; i++) {
-  
+
       const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 10);
       const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
       const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-  
+
       const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
-  
+
       tween.to({
         x:sprite.patrol_path[i].x,
         y:sprite.patrol_path[i].y,
       }, walk_time, createjs.Ease.sineInOut)
-      .wait(random_wait_time_with_threshold)
-      .to({
-        rotation: angle_to_face,
-      }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-      .wait(random_wait_time_with_threshold);
+        .wait(random_wait_time_with_threshold)
+        .to({
+          rotation: angle_to_face,
+        }, random_wait_time_with_minimum, createjs.Ease.backInOut)
+        .wait(random_wait_time_with_threshold);
     }
 
     tween.call(()=>resolve());
-  })
-};
+  });
+}
 
 //testing
-function run_pathfinding_test() {
-
-  const enemy_sprite = viewport.children[7].children[0];
-  const player_sprite = global.Player.sprite;
-
-  const grid = grid_container.children;
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid);
-
-  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-}
+//function run_pathfinding_test() {
+//
+// const enemy_sprite = viewport.children[7].children[0];
+// const player_sprite = global.Player.sprite;
+//
+// const grid = grid_container.children;
+// const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
+// const player_point = get_sprite_position_on_grid(player_sprite, grid);
+//
+// create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+//   .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
+//}
 
 // function path_from_enemy_to_player(enemy, player) {
 

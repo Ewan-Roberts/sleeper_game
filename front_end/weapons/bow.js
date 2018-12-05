@@ -1,6 +1,7 @@
+'use strict';
+
 const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
-const { point_hits_enemy_in_container } = require('../character/enemy.js');
 const viewport = require('../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
 const arrow_container = new PIXI.Container();
@@ -23,29 +24,12 @@ class Arrow {
   constructor() {
     this.sprite = new PIXI.Sprite.fromFrame('arrow');
     this.sprite.name = 'arrow';
-    this.sprite.anchor.set(0.95)
-    this.sprite.height *= 3
-    this.sprite.zIndex = -40
-    console.log(this.container)
+    this.sprite.anchor.set(0.95);
+    this.sprite.height *= 3;
+    this.sprite.zIndex = -40;
     arrow_container.addChild(this.sprite);
   }
 
-}
-
-function create_arrow() {
-  const arrow = PIXI.Sprite.fromFrame('arrow');
-  arrow.name = 'arrow';
-  arrow.anchor.set(0.95)
-  if(global.is_development){
-    arrow.height *= 3
-    viewport.addChild(arrow);
-  } else {
-    arrow.width /= 2;
-    arrow.height /= 3;
-    arrow_container.addChild(arrow);
-  }
-  
-  return arrow;
 }
 
 function create_rotated_arrow(origin, target) {
@@ -67,7 +51,7 @@ function create_arrow_path(origin, target) {
   const arrow_path = new PIXI.tween.TweenPath()
     .moveTo(origin.x, origin.y)
     .lineTo(target.x, target.y);
-  
+
   return arrow_path;
 }
 
@@ -86,19 +70,18 @@ function arrow_management(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
-  
+
   arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition()
+    const arrow_point = arrow.getGlobalPosition();
 
     viewport.getChildByName('enemy_container').children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
-        
+
         const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
         arrow.destroy();
-        console.log(enemy)
         enemy.speak('I am hit');
-        enemy.addChild(arrow_in_enemy)
+        enemy.addChild(arrow_in_enemy);
 
         return;
       }
@@ -107,22 +90,22 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('collision_items').children.forEach(object => {
       if(object.containsPoint(arrow_point)){
         arrow_tween.stop();
-        
+
         return;
       }
     });
-    
+
     viewport.getChildByName('door_container').children.forEach(door => {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);       
+
+        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
         arrow.width = 600;
 
         door.rotation += 0.05;
         door.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
         door.addChild(arrow);
-        
+
         return;
       }
     });
@@ -130,49 +113,45 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        console.log('hit cirrter')
-        console.log(critter)
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);       
+        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
         arrow.width = 600;
         const tween = createjs.Tween.get(critter);
-        console.log(tween)
         tween.pause();
         tween.paused = true;
-        tween.wait(2000)
+        tween.wait(2000);
         critter.rotation += 0.05;
         critter.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
         critter.addChild(arrow);
         critter.stop();
-        
+
         return;
       }
     });
   });
-};
+}
 
-// todo move enemy out out of global 
+// todo move enemy out out of global
 function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
   if(!global.is_development) return;
-  
+
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
 
   arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition()
+    const arrow_point = arrow.getGlobalPosition();
 
     if(global.Player.sprite.containsPoint(arrow_point)) {
-      console.log('hitting player')
       arrow_tween.stop();
 
-      global.Player.vitals.health -=40
-      
+      global.Player.vitals.health -=40;
+
       const arrow_in_player = create_embedded_arrow(arrow.rotation -=3.1);
 
       // TDOO can i retrofit this
       arrow.destroy();
       // if(global.Player.vitals.health < 40) {
-        
+
       //   if(global.is_development) {
       //     dialog_util.renderText(global.Player.sprite, 'I am dead home slice');
       //   } else {
@@ -182,21 +161,20 @@ function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
       // }
 
       global.Player.vitals.health -= 40;
-      global.Player.sprite.addChild(arrow_in_player)
+      global.Player.sprite.addChild(arrow_in_player);
     }
 
     for (let i = 0; i < global.collisionItems.children.length; i++) {
       const sprite_in_container = global.collisionItems.children[i];
       if(sprite_in_container.containsPoint(arrow_point)){
-        console.log('enemy arrow on collision item');
-        arrow_tween.stop()
+        arrow_tween.stop();
       }
     }
-  })
-};
+  });
+}
 
 module.exports = {
   arrow_shoot_from_sprite_to_sprite,
   arrow_management,
-}
+};
 

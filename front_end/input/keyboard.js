@@ -1,3 +1,5 @@
+'use strict';
+
 const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
 const ticker = require('../engine/ticker');
@@ -29,7 +31,7 @@ class Keyboard {
     this.buffer = 50;
     this.player = viewport.getChildByName('player');
   }
-  
+
   key_down(e) {
     if (!this.moveable) return;
     if(!e) return;
@@ -57,9 +59,8 @@ class Keyboard {
         this.shift();
         break;
     }
-    
   }
-  
+
   key_up() {
     this.shift_pressed = false;
     this.player.textures = this.sprite.animations.bow.idle;
@@ -68,16 +69,16 @@ class Keyboard {
 
   up() {
     const player_point = {
-      x: this.player_position._x,
-      y: this.player_position._y,
-    }
+      x: this.player_position.x,
+      y: this.player_position.y,
+    };
     for(let i =0; i< this.collision_objects.length; i++){
       player_point.y -= this.buffer;
 
       if(this.collision_objects[i].containsPoint(player_point)){
-        console.log('poo')
+        //console.log('poo');
         return;
-      } 
+      }
     }
 
     this.player.y -= this.movement_speed;
@@ -86,12 +87,12 @@ class Keyboard {
 
   down() {
     const player_position = this.player.getGlobalPosition();
-    
+
     this.collision_objects.forEach(object => {
       player_position.y += this.buffer;
       if(object.containsPoint(player_position)){
         return;
-      }   
+      }
     });
 
     this.player.y += this.movement_speed;
@@ -100,12 +101,12 @@ class Keyboard {
 
   left() {
     const player_position = this.player.getGlobalPosition();
-    
+
     this.collision_objects.forEach(object => {
       player_position.x -= this.buffer;
       if(object.containsPoint(player_position)){
         return;
-      }   
+      }
     });
 
     this.player.x -= this.movement_speed;
@@ -114,12 +115,12 @@ class Keyboard {
 
   right() {
     const player_position = this.player.getGlobalPosition();
-    
+
     this.collision_objects.forEach(object => {
       player_position.x += this.buffer;
       if(object.containsPoint(player_position)){
         return;
-      }   
+      }
     });
 
     this.player.x += this.movement_speed;
@@ -129,7 +130,7 @@ class Keyboard {
   inventory() {
     if ( this.inventory_open === false ) {
       ticker.add(() => gui.update_location());
-      gui.show()
+      gui.show();
       this.inventory_open = true;
     } else {
       ticker.remove(() => gui.update_location());
@@ -145,4 +146,4 @@ class Keyboard {
 
 module.exports = {
   Keyboard,
-}
+};

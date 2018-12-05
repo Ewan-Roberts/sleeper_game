@@ -1,3 +1,5 @@
+'use strict';
+
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 
@@ -21,10 +23,9 @@ class Rat {
     this.sprite.rotation = -0.5;
     this.sprite.play();
     this.sprite.name = 'rat';
-    this.sprite.zIndex = -3
+    this.sprite.zIndex = -3;
 
     critter_container.addChild(this.sprite);
-    console.log(viewport);
   }
 
   create_patrol_path(path_data) {
@@ -42,12 +43,12 @@ class Rat {
       const val = i < 10 ? `0${i}` : i;
       moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
     }
-  
+
     for (let i = 15; i > 0; i -= 1) {
       const val = i < 10 ? `0${i}` : i;
       moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
     }
-  
+
     moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
@@ -69,15 +70,15 @@ class Rat {
       PIXI.Texture.fromFrame('rat_01'),
     ];
 
-    return waiting_frames
+    return waiting_frames;
   }
 
   create_dead_frames() {
-    return PIXI.Texture.fromFrame('rat_35');;
+    return PIXI.Texture.fromFrame('rat_35');
   }
 
   create_eat_frames() {
-    
+
     const eating_frames = [
       PIXI.Texture.fromFrame('rat_37'),
       PIXI.Texture.fromFrame('rat_38'),
@@ -98,4 +99,4 @@ class Rat {
 
 module.exports = {
   Rat,
-}
+};

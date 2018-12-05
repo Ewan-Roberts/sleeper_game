@@ -1,27 +1,20 @@
+'use strict';
 
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
-const ticker = require('../engine/ticker');
 
-const enemyDialogOptions = [
-  'Oh shit, there he is',
-  'Who the fuck are you',
-  'Dont fucking move',
-  'Stop stop stop',
-  'No more, not again',
-  'Karl? That you?',
-  'Are you real?',
-  'Ill help you die',
-  'Give me that now',
-  'Isabella? Is that you?',
-];
-
-
-function enemySurprised() {
-  const random_number = Math.floor(Math.random() * enemyDialogOptions.length);
-  
-  return enemyDialogOptions[random_number];
-}
+//const enemyDialogOptions = [
+// 'Oh shit, there he is',
+// 'Who the fuck are you',
+// 'Dont fucking move',
+// 'Stop stop stop',
+// 'No more, not again',
+// 'Karl? That you?',
+// 'Are you real?',
+// 'Ill help you die',
+// 'Give me that now',
+// 'Isabella? Is that you?',
+//};
 
 class Dialog {
   constructor() {
@@ -39,25 +32,25 @@ class Dialog {
     this.background.width = viewport.width;
     this.background.height = viewport.height;
     this.background.position.set(0,0);
-    
+
     this.container.addChild(this.background);
   }
-  
+
   add_script(script) {
     this.script = script;
   }
-  
+
   add_portrait(point, image_name) {
     this.portrait = new PIXI.Sprite.fromFrame(image_name);
-    
+
     this.portrait.zIndex = -11;
     this.portrait.position.set(point.x - 800, point.y);
 
     this.container.addChild(this.portrait);
   }
-  
+
   clear_slide_text() {
-  
+
     this.container.getChildByName('actor_text').text = '';
     this.container.getChildByName('render_text').text = '';
     this.container.getChildByName('button_text').text = '';
@@ -69,12 +62,10 @@ class Dialog {
   create_text_timeout(text_array) {
     let i = 0;
     let current_text = '';
-    
-    if(this.timeout) {
-      console.log('i exist!')
 
+    if(this.timeout) {
       this.container.getChildByName('render_text').text = '';
-      clearInterval(this.timeout)
+      clearInterval(this.timeout);
     } else {
       this.timeout = setInterval(()=> {
         if(i === text_array.length){
@@ -84,41 +75,41 @@ class Dialog {
         current_text += text_array[i] + ' ';
         this.container.getChildByName('render_text').text = current_text;
         i++;
-      }, 150)
+      }, 150);
     }
   }
 
   refresh_text_slide(step) {
-    this.clear_slide_text()
-    const text_array = this.script[step].name.split(' ')
-    this.create_text_timeout(text_array)
+    this.clear_slide_text();
+    const text_array = this.script[step].name.split(' ');
+    this.create_text_timeout(text_array);
 
     this.container.getChildByName('actor_text').text = this.script[step].actor;
     this.container.getChildByName('button_text').text = 'next';
     this.container.getChildByName('button_text').click = () => {
-      
+
       for(let i = 0; i < this.script.length; i++) {
-        if(this.script[i].id = this.script[step].id){
-          this.refresh_branch_slide(i)
+        if(this.script[i].id === this.script[step].id){
+          this.refresh_branch_slide(i);
         }
       }
     };
   }
 
-  refresh_branch_slide(step) {
+  refresh_branch_slide() {
     this.clear_slide_text();
     this.container.getChildByName('choice_one').text = 'yes';
     this.container.getChildByName('choice_two').text = 'no' ;
   }
 
-  enter_dialog_slide(point, step) {
+  enter_dialog_slide(point) {
     this.create_slide_format(point);
-    
+
     if(this.script[0].type === 'Text'){
       this.refresh_text_slide(0);
     }
   }
-  
+
   create_slide_format(point) {
     this.render_actor(point.x - 720, point.y -80, '');
     this.render_text(point.x - 400, point.y - 200, '');
@@ -129,8 +120,8 @@ class Dialog {
 
   render_choice_two(x, y, text) {
     const choice_text = new PIXI.Text(text, {
-      fontFamily : 'Arial', 
-      fontSize: 30, 
+      fontFamily : 'Arial',
+      fontSize: 30,
       fill : 0xC0C0C0,
     });
     choice_text.name = 'choice_two';
@@ -138,11 +129,11 @@ class Dialog {
 
     this.container.addChild(choice_text);
   }
-  
+
   render_choice_one(x, y, text) {
     const choice_text = new PIXI.Text(text, {
-      fontFamily : 'Arial', 
-      fontSize: 30, 
+      fontFamily : 'Arial',
+      fontSize: 30,
       fill : 0xC0C0C0,
     });
     choice_text.name = 'choice_one';
@@ -153,12 +144,12 @@ class Dialog {
 
   render_actor(x, y, text) {
     const actor_text = new PIXI.Text(text, {
-      fontFamily : 'Arial', 
-      fontSize: 30, 
+      fontFamily : 'Arial',
+      fontSize: 30,
       fill : 0xC0C0C0,
     });
     actor_text.name = 'actor_text';
-    
+
     actor_text.position.set(x,y);
 
     this.container.addChild(actor_text);
@@ -166,8 +157,8 @@ class Dialog {
 
   render_action(x, y, text) {
     const button_text = new PIXI.Text(text, {
-      fontFamily : 'Arial', 
-      fontSize: 30, 
+      fontFamily : 'Arial',
+      fontSize: 30,
       fill : 0x0000ff,
     });
 
@@ -181,8 +172,8 @@ class Dialog {
 
   render_text(x, y, text) {
     const render_text = new PIXI.Text(text, {
-      fontFamily : 'Arial', 
-      fontSize: 35, 
+      fontFamily : 'Arial',
+      fontSize: 35,
       fill : 0xffffff,
     });
     render_text.name = 'render_text';
@@ -195,4 +186,4 @@ class Dialog {
 
 module.exports = {
   Dialog,
-}
+};

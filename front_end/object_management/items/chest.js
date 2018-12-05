@@ -1,7 +1,8 @@
+'use strict';
+
 const PIXI = require('pixi.js');
-const io = require('socket.io-client');
 const viewport = require('../../engine/viewport.js');
-const { GUI_Container } = require('../../gui/container')
+const { GUI_Container } = require('../../gui/container');
 
 const container = new PIXI.Container();
 container.name = 'item_container';
@@ -14,8 +15,8 @@ class Chest {
       state: {
         full:   PIXI.Texture.fromFrame('chest_full'),
         empty:  PIXI.Texture.fromFrame('chest_empty'),
-      }
-    }
+      },
+    };
     this.sprite = new PIXI.Sprite(this.image_cache.state.full);
     this.sprite.anchor.set(0.5);
     this.sprite.zIndex = -5;
@@ -38,7 +39,7 @@ class Chest {
           this.empty();
           break;
       }
-    }
+    };
   }
 
   open_inventory_box() {
@@ -46,13 +47,13 @@ class Chest {
       return;
     }
     this.state = 'open';
-    
+
     const inventory_box = new GUI_Container();
     inventory_box.add_item_tiles();
-    inventory_box.populate_slot_1('bunny')
-    inventory_box.populate_slot_2('bunny')
-    inventory_box.populate_slot_3('bunny')
-    inventory_box.populate_slot_4('bunny')
+    inventory_box.populate_slot_1('bunny');
+    inventory_box.populate_slot_2('bunny');
+    inventory_box.populate_slot_3('bunny');
+    inventory_box.populate_slot_4('bunny');
     this.sprite.addChild(inventory_box.container);
   }
 
@@ -72,4 +73,4 @@ class Chest {
 
 module.exports = {
   Chest,
-}
+};

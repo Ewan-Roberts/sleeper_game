@@ -1,3 +1,5 @@
+'use strict';
+
 const Viewport = require('pixi-viewport');
 
 const viewport = new Viewport({

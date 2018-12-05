@@ -1,3 +1,5 @@
+'use strict';
+
 const PIXI              = require('pixi.js');
 const viewport          = require('../../engine/viewport');
 const { createjs }      = require('@createjs/tweenjs');
@@ -18,20 +20,18 @@ class Door {
     this.sprite.name = 'door';
     this.state = 'closed';
     door_container.addChild(this.sprite);
-    
+
   }
 
   add_state_handling() {
     this.sprite.click = () => {
-      
+
       switch(this.state) {
         case 'transition':
           return;
-          break;
         case 'locked':
           return;
-          break;
-        case 'closed': 
+        case 'closed':
           this.open();
           break;
         case 'open':
@@ -46,7 +46,7 @@ class Door {
     this.state = 'locked';
     return this;
   }
-  
+
   unlock() {
     this.state = 'closed';
     return this;
@@ -77,8 +77,8 @@ class Door {
     });
     return this;
   }
- }
+}
 
 module.exports = {
   Door,
-}
+};
