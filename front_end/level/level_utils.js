@@ -83,11 +83,6 @@ class Level {
     const character = new Player();
 
     character.set_position(location.x,location.y);
-    character.add_aiming_line();
-    character.add_aiming_cone();
-    character.mouse_move();
-    character.mouse_down();
-    character.mouse_up();
     character.add_controls();
     character.follow_player();
     character.create_light();

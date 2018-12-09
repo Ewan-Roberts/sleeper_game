@@ -24,11 +24,12 @@ const keymap = {
 class Keyboard {
   constructor() {
     this.inventory_open = false;
-    this.shift_pressed = false;
     this.moveable = true;
     this.movement_speed = 15;
     this.buffer = 50;
+    
     this.player = viewport.getChildByName('player');
+    this.player.shift_pressed = false;
   }
 
   key_down(e) {
@@ -36,7 +37,7 @@ class Keyboard {
     if(!e) return;
     const key = keymap[e.key];
     if(!key) return;
-    this.player.loop = true;
+    this.loop = true;
 
     switch(key) {
       case 'up':
@@ -68,7 +69,7 @@ class Keyboard {
   }
 
   key_up() {
-    this.shift_pressed = false;
+    this.player.shift_pressed = false;
     this.player.textures = this.player.animations.bow.idle;
     this.player.play();
   }
@@ -160,7 +161,7 @@ class Keyboard {
   }
 
   shift() {
-    this.shift_pressed = true;
+    this.player.shift_pressed = true;
   }
 }
 
