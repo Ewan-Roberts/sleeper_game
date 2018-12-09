@@ -493,7 +493,7 @@ class Player extends Character{
 
   mouse_down() {
     viewport.on('mousedown', (event) => {
-      if(!this.shift_pressed) return;
+      if(!this.keyboard.shift_pressed) return;
       this.aiming_cone.alpha = 0;
       this.aiming_cone.count = 10;
       this.aiming_cone.width = 500;
@@ -502,31 +502,34 @@ class Player extends Character{
 
       this.sprite.textures = this.sprite.animations.bow.ready;
       this.sprite.loop = false;
-      /* perfomance!!!
       this.count_down = () => {
-         if(this.power < 300) {
-          ticker.remove(this)
-          return
+        if (!this.keyboard.shift_pressed){
+          ticker.remove(this.count_down);
+          this.aiming_cone.alpha = 0;
+          return;
         }
-        if (this.power > 750) {
+        if(this.power < 300) {
+          this.sprite.textures = this.sprite.animations.bow.idle;
+          ticker.remove(this.count_down);
+          return;
+        }
+        if (this.power > 650) {
           this.allow_shoot = false;
         } else {
           this.allow_shoot = true;
         }
-        console.log(this.power)
 
         this.aiming_cone.width -= 1.5;
         this.aiming_cone.height += 3;
-        this.aiming_cone.alpha += 0.002
+        this.aiming_cone.alpha += 0.002;
         this.aiming_cone.count -= 0.04;
         //this.aiming_cone.filters[0].blur = this.aiming_cone.count;
 
         if (this.power > 400) {
-          this.power -= 10;
+          this.power -= 5;
         }
-      }
+      };
       ticker.add(this.count_down);
-      */
       if (this.weapon === 'bow') {
         const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
 
@@ -538,17 +541,15 @@ class Player extends Character{
 
   mouse_up() {
     viewport.on('mouseup', (event) => {
-      const poo = new PIXI.Sprite.fromFrame('bunny');
-      poo.position.x = viewport.center.x;
-      poo.position.y = viewport.bottom;
-      viewport.addChild(poo);
+      if(!this.keyboard.shift_pressed) return;
+
       this.moveable = true;
       this.sprite.play();
+      this.sprite.textures = this.sprite.animations.bow.idle;
 
       ticker.remove(this.count_down);
       this.aiming_cone.alpha = 0;
       if (this.weapon === 'bow' && this.allow_shoot /*&& this.shift_pressed*/) {
-        this.sprite.textures = this.sprite.animations.bow.idle;
 
         const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
         bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
@@ -557,17 +558,17 @@ class Player extends Character{
   }
 
   add_controls() {
-    const keyboard = new Keyboard();
+    this.keyboard = new Keyboard();
     const player_position = this.sprite.getGlobalPosition();
 
     global.document.addEventListener('keydown', (e) => {
-      keyboard.player_position = this.sprite.position;
-      keyboard.key_down(e);
+      this.keyboard.player_position = this.sprite.position;
+      this.keyboard.key_down(e);
     });
 
     global.document.addEventListener('keyup', () => {
-      keyboard.key_up();
-      console.log('there')
+      this.keyboard.key_up();
+      console.log('there');
     });
   }
 }
@@ -1561,8 +1562,8 @@ class GUI_HUD {
 
   show() {
     dom_hud.style.display = 'block';
-    //this.fill_slot(0);
     const player = {};
+
     // replace with uuid and shit
     player.id = '1';
     socket.emit('get_inventory', player.id);
@@ -1625,7 +1626,6 @@ loader.load(() => {
 
 const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
-const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
 
 const keymap = {
@@ -1642,6 +1642,7 @@ const keymap = {
   ArrowDown: 'down',
   ArrowRight: 'right',
   i: 'i',
+  Shift: 'Shift',
 };
 
 class Keyboard {
@@ -1791,7 +1792,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../engine/ticker":11,"../engine/viewport":12,"../gui/hud":14}],17:[function(require,module,exports){
+},{"../engine/viewport":12,"../gui/hud":14}],17:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {

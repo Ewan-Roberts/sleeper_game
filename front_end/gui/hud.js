@@ -21,8 +21,8 @@ class GUI_HUD {
 
   show() {
     dom_hud.style.display = 'block';
-    //this.fill_slot(0);
     const player = {};
+
     // replace with uuid and shit
     player.id = '1';
     socket.emit('get_inventory', player.id);

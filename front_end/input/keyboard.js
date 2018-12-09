@@ -2,7 +2,6 @@
 
 const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
-const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
 
 const keymap = {
@@ -19,6 +18,7 @@ const keymap = {
   ArrowDown: 'down',
   ArrowRight: 'right',
   i: 'i',
+  Shift: 'Shift',
 };
 
 class Keyboard {
