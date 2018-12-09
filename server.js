@@ -1,5 +1,6 @@
-//load in the env file
-require('dotenv').config()
+'use strict';
+
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
@@ -9,15 +10,15 @@ const io = require('socket.io')(server, {});
 app.use(express.static('./public'));
 
 app.get('/', (req, res) => {
-  
-  res.sendFile(`${__dirname}/public/index.html`)
-  
+
+  res.sendFile(`${__dirname}/public/index.html`);
+
 });
 
 server.listen(port, () => {
-  console.log(`server is listening on port: ${port}`)
+  //console.log(`server is listening on port: ${port}`);
 });
 
-io.on('connection', (socket) => {
-  console.log('Client connected.');
+io.on('connection', () => {
+  //console.log('Client connected.');
 });

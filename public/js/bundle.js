@@ -1,4 +1,584 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const PIXI = require('pixi.js');
+const viewport = require('../engine/viewport');
+const ticker = require('../engine/ticker');
+
+function get_intersection(ray, segment){
+  // RAY in parametric: Point + Delta*T1
+  const r_px = ray.a.x;
+  const r_py = ray.a.y;
+  const r_dx = ray.b.x-ray.a.x;
+  const r_dy = ray.b.y-ray.a.y;
+
+  // SEGMENT in parametric: Point + Delta*T2
+  const s_px = segment.a.x;
+  const s_py = segment.a.y;
+  const s_dx = segment.b.x-segment.a.x;
+  const s_dy = segment.b.y-segment.a.y;
+
+  // Are they parallel? If so, no intersect
+  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
+  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
+  if(r_dx/r_mag===s_dx/s_mag && r_dy/r_mag===s_dy/s_mag){
+    // Unit vectors are the same.
+    return null;
+  }
+
+  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
+  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
+
+  // Must be within parametic whatevers for RAY/SEGMENT
+  if(T1<0) return null;
+  if(T2<0 || T2>1) return null;
+
+  // Return the POINT OF INTERSECTION
+  return {
+    x: r_px+r_dx*T1,
+    y: r_py+r_dy*T1,
+    param: T1,
+  };
+}
+
+class Character {
+  constructor(name) {
+    this.container = new PIXI.Container();
+    this.container.name = name;
+
+    const default_frames = this.create_default_frames();
+    this.sprite = new PIXI.extras.AnimatedSprite(default_frames);
+    this.sprite.height /= 2;
+    this.sprite.width /= 2;
+    this.sprite.anchor.set(0.5);
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.play();
+    this.sprite.vitals = {
+      health: 100,
+      status: 'alive',
+    };
+  }
+
+  create_default_frames() {
+    const enemy_frames = [];
+
+    for (let i = 0; i < 19; i++) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
+    }
+
+    return enemy_frames;
+  }
+
+
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
+  create_idle_frames() {
+    const idle_frames = [];
+    for (let i = 0; i <= 21; i += 1) {
+      let name = `survivor-idle_0${i}`;
+
+      if (i >= 10) {
+        name = `survivor-idle_${i}`;
+      }
+      idle_frames.push(PIXI.Texture.fromFrame(name));
+    }
+    const reversed = idle_frames.reverse();
+    return idle_frames.concat(reversed);
+  }
+
+  add_sight_line() {
+    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
+
+    sight_line_box.name = 'sight_line';
+    sight_line_box.width = 3000;
+    sight_line_box.height = 600;
+    sight_line_box.anchor.y = 0.5;
+    sight_line_box.alpha = 0.2;
+
+    this.sprite.addChild(sight_line_box);
+  }
+
+  add_influence_box() {
+    const influence_box = PIXI.Sprite.fromFrame('black_dot');
+
+    influence_box.name = 'influence_box';
+    influence_box.width = 2000;
+    influence_box.height = 2000;
+    influence_box.alpha = 0.4;
+    influence_box.anchor.set(0.5);
+
+    this.sprite.addChild(influence_box);
+  }
+
+  create_light() {
+    const light = PIXI.Sprite.fromFrame('light_gradient');
+    light.name = 'light';
+
+    light.anchor.set(0.5);
+    light.width   = 4000;
+    light.height  = 4000;
+    light.alpha   = 0.1;
+
+    this.sprite.addChild(light);
+  }
+
+  add_raycasting(level_segments) {
+    const raycast = new PIXI.Graphics();
+
+    const points = [];
+    level_segments.forEach(seg => points.push(seg.a,seg.b));
+
+    if(!global.is_development) {
+      const light = this.sprite.getChildByName('light');
+      light.mask = raycast;
+      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+    }
+
+    ticker.add(() => {
+      const unique_angles = [];
+      let intersects = [];
+
+      raycast.clear();
+      raycast.beginFill(0xfffffff, 0.05);
+
+      points.forEach(elem => {
+        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
+        elem.angle = angle;
+        unique_angles.push(angle - 0.00001, angle + 0.00001);
+      });
+
+      for(let k=0; k < unique_angles.length; k++){
+        const angle = unique_angles[k];
+        const dx = Math.cos(angle);
+        const dy = Math.sin(angle);
+        const ray = {
+          a: {x: this.sprite.x,       y: this.sprite.y},
+          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy},
+        };
+
+        let closest_intersect = null;
+        for(let i=0; i < level_segments.length; i++){
+          const intersect = get_intersection(ray, level_segments[i]);
+          if(!intersect) continue;
+          if(!closest_intersect || intersect.param<closest_intersect.param){
+            closest_intersect = intersect;
+          }
+        }
+        if(!closest_intersect) continue;
+
+        closest_intersect.angle = angle;
+        intersects.push(closest_intersect);
+      }
+
+      intersects = intersects.sort((a,b) => a.angle - b.angle);
+
+      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
+
+      for (let i = 0; i < intersects.length; i++) {
+        raycast.lineTo(intersects[i].x, intersects[i].y);
+      }
+
+      const player_sprite = viewport.getChildByName('player');
+      const player_position = player_sprite.getGlobalPosition();
+
+      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+        this.action_on_seeing_player(player_sprite);
+      }
+
+      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
+        this.action_on_hearing_player(player_sprite);
+      }
+    });
+    viewport.addChild(raycast);
+  }
+
+  kill() {
+    this.sprite.stop();
+
+    //const tween = createjs.Tween.get(this.sprite);
+    //tween.pause();
+
+    this.vitals.status = 'dead';
+  }
+}
+
+module.exports = {
+  Character,
+};
+
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../engine/ticker":10,"../engine/viewport":11,"pixi.js":195}],2:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const PIXI = require('pixi.js');
+const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
+const { pathfind_from_enemy_to_player } = require('../engine/pathfind.js');
+const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow.js');
+const { createjs } = require('@createjs/tweenjs');
+const viewport = require('../engine/viewport');
+const { Character } = require('./character_model');
+
+const container = new PIXI.Container();
+container.name = 'enemy_container';
+container.zIndex = -10;
+viewport.addChild(container);
+
+class Enemy extends Character {
+  constructor() {
+    super();
+    this.sprite.speak = (text) => {
+      const render_text = new PIXI.Text(text);
+      render_text.x = this.sprite.x - 100;
+      render_text.y = this.sprite.y - 80;
+      render_text.alpha = 1;
+      container.addChild(render_text);
+    };
+    container.addChild(this.sprite);
+  }
+
+  stop_and_shoot_player(player_sprite) {
+    this.path.paused = true;
+    let shot = false;
+
+    if(!shot) {
+      arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite);
+      shot = true;
+    }
+  }
+
+  create_patrol_path(path_data) {
+    this.sprite.patrol_path = path_data;
+  }
+
+  //for testing
+  create_direction_line() {
+    const direction_line = PIXI.Sprite.fromFrame('black_dot');
+
+    direction_line.width = 200;
+    direction_line.height = 15;
+    direction_line.anchor.x =0;
+    direction_line.anchor.y =0.5;
+
+    if(!global.is_development) {
+      direction_line.alpha = 0;
+    }
+
+    this.sprite.addChild(direction_line);
+  }
+
+  action_on_seeing_player(player_sprite) {
+    if(!this.player_seen) {
+      this.sprite.speak('now, calm down, dont move');
+      this.sprite.stop();
+      createjs.Tween.removeTweens(this.sprite);
+    }
+
+    this.player_seen = true;
+    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
+  }
+
+  action_on_hearing_player(player_sprite) {
+    pathfind_from_enemy_to_player(this.sprite, player_sprite);
+  }
+}
+
+module.exports = {
+  Enemy,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../engine/pathfind.js":9,"../engine/viewport":11,"../utils/sprite_helper.js":30,"../weapons/bow.js":31,"./character_model":1,"@createjs/tweenjs":33,"pixi.js":195}],3:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+const viewport = require('../engine/viewport');
+const { Character } = require('./character_model');
+const { Dialog } = require('../dialog/dialog_util');
+
+const container = new PIXI.Container();
+container.name = 'friend_container';
+container.zIndex = -10;
+viewport.addChild(container);
+
+class Friend extends Character {
+  constructor() {
+    super();
+    const idle_frames = this.create_idle_frames();
+    this.sprite = new PIXI.extras.AnimatedSprite(idle_frames);
+    this.sprite.name = 'friendly';
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    container.addChild(this.sprite);
+  }
+
+  add_script(script) {
+    this.sprite.dialog = {
+      script: script,
+      current_step: 0,
+    };
+  }
+
+  add_dialog_handling() {
+    this.dialog = new Dialog();
+    this.dialog_open = false;
+  }
+
+  add_state_handling() {
+    this.sprite.click = () => {
+      //if(this.dialog_open) {
+      //  return;
+      //}
+      const player = viewport.getChildByName('player');
+      this.dialog.create_background();
+      this.dialog.add_script(this.sprite.dialog.script);
+      this.dialog.add_portrait(player, 'merc_portrait');
+      this.dialog.enter_dialog_slide(player);
+    };
+  }
+}
+
+module.exports = {
+  Friend,
+};
+
+
+
+},{"../dialog/dialog_util":7,"../engine/viewport":11,"./character_model":1,"pixi.js":195}],4:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const PIXI              = require('pixi.js');
+const sprite_helper     = require('../utils/sprite_helper.js');
+const bow_helper        = require('../weapons/bow.js');
+const ticker            = require('../engine/ticker');
+const viewport          = require('../engine/viewport.js');
+const { Character }     = require('./character_model');
+const { Keyboard }      = require('../input/keyboard');
+
+const get_mouse_position = (event, viewport) => ({
+  x: event.data.global.x - viewport.screenWidth / 2,
+  y: event.data.global.y - viewport.screenHeight / 2,
+});
+
+const get_mouse_position_from_player = (event, sprite, viewport) => {
+  const mouse_position = get_mouse_position(event, viewport);
+
+  mouse_position.x += sprite.x;
+  mouse_position.y += sprite.y;
+
+  return mouse_position;
+};
+
+class Player extends Character{
+  constructor() {
+    super();
+
+    this.sprite = new PIXI.extras.AnimatedSprite(this.create_bow_idle_frames());
+    this.sprite.animations = {
+      bow: {
+        idle:   this.create_bow_idle_frames(),
+        walk:   this.create_bow_walk_frames(),
+        ready:  this.create_bow_ready_frames(),
+      },
+    };
+
+    this.sprite.anchor.set(0.5);
+    this.sprite.width /= 2;
+    this.sprite.height /= 2;
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.play();
+    this.sprite.zIndex = -1;
+    this.sprite.name = 'player';
+    this.shift_pressed = false;
+    this.inventory_open = false;
+    this.weapon = 'bow';
+    this.power = 1000;
+    this.allow_shoot = true;
+    this.movement_speed = 15;
+
+    viewport.addChild(this.sprite);
+  }
+
+  follow_player() {
+    viewport.follow(this.sprite);
+  }
+
+  create_bow_idle_frames() {
+    const bow_frames = [];
+    for (let i = 0; i <= 21; i += 1) {
+      let name = `survivor-bow-idle-0${i}`;
+
+      if (i >= 10) {
+        name = `survivor-bow-idle-${i}`;
+      }
+      bow_frames.push(PIXI.Texture.fromFrame(name));
+    }
+    return bow_frames;
+  }
+
+  create_bow_ready_frames() {
+    const ready_frames = [];
+    for (let i = 0; i <= 38; i += 1) {
+      let name = `survivor-bow-pull-0${i}`;
+
+      if (i >= 10) {
+        name = `survivor-bow-pull-${i}`;
+      }
+
+      ready_frames.push(PIXI.Texture.fromFrame(name));
+    }
+    return ready_frames;
+  }
+
+  create_bow_walk_frames() {
+    const walk_frames = [];
+    for (let i = 0; i <= 20; i += 1) {
+      let name = `survivor-walk_bow_0${i}`;
+
+      if (i >= 10) {
+        name = `survivor-walk_bow_${i}`;
+      }
+      walk_frames.push(PIXI.Texture.fromFrame(name));
+    }
+    return walk_frames;
+  }
+
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
+  add_aiming_line() {
+    this.aiming_line = new PIXI.Graphics();
+    this.aiming_line.name = 'aiming_line';
+
+    viewport.addChild(this.aiming_line);
+  }
+
+  add_aiming_cone() {
+    this.aiming_cone = PIXI.Sprite.fromFrame('yellow_triangle');
+
+    this.aiming_cone.height = 800;
+    this.aiming_cone.width = 400;
+    this.aiming_cone.anchor.x = 0.5;
+    this.aiming_cone.alpha = 0;
+    //this.aiming_cone.filters = [new PIXI.filters.BlurFilter()];
+    this.aiming_cone.name = 'aiming_cone';
+
+    viewport.addChild(this.aiming_cone);
+  }
+
+  mouse_move() {
+    viewport.on('mousemove', (event) => {
+      const mouse_position = get_mouse_position(event,viewport);
+      const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
+
+      this.aiming_cone.position.set(this.sprite.position.x, this.sprite.position.y);
+      this.aiming_cone.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player) - 1.575;
+
+      //this.aiming_line.clear();
+      //this.aiming_line.position.set(this.sprite.position.x, this.sprite.position.y);
+      //this.aiming_line.lineStyle(3, 0xffffff, 1).moveTo(0, 0).lineTo(mouse_position.x, mouse_position.y);
+
+      this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
+
+      viewport.addChild(this.aiming_cone, this.aiming_line);
+    });
+  }
+
+  mouse_down() {
+    viewport.on('mousedown', (event) => {
+      if(!this.shift_pressed) return;
+      this.aiming_cone.alpha = 0;
+      this.aiming_cone.count = 10;
+      this.aiming_cone.width = 500;
+      this.aiming_cone.height = 300;
+      this.power = 900;
+
+      this.sprite.textures = this.sprite.animations.bow.ready;
+      this.sprite.loop = false;
+      /* perfomance!!!
+      this.count_down = () => {
+         if(this.power < 300) {
+          ticker.remove(this)
+          return
+        }
+        if (this.power > 750) {
+          this.allow_shoot = false;
+        } else {
+          this.allow_shoot = true;
+        }
+        console.log(this.power)
+
+        this.aiming_cone.width -= 1.5;
+        this.aiming_cone.height += 3;
+        this.aiming_cone.alpha += 0.002
+        this.aiming_cone.count -= 0.04;
+        //this.aiming_cone.filters[0].blur = this.aiming_cone.count;
+
+        if (this.power > 400) {
+          this.power -= 10;
+        }
+      }
+      ticker.add(this.count_down);
+      */
+      if (this.weapon === 'bow') {
+        const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
+
+        this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
+        this.sprite.gotoAndPlay(0);
+      }
+    });
+  }
+
+  mouse_up() {
+    viewport.on('mouseup', (event) => {
+      const poo = new PIXI.Sprite.fromFrame('bunny');
+      poo.position.x = viewport.center.x;
+      poo.position.y = viewport.bottom;
+      viewport.addChild(poo);
+      this.moveable = true;
+      this.sprite.play();
+
+      ticker.remove(this.count_down);
+      this.aiming_cone.alpha = 0;
+      if (this.weapon === 'bow' && this.allow_shoot /*&& this.shift_pressed*/) {
+        this.sprite.textures = this.sprite.animations.bow.idle;
+
+        const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
+        bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
+      }
+    });
+  }
+
+  add_controls() {
+    const keyboard = new Keyboard();
+    const player_position = this.sprite.getGlobalPosition();
+
+    global.document.addEventListener('keydown', (e) => {
+      keyboard.player_position = this.sprite.position;
+      keyboard.key_down(e);
+    });
+
+    global.document.addEventListener('keyup', () => {
+      keyboard.key_down();
+    });
+  }
+}
+
+module.exports = {
+  Player,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../engine/ticker":10,"../engine/viewport.js":11,"../input/keyboard":15,"../utils/sprite_helper.js":30,"../weapons/bow.js":31,"./character_model":1,"pixi.js":195}],5:[function(require,module,exports){
+'use strict';
+
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 
@@ -22,14 +602,14 @@ class Rat {
     this.sprite.rotation = -0.5;
     this.sprite.play();
     this.sprite.name = 'rat';
-    this.sprite.zIndex = -3
+    this.sprite.zIndex = -3;
 
     critter_container.addChild(this.sprite);
-    console.log(viewport);
   }
 
   create_patrol_path(path_data) {
     this.sprite.patrol_path = path_data;
+    console.log('thing')
   }
 
   set_position(x,y) {
@@ -43,12 +623,12 @@ class Rat {
       const val = i < 10 ? `0${i}` : i;
       moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
     }
-  
+
     for (let i = 15; i > 0; i -= 1) {
       const val = i < 10 ? `0${i}` : i;
       moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
     }
-  
+
     moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
@@ -70,15 +650,15 @@ class Rat {
       PIXI.Texture.fromFrame('rat_01'),
     ];
 
-    return waiting_frames
+    return waiting_frames;
   }
 
   create_dead_frames() {
-    return PIXI.Texture.fromFrame('rat_35');;
+    return PIXI.Texture.fromFrame('rat_35');
   }
 
   create_eat_frames() {
-    
+
     const eating_frames = [
       PIXI.Texture.fromFrame('rat_37'),
       PIXI.Texture.fromFrame('rat_38'),
@@ -99,1167 +679,253 @@ class Rat {
 
 module.exports = {
   Rat,
+};
+
+},{"../engine/viewport":11,"pixi.js":195}],6:[function(require,module,exports){
+'use strict';
+
+const ticker = require('../engine/ticker');
+
+function fade_out_sprite(sprite, speed){
+  const count_down = () => {
+    if (sprite.alpha > 0) {
+      sprite.alpha -= speed || 0.005;
+    } else {
+      ticker.remove(count_down);
+    }
+  };
+
+  ticker.add(count_down);
 }
 
-},{"../engine/viewport":13,"pixi.js":262}],2:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
-const { pathfind_from_enemy_to_player } = require('../engine/pathfind.js')
-const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow.js');
-const { createjs } = require('@createjs/tweenjs');
-const ticker = require('../engine/ticker');
-const viewport = require('../engine/viewport');
+// todo: this could be running both
+function fade_in_sprite(sprite, speed, limit){
+  const count_up = () => {
+    if (sprite.alpha < limit) {
+      sprite.alpha += speed || 0.005;
+    } else {
+      ticker.remove(count_up);
+    }
+  };
 
-function get_intersection(ray, segment){
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
+  ticker.add(count_up);
+}
 
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
+class Effects {
 
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
+  static fade_to_black(sprite) {
+    fade_out_sprite(sprite);
   }
 
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1
-  };
+  static fade_to_normal(sprite) {
+    fade_in_sprite(sprite);
+  }
 }
 
-class Enemy {
+module.exports = {
+  Effects,
+};
+
+
+
+
+},{"../engine/ticker":10}],7:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+const viewport = require('../engine/viewport');
+
+//const enemyDialogOptions = [
+// 'Oh shit, there he is',
+// 'Who the fuck are you',
+// 'Dont fucking move',
+// 'Stop stop stop',
+// 'No more, not again',
+// 'Karl? That you?',
+// 'Are you real?',
+// 'Ill help you die',
+// 'Give me that now',
+// 'Isabella? Is that you?',
+//};
+
+class Dialog {
   constructor() {
     this.container = new PIXI.Container();
-    this.container.name = 'enemy_container';
-    
+    this.container.zIndex = -20;
     viewport.addChild(this.container);
-    const enemy_frames = this.create_knife_enemy_frames();
+  }
 
-    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
-    this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
+  create_background() {
+    this.background = new PIXI.Sprite.fromFrame('black_dot');
 
-    this.sprite.speak = (text) => {
-      const render_text = new PIXI.Text(text);
-      render_text.x = this.sprite.x - 100;
-      render_text.y = this.sprite.y - 80;
+    this.background.zIndex = -10;
+    this.background.alpha = 0.5;
+    this.background.name = 'dialog_background';
+    this.background.width = viewport.width;
+    this.background.height = viewport.height;
+    this.background.position.set(0,0);
 
-      //viewport.addChild(render_text);
+    this.container.addChild(this.background);
+  }
 
-      //function fadeOut() {
-      //  if (render_text.alpha > 0) {
-      //    render_text.alpha -= 0.01;
-      //  } else {
-      //    ticker.remove(fadeOut);
-      //    viewport.removeChild(render_text);
-      //  }
-      //}
+  add_script(script) {
+    this.script = script;
+  }
 
-      //ticker.add(fadeOut);
+  add_portrait(point, image_name) {
+    this.portrait = new PIXI.Sprite.fromFrame(image_name);
+
+    this.portrait.zIndex = -11;
+    this.portrait.position.set(point.x - 800, point.y);
+
+    this.container.addChild(this.portrait);
+  }
+
+  clear_slide_text() {
+
+    this.container.getChildByName('actor_text').text = '';
+    this.container.getChildByName('render_text').text = '';
+    this.container.getChildByName('button_text').text = '';
+    this.container.getChildByName('choice_one').text = '';
+    this.container.getChildByName('choice_two').text = '';
+
+  }
+
+  create_text_timeout(text_array) {
+    let i = 0;
+    let current_text = '';
+
+    if(this.timeout) {
+      this.container.getChildByName('render_text').text = '';
+      clearInterval(this.timeout);
+    } else {
+      this.timeout = setInterval(()=> {
+        if(i === text_array.length){
+          clearInterval(this.timeout);
+          return;
+        }
+        current_text += text_array[i] + ' ';
+        this.container.getChildByName('render_text').text = current_text;
+        i++;
+      }, 150);
     }
-    this.player_seen = false;
-    this.container.addChild(this.sprite)
   }
 
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
+  refresh_text_slide(step) {
+    this.clear_slide_text();
+    const text_array = this.script[step].name.split(' ');
+    this.create_text_timeout(text_array);
 
-  create_knife_enemy_frames() {
-    const enemy_frames = [];
+    this.container.getChildByName('actor_text').text = this.script[step].actor;
+    this.container.getChildByName('button_text').text = 'next';
+    this.container.getChildByName('button_text').click = () => {
 
-    for (let i = 0; i < 19; i++) {
-      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-    }
-
-    return enemy_frames;
-  }
-
-  add_vitals() {
-    this.sprite.vitals = {
-      health: 100,
-      status: 'alive',
+      for(let i = 0; i < this.script.length; i++) {
+        if(this.script[i].id === this.script[step].id){
+          this.refresh_branch_slide(i);
+        }
+      }
     };
   }
 
-  add_sight_line() {
-    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
-
-    sight_line_box.name = 'sight_line';
-    sight_line_box.width = 3000;
-    sight_line_box.height = 600;
-    sight_line_box.anchor.y = 0.5;
-    sight_line_box.alpha = 0.2;
-
-    if (!global.is_development) {
-      sight_line_box.alpha = 0;
-    }
-    this.sprite.addChild(sight_line_box);
+  refresh_branch_slide() {
+    this.clear_slide_text();
+    this.container.getChildByName('choice_one').text = 'yes';
+    this.container.getChildByName('choice_two').text = 'no' ;
   }
 
-  add_influence_box() {
-    const influence_box = PIXI.Sprite.fromFrame('black_dot');
+  enter_dialog_slide(point) {
+    this.create_slide_format(point);
 
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
-    influence_box.height = 2000;
-    influence_box.alpha = 0.4;
-    influence_box.anchor.set(0.5);
-
-    if(!global.is_development) {
-      influence_box.alpha = 0;
-    }
-    this.sprite.addChild(influence_box);
-  }
-
-  stop_and_shoot_player(player_sprite) {
-    this.path.paused = true;
-    let shot = false;
-
-    if(!shot) {
-      arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
-      shot = true;
+    if(this.script[0].type === 'Text'){
+      this.refresh_text_slide(0);
     }
   }
 
-  create_patrol_path(path_data) {
-    this.sprite.patrol_path = path_data;
+  create_slide_format(point) {
+    this.render_actor(point.x - 720, point.y -80, '');
+    this.render_text(point.x - 400, point.y - 200, '');
+    this.render_choice_one(point.x + 100, point.y + 100, '');
+    this.render_choice_two(point.x + 200, point.y + 100, '');
+    this.render_action(point.x + 200, point.y + 200);
   }
 
-  create_direction_line() {
-    const direction_line = PIXI.Sprite.fromFrame('black_dot');
-
-    direction_line.width = 200;
-    direction_line.height = 15;
-    direction_line.anchor.x =0
-    direction_line.anchor.y =0.5
-
-    if(!global.is_development) {
-      direction_line.alpha = 0;
-    }
-
-    this.sprite.addChild(direction_line);
-  }
-
-  create_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.name = 'light';
-
-    light.anchor.set(0.5);
-    light.width   = 4000;
-    light.height  = 4000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-
-  add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics()
-
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast
-      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-    }
-
-    ticker.add(() => {
-      const unique_angles = [];
-      let intersects = [];
-
-      raycast.clear()
-      raycast.beginFill(0xfffffff, 0.05);
-
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
-
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
-        };
-
-        let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        }
-        if(!closest_intersect) continue;
-
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      }
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-
-      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
-      }
-
-      const player_sprite = viewport.getChildByName('player')
-      const player_position = player_sprite.getGlobalPosition() 
-
-      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_seeing_player(player_sprite);
-      }
-
-      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_hearing_player(player_sprite);
-      }
+  render_choice_two(x, y, text) {
+    const choice_text = new PIXI.Text(text, {
+      fontFamily : 'Arial',
+      fontSize: 30,
+      fill : 0xC0C0C0,
     });
-    viewport.addChild(raycast)
+    choice_text.name = 'choice_two';
+    choice_text.position.set(x,y);
+
+    this.container.addChild(choice_text);
   }
 
-  action_on_seeing_player(player_sprite) {
-    // first time you're seen 
-    if(!this.player_seen) {
-      this.speak('now, calm down, dont move');
-      this.sprite.stop()
-      createjs.Tween.removeTweens(this.sprite)
-    }
+  render_choice_one(x, y, text) {
+    const choice_text = new PIXI.Text(text, {
+      fontFamily : 'Arial',
+      fontSize: 30,
+      fill : 0xC0C0C0,
+    });
+    choice_text.name = 'choice_one';
+    choice_text.position.set(x,y);
 
-    this.player_seen = true;
-
-    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
+    this.container.addChild(choice_text);
   }
 
-  action_on_hearing_player(player_sprite) {
+  render_actor(x, y, text) {
+    const actor_text = new PIXI.Text(text, {
+      fontFamily : 'Arial',
+      fontSize: 30,
+      fill : 0xC0C0C0,
+    });
+    actor_text.name = 'actor_text';
 
-    pathfind_from_enemy_to_player(this.sprite, player_sprite)
+    actor_text.position.set(x,y);
 
+    this.container.addChild(actor_text);
   }
 
+  render_action(x, y, text) {
+    const button_text = new PIXI.Text(text, {
+      fontFamily : 'Arial',
+      fontSize: 30,
+      fill : 0x0000ff,
+    });
 
-  kill() {
-    this.sprite.stop();
+    button_text.name = 'button_text';
+    button_text.position.set(x,y);
+    button_text.interactive = true;
+    button_text.buttonMode = true;
 
-    const tween = createjs.Tween.get(this.sprite);
-    tween.pause();
+    this.container.addChild(button_text);
+  }
 
-    this.vitals.status = 'dead';
-    put_blood_splatter_under_sprite(this.sprite);
+  render_text(x, y, text) {
+    const render_text = new PIXI.Text(text, {
+      fontFamily : 'Arial',
+      fontSize: 35,
+      fill : 0xffffff,
+    });
+    render_text.name = 'render_text';
+    render_text.position.set(x,y);
+
+    this.container.addChild(render_text);
   }
 
 }
 
 module.exports = {
-  Enemy,
-}
+  Dialog,
+};
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pathfind.js":10,"../engine/ticker":12,"../engine/viewport":13,"../utils/sprite_helper.js":34,"../weapons/bow.js":36,"@createjs/tweenjs":39,"pixi.js":262}],3:[function(require,module,exports){
+},{"../engine/viewport":11,"pixi.js":195}],8:[function(require,module,exports){
 (function (global){
-const PIXI              = require('pixi.js');
-const sprite_helper     = require('../utils/sprite_helper.js');
-const bow_helper        = require('../weapons/bow.js');
-const document_helper   = require('../utils/mouse.js');
-const ticker            = require('../engine/ticker');
-const viewport          = require('../engine/viewport.js');
-
-const get_mouse_position = (event, viewport) => ({
-  x: event.data.global.x - viewport.screenWidth / 2,
-  y: event.data.global.y - viewport.screenHeight / 2,
-})
-
-const get_mouse_position_from_player = (event, sprite, viewport) => {
-  const mouse_position = get_mouse_position(event, viewport);
-
-  mouse_position.x += sprite.x
-  mouse_position.y += sprite.y;
-
-  return mouse_position;
-}
-
-function get_intersection(ray, segment){
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
-
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
-
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
-  }
-
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1
-  };
-}
-
-class Player {
-  constructor() {
-    this.animations = {
-      bow: {
-        idle:   this.create_bow_idle_frames(),
-        walk:   this.create_bow_walk_frames(),
-        ready:  this.create_bow_ready_frames(),
-      },
-    };
-
-    this.sprite = new PIXI.extras.AnimatedSprite(this.animations.bow.idle);
-    this.sprite.anchor.set(0.5);
-    this.sprite.width /= 2;
-    this.sprite.height /= 2;
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
-    this.sprite.zIndex = -1;
-    this.sprite.name = 'player';
-    
-    this.weapon = 'bow';
-    this.power = 1000;
-    this.allow_shoot = true;
-    this.movement_speed = 15;
-
-    viewport.addChild(this.sprite);
-  }
-
-  follow_player() {
-    viewport.follow(this.sprite);
-  }
-
-  create_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    
-    light.name  = 'light';
-    light.anchor.set(0.5);
-    light.width   = 2000;
-    light.height  = 2000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-
-  add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics();
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast
-    }
-    
-    ticker.add(() => {
-      const unique_angles = [];
-      let intersects = [];
-      
-      raycast.clear()
-      raycast.beginFill(0xfffffff, 0.05);
-  
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
-  
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
-        };
-  
-        let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        }
-        if(!closest_intersect) continue;
-  
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      }
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
-      }
-    });
-
-    viewport.addChild(raycast)
-  }
-
-  create_bow_idle_frames() {
-    const bow_frames = [];
-    for (let i = 0; i <= 21; i += 1) {
-      let name = `survivor-bow-idle-0${i}`;
-
-      if (i >= 10) {
-        name = `survivor-bow-idle-${i}`;
-      }
-      bow_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    return bow_frames;
-  }
-
-  create_bow_ready_frames() {
-    const ready_frames = [];
-    for (let i = 0; i <= 38; i += 1) {
-      let name = `survivor-bow-pull-0${i}`;
-  
-      if (i >= 10) {
-        name = `survivor-bow-pull-${i}`;
-      }
-  
-      ready_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    return ready_frames;
-  }
-
-  create_bow_walk_frames() {
-    const walk_frames = [];
-    for (let i = 0; i <= 20; i += 1) {
-      let name = `survivor-walk_bow_0${i}`;
-  
-      if (i >= 10) {
-        name = `survivor-walk_bow_${i}`;
-      }
-      walk_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    return walk_frames;
-  }
-
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
-
-  add_aiming_line() {
-    this.aiming_line = new PIXI.Graphics();
-    this.aiming_line.name = 'aiming_line';
-    
-    viewport.addChild(this.aiming_line)
-  }
-
-  add_aiming_cone() {
-    this.aiming_cone = PIXI.Sprite.fromFrame('yellow_triangle');
-    
-    this.aiming_cone.height = 800;
-    this.aiming_cone.width = 400;
-    this.aiming_cone.anchor.x = 0.5;
-    this.aiming_cone.alpha = 0;
-    //this.aiming_cone.filters = [new PIXI.filters.BlurFilter()];
-    this.aiming_cone.name = 'aiming_cone';
-    
-    viewport.addChild(this.aiming_cone);
-  }
-
-  mouse_move() {
-    viewport.on('mousemove', (event) => {
-      const mouse_position = get_mouse_position(event,viewport)
-      const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-
-      this.aiming_cone.position.set(this.sprite.position.x, this.sprite.position.y);
-      this.aiming_cone.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player) - 1.575
-      
-      //this.aiming_line.clear();  
-      //this.aiming_line.position.set(this.sprite.position.x, this.sprite.position.y);
-      //this.aiming_line.lineStyle(3, 0xffffff, 1).moveTo(0, 0).lineTo(mouse_position.x, mouse_position.y);
-      
-      this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
-      
-      viewport.addChild(this.aiming_cone, this.aiming_line);
-    }); 
-  }
-
-  mouse_down() {
-    viewport.on('mousedown', (event) => {
-      this.aiming_cone.alpha = 0;
-      this.aiming_cone.count = 10;
-      this.aiming_cone.width = 500;
-      this.aiming_cone.height = 300;
-      this.power = 900;
-
-      this.sprite.textures = this.animations.bow.ready;
-      this.sprite.loop = false;
-      /* perfomance!!!
-      this.count_down = () => {
-         if(this.power < 300) {
-          ticker.remove(this)
-          return
-        }
-        if (this.power > 750) {
-          this.allow_shoot = false;
-        } else {
-          this.allow_shoot = true;
-        }
-        console.log(this.power)
-        
-        this.aiming_cone.width -= 1.5;
-        this.aiming_cone.height += 3;
-        this.aiming_cone.alpha += 0.002
-        this.aiming_cone.count -= 0.04;
-        //this.aiming_cone.filters[0].blur = this.aiming_cone.count;
-
-        if (this.power > 400) {
-          this.power -= 10;
-        }
-      }
-      ticker.add(this.count_down);
-      */
-      if (this.weapon === 'bow') {
-        const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-  
-        this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
-        this.sprite.gotoAndPlay(0);
-      }
-    });
-  }
-
-  mouse_up() {
-    viewport.on('mouseup', (event) => {
-      this.moveable = true;
-      this.sprite.play();
-      this.sprite.textures = this.animations.bow.idle;
-      
-      ticker.remove(this.count_down);
-      this.aiming_cone.alpha = 0;
-
-      if (this.weapon === 'bow' && this.allow_shoot) {
-        const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-  
-        bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
-      }
-    });
-  }
-
-  add_controls() {
-    global.document.addEventListener('keydown', (e) => {
-      const key = document_helper.getDirection(e.key);
-      const collision_objects = viewport.getChildByName('collision_items');
-      this.sprite.loop = true;
-
-      if (!this.moveable) return;
-
-      if (key === 'up') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-          const player_position = this.sprite.getGlobalPosition()
-
-          player_position.y -= this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1);
-            return;
-          }      
-        }
-
-        this.sprite.y -= this.movement_speed;
-        this.sprite.rotation = -2;
-      };
-
-      if (key === 'down') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.y += this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.y += this.movement_speed;
-        this.sprite.rotation = 2;
-      };
-
-      if (key === 'left') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.x -= this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.x -= this.movement_speed;
-        this.sprite.rotation = -3;
-      };
-
-      if (key === 'right') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.x += this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.x += this.movement_speed;
-        this.sprite.rotation = 0;
-      };
-
-      if(key === 'right' || key === 'up' || key === 'down' || key === 'left'){
-        if(this.sprite.textures !== this.animations.bow.walk) {
-          this.sprite.textures = this.animations.bow.walk;
-          this.sprite.play();
-        };
-      }
-    });
-
-    global.document.addEventListener('keyup', () => {
-      this.sprite.textures = this.animations.bow.idle;
-
-      this.sprite.play();
-    });
-  };
-}
-
-module.exports = {
-  Player,
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/ticker":12,"../engine/viewport.js":13,"../utils/mouse.js":33,"../utils/sprite_helper.js":34,"../weapons/bow.js":36,"pixi.js":262}],4:[function(require,module,exports){
-(function (global){
-
-const PIXI = require('pixi.js');
-// const documentHelper = require('../utils/document_helper.js');
-
-function onDragStart(event) {
-  this.alpha = 0.5;
-  this.dragging = true;
-  this.data = event.data;
-}
-
-function onDragEnd() {
-  this.alpha = 1;
-  this.dragging = false;
-  this.data = null;
-}
-
-function onDragMove() {
-  if (this.dragging) {
-    var newPosition = this.data.getLocalPosition(this.parent);
-    this.position.x = newPosition.x;
-    this.position.y = newPosition.y;
-  }
-}
-
-module.exports.renderItem = (x, y) => {
-
-  const item = PIXI.Sprite.fromFrame('cupboard');
-  item.interactive = true;
-  item.buttonMode = true;
-  // global.viewport.addChild(item);
-  global.collisionItems.addChild(item);
-  item.position.set(x, y);
-  item
-    .on('mousedown', onDragStart)
-    .on('mouseup', onDragEnd)
-    .on('mouseupoutside', onDragEnd)
-    .on('mousemove', onDragMove);
-
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":262}],5:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const cutscene_util = require('./cutscene_utils');
-const player = require('../character/player.js');
-
-const scene = {
-  x: 1000,
-  y: 1000,
-};
-
-module.exports.start = () => {
-  player.remove_controls();
-  cutscene_util.clearScene();
-  cutscene_util.teleport(scene.x, scene.y);
-
-  const introFloor = PIXI.Sprite.fromFrame('bedroom_floor_cutscene');
-  introFloor.width *= 2;
-  introFloor.height *= 2;
-  introFloor.anchor.set(0.5);
-  introFloor.position.set(scene.x - 300, scene.y);
-
-  global.viewport.addChild(introFloor);
-
-  filterUtil.godray(introFloor.x + 100, (scene.y - introFloor.height - 50))
-    .then(() => cutscene_util.createPlayer())
-    .then(() => {
-      global.Player.moveable = false;
-      cutscene_util.movePlayer(
-        { x: scene.x + 200, y: scene.y - 200 },
-        { x: scene.x + 200, y: scene.y + 500 },
-      );
-    });
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../character/player.js":3,"./cutscene_utils":6,"pixi.js":262}],6:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const spriteHelper = require('../utils/sprite_helper.js');
-
-module.exports.teleport = (x, y) => {
-  global.Player.sprite.x = x;
-  global.Player.sprite.y = y;
-};
-
-module.exports.clearScene = () => global.viewport.removeChildren();
-
-module.exports.createPlayer = () => {
-  global.Player.sprite = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  global.Player.sprite.anchor.set(0.5);
-  global.Player.sprite.width /= 2;
-  global.Player.sprite.height /= 2;
-  global.Player.sprite.animationSpeed = 0.6;
-  global.Player.sprite.play();
-  global.Player.sprite.zIndex = -20;
-
-  global.Player.sprite.walk = new PIXI.extras.AnimatedSprite(global.Player.animation.walk);
-  global.Player.sprite.idle = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  global.Player.sprite.ready = new PIXI.extras.AnimatedSprite(global.Player.animation.ready);
-
-  global.viewport.addChild(global.Player.sprite);
-};
-
-module.exports.movePlayer = (start, finish) => {
-  const pathOne = new PIXI.tween.TweenPath()
-    .moveTo(start.x, start.y)
-    .lineTo(finish.x, finish.y);
-
-  const pathOneVisualGuide = new PIXI.Graphics()
-    .lineStyle(1, 0xffffff, 1)
-    .drawPath(pathOne);
-  global.viewport.addChild(pathOneVisualGuide);
-
-  const animatedPlayer = new PIXI.extras.AnimatedSprite(global.Player.animation.idle);
-  animatedPlayer.x = start.x;
-  animatedPlayer.y = start.y;
-  animatedPlayer.height /= 3;
-  animatedPlayer.width /= 3;
-  animatedPlayer.texture.width = 100;
-  animatedPlayer.texture.height = 100;
-  animatedPlayer.anchor.set(0);
-  animatedPlayer.animationSpeed = 0.4;
-  animatedPlayer.play();
-
-  const animatedPlayerTween = PIXI.tweenManager.createTween(animatedPlayer);
-  animatedPlayerTween.name = 'tween';
-  animatedPlayerTween.path = pathOne;
-  animatedPlayerTween.target.rotation = spriteHelper.angle(animatedPlayer, pathOne.tmpPoint2);
-  animatedPlayerTween.time = 3000;
-  animatedPlayerTween.easing = PIXI.tween.Easing.inOutQuad();
-  animatedPlayerTween.name = 'tween path';
-  animatedPlayerTween.start();
-
-  global.viewport.addChild(animatedPlayer);
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/sprite_helper.js":34,"pixi.js":262}],7:[function(require,module,exports){
-(function (global){
+'use strict';
 
 const PIXI = require('pixi.js');
 
-const enemyDialogOptions = [
-  'Oh shit, there he is',
-  'Who the fuck are you',
-  'Dont fucking move',
-  'Stop stop stop',
-  'No more, not again',
-  'Karl? That you?',
-  'Are you real?',
-  'Ill help you die',
-  'Give me that now',
-  'Isabella? Is that you?',
-];
-
-module.exports.renderText = (point, text) => {
-  const renderText = new PIXI.Text(text);
-  renderText.x = point.x - 100;
-  renderText.y = point.y - 80;
-
-  global.viewport.addChild(renderText);
-
-  function fadeOut() {
-    if (renderText.alpha > 0) renderText.alpha -= 0.01;
-    else global.app.ticker.remove(fadeOut);
-  }
-
-  global.app.ticker.add(fadeOut);
-};
-
-module.exports.enemySurprised = () => enemyDialogOptions[
-  Math.floor(Math.random() * enemyDialogOptions.length)
-];
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":262}],8:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
-// const Player = require('../player/player.js');
-const { pathfind_from_enemy_to_player } = require('../pathfinding/pathfind_util.js')
-const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow/bow_helper.js');
-const { createjs } = require('@createjs/tweenjs');
-const ticker = require('../engine/ticker');
-const viewport = require('../engine/viewport');
-
-// console.log(Player)
-
-const enemy_container = new PIXI.Container();
-enemy_container.name = 'enemy_container';
-
-function get_intersection(ray, segment){
-	// RAY in parametric: Point + Delta*T1
-	const r_px = ray.a.x;
-	const r_py = ray.a.y;
-	const r_dx = ray.b.x-ray.a.x;
-	const r_dy = ray.b.y-ray.a.y;
-
-	// SEGMENT in parametric: Point + Delta*T2
-	const s_px = segment.a.x;
-	const s_py = segment.a.y;
-	const s_dx = segment.b.x-segment.a.x;
-	const s_dy = segment.b.y-segment.a.y;
-
-	// Are they parallel? If so, no intersect
-	const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-	const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-	if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-		// Unit vectors are the same.
-		return null;
-	}
-
-	const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-	const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-	// Must be within parametic whatevers for RAY/SEGMENT
-	if(T1<0) return null;
-	if(T2<0 || T2>1) return null;
-
-	// Return the POINT OF INTERSECTION
-	return {
-		x: r_px+r_dx*T1,
-		y: r_py+r_dy*T1,
-		param: T1
-	};
-}
-
-class Enemy {
-  constructor() {
-    viewport.addChild(enemy_container);
-
-    const enemy_frames = this.create_knife_enemy_frames();
-
-    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
-    this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.rotation = -0.5;
-    this.sprite.play();
-    this.sprite.tag = 'enemy';
-
-    this.sprite.speak = (text) => {
-      const renderText = new PIXI.Text(text);
-      renderText.x = this.sprite.x - 100;
-      renderText.y = this.sprite.y - 80;
-
-      viewport.addChild(renderText);
-
-      function fadeOut() {
-        if (renderText.alpha > 0) {
-          renderText.alpha -= 0.01;
-        } else {
-          ticker.remove(fadeOut);
-        }
-      }
-
-      ticker.add(fadeOut);
-    }
-    this.player_seen = false;
-  }
-
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
-
-  create_knife_enemy_frames() {
-    const enemy_frames = [];
-  
-    for (let i = 0; i < 19; i++) {
-      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-    }
-
-    return enemy_frames;
-  }
-
-  add_vitals() {
-    this.sprite.vitals = {
-      health: 100,
-      status: 'alive',
-    };
-  }
-
-  add_sight_line() {
-    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
-
-    sight_line_box.name = 'sight_line';
-    sight_line_box.width = 3000;
-    sight_line_box.height = 600;
-    sight_line_box.anchor.y = 0.5;
-    sight_line_box.alpha = 0.2;
-
-    if (!global.is_development) {
-      sight_line_box.alpha = 0;
-    }
-    this.sprite.addChild(sight_line_box);
-  }
-
-  add_influence_box() {
-    const influence_box = PIXI.Sprite.fromFrame('black_dot');
-
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
-    influence_box.height = 2000;
-    influence_box.alpha = 0.4;
-    influence_box.anchor.set(0.5);
-
-    if(!global.is_development) {
-      influence_box.alpha = 0;
-    }
-    this.sprite.addChild(influence_box);
-  }
-
-  stop_and_shoot_player(player_sprite) {
-    this.path.paused = true;
-    let shot = false;
-
-    if(!shot) {
-      arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
-      shot = true;
-    }
-  }
-
-  create_patrol_path(path_data) {
-    this.sprite.patrol_path = path_data;
-  }
-
-  create_direction_line() {
-    const direction_line = PIXI.Sprite.fromFrame('black_dot');
-
-    direction_line.width = 200;
-    direction_line.height = 15;
-    direction_line.anchor.x =0
-    direction_line.anchor.y =0.5
-    
-    if(!global.is_development) {
-      direction_line.alpha = 0;
-    }
-
-    this.sprite.addChild(direction_line);
-  }
-
-  create_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.name = 'light';
-
-    light.anchor.set(0.5);
-    light.width   = 4000;
-    light.height  = 4000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-
-  add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics()
-    
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast
-      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-    }
-    
-    ticker.add(() => {
-      const unique_angles = [];
-      let intersects = [];
-      
-      raycast.clear()
-      raycast.beginFill(0xfffffff, 0.05);
-  
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
-  
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
-        };
-  
-        let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        }
-        if(!closest_intersect) continue;
-  
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      }
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-
-      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
-      }
-      
-      const player_sprite = viewport.getChildByName('player')
-      const player_position = player_sprite.getGlobalPosition() 
-
-      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_seeing_player(player_sprite);
-      }
-
-      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_hearing_player(player_sprite);
-      }
-    });
-    viewport.addChild(raycast)
-  }
-
-  action_on_seeing_player(player_sprite) {
-    // first time you're seen 
-    if(!this.player_seen) {
-      this.speak('now, calm down, dont move');
-      this.sprite.stop()
-      createjs.Tween.removeTweens(this.sprite)
-    }
-
-    this.player_seen = true;
-
-    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
-  }
-
-  action_on_hearing_player(player_sprite) {
-
-    pathfind_from_enemy_to_player(this.sprite, player_sprite)
-
-  }
-
-  
-  kill() {
-    this.sprite.stop();
-
-    const tween = createjs.Tween.get(this.sprite);
-    tween.pause();
-
-    this.vitals.status = 'dead';
-    put_blood_splatter_under_sprite(enemy_sprite);
-  }
-
-  add_to_container() {
-    enemy_container.addChild(this.sprite);
-  }
-}
-
-function point_hits_enemy_in_container(point) {
-  
-  for (let i = 0; i < enemy_container.children.length; i++) {
-    const enemy_in_container = enemy_container.children[i];
-
-    if(enemy_in_container.containsPoint(point)){
-      return enemy_in_container;
-    }
-  }
-}
-
-module.exports = {
-  point_hits_enemy_in_container,
-  Enemy,
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/ticker":12,"../engine/viewport":13,"../pathfinding/pathfind_util.js":30,"../utils/sprite_helper.js":34,"../weapons/bow/bow_helper.js":37,"@createjs/tweenjs":39,"pixi.js":262}],9:[function(require,module,exports){
-(function (global){
-
-
-
-// add the viewport to the stage
 module.exports = new PIXI.Application({
   width: global.window.innerWidth,
   height: global.window.innerHeight,
@@ -1269,8 +935,10 @@ module.exports = new PIXI.Application({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{"pixi.js":195}],9:[function(require,module,exports){
 (function (global){
+'use strict';
+
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
 const viewport = require('./viewport');
@@ -1386,7 +1054,7 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
 }
 
 const distance_between_two_points = (point_one, point_two) => {
-  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y)
+  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
 };
 
 const generate_wait_time_with_threshold = (max, threshold) => {
@@ -1420,16 +1088,16 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 }
 
 function move_sprite_on_path(sprite, path_array) {
-  return new Promise((resolve, reject) => {
-    
+  return new Promise(resolve => {
+
     const tween = createjs.Tween.get(sprite);
 
     const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
     //TODO
     for (let i = 0; i < path_array.length; i++) {
       if(path_array[i-1] === undefined) continue;
-      
-      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
+
+      const angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
 
       tween.to({
         rotation: angle_to_face,
@@ -1445,7 +1113,7 @@ function move_sprite_on_path(sprite, path_array) {
 }
 
 function move_enemy_to_point(sprite, point) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
     const walk_time = create_relative_walk_time(sprite, point.middle);
@@ -1454,10 +1122,10 @@ function move_enemy_to_point(sprite, point) {
     tween.to({
       rotation: Math.abs(angle_to_face),
     })
-    .to({
-      x: point.middle.x,
-      y: point.middle.y,
-    }, walk_time, createjs.Ease.sineInOut);
+      .to({
+        x: point.middle.x,
+        y: point.middle.y,
+      }, walk_time, createjs.Ease.sineInOut);
 
     tween.call(()=>resolve());
   });
@@ -1465,7 +1133,7 @@ function move_enemy_to_point(sprite, point) {
 
 let boolean_time = true;
 
-function path_enemy_on_points(enemy_sprite, point_array, options) {
+function path_enemy_on_points(enemy_sprite, point_array) {
   if( boolean_time === false ) return;
 
   boolean_time = false;
@@ -1484,7 +1152,7 @@ function path_enemy_on_points(enemy_sprite, point_array, options) {
     .then(() => wait_sprite(enemy_sprite, 500))
     .then(() => look_around_sprite(enemy_sprite, 1000, 1))
     .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
-    .then(() => move_sprite_on_route(enemy_sprite))
+    .then(() => move_sprite_on_route(enemy_sprite));
 
 }
 
@@ -1533,67 +1201,67 @@ function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
 }
 
 function move_sprite_on_route_straight(sprite) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
     sprite.position.set(sprite.patrol_path[0].x,sprite.patrol_path[0].y);
-    
+
     for (let i = 1; i < sprite.patrol_path.length; i++) {
       const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 5);
       const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
-  
+
       tween.to({
         x:sprite.patrol_path[i].x,
         y:sprite.patrol_path[i].y,
         rotation: angle_to_face,
-      }, walk_time)
+      }, walk_time);
     }
 
     tween.call(()=>resolve());
-  })
-};
+  });
+}
 
 function move_sprite_on_route(sprite) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
 
     for (let i = 1; i < sprite.patrol_path.length; i++) {
-  
+
       const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 10);
       const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
       const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-  
+
       const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
-  
+
       tween.to({
         x:sprite.patrol_path[i].x,
         y:sprite.patrol_path[i].y,
       }, walk_time, createjs.Ease.sineInOut)
-      .wait(random_wait_time_with_threshold)
-      .to({
-        rotation: angle_to_face,
-      }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-      .wait(random_wait_time_with_threshold);
+        .wait(random_wait_time_with_threshold)
+        .to({
+          rotation: angle_to_face,
+        }, random_wait_time_with_minimum, createjs.Ease.backInOut)
+        .wait(random_wait_time_with_threshold);
     }
 
     tween.call(()=>resolve());
-  })
-};
+  });
+}
 
 //testing
-function run_pathfinding_test() {
-
-  const enemy_sprite = viewport.children[7].children[0];
-  const player_sprite = global.Player.sprite;
-
-  const grid = grid_container.children;
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid);
-
-  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-}
+//function run_pathfinding_test() {
+//
+// const enemy_sprite = viewport.children[7].children[0];
+// const player_sprite = global.Player.sprite;
+//
+// const grid = grid_container.children;
+// const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
+// const player_point = get_sprite_position_on_grid(player_sprite, grid);
+//
+// create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+//   .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
+//}
 
 // function path_from_enemy_to_player(enemy, player) {
 
@@ -1711,22 +1379,16 @@ module.exports = {
 // }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./viewport":13,"@createjs/tweenjs":39,"easystarjs":81,"pixi.js":262}],11:[function(require,module,exports){
-const io = require('socket.io-client');
-
-const socket = io.connect();
-
-module.exports = socket;
-
-},{"socket.io-client":304}],12:[function(require,module,exports){
+},{"./viewport":11,"@createjs/tweenjs":33,"easystarjs":36,"pixi.js":195}],10:[function(require,module,exports){
+'use strict';
 
 const app = require('./app');
 
 module.exports = app.ticker;
 
-},{"./app":9}],13:[function(require,module,exports){
+},{"./app":8}],11:[function(require,module,exports){
 (function (global){
-
+'use strict';
 
 const Viewport = require('pixi-viewport');
 
@@ -1737,46 +1399,453 @@ const viewport = new Viewport({
   worldHeight:  global.window.innerHeight,
 });
 
-viewport.drag().decelerate();
-
 module.exports = viewport;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-viewport":145}],14:[function(require,module,exports){
-(function (global){
+},{"pixi-viewport":78}],12:[function(require,module,exports){
+'use strict';
+
 const PIXI = require('pixi.js');
-const tween = require('pixi-tween');
+//const io = require('socket.io-client');
+//const viewport = require('../engine/viewport.js');
+
+const padding = 1;
+const box_size = 100-padding;
+
+class GUI_Container {
+  constructor() {
+    this.container = new PIXI.Container();
+    this.container.name = 'gui_container';
+    this.container.zIndex = -8;
+
+    this.sprite = PIXI.Sprite.fromFrame('black_dot');
+    this.sprite.height = 100;
+    this.sprite.width = 402;
+    this.sprite.position.x = 200;
+    this.sprite.anchor.set(0.5);
+    this.sprite.name = 'background';
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+
+    this.container.addChild(this.sprite);
+  }
+
+  add_item_tiles() {
+    const item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_1.name = 'item_slot_1';
+    item_slot_1.width = box_size;
+    item_slot_1.height = box_size;
+    item_slot_1.anchor.y = 0.5;
+    item_slot_1.position.x = this.sprite.x-this.sprite.width/2 + padding;
+
+    const item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_2.name = 'item_slot_2';
+    item_slot_2.width = box_size;
+    item_slot_2.height = box_size;
+    item_slot_2.anchor.y = 0.5;
+    item_slot_2.position.x = this.sprite.x-this.sprite.width/4 + padding;
+
+    const item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_3.name = 'item_slot_3';
+    item_slot_3.width = box_size;
+    item_slot_3.height = box_size;
+    item_slot_3.anchor.y = 0.5;
+    item_slot_3.position.x = this.sprite.x + padding;
+
+    const item_slot_4 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_4.name = 'item_slot_4';
+    item_slot_4.width = box_size;
+    item_slot_4.height = box_size;
+    item_slot_4.anchor.y = 0.5;
+    item_slot_4.position.x = this.sprite.x +this.sprite.width/4 + padding;
+
+    this.container.addChild(item_slot_1, item_slot_2, item_slot_3, item_slot_4);
+  }
+
+  populate_slot_1(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_1').addChild(item);
+  }
+
+  populate_slot_2(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_2').addChild(item);
+  }
+
+  populate_slot_3(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_3').addChild(item);
+  }
+
+  populate_slot_4(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_4').addChild(item);
+  }
+}
+
+module.exports = {
+  GUI_Container,
+};
+
+},{"pixi.js":195}],13:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+const viewport = require('../engine/viewport.js');
+
+const padding = 1;
+const box_size = 100-padding;
+const container = new PIXI.Container();
+container.name = 'gui_container';
+container.zIndex = -50;
+viewport.addChild(container);
+
+class GUI_HUD {
+  constructor() {
+    this.sprite = PIXI.Sprite.fromFrame('black_dot');
+    this.sprite.width = viewport.worldWidth;
+    this.sprite.height = 500;
+    this.sprite.anchor.set(0.5);
+    this.sprite.name = 'background';
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.zIndex = -60;
+    container.addChild(this.sprite);
+  }
+
+  update_location() {
+    this.sprite.position.y = viewport.bottom;
+    this.sprite.position.x = viewport.center.x;
+  }
+
+  show() {
+    this.sprite.alpha = 1;
+  }
+
+  hide() {
+    this.sprite.alpha = 0;
+  }
+
+  add_item_tiles() {
+    const item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_1.name = 'item_slot_1';
+    item_slot_1.width = box_size;
+    item_slot_1.height = box_size;
+    item_slot_1.anchor.y = 0.5;
+    item_slot_1.position.x = this.sprite.x-this.sprite.width/2 + padding;
+
+    const item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_2.name = 'item_slot_2';
+    item_slot_2.width = box_size;
+    item_slot_2.height = box_size;
+    item_slot_2.anchor.y = 0.5;
+    item_slot_2.position.x = this.sprite.x-this.sprite.width/4 + padding;
+
+    const item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_3.name = 'item_slot_3';
+    item_slot_3.width = box_size;
+    item_slot_3.height = box_size;
+    item_slot_3.anchor.y = 0.5;
+    item_slot_3.position.x = this.sprite.x + padding;
+
+    const item_slot_4 = PIXI.Sprite.fromFrame('item_slot');
+    item_slot_4.name = 'item_slot_4';
+    item_slot_4.width = box_size;
+    item_slot_4.height = box_size;
+    item_slot_4.anchor.y = 0.5;
+    item_slot_4.position.x = this.sprite.x +this.sprite.width/4 + padding;
+
+    this.container.addChild(item_slot_1, item_slot_2, item_slot_3, item_slot_4);
+  }
+
+  populate_slot_1(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_1').addChild(item);
+  }
+
+  populate_slot_2(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_2').addChild(item);
+  }
+
+  populate_slot_3(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_3').addChild(item);
+  }
+
+  populate_slot_4(name) {
+    const item = PIXI.Sprite.fromFrame(name);
+    item.height = box_size;
+    item.width = box_size;
+    item.anchor.y = 0.5;
+    item.anchor.x = -0.5;
+    item.interactive = true;
+    item.buttonMode = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.container.getChildByName('item_slot_4').addChild(item);
+  }
+}
+
+module.exports = {
+  GUI_HUD,
+};
+
+},{"../engine/viewport.js":11,"pixi.js":195}],14:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const PIXI = require('pixi.js');
 const pixiPackerParser = require('pixi-packer-parser');
 
-//engine set up 
+//engine set up
 const app = require('./engine/app');
 const ticker = require('./engine/ticker');
 const viewport = require('./engine/viewport');
+const tweenManager = require('pixi-tween');
 
-ticker.add(() => PIXI.tweenManager.update())
 global.document.body.appendChild(app.view);
 
 global.is_development = true;
 
 app.stage.addChild(viewport);
 
-global.collisionItems = new PIXI.Container();
-global.movableItems = new PIXI.Container();
-global.doors = new PIXI.Container();
+ticker.add(() => PIXI.tweenManager.update());
 
-viewport.addChild(global.collisionItems, global.movableItems, global.doors);
 const loader = new PIXI.loaders.Loader();
 loader.use(pixiPackerParser(PIXI));
 loader.add('../../images/bedroom_EN_web.json');
 loader.load(() => {
   const debug = require('./level/debug/debug_layout.js');
   debug.add_floor();
-  const pathfinding = require('./pathfinding/pathfind_util.js');
 });
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./engine/app":9,"./engine/ticker":12,"./engine/viewport":13,"./level/debug/debug_layout.js":20,"./pathfinding/pathfind_util.js":30,"pixi-packer-parser":131,"pixi-tween":132,"pixi.js":262}],15:[function(require,module,exports){
+},{"./engine/app":8,"./engine/ticker":10,"./engine/viewport":11,"./level/debug/debug_layout.js":20,"pixi-packer-parser":64,"pixi-tween":65,"pixi.js":195}],15:[function(require,module,exports){
+'use strict';
+
+const { GUI_HUD } = require('../gui/hud');
+const gui = new GUI_HUD();
+const ticker = require('../engine/ticker');
+const viewport = require('../engine/viewport');
+
+const keymap = {
+  w: 'up',
+  a: 'left',
+  s: 'down',
+  d: 'right',
+  j: 'down',
+  k: 'up',
+  h: 'left',
+  l: 'right',
+  ArrowUp: 'up',
+  ArrowLeft: 'left',
+  ArrowDown: 'down',
+  ArrowRight: 'right',
+  i: 'i',
+};
+
+class Keyboard {
+  constructor() {
+    this.inventory_open = false;
+    this.shift_pressed = false;
+    this.moveable = true;
+    this.collision_objects = viewport.getChildByName('collision_items').children;
+    this.movement_speed = 15;
+    this.buffer = 50;
+    this.player = viewport.getChildByName('player');
+  }
+
+  key_down(e) {
+    if (!this.moveable) return;
+    if(!e) return;
+    const key = keymap[e.key];
+    if(!key) return;
+    this.player.loop = true;
+
+    switch(key) {
+      case 'up':
+        this.up();
+        break;
+      case 'left':
+        this.left();
+        break;
+      case 'down':
+        this.down();
+        break;
+      case 'right':
+        this.right();
+        break;
+      case 'i':
+        this.inventory();
+        break;
+      case 'Shift':
+        this.shift();
+        break;
+    }
+  }
+
+  key_up() {
+    this.shift_pressed = false;
+    this.player.textures = this.sprite.animations.bow.idle;
+    this.player.play();
+  }
+
+  up() {
+    const player_point = {
+      x: this.player_position.x,
+      y: this.player_position.y,
+    };
+    for(let i =0; i< this.collision_objects.length; i++){
+      player_point.y -= this.buffer;
+
+      if(this.collision_objects[i].containsPoint(player_point)){
+        //console.log('poo');
+        return;
+      }
+    }
+
+    this.player.y -= this.movement_speed;
+    this.player.rotation = -2;
+  }
+
+  down() {
+    const player_position = this.player.getGlobalPosition();
+
+    this.collision_objects.forEach(object => {
+      player_position.y += this.buffer;
+      if(object.containsPoint(player_position)){
+        return;
+      }
+    });
+
+    this.player.y += this.movement_speed;
+    this.player.rotation = 2;
+  }
+
+  left() {
+    const player_position = this.player.getGlobalPosition();
+
+    this.collision_objects.forEach(object => {
+      player_position.x -= this.buffer;
+      if(object.containsPoint(player_position)){
+        return;
+      }
+    });
+
+    this.player.x -= this.movement_speed;
+    this.player.rotation = -3;
+  }
+
+  right() {
+    const player_position = this.player.getGlobalPosition();
+
+    this.collision_objects.forEach(object => {
+      player_position.x += this.buffer;
+      if(object.containsPoint(player_position)){
+        return;
+      }
+    });
+
+    this.player.x += this.movement_speed;
+    this.player.rotation = 0;
+  }
+
+  inventory() {
+    if ( this.inventory_open === false ) {
+      ticker.add(() => gui.update_location());
+      gui.show();
+      this.inventory_open = true;
+    } else {
+      ticker.remove(() => gui.update_location());
+      gui.hide();
+      this.inventory_open = false;
+    }
+  }
+
+  shift() {
+    this.shift_pressed = true;
+  }
+}
+
+module.exports = {
+  Keyboard,
+};
+
+},{"../engine/ticker":10,"../engine/viewport":11,"../gui/hud":13}],16:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -2016,7 +2085,7 @@ module.exports={ "columns":0,
  "tilewidth":3800,
  "type":"tileset"
 }
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 const bedroomData = require('./bedroom_data_5.json');
@@ -2048,706 +2117,767 @@ module.exports.load = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../cutscene/cutscene_utils":6,"../../engine/viewport":13,"../foyer/foyer_util.js":24,"../level_utils.js":25,"./bedroom_data_5.json":15,"pixi.js":262}],17:[function(require,module,exports){
+},{"../../cutscene/cutscene_utils":6,"../../engine/viewport":11,"../foyer/foyer_util.js":24,"../level_utils.js":25,"./bedroom_data_5.json":16,"pixi.js":195}],18:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
         {
-         "chunks":[
+         "layers":[
                 {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAQAAAAFAAAABgAAAAcAAAAIAAAACQAAAAoAAAALAAAADAAAAA0AAAAOAAAADwAAABAAAAAnAAAAKAAAACkAAAAqAAAAKwAAACwAAAAtAAAALgAAAC8AAAAwAAAAMQAAADIAAAAzAAAANAAAADUAAAA2AAAATQAAAE4AAABPAAAAUAAAAFEAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAHMAAAB0AAAAdQAAAHYAAAB3AAAAeAAAAHkAAAB6AAAAewAAAHwAAAB9AAAAfgAAAH8AAACAAAAAgQAAAIIAAACZAAAAmgAAAJsAAACcAAAAnQAAAJ4AAACfAAAAoAAAAKEAAACiAAAAowAAAKQAAAClAAAApgAAAKcAAACoAAAAvwAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAMYAAADHAAAAyAAAAMkAAADKAAAAywAAAMwAAADNAAAAzgAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA7QAAAO4AAADvAAAA8AAAAPEAAADyAAAA8wAAAPQAAAALAQAADAEAAA0BAAAOAQAADwEAABABAAARAQAAEgEAABMBAAAUAQAAFQEAABYBAAAXAQAAGAEAABkBAAAaAQAAMQEAADIBAAAzAQAANAEAADUBAAA2AQAANwEAADgBAAA5AQAAOgEAADsBAAA8AQAAPQEAAD4BAAA\/AQAAQAEAAFcBAABYAQAAWQEAAFoBAABbAQAAXAEAAF0BAABeAQAAXwEAAGABAABhAQAAYgEAAGMBAABkAQAAZQEAAGYBAAB9AQAAfgEAAH8BAACAAQAAgQEAAIIBAACDAQAAhAEAAIUBAACGAQAAhwEAAIgBAACJAQAAigEAAIsBAACMAQAAowEAAKQBAAClAQAApgEAAKcBAACoAQAAqQEAAKoBAACrAQAArAEAAK0BAACuAQAArwEAALABAACxAQAAsgEAAMkBAADKAQAAywEAAMwBAADNAQAAzgEAAM8BAADQAQAA0QEAANIBAADTAQAA1AEAANUBAADWAQAA1wEAANgBAADvAQAA8AEAAPEBAADyAQAA8wEAAPQBAAD1AQAA9gEAAPcBAAD4AQAA+QEAAPoBAAD7AQAA\/AEAAP0BAAD+AQAAFQIAABYCAAAXAgAAGAIAABkCAAAaAgAAGwIAABwCAAAdAgAAHgIAAB8CAAAgAgAAIQIAACICAAAjAgAAJAIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGQAAABoAAAAbAAAAHAAAAB0AAAAeAAAAHwAAACAAAAA3AAAAOAAAADkAAAA6AAAAOwAAADwAAAA9AAAAPgAAAD8AAABAAAAAQQAAAEIAAABDAAAARAAAAEUAAABGAAAAXQAAAF4AAABfAAAAYAAAAGEAAABiAAAAYwAAAGQAAABlAAAAZgAAAGcAAABoAAAAaQAAAGoAAABrAAAAbAAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAIkAAACKAAAAiwAAAIwAAACNAAAAjgAAAI8AAACQAAAAkQAAAJIAAACpAAAAqgAAAKsAAACsAAAArQAAAK4AAACvAAAAsAAAALEAAACyAAAAswAAALQAAAC1AAAAtgAAALcAAAC4AAAAzwAAANAAAADRAAAA0gAAANMAAADUAAAA1QAAANYAAADXAAAA2AAAANkAAADaAAAA2wAAANwAAADdAAAA3gAAAPUAAAD2AAAA9wAAAPgAAAD5AAAA+gAAAPsAAAD8AAAA\/QAAAP4AAAD\/AAAAAAEAAAEBAAACAQAAAwEAAAQBAAAbAQAAHAEAAB0BAAAeAQAAHwEAACABAAAhAQAAIgEAACMBAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAQQEAAEIBAABDAQAARAEAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAGcBAABoAQAAaQEAAGoBAABrAQAAbAEAAG0BAABuAQAAbwEAAHABAABxAQAAcgEAAHMBAAB0AQAAdQEAAHYBAACNAQAAjgEAAI8BAACQAQAAkQEAAJIBAACTAQAAlAEAAJUBAACWAQAAlwEAAJgBAACZAQAAmgEAAJsBAACcAQAAswEAALQBAAC1AQAAtgEAALcBAAC4AQAAuQEAALoBAAC7AQAAvAEAAL0BAAC+AQAAvwEAAMABAADBAQAAwgEAANkBAADaAQAA2wEAANwBAADdAQAA3gEAAN8BAADgAQAA4QEAAOIBAADjAQAA5AEAAOUBAADmAQAA5wEAAOgBAAD\/AQAAAAIAAAECAAACAgAAAwIAAAQCAAAFAgAABgIAAAcCAAAIAgAACQIAAAoCAAALAgAADAIAAA0CAAAOAgAAJQIAACYCAAAnAgAAKAIAACkCAAAqAgAAKwIAACwCAAAtAgAALgIAAC8CAAAwAgAAMQIAADICAAAzAgAANAIAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":0
-                }, 
-                {
-                 "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEAAAAiAAAAIwAAACQAAAAlAAAAJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHAAAASAAAAEkAAABKAAAASwAAAEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbQAAAG4AAABvAAAAcAAAAHEAAAByAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5AAAAugAAALsAAAC8AAAAvQAAAL4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3wAAAOAAAADhAAAA4gAAAOMAAADkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUBAAAGAQAABwEAAAgBAAAJAQAACgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArAQAALAEAAC0BAAAuAQAALwEAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUQEAAFIBAABTAQAAVAEAAFUBAABWAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHcBAAB4AQAAeQEAAHoBAAB7AQAAfAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACdAQAAngEAAJ8BAACgAQAAoQEAAKIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwwEAAMQBAADFAQAAxgEAAMcBAADIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOkBAADqAQAA6wEAAOwBAADtAQAA7gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAgAAEAIAABECAAASAgAAEwIAABQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANQIAADYCAAA3AgAAOAIAADkCAAA6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":0
-                }, 
-                {
-                 "data":"OwIAADwCAAA9AgAAPgIAAD8CAABAAgAAQQIAAEICAABDAgAARAIAAEUCAABGAgAARwIAAEgCAABJAgAASgIAAGECAABiAgAAYwIAAGQCAABlAgAAZgIAAGcCAABoAgAAaQIAAGoCAABrAgAAbAIAAG0CAABuAgAAbwIAAHACAACHAgAAiAIAAIkCAACKAgAAiwIAAIwCAACNAgAAjgIAAI8CAACQAgAAkQIAAJICAACTAgAAlAIAAJUCAACWAgAArQIAAK4CAACvAgAAsAIAALECAACyAgAAswIAALQCAAC1AgAAtgIAALcCAAC4AgAAuQIAALoCAAC7AgAAvAIAANMCAADUAgAA1QIAANYCAADXAgAA2AIAANkCAADaAgAA2wIAANwCAADdAgAA3gIAAN8CAADgAgAA4QIAAOICAAD5AgAA+gIAAPsCAAD8AgAA\/QIAAP4CAAD\/AgAAAAMAAAEDAAACAwAAAwMAAAQDAAAFAwAABgMAAAcDAAAIAwAAHwMAACADAAAhAwAAIgMAACMDAAAkAwAAJQMAACYDAAAnAwAAKAMAACkDAAAqAwAAKwMAACwDAAAtAwAALgMAAEUDAABGAwAARwMAAEgDAABJAwAASgMAAEsDAABMAwAATQMAAE4DAABPAwAAUAMAAFEDAABSAwAAUwMAAFQDAABrAwAAbAMAAG0DAABuAwAAbwMAAHADAABxAwAAcgMAAHMDAAB0AwAAdQMAAHYDAAB3AwAAeAMAAHkDAAB6AwAAkQMAAJIDAACTAwAAlAMAAJUDAACWAwAAlwMAAJgDAACZAwAAmgMAAJsDAACcAwAAnQMAAJ4DAACfAwAAoAMAALcDAAC4AwAAuQMAALoDAAC7AwAAvAMAAL0DAAC+AwAAvwMAAMADAADBAwAAwgMAAMMDAADEAwAAxQMAAMYDAADdAwAA3gMAAN8DAADgAwAA4QMAAOIDAADjAwAA5AMAAOUDAADmAwAA5wMAAOgDAADpAwAA6gMAAOsDAADsAwAAAwQAAAQEAAAFBAAABgQAAAcEAAAIBAAACQQAAAoEAAALBAAADAQAAA0EAAAOBAAADwQAABAEAAARBAAAEgQAACkEAAAqBAAAKwQAACwEAAAtBAAALgQAAC8EAAAwBAAAMQQAADIEAAAzBAAANAQAADUEAAA2BAAANwQAADgEAABPBAAAUAQAAFEEAABSBAAAUwQAAFQEAABVBAAAVgQAAFcEAABYBAAAWQQAAFoEAABbBAAAXAQAAF0EAABeBAAAdQQAAHYEAAB3BAAAeAQAAHkEAAB6BAAAewQAAHwEAAB9BAAAfgQAAH8EAACABAAAgQQAAIIEAACDBAAAhAQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":16
-                }, 
-                {
-                 "data":"SwIAAEwCAABNAgAATgIAAE8CAABQAgAAUQIAAFICAABTAgAAVAIAAFUCAABWAgAAVwIAAFgCAABZAgAAWgIAAHECAAByAgAAcwIAAHQCAAB1AgAAdgIAAHcCAAB4AgAAeQIAAHoCAAB7AgAAfAIAAH0CAAB+AgAAfwIAAIACAACXAgAAmAIAAJkCAACaAgAAmwIAAJwCAACdAgAAngIAAJ8CAACgAgAAoQIAAKICAACjAgAApAIAAKUCAACmAgAAvQIAAL4CAAC\/AgAAwAIAAMECAADCAgAAwwIAAMQCAADFAgAAxgIAAMcCAADIAgAAyQIAAMoCAADLAgAAzAIAAOMCAADkAgAA5QIAAOYCAADnAgAA6AIAAOkCAADqAgAA6wIAAOwCAADtAgAA7gIAAO8CAADwAgAA8QIAAPICAAAJAwAACgMAAAsDAAAMAwAADQMAAA4DAAAPAwAAEAMAABEDAAASAwAAEwMAABQDAAAVAwAAFgMAABcDAAAYAwAALwMAADADAAAxAwAAMgMAADMDAAA0AwAANQMAADYDAAA3AwAAOAMAADkDAAA6AwAAOwMAADwDAAA9AwAAPgMAAFUDAABWAwAAVwMAAFgDAABZAwAAWgMAAFsDAABcAwAAXQMAAF4DAABfAwAAYAMAAGEDAABiAwAAYwMAAGQDAAB7AwAAfAMAAH0DAAB+AwAAfwMAAIADAACBAwAAggMAAIMDAACEAwAAhQMAAIYDAACHAwAAiAMAAIkDAACKAwAAoQMAAKIDAACjAwAApAMAAKUDAACmAwAApwMAAKgDAACpAwAAqgMAAKsDAACsAwAArQMAAK4DAACvAwAAsAMAAMcDAADIAwAAyQMAAMoDAADLAwAAzAMAAM0DAADOAwAAzwMAANADAADRAwAA0gMAANMDAADUAwAA1QMAANYDAADtAwAA7gMAAO8DAADwAwAA8QMAAPIDAADzAwAA9AMAAPUDAAD2AwAA9wMAAPgDAAD5AwAA+gMAAPsDAAD8AwAAEwQAABQEAAAVBAAAFgQAABcEAAAYBAAAGQQAABoEAAAbBAAAHAQAAB0EAAAeBAAAHwQAACAEAAAhBAAAIgQAADkEAAA6BAAAOwQAADwEAAA9BAAAPgQAAD8EAABABAAAQQQAAEIEAABDBAAARAQAAEUEAABGBAAARwQAAEgEAABfBAAAYAQAAGEEAABiBAAAYwQAAGQEAABlBAAAZgQAAGcEAABoBAAAaQQAAGoEAABrBAAAbAQAAG0EAABuBAAAhQQAAIYEAACHBAAAiAQAAIkEAACKBAAAiwQAAIwEAACNBAAAjgQAAI8EAACQBAAAkQQAAJIEAACTBAAAlAQAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":16
-                }, 
-                {
-                 "data":"WwIAAFwCAABdAgAAXgIAAF8CAABgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIECAACCAgAAgwIAAIQCAACFAgAAhgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACnAgAAqAIAAKkCAACqAgAAqwIAAKwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzQIAAM4CAADPAgAA0AIAANECAADSAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPMCAAD0AgAA9QIAAPYCAAD3AgAA+AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAwAAGgMAABsDAAAcAwAAHQMAAB4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwMAAEADAABBAwAAQgMAAEMDAABEAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGUDAABmAwAAZwMAAGgDAABpAwAAagMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACLAwAAjAMAAI0DAACOAwAAjwMAAJADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsQMAALIDAACzAwAAtAMAALUDAAC2AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANcDAADYAwAA2QMAANoDAADbAwAA3AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9AwAA\/gMAAP8DAAAABAAAAQQAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIwQAACQEAAAlBAAAJgQAACcEAAAoBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEkEAABKBAAASwQAAEwEAABNBAAATgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABvBAAAcAQAAHEEAAByBAAAcwQAAHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlQQAAJYEAACXBAAAmAQAAJkEAACaBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":16
-                }, 
-                {
-                 "data":"mwQAAJwEAACdBAAAngQAAJ8EAACgBAAAoQQAAKIEAACjBAAApAQAAKUEAACmBAAApwQAAKgEAACpBAAAqgQAAMEEAADCBAAAwwQAAMQEAADFBAAAxgQAAMcEAADIBAAAyQQAAMoEAADLBAAAzAQAAM0EAADOBAAAzwQAANAEAADnBAAA6AQAAOkEAADqBAAA6wQAAOwEAADtBAAA7gQAAO8EAADwBAAA8QQAAPIEAADzBAAA9AQAAPUEAAD2BAAADQUAAA4FAAAPBQAAEAUAABEFAAASBQAAEwUAABQFAAAVBQAAFgUAABcFAAAYBQAAGQUAABoFAAAbBQAAHAUAADMFAAA0BQAANQUAADYFAAA3BQAAOAUAADkFAAA6BQAAOwUAADwFAAA9BQAAPgUAAD8FAABABQAAQQUAAEIFAABZBQAAWgUAAFsFAABcBQAAXQUAAF4FAABfBQAAYAUAAGEFAABiBQAAYwUAAGQFAABlBQAAZgUAAGcFAABoBQAAfwUAAIAFAACBBQAAggUAAIMFAACEBQAAhQUAAIYFAACHBQAAiAUAAIkFAACKBQAAiwUAAIwFAACNBQAAjgUAAKUFAACmBQAApwUAAKgFAACpBQAAqgUAAKsFAACsBQAArQUAAK4FAACvBQAAsAUAALEFAACyBQAAswUAALQFAADLBQAAzAUAAM0FAADOBQAAzwUAANAFAADRBQAA0gUAANMFAADUBQAA1QUAANYFAADXBQAA2AUAANkFAADaBQAA8QUAAPIFAADzBQAA9AUAAPUFAAD2BQAA9wUAAPgFAAD5BQAA+gUAAPsFAAD8BQAA\/QUAAP4FAAD\/BQAAAAYAABcGAAAYBgAAGQYAABoGAAAbBgAAHAYAAB0GAAAeBgAAHwYAACAGAAAhBgAAIgYAACMGAAAkBgAAJQYAACYGAAA9BgAAPgYAAD8GAABABgAAQQYAAEIGAABDBgAARAYAAEUGAABGBgAARwYAAEgGAABJBgAASgYAAEsGAABMBgAAYwYAAGQGAABlBgAAZgYAAGcGAABoBgAAaQYAAGoGAABrBgAAbAYAAG0GAABuBgAAbwYAAHAGAABxBgAAcgYAAIkGAACKBgAAiwYAAIwGAACNBgAAjgYAAI8GAACQBgAAkQYAAJIGAACTBgAAlAYAAJUGAACWBgAAlwYAAJgGAACvBgAAsAYAALEGAACyBgAAswYAALQGAAC1BgAAtgYAALcGAAC4BgAAuQYAALoGAAC7BgAAvAYAAL0GAAC+BgAA1QYAANYGAADXBgAA2AYAANkGAADaBgAA2wYAANwGAADdBgAA3gYAAN8GAADgBgAA4QYAAOIGAADjBgAA5AYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":32
-                }, 
-                {
-                 "data":"qwQAAKwEAACtBAAArgQAAK8EAACwBAAAsQQAALIEAACzBAAAtAQAALUEAAC2BAAAtwQAALgEAAC5BAAAugQAANEEAADSBAAA0wQAANQEAADVBAAA1gQAANcEAADYBAAA2QQAANoEAADbBAAA3AQAAN0EAADeBAAA3wQAAOAEAAD3BAAA+AQAAPkEAAD6BAAA+wQAAPwEAAD9BAAA\/gQAAP8EAAAABQAAAQUAAAIFAAADBQAABAUAAAUFAAAGBQAAHQUAAB4FAAAfBQAAIAUAACEFAAAiBQAAIwUAACQFAAAlBQAAJgUAACcFAAAoBQAAKQUAACoFAAArBQAALAUAAEMFAABEBQAARQUAAEYFAABHBQAASAUAAEkFAABKBQAASwUAAEwFAABNBQAATgUAAE8FAABQBQAAUQUAAFIFAABpBQAAagUAAGsFAABsBQAAbQUAAG4FAABvBQAAcAUAAHEFAAByBQAAcwUAAHQFAAB1BQAAdgUAAHcFAAB4BQAAjwUAAJAFAACRBQAAkgUAAJMFAACUBQAAlQUAAJYFAACXBQAAmAUAAJkFAACaBQAAmwUAAJwFAACdBQAAngUAALUFAAC2BQAAtwUAALgFAAC5BQAAugUAALsFAAC8BQAAvQUAAL4FAAC\/BQAAwAUAAMEFAADCBQAAwwUAAMQFAADbBQAA3AUAAN0FAADeBQAA3wUAAOAFAADhBQAA4gUAAOMFAADkBQAA5QUAAOYFAADnBQAA6AUAAOkFAADqBQAAAQYAAAIGAAADBgAABAYAAAUGAAAGBgAABwYAAAgGAAAJBgAACgYAAAsGAAAMBgAADQYAAA4GAAAPBgAAEAYAACcGAAAoBgAAKQYAACoGAAArBgAALAYAAC0GAAAuBgAALwYAADAGAAAxBgAAMgYAADMGAAA0BgAANQYAADYGAABNBgAATgYAAE8GAABQBgAAUQYAAFIGAABTBgAAVAYAAFUGAABWBgAAVwYAAFgGAABZBgAAWgYAAFsGAABcBgAAcwYAAHQGAAB1BgAAdgYAAHcGAAB4BgAAeQYAAHoGAAB7BgAAfAYAAH0GAAB+BgAAfwYAAIAGAACBBgAAggYAAJkGAACaBgAAmwYAAJwGAACdBgAAngYAAJ8GAACgBgAAoQYAAKIGAACjBgAApAYAAKUGAACmBgAApwYAAKgGAAC\/BgAAwAYAAMEGAADCBgAAwwYAAMQGAADFBgAAxgYAAMcGAADIBgAAyQYAAMoGAADLBgAAzAYAAM0GAADOBgAA5QYAAOYGAADnBgAA6AYAAOkGAADqBgAA6wYAAOwGAADtBgAA7gYAAO8GAADwBgAA8QYAAPIGAADzBgAA9AYAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":32
-                }, 
-                {
-                 "data":"uwQAALwEAAC9BAAAvgQAAL8EAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEEAADiBAAA4wQAAOQEAADlBAAA5gQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBQAACAUAAAkFAAAKBQAACwUAAAwFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALQUAAC4FAAAvBQAAMAUAADEFAAAyBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFMFAABUBQAAVQUAAFYFAABXBQAAWAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5BQAAegUAAHsFAAB8BQAAfQUAAH4FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnwUAAKAFAAChBQAAogUAAKMFAACkBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMUFAADGBQAAxwUAAMgFAADJBQAAygUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADrBQAA7AUAAO0FAADuBQAA7wUAAPAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQYAABIGAAATBgAAFAYAABUGAAAWBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcGAAA4BgAAOQYAADoGAAA7BgAAPAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABdBgAAXgYAAF8GAABgBgAAYQYAAGIGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgwYAAIQGAACFBgAAhgYAAIcGAACIBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKkGAACqBgAAqwYAAKwGAACtBgAArgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADPBgAA0AYAANEGAADSBgAA0wYAANQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9QYAAPYGAAD3BgAA+AYAAPkGAAD6BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":32
-                }, 
-                {
-                 "data":"+wYAAPwGAAD9BgAA\/gYAAP8GAAAABwAAAQcAAAIHAAADBwAABAcAAAUHAAAGBwAABwcAAAgHAAAJBwAACgcAACEHAAAiBwAAIwcAACQHAAAlBwAAJgcAACcHAAAoBwAAKQcAACoHAAArBwAALAcAAC0HAAAuBwAALwcAADAHAABHBwAASAcAAEkHAABKBwAASwcAAEwHAABNBwAATgcAAE8HAABQBwAAUQcAAFIHAABTBwAAVAcAAFUHAABWBwAAbQcAAG4HAABvBwAAcAcAAHEHAAByBwAAcwcAAHQHAAB1BwAAdgcAAHcHAAB4BwAAeQcAAHoHAAB7BwAAfAcAAJMHAACUBwAAlQcAAJYHAACXBwAAmAcAAJkHAACaBwAAmwcAAJwHAACdBwAAngcAAJ8HAACgBwAAoQcAAKIHAAC5BwAAugcAALsHAAC8BwAAvQcAAL4HAAC\/BwAAwAcAAMEHAADCBwAAwwcAAMQHAADFBwAAxgcAAMcHAADIBwAA3wcAAOAHAADhBwAA4gcAAOMHAADkBwAA5QcAAOYHAADnBwAA6AcAAOkHAADqBwAA6wcAAOwHAADtBwAA7gcAAAUIAAAGCAAABwgAAAgIAAAJCAAACggAAAsIAAAMCAAADQgAAA4IAAAPCAAAEAgAABEIAAASCAAAEwgAABQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":48
-                }, 
-                {
-                 "data":"CwcAAAwHAAANBwAADgcAAA8HAAAQBwAAEQcAABIHAAATBwAAFAcAABUHAAAWBwAAFwcAABgHAAAZBwAAGgcAADEHAAAyBwAAMwcAADQHAAA1BwAANgcAADcHAAA4BwAAOQcAADoHAAA7BwAAPAcAAD0HAAA+BwAAPwcAAEAHAABXBwAAWAcAAFkHAABaBwAAWwcAAFwHAABdBwAAXgcAAF8HAABgBwAAYQcAAGIHAABjBwAAZAcAAGUHAABmBwAAfQcAAH4HAAB\/BwAAgAcAAIEHAACCBwAAgwcAAIQHAACFBwAAhgcAAIcHAACIBwAAiQcAAIoHAACLBwAAjAcAAKMHAACkBwAApQcAAKYHAACnBwAAqAcAAKkHAACqBwAAqwcAAKwHAACtBwAArgcAAK8HAACwBwAAsQcAALIHAADJBwAAygcAAMsHAADMBwAAzQcAAM4HAADPBwAA0AcAANEHAADSBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA7wcAAPAHAADxBwAA8gcAAPMHAAD0BwAA9QcAAPYHAAD3BwAA+AcAAPkHAAD6BwAA+wcAAPwHAAD9BwAA\/gcAABUIAAAWCAAAFwgAABgIAAAZCAAAGggAABsIAAAcCAAAHQgAAB4IAAAfCAAAIAgAACEIAAAiCAAAIwgAACQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":48
-                }, 
-                {
-                 "data":"GwcAABwHAAAdBwAAHgcAAB8HAAAgBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEHAABCBwAAQwcAAEQHAABFBwAARgcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnBwAAaAcAAGkHAABqBwAAawcAAGwHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjQcAAI4HAACPBwAAkAcAAJEHAACSBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALMHAAC0BwAAtQcAALYHAAC3BwAAuAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZBwAA2gcAANsHAADcBwAA3QcAAN4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\/wcAAAAIAAABCAAAAggAAAMIAAAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUIAAAmCAAAJwgAACgIAAApCAAAKggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":32,
-                 "y":48
-                }],
-         "encoding":"base64",
-         "height":64,
-         "name":"Tile Layer 1",
-         "opacity":1,
-         "startx":0,
-         "starty":0,
-         "type":"tilelayer",
-         "visible":true,
-         "width":48,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "height":4287.99483470341,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":71.1878167115903,
-                 "x":140.908152873722,
-                 "y":352.118235782039
-                }, 
-                {
-                 "height":98.8078079071574,
-                 "id":2,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1745.42576355132,
-                 "x":-180.469646118797,
-                 "y":4636.83030674721
-                }, 
-                {
-                 "height":1295.91907334578,
-                 "id":3,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96.9776475519793,
-                 "x":1098.40853718636,
-                 "y":3349.16300278899
-                }, 
-                {
-                 "height":72.8653023279652,
-                 "id":4,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":329.924150524603,
-                 "x":209.771013726274,
-                 "y":351.680298817159
-                }, 
-                {
-                 "height":87.0770370031721,
-                 "id":7,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":610.013868941281,
-                 "x":206.483427979566,
-                 "y":1656.8486826545
-                }, 
-                {
-                 "height":84.1867907925027,
-                 "id":8,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":399.205161280792,
-                 "x":1020.00417867435,
-                 "y":1657.90249518416
-                }, 
-                {
-                 "height":1288.04870233899,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":96.9696999733776,
-                 "x":1098.25814385151,
-                 "y":1742.85
-                }, 
-                {
-                 "height":80.3395577022284,
-                 "id":10,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":668.420569717998,
-                 "x":776.061109603926,
-                 "y":354.483674843146
-                }, 
-                {
-                 "height":80.8512925839349,
-                 "id":11,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1702.69133624533,
-                 "x":1677.71698020668,
-                 "y":350.838425015004
-                }, 
-                {
-                 "height":369.592008067473,
-                 "id":12,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":73.499527744058,
-                 "x":1992.79544415995,
-                 "y":429.031944530302
-                }, 
-                {
-                 "height":2396.01591579894,
-                 "id":13,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":72.9392053016209,
-                 "x":1993.40136243144,
-                 "y":1045.88
-                }, 
-                {
-                 "height":89.202968299712,
-                 "id":14,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":310.407419479643,
-                 "x":1682.16619596542,
-                 "y":1657.79976945245
-                }, 
-                {
-                 "height":0,
-                 "id":15,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1035.15686678091,
-                 "y":1028.72744506814
-                }, 
-                {
-                 "height":84.1868,
-                 "id":16,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":525.526216808456,
-                 "x":2063.86746648621,
-                 "y":2190.44075828822
-                }, 
-                {
-                 "height":84.1868,
-                 "id":17,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":350.223086878061,
-                 "x":2939.09314849188,
-                 "y":2187.86277427172
-                }, 
-                {
-                 "height":4298.56489559165,
-                 "id":18,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":90.9850881154937,
-                 "x":3289.12978128384,
-                 "y":432.568544728022
-                }, 
-                {
-                 "height":93.6518881154936,
-                 "id":19,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1363.88,
-                 "x":1929.29176076308,
-                 "y":4638.66000592936
-                }, 
-                {
-                 "height":89.203,
-                 "id":20,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":797.645979118329,
-                 "x":1198.23810866203,
-                 "y":2535.9605005156
-                }, 
-                {
-                 "height":89.203,
-                 "id":21,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":869.829552461975,
-                 "x":1196.94910621294,
-                 "y":3443.41087432328
-                }],
-         "offsetx":179.197506817296,
-         "offsety":377.873003506038,
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"Object Layer 2",
-         "objects":[
-                {
-                 "height":0,
-                 "id":6,
-                 "name":"",
-                 "polyline":[
+                 "chunks":[
                         {
+                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAQAAAAFAAAABgAAAAcAAAAIAAAACQAAAAoAAAALAAAADAAAAA0AAAAOAAAADwAAABAAAAAnAAAAKAAAACkAAAAqAAAAKwAAACwAAAAtAAAALgAAAC8AAAAwAAAAMQAAADIAAAAzAAAANAAAADUAAAA2AAAATQAAAE4AAABPAAAAUAAAAFEAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAHMAAAB0AAAAdQAAAHYAAAB3AAAAeAAAAHkAAAB6AAAAewAAAHwAAAB9AAAAfgAAAH8AAACAAAAAgQAAAIIAAACZAAAAmgAAAJsAAACcAAAAnQAAAJ4AAACfAAAAoAAAAKEAAACiAAAAowAAAKQAAAClAAAApgAAAKcAAACoAAAAvwAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAMYAAADHAAAAyAAAAMkAAADKAAAAywAAAMwAAADNAAAAzgAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA7QAAAO4AAADvAAAA8AAAAPEAAADyAAAA8wAAAPQAAAALAQAADAEAAA0BAAAOAQAADwEAABABAAARAQAAEgEAABMBAAAUAQAAFQEAABYBAAAXAQAAGAEAABkBAAAaAQAAMQEAADIBAAAzAQAANAEAADUBAAA2AQAANwEAADgBAAA5AQAAOgEAADsBAAA8AQAAPQEAAD4BAAA\/AQAAQAEAAFcBAABYAQAAWQEAAFoBAABbAQAAXAEAAF0BAABeAQAAXwEAAGABAABhAQAAYgEAAGMBAABkAQAAZQEAAGYBAAB9AQAAfgEAAH8BAACAAQAAgQEAAIIBAACDAQAAhAEAAIUBAACGAQAAhwEAAIgBAACJAQAAigEAAIsBAACMAQAAowEAAKQBAAClAQAApgEAAKcBAACoAQAAqQEAAKoBAACrAQAArAEAAK0BAACuAQAArwEAALABAACxAQAAsgEAAMkBAADKAQAAywEAAMwBAADNAQAAzgEAAM8BAADQAQAA0QEAANIBAADTAQAA1AEAANUBAADWAQAA1wEAANgBAADvAQAA8AEAAPEBAADyAQAA8wEAAPQBAAD1AQAA9gEAAPcBAAD4AQAA+QEAAPoBAAD7AQAA\/AEAAP0BAAD+AQAAFQIAABYCAAAXAgAAGAIAABkCAAAaAgAAGwIAABwCAAAdAgAAHgIAAB8CAAAgAgAAIQIAACICAAAjAgAAJAIAAA==",
+                         "height":16,
+                         "width":16,
                          "x":0,
                          "y":0
                         }, 
                         {
-                         "x":-1236.9109947644,
-                         "y":19.633507853403
-                        }, 
-                        {
-                         "x":-1217.27748691099,
-                         "y":726.439790575916
-                        }, 
-                        {
-                         "x":-157.068062827225,
-                         "y":752.61780104712
-                        }, 
-                        {
-                         "x":-176.701570680628,
-                         "y":1341.62303664921
-                        }, 
-                        {
-                         "x":-320.680628272251,
-                         "y":1498.69109947644
-                        }, 
-                        {
-                         "x":-287.958115183246,
-                         "y":1786.64921465969
-                        }, 
-                        {
-                         "x":-26.1780104712043,
-                         "y":1747.38219895288
-                        }, 
-                        {
-                         "x":150.523560209424,
-                         "y":1361.25654450262
-                        }, 
-                        {
-                         "x":-65.4450261780105,
-                         "y":1191.09947643979
-                        }, 
-                        {
-                         "x":-346.858638743455,
-                         "y":575.916230366492
-                        }, 
-                        {
-                         "x":-536.649214659686,
-                         "y":510.471204188482
-                        }, 
-                        {
-                         "x":-726.439790575916,
-                         "y":759.162303664921
-                        }, 
-                        {
-                         "x":-778.795811518325,
-                         "y":1832.46073298429
-                        }, 
-                        {
-                         "x":-1191.09947643979,
-                         "y":2257.85340314136
-                        }, 
-                        {
-                         "x":-1204.18848167539,
-                         "y":2074.60732984293
-                        }, 
-                        {
-                         "x":-1204.18848167539,
-                         "y":1839.00523560209
-                        }, 
-                        {
-                         "x":-1204.18848167539,
-                         "y":1551.04712041885
-                        }, 
-                        {
-                         "x":-1282.72251308901,
-                         "y":1590.31413612565
-                        }, 
-                        {
-                         "x":-1341.62303664921,
-                         "y":2126.96335078534
-                        }, 
-                        {
-                         "x":-1295.81151832461,
-                         "y":2676.70157068063
-                        }, 
-                        {
-                         "x":-1060.20942408377,
-                         "y":3017.01570680628
-                        }, 
-                        {
-                         "x":-647.905759162304,
-                         "y":2565.44502617801
-                        }, 
-                        {
-                         "x":-32.7225130890054,
-                         "y":2303.66492146597
-                        }, 
-                        {
-                         "x":117.801047120419,
-                         "y":3102.0942408377
-                        }, 
-                        {
-                         "x":78.5340314136124,
-                         "y":3481.67539267016
-                        }, 
-                        {
-                         "x":45.8115183246073,
-                         "y":4149.21465968586
-                        }, 
-                        {
-                         "x":-327.225130890052,
-                         "y":4188.48167539267
-                        }, 
-                        {
-                         "x":-680.628272251309,
-                         "y":4077.22513089005
-                        }, 
-                        {
-                         "x":-693.717277486911,
-                         "y":4149.21465968586
-                        }, 
-                        {
-                         "x":-615.183246073299,
-                         "y":4240.83769633508
-                        }, 
-                        {
-                         "x":-425.392670157068,
-                         "y":4319.37172774869
-                        }, 
-                        {
-                         "x":-111.256544502618,
-                         "y":4319.37172774869
-                        }, 
-                        {
-                         "x":111.256544502618,
-                         "y":4260.47120418848
-                        }, 
-                        {
-                         "x":157.068062827225,
-                         "y":4109.94764397906
-                        }, 
-                        {
-                         "x":209.424083769634,
-                         "y":3527.48691099476
-                        }, 
-                        {
-                         "x":575.916230366492,
-                         "y":3160.99476439791
-                        }, 
-                        {
-                         "x":1007.85340314136,
-                         "y":2545.81151832461
-                        }, 
-                        {
-                         "x":975.130890052356,
-                         "y":2041.88481675393
-                        }, 
-                        {
-                         "x":981.675392670157,
-                         "y":1714.65968586387
-                        }, 
-                        {
-                         "x":1034.03141361257,
-                         "y":1295.81151832461
-                        }, 
-                        {
-                         "x":824.607329842932,
-                         "y":948.952879581152
-                        }, 
-                        {
-                         "x":641.361256544503,
-                         "y":458.115183246073
-                        }, 
-                        {
-                         "x":680.628272251309,
-                         "y":45.8115183246073
-                        }, 
-                        {
-                         "x":1086.38743455497,
-                         "y":13.0890052356019
-                        }, 
-                        {
-                         "x":1407.06806282723,
-                         "y":130.890052356021
-                        }, 
-                        {
-                         "x":1439.79057591623,
-                         "y":510.471204188482
-                        }, 
-                        {
-                         "x":1439.79057591623,
-                         "y":1047.12041884817
-                        }, 
-                        {
-                         "x":1263.0890052356,
-                         "y":1393.97905759162
-                        }, 
-                        {
-                         "x":1125.65445026178,
-                         "y":1583.76963350785
-                        }, 
-                        {
-                         "x":1073.29842931937,
-                         "y":2454.18848167539
-                        }, 
-                        {
-                         "x":981.675392670157,
-                         "y":3154.4502617801
-                        }, 
-                        {
-                         "x":431.937172774869,
-                         "y":3507.85340314136
-                        }, 
-                        {
-                         "x":-215.968586387435,
-                         "y":3115.1832460733
-                        }, 
-                        {
-                         "x":-242.146596858639,
-                         "y":2598.16753926702
-                        }, 
-                        {
-                         "x":-719.895287958115,
-                         "y":2329.84293193717
-                        }, 
-                        {
-                         "x":-765.706806282722,
-                         "y":2022.25130890052
-                        }, 
-                        {
-                         "x":-935.86387434555,
-                         "y":582.460732984293
-                        }, 
-                        {
-                         "x":-647.905759162304,
-                         "y":477.748691099476
-                        }, 
-                        {
-                         "x":-189.79057591623,
-                         "y":477.748691099476
-                        }, 
-                        {
-                         "x":0,
-                         "y":13.0890052356019
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1871.7277486911,
-                 "y":1099.47643979058
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"Object Layer 3",
-         "objects":[
-                {
-                 "height":0,
-                 "id":22,
-                 "name":"",
-                 "polyline":[
-                        {
-                         "x":0,
+                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGQAAABoAAAAbAAAAHAAAAB0AAAAeAAAAHwAAACAAAAA3AAAAOAAAADkAAAA6AAAAOwAAADwAAAA9AAAAPgAAAD8AAABAAAAAQQAAAEIAAABDAAAARAAAAEUAAABGAAAAXQAAAF4AAABfAAAAYAAAAGEAAABiAAAAYwAAAGQAAABlAAAAZgAAAGcAAABoAAAAaQAAAGoAAABrAAAAbAAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAIkAAACKAAAAiwAAAIwAAACNAAAAjgAAAI8AAACQAAAAkQAAAJIAAACpAAAAqgAAAKsAAACsAAAArQAAAK4AAACvAAAAsAAAALEAAACyAAAAswAAALQAAAC1AAAAtgAAALcAAAC4AAAAzwAAANAAAADRAAAA0gAAANMAAADUAAAA1QAAANYAAADXAAAA2AAAANkAAADaAAAA2wAAANwAAADdAAAA3gAAAPUAAAD2AAAA9wAAAPgAAAD5AAAA+gAAAPsAAAD8AAAA\/QAAAP4AAAD\/AAAAAAEAAAEBAAACAQAAAwEAAAQBAAAbAQAAHAEAAB0BAAAeAQAAHwEAACABAAAhAQAAIgEAACMBAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAQQEAAEIBAABDAQAARAEAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAGcBAABoAQAAaQEAAGoBAABrAQAAbAEAAG0BAABuAQAAbwEAAHABAABxAQAAcgEAAHMBAAB0AQAAdQEAAHYBAACNAQAAjgEAAI8BAACQAQAAkQEAAJIBAACTAQAAlAEAAJUBAACWAQAAlwEAAJgBAACZAQAAmgEAAJsBAACcAQAAswEAALQBAAC1AQAAtgEAALcBAAC4AQAAuQEAALoBAAC7AQAAvAEAAL0BAAC+AQAAvwEAAMABAADBAQAAwgEAANkBAADaAQAA2wEAANwBAADdAQAA3gEAAN8BAADgAQAA4QEAAOIBAADjAQAA5AEAAOUBAADmAQAA5wEAAOgBAAD\/AQAAAAIAAAECAAACAgAAAwIAAAQCAAAFAgAABgIAAAcCAAAIAgAACQIAAAoCAAALAgAADAIAAA0CAAAOAgAAJQIAACYCAAAnAgAAKAIAACkCAAAqAgAAKwIAACwCAAAtAgAALgIAAC8CAAAwAgAAMQIAADICAAAzAgAANAIAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":16,
                          "y":0
                         }, 
                         {
-                         "x":-835.266821345708,
-                         "y":-5.1559680329982
+                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEAAAAiAAAAIwAAACQAAAAlAAAAJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHAAAASAAAAEkAAABKAAAASwAAAEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbQAAAG4AAABvAAAAcAAAAHEAAAByAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5AAAAugAAALsAAAC8AAAAvQAAAL4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3wAAAOAAAADhAAAA4gAAAOMAAADkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUBAAAGAQAABwEAAAgBAAAJAQAACgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArAQAALAEAAC0BAAAuAQAALwEAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUQEAAFIBAABTAQAAVAEAAFUBAABWAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHcBAAB4AQAAeQEAAHoBAAB7AQAAfAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACdAQAAngEAAJ8BAACgAQAAoQEAAKIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwwEAAMQBAADFAQAAxgEAAMcBAADIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOkBAADqAQAA6wEAAOwBAADtAQAA7gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAgAAEAIAABECAAASAgAAEwIAABQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANQIAADYCAAA3AgAAOAIAADkCAAA6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":32,
+                         "y":0
                         }, 
                         {
-                         "x":-889.404485692189,
-                         "y":-2.57798401649916
+                         "data":"OwIAADwCAAA9AgAAPgIAAD8CAABAAgAAQQIAAEICAABDAgAARAIAAEUCAABGAgAARwIAAEgCAABJAgAASgIAAGECAABiAgAAYwIAAGQCAABlAgAAZgIAAGcCAABoAgAAaQIAAGoCAABrAgAAbAIAAG0CAABuAgAAbwIAAHACAACHAgAAiAIAAIkCAACKAgAAiwIAAIwCAACNAgAAjgIAAI8CAACQAgAAkQIAAJICAACTAgAAlAIAAJUCAACWAgAArQIAAK4CAACvAgAAsAIAALECAACyAgAAswIAALQCAAC1AgAAtgIAALcCAAC4AgAAuQIAALoCAAC7AgAAvAIAANMCAADUAgAA1QIAANYCAADXAgAA2AIAANkCAADaAgAA2wIAANwCAADdAgAA3gIAAN8CAADgAgAA4QIAAOICAAD5AgAA+gIAAPsCAAD8AgAA\/QIAAP4CAAD\/AgAAAAMAAAEDAAACAwAAAwMAAAQDAAAFAwAABgMAAAcDAAAIAwAAHwMAACADAAAhAwAAIgMAACMDAAAkAwAAJQMAACYDAAAnAwAAKAMAACkDAAAqAwAAKwMAACwDAAAtAwAALgMAAEUDAABGAwAARwMAAEgDAABJAwAASgMAAEsDAABMAwAATQMAAE4DAABPAwAAUAMAAFEDAABSAwAAUwMAAFQDAABrAwAAbAMAAG0DAABuAwAAbwMAAHADAABxAwAAcgMAAHMDAAB0AwAAdQMAAHYDAAB3AwAAeAMAAHkDAAB6AwAAkQMAAJIDAACTAwAAlAMAAJUDAACWAwAAlwMAAJgDAACZAwAAmgMAAJsDAACcAwAAnQMAAJ4DAACfAwAAoAMAALcDAAC4AwAAuQMAALoDAAC7AwAAvAMAAL0DAAC+AwAAvwMAAMADAADBAwAAwgMAAMMDAADEAwAAxQMAAMYDAADdAwAA3gMAAN8DAADgAwAA4QMAAOIDAADjAwAA5AMAAOUDAADmAwAA5wMAAOgDAADpAwAA6gMAAOsDAADsAwAAAwQAAAQEAAAFBAAABgQAAAcEAAAIBAAACQQAAAoEAAALBAAADAQAAA0EAAAOBAAADwQAABAEAAARBAAAEgQAACkEAAAqBAAAKwQAACwEAAAtBAAALgQAAC8EAAAwBAAAMQQAADIEAAAzBAAANAQAADUEAAA2BAAANwQAADgEAABPBAAAUAQAAFEEAABSBAAAUwQAAFQEAABVBAAAVgQAAFcEAABYBAAAWQQAAFoEAABbBAAAXAQAAF0EAABeBAAAdQQAAHYEAAB3BAAAeAQAAHkEAAB6BAAAewQAAHwEAAB9BAAAfgQAAH8EAACABAAAgQQAAIIEAACDBAAAhAQAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":0,
+                         "y":16
                         }, 
                         {
-                         "x":-920.340293890178,
-                         "y":28.3578241814901
+                         "data":"SwIAAEwCAABNAgAATgIAAE8CAABQAgAAUQIAAFICAABTAgAAVAIAAFUCAABWAgAAVwIAAFgCAABZAgAAWgIAAHECAAByAgAAcwIAAHQCAAB1AgAAdgIAAHcCAAB4AgAAeQIAAHoCAAB7AgAAfAIAAH0CAAB+AgAAfwIAAIACAACXAgAAmAIAAJkCAACaAgAAmwIAAJwCAACdAgAAngIAAJ8CAACgAgAAoQIAAKICAACjAgAApAIAAKUCAACmAgAAvQIAAL4CAAC\/AgAAwAIAAMECAADCAgAAwwIAAMQCAADFAgAAxgIAAMcCAADIAgAAyQIAAMoCAADLAgAAzAIAAOMCAADkAgAA5QIAAOYCAADnAgAA6AIAAOkCAADqAgAA6wIAAOwCAADtAgAA7gIAAO8CAADwAgAA8QIAAPICAAAJAwAACgMAAAsDAAAMAwAADQMAAA4DAAAPAwAAEAMAABEDAAASAwAAEwMAABQDAAAVAwAAFgMAABcDAAAYAwAALwMAADADAAAxAwAAMgMAADMDAAA0AwAANQMAADYDAAA3AwAAOAMAADkDAAA6AwAAOwMAADwDAAA9AwAAPgMAAFUDAABWAwAAVwMAAFgDAABZAwAAWgMAAFsDAABcAwAAXQMAAF4DAABfAwAAYAMAAGEDAABiAwAAYwMAAGQDAAB7AwAAfAMAAH0DAAB+AwAAfwMAAIADAACBAwAAggMAAIMDAACEAwAAhQMAAIYDAACHAwAAiAMAAIkDAACKAwAAoQMAAKIDAACjAwAApAMAAKUDAACmAwAApwMAAKgDAACpAwAAqgMAAKsDAACsAwAArQMAAK4DAACvAwAAsAMAAMcDAADIAwAAyQMAAMoDAADLAwAAzAMAAM0DAADOAwAAzwMAANADAADRAwAA0gMAANMDAADUAwAA1QMAANYDAADtAwAA7gMAAO8DAADwAwAA8QMAAPIDAADzAwAA9AMAAPUDAAD2AwAA9wMAAPgDAAD5AwAA+gMAAPsDAAD8AwAAEwQAABQEAAAVBAAAFgQAABcEAAAYBAAAGQQAABoEAAAbBAAAHAQAAB0EAAAeBAAAHwQAACAEAAAhBAAAIgQAADkEAAA6BAAAOwQAADwEAAA9BAAAPgQAAD8EAABABAAAQQQAAEIEAABDBAAARAQAAEUEAABGBAAARwQAAEgEAABfBAAAYAQAAGEEAABiBAAAYwQAAGQEAABlBAAAZgQAAGcEAABoBAAAaQQAAGoEAABrBAAAbAQAAG0EAABuBAAAhQQAAIYEAACHBAAAiAQAAIkEAACKBAAAiwQAAIwEAACNBAAAjgQAAI8EAACQBAAAkQQAAJIEAACTBAAAlAQAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":16,
+                         "y":16
                         }, 
                         {
-                         "x":-925.496261923176,
-                         "y":85.0734725444702
+                         "data":"WwIAAFwCAABdAgAAXgIAAF8CAABgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIECAACCAgAAgwIAAIQCAACFAgAAhgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACnAgAAqAIAAKkCAACqAgAAqwIAAKwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzQIAAM4CAADPAgAA0AIAANECAADSAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPMCAAD0AgAA9QIAAPYCAAD3AgAA+AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAwAAGgMAABsDAAAcAwAAHQMAAB4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwMAAEADAABBAwAAQgMAAEMDAABEAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGUDAABmAwAAZwMAAGgDAABpAwAAagMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACLAwAAjAMAAI0DAACOAwAAjwMAAJADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsQMAALIDAACzAwAAtAMAALUDAAC2AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANcDAADYAwAA2QMAANoDAADbAwAA3AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9AwAA\/gMAAP8DAAAABAAAAQQAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIwQAACQEAAAlBAAAJgQAACcEAAAoBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEkEAABKBAAASwQAAEwEAABNBAAATgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABvBAAAcAQAAHEEAAByBAAAcwQAAHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlQQAAJYEAACXBAAAmAQAAJkEAACaBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":32,
+                         "y":16
                         }, 
                         {
-                         "x":-925.496261923176,
-                         "y":1185.87264758958
+                         "data":"mwQAAJwEAACdBAAAngQAAJ8EAACgBAAAoQQAAKIEAACjBAAApAQAAKUEAACmBAAApwQAAKgEAACpBAAAqgQAAMEEAADCBAAAwwQAAMQEAADFBAAAxgQAAMcEAADIBAAAyQQAAMoEAADLBAAAzAQAAM0EAADOBAAAzwQAANAEAADnBAAA6AQAAOkEAADqBAAA6wQAAOwEAADtBAAA7gQAAO8EAADwBAAA8QQAAPIEAADzBAAA9AQAAPUEAAD2BAAADQUAAA4FAAAPBQAAEAUAABEFAAASBQAAEwUAABQFAAAVBQAAFgUAABcFAAAYBQAAGQUAABoFAAAbBQAAHAUAADMFAAA0BQAANQUAADYFAAA3BQAAOAUAADkFAAA6BQAAOwUAADwFAAA9BQAAPgUAAD8FAABABQAAQQUAAEIFAABZBQAAWgUAAFsFAABcBQAAXQUAAF4FAABfBQAAYAUAAGEFAABiBQAAYwUAAGQFAABlBQAAZgUAAGcFAABoBQAAfwUAAIAFAACBBQAAggUAAIMFAACEBQAAhQUAAIYFAACHBQAAiAUAAIkFAACKBQAAiwUAAIwFAACNBQAAjgUAAKUFAACmBQAApwUAAKgFAACpBQAAqgUAAKsFAACsBQAArQUAAK4FAACvBQAAsAUAALEFAACyBQAAswUAALQFAADLBQAAzAUAAM0FAADOBQAAzwUAANAFAADRBQAA0gUAANMFAADUBQAA1QUAANYFAADXBQAA2AUAANkFAADaBQAA8QUAAPIFAADzBQAA9AUAAPUFAAD2BQAA9wUAAPgFAAD5BQAA+gUAAPsFAAD8BQAA\/QUAAP4FAAD\/BQAAAAYAABcGAAAYBgAAGQYAABoGAAAbBgAAHAYAAB0GAAAeBgAAHwYAACAGAAAhBgAAIgYAACMGAAAkBgAAJQYAACYGAAA9BgAAPgYAAD8GAABABgAAQQYAAEIGAABDBgAARAYAAEUGAABGBgAARwYAAEgGAABJBgAASgYAAEsGAABMBgAAYwYAAGQGAABlBgAAZgYAAGcGAABoBgAAaQYAAGoGAABrBgAAbAYAAG0GAABuBgAAbwYAAHAGAABxBgAAcgYAAIkGAACKBgAAiwYAAIwGAACNBgAAjgYAAI8GAACQBgAAkQYAAJIGAACTBgAAlAYAAJUGAACWBgAAlwYAAJgGAACvBgAAsAYAALEGAACyBgAAswYAALQGAAC1BgAAtgYAALcGAAC4BgAAuQYAALoGAAC7BgAAvAYAAL0GAAC+BgAA1QYAANYGAADXBgAA2AYAANkGAADaBgAA2wYAANwGAADdBgAA3gYAAN8GAADgBgAA4QYAAOIGAADjBgAA5AYAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":0,
+                         "y":32
                         }, 
                         {
-                         "x":-915.18432585718,
-                         "y":1198.76256767208
+                         "data":"qwQAAKwEAACtBAAArgQAAK8EAACwBAAAsQQAALIEAACzBAAAtAQAALUEAAC2BAAAtwQAALgEAAC5BAAAugQAANEEAADSBAAA0wQAANQEAADVBAAA1gQAANcEAADYBAAA2QQAANoEAADbBAAA3AQAAN0EAADeBAAA3wQAAOAEAAD3BAAA+AQAAPkEAAD6BAAA+wQAAPwEAAD9BAAA\/gQAAP8EAAAABQAAAQUAAAIFAAADBQAABAUAAAUFAAAGBQAAHQUAAB4FAAAfBQAAIAUAACEFAAAiBQAAIwUAACQFAAAlBQAAJgUAACcFAAAoBQAAKQUAACoFAAArBQAALAUAAEMFAABEBQAARQUAAEYFAABHBQAASAUAAEkFAABKBQAASwUAAEwFAABNBQAATgUAAE8FAABQBQAAUQUAAFIFAABpBQAAagUAAGsFAABsBQAAbQUAAG4FAABvBQAAcAUAAHEFAAByBQAAcwUAAHQFAAB1BQAAdgUAAHcFAAB4BQAAjwUAAJAFAACRBQAAkgUAAJMFAACUBQAAlQUAAJYFAACXBQAAmAUAAJkFAACaBQAAmwUAAJwFAACdBQAAngUAALUFAAC2BQAAtwUAALgFAAC5BQAAugUAALsFAAC8BQAAvQUAAL4FAAC\/BQAAwAUAAMEFAADCBQAAwwUAAMQFAADbBQAA3AUAAN0FAADeBQAA3wUAAOAFAADhBQAA4gUAAOMFAADkBQAA5QUAAOYFAADnBQAA6AUAAOkFAADqBQAAAQYAAAIGAAADBgAABAYAAAUGAAAGBgAABwYAAAgGAAAJBgAACgYAAAsGAAAMBgAADQYAAA4GAAAPBgAAEAYAACcGAAAoBgAAKQYAACoGAAArBgAALAYAAC0GAAAuBgAALwYAADAGAAAxBgAAMgYAADMGAAA0BgAANQYAADYGAABNBgAATgYAAE8GAABQBgAAUQYAAFIGAABTBgAAVAYAAFUGAABWBgAAVwYAAFgGAABZBgAAWgYAAFsGAABcBgAAcwYAAHQGAAB1BgAAdgYAAHcGAAB4BgAAeQYAAHoGAAB7BgAAfAYAAH0GAAB+BgAAfwYAAIAGAACBBgAAggYAAJkGAACaBgAAmwYAAJwGAACdBgAAngYAAJ8GAACgBgAAoQYAAKIGAACjBgAApAYAAKUGAACmBgAApwYAAKgGAAC\/BgAAwAYAAMEGAADCBgAAwwYAAMQGAADFBgAAxgYAAMcGAADIBgAAyQYAAMoGAADLBgAAzAYAAM0GAADOBgAA5QYAAOYGAADnBgAA6AYAAOkGAADqBgAA6wYAAOwGAADtBgAA7gYAAO8GAADwBgAA8QYAAPIGAADzBgAA9AYAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":16,
+                         "y":32
                         }, 
                         {
-                         "x":-876.514565609693,
-                         "y":1198.76256767208
+                         "data":"uwQAALwEAAC9BAAAvgQAAL8EAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEEAADiBAAA4wQAAOQEAADlBAAA5gQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBQAACAUAAAkFAAAKBQAACwUAAAwFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALQUAAC4FAAAvBQAAMAUAADEFAAAyBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFMFAABUBQAAVQUAAFYFAABXBQAAWAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5BQAAegUAAHsFAAB8BQAAfQUAAH4FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnwUAAKAFAAChBQAAogUAAKMFAACkBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMUFAADGBQAAxwUAAMgFAADJBQAAygUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADrBQAA7AUAAO0FAADuBQAA7wUAAPAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQYAABIGAAATBgAAFAYAABUGAAAWBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcGAAA4BgAAOQYAADoGAAA7BgAAPAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABdBgAAXgYAAF8GAABgBgAAYQYAAGIGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgwYAAIQGAACFBgAAhgYAAIcGAACIBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKkGAACqBgAAqwYAAKwGAACtBgAArgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADPBgAA0AYAANEGAADSBgAA0wYAANQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9QYAAPYGAAD3BgAA+AYAAPkGAAD6BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":32,
+                         "y":32
                         }, 
                         {
-                         "x":-794.019077081722,
-                         "y":1188.45063160608
+                         "data":"+wYAAPwGAAD9BgAA\/gYAAP8GAAAABwAAAQcAAAIHAAADBwAABAcAAAUHAAAGBwAABwcAAAgHAAAJBwAACgcAACEHAAAiBwAAIwcAACQHAAAlBwAAJgcAACcHAAAoBwAAKQcAACoHAAArBwAALAcAAC0HAAAuBwAALwcAADAHAABHBwAASAcAAEkHAABKBwAASwcAAEwHAABNBwAATgcAAE8HAABQBwAAUQcAAFIHAABTBwAAVAcAAFUHAABWBwAAbQcAAG4HAABvBwAAcAcAAHEHAAByBwAAcwcAAHQHAAB1BwAAdgcAAHcHAAB4BwAAeQcAAHoHAAB7BwAAfAcAAJMHAACUBwAAlQcAAJYHAACXBwAAmAcAAJkHAACaBwAAmwcAAJwHAACdBwAAngcAAJ8HAACgBwAAoQcAAKIHAAC5BwAAugcAALsHAAC8BwAAvQcAAL4HAAC\/BwAAwAcAAMEHAADCBwAAwwcAAMQHAADFBwAAxgcAAMcHAADIBwAA3wcAAOAHAADhBwAA4gcAAOMHAADkBwAA5QcAAOYHAADnBwAA6AcAAOkHAADqBwAA6wcAAOwHAADtBwAA7gcAAAUIAAAGCAAABwgAAAgIAAAJCAAACggAAAsIAAAMCAAADQgAAA4IAAAPCAAAEAgAABEIAAASCAAAEwgAABQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":0,
+                         "y":48
                         }, 
                         {
-                         "x":-747.615364784738,
-                         "y":1216.80845578757
+                         "data":"CwcAAAwHAAANBwAADgcAAA8HAAAQBwAAEQcAABIHAAATBwAAFAcAABUHAAAWBwAAFwcAABgHAAAZBwAAGgcAADEHAAAyBwAAMwcAADQHAAA1BwAANgcAADcHAAA4BwAAOQcAADoHAAA7BwAAPAcAAD0HAAA+BwAAPwcAAEAHAABXBwAAWAcAAFkHAABaBwAAWwcAAFwHAABdBwAAXgcAAF8HAABgBwAAYQcAAGIHAABjBwAAZAcAAGUHAABmBwAAfQcAAH4HAAB\/BwAAgAcAAIEHAACCBwAAgwcAAIQHAACFBwAAhgcAAIcHAACIBwAAiQcAAIoHAACLBwAAjAcAAKMHAACkBwAApQcAAKYHAACnBwAAqAcAAKkHAACqBwAAqwcAAKwHAACtBwAArgcAAK8HAACwBwAAsQcAALIHAADJBwAAygcAAMsHAADMBwAAzQcAAM4HAADPBwAA0AcAANEHAADSBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA7wcAAPAHAADxBwAA8gcAAPMHAAD0BwAA9QcAAPYHAAD3BwAA+AcAAPkHAAD6BwAA+wcAAPwHAAD9BwAA\/gcAABUIAAAWCAAAFwgAABgIAAAZCAAAGggAABsIAAAcCAAAHQgAAB4IAAAfCAAAIAgAACEIAAAiCAAAIwgAACQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":16,
+                         "y":48
                         }, 
                         {
-                         "x":-770.81722093323,
-                         "y":1252.90023201856
-                        }, 
-                        {
-                         "x":-902.294405774684,
-                         "y":1252.90023201856
-                        }, 
-                        {
-                         "x":-933.230213972673,
-                         "y":1317.34983243104
-                        }, 
-                        {
-                         "x":-933.230213972673,
-                         "y":1417.8912090745
-                        }, 
-                        {
-                         "x":-922.918277906677,
-                         "y":2549.62619231761
-                        }, 
-                        {
-                         "x":-928.074245939675,
-                         "y":4166.02217066254
-                        }, 
-                        {
-                         "x":-904.872389791183,
-                         "y":4186.64604279453
-                        }, 
-                        {
-                         "x":-879.092549626192,
-                         "y":4263.98556328951
-                        }, 
-                        {
-                         "x":-884.24851765919,
-                         "y":4431.55452436195
-                        }, 
-                        {
-                         "x":-917.762309873679,
-                         "y":4483.11420469193
-                        }, 
-                        {
-                         "x":-1142.0469193091,
-                         "y":4573.3436452694
-                        }, 
-                        {
-                         "x":-1299.30394431555,
-                         "y":4547.56380510441
+                         "data":"GwcAABwHAAAdBwAAHgcAAB8HAAAgBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEHAABCBwAAQwcAAEQHAABFBwAARgcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnBwAAaAcAAGkHAABqBwAAawcAAGwHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjQcAAI4HAACPBwAAkAcAAJEHAACSBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALMHAAC0BwAAtQcAALYHAAC3BwAAuAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZBwAA2gcAANsHAADcBwAA3QcAAN4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\/wcAAAAIAAABCAAAAggAAAMIAAAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUIAAAmCAAAJwgAACgIAAApCAAAKggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+                         "height":16,
+                         "width":16,
+                         "x":32,
+                         "y":48
                         }],
-                 "rotation":0,
-                 "type":"",
+                 "encoding":"base64",
+                 "height":64,
+                 "name":"Tile Layer 1",
+                 "opacity":1,
+                 "startx":0,
+                 "starty":0,
+                 "type":"tilelayer",
                  "visible":true,
-                 "width":0,
-                 "x":1484.91879350348,
-                 "y":734.725444702243
+                 "width":48,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"Object Layer 1",
+                 "objects":[
+                        {
+                         "height":4287.99483470341,
+                         "id":1,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":71.1878167115903,
+                         "x":140.908152873722,
+                         "y":352.118235782039
+                        }, 
+                        {
+                         "height":98.8078079071574,
+                         "id":2,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1745.42576355132,
+                         "x":-180.469646118797,
+                         "y":4636.83030674721
+                        }, 
+                        {
+                         "height":1295.91907334578,
+                         "id":3,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":96.9776475519793,
+                         "x":1098.40853718636,
+                         "y":3349.16300278899
+                        }, 
+                        {
+                         "height":72.8653023279652,
+                         "id":4,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":329.924150524603,
+                         "x":209.771013726274,
+                         "y":351.680298817159
+                        }, 
+                        {
+                         "height":87.0770370031721,
+                         "id":7,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":613.890964996336,
+                         "x":206.483427979566,
+                         "y":1656.8486826545
+                        }, 
+                        {
+                         "height":84.1867907925027,
+                         "id":8,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":405.990079377138,
+                         "x":1020.00417867435,
+                         "y":1657.90249518416
+                        }, 
+                        {
+                         "height":1288.04870233899,
+                         "id":9,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":96.9696999733776,
+                         "x":1098.25814385151,
+                         "y":1742.85
+                        }, 
+                        {
+                         "height":71.8526517856425,
+                         "id":10,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":668.420569717998,
+                         "x":776.061109603926,
+                         "y":354.483674843146
+                        }, 
+                        {
+                         "height":76.0016320601716,
+                         "id":11,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1702.69133624533,
+                         "x":1677.71698020668,
+                         "y":350.838425015004
+                        }, 
+                        {
+                         "height":369.592008067473,
+                         "id":12,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":73.499527744058,
+                         "x":1992.79544415995,
+                         "y":429.031944530302
+                        }, 
+                        {
+                         "height":2396.01591579894,
+                         "id":13,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":72.9392053016209,
+                         "x":1993.40136243144,
+                         "y":1045.88
+                        }, 
+                        {
+                         "height":89.202968299712,
+                         "id":14,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":310.407419479643,
+                         "x":1682.16619596542,
+                         "y":1657.79976945245
+                        }, 
+                        {
+                         "height":84.1868,
+                         "id":16,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":525.526216808456,
+                         "x":2063.86746648621,
+                         "y":2190.44075828822
+                        }, 
+                        {
+                         "height":84.1868,
+                         "id":17,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":350.223086878061,
+                         "x":2939.09314849188,
+                         "y":2187.86277427172
+                        }, 
+                        {
+                         "height":4298.56489559165,
+                         "id":18,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":90.9850881154937,
+                         "x":3289.12978128384,
+                         "y":432.568544728022
+                        }, 
+                        {
+                         "height":93.6518881154936,
+                         "id":19,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1363.88,
+                         "x":1929.29176076308,
+                         "y":4638.66000592936
+                        }, 
+                        {
+                         "height":89.203,
+                         "id":20,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":797.645979118329,
+                         "x":1198.23810866203,
+                         "y":2535.9605005156
+                        }, 
+                        {
+                         "height":89.203,
+                         "id":21,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":869.829552461975,
+                         "x":1196.94910621294,
+                         "y":3443.41087432328
+                        }],
+                 "offsetx":182.2,
+                 "offsety":377.873003506038,
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"Object Layer 2",
+                 "objects":[
+                        {
+                         "height":0,
+                         "id":6,
+                         "name":"",
+                         "polyline":[
+                                {
+                                 "x":0,
+                                 "y":0
+                                }, 
+                                {
+                                 "x":-1236.9109947644,
+                                 "y":19.633507853403
+                                }, 
+                                {
+                                 "x":-1217.27748691099,
+                                 "y":726.439790575916
+                                }, 
+                                {
+                                 "x":-157.068062827225,
+                                 "y":752.61780104712
+                                }, 
+                                {
+                                 "x":-176.701570680628,
+                                 "y":1341.62303664921
+                                }, 
+                                {
+                                 "x":-320.680628272251,
+                                 "y":1498.69109947644
+                                }, 
+                                {
+                                 "x":-287.958115183246,
+                                 "y":1786.64921465969
+                                }, 
+                                {
+                                 "x":-26.1780104712043,
+                                 "y":1747.38219895288
+                                }, 
+                                {
+                                 "x":150.523560209424,
+                                 "y":1361.25654450262
+                                }, 
+                                {
+                                 "x":-65.4450261780105,
+                                 "y":1191.09947643979
+                                }, 
+                                {
+                                 "x":-346.858638743455,
+                                 "y":575.916230366492
+                                }, 
+                                {
+                                 "x":-536.649214659686,
+                                 "y":510.471204188482
+                                }, 
+                                {
+                                 "x":-726.439790575916,
+                                 "y":759.162303664921
+                                }, 
+                                {
+                                 "x":-778.795811518325,
+                                 "y":1832.46073298429
+                                }, 
+                                {
+                                 "x":-1191.09947643979,
+                                 "y":2257.85340314136
+                                }, 
+                                {
+                                 "x":-1204.18848167539,
+                                 "y":2074.60732984293
+                                }, 
+                                {
+                                 "x":-1204.18848167539,
+                                 "y":1839.00523560209
+                                }, 
+                                {
+                                 "x":-1204.18848167539,
+                                 "y":1551.04712041885
+                                }, 
+                                {
+                                 "x":-1282.72251308901,
+                                 "y":1590.31413612565
+                                }, 
+                                {
+                                 "x":-1341.62303664921,
+                                 "y":2126.96335078534
+                                }, 
+                                {
+                                 "x":-1295.81151832461,
+                                 "y":2676.70157068063
+                                }, 
+                                {
+                                 "x":-1060.20942408377,
+                                 "y":3017.01570680628
+                                }, 
+                                {
+                                 "x":-647.905759162304,
+                                 "y":2565.44502617801
+                                }, 
+                                {
+                                 "x":-32.7225130890054,
+                                 "y":2303.66492146597
+                                }, 
+                                {
+                                 "x":117.801047120419,
+                                 "y":3102.0942408377
+                                }, 
+                                {
+                                 "x":78.5340314136124,
+                                 "y":3481.67539267016
+                                }, 
+                                {
+                                 "x":45.8115183246073,
+                                 "y":4149.21465968586
+                                }, 
+                                {
+                                 "x":-327.225130890052,
+                                 "y":4188.48167539267
+                                }, 
+                                {
+                                 "x":-680.628272251309,
+                                 "y":4077.22513089005
+                                }, 
+                                {
+                                 "x":-693.717277486911,
+                                 "y":4149.21465968586
+                                }, 
+                                {
+                                 "x":-615.183246073299,
+                                 "y":4240.83769633508
+                                }, 
+                                {
+                                 "x":-425.392670157068,
+                                 "y":4319.37172774869
+                                }, 
+                                {
+                                 "x":-111.256544502618,
+                                 "y":4319.37172774869
+                                }, 
+                                {
+                                 "x":111.256544502618,
+                                 "y":4260.47120418848
+                                }, 
+                                {
+                                 "x":157.068062827225,
+                                 "y":4109.94764397906
+                                }, 
+                                {
+                                 "x":209.424083769634,
+                                 "y":3527.48691099476
+                                }, 
+                                {
+                                 "x":575.916230366492,
+                                 "y":3160.99476439791
+                                }, 
+                                {
+                                 "x":1007.85340314136,
+                                 "y":2545.81151832461
+                                }, 
+                                {
+                                 "x":975.130890052356,
+                                 "y":2041.88481675393
+                                }, 
+                                {
+                                 "x":981.675392670157,
+                                 "y":1714.65968586387
+                                }, 
+                                {
+                                 "x":1034.03141361257,
+                                 "y":1295.81151832461
+                                }, 
+                                {
+                                 "x":824.607329842932,
+                                 "y":948.952879581152
+                                }, 
+                                {
+                                 "x":641.361256544503,
+                                 "y":458.115183246073
+                                }, 
+                                {
+                                 "x":680.628272251309,
+                                 "y":45.8115183246073
+                                }, 
+                                {
+                                 "x":1086.38743455497,
+                                 "y":13.0890052356019
+                                }, 
+                                {
+                                 "x":1407.06806282723,
+                                 "y":130.890052356021
+                                }, 
+                                {
+                                 "x":1439.79057591623,
+                                 "y":510.471204188482
+                                }, 
+                                {
+                                 "x":1439.79057591623,
+                                 "y":1047.12041884817
+                                }, 
+                                {
+                                 "x":1263.0890052356,
+                                 "y":1393.97905759162
+                                }, 
+                                {
+                                 "x":1125.65445026178,
+                                 "y":1583.76963350785
+                                }, 
+                                {
+                                 "x":1073.29842931937,
+                                 "y":2454.18848167539
+                                }, 
+                                {
+                                 "x":981.675392670157,
+                                 "y":3154.4502617801
+                                }, 
+                                {
+                                 "x":431.937172774869,
+                                 "y":3507.85340314136
+                                }, 
+                                {
+                                 "x":-215.968586387435,
+                                 "y":3115.1832460733
+                                }, 
+                                {
+                                 "x":-242.146596858639,
+                                 "y":2598.16753926702
+                                }, 
+                                {
+                                 "x":-719.895287958115,
+                                 "y":2329.84293193717
+                                }, 
+                                {
+                                 "x":-765.706806282722,
+                                 "y":2022.25130890052
+                                }, 
+                                {
+                                 "x":-935.86387434555,
+                                 "y":582.460732984293
+                                }, 
+                                {
+                                 "x":-647.905759162304,
+                                 "y":477.748691099476
+                                }, 
+                                {
+                                 "x":-189.79057591623,
+                                 "y":477.748691099476
+                                }, 
+                                {
+                                 "x":0,
+                                 "y":13.0890052356019
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":0,
+                         "x":1871.7277486911,
+                         "y":1099.47643979058
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"Object Layer 3",
+                 "objects":[
+                        {
+                         "height":0,
+                         "id":22,
+                         "name":"",
+                         "polyline":[
+                                {
+                                 "x":0,
+                                 "y":0
+                                }, 
+                                {
+                                 "x":-835.266821345708,
+                                 "y":-5.1559680329982
+                                }, 
+                                {
+                                 "x":-889.404485692189,
+                                 "y":-2.57798401649916
+                                }, 
+                                {
+                                 "x":-920.340293890178,
+                                 "y":28.3578241814901
+                                }, 
+                                {
+                                 "x":-925.496261923176,
+                                 "y":85.0734725444702
+                                }, 
+                                {
+                                 "x":-925.496261923176,
+                                 "y":1185.87264758958
+                                }, 
+                                {
+                                 "x":-915.18432585718,
+                                 "y":1198.76256767208
+                                }, 
+                                {
+                                 "x":-876.514565609693,
+                                 "y":1198.76256767208
+                                }, 
+                                {
+                                 "x":-794.019077081722,
+                                 "y":1188.45063160608
+                                }, 
+                                {
+                                 "x":-747.615364784738,
+                                 "y":1216.80845578757
+                                }, 
+                                {
+                                 "x":-770.81722093323,
+                                 "y":1252.90023201856
+                                }, 
+                                {
+                                 "x":-902.294405774684,
+                                 "y":1252.90023201856
+                                }, 
+                                {
+                                 "x":-933.230213972673,
+                                 "y":1317.34983243104
+                                }, 
+                                {
+                                 "x":-933.230213972673,
+                                 "y":1417.8912090745
+                                }, 
+                                {
+                                 "x":-922.918277906677,
+                                 "y":2549.62619231761
+                                }, 
+                                {
+                                 "x":-928.074245939675,
+                                 "y":4166.02217066254
+                                }, 
+                                {
+                                 "x":-904.872389791183,
+                                 "y":4186.64604279453
+                                }, 
+                                {
+                                 "x":-879.092549626192,
+                                 "y":4263.98556328951
+                                }, 
+                                {
+                                 "x":-884.24851765919,
+                                 "y":4431.55452436195
+                                }, 
+                                {
+                                 "x":-917.762309873679,
+                                 "y":4483.11420469193
+                                }, 
+                                {
+                                 "x":-1142.0469193091,
+                                 "y":4573.3436452694
+                                }, 
+                                {
+                                 "x":-1299.30394431555,
+                                 "y":4547.56380510441
+                                }],
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":0,
+                         "x":1371.48749677752,
+                         "y":853.312709461201
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"Object Layer 4",
+                 "objects":[
+                        {
+                         "height":22.091516827777,
+                         "id":23,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":201.307396009669,
+                         "x":1000.61414056822,
+                         "y":2096.28799025852
+                        }, 
+                        {
+                         "height":21.2004379076902,
+                         "id":24,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":254.403082771456,
+                         "x":1606.55974993989,
+                         "y":2097.14834319237
+                        }, 
+                        {
+                         "height":24.276571466864,
+                         "id":25,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":295.64288488463,
+                         "x":1372.09002099612,
+                         "y":3376.46669593124
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "layers":[
+                        {
+                         "image":"..\/..\/..\/..\/assets\/items\/chest_full.png",
+                         "name":"chest_full",
+                         "offsetx":1143.21093357441,
+                         "offsety":1065.35819304326,
+                         "opacity":1,
+                         "type":"imagelayer",
+                         "visible":true,
+                         "x":0,
+                         "y":0
+                        }],
+                 "name":"items_group",
+                 "opacity":1,
+                 "type":"group",
+                 "visible":true,
+                 "x":0,
+                 "y":0
                 }],
+         "name":"Group 1",
          "opacity":1,
-         "type":"objectgroup",
+         "type":"group",
          "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":23,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -2762,7 +2892,7 @@ module.exports={ "height":100,
  "version":1,
  "width":95
 }
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports={ "columns":38,
  "image":"..\/..\/..\/..\/assets\/bedroom\/flat_floor2.jpg",
  "imageheight":5500,
@@ -6813,80 +6943,25 @@ module.exports={ "columns":38,
  "tilewidth":100,
  "type":"tileset"
 }
-},{}],19:[function(require,module,exports){
-(function (global){
-
+},{}],20:[function(require,module,exports){
 const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport');
-
-module.exports.add_items = () => {
-  const boxFull = PIXI.Sprite.fromFrame('chest_full');
-  boxFull.position.set(-1200, 0);
-  boxFull.width *= 2;
-  boxFull.height *= 2;
-  boxFull.rotation = 0.06;
-  boxFull.interactive = true;
-  boxFull.buttonMode = true;
-  boxFull.id = 35;
-  boxFull.on('pointerdown', () => {
-    boxFull.texture = PIXI.Sprite.fromFrame('chest_empty');
-
-    global.socket.emit('get_container_contents', boxFull.id);
-  });
-
-  const movableBox = PIXI.Sprite.fromFrame('chest_full');
-  movableBox.position.set(-600, 400);
-  movableBox.width *= 2;
-  movableBox.height *= 2;
-  movableBox.rotation = 0.06;
-  movableBox.interactive = true;
-  movableBox.buttonMode = true;
-  movableBox.weight = 10;
-
-  global.movableItems.addChild(movableBox);
-  global.collisionItems.addChild(boxFull);
-  viewport.addChild(global.collisionItems);
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport":13,"pixi.js":262}],20:[function(require,module,exports){
-
-const PIXI = require('pixi.js');
-const { Player } = require('../../player/player.js');
-const enemy = require('../../enemies/enemy.js');
-const items = require('./debug_items.js');
-const filterUtil = require('../../visual_effects/filter_utils.js');
+const { Player } = require('../../character/player.js');
+const enemy = require('../../character/enemy.js');
 const dialogUtil = require('../../dialog/dialog_util.js');
-const networkPlayers = require('../../network/network_players.js');
 const rain = require('../../weather/rain.js');
-const cutsceneIntro = require('../../cutscene/cutscene_intro.js');
-const rat = require('../../animals/rat.js');
+const rat = require('../../character/rat.js');
 const cutsceneUtils = require('../../cutscene/cutscene_utils.js');
-const generateObject = require('../../construction/generate_object.js');
 const bedroomUtil = require('../bedroom/bedroom_util.js');
 const parkUtil = require('../park/park_util.js');
-const pathfinding_util = require('../../pathfinding/pathfind_util.js');
+const pathfinding_util = require('../../engine/pathfind.js');
 const level_util = require('../level_utils.js');
 const viewport = require('../../engine/viewport');
 
-// global.collisionItems = new PIXI.Container();
-
 module.exports.add_floor = () => {
-
-  // const collisionWall = PIXI.Sprite.fromFrame('black_wall');
-  // collisionWall.position.set(100, 600);
 
   const door = PIXI.Sprite.fromFrame('black_wall');
   door.width /= 2;
   door.position.set(-100, -200);
-
-  const character = new Player();
-  character.set_position(1000,1000);
-  character.mouse_move();
-  character.mouse_down();
-  character.mouse_up();
-  character.add_controls();
-  character.follow_player();
 
   level_util.load_bedroom_map()
 
@@ -6898,15 +6973,10 @@ module.exports.add_floor = () => {
     });
   };
 
-  // global.collisionItems.zIndex = 1;
-  // global.collisionItems.addChild( /* slantedWall */ collisionWall);
   viewport.updateLayersOrder();
-
-  items.add_items();
-  
 };
 
-},{"../../animals/rat.js":1,"../../construction/generate_object.js":4,"../../cutscene/cutscene_intro.js":5,"../../cutscene/cutscene_utils.js":6,"../../dialog/dialog_util.js":7,"../../enemies/enemy.js":8,"../../engine/viewport":13,"../../network/network_players.js":28,"../../pathfinding/pathfind_util.js":30,"../../player/player.js":31,"../../visual_effects/filter_utils.js":35,"../../weather/rain.js":38,"../bedroom/bedroom_util.js":16,"../level_utils.js":25,"../park/park_util.js":27,"./debug_items.js":19,"pixi.js":262}],21:[function(require,module,exports){
+},{"../../character/enemy.js":2,"../../character/player.js":4,"../../character/rat.js":5,"../../cutscene/cutscene_utils.js":6,"../../dialog/dialog_util.js":7,"../../engine/pathfind.js":9,"../../engine/viewport":11,"../../weather/rain.js":32,"../bedroom/bedroom_util.js":17,"../level_utils.js":25,"../park/park_util.js":27,"pixi.js":195}],21:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -7745,158 +7815,164 @@ module.exports.load = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../cutscene/cutscene_utils":6,"../level_utils.js":25,"../park/park_util.js":27,"./foyer_data.json":23,"pixi.js":262}],25:[function(require,module,exports){
-(function (global){
+},{"../../cutscene/cutscene_utils":6,"../level_utils.js":25,"../park/park_util.js":27,"./foyer_data.json":23,"pixi.js":195}],25:[function(require,module,exports){
+'use strict';
+
 const PIXI = require('pixi.js');
-const { create_level_grid, move_sprite_on_route, move_sprite_on_route_straight } = require('../pathfinding/pathfind_util.js');
-const { Enemy } = require('../enemies/enemy.js');
 const viewport = require('../engine/viewport');
-const { Rat } = require('../animals/rat');
 
-module.exports.clearViewport = () => {
-  for (let i = global.viewport.children.length - 1; i >= 0; i -= 1) {
-    console.log(global.viewport.children[i].name)
-    if (global.viewport.children[i].name === 'player') continue;
-
-    global.viewport.removeChild(global.viewport.children[i]);
-  }
-};
-
-module.exports.clearCollision = () => {
-  for (let i = global.collisionItems.children.length - 1; i >= 0; i -= 1) {
-    global.collisionItems.removeChild(global.collisionItems.children[i]);
-  }
-};
-
-module.exports.clearEventTriggers = () => {
-  for (let i = global.eventTriggers.children.length - 1; i >= 0; i -= 1) {
-    global.eventTriggers.removeChild(global.eventTriggers.children[i]);
-  }
-};
-
-// hit area that is transparent, kept a little tint for testing
-module.exports.hit_areas = (wallArray, x, y) => {
-  wallArray.forEach((wallData) => {
-    const wall = PIXI.Sprite.fromFrame('black_dot');
-
-    wall.position.set(wallData.x, wallData.y);
-    wall.width = wallData.width;
-    wall.height = wallData.height;
-    wall.alpha = 0.01;
-
-    this.collision_items.addChild(wall);
-  });
-};
-
-// Load event pads
-module.exports.event_pad = (padArray, callback) => {
-  padArray.forEach((padDetails) => {
-    const pad = PIXI.Sprite.fromFrame('black_dot');
-
-    pad.position.set(padDetails.x, padDetails.y);
-    pad.width = padDetails.width;
-    pad.height = padDetails.height;
-    pad.alpha = padDetails.alpha;
-    pad.action = callback;
-    pad.fired = false;
-    pad.alpha = 0.5;
-    global.eventTriggers.addChild(pad);
-  });
-  global.viewport.addChild(global.eventTriggers);
-};
-
-const easystarjs = require('easystarjs');
-global.easystar = new easystarjs.js();
+const {
+  create_level_grid,
+  move_sprite_on_route_straight,
+} = require('../engine/pathfind.js');
+const { Enemy } = require('../character/enemy.js');
+const { Friend } = require('../character/friend.js');
+const { Rat } = require('../character/rat');
+const { Player } = require('../character/player.js');
+const { Door } = require('../object_management/hard_furnishing/door.js');
+const { Chest } = require('../object_management/items/chest');
 
 class Level {
-  constructor(level_data, level_tiles) {
-    this.level_data = level_data;
-    this.level_tiles = level_tiles;
+  constructor() {
     this.segments = [];
     this.collision_items = new PIXI.Container();
-    this.collision_items.zIndex = -2;
-    this.collision_items.name = 'collision_items'
+    this.collision_items.zIndex = -10;
+    this.collision_items.name = 'collision_items';
 
     viewport.addChild(this.collision_items);
   }
 
-  add_to_segments(item) {
-
-    this.segments.push(
-        {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-        {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-        {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}},
-    )
+  create_grid(level_tiles) {
+    this.grid = create_level_grid(level_tiles);
   }
 
-  set_background_image(image, x, y) {
-    
+  add_to_segments(item) {
+    this.segments.push(
+      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
+      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
+      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
+      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
+    );
+  }
+
+  set_background_image(image, tile_data) {
     this.background_image = image;
-    this.background_image.position.set(x, y);
-    
-    // why is this is tiles data? rename?
-    this.background_image.width = this.level_tiles.imagewidth;
-    this.background_image.height = this.level_tiles.imageheight;  
-    
+    this.background_image.position.set(0, 0);
+    this.background_image.width = tile_data.imagewidth;
+    this.background_image.height = tile_data.imageheight;
+
     this.add_to_segments(this.background_image);
+
     viewport.addChild(this.background_image);
   }
 
-  render_walls(options) {
-    const wall_array = this.level_data.layers[1];
-  
+  render_walls(wall_array) {
     wall_array.objects.forEach((wall_data) => {
       const wall = PIXI.Sprite.fromFrame('black_dot');
-  
-      wall.position.set(wall_data.x + options.wall_offset.x, wall_data.y + options.wall_offset.y);
+
+      wall.position.set(wall_data.x + wall_array.offsetx, wall_data.y + wall_array.offsety- 100);
       wall.width = wall_data.width;
       wall.height = wall_data.height;
-  
-      this.add_to_segments(wall)
-  
+      wall.anchor.set(0);
+      wall.zIndex = -20;
+      this.add_to_segments(wall);
+
       this.collision_items.addChild(wall);
     });
   }
 
-  create_grid() {
-    this.grid = create_level_grid(this.level_tiles);
+  render_items(item_array) {
+    item_array.x = item_array.offsetx;
+    item_array.y = item_array.offsety - 100;
+
+    const chest = new Chest(item_array);
+    chest.add_state_handling();
   }
 
-  create_enemy(x, y) {
+  render_doors(door_array) {
+    door_array.objects.forEach((door_data) => {
+      const door = new Door(door_data);
+      door.add_state_handling();
+      door.lock().unlock().open();
+    });
+  }
 
+  create_player(location){
+    const character = new Player();
+
+    character.set_position(location.x,location.y);
+    character.add_aiming_line();
+    character.add_aiming_cone();
+    character.mouse_move();
+    character.mouse_down();
+    character.mouse_up();
+    character.add_controls();
+    character.follow_player();
+    character.create_light();
+    //character.add_raycasting(this.segments)
+  }
+
+  create_friend(location, script) {
+    const friend = new Friend();
+    friend.set_position(location.x,location.y);
+    friend.add_dialog_handling();
+    friend.add_script(script);
+    friend.add_state_handling();
+  }
+
+  create_enemy(location, path) {
     const enemy = new Enemy();
-    enemy.set_position(x, y);
+
+    enemy.set_position(location.x, location.y);
     enemy.create_direction_line();
-    enemy.add_vitals();
     enemy.add_sight_line();
     enemy.add_influence_box();
     enemy.create_light();
     enemy.add_raycasting(this.segments);
-    enemy.add_to_container();
-    
-    const formatted_path_data = format_path_data(this.level_data.layers[2]);
+
+    const formatted_path_data = format_path_data(path);
     enemy.create_patrol_path(formatted_path_data);
   }
 
-  create_rat(x, y) {
-
+  create_rat(location, path) {
     const rat = new Rat();
-    rat.set_position(x, y);
-    
-    const formatted_path_data = format_path_data(this.level_data.layers[3]);
+    rat.set_position(location.x, location.y);
 
-    rat.create_patrol_path(formatted_path_data)
-
-    console.log(rat)
-
-    move_sprite_on_route_straight(rat.sprite).then(res => console.log(res));
+    const formatted_path_data = format_path_data(path);
+    rat.create_patrol_path(formatted_path_data);
+    move_sprite_on_route_straight(rat.sprite);
   }
+}
 
+class Bedroom extends Level {
+  constructor(data, image) {
+    super();
+
+    const {
+      grid_data,
+      wall_data,
+      door_data,
+      item_data,
+      player_data,
+      enemy_data,
+      rat_data,
+      friend_data,
+    } = data;
+
+    this.create_grid(grid_data);
+    this.set_background_image(image, grid_data);
+    this.render_walls(wall_data);
+    this.render_doors(door_data);
+    this.render_items(item_data.layers[0]);
+    this.create_player(player_data.position);
+    this.create_enemy(enemy_data.position, enemy_data.path_data);
+    this.create_rat(rat_data.position, rat_data.path_data);
+    this.create_friend(friend_data.position, friend_data.script);
+  }
 }
 
 module.exports.load_debug_map_image = () => {
-  
+
   const debug_room_tiled_data = require('./debug/playground/map2_output.json');
   const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
@@ -7907,26 +7983,24 @@ module.exports.load_debug_map_image = () => {
     wall_offset: {
       x: 0,
       y: 0,
-    }
-  }
+    },
+  };
 
-  debug_room.set_background_image(debug_room_image, 0, 0);
+  debug_room.set_background_image(debug_room_image);
   debug_room.render_walls(options);
   debug_room.create_grid();
   // debug_room.create_enemies();
-}
+};
 
 function format_path_data(path_data){
-
   const formatted_path_array = [];
 
-  //this is bad, feel bad
   for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
     const element = path_data.objects[0].polyline[i];
     const path_data2 = {
       x: element.x + path_data.objects[0].x,
-      y: element.y + path_data.objects[0].y,
-    } 
+      y: element.y + path_data.objects[0].y - 100,
+    };
     formatted_path_array.push(path_data2);
   }
 
@@ -7934,29 +8008,51 @@ function format_path_data(path_data){
 }
 
 module.exports.load_bedroom_map = () => {
-  
-  const bedroom_room_tiled_data = require('./bedroom/level_data/bedroom_level_data.json');
-  const bedroom_room_tiled_tiles = require('./bedroom/level_data/flat_floor_data.json');
-  const bedroom_room_image = PIXI.Sprite.fromFrame('flat_floor2');
+  const level_data = require('./bedroom/level_data/bedroom_level_data.json');
+  const tiles_data = require('./bedroom/level_data/flat_floor_data.json');
+  const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
+  const friend_script = [{type:'Text',id:'7a69da96-639e-4292-a26f-59a47b934884',actor:'trader',name:'Welcome to a dialog option, want to \ngo to the next line?\n \n Well here we go, welcome to the end \n of the world',next:'274625c9-0d31-49a3-87dc-129a721ee698'},{type:'Branch',id:'274625c9-0d31-49a3-87dc-129a721ee698',variable:'first choice ',branches:{yes:'e2e31f77-0614-43b4-9e4e-b996379ea43d',no:'4f2717a2-11de-4f42-a358-907e8e3eb656'}},{type:'Text',id:'ee68a265-ba7e-4284-856d-43d2b1c3594d',actor:'trader',name:'final node after the yes choice ',next:null},{type:'Text',id:'e2e31f77-0614-43b4-9e4e-b996379ea43d',actor:'trader',name:'this is the first yes choice',next:'ee68a265-ba7e-4284-856d-43d2b1c3594d'},{type:'Text',id:'4f2717a2-11de-4f42-a358-907e8e3eb656',actor:'trader',name:'this is the first no choice',next:null}];
 
-  const bedroom = new Level(bedroom_room_tiled_data, bedroom_room_tiled_tiles);
+  const bedroom_schema = {
+    player_data: {
+      position: {
+        x: 1000,
+        y: 1000,
+      },
+    },
+    enemy_data: {
+      position: {
+        x: 1800,
+        y: 1000,
+      },
+      path_data: level_data.layers[0].layers[2],
+    },
+    friend_data: {
+      position: {
+        x: 600,
+        y: 1300,
+      },
+      script: friend_script,
+    },
+    rat_data: {
+      position: {
+        x: 2300,
+        y: 1800,
+      },
+      path_data: level_data.layers[0].layers[3],
+    },
+    wall_data: level_data.layers[0].layers[1],
+    door_data: level_data.layers[0].layers[4],
+    item_data: level_data.layers[0].layers[5],
+    grid_data: tiles_data,
+  };
 
-  const options = {
-    wall_offset: {
-      x: 320,
-      y: 260,
-    }
-  }
+  new Bedroom(bedroom_schema, bedroom_image);
+};
 
-  bedroom.set_background_image(bedroom_room_image, 140, -20);
-  bedroom.render_walls(options);
-  bedroom.create_grid();
-  bedroom.create_enemy(1800, 1000);
-  bedroom.create_rat(2300, 1800)
-}
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../animals/rat":1,"../enemies/enemy.js":8,"../engine/viewport":13,"../pathfinding/pathfind_util.js":30,"./bedroom/level_data/bedroom_level_data.json":17,"./bedroom/level_data/flat_floor_data.json":18,"./debug/playground/map2_output.json":21,"./debug/playground/map2_tiles.json":22,"easystarjs":81,"pixi.js":262}],26:[function(require,module,exports){
+
+},{"../character/enemy.js":2,"../character/friend.js":3,"../character/player.js":4,"../character/rat":5,"../engine/pathfind.js":9,"../engine/viewport":11,"../object_management/hard_furnishing/door.js":28,"../object_management/items/chest":29,"./bedroom/level_data/bedroom_level_data.json":18,"./bedroom/level_data/flat_floor_data.json":19,"./debug/playground/map2_output.json":21,"./debug/playground/map2_tiles.json":22,"pixi.js":195}],26:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
@@ -8069,1186 +8165,171 @@ module.exports.importEnemyPathData = () => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../level_utils.js":25,"./park_data.json":26,"pixi.js":262}],28:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const socket = require('../engine/socket');
-const viewport = require('../engine/viewport');
+},{"../level_utils.js":25,"./park_data.json":26,"pixi.js":195}],28:[function(require,module,exports){
+'use strict';
 
-module.exports.load_network_sprite = () => {
-  const bunny = PIXI.Sprite.fromFrame('bunny');
+const PIXI              = require('pixi.js');
+const viewport          = require('../../engine/viewport');
+const { createjs }      = require('@createjs/tweenjs');
 
-  socket.emit('get_network_sprites', ({ x: global.Player.sprite.x, y: global.Player.sprite.y }));
+const door_container = new PIXI.Container();
+door_container.name     = 'door_container';
+door_container.zIndex   = -2;
+viewport.addChild(door_container);
 
-  socket.on('server_sprite', (serverSprite) => {
-    bunny.x = serverSprite.x;
-    bunny.y = serverSprite.y;
-  });
+class Door {
+  constructor(door_data) {
+    this.sprite = PIXI.Sprite.fromFrame('black_dot');
+    this.sprite.position.set(door_data.x, door_data.y);
+    this.sprite.width = door_data.width;
+    this.sprite.height = door_data.height;
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.name = 'door';
+    this.state = 'closed';
+    door_container.addChild(this.sprite);
 
-  viewport.addChild(bunny);
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/socket":11,"../engine/viewport":13,"pixi.js":262}],29:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
-const { pathfind_from_enemy_to_player } = require('../pathfinding/pathfind_util.js')
-const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow/bow_helper.js');
-const { createjs } = require('@createjs/tweenjs');
-const ticker = require('../engine/ticker');
-const viewport = require('../engine/viewport');
-
-function get_intersection(ray, segment){
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
-
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
-
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
   }
 
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
+  add_state_handling() {
+    this.sprite.click = () => {
 
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1
-  };
-}
-
-class Enemy {
-  constructor() {
-    this.container = new PIXI.Container();
-    this.container.name = 'enemy_container';
-    
-    viewport.addChild(this.container);
-    const enemy_frames = this.create_knife_enemy_frames();
-
-    this.sprite = new PIXI.extras.AnimatedSprite(enemy_frames);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
-    this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
-
-    this.sprite.speak = (text) => {
-      const render_text = new PIXI.Text(text);
-      render_text.x = this.sprite.x - 100;
-      render_text.y = this.sprite.y - 80;
-
-      //viewport.addChild(render_text);
-
-      //function fadeOut() {
-      //  if (render_text.alpha > 0) {
-      //    render_text.alpha -= 0.01;
-      //  } else {
-      //    ticker.remove(fadeOut);
-      //    viewport.removeChild(render_text);
-      //  }
-      //}
-
-      //ticker.add(fadeOut);
-    }
-    this.player_seen = false;
-    this.container.addChild(this.sprite)
-  }
-
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
-
-  create_knife_enemy_frames() {
-    const enemy_frames = [];
-
-    for (let i = 0; i < 19; i++) {
-      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-    }
-
-    return enemy_frames;
-  }
-
-  add_vitals() {
-    this.sprite.vitals = {
-      health: 100,
-      status: 'alive',
+      switch(this.state) {
+        case 'transition':
+          return;
+        case 'locked':
+          return;
+        case 'closed':
+          this.open();
+          break;
+        case 'open':
+          this.close();
+          break;
+      }
+      this.state = 'transition';
     };
   }
 
-  add_sight_line() {
-    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
-
-    sight_line_box.name = 'sight_line';
-    sight_line_box.width = 3000;
-    sight_line_box.height = 600;
-    sight_line_box.anchor.y = 0.5;
-    sight_line_box.alpha = 0.2;
-
-    if (!global.is_development) {
-      sight_line_box.alpha = 0;
-    }
-    this.sprite.addChild(sight_line_box);
+  lock() {
+    this.state = 'locked';
+    return this;
   }
 
-  add_influence_box() {
-    const influence_box = PIXI.Sprite.fromFrame('black_dot');
-
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
-    influence_box.height = 2000;
-    influence_box.alpha = 0.4;
-    influence_box.anchor.set(0.5);
-
-    if(!global.is_development) {
-      influence_box.alpha = 0;
-    }
-    this.sprite.addChild(influence_box);
+  unlock() {
+    this.state = 'closed';
+    return this;
   }
 
-  stop_and_shoot_player(player_sprite) {
-    this.path.paused = true;
-    let shot = false;
-
-    if(!shot) {
-      arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite)
-      shot = true;
-    }
-  }
-
-  create_patrol_path(path_data) {
-    this.sprite.patrol_path = path_data;
-  }
-
-  create_direction_line() {
-    const direction_line = PIXI.Sprite.fromFrame('black_dot');
-
-    direction_line.width = 200;
-    direction_line.height = 15;
-    direction_line.anchor.x =0
-    direction_line.anchor.y =0.5
-
-    if(!global.is_development) {
-      direction_line.alpha = 0;
-    }
-
-    this.sprite.addChild(direction_line);
-  }
-
-  create_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.name = 'light';
-
-    light.anchor.set(0.5);
-    light.width   = 4000;
-    light.height  = 4000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-
-  add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics()
-
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast
-      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-    }
-
-    ticker.add(() => {
-      const unique_angles = [];
-      let intersects = [];
-
-      raycast.clear()
-      raycast.beginFill(0xfffffff, 0.05);
-
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
-
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
-        };
-
-        let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        }
-        if(!closest_intersect) continue;
-
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      }
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-
-      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
-      }
-
-      const player_sprite = viewport.getChildByName('player')
-      const player_position = player_sprite.getGlobalPosition() 
-
-      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_seeing_player(player_sprite);
-      }
-
-      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_hearing_player(player_sprite);
-      }
-    });
-    viewport.addChild(raycast)
-  }
-
-  action_on_seeing_player(player_sprite) {
-    // first time you're seen 
-    if(!this.player_seen) {
-      this.speak('now, calm down, dont move');
-      this.sprite.stop()
-      createjs.Tween.removeTweens(this.sprite)
-    }
-
-    this.player_seen = true;
-
-    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
-  }
-
-  action_on_hearing_player(player_sprite) {
-
-    pathfind_from_enemy_to_player(this.sprite, player_sprite)
-
-  }
-
-
-  kill() {
-    this.sprite.stop();
-
+  open()  {
     const tween = createjs.Tween.get(this.sprite);
-    tween.pause();
-
-    this.vitals.status = 'dead';
-    put_blood_splatter_under_sprite(this.sprite);
-  }
-
-}
-
-module.exports = {
-  Enemy,
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/ticker":12,"../engine/viewport":13,"../pathfinding/pathfind_util.js":30,"../utils/sprite_helper.js":34,"../weapons/bow/bow_helper.js":37,"@createjs/tweenjs":39,"pixi.js":262}],30:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const { createjs } = require('@createjs/tweenjs');
-const viewport = require('../engine/viewport');
-const easystarjs = require('easystarjs');
-
-const grid_container = new PIXI.Container();
-grid_container.name = 'grid_container';
-
-const sprite_grid = [];
-const binary_grid_map = [];
-
-const easystar = new easystarjs.js();
-
-function create_level_grid(tiles_object) {
-  const grid_dimension = 100;
-
-  let line_grid = [];
-  let binary_line = [];
-
-  let current_x = 0;
-  let current_y = 0;
-
-  let current_grid_x = 0;
-  let current_grid_y = 0;
-
-  for (let i = 1; i < tiles_object.tilecount; i++) {
-    const grid_cell = PIXI.Sprite.fromFrame('black_dot');
-    grid_cell.cell_position = {
-      x: current_grid_x,
-      y: current_grid_y,
-    };
-
-    current_x += grid_dimension;
-    if(i % tiles_object.columns === 0){
-      sprite_grid.push(line_grid);
-      binary_grid_map.push(binary_line);
-
-      line_grid = [];
-      binary_line = [];
-
-      current_y += grid_dimension;
-      current_x = 0;
-      current_grid_x = 0;
-      current_grid_y += 1;
-    }
-    current_grid_x += 1;
-
-    grid_cell.width   = grid_dimension;
-    grid_cell.height  = grid_dimension;
-    grid_cell.x       = current_x;
-    grid_cell.y       = current_y;
-    grid_cell.middle  = {
-      x: grid_cell.x + grid_dimension/2,
-      y: grid_cell.y + grid_dimension/2,
-    };
-
-    if(tiles_object.tileproperties.hasOwnProperty(i)){
-      // is a wall
-      grid_cell.alpha = 0.5;
-      binary_line.push(1);
-    } else {
-      // is walkable ground
-      grid_cell.alpha = 0;
-      binary_line.push(0);
-    }
-
-    line_grid.push(grid_cell);
-
-    global.line_grid = line_grid;
-
-    grid_container.addChild(grid_cell);
-  }
-
-  //TODO remove into an easystar function
-  viewport.addChild(grid_container);
-  easystar.setGrid(binary_grid_map);
-  easystar.setAcceptableTiles([0]);
-  easystar.setIterationsPerCalculation(1000);
-}
-
-function get_sprite_position_on_grid(sprite, container) {
-  if(!container) throw 'gimme a container';
-
-  const grid_containing_sprite = container.find(grid => (
-    grid.containsPoint(sprite.getGlobalPosition())
-  ));
-
-  if(grid_containing_sprite){
-    return grid_containing_sprite;
-  }
-}
-
-function highlight_grid_cell_from_path(path) {
-  path.forEach(grid => {
-    sprite_grid[grid.y][grid.x].alpha = 0.5;
-  });
-}
-
-function create_path_from_two_grid_points(sprite_one, sprite_two) {
-  return new Promise((resolve, reject) => {
-
-    easystar.findPath(sprite_one.x, sprite_one.y, sprite_two.x, sprite_two.y, (path) => {
-
-      if(path === null) {
-        reject(new Error('no path found'));
-      } else {
-        resolve(path);
-      }
-    });
-    // has to be here
-    easystar.calculate();
-  });
-}
-
-const distance_between_two_points = (point_one, point_two) => {
-  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y)
-};
-
-const generate_wait_time_with_threshold = (max, threshold) => {
-
-  const random_number = Math.floor(Math.random() * max);
-
-  // sometimes skip a wait at a point for the shits and giggles
-  if(threshold && random_number < threshold) {
-    return 0;
-  }
-
-  return random_number;
-};
-
-// TODO abstract this maths shiattttt
-const generate_wait_time_with_minimum = (max, min) => {
-  return Math.floor(Math.random() * max) + min;
-};
-
-function create_relative_walk_time(point_one, point_two, velocity = 15) {
-  const distance = distance_between_two_points(point_one, point_two);
-
-  //produce a little randomness in speed between points
-  const speed = velocity + Math.random();
-
-  const time_for_tween = distance * speed;
-
-  const rounded_time = Math.round(time_for_tween);
-
-  return rounded_time;
-}
-
-function move_sprite_on_path(sprite, path_array) {
-  return new Promise((resolve, reject) => {
-    
-    const tween = createjs.Tween.get(sprite);
-
-    const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
-    //TODO
-    for (let i = 0; i < path_array.length; i++) {
-      if(path_array[i-1] === undefined) continue;
-      
-      let angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
-
-      tween.to({
-        rotation: angle_to_face,
-      }).to({
-        x:path_array[i].middle.x,
-        y:path_array[i].middle.y,
-        rotation: angle_to_face,
-      }, walk_time/2);
-    }
-
-    tween.call(()=>resolve());
-  });
-}
-
-function move_enemy_to_point(sprite, point) {
-  return new Promise((resolve, reject) => {
-
-    const tween = createjs.Tween.get(sprite);
-    const walk_time = create_relative_walk_time(sprite, point.middle);
-    const angle_to_face = Math.atan2(point.middle.y - sprite.y, point.middle.x -sprite.x);
 
     tween.to({
-      rotation: Math.abs(angle_to_face),
-    })
-    .to({
-      x: point.middle.x,
-      y: point.middle.y,
-    }, walk_time, createjs.Ease.sineInOut);
-
-    tween.call(()=>resolve());
-  });
-}
-
-let boolean_time = true;
-
-function path_enemy_on_points(enemy_sprite, point_array, options) {
-  if( boolean_time === false ) return;
-
-  boolean_time = false;
-
-  if(global.is_development) {
-    highlight_grid_cell_from_path(point_array);
+      rotation: this.sprite.rotation,
+    }).to({
+      rotation: this.sprite.rotation +2,
+    }, 1000).call(()=>{
+      this.state = 'open';
+    });
+    return this;
   }
 
-  const path_array = point_array.map(grid => (
-    sprite_grid[grid.y][grid.x]
-  ));
+  close() {
+    const tween = createjs.Tween.get(this.sprite);
 
-  // move from the current position to the start of the path
-  move_enemy_to_point(enemy_sprite, path_array[0])
-    .then(() => move_sprite_on_path(enemy_sprite, path_array))
-    .then(() => wait_sprite(enemy_sprite, 500))
-    .then(() => look_around_sprite(enemy_sprite, 1000, 1))
-    .then(() => move_sprite_on_path(enemy_sprite, path_array.reverse()))
-    .then(() => move_sprite_on_route(enemy_sprite))
-
-}
-
-function look_around_sprite(sprite, time, angle_to_rotate) {
-
-  return new Promise(resolve => {
-    const tween = createjs.Tween.get(sprite);
-    tween.wait(500)
-      .to({
-        rotation: sprite.rotation + angle_to_rotate,
-      },time/3)
-      .to({
-        rotation: sprite.rotation - angle_to_rotate,
-      },time/2)
-      .to({
-        rotation: sprite.rotation + angle_to_rotate/2,
-      },time/3);
-    tween.wait(500);
-
-    tween.call(()=>{
-      resolve();
+    tween.to({
+      rotation: this.sprite.rotation,
+    }).to({
+      rotation: this.sprite.rotation -2,
+    }, 1000).call(()=>{
+      this.state = 'closed';
     });
-  });
-}
-
-function wait_sprite(sprite, time) {
-  return new Promise(resolve => {
-    const tween = createjs.Tween.get(sprite);
-    tween.wait(time);
-    tween.call(()=>{
-      resolve();
-    });
-  });
-}
-
-function pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
-  const grid = grid_container.children;
-
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid);
-
-  if(enemy_point && player_point){
-    create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-      .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
+    return this;
   }
 }
-
-function move_sprite_on_route_straight(sprite) {
-  return new Promise((resolve, reject) => {
-
-    const tween = createjs.Tween.get(sprite);
-    sprite.position.set(sprite.patrol_path[0].x,sprite.patrol_path[0].y);
-    
-    for (let i = 1; i < sprite.patrol_path.length; i++) {
-      const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 5);
-      const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
-  
-      tween.to({
-        x:sprite.patrol_path[i].x,
-        y:sprite.patrol_path[i].y,
-        rotation: angle_to_face,
-      }, walk_time)
-    }
-
-    tween.call(()=>resolve());
-  })
-};
-
-function move_sprite_on_route(sprite) {
-  return new Promise((resolve, reject) => {
-
-    const tween = createjs.Tween.get(sprite);
-
-    for (let i = 1; i < sprite.patrol_path.length; i++) {
-  
-      const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 10);
-      const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
-      const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-  
-      const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
-  
-      tween.to({
-        x:sprite.patrol_path[i].x,
-        y:sprite.patrol_path[i].y,
-      }, walk_time, createjs.Ease.sineInOut)
-      .wait(random_wait_time_with_threshold)
-      .to({
-        rotation: angle_to_face,
-      }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-      .wait(random_wait_time_with_threshold);
-    }
-
-    tween.call(()=>resolve());
-  })
-};
-
-//testing
-function run_pathfinding_test() {
-
-  const enemy_sprite = viewport.children[7].children[0];
-  const player_sprite = global.Player.sprite;
-
-  const grid = grid_container.children;
-  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
-  const player_point = get_sprite_position_on_grid(player_sprite, grid);
-
-  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-}
-
-// function path_from_enemy_to_player(enemy, player) {
-
-//   const grid = grid_container.children;
-
-//   const enemy_point = get_sprite_position_on_grid(enemy, grid);
-//   const player_point = get_sprite_position_on_grid(player, grid);
-
-//   create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-//     .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-// }
-
-
-// setInterval(()=>{
-//   // highlight_start_grid()
-
-//   run_pathfinding_test();
-// },2000);
-
 
 module.exports = {
-  create_level_grid,
-  pathfind_from_enemy_to_player,
-  move_sprite_on_path,
-  move_sprite_on_route,
-  move_sprite_on_route_straight,
+  Door,
 };
 
-// function continue_sprite_on_default_path(sprite) {
-//   const tween = sprite.path;
+},{"../../engine/viewport":11,"@createjs/tweenjs":33,"pixi.js":195}],29:[function(require,module,exports){
+'use strict';
 
-//   for (let i = 0; i < sprite.path.length; i++) {
-//     // TODO
-//     const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
+const PIXI = require('pixi.js');
+const viewport = require('../../engine/viewport.js');
+const { GUI_Container } = require('../../gui/container');
 
-//     const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
+const container = new PIXI.Container();
+container.name = 'item_container';
+container.zIndex = -6;
+viewport.addChild(container);
 
-//     const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-
-//     let angle_iterator = i + 1;
-
-//     // TODO: you're a monster
-//     if(sprite.path[i+1] === undefined) {
-//       angle_iterator = 0;
-//     }
-
-//     //TODO stop  spinning 360, minus it from the factorial
-//     const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
-
-//     tween.to({
-//       x:sprite.path[i].x +50,
-//       y:sprite.path[i].y +50,
-//     }, walk_time, createjs.Ease.sineInOut)
-//       .wait(random_wait_time_with_threshold)
-//       .to({
-//         rotation: angle_to_face,
-//       }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-//       .wait(random_wait_time_with_threshold);
-//   }
-//   tween.call(()=>{
-//     console.log('end of tween');
-//   });
-
-// }
-
-
-
-// function highlight_start_grid () {
-
-//   const grid = grid_container.children;
-//   const enemy_sprite = global.viewport.children[7].children[0];
-//   const player_sprite = global.Player.sprite;
-
-//   const grid_to_highlight_enemy = get_sprite_position_on_grid(enemy_sprite, grid)
-
-//   const grid_to_highlight_player = get_sprite_position_on_grid(player_sprite, grid)
-
-//   // console.log(grid_to_highlight)
-
-//   grid_to_highlight_enemy.alpha =1;
-//   grid_to_highlight_player.alpha =1;
-
-//   create_path_from_two_grid_points(grid_to_highlight_enemy.cell_position, grid_to_highlight_player.cell_position)
-//   .then(path => {
-//     console.log(path);
-//     highlight_grid_cell_from_path(path)
-//   })
-
-// }
-
-
-// // TODO one time the tween
-// let boolean_time = true;
-
-// function create_tween_on_point_array(sprite, point_array) {
-//   if( boolean_time === false ) return;
-
-//   sprite.path.paused = true;
-
-//   boolean_time = false;
-
-//   if(global.is_development) {
-//     highlight_grid_cell_from_path(point_array);
-//   }
-
-//   const path_array = point_array.map(grid => (
-//     sprite_grid[grid.y][grid.x]
-//   ));
-
-//   const tween_to_player = move_sprite_on_path_with_delay(sprite, path_array);
-
-//   tween_to_player.call(() => {
-//     move_sprite_on_path_with_delay(sprite, path_array.reverse());
-//   })
-// }
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/viewport":13,"@createjs/tweenjs":39,"easystarjs":81,"pixi.js":262}],31:[function(require,module,exports){
-(function (global){
-const PIXI              = require('pixi.js');
-const sprite_helper     = require('../utils/sprite_helper.js');
-const bow_helper        = require('../weapons/bow/bow_helper.js');
-const document_helper   = require('../utils/document_helper.js');
-const ticker            = require('../engine/ticker');
-const viewport          = require('../engine/viewport.js');
-
-const get_mouse_position = (event, viewport) => ({
-  x: event.data.global.x - viewport.screenWidth / 2,
-  y: event.data.global.y - viewport.screenHeight / 2,
-})
-
-const get_mouse_position_from_player = (event, sprite, viewport) => {
-  const mouse_position = get_mouse_position(event, viewport);
-
-  mouse_position.x += sprite.x
-  mouse_position.y += sprite.y;
-
-  return mouse_position;
-}
-
-function get_intersection(ray, segment){
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
-
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
-
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag==s_dx/s_mag && r_dy/r_mag==s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
-  }
-
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
-    param: T1
-  };
-}
-
-class Player {
-  constructor() {
-    this.animations = {
-      bow: {
-        idle:   this.create_bow_idle_frames(),
-        walk:   this.create_bow_walk_frames(),
-        ready:  this.create_bow_ready_frames(),
+class Chest {
+  constructor(item_data) {
+    this.image_cache = {
+      state: {
+        full:   PIXI.Texture.fromFrame('chest_full'),
+        empty:  PIXI.Texture.fromFrame('chest_empty'),
       },
     };
-
-    this.sprite = new PIXI.extras.AnimatedSprite(this.animations.bow.idle);
+    this.sprite = new PIXI.Sprite(this.image_cache.state.full);
     this.sprite.anchor.set(0.5);
-    this.sprite.width /= 2;
-    this.sprite.height /= 2;
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
-    this.sprite.zIndex = -1;
-    this.sprite.name = 'player';
-    
-    this.weapon = 'bow';
-    this.power = 1000;
-    this.allow_shoot = true;
-    this.movement_speed = 15;
+    this.sprite.zIndex = -5;
+    this.sprite.name = 'chest';
+    this.sprite.position.set(item_data.x, item_data.y);
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.state = 'closed';
 
-    viewport.addChild(this.sprite);
+    container.addChild(this.sprite);
   }
 
-  follow_player() {
-    viewport.follow(this.sprite);
+  add_state_handling() {
+    this.sprite.click = () => {
+      switch(this.state) {
+        case 'closed':
+          this.open_inventory_box();
+          break;
+        case 'full':
+          this.empty();
+          break;
+      }
+    };
   }
 
-  create_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    
-    light.name  = 'light';
-    light.anchor.set(0.5);
-    light.width   = 2000;
-    light.height  = 2000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-
-  add_raycasting(level_segments) {
-    const raycast = new PIXI.Graphics();
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast
+  open_inventory_box() {
+    if(this.state === 'open') {
+      return;
     }
-    
-    ticker.add(() => {
-      const unique_angles = [];
-      let intersects = [];
-      
-      raycast.clear()
-      raycast.beginFill(0xfffffff, 0.05);
-  
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      })
-  
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy}
-        };
-  
-        let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        }
-        if(!closest_intersect) continue;
-  
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      }
+    this.state = 'open';
 
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-      raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        raycast.lineTo(intersects[i].x, intersects[i].y); 
-      }
-    });
-
-    viewport.addChild(raycast)
+    const inventory_box = new GUI_Container();
+    inventory_box.add_item_tiles();
+    inventory_box.populate_slot_1('bunny');
+    inventory_box.populate_slot_2('bunny');
+    inventory_box.populate_slot_3('bunny');
+    inventory_box.populate_slot_4('bunny');
+    this.sprite.addChild(inventory_box.container);
   }
 
-  create_bow_idle_frames() {
-    const bow_frames = [];
-    for (let i = 0; i <= 21; i += 1) {
-      let name = `survivor-bow-idle-0${i}`;
-
-      if (i >= 10) {
-        name = `survivor-bow-idle-${i}`;
-      }
-      bow_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    return bow_frames;
+  empty() {
+    this.sprite.texture = this.image_cache.state.empty;
+    this.state = 'empty';
+    return this;
   }
 
-  create_bow_ready_frames() {
-    const ready_frames = [];
-    for (let i = 0; i <= 38; i += 1) {
-      let name = `survivor-bow-pull-0${i}`;
-  
-      if (i >= 10) {
-        name = `survivor-bow-pull-${i}`;
-      }
-  
-      ready_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    return ready_frames;
+  fill() {
+    this.sprite.texture = this.image_cache.state.full;
+    this.state = 'full';
+    return this;
   }
-
-  create_bow_walk_frames() {
-    const walk_frames = [];
-    for (let i = 0; i <= 20; i += 1) {
-      let name = `survivor-walk_bow_0${i}`;
-  
-      if (i >= 10) {
-        name = `survivor-walk_bow_${i}`;
-      }
-      walk_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    return walk_frames;
-  }
-
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
-
-  add_aiming_line() {
-    this.aiming_line = new PIXI.Graphics();
-    this.aiming_line.name = 'aiming_line';
-    
-    viewport.addChild(this.aiming_line)
-  }
-
-  add_aiming_cone() {
-    this.aiming_cone = PIXI.Sprite.fromFrame('yellow_triangle');
-    
-    this.aiming_cone.height = 800;
-    this.aiming_cone.width = 400;
-    this.aiming_cone.anchor.x = 0.5;
-    this.aiming_cone.alpha = 0;
-    //this.aiming_cone.filters = [new PIXI.filters.BlurFilter()];
-    this.aiming_cone.name = 'aiming_cone';
-    
-    viewport.addChild(this.aiming_cone);
-  }
-
-  mouse_move() {
-    viewport.on('mousemove', (event) => {
-      const mouse_position = get_mouse_position(event,viewport)
-      const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-
-      this.aiming_cone.position.set(this.sprite.position.x, this.sprite.position.y);
-      this.aiming_cone.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player) - 1.575
-      
-      //this.aiming_line.clear();  
-      //this.aiming_line.position.set(this.sprite.position.x, this.sprite.position.y);
-      //this.aiming_line.lineStyle(3, 0xffffff, 1).moveTo(0, 0).lineTo(mouse_position.x, mouse_position.y);
-      
-      this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
-      
-      viewport.addChild(this.aiming_cone, this.aiming_line);
-    }); 
-  }
-
-  mouse_down() {
-    viewport.on('mousedown', (event) => {
-      this.aiming_cone.alpha = 0;
-      this.aiming_cone.count = 10;
-      this.aiming_cone.width = 500;
-      this.aiming_cone.height = 300;
-      this.power = 900;
-
-      this.sprite.textures = this.animations.bow.ready;
-      this.sprite.loop = false;
-      /* perfomance!!!
-      this.count_down = () => {
-         if(this.power < 300) {
-          ticker.remove(this)
-          return
-        }
-        if (this.power > 750) {
-          this.allow_shoot = false;
-        } else {
-          this.allow_shoot = true;
-        }
-        console.log(this.power)
-        
-        this.aiming_cone.width -= 1.5;
-        this.aiming_cone.height += 3;
-        this.aiming_cone.alpha += 0.002
-        this.aiming_cone.count -= 0.04;
-        //this.aiming_cone.filters[0].blur = this.aiming_cone.count;
-
-        if (this.power > 400) {
-          this.power -= 10;
-        }
-      }
-      ticker.add(this.count_down);
-      */
-      if (this.weapon === 'bow') {
-        const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-  
-        this.sprite.rotation = sprite_helper.get_angle_from_point_to_point(this.sprite, mouse_position_player);
-        this.sprite.gotoAndPlay(0);
-      }
-    });
-  }
-
-  mouse_up() {
-    viewport.on('mouseup', (event) => {
-      this.moveable = true;
-      this.sprite.play();
-      this.sprite.textures = this.animations.bow.idle;
-      
-      ticker.remove(this.count_down);
-      this.aiming_cone.alpha = 0;
-
-      if (this.weapon === 'bow' && this.allow_shoot) {
-        const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport)
-  
-        bow_helper.arrow_management(this.power, this.sprite, mouse_position_player);
-      }
-    });
-  }
-
-  add_controls() {
-    global.document.addEventListener('keydown', (e) => {
-      const key = document_helper.getDirection(e.key);
-      const collision_objects = viewport.getChildByName('collision_items');
-      this.sprite.loop = true;
-
-      if (!this.moveable) return;
-
-      if (key === 'up') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-          const player_position = this.sprite.getGlobalPosition()
-
-          player_position.y -= this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1);
-            return;
-          }      
-        }
-
-        this.sprite.y -= this.movement_speed;
-        this.sprite.rotation = -2;
-      };
-
-      if (key === 'down') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.y += this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.y += this.movement_speed;
-        this.sprite.rotation = 2;
-      };
-
-      if (key === 'left') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.x -= this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.x -= this.movement_speed;
-        this.sprite.rotation = -3;
-      };
-
-      if (key === 'right') {
-        for(let i = 0; i < collision_objects.children.length; i++){
-
-          const player_position = this.sprite.getGlobalPosition()
-          player_position.x += this.movement_speed*3;
-          if(collision_objects.children[i].containsPoint(player_position)){
-            this.sprite.gotoAndStop(1)
-            return;
-          }      
-        }
-
-        this.sprite.x += this.movement_speed;
-        this.sprite.rotation = 0;
-      };
-
-      if(key === 'right' || key === 'up' || key === 'down' || key === 'left'){
-        if(this.sprite.textures !== this.animations.bow.walk) {
-          this.sprite.textures = this.animations.bow.walk;
-          this.sprite.play();
-        };
-      }
-    });
-
-    global.document.addEventListener('keyup', () => {
-      this.sprite.textures = this.animations.bow.idle;
-
-      this.sprite.play();
-    });
-  };
 }
+
 
 module.exports = {
-  Player,
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/ticker":12,"../engine/viewport.js":13,"../utils/document_helper.js":32,"../utils/sprite_helper.js":34,"../weapons/bow/bow_helper.js":37,"pixi.js":262}],32:[function(require,module,exports){
-
-const keymap = {
-  w: 'up',
-  a: 'left',
-  s: 'down',
-  d: 'right',
-  j: 'down',
-  k: 'up',
-  h: 'left',
-  l: 'right',
-  ArrowUp: 'up',
-  ArrowLeft: 'left',
-  ArrowDown: 'down',
-  ArrowRight: 'right',
+  Chest,
 };
 
-module.exports.getDirection = key => keymap[key];
-
-module.exports.mousePositionFromPlayer = (event, player, viewport) => ({
-  x: event.x + player.x - viewport.screenWidth / 2,
-  y: event.y + player.y - viewport.screenHeight / 2,
-});
-
-module.exports.mousePositionFromScreen = (event, viewport) => ({
-  x: event.x - viewport.screenWidth / 2,
-  y: event.y - viewport.screenHeight / 2,
-});
-
-},{}],33:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],34:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-// const intersect = require('yy-intersects');
-
-function distanceSquared(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow((x1 - x2)) + Math.pow(y1 - y2, 2));
-}
-
-function linePoint(x1, y1, x2, y2, xp, yp, tolerance) {
-  tolerance = tolerance || 1;
-  return Math.abs(distanceSquared(x1, y1, x2, y2) - (distanceSquared(x1, y1, xp, yp) + distanceSquared(x2, y2, xp, yp))) <= tolerance;
-}
-
+},{"../../engine/viewport.js":11,"../../gui/container":12,"pixi.js":195}],30:[function(require,module,exports){
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {
     if (o.anchor[axis] !== 0) {
@@ -9259,207 +8340,23 @@ function getCenter(o, dimension, axis) {
   return dimension;
 }
 
-
-module.exports.put_blood_splatter_under_sprite = (sprite) => {
-  const blood_stain = PIXI.Sprite.fromFrame('round_floor_stain');
-  
-  blood_stain.width /= 2;
-  blood_stain.height /= 2;
-  blood_stain.position.set(sprite.x, sprite.y);
-  blood_stain.anchor.set(0.5);
-  blood_stain.alpha = 0.4;
-
-  global.viewport.addChild(blood_stain);
-}
-
-
 module.exports.get_angle_from_point_to_point = (sprite, point) => Math.atan2(
   (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x')),
+  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
 );
 
-module.exports.drawPolygon = (points, color) => {
-  color = typeof color === 'undefined' ? 0xffffff : color;
-  const polygon = global.viewport.addChild(new PIXI.Graphics());
-  polygon.beginFill(color).drawPolygon(points).endFill();
-  return polygon;
-};
 
-module.exports.drawPathAndShow = (path) => {
-  const pathVisualGuide = new PIXI.Graphics()
-    .lineStyle(1, 0xffffff, 1)
-    .drawPath(path);
-
-  global.viewport.addChild(pathVisualGuide);
-};
-
-module.exports.trimVertexData = (sprite) => {
-  const trimmedData = [];
-
-  for (let i = 0; i < sprite.vertexData.length; i += 1) {
-    if (i % 2 === 0) trimmedData.push(sprite.vertexData[i] - sprite.vertexData[0] + sprite.x);
-    else trimmedData.push(sprite.vertexData[i] - sprite.vertexData[1] + sprite.y);
-  }
-
-  return trimmedData;
-};
-
-module.exports.hitBox = (x, y, points) => {
-  const length = points.length;
-  let c = false;
-  let lastAction = 'top';
-  let i;
-  let j;
-  for (i = 0, j = length - 2; i < length; i += 2) {
-    if (((points[i + 1] > y) !== (points[j + 1] > y)) && (x < (points[j] - points[i]) * (y - points[i + 1]) / (points[j + 1] - points[i + 1]) + points[i])) {
-      c = !c;
-    }
-    j = i;
-  }
-  if (c) {
-    return lastAction;
-  }
-  for (i = 0; i < length; i += 2) {
-    const p1x = points[i];
-    const p1y = points[i + 1];
-    let p2x;
-    let p2y;
-    if (i === length - 2) {
-      p2x = points[0];
-      p2y = points[1];
-    } else {
-      p2x = points[i + 2];
-      p2y = points[i + 3];
-    }
-    if (linePoint(p1x, p1y, p2x, p2y, x, y, [1])) {
-      if (p1x === points[0]) {
-        lastAction = 'top';
-        return 'top';
-      }
-      lastAction = 'bottom';
-      return 'bottom';
-    }
-  }
-  return false;
-};
-
-module.exports.hitBoxContainerObj = (container, player) => new Promise((resolve) => {
-  for (let a = 0; a < container.length; a += 1) {
-    const vertexData = this.trimVertexData(container[a]);
-    if (this.hitBox(player.x, player.y, vertexData)) {
-      resolve(container[a]);
-    }
-  }
-});
-
-module.exports.global_container_hit = (container, sprite) => {
-  for (let a = 0; a < container.length; a++) {
-    const sprite_in_container = container[a];
-
-    if(sprite.containsPoint(sprite_in_container.getGlobalPosition())){
-      console.log('hitting something');
-    }
-  }
-};
-
-module.exports.hitBoxSpriteObj = (sprite, player) => new Promise((resolve) => {
-  const vertexData = this.trimVertexData(sprite);
-
-  if (this.hitBox(player.x, player.y, vertexData)) {
-    resolve(sprite);
-  }
-});
-
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":262}],35:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (global){
+'use strict';
 
-const filters = require('pixi-filters');
-const PIXI = require('pixi.js');
-
-const padding = 100;
-let overlay = {};
-
-function countUp() {
-  if (overlay.alpha <= 1) {
-    overlay.alpha += 0.01;
-  } else {
-    global.app.ticker.remove(countUp);
-    overlay.alpha = 1;
-  }
-}
-
-function countDown() {
-  if (overlay.alpha >= 0) {
-    overlay.alpha -= 0.01;
-  } else {
-    global.app.ticker.remove(countDown);
-    overlay.alpha = 0;
-    global.viewport.removeChild(overlay);
-  }
-}
-
-module.exports.fade_in_black = () => {
-  overlay = PIXI.Sprite.fromFrame('black_dot');
-  overlay.zIndex = -3;
-  overlay.anchor.set(0.5);
-
-  overlay.alpha = 0;
-  overlay.width = global.viewport.worldWidth + padding;
-  overlay.height = global.viewport.worldHeight + padding;
-  overlay.position.set(global.viewport.center.x, global.viewport.center.y);
-  global.app.ticker.add(countUp);
-  global.viewport.addChild(overlay);
-};
-
-module.exports.fade_out_black = () => {
-  overlay = PIXI.Sprite.fromFrame('black_dot');
-  overlay.zIndex = -3;
-  overlay.anchor.set(0.5);
-  overlay.alpha = 1;
-  overlay.width = global.viewport.worldWidth + padding;
-  overlay.height = global.viewport.worldHeight + padding;
-  overlay.position.set(global.viewport.center.x, global.viewport.center.y);
-  global.app.ticker.add(countDown);
-};
-
-module.exports.glitch = () => {
-  global.viewport.filters = [new filters.GlitchFilter()];
-};
-
-module.exports.godray = (x, y) => {
-  this.clear();
-  const godray = new filters.GodrayFilter();
-  godray.parallel = false;
-  godray.center = [x, y];
-  godray.gain = 0.4;
-  godray.time = 20.5;
-  console.log(global.viewport)
-  global.viewport.children[0].filters = [godray];
-
-  function godrayAnimation() {
-    if (godray.time <= 100) godray.time += 0.005;
-  }
-  global.app.ticker.add(godrayAnimation);
-  
-};
-
-module.exports.clear = () => {
-  global.viewport.filters = [];
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-filters":113,"pixi.js":262}],36:[function(require,module,exports){
-(function (global){
 const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
-const { point_hits_enemy_in_container } = require('../character/enemy.js');
 const viewport = require('../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
+arrow_container.zIndex = -10;
 viewport.addChild(arrow_container);
 
 // const arrowSounds = [
@@ -9473,26 +8370,22 @@ viewport.addChild(arrow_container);
 //   new Audio('audio/arrow_hit_07.wav'),
 // ];
 
-function create_arrow() {
-  const arrow = PIXI.Sprite.fromFrame('arrow');
-  arrow.name = 'arrow';
-  arrow.anchor.set(0.95)
-  if(global.is_development){
-    arrow.height *= 3
-    viewport.addChild(arrow);
-  } else {
-    arrow.width /= 2;
-    arrow.height /= 3;
-    arrow_container.addChild(arrow);
+class Arrow {
+  constructor() {
+    this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    this.sprite.name = 'arrow';
+    this.sprite.anchor.set(0.95);
+    this.sprite.height *= 3;
+    this.sprite.zIndex = -40;
+    arrow_container.addChild(this.sprite);
   }
-  
-  return arrow;
+
 }
 
 function create_rotated_arrow(origin, target) {
-  const arrow = create_arrow();
-  arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
-  return arrow;
+  const arrow = new Arrow();
+  arrow.sprite.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
+  return arrow.sprite;
 }
 
 function create_embedded_arrow(rotation) {
@@ -9508,7 +8401,7 @@ function create_arrow_path(origin, target) {
   const arrow_path = new PIXI.tween.TweenPath()
     .moveTo(origin.x, origin.y)
     .lineTo(target.x, target.y);
-  
+
   return arrow_path;
 }
 
@@ -9527,18 +8420,18 @@ function arrow_management(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
-  
+
   arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition()
+    const arrow_point = arrow.getGlobalPosition();
 
     viewport.getChildByName('enemy_container').children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
-        
+
         const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
         arrow.destroy();
         enemy.speak('I am hit');
-        enemy.addChild(arrow_in_enemy)
+        enemy.addChild(arrow_in_enemy);
 
         return;
       }
@@ -9547,22 +8440,22 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('collision_items').children.forEach(object => {
       if(object.containsPoint(arrow_point)){
         arrow_tween.stop();
-        
+
         return;
       }
     });
-    
+
     viewport.getChildByName('door_container').children.forEach(door => {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);       
+
+        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
         arrow.width = 600;
 
         door.rotation += 0.05;
         door.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
         door.addChild(arrow);
-        
+
         return;
       }
     });
@@ -9570,49 +8463,45 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        console.log('hit cirrter')
-        console.log(critter)
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);       
+        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
         arrow.width = 600;
         const tween = createjs.Tween.get(critter);
-        console.log(tween)
         tween.pause();
         tween.paused = true;
-        tween.wait(2000)
+        tween.wait(2000);
         critter.rotation += 0.05;
         critter.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
         critter.addChild(arrow);
         critter.stop();
-        
+
         return;
       }
     });
   });
-};
+}
 
-// todo move enemy out out of global 
+// todo move enemy out out of global
 function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
   if(!global.is_development) return;
-  
+
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
 
   arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition()
+    const arrow_point = arrow.getGlobalPosition();
 
     if(global.Player.sprite.containsPoint(arrow_point)) {
-      console.log('hitting player')
       arrow_tween.stop();
 
-      global.Player.vitals.health -=40
-      
+      global.Player.vitals.health -=40;
+
       const arrow_in_player = create_embedded_arrow(arrow.rotation -=3.1);
 
       // TDOO can i retrofit this
       arrow.destroy();
       // if(global.Player.vitals.health < 40) {
-        
+
       //   if(global.is_development) {
       //     dialog_util.renderText(global.Player.sprite, 'I am dead home slice');
       //   } else {
@@ -9622,218 +8511,26 @@ function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
       // }
 
       global.Player.vitals.health -= 40;
-      global.Player.sprite.addChild(arrow_in_player)
+      global.Player.sprite.addChild(arrow_in_player);
     }
 
     for (let i = 0; i < global.collisionItems.children.length; i++) {
       const sprite_in_container = global.collisionItems.children[i];
       if(sprite_in_container.containsPoint(arrow_point)){
-        console.log('enemy arrow on collision item');
-        arrow_tween.stop()
+        arrow_tween.stop();
       }
     }
-  })
-};
-
-module.exports = {
-  arrow_shoot_from_sprite_to_sprite,
-  arrow_management,
-}
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../character/enemy.js":2,"../engine/viewport.js":13,"../utils/sprite_helper.js":34,"@createjs/tweenjs":39,"pixi.js":262}],37:[function(require,module,exports){
-(function (global){
-const PIXI = require('pixi.js');
-const sprite_helper = require('../../utils/sprite_helper.js');
-const { point_hits_enemy_in_container } = require('../../npc/enemy.js');
-const viewport = require('../../engine/viewport.js');
-const { createjs } = require('@createjs/tweenjs');
-const arrow_container = new PIXI.Container();
-arrow_container.name = 'arrow containter';
-viewport.addChild(arrow_container);
-
-// const arrowSounds = [
-//   new Audio('audio/arrow_hit_00.wav'),
-//   new Audio('audio/arrow_hit_01.wav'),
-//   new Audio('audio/arrow_hit_02.wav'),
-//   new Audio('audio/arrow_hit_03.wav'),
-//   new Audio('audio/arrow_hit_04.wav'),
-//   new Audio('audio/arrow_hit_05.wav'),
-//   new Audio('audio/arrow_hit_06.wav'),
-//   new Audio('audio/arrow_hit_07.wav'),
-// ];
-
-function create_arrow() {
-  const arrow = PIXI.Sprite.fromFrame('arrow');
-  arrow.name = 'arrow';
-  arrow.anchor.set(0.95)
-  if(global.is_development){
-    arrow.height *= 3
-    viewport.addChild(arrow);
-  } else {
-    arrow.width /= 2;
-    arrow.height /= 3;
-    arrow_container.addChild(arrow);
-  }
-  
-  return arrow;
-}
-
-function create_rotated_arrow(origin, target) {
-  const arrow = create_arrow();
-  arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
-  return arrow;
-}
-
-function create_embedded_arrow(rotation) {
-  const arrow_embedded = PIXI.Sprite.fromFrame('arrow_embedded');
-
-  arrow_embedded.anchor.set(0.9);
-  arrow_embedded.rotation = rotation;
-
-  return arrow_embedded;
-}
-
-function create_arrow_path(origin, target) {
-  const arrow_path = new PIXI.tween.TweenPath()
-    .moveTo(origin.x, origin.y)
-    .lineTo(target.x, target.y);
-  
-  return arrow_path;
-}
-
-function create_arrow_tween(arrow, power, arrow_path) {
-  const arrow_tween = PIXI.tweenManager.createTween(arrow);
-
-  arrow_tween.path = arrow_path;
-  arrow_tween.time = power;
-  arrow_tween.easing = PIXI.tween.Easing.linear();
-  arrow_tween.start();
-
-  return arrow_tween;
-}
-
-function arrow_management(power, origin, target) {
-  const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin,target);
-  const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
-  
-  arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition()
-
-    viewport.getChildByName('enemy_container').children.forEach(enemy => {
-      if(enemy.containsPoint(arrow_point)){
-        arrow_tween.stop();
-        
-        const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
-        arrow.destroy();
-        enemy.speak('I am hit');
-        enemy.addChild(arrow_in_enemy)
-
-        return;
-      }
-    });
-
-    viewport.getChildByName('collision_items').children.forEach(object => {
-      if(object.containsPoint(arrow_point)){
-        arrow_tween.stop();
-        
-        return;
-      }
-    });
-    
-    viewport.getChildByName('door_container').children.forEach(door => {
-      if(door.containsPoint(arrow_point)) {
-        arrow_tween.stop();
-        
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);       
-        arrow.width = 600;
-
-        door.rotation += 0.05;
-        door.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
-        door.addChild(arrow);
-        
-        return;
-      }
-    });
-
-    viewport.getChildByName('critter_container').children.forEach(critter => {
-      if(critter.containsPoint(arrow_point)) {
-        arrow_tween.stop();
-        console.log('hit cirrter')
-        console.log(critter)
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);       
-        arrow.width = 600;
-        const tween = createjs.Tween.get(critter);
-        console.log(tween)
-        tween.pause();
-        tween.paused = true;
-        tween.wait(2000)
-        critter.rotation += 0.05;
-        critter.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
-        critter.addChild(arrow);
-        critter.stop();
-        
-        return;
-      }
-    });
   });
-};
-
-// todo move enemy out out of global 
-function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
-  if(!global.is_development) return;
-  
-  const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin, target);
-  const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
-
-  arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition()
-
-    if(global.Player.sprite.containsPoint(arrow_point)) {
-      console.log('hitting player')
-      arrow_tween.stop();
-
-      global.Player.vitals.health -=40
-      
-      const arrow_in_player = create_embedded_arrow(arrow.rotation -=3.1);
-
-      // TDOO can i retrofit this
-      arrow.destroy();
-      // if(global.Player.vitals.health < 40) {
-        
-      //   if(global.is_development) {
-      //     dialog_util.renderText(global.Player.sprite, 'I am dead home slice');
-      //   } else {
-      //     // end the game
-      //     debugger;
-      //   }
-      // }
-
-      global.Player.vitals.health -= 40;
-      global.Player.sprite.addChild(arrow_in_player)
-    }
-
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
-      if(sprite_in_container.containsPoint(arrow_point)){
-        console.log('enemy arrow on collision item');
-        arrow_tween.stop()
-      }
-    }
-  })
-};
+}
 
 module.exports = {
   arrow_shoot_from_sprite_to_sprite,
   arrow_management,
-}
+};
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport.js":13,"../../npc/enemy.js":29,"../../utils/sprite_helper.js":34,"@createjs/tweenjs":39,"pixi.js":262}],38:[function(require,module,exports){
+},{"../engine/viewport.js":11,"../utils/sprite_helper.js":30,"@createjs/tweenjs":33,"pixi.js":195}],32:[function(require,module,exports){
 (function (global){
 const PIXI = require('pixi.js');
 
@@ -9873,7 +8570,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":262}],39:[function(require,module,exports){
+},{"pixi.js":195}],33:[function(require,module,exports){
 /**
  * @license
  * TweenJS
@@ -9887,565 +8584,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
  * This notice shall be included in all copies or substantial portions of the Software.
  */
 !function(t){"use strict";var e=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")},n=function(){function t(t,e){for(var i=0;i<e.length;i++){var n=e[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,i,n){return i&&t(e.prototype,i),n&&t(e,n),e}}(),r=function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)},o=function(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e},s=function(){function t(i){var n=arguments.length>1&&void 0!==arguments[1]&&arguments[1],r=arguments.length>2&&void 0!==arguments[2]&&arguments[2];e(this,t),this.type=i,this.target=null,this.currentTarget=null,this.eventPhase=0,this.bubbles=n,this.cancelable=r,this.timeStamp=(new Date).getTime(),this.defaultPrevented=!1,this.propagationStopped=!1,this.immediatePropagationStopped=!1,this.removed=!1}return t.prototype.preventDefault=function(){return this.defaultPrevented=this.cancelable,this},t.prototype.stopPropagation=function(){return this.propagationStopped=!0,this},t.prototype.stopImmediatePropagation=function(){return this.immediatePropagationStopped=this.propagationStopped=!0,this},t.prototype.remove=function(){return this.removed=!0,this},t.prototype.clone=function(){var e=new t(this.type,this.bubbles,this.cancelable);for(var i in this)this.hasOwnProperty(i)&&(e[i]=this[i]);return e},t.prototype.set=function(t){for(var e in t)this[e]=t[e];return this},t.prototype.toString=function(){return"["+this.constructor.name+" (type="+this.type+")]"},t}(),a=function(){function t(){e(this,t),this._listeners=null,this._captureListeners=null}return t.initialize=function(e){var i=t.prototype;e.addEventListener=i.addEventListener,e.on=i.on,e.removeEventListener=e.off=i.removeEventListener,e.removeAllEventListeners=i.removeAllEventListeners,e.hasEventListener=i.hasEventListener,e.dispatchEvent=i.dispatchEvent,e._dispatchEvent=i._dispatchEvent,e.willTrigger=i.willTrigger},t.prototype.addEventListener=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]&&arguments[2],n=void 0,r=(n=i?this._captureListeners=this._captureListeners||{}:this._listeners=this._listeners||{})[t];return r&&(this.removeEventListener(t,e,i),r=n[t]),r?r.push(e):n[t]=[e],e},t.prototype.on=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,n=arguments.length>3&&void 0!==arguments[3]&&arguments[3],r=arguments.length>4&&void 0!==arguments[4]?arguments[4]:{},o=arguments.length>5&&void 0!==arguments[5]&&arguments[5];return e.handleEvent&&(i=i||e,e=e.handleEvent),i=i||this,this.addEventListener(t,function(t){e.call(i,t,r),n&&t.remove()},o)},t.prototype.removeEventListener=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]&&arguments[2]?this._captureListeners:this._listeners;if(i){var n=i[t];if(n)for(var r=n.length,o=0;o<r;o++)if(n[o]===e){1===r?delete i[t]:n.splice(o,1);break}}},t.prototype.off=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]&&arguments[2];this.removeEventListener(t,e,i)},t.prototype.removeAllEventListeners=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;t?(this._listeners&&delete this._listeners[t],this._captureListeners&&delete this._captureListeners[t]):this._listeners=this._captureListeners=null},t.prototype.dispatchEvent=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1],i=arguments.length>2&&void 0!==arguments[2]&&arguments[2];if("string"==typeof t){var n=this._listeners;if(!(e||n&&n[t]))return!0;t=new s(t,e,i)}else t.target&&t.clone&&(t=t.clone());try{t.target=this}catch(t){}if(t.bubbles&&this.parent){for(var r=this,o=[r];r.parent;)o.push(r=r.parent);var a=o.length,u=void 0;for(u=a-1;u>=0&&!t.propagationStopped;u--)o[u]._dispatchEvent(t,1+(0==u));for(u=1;u<a&&!t.propagationStopped;u++)o[u]._dispatchEvent(t,3)}else this._dispatchEvent(t,2);return!t.defaultPrevented},t.prototype.hasEventListener=function(t){var e=this._listeners,i=this._captureListeners;return!!(e&&e[t]||i&&i[t])},t.prototype.willTrigger=function(t){for(var e=this;e;){if(e.hasEventListener(t))return!0;e=e.parent}return!1},t.prototype.toString=function(){return"["+(this.constructor.name+this.name?" "+this.name:"")+"]"},t.prototype._dispatchEvent=function(t,e){var i=1===e?this._captureListeners:this._listeners;if(t&&i){var n=i[t.type],r=void 0;if(!n||0===(r=n.length))return;try{t.currentTarget=this}catch(t){}try{t.eventPhase=e}catch(t){}t.removed=!1,n=n.slice();for(var o=0;o<r&&!t.immediatePropagationStopped;o++){var s=n[o];s.handleEvent?s.handleEvent(t):s(t),t.removed&&(this.off(t.type,s,1===e),t.removed=!1)}}},t}(),u=function(t){function s(i){e(this,s);var n=o(this,t.call(this));return n.ignoreGlobalPause=!1,n.loop=0,n.useTicks=!1,n.reversed=!1,n.bounce=!1,n.timeScale=1,n.duration=0,n.position=0,n.rawPosition=-1,n._paused=!0,n._next=null,n._prev=null,n._parent=null,n._labels=null,n._labelList=null,i&&(n.useTicks=!!i.useTicks,n.ignoreGlobalPause=!!i.ignoreGlobalPause,n.loop=!0===i.loop?-1:i.loop||0,n.reversed=!!i.reversed,n.bounce=!!i.bounce,n.timeScale=i.timeScale||1,i.onChange&&n.addEventListener("change",i.onChange),i.onComplete&&n.addEventListener("complete",i.onComplete)),n}return r(s,t),s.prototype.advance=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1];this.setPosition(this.rawPosition+t*this.timeScale,e)},s.prototype.setPosition=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1],i=arguments.length>2&&void 0!==arguments[2]&&arguments[2],n=arguments[3],r=this.duration,o=this.loop,s=this.rawPosition,a=0,u=0,h=!1;if(t<0&&(t=0),0===r){if(h=!0,-1!==s)return h}else{if(u=t-(a=t/r|0)*r,(h=-1!==o&&t>=o*r+r)&&(t=(u=r)*(a=o)+r),t===s)return h;!this.reversed!=!(this.bounce&&a%2)&&(u=r-u)}this.position=u,this.rawPosition=t,this._updatePosition(i,h),h&&(this.paused=!0),n&&n(this),e||this._runActions(s,t,i,!i&&-1===s),this.dispatchEvent("change"),h&&this.dispatchEvent("complete")},s.prototype.calculatePosition=function(t){var e=this.duration,i=this.loop,n=0,r=0;return 0===e?0:(-1!==i&&t>=i*e+e?(r=e,n=i):r=t<0?0:t-(n=t/e|0)*e,!this.reversed!=!(this.bounce&&n%2)?e-r:r)},s.prototype.addLabel=function(t,e){this._labels||(this._labels={}),this._labels[t]=e;var n=this._labelList;if(n){for(var r=0,o=n.length;r<o&&!(e<n[r].position);r++);n.splice(i,0,{label:t,position:e})}},s.prototype.gotoAndPlay=function(t){this.paused=!1,this._goto(t)},s.prototype.gotoAndStop=function(t){this.paused=!0,this._goto(t)},s.prototype.resolve=function(t){var e=Number(t);return isNaN(e)?this._labels&&this._labels[t]:e},s.prototype.toString=function(){return"["+this.constructor.name+(this.name?" (name="+this.name+")":"")+"]"},s.prototype.clone=function(){throw"AbstractTween cannot be cloned."},s.prototype._init=function(t){t&&t.paused||(this.paused=!1),t&&null!=t.position&&this.setPosition(t.position)},s.prototype._goto=function(t){var e=this.resolve(t);null!=e&&this.setPosition(e,!1,!0)},s.prototype._runActions=function(t,e,i,n){if(this._actionHead||this.tweens){var r=this.duration,o=this.loop,s=this.reversed,a=this.bounce,u=void 0,h=void 0,p=void 0,l=void 0;if(0===r?(u=h=p=l=0,s=a=!1):(p=t-(u=t/r|0)*r,l=e-(h=e/r|0)*r),-1!==o&&(h>o&&(l=r,h=o),u>o&&(p=r,u=o)),i)return this._runActionsRange(l,l,i,n);if(u!==h||p!==l||i||n){-1===u&&(u=p=0);var c=t<=e,d=u;do{var f=d===u?p:c?0:r,v=d===h?l:c?r:0;if(!s!=!(a&&d%2)&&(f=r-f,v=r-v),a&&d!==u&&f===v);else if(this._runActionsRange(f,v,i,n||d!==u&&!a))return!0;n=!1}while(c&&++d<=h||!c&&--d>=h)}}},s.prototype._runActionsRange=function(t,e,i,n){throw"_runActionsRange is abstract and must be overridden by a subclass."},s.prototype._updatePosition=function(t,e){throw"_updatePosition is abstract and must be overridden by a subclass."},n(s,[{key:"labels",get:function(){var t=this._labelList;if(!t){t=this._labelList=[];var e=this._labels;for(var i in e)t.push({label:i,position:e[i]});t.sort(function(t,e){return t.position-e.position})}return t},set:function(t){this._labels=t,this._labelList=null}},{key:"currentLabel",get:function(){for(var t=this.labels,e=this.position,n=0,r=t.length;n<r&&!(e<t[n].position);n++);return 0===i?null:t[i-1].label}},{key:"paused",get:function(){return this._paused},set:function(t){G._register(this,t),this._paused=t}}]),s}(a);function h(t){return t}function p(t){return function(e){return Math.pow(e,t)}}function l(t){return function(e){return 1-Math.pow(1-e,t)}}function c(t){return function(e){return(e*=2)<1?.5*Math.pow(e,t):1-.5*Math.abs(Math.pow(2-e,t))}}function d(t){return function(e){return e*e*((t+1)*e-t)}}function f(t){return function(e){return--e*e*((t+1)*e+t)+1}}function v(t){return t*=1.525,function(e){return(e*=2)<1?e*e*((t+1)*e-t)*.5:.5*((e-=2)*e*((t+1)*e+t)+2)}}function _(t,e){var i=2*Math.PI;return function(n){if(0===n||1===n)return n;var r=e/i*Math.asin(1/t);return-t*Math.pow(2,10*(n-=1))*Math.sin((n-r)*i/e)}}function g(t,e){var i=2*Math.PI;return function(n){if(0===n||1===n)return n;var r=e/i*Math.asin(1/t);return t*Math.pow(2,-10*n)*Math.sin((n-r)*i/e)+1}}function m(t,e){var i=2*Math.PI;return function(n){var r=e/i*Math.asin(1/t);return(n*=2)<1?t*Math.pow(2,10*(n-=1))*Math.sin((n-r)*i/e)*-.5:t*Math.pow(2,-10*(n-=1))*Math.sin((n-r)*i/e)*.5+1}}var y=h,w=p(2),T=l(2),b=c(2),E=p(3),k=l(3),P=c(3),I=p(4),L=l(4),A=c(4),M=p(5),O=l(5),S=c(5),x=d(1.7),j=f(1.7),R=v(1.7),F=_(1,.3),q=g(1,.3),D=m(1,.3*1.5),H=Object.freeze({linear:h,get:function(t){return t<-1?t=-1:t>1&&(t=1),function(e){return 0==t?e:t<0?e*(e*-t+1+t):e*((2-e)*t+(1-t))}},getPowIn:p,getPowOut:l,getPowInOut:c,sineIn:function(t){return 1-Math.cos(t*Math.PI/2)},sineOut:function(t){return Math.sin(t*Math.PI/2)},sineInOut:function(t){return-.5*(Math.cos(Math.PI*t)-1)},getBackIn:d,getBackOut:f,getBackInOut:v,circIn:function(t){return-(Math.sqrt(1-t*t)-1)},circOut:function(t){return Math.sqrt(1- --t*t)},circInOut:function(t){return(t*=2)<1?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-=2)*t)+1)},bounceIn:function(t){return 1-Ease.bounceOut(1-t)},bounceOut:function(t){return t<1/2.75?7.5625*t*t:t<2/2.75?7.5625*(t-=1.5/2.75)*t+.75:t<2.5/2.75?7.5625*(t-=2.25/2.75)*t+.9375:7.5625*(t-=2.625/2.75)*t+.984375},bounceInOut:function(t){return t<.5?.5*Ease.bounceIn(2*t):.5*Ease.bounceOut(2*t-1)+.5},getElasticIn:_,getElasticOut:g,getElasticInOut:m,none:y,quadIn:w,quadOut:T,quadInOut:b,cubicIn:E,cubicOut:k,cubicInOut:P,quartIn:I,quartOut:L,quartInOut:A,quintIn:M,quintOut:O,quintInOut:S,backIn:x,backOut:j,backInOut:R,elasticIn:F,elasticOut:q,elasticInOut:D}),C=function(t){function i(n){e(this,i);var r=o(this,t.call(this));return r.name=n,r.timingMode=i.TIMEOUT,r.maxDelta=0,r.paused=!1,r._inited=!1,r._startTime=0,r._pausedTime=0,r._ticks=0,r._pausedTicks=0,r._interval=50,r._lastTime=0,r._times=null,r._tickTimes=null,r._timerId=null,r._raf=!0,r}return r(i,t),n(i,null,[{key:"RAF_SYNCHED",get:function(){return"synched"}},{key:"RAF",get:function(){return"raf"}},{key:"TIMEOUT",get:function(){return"timeout"}}]),i.prototype.init=function(){this._inited||(this._inited=!0,this._times=[],this._tickTimes=[],this._startTime=this._getTime(),this._times.push(this._lastTime=0),this._setupTick())},i.prototype.reset=function(){if(this._raf){var t=window.cancelAnimationFrame||window.webkitCancelAnimationFrame||window.mozCancelAnimationFrame||window.oCancelAnimationFrame||window.msCancelAnimationFrame;t&&t(this._timerId)}else clearTimeout(this._timerId);this.removeAllEventListeners("tick"),this._timerId=this._times=this._tickTimes=null,this._startTime=this._lastTime=this._ticks=0,this._inited=!1},i.prototype.addEventListener=function(e,i,n){return!this._inited&&this.init(),t.prototype.addEventListener.call(this,e,i,n)},i.prototype.getMeasuredTickTime=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null,e=this._tickTimes;return!e||e.length<1?-1:(t=Math.min(e.length,t||0|this.framerate),e.reduce(function(t,e){return t+e},0)/t)},i.prototype.getMeasuredFPS=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null,e=this._times;return!e||e.length<2?-1:(t=Math.min(e.length-1,t||0|this.framerate),1e3/((e[0]-e[t])/t))},i.prototype.getTime=function(){var t=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return this._startTime?this._getTime()-(t?this._pausedTime:0):-1},i.prototype.getEventTime=function(){var t=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return this._startTime?(this._lastTime||this._startTime)-(t?this._pausedTime:0):-1},i.prototype.getTicks=function(){var t=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return this._ticks-(t?this._pausedTicks:0)},i.prototype._handleSynch=function(){this._timerId=null,this._setupTick(),this._getTime()-this._lastTime>=.97*(this._interval-1)&&this._tick()},i.prototype._handleRAF=function(){this._timerId=null,this._setupTick(),this._tick()},i.prototype._handleTimeout=function(){this._timerId=null,this._setupTick(),this._tick()},i.prototype._setupTick=function(){if(null==this._timerId){var t=this.timingMode||this._raf&&i.RAF;if(t===i.RAF_SYNCHED||t===i.RAF){var e=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame;if(e)return this._timerId=e(t===i.RAF?this._handleRAF.bind(this):this._handleSynch.bind(this)),void(this._raf=!0)}this._raf=!1,this._timerId=setTimeout(this._handleTimeout.bind(this),this._interval)}},i.prototype._tick=function(){var t=this.paused,e=this._getTime(),i=e-this._lastTime;if(this._lastTime=e,this._ticks++,t&&(this._pausedTicks++,this._pausedTime+=i),this.hasEventListener("tick")){var n=new s("tick"),r=this.maxDelta;n.delta=r&&i>r?r:i,n.paused=t,n.time=e,n.runTime=e-this._pausedTime,this.dispatchEvent(n)}for(this._tickTimes.unshift(this._getTime()-e);this._tickTimes.length>100;)this._tickTimes.pop();for(this._times.unshift(e);this._times.length>100;)this._times.pop()},i.prototype._getTime=function(){var t=window.performance&&window.performance.now;return(t&&t.call(performance)||(new Date).getTime())-this._startTime},i.on=function(t,e,i,n,r,o){return N.on(t,e,i,n,r,o)},i.removeEventListener=function(t,e,i){N.removeEventListener(t,e,i)},i.off=function(t,e,i){N.off(t,e,i)},i.removeAllEventListeners=function(t){N.removeAllEventListeners(t)},i.dispatchEvent=function(t,e,i){return N.dispatchEvent(t,e,i)},i.hasEventListener=function(t){return N.hasEventListener(t)},i.willTrigger=function(t){return N.willTrigger(t)},i.toString=function(){return N.toString()},i.init=function(){N.init()},i.reset=function(){N.reset()},i.addEventListener=function(t,e,i){N.addEventListener(t,e,i)},i.getMeasuredTickTime=function(t){return N.getMeasuredTickTime(t)},i.getMeasuredFPS=function(t){return N.getMeasuredFPS(t)},i.getTime=function(t){return N.getTime(t)},i.getEventTime=function(t){return N.getEventTime(t)},i.getTicks=function(t){return N.getTicks(t)},n(i,[{key:"interval",get:function(){return this._interval},set:function(t){this._interval=t,this._inited&&this._setupTick()}},{key:"framerate",get:function(){return 1e3/this._interval},set:function(t){this.interval=1e3/t}}],[{key:"interval",get:function(){return N.interval},set:function(t){N.interval=t}},{key:"framerate",get:function(){return N.framerate},set:function(t){N.framerate=t}},{key:"name",get:function(){return N.name},set:function(t){N.name=t}},{key:"timingMode",get:function(){return N.timingMode},set:function(t){N.timingMode=t}},{key:"maxDelta",get:function(){return N.maxDelta},set:function(t){N.maxDelta=t}},{key:"paused",get:function(){return N.paused},set:function(t){N.paused=t}}]),i}(a),N=new C("createjs.global"),G=function(t){function n(i,r){e(this,n);var s=o(this,t.call(this,r));return s.pluginData=null,s.target=i,s.passive=!1,s._stepHead=new B(null,0,0,{},null,!0),s._stepTail=s._stepHead,s._stepPosition=0,s._actionHead=null,s._actionTail=null,s._plugins=null,s._pluginIds=null,s._injected=null,r&&(s.pluginData=r.pluginData,r.override&&n.removeTweens(i)),s.pluginData||(s.pluginData={}),s._init(r),s}return r(n,t),n.get=function(t,e){return new n(t,e)},n.tick=function(t,e){for(var i=n._tweenHead;i;){var r=i._next;e&&!i.ignoreGlobalPause||i._paused||i.advance(i.useTicks?1:t),i=r}},n.handleEvent=function(t){"tick"===t.type&&this.tick(t.delta,t.paused)},n.removeTweens=function(t){if(t.tweenjs_count){for(var e=n._tweenHead;e;){var i=e._next;e.target===t&&(e.paused=!0),e=i}t.tweenjs_count=0}},n.removeAllTweens=function(){for(var t=n._tweenHead;t;){var e=t._next;t._paused=!0,t.target&&(t.target.tweenjs_count=0),t._next=t._prev=null,t=e}n._tweenHead=n._tweenTail=null},n.hasActiveTweens=function(t){return t?!!t.tweenjs_count:!!n._tweenHead},n.installPlugin=function(t,e){t.install(e);for(var r=t.priority=t.priority||0,o=n._plugins=n._plugins||[],s=0,a=o.length;s<a&&!(r<o[s].priority);s++);o.splice(i,0,t)},n._register=function(t,e){var i=t.target;if(!e&&t._paused){i&&(i.tweenjs_count=i.tweenjs_count?i.tweenjs_count+1:1);var r=n._tweenTail;r?(n._tweenTail=r._next=t,t._prev=r):n._tweenHead=n._tweenTail=t,n._inited||(C.addEventListener("tick",n),n._inited=!0)}else if(e&&!t._paused){i&&i.tweenjs_count--;var o=t._next,s=t._prev;o?o._prev=s:n._tweenTail=s,s?s._next=o:n._tweenHead=o,t._next=t._prev=null}},n.prototype.wait=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1];return t>0&&this._addStep(+t,this._stepTail.props,null,e),this},n.prototype.to=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0,i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:h;e<0&&(e=0);var n=this._addStep(+e,null,i);return this._appendProps(t,n),this},n.prototype.label=function(t){return this.addLabel(t,this.duration),this},n.prototype.call=function(t,e,i){return this._addAction(i||this.target,t,e||[this])},n.prototype.set=function(t,e){return this._addAction(e||this.target,this._set,[t])},n.prototype.play=function(t){return this._addAction(t||this,this._set,[{paused:!1}])},n.prototype.pause=function(t){return this._addAction(t||this,this._set,[{paused:!1}])},n.prototype.clone=function(){throw"Tween can not be cloned."},n.prototype._addPlugin=function(t){var e=this._pluginIds||(this._pluginIds={}),i=t.id;if(i&&!e[i]){e[i]=!0;for(var n=this._plugins||(this._plugins=[]),r=t.priority||0,o=0,s=n.length;o<s;o++)if(r<n[o].priority)return void n.splice(o,0,t);n.push(t)}},n.prototype._updatePosition=function(t,e){var i=this._stepHead.next,n=this.position,r=this.duration;if(this.target&&i){for(var o=i.next;o&&o.t<=n;)o=(i=i.next).next;var s=e?0===r?1:n/r:(n-i.t)/i.d;this._updateTargetProps(i,s,e)}this._stepPosition=i?n-i.t:0},n.prototype._updateTargetProps=function(t,e,i){if(!(this.passive=!!t.passive)){var r=void 0,o=void 0,s=void 0,a=void 0,u=t.prev.props,h=t.props;(a=t.ease)&&(e=a(e,0,1,1));var p=this._plugins;t:for(var l in u){if(r=(o=u[l])!==(s=h[l])&&"number"==typeof o?o+(s-o)*e:e>=1?s:o,p)for(var c=0,d=p.length;c<d;c++){var f=p[c].change(this,t,l,r,e,i);if(f===n.IGNORE)continue t;void 0!==f&&(r=f)}this.target[l]=r}}},n.prototype._runActionsRange=function(t,e,i,n){var r=t>e,o=r?this._actionTail:this._actionHead,s=e,a=t;r&&(s=t,a=e);for(var u=this.position;o;){var h=o.t;if((h===e||h>a&&h<s||n&&h===t)&&(o.funct.apply(o.scope,o.params),u!==this.position))return!0;o=r?o.prev:o.next}},n.prototype._appendProps=function(t,e,i){var r,o=this._stepHead.props,s=this.target,a=n._plugins,u=void 0,h=void 0,p=void 0,l=void 0,c=e.prev,d=c.props,f=e.props||(e.props=this._cloneProps(d)),v={};for(u in t)if(t.hasOwnProperty(u)&&(v[u]=f[u]=t[u],void 0===o[u])){if(l=void 0,a)for(h=a.length-1;h>=0;h--)if(void 0!==(p=a[h].init(this,u,l))&&(l=p),l===n.IGNORE){(ignored=ignored||{})[u]=!0,delete f[u],delete v[u];break}l!==n.IGNORE&&(void 0===l&&(l=s[u]),d[u]=void 0===l?null:l)}for(u in v){p=t[u];for(var _=void 0,g=c;(_=g)&&(g=_.prev);)if(g.props!==_.props){if(void 0!==g.props[u])break;g.props[u]=d[u]}}if(i&&(a=this._plugins))for(h=a.length-1;h>=0;h--)a[h].step(this,e,v);(r=this._injected)&&(this._injected=null,this._appendProps(r,e,!1))},n.prototype._injectProp=function(t,e){(this._injected||(this._injected={}))[t]=e},n.prototype._addStep=function(t,e,i){var n=arguments.length>3&&void 0!==arguments[3]&&arguments[3],r=new B(this._stepTail,this.duration,t,e,i,n);return this.duration+=t,this._stepTail=this._stepTail.next=r},n.prototype._addAction=function(t,e,i){var n=new U(this._actionTail,this.duration,t,e,i);return this._actionTail?this._actionTail.next=n:this._actionHead=n,this._actionTail=n,this},n.prototype._set=function(t){for(var e in t)this[e]=t[e]},n.prototype._cloneProps=function(t){var e={};for(var i in t)e[i]=t[i];return e},n}(u),z=G.prototype;z.w=z.wait,z.t=z.to,z.c=z.call,z.s=z.set,G.IGNORE={},G._tweens=[],G._plugins=null,G._tweenHead=null,G._tweenTail=null;var B=function t(i,n,r,o,s,a){e(this,t),this.next=null,this.prev=i,this.t=n,this.d=r,this.props=o,this.ease=s,this.passive=a,this.index=i?i.index+1:0},U=function t(i,n,r,o,s){e(this,t),this.next=null,this.d=0,this.prev=i,this.t=n,this.scope=r,this.funct=o,this.params=s},Y=function(t){function i(){var n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};e(this,i);var r=o(this,t.call(this,n));return r.tweens=[],n.tweens&&r.addTween.apply(r,n.tweens),n.labels&&(r.labels=n.labels),r._init(n),r}return r(i,t),i.prototype.addTween=function(){for(var t=arguments.length,e=Array(t),i=0;i<t;i++)e[i]=arguments[i];var n=e.length;if(1===n){var r=e[0];this.tweens.push(r),r._parent=this,r.paused=!0;var o=r.duration;return r.loop>0&&(o*=r.loop+1),o>this.duration&&(this.duration=o),this.rawPosition>=0&&r.setPosition(this.rawPosition),r}if(n>1){for(var s=0;s<n;s++)this.addTween(e[s]);return e[n-1]}return null},i.prototype.removeTween=function(){for(var t=arguments.length,e=Array(t),i=0;i<t;i++)e[i]=arguments[i];var n=e.length;if(1===n){for(var r=this.tweens,o=e[0],s=r.length;s--;)if(r[s]===o)return r.splice(s,1),o._parent=null,o.duration>=this.duration&&this.updateDuration(),!0;return!1}if(n>1){for(var a=!0,u=0;u<n;u++)a=a&&this.removeTween(e[u]);return a}return!0},i.prototype.updateDuration=function(){this.duration=0;for(var t=0,e=this.tweens.length;t<e;t++){var i=this.tweens[t],n=i.duration;i.loop>0&&(n*=i.loop+1),n>this.duration&&(this.duration=n)}},i.prototype.clone=function(){throw"Timeline can not be cloned."},i.prototype._updatePosition=function(t,e){for(var i=this.position,n=0,r=this.tweens.length;n<r;n++)this.tweens[n].setPosition(i,!0,t)},i.prototype._runActionsRange=function(t,e,i,n){for(var r=this.position,o=0,s=this.tweens.length;o<s;o++)if(this.tweens[o]._runActions(t,e,i,n),r!==this.position)return!0},i}(u);t.Ease=H,t.Tween=G,t.AbstractTween=u,t.Timeline=Y,t.Event=s,t.EventDispatcher=a,t.Ticker=C,(t.versions=t.versions||{}).tweenjs="2.0.0"}(this.createjs=this.createjs||{});
-},{}],40:[function(require,module,exports){
-/*!
- * @pixi/filter-adjustment - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-adjustment is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(t.__filters={},t.PIXI)}(this,function(t,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float gamma;\nuniform float contrast;\nuniform float saturation;\nuniform float brightness;\nuniform float red;\nuniform float green;\nuniform float blue;\nuniform float alpha;\n\nvoid main(void)\n{\n    vec4 c = texture2D(uSampler, vTextureCoord);\n\n    if (c.a > 0.0) {\n        c.rgb /= c.a;\n\n        vec3 rgb = pow(c.rgb, vec3(1. / gamma));\n        rgb = mix(vec3(.5), mix(vec3(dot(vec3(.2125, .7154, .0721), rgb)), rgb, saturation), contrast);\n        rgb.r *= red;\n        rgb.g *= green;\n        rgb.b *= blue;\n        c.rgb = rgb * brightness;\n\n        c.rgb *= c.a;\n    }\n\n    gl_FragColor = c * alpha;\n}\n",i=function(t){function n(n){t.call(this,r,e),Object.assign(this,{gamma:1,saturation:1,contrast:1,brightness:1,red:1,green:1,blue:1,alpha:1},n)}return t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n,n.prototype.apply=function(t,n,r,e){this.uniforms.gamma=Math.max(this.gamma,1e-4),this.uniforms.saturation=this.saturation,this.uniforms.contrast=this.contrast,this.uniforms.brightness=this.brightness,this.uniforms.red=this.red,this.uniforms.green=this.green,this.uniforms.blue=this.blue,this.uniforms.alpha=this.alpha,t.applyFilter(this,n,r,e)},n}(n.Filter);t.AdjustmentFilter=i,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],41:[function(require,module,exports){
-/*!
- * @pixi/filter-advanced-bloom - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-advanced-bloom is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js"),require("@pixi/filter-kawase-blur")):"function"==typeof define&&define.amd?define(["exports","pixi.js","@pixi/filter-kawase-blur"],t):t(e.__filters={},e.PIXI,e.PIXI.filters)}(this,function(e,t,r){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform float threshold;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    // A simple & fast algorithm for getting brightness.\n    // It's inaccuracy , but good enought for this feature.\n    float _max = max(max(color.r, color.g), color.b);\n    float _min = min(min(color.r, color.g), color.b);\n    float brightness = (_max + _min) * 0.5;\n\n    if(brightness > threshold) {\n        gl_FragColor = color;\n    } else {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\n    }\n}\n",n=function(e){function t(t){void 0===t&&(t=.5),e.call(this,o,i),this.threshold=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var r={threshold:{configurable:!0}};return r.threshold.get=function(){return this.uniforms.threshold},r.threshold.set=function(e){this.uniforms.threshold=e},Object.defineProperties(t.prototype,r),t}(t.Filter),l="uniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform sampler2D bloomTexture;\nuniform float bloomScale;\nuniform float brightness;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    color.rgb *= brightness;\n    vec4 bloomColor = vec4(texture2D(bloomTexture, vTextureCoord).rgb, 0.0);\n    bloomColor.rgb *= bloomScale;\n    gl_FragColor = color + bloomColor;\n}\n",s=function(e){function i(i){e.call(this,o,l),"number"==typeof i&&(i={threshold:i}),i=Object.assign({threshold:.5,bloomScale:1,brightness:1,kernels:null,blur:8,quality:4,pixelSize:1,resolution:t.settings.RESOLUTION},i),this.bloomScale=i.bloomScale,this.brightness=i.brightness;var s=i.kernels,u=i.blur,a=i.quality,c=i.pixelSize,h=i.resolution;this._extractFilter=new n(i.threshold),this._extractFilter.resolution=h,this._blurFilter=s?new r.KawaseBlurFilter(s):new r.KawaseBlurFilter(u,a),this.pixelSize=c,this.resolution=h}e&&(i.__proto__=e),i.prototype=Object.create(e&&e.prototype),i.prototype.constructor=i;var s={resolution:{configurable:!0},threshold:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return i.prototype.apply=function(e,t,r,o,i){var n=e.getRenderTarget(!0);this._extractFilter.apply(e,t,n,!0,i);var l=e.getRenderTarget(!0);this._blurFilter.apply(e,n,l,!0,i),this.uniforms.bloomScale=this.bloomScale,this.uniforms.brightness=this.brightness,this.uniforms.bloomTexture=l,e.applyFilter(this,t,r,o),e.returnRenderTarget(l),e.returnRenderTarget(n)},s.resolution.get=function(){return this._resolution},s.resolution.set=function(e){this._resolution=e,this._extractFilter&&(this._extractFilter.resolution=e),this._blurFilter&&(this._blurFilter.resolution=e)},s.threshold.get=function(){return this._extractFilter.threshold},s.threshold.set=function(e){this._extractFilter.threshold=e},s.kernels.get=function(){return this._blurFilter.kernels},s.kernels.set=function(e){this._blurFilter.kernels=e},s.blur.get=function(){return this._blurFilter.blur},s.blur.set=function(e){this._blurFilter.blur=e},s.quality.get=function(){return this._blurFilter.quality},s.quality.set=function(e){this._blurFilter.quality=e},s.pixelSize.get=function(){return this._blurFilter.pixelSize},s.pixelSize.set=function(e){this._blurFilter.pixelSize=e},Object.defineProperties(i.prototype,s),i}(t.Filter);e.AdvancedBloomFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"@pixi/filter-kawase-blur":57,"pixi.js":262}],42:[function(require,module,exports){
-/*!
- * @pixi/filter-ascii - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-ascii is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform float pixelSize;\nuniform sampler2D uSampler;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n    return floor( coord / size ) * size;\n}\n\nvec2 getMod(vec2 coord, vec2 size)\n{\n    return mod( coord , size) / size;\n}\n\nfloat character(float n, vec2 p)\n{\n    p = floor(p*vec2(4.0, -4.0) + 2.5);\n    if (clamp(p.x, 0.0, 4.0) == p.x && clamp(p.y, 0.0, 4.0) == p.y)\n    {\n        if (int(mod(n/exp2(p.x + 5.0*p.y), 2.0)) == 1) return 1.0;\n    }\n    return 0.0;\n}\n\nvoid main()\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    // get the rounded color..\n    vec2 pixCoord = pixelate(coord, vec2(pixelSize));\n    pixCoord = unmapCoord(pixCoord);\n\n    vec4 color = texture2D(uSampler, pixCoord);\n\n    // determine the character to use\n    float gray = (color.r + color.g + color.b) / 3.0;\n\n    float n =  65536.0;             // .\n    if (gray > 0.2) n = 65600.0;    // :\n    if (gray > 0.3) n = 332772.0;   // *\n    if (gray > 0.4) n = 15255086.0; // o\n    if (gray > 0.5) n = 23385164.0; // &\n    if (gray > 0.6) n = 15252014.0; // 8\n    if (gray > 0.7) n = 13199452.0; // @\n    if (gray > 0.8) n = 11512810.0; // #\n\n    // get the mod..\n    vec2 modd = getMod(coord, vec2(pixelSize));\n\n    gl_FragColor = color * character( n, vec2(-1.0) + modd * 2.0);\n\n}",t=function(e){function n(n){void 0===n&&(n=8),e.call(this,o,r),this.size=n}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.pixelSize},t.size.set=function(e){this.uniforms.pixelSize=e},Object.defineProperties(n.prototype,t),n}(n.Filter);e.AsciiFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],43:[function(require,module,exports){
-/*!
- * @pixi/filter-bevel - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-bevel is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float transformX;\nuniform float transformY;\nuniform vec3 lightColor;\nuniform float lightAlpha;\nuniform vec3 shadowColor;\nuniform float shadowAlpha;\n\nvoid main(void) {\n    vec2 transform = vec2(1.0 / filterArea) * vec2(transformX, transformY);\n    vec4 color = texture2D(uSampler, vTextureCoord);\n    float light = texture2D(uSampler, vTextureCoord - transform).a;\n    float shadow = texture2D(uSampler, vTextureCoord + transform).a;\n\n    color.rgb = mix(color.rgb, lightColor, clamp((color.a - light) * lightAlpha, 0.0, 1.0));\n    color.rgb = mix(color.rgb, shadowColor, clamp((color.a - shadow) * shadowAlpha, 0.0, 1.0));\n    gl_FragColor = vec4(color.rgb * color.a, color.a);\n}\n",n=function(o){function n(t){void 0===t&&(t={}),o.call(this,r,i),this.uniforms.lightColor=new Float32Array(3),this.uniforms.shadowColor=new Float32Array(3),t=Object.assign({rotation:45,thickness:2,lightColor:16777215,lightAlpha:.7,shadowColor:0,shadowAlpha:.7},t),this.rotation=t.rotation,this.thickness=t.thickness,this.lightColor=t.lightColor,this.lightAlpha=t.lightAlpha,this.shadowColor=t.shadowColor,this.shadowAlpha=t.shadowAlpha}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var e={rotation:{configurable:!0},thickness:{configurable:!0},lightColor:{configurable:!0},lightAlpha:{configurable:!0},shadowColor:{configurable:!0},shadowAlpha:{configurable:!0}};return n.prototype._updateTransform=function(){this.uniforms.transformX=this._thickness*Math.cos(this._angle),this.uniforms.transformY=this._thickness*Math.sin(this._angle)},e.rotation.get=function(){return this._angle/t.DEG_TO_RAD},e.rotation.set=function(o){this._angle=o*t.DEG_TO_RAD,this._updateTransform()},e.thickness.get=function(){return this._thickness},e.thickness.set=function(o){this._thickness=o,this._updateTransform()},e.lightColor.get=function(){return t.utils.rgb2hex(this.uniforms.lightColor)},e.lightColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.lightColor)},e.lightAlpha.get=function(){return this.uniforms.lightAlpha},e.lightAlpha.set=function(o){this.uniforms.lightAlpha=o},e.shadowColor.get=function(){return t.utils.rgb2hex(this.uniforms.shadowColor)},e.shadowColor.set=function(o){t.utils.hex2rgb(o,this.uniforms.shadowColor)},e.shadowAlpha.get=function(){return this.uniforms.shadowAlpha},e.shadowAlpha.set=function(o){this.uniforms.shadowAlpha=o},Object.defineProperties(n.prototype,e),n}(t.Filter);o.BevelFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],44:[function(require,module,exports){
-/*!
- * @pixi/filter-bloom - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-bloom is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(t,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(t.__filters={},t.PIXI)}(this,function(t,r){"use strict";var e=r.filters,i=e.BlurXFilter,l=e.BlurYFilter,u=e.AlphaFilter,n=function(t){function e(e,n,o,s){var b,f;void 0===e&&(e=2),void 0===n&&(n=4),void 0===o&&(o=r.settings.RESOLUTION),void 0===s&&(s=5),t.call(this),"number"==typeof e?(b=e,f=e):e instanceof r.Point?(b=e.x,f=e.y):Array.isArray(e)&&(b=e[0],f=e[1]),this.blurXFilter=new i(b,n,o,s),this.blurYFilter=new l(f,n,o,s),this.blurYFilter.blendMode=r.BLEND_MODES.SCREEN,this.defaultFilter=new u}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var n={blur:{configurable:!0},blurX:{configurable:!0},blurY:{configurable:!0}};return e.prototype.apply=function(t,r,e){var i=t.getRenderTarget(!0);this.defaultFilter.apply(t,r,e),this.blurXFilter.apply(t,r,i),this.blurYFilter.apply(t,i,e),t.returnRenderTarget(i)},n.blur.get=function(){return this.blurXFilter.blur},n.blur.set=function(t){this.blurXFilter.blur=this.blurYFilter.blur=t},n.blurX.get=function(){return this.blurXFilter.blur},n.blurX.set=function(t){this.blurXFilter.blur=t},n.blurY.get=function(){return this.blurYFilter.blur},n.blurY.set=function(t){this.blurYFilter.blur=t},Object.defineProperties(e.prototype,n),e}(r.Filter);t.BloomFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],45:[function(require,module,exports){
-/*!
- * @pixi/filter-bulge-pinch - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-bulge-pinch is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="uniform float radius;\nuniform float strength;\nuniform vec2 center;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoord;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nvoid main()\n{\n    vec2 coord = vTextureCoord * filterArea.xy;\n    coord -= center * dimensions.xy;\n    float distance = length(coord);\n    if (distance < radius) {\n        float percent = distance / radius;\n        if (strength > 0.0) {\n            coord *= mix(1.0, smoothstep(0.0, radius / distance, percent), strength * 0.75);\n        } else {\n            coord *= mix(1.0, pow(percent, 1.0 + strength * 0.75) * radius / distance, 1.0 - percent);\n        }\n    }\n    coord += center * dimensions.xy;\n    coord /= filterArea.xy;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    gl_FragColor = color;\n}\n",o=function(e){function n(n,o,i){e.call(this,t,r),this.uniforms.dimensions=new Float32Array(2),this.center=n||[.5,.5],this.radius=o||100,this.strength=i||1}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={radius:{configurable:!0},strength:{configurable:!0},center:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,e.applyFilter(this,n,t,r)},o.radius.get=function(){return this.uniforms.radius},o.radius.set=function(e){this.uniforms.radius=e},o.strength.get=function(){return this.uniforms.strength},o.strength.set=function(e){this.uniforms.strength=e},o.center.get=function(){return this.uniforms.center},o.center.set=function(e){this.uniforms.center=e},Object.defineProperties(n.prototype,o),n}(n.Filter);e.BulgePinchFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],46:[function(require,module,exports){
-/*!
- * @pixi/filter-color-map - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-color-map is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform sampler2D colorMap;\n\nuniform float _mix;\nuniform float _size;\nuniform float _sliceSize;\nuniform float _slicePixelSize;\nuniform float _sliceInnerSize;\n\nvoid main() {\n    vec4 color = texture2D(uSampler, vTextureCoord.xy);\n\n    float sliceIndex = color.b * (_size - 1.0);\n    float zSlice0 = floor(sliceIndex);\n    float zSlice1 = ceil(sliceIndex);\n\n    float xOffset = _slicePixelSize * 0.5 + color.r * _sliceInnerSize;\n    float s0 = xOffset + zSlice0 * _sliceSize;\n    float s1 = xOffset + zSlice1 * _sliceSize;\n    vec4 slice0Color = texture2D(colorMap, vec2(s0, color.g));\n    vec4 slice1Color = texture2D(colorMap, vec2(s1, color.g));\n    vec4 adjusted = mix(slice0Color, slice1Color, fract(sliceIndex));\n\n    gl_FragColor = mix(color, adjusted, _mix);\n}\n",s=function(e){function s(i,s,r){void 0===s&&(s=!1),void 0===r&&(r=1),e.call(this,t,o),this._size=0,this._sliceSize=0,this._slicePixelSize=0,this._sliceInnerSize=0,this._scaleMode=null,this._nearest=!1,this.nearest=s,this.mix=r,this.colorMap=i}e&&(s.__proto__=e),s.prototype=Object.create(e&&e.prototype),s.prototype.constructor=s;var r={colorSize:{configurable:!0},colorMap:{configurable:!0},nearest:{configurable:!0}};return s.prototype.apply=function(e,i,t,o){this.uniforms._mix=this.mix,e.applyFilter(this,i,t,o)},r.colorSize.get=function(){return this._size},r.colorMap.get=function(){return this._colorMap},r.colorMap.set=function(e){e instanceof i.Texture||(e=i.Texture.from(e)),e&&e.baseTexture&&(e.baseTexture.scaleMode=this._scaleMode,e.baseTexture.mipmap=!1,this._size=e.height,this._sliceSize=1/this._size,this._slicePixelSize=this._sliceSize/this._size,this._sliceInnerSize=this._slicePixelSize*(this._size-1),this.uniforms._size=this._size,this.uniforms._sliceSize=this._sliceSize,this.uniforms._slicePixelSize=this._slicePixelSize,this.uniforms._sliceInnerSize=this._sliceInnerSize,this.uniforms.colorMap=e),this._colorMap=e},r.nearest.get=function(){return this._nearest},r.nearest.set=function(e){this._nearest=e,this._scaleMode=e?i.SCALE_MODES.NEAREST:i.SCALE_MODES.LINEAR;var t=this._colorMap;t&&t.baseTexture&&(t.baseTexture._glTextures={},t.baseTexture.scaleMode=this._scaleMode,t.baseTexture.mipmap=!1,t._updateID++,t.baseTexture.emit("update",t.baseTexture))},s.prototype.updateColorMap=function(){var e=this._colorMap;e&&e.baseTexture&&(e._updateID++,e.baseTexture.emit("update",e.baseTexture),this.colorMap=e)},s.prototype.destroy=function(i){this._colorMap&&this._colorMap.destroy(i),e.prototype.destroy.call(this)},Object.defineProperties(s.prototype,r),s}(i.Filter);e.ColorMapFilter=s,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],47:[function(require,module,exports){
-/*!
- * @pixi/filter-color-replace - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-color-replace is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(o,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(o.__filters={},o.PIXI)}(this,function(o,r){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec3 originalColor;\nuniform vec3 newColor;\nuniform float epsilon;\nvoid main(void) {\n    vec4 currentColor = texture2D(uSampler, vTextureCoord);\n    vec3 colorDiff = originalColor - (currentColor.rgb / max(currentColor.a, 0.0000000001));\n    float colorDistance = length(colorDiff);\n    float doReplace = step(colorDistance, epsilon);\n    gl_FragColor = vec4(mix(currentColor.rgb, (newColor + colorDiff) * currentColor.a, doReplace), currentColor.a);\n}\n",n=function(o){function n(r,n,t){void 0===r&&(r=16711680),void 0===n&&(n=0),void 0===t&&(t=.4),o.call(this,e,i),this.uniforms.originalColor=new Float32Array(3),this.uniforms.newColor=new Float32Array(3),this.originalColor=r,this.newColor=n,this.epsilon=t}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={originalColor:{configurable:!0},newColor:{configurable:!0},epsilon:{configurable:!0}};return t.originalColor.set=function(o){var e=this.uniforms.originalColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._originalColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._originalColor=r.utils.rgb2hex(e))},t.originalColor.get=function(){return this._originalColor},t.newColor.set=function(o){var e=this.uniforms.newColor;"number"==typeof o?(r.utils.hex2rgb(o,e),this._newColor=o):(e[0]=o[0],e[1]=o[1],e[2]=o[2],this._newColor=r.utils.rgb2hex(e))},t.newColor.get=function(){return this._newColor},t.epsilon.set=function(o){this.uniforms.epsilon=o},t.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(n.prototype,t),n}(r.Filter);o.ColorReplaceFilter=n,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],48:[function(require,module,exports){
-/*!
- * @pixi/filter-convolution - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-convolution is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="precision mediump float;\n\nvarying mediump vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec2 texelSize;\nuniform float matrix[9];\n\nvoid main(void)\n{\n   vec4 c11 = texture2D(uSampler, vTextureCoord - texelSize); // top left\n   vec4 c12 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - texelSize.y)); // top center\n   vec4 c13 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y - texelSize.y)); // top right\n\n   vec4 c21 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y)); // mid left\n   vec4 c22 = texture2D(uSampler, vTextureCoord); // mid center\n   vec4 c23 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y)); // mid right\n\n   vec4 c31 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y + texelSize.y)); // bottom left\n   vec4 c32 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + texelSize.y)); // bottom center\n   vec4 c33 = texture2D(uSampler, vTextureCoord + texelSize); // bottom right\n\n   gl_FragColor =\n       c11 * matrix[0] + c12 * matrix[1] + c13 * matrix[2] +\n       c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +\n       c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];\n\n   gl_FragColor.a = c22.a;\n}\n",o=function(e){function t(t,o,n){e.call(this,r,i),this.uniforms.texelSize=new Float32Array(9),this.matrix=t,this.width=o,this.height=n}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var o={matrix:{configurable:!0},width:{configurable:!0},height:{configurable:!0}};return o.matrix.get=function(){return this.uniforms.matrix},o.matrix.set=function(e){this.uniforms.matrix=new Float32Array(e)},o.width.get=function(){return 1/this.uniforms.texelSize[0]},o.width.set=function(e){this.uniforms.texelSize[0]=1/e},o.height.get=function(){return 1/this.uniforms.texelSize[1]},o.height.set=function(e){this.uniforms.texelSize[1]=1/e},Object.defineProperties(t.prototype,o),t}(t.Filter);e.ConvolutionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],49:[function(require,module,exports){
-/*!
- * @pixi/filter-cross-hatch - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-cross-hatch is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(n,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(n.__filters={},n.PIXI)}(this,function(n,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void)\n{\n    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);\n\n    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n\n    if (lum < 1.00)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.75)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.50)\n    {\n        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n\n    if (lum < 0.3)\n    {\n        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0)\n        {\n            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        }\n    }\n}\n",t=function(n){function o(){n.call(this,r,e)}return n&&(o.__proto__=n),o.prototype=Object.create(n&&n.prototype),o.prototype.constructor=o,o}(o.Filter);n.CrossHatchFilter=t,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],50:[function(require,module,exports){
-/*!
- * @pixi/filter-crt - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-crt is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(n,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(n.__filters={},n.PIXI)}(this,function(n,i){"use strict";var e="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nconst float SQRT_2 = 1.414213;\n\nconst float light = 1.0;\n\nuniform float curvature;\nuniform float lineWidth;\nuniform float lineContrast;\nuniform bool verticalLine;\nuniform float noise;\nuniform float noiseSize;\n\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\n\nuniform float seed;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    vec2 dir = vec2(coord - vec2(0.5, 0.5));\n\n    float _c = curvature > 0. ? curvature : 1.;\n    float k = curvature > 0. ?(length(dir * dir) * 0.25 * _c * _c + 0.935 * _c) : 1.;\n    vec2 uv = dir * k;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 rgb = gl_FragColor.rgb;\n\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        rgb += _noise * noise;\n    }\n\n    if (lineWidth > 0.0) {\n        float v = (verticalLine ? uv.x * dimensions.x : uv.y * dimensions.y) * min(1.0, 2.0 / lineWidth ) / _c;\n        float j = 1. + cos(v * 1.2 - time) * 0.5 * lineContrast;\n        rgb *= j;\n        float segment = verticalLine ? mod((dir.x + .5) * dimensions.x, 4.) : mod((dir.y + .5) * dimensions.y, 4.);\n        rgb *= 0.99 + ceil(segment) * 0.015;\n    }\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    gl_FragColor.rgb = rgb;\n}\n",o=function(n){function i(i){n.call(this,e,t),this.uniforms.dimensions=new Float32Array(2),this.time=0,this.seed=0,Object.assign(this,{curvature:1,lineWidth:1,lineContrast:.25,verticalLine:!1,noise:0,noiseSize:1,seed:0,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3,time:0},i)}n&&(i.__proto__=n),i.prototype=Object.create(n&&n.prototype),i.prototype.constructor=i;var o={curvature:{configurable:!0},lineWidth:{configurable:!0},lineContrast:{configurable:!0},verticalLine:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return i.prototype.apply=function(n,i,e,t){this.uniforms.dimensions[0]=i.sourceFrame.width,this.uniforms.dimensions[1]=i.sourceFrame.height,this.uniforms.seed=this.seed,this.uniforms.time=this.time,n.applyFilter(this,i,e,t)},o.curvature.set=function(n){this.uniforms.curvature=n},o.curvature.get=function(){return this.uniforms.curvature},o.lineWidth.set=function(n){this.uniforms.lineWidth=n},o.lineWidth.get=function(){return this.uniforms.lineWidth},o.lineContrast.set=function(n){this.uniforms.lineContrast=n},o.lineContrast.get=function(){return this.uniforms.lineContrast},o.verticalLine.set=function(n){this.uniforms.verticalLine=n},o.verticalLine.get=function(){return this.uniforms.verticalLine},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(i.prototype,o),i}(i.Filter);n.CRTFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],51:[function(require,module,exports){
-/*!
- * @pixi/filter-dot - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-dot is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform vec4 filterArea;\nuniform sampler2D uSampler;\n\nuniform float angle;\nuniform float scale;\n\nfloat pattern()\n{\n   float s = sin(angle), c = cos(angle);\n   vec2 tex = vTextureCoord * filterArea.xy;\n   vec2 point = vec2(\n       c * tex.x - s * tex.y,\n       s * tex.x + c * tex.y\n   ) * scale;\n   return (sin(point.x) * sin(point.y)) * 4.0;\n}\n\nvoid main()\n{\n   vec4 color = texture2D(uSampler, vTextureCoord);\n   float average = (color.r + color.g + color.b) / 3.0;\n   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);\n}\n",r=function(e){function n(n,r){void 0===n&&(n=1),void 0===r&&(r=5),e.call(this,t,o),this.scale=n,this.angle=r}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={scale:{configurable:!0},angle:{configurable:!0}};return r.scale.get=function(){return this.uniforms.scale},r.scale.set=function(e){this.uniforms.scale=e},r.angle.get=function(){return this.uniforms.angle},r.angle.set=function(e){this.uniforms.angle=e},Object.defineProperties(n.prototype,r),n}(n.Filter);e.DotFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],52:[function(require,module,exports){
-/*!
- * @pixi/filter-drop-shadow - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-drop-shadow is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(t,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("@pixi/filter-kawase-blur"),require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","@pixi/filter-kawase-blur","pixi.js"],i):i(t.__filters={},t.PIXI.filters,t.PIXI)}(this,function(t,i,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform float alpha;\nuniform vec3 color;\nvoid main(void){\n    vec4 sample = texture2D(uSampler, vTextureCoord);\n\n    // Un-premultiply alpha before applying the color\n    if (sample.a > 0.0) {\n        sample.rgb /= sample.a;\n    }\n\n    // Premultiply alpha again\n    sample.rgb = color.rgb * sample.a;\n\n    // alpha user alpha\n    sample *= alpha;\n\n    gl_FragColor = sample;\n}",o=function(t){function o(o){o&&o.constructor!==Object&&(console.warn("DropShadowFilter now uses options instead of (rotation, distance, blur, color, alpha)"),o={rotation:o},void 0!==arguments[1]&&(o.distance=arguments[1]),void 0!==arguments[2]&&(o.blur=arguments[2]),void 0!==arguments[3]&&(o.color=arguments[3]),void 0!==arguments[4]&&(o.alpha=arguments[4])),o=Object.assign({rotation:45,distance:5,color:0,alpha:.5,shadowOnly:!1,kernels:null,blur:2,quality:3,pixelSize:1,resolution:e.settings.RESOLUTION},o),t.call(this);var l=o.kernels,a=o.blur,s=o.quality,u=o.pixelSize,c=o.resolution;this._tintFilter=new e.Filter(r,n),this._tintFilter.uniforms.color=new Float32Array(4),this._tintFilter.resolution=c,this._blurFilter=l?new i.KawaseBlurFilter(l):new i.KawaseBlurFilter(a,s),this.pixelSize=u,this.resolution=c,this.targetTransform=new e.Matrix;var p=o.shadowOnly,h=o.rotation,f=o.distance,d=o.alpha,g=o.color;this.shadowOnly=p,this.rotation=h,this.distance=f,this.alpha=d,this.color=g,this._updatePadding()}t&&(o.__proto__=t),o.prototype=Object.create(t&&t.prototype),o.prototype.constructor=o;var l={resolution:{configurable:!0},distance:{configurable:!0},rotation:{configurable:!0},alpha:{configurable:!0},color:{configurable:!0},kernels:{configurable:!0},blur:{configurable:!0},quality:{configurable:!0},pixelSize:{configurable:!0}};return o.prototype.apply=function(t,i,e,r){var n=t.getRenderTarget();n.transform=this.targetTransform,this._tintFilter.apply(t,i,n,!0),n.transform=null,this._blurFilter.apply(t,n,e),!0!==this.shadowOnly&&t.applyFilter(this,i,e,r),t.returnRenderTarget(n)},o.prototype._updatePadding=function(){this.padding=this.distance+2*this.blur},o.prototype._updateTargetTransform=function(){this.targetTransform.tx=this.distance*Math.cos(this.angle),this.targetTransform.ty=this.distance*Math.sin(this.angle)},l.resolution.get=function(){return this._resolution},l.resolution.set=function(t){this._resolution=t,this._tintFilter&&(this._tintFilter.resolution=t),this._blurFilter&&(this._blurFilter.resolution=t)},l.distance.get=function(){return this._distance},l.distance.set=function(t){this._distance=t,this._updatePadding(),this._updateTargetTransform()},l.rotation.get=function(){return this.angle/e.DEG_TO_RAD},l.rotation.set=function(t){this.angle=t*e.DEG_TO_RAD,this._updateTargetTransform()},l.alpha.get=function(){return this._tintFilter.uniforms.alpha},l.alpha.set=function(t){this._tintFilter.uniforms.alpha=t},l.color.get=function(){return e.utils.rgb2hex(this._tintFilter.uniforms.color)},l.color.set=function(t){e.utils.hex2rgb(t,this._tintFilter.uniforms.color)},l.kernels.get=function(){return this._blurFilter.kernels},l.kernels.set=function(t){this._blurFilter.kernels=t},l.blur.get=function(){return this._blurFilter.blur},l.blur.set=function(t){this._blurFilter.blur=t,this._updatePadding()},l.quality.get=function(){return this._blurFilter.quality},l.quality.set=function(t){this._blurFilter.quality=t},l.pixelSize.get=function(){return this._blurFilter.pixelSize},l.pixelSize.set=function(t){this._blurFilter.pixelSize=t},Object.defineProperties(o.prototype,l),o}(e.Filter);t.DropShadowFilter=o,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"@pixi/filter-kawase-blur":57,"pixi.js":262}],53:[function(require,module,exports){
-/*!
- * @pixi/filter-emboss - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-emboss is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float strength;\nuniform vec4 filterArea;\n\n\nvoid main(void)\n{\n\tvec2 onePixel = vec2(1.0 / filterArea);\n\n\tvec4 color;\n\n\tcolor.rgb = vec3(0.5);\n\n\tcolor -= texture2D(uSampler, vTextureCoord - onePixel) * strength;\n\tcolor += texture2D(uSampler, vTextureCoord + onePixel) * strength;\n\n\tcolor.rgb = vec3((color.r + color.g + color.b) / 3.0);\n\n\tfloat alpha = texture2D(uSampler, vTextureCoord).a;\n\n\tgl_FragColor = vec4(color.rgb * alpha, alpha);\n}\n",n=function(e){function t(t){void 0===t&&(t=5),e.call(this,r,o),this.strength=t}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var n={strength:{configurable:!0}};return n.strength.get=function(){return this.uniforms.strength},n.strength.set=function(e){this.uniforms.strength=e},Object.defineProperties(t.prototype,n),t}(t.Filter);e.EmbossFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],54:[function(require,module,exports){
-/*!
- * @pixi/filter-glitch - v2.6.1
- * Compiled Thu, 03 May 2018 14:20:43 UTC
- *
- * @pixi/filter-glitch is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i(e.__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="// precision highp float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\nuniform float aspect;\n\nuniform sampler2D displacementMap;\nuniform float offset;\nuniform float sinDir;\nuniform float cosDir;\nuniform int fillMode;\n\nuniform float seed;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nconst int TRANSPARENT = 0;\nconst int ORIGINAL = 1;\nconst int LOOP = 2;\nconst int CLAMP = 3;\nconst int MIRROR = 4;\n\nvoid main(void)\n{\n    vec2 coord = (vTextureCoord * filterArea.xy) / dimensions;\n\n    if (coord.x > 1.0 || coord.y > 1.0) {\n        return;\n    }\n\n    float cx = coord.x - 0.5;\n    float cy = (coord.y - 0.5) * aspect;\n    float ny = (-sinDir * cx + cosDir * cy) / aspect + 0.5;\n\n    // displacementMap: repeat\n    // ny = ny > 1.0 ? ny - 1.0 : (ny < 0.0 ? 1.0 + ny : ny);\n\n    // displacementMap: mirror\n    ny = ny > 1.0 ? 2.0 - ny : (ny < 0.0 ? -ny : ny);\n\n    vec4 dc = texture2D(displacementMap, vec2(0.5, ny));\n\n    float displacement = (dc.r - dc.g) * (offset / filterArea.x);\n\n    coord = vTextureCoord + vec2(cosDir * displacement, sinDir * displacement * aspect);\n\n    if (fillMode == CLAMP) {\n        coord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    } else {\n        if( coord.x > filterClamp.z ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x -= filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x = filterClamp.z * 2.0 - coord.x;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.x < filterClamp.x ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x += filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x *= -filterClamp.z;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n\n        if( coord.y > filterClamp.w ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y -= filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y = filterClamp.w * 2.0 - coord.y;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.y < filterClamp.y ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y += filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y *= -filterClamp.w;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n    }\n\n    gl_FragColor.r = texture2D(uSampler, coord + red * (1.0 - seed * 0.4) / filterArea.xy).r;\n    gl_FragColor.g = texture2D(uSampler, coord + green * (1.0 - seed * 0.3) / filterArea.xy).g;\n    gl_FragColor.b = texture2D(uSampler, coord + blue * (1.0 - seed * 0.2) / filterArea.xy).b;\n    gl_FragColor.a = texture2D(uSampler, coord).a;\n}\n",r=function(e){function r(r){void 0===r&&(r={}),e.call(this,t,n),this.uniforms.dimensions=new Float32Array(2),r=Object.assign({slices:5,offset:100,direction:0,fillMode:0,average:!1,seed:0,red:[0,0],green:[0,0],blue:[0,0],minSize:8,sampleSize:512},r),this.direction=r.direction,this.red=r.red,this.green=r.green,this.blue=r.blue,this.offset=r.offset,this.fillMode=r.fillMode,this.average=r.average,this.seed=r.seed,this.minSize=r.minSize,this.sampleSize=r.sampleSize,this._canvas=document.createElement("canvas"),this._canvas.width=4,this._canvas.height=this.sampleSize,this.texture=i.Texture.fromCanvas(this._canvas,i.SCALE_MODES.NEAREST),this._slices=0,this.slices=r.slices}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var s={sizes:{configurable:!0},offsets:{configurable:!0},slices:{configurable:!0},direction:{configurable:!0},red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return r.prototype.apply=function(e,i,t,n){var r=i.sourceFrame.width,s=i.sourceFrame.height;this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=s,this.uniforms.aspect=s/r,this.uniforms.seed=this.seed,this.uniforms.offset=this.offset,this.uniforms.fillMode=this.fillMode,e.applyFilter(this,i,t,n)},r.prototype._randomizeSizes=function(){var e=this._sizes,i=this._slices-1,t=this.sampleSize,n=Math.min(this.minSize/t,.9/this._slices);if(this.average){for(var r=this._slices,s=1,o=0;o<i;o++){var l=s/(r-o),f=Math.max(l*(1-.6*Math.random()),n);e[o]=f,s-=f}e[i]=s}else{for(var a=1,c=Math.sqrt(1/this._slices),u=0;u<i;u++){var d=Math.max(c*a*Math.random(),n);e[u]=d,a-=d}e[i]=a}this.shuffle()},r.prototype.shuffle=function(){for(var e=this._sizes,i=this._slices-1;i>0;i--){var t=Math.random()*i>>0,n=e[i];e[i]=e[t],e[t]=n}},r.prototype._randomizeOffsets=function(){for(var e=0;e<this._slices;e++)this._offsets[e]=Math.random()*(Math.random()<.5?-1:1)},r.prototype.refresh=function(){this._randomizeSizes(),this._randomizeOffsets(),this.redraw()},r.prototype.redraw=function(){var e,i=this.sampleSize,t=this.texture,n=this._canvas.getContext("2d");n.clearRect(0,0,8,i);for(var r=0,s=0;s<this._slices;s++){e=Math.floor(256*this._offsets[s]);var o=this._sizes[s]*i,l=e>0?e:0,f=e<0?-e:0;n.fillStyle="rgba("+l+", "+f+", 0, 1)",n.fillRect(0,r>>0,i,o+1>>0),r+=o}t.baseTexture.emit("update",t.baseTexture),this.uniforms.displacementMap=t},s.sizes.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._sizes[t]=e[t]},s.sizes.get=function(){return this._sizes},s.offsets.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._offsets[t]=e[t]},s.offsets.get=function(){return this._offsets},s.slices.get=function(){return this._slices},s.slices.set=function(e){this._slices!==e&&(this._slices=e,this.uniforms.slices=e,this._sizes=this.uniforms.slicesWidth=new Float32Array(e),this._offsets=this.uniforms.slicesOffset=new Float32Array(e),this.refresh())},s.direction.get=function(){return this._direction},s.direction.set=function(e){if(this._direction!==e){this._direction=e;var t=e*i.DEG_TO_RAD;this.uniforms.sinDir=Math.sin(t),this.uniforms.cosDir=Math.cos(t)}},s.red.get=function(){return this.uniforms.red},s.red.set=function(e){this.uniforms.red=e},s.green.get=function(){return this.uniforms.green},s.green.set=function(e){this.uniforms.green=e},s.blue.get=function(){return this.uniforms.blue},s.blue.set=function(e){this.uniforms.blue=e},r.prototype.destroy=function(){this.texture.destroy(!0),this.texture=null,this._canvas=null,this.red=null,this.green=null,this.blue=null,this._sizes=null,this._offsets=null},Object.defineProperties(r.prototype,s),r}(i.Filter);r.TRANSPARENT=0,r.ORIGINAL=1,r.LOOP=2,r.CLAMP=3,r.MIRROR=4,e.GlitchFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
-
-
-},{"pixi.js":262}],55:[function(require,module,exports){
-/*!
- * @pixi/filter-glow - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-glow is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(o,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(o.__filters={},o.PIXI)}(this,function(o,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nvarying vec4 vColor;\n\nuniform sampler2D uSampler;\n\nuniform float distance;\nuniform float outerStrength;\nuniform float innerStrength;\nuniform vec4 glowColor;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nconst float PI = 3.14159265358979323846264;\n\nvoid main(void) {\n    vec2 px = vec2(1.0 / filterArea.x, 1.0 / filterArea.y);\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float totalAlpha = 0.0;\n    float maxTotalAlpha = 0.0;\n    float cosAngle;\n    float sinAngle;\n    vec2 displaced;\n    for (float angle = 0.0; angle <= PI * 2.0; angle += %QUALITY_DIST%) {\n       cosAngle = cos(angle);\n       sinAngle = sin(angle);\n       for (float curDistance = 1.0; curDistance <= %DIST%; curDistance++) {\n           displaced.x = vTextureCoord.x + cosAngle * curDistance * px.x;\n           displaced.y = vTextureCoord.y + sinAngle * curDistance * px.y;\n           curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n           totalAlpha += (distance - curDistance) * curColor.a;\n           maxTotalAlpha += (distance - curDistance);\n       }\n    }\n    maxTotalAlpha = max(maxTotalAlpha, 0.0001);\n\n    ownColor.a = max(ownColor.a, 0.0001);\n    ownColor.rgb = ownColor.rgb / ownColor.a;\n    float outerGlowAlpha = (totalAlpha / maxTotalAlpha)  * outerStrength * (1. - ownColor.a);\n    float innerGlowAlpha = ((maxTotalAlpha - totalAlpha) / maxTotalAlpha) * innerStrength * ownColor.a;\n    float resultAlpha = (ownColor.a + outerGlowAlpha);\n    gl_FragColor = vec4(mix(mix(ownColor.rgb, glowColor.rgb, innerGlowAlpha / ownColor.a), glowColor.rgb, outerGlowAlpha / resultAlpha) * resultAlpha, resultAlpha);\n}\n",r=function(o){function r(t,r,i,l,a){void 0===t&&(t=10),void 0===r&&(r=4),void 0===i&&(i=0),void 0===l&&(l=16777215),void 0===a&&(a=.1),o.call(this,n,e.replace(/%QUALITY_DIST%/gi,""+(1/a/t).toFixed(7)).replace(/%DIST%/gi,""+t.toFixed(7))),this.uniforms.glowColor=new Float32Array([0,0,0,1]),this.distance=t,this.color=l,this.outerStrength=r,this.innerStrength=i}o&&(r.__proto__=o),r.prototype=Object.create(o&&o.prototype),r.prototype.constructor=r;var i={color:{configurable:!0},distance:{configurable:!0},outerStrength:{configurable:!0},innerStrength:{configurable:!0}};return i.color.get=function(){return t.utils.rgb2hex(this.uniforms.glowColor)},i.color.set=function(o){t.utils.hex2rgb(o,this.uniforms.glowColor)},i.distance.get=function(){return this.uniforms.distance},i.distance.set=function(o){this.uniforms.distance=o},i.outerStrength.get=function(){return this.uniforms.outerStrength},i.outerStrength.set=function(o){this.uniforms.outerStrength=o},i.innerStrength.get=function(){return this.uniforms.innerStrength},i.innerStrength.set=function(o){this.uniforms.innerStrength=o},Object.defineProperties(r.prototype,i),r}(t.Filter);o.GlowFilter=r,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],56:[function(require,module,exports){
-/*!
- * @pixi/filter-godray - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-godray is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="vec3 mod289(vec3 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 mod289(vec4 x)\n{\n    return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\nvec4 permute(vec4 x)\n{\n    return mod289(((x * 34.0) + 1.0) * x);\n}\nvec4 taylorInvSqrt(vec4 r)\n{\n    return 1.79284291400159 - 0.85373472095314 * r;\n}\nvec3 fade(vec3 t)\n{\n    return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);\n}\n// Classic Perlin noise, periodic variant\nfloat pnoise(vec3 P, vec3 rep)\n{\n    vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period\n    vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period\n    Pi0 = mod289(Pi0);\n    Pi1 = mod289(Pi1);\n    vec3 Pf0 = fract(P); // Fractional part for interpolation\n    vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0\n    vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);\n    vec4 iy = vec4(Pi0.yy, Pi1.yy);\n    vec4 iz0 = Pi0.zzzz;\n    vec4 iz1 = Pi1.zzzz;\n    vec4 ixy = permute(permute(ix) + iy);\n    vec4 ixy0 = permute(ixy + iz0);\n    vec4 ixy1 = permute(ixy + iz1);\n    vec4 gx0 = ixy0 * (1.0 / 7.0);\n    vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;\n    gx0 = fract(gx0);\n    vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);\n    vec4 sz0 = step(gz0, vec4(0.0));\n    gx0 -= sz0 * (step(0.0, gx0) - 0.5);\n    gy0 -= sz0 * (step(0.0, gy0) - 0.5);\n    vec4 gx1 = ixy1 * (1.0 / 7.0);\n    vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;\n    gx1 = fract(gx1);\n    vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);\n    vec4 sz1 = step(gz1, vec4(0.0));\n    gx1 -= sz1 * (step(0.0, gx1) - 0.5);\n    gy1 -= sz1 * (step(0.0, gy1) - 0.5);\n    vec3 g000 = vec3(gx0.x, gy0.x, gz0.x);\n    vec3 g100 = vec3(gx0.y, gy0.y, gz0.y);\n    vec3 g010 = vec3(gx0.z, gy0.z, gz0.z);\n    vec3 g110 = vec3(gx0.w, gy0.w, gz0.w);\n    vec3 g001 = vec3(gx1.x, gy1.x, gz1.x);\n    vec3 g101 = vec3(gx1.y, gy1.y, gz1.y);\n    vec3 g011 = vec3(gx1.z, gy1.z, gz1.z);\n    vec3 g111 = vec3(gx1.w, gy1.w, gz1.w);\n    vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));\n    g000 *= norm0.x;\n    g010 *= norm0.y;\n    g100 *= norm0.z;\n    g110 *= norm0.w;\n    vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));\n    g001 *= norm1.x;\n    g011 *= norm1.y;\n    g101 *= norm1.z;\n    g111 *= norm1.w;\n    float n000 = dot(g000, Pf0);\n    float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));\n    float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));\n    float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));\n    float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));\n    float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));\n    float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));\n    float n111 = dot(g111, Pf1);\n    vec3 fade_xyz = fade(Pf0);\n    vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);\n    vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);\n    float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);\n    return 2.2 * n_xyz;\n}\nfloat turb(vec3 P, vec3 rep, float lacunarity, float gain)\n{\n    float sum = 0.0;\n    float sc = 1.0;\n    float totalgain = 1.0;\n    for (float i = 0.0; i < 6.0; i++)\n    {\n        sum += totalgain * pnoise(P * sc, rep);\n        sc *= lacunarity;\n        totalgain *= gain;\n    }\n    return abs(sum);\n}\n",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform vec2 light;\nuniform bool parallel;\nuniform float aspect;\n\nuniform float gain;\nuniform float lacunarity;\nuniform float time;\n\n${perlin}\n\nvoid main(void) {\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    float d;\n\n    if (parallel) {\n        float _cos = light.x;\n        float _sin = light.y;\n        d = (_cos * coord.x) + (_sin * coord.y * aspect);\n    } else {\n        float dx = coord.x - light.x / dimensions.x;\n        float dy = (coord.y - light.y / dimensions.y) * aspect;\n        float dis = sqrt(dx * dx + dy * dy) + 0.00001;\n        d = dy / dis;\n    }\n\n    vec3 dir = vec3(d, d, 0.0);\n\n    float noise = turb(dir + vec3(time, 0.0, 62.1 + time) * 0.05, vec3(480.0, 320.0, 480.0), lacunarity, gain);\n    noise = mix(noise, 0.0, 0.3);\n    //fade vertically.\n    vec4 mist = vec4(noise, noise, noise, 1.0) * (1.0 - coord.y);\n    mist.a = 1.0;\n\n    gl_FragColor = texture2D(uSampler, vTextureCoord) + mist;\n}\n",r=function(n){function r(r){n.call(this,t,o.replace("${perlin}",i)),this.uniforms.dimensions=new Float32Array(2),"number"==typeof r&&(console.warn("GodrayFilter now uses options instead of (angle, gain, lacunarity, time)"),r={angle:r},void 0!==arguments[1]&&(r.gain=arguments[1]),void 0!==arguments[2]&&(r.lacunarity=arguments[2]),void 0!==arguments[3]&&(r.time=arguments[3])),r=Object.assign({angle:30,gain:.5,lacunarity:2.5,time:0,parallel:!0,center:[0,0]},r),this._angleLight=new e.Point,this.angle=r.angle,this.gain=r.gain,this.lacunarity=r.lacunarity,this.parallel=r.parallel,this.center=r.center,this.time=r.time}n&&(r.__proto__=n),r.prototype=Object.create(n&&n.prototype),r.prototype.constructor=r;var a={angle:{configurable:!0},gain:{configurable:!0},lacunarity:{configurable:!0}};return r.prototype.apply=function(n,e,t,i){var o=e.sourceFrame,r=o.width,a=o.height;this.uniforms.light=this.parallel?this._angleLight:this.center,this.uniforms.parallel=this.parallel,this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=a,this.uniforms.aspect=a/r,this.uniforms.time=this.time,n.applyFilter(this,e,t,i)},a.angle.get=function(){return this._angle},a.angle.set=function(n){this._angle=n;var t=n*e.DEG_TO_RAD;this._angleLight.x=Math.cos(t),this._angleLight.y=Math.sin(t)},a.gain.get=function(){return this.uniforms.gain},a.gain.set=function(n){this.uniforms.gain=n},a.lacunarity.get=function(){return this.uniforms.lacunarity},a.lacunarity.set=function(n){this.uniforms.lacunarity=n},Object.defineProperties(r.prototype,a),r}(e.Filter);n.GodrayFilter=r,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],57:[function(require,module,exports){
-/*!
- * @pixi/filter-kawase-blur - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-kawase-blur is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}",o="\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 uOffset;\nuniform vec4 filterClamp;\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n\n    // Sample top left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample top right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y + uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom right pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x + uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Sample bottom left pixel\n    color += texture2D(uSampler, clamp(vec2(vTextureCoord.x - uOffset.x, vTextureCoord.y - uOffset.y), filterClamp.xy, filterClamp.zw));\n\n    // Average\n    color *= 0.25;\n\n    gl_FragColor = color;\n}\n",n=function(e){function n(n,l,u){void 0===n&&(n=4),void 0===l&&(l=3),void 0===u&&(u=!1),e.call(this,r,u?o:i),this.uniforms.uOffset=new Float32Array(2),this._pixelSize=new t.Point,this.pixelSize=1,this._clamp=u,this._kernels=null,Array.isArray(n)?this.kernels=n:(this._blur=n,this.quality=l)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var l={kernels:{configurable:!0},clamp:{configurable:!0},pixelSize:{configurable:!0},quality:{configurable:!0},blur:{configurable:!0}};return n.prototype.apply=function(e,t,r,i){var o,n=this.pixelSize.x/t.size.width,l=this.pixelSize.y/t.size.height;if(1===this._quality||0===this._blur)o=this._kernels[0]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,t,r,i);else{for(var u,s=e.getRenderTarget(!0),f=t,a=s,p=this._quality-1,x=0;x<p;x++)o=this._kernels[x]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,a,!0),u=f,f=a,a=u;o=this._kernels[p]+.5,this.uniforms.uOffset[0]=o*n,this.uniforms.uOffset[1]=o*l,e.applyFilter(this,f,r,i),e.returnRenderTarget(s)}},n.prototype._generateKernels=function(){var e=this._blur,t=this._quality,r=[e];if(e>0)for(var i=e,o=e/t,n=1;n<t;n++)i-=o,r.push(i);this._kernels=r},l.kernels.get=function(){return this._kernels},l.kernels.set=function(e){Array.isArray(e)&&e.length>0?(this._kernels=e,this._quality=e.length,this._blur=Math.max.apply(Math,e)):(this._kernels=[0],this._quality=1)},l.clamp.get=function(){return this._clamp},l.pixelSize.set=function(e){"number"==typeof e?(this._pixelSize.x=e,this._pixelSize.y=e):Array.isArray(e)?(this._pixelSize.x=e[0],this._pixelSize.y=e[1]):e instanceof t.Point?(this._pixelSize.x=e.x,this._pixelSize.y=e.y):(this._pixelSize.x=1,this._pixelSize.y=1)},l.pixelSize.get=function(){return this._pixelSize},l.quality.get=function(){return this._quality},l.quality.set=function(e){this._quality=Math.max(1,Math.round(e)),this._generateKernels()},l.blur.get=function(){return this._blur},l.blur.set=function(e){this._blur=e,this._generateKernels()},Object.defineProperties(n.prototype,l),n}(t.Filter);e.KawaseBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],58:[function(require,module,exports){
-/*!
- * @pixi/filter-motion-blur - v2.6.1
- * Compiled Thu, 03 May 2018 14:20:43 UTC
- *
- * @pixi/filter-motion-blur is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",o="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uVelocity;\nuniform int uKernelSize;\nuniform float uOffset;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\n// Notice:\n// the perfect way:\n//    int kernelSize = min(uKernelSize, MAX_KERNELSIZE);\n// BUT in real use-case , uKernelSize < MAX_KERNELSIZE almost always.\n// So use uKernelSize directly.\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    vec2 velocity = uVelocity / filterArea.xy;\n    float offset = -uOffset / length(uVelocity) - 0.5;\n    int k = uKernelSize - 1;\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n        vec2 bias = velocity * (float(i) / float(k) + offset);\n        color += texture2D(uSampler, vTextureCoord + bias);\n    }\n    gl_FragColor = color / float(uKernelSize);\n}\n",n=function(e){function n(n,r,l){void 0===n&&(n=[0,0]),void 0===r&&(r=5),void 0===l&&(l=0),e.call(this,i,o),this.uniforms.uVelocity=new Float32Array(2),this._velocity=new t.ObservablePoint(this.velocityChanged,this),this.velocity=n,this.kernelSize=r,this.offset=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var r={velocity:{configurable:!0},offset:{configurable:!0}};return n.prototype.apply=function(e,t,i,o){var n=this.velocity,r=n.x,l=n.y;this.uniforms.uKernelSize=0!==r||0!==l?this.kernelSize:0,e.applyFilter(this,t,i,o)},r.velocity.set=function(e){Array.isArray(e)?this._velocity.set(e[0],e[1]):(e instanceof t.Point||e instanceof t.ObservablePoint)&&this._velocity.copy(e)},r.velocity.get=function(){return this._velocity},n.prototype.velocityChanged=function(){this.uniforms.uVelocity[0]=this._velocity.x,this.uniforms.uVelocity[1]=this._velocity.y},r.offset.set=function(e){this.uniforms.uOffset=e},r.offset.get=function(){return this.uniforms.uOffset},Object.defineProperties(n.prototype,r),n}(t.Filter);e.MotionBlurFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
-
-
-},{"pixi.js":262}],59:[function(require,module,exports){
-/*!
- * @pixi/filter-multi-color-replace - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-multi-color-replace is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(o,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(o.__filters={},o.PIXI)}(this,function(o,e){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform float epsilon;\n\nconst int MAX_COLORS = %maxColors%;\n\nuniform vec3 originalColors[MAX_COLORS];\nuniform vec3 targetColors[MAX_COLORS];\n\nvoid main(void)\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n\n    float alpha = gl_FragColor.a;\n    if (alpha < 0.0001)\n    {\n      return;\n    }\n\n    vec3 color = gl_FragColor.rgb / alpha;\n\n    for(int i = 0; i < MAX_COLORS; i++)\n    {\n      vec3 origColor = originalColors[i];\n      if (origColor.r < 0.0)\n      {\n        break;\n      }\n      vec3 colorDiff = origColor - color;\n      if (length(colorDiff) < epsilon)\n      {\n        vec3 targetColor = targetColors[i];\n        gl_FragColor = vec4((targetColor + colorDiff) * alpha, alpha);\n        return;\n      }\n    }\n}\n",t=function(o){function t(e,t,i){void 0===t&&(t=.05),void 0===i&&(i=null),i=i||e.length,o.call(this,r,n.replace(/%maxColors%/g,i)),this.epsilon=t,this._maxColors=i,this._replacements=null,this.uniforms.originalColors=new Float32Array(3*i),this.uniforms.targetColors=new Float32Array(3*i),this.replacements=e}o&&(t.__proto__=o),t.prototype=Object.create(o&&o.prototype),t.prototype.constructor=t;var i={replacements:{configurable:!0},maxColors:{configurable:!0},epsilon:{configurable:!0}};return i.replacements.set=function(o){var r=this.uniforms.originalColors,n=this.uniforms.targetColors,t=o.length;if(t>this._maxColors)throw"Length of replacements ("+t+") exceeds the maximum colors length ("+this._maxColors+")";r[3*t]=-1;for(var i=0;i<t;i++){var l=o[i],s=l[0];"number"==typeof s?s=e.utils.hex2rgb(s):l[0]=e.utils.rgb2hex(s),r[3*i]=s[0],r[3*i+1]=s[1],r[3*i+2]=s[2];var a=l[1];"number"==typeof a?a=e.utils.hex2rgb(a):l[1]=e.utils.rgb2hex(a),n[3*i]=a[0],n[3*i+1]=a[1],n[3*i+2]=a[2]}this._replacements=o},i.replacements.get=function(){return this._replacements},t.prototype.refresh=function(){this.replacements=this._replacements},i.maxColors.get=function(){return this._maxColors},i.epsilon.set=function(o){this.uniforms.epsilon=o},i.epsilon.get=function(){return this.uniforms.epsilon},Object.defineProperties(t.prototype,i),t}(e.Filter);o.MultiColorReplaceFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],60:[function(require,module,exports){
-/*!
- * @pixi/filter-old-film - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-old-film is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(n,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(n.__filters={},n.PIXI)}(this,function(n,t){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\n\nuniform float sepia;\nuniform float noise;\nuniform float noiseSize;\nuniform float scratch;\nuniform float scratchDensity;\nuniform float scratchWidth;\nuniform float vignetting;\nuniform float vignettingAlpha;\nuniform float vignettingBlur;\nuniform float seed;\n\nconst float SQRT_2 = 1.414213;\nconst vec3 SEPIA_RGB = vec3(112.0 / 255.0, 66.0 / 255.0, 20.0 / 255.0);\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvec3 Overlay(vec3 src, vec3 dst)\n{\n    // if (dst <= 0.5) then: 2 * src * dst\n    // if (dst > 0.5) then: 1 - 2 * (1 - dst) * (1 - src)\n    return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),\n                (dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),\n                (dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));\n}\n\n\nvoid main()\n{\n    gl_FragColor = texture2D(uSampler, vTextureCoord);\n    vec3 color = gl_FragColor.rgb;\n\n    if (sepia > 0.0)\n    {\n        float gray = (color.x + color.y + color.z) / 3.0;\n        vec3 grayscale = vec3(gray);\n\n        color = Overlay(SEPIA_RGB, grayscale);\n\n        color = grayscale + sepia * (color - grayscale);\n    }\n\n    vec2 coord = vTextureCoord * filterArea.xy / dimensions.xy;\n\n    if (vignetting > 0.0)\n    {\n        float outter = SQRT_2 - vignetting * SQRT_2;\n        vec2 dir = vec2(vec2(0.5, 0.5) - coord);\n        dir.y *= dimensions.y / dimensions.x;\n        float darker = clamp((outter - length(dir) * SQRT_2) / ( 0.00001 + vignettingBlur * SQRT_2), 0.0, 1.0);\n        color.rgb *= darker + (1.0 - darker) * (1.0 - vignettingAlpha);\n    }\n\n    if (scratchDensity > seed && scratch != 0.0)\n    {\n        float phase = seed * 256.0;\n        float s = mod(floor(phase), 2.0);\n        float dist = 1.0 / scratchDensity;\n        float d = distance(coord, vec2(seed * dist, abs(s - seed * dist)));\n        if (d < seed * 0.6 + 0.4)\n        {\n            highp float period = scratchDensity * 10.0;\n\n            float xx = coord.x * period + phase;\n            float aa = abs(mod(xx, 0.5) * 4.0);\n            float bb = mod(floor(xx / 0.5), 2.0);\n            float yy = (1.0 - bb) * aa + bb * (2.0 - aa);\n\n            float kk = 2.0 * period;\n            float dw = scratchWidth / dimensions.x * (0.75 + seed);\n            float dh = dw * kk;\n\n            float tine = (yy - (2.0 - dh));\n\n            if (tine > 0.0) {\n                float _sign = sign(scratch);\n\n                tine = s * tine / period + scratch + 0.1;\n                tine = clamp(tine + 1.0, 0.5 + _sign * 0.5, 1.5 + _sign * 0.5);\n\n                color.rgb *= tine;\n            }\n        }\n    }\n\n    if (noise > 0.0 && noiseSize > 0.0)\n    {\n        vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n        pixelCoord.x = floor(pixelCoord.x / noiseSize);\n        pixelCoord.y = floor(pixelCoord.y / noiseSize);\n        // vec2 d = pixelCoord * noiseSize * vec2(1024.0 + seed * 512.0, 1024.0 - seed * 512.0);\n        // float _noise = snoise(d) * 0.5;\n        float _noise = rand(pixelCoord * noiseSize * seed) - 0.5;\n        color += _noise * noise;\n    }\n\n    gl_FragColor.rgb = color;\n}\n",o=function(n){function t(t,o){void 0===o&&(o=0),n.call(this,i,e),this.uniforms.dimensions=new Float32Array(2),"number"==typeof t?(this.seed=t,t=null):this.seed=o,Object.assign(this,{sepia:.3,noise:.3,noiseSize:1,scratch:.5,scratchDensity:.3,scratchWidth:1,vignetting:.3,vignettingAlpha:1,vignettingBlur:.3},t)}n&&(t.__proto__=n),t.prototype=Object.create(n&&n.prototype),t.prototype.constructor=t;var o={sepia:{configurable:!0},noise:{configurable:!0},noiseSize:{configurable:!0},scratch:{configurable:!0},scratchDensity:{configurable:!0},scratchWidth:{configurable:!0},vignetting:{configurable:!0},vignettingAlpha:{configurable:!0},vignettingBlur:{configurable:!0}};return t.prototype.apply=function(n,t,i,e){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,this.uniforms.seed=this.seed,n.applyFilter(this,t,i,e)},o.sepia.set=function(n){this.uniforms.sepia=n},o.sepia.get=function(){return this.uniforms.sepia},o.noise.set=function(n){this.uniforms.noise=n},o.noise.get=function(){return this.uniforms.noise},o.noiseSize.set=function(n){this.uniforms.noiseSize=n},o.noiseSize.get=function(){return this.uniforms.noiseSize},o.scratch.set=function(n){this.uniforms.scratch=n},o.scratch.get=function(){return this.uniforms.scratch},o.scratchDensity.set=function(n){this.uniforms.scratchDensity=n},o.scratchDensity.get=function(){return this.uniforms.scratchDensity},o.scratchWidth.set=function(n){this.uniforms.scratchWidth=n},o.scratchWidth.get=function(){return this.uniforms.scratchWidth},o.vignetting.set=function(n){this.uniforms.vignetting=n},o.vignetting.get=function(){return this.uniforms.vignetting},o.vignettingAlpha.set=function(n){this.uniforms.vignettingAlpha=n},o.vignettingAlpha.get=function(){return this.uniforms.vignettingAlpha},o.vignettingBlur.set=function(n){this.uniforms.vignettingBlur=n},o.vignettingBlur.get=function(){return this.uniforms.vignettingBlur},Object.defineProperties(t.prototype,o),t}(t.Filter);n.OldFilmFilter=o,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],61:[function(require,module,exports){
-/*!
- * @pixi/filter-outline - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-outline is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec2 thickness;\nuniform vec4 outlineColor;\nuniform vec4 filterClamp;\n\nconst float DOUBLE_PI = 3.14159265358979323846264 * 2.;\n\nvoid main(void) {\n    vec4 ownColor = texture2D(uSampler, vTextureCoord);\n    vec4 curColor;\n    float maxAlpha = 0.;\n    vec2 displaced;\n    for (float angle = 0.; angle <= DOUBLE_PI; angle += ${angleStep}) {\n        displaced.x = vTextureCoord.x + thickness.x * cos(angle);\n        displaced.y = vTextureCoord.y + thickness.y * sin(angle);\n        curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));\n        maxAlpha = max(maxAlpha, curColor.a);\n    }\n    float resultAlpha = max(maxAlpha, ownColor.a);\n    gl_FragColor = vec4((ownColor.rgb + outlineColor.rgb * (1. - ownColor.a)) * resultAlpha, resultAlpha);\n}\n",n=function(e){function n(o,i,l){void 0===o&&(o=1),void 0===i&&(i=0),void 0===l&&(l=.1);var a=Math.max(l*n.MAX_SAMPLES,n.MIN_SAMPLES),s=(2*Math.PI/a).toFixed(7);e.call(this,t,r.replace(/\$\{angleStep\}/,s)),this.uniforms.thickness=new Float32Array([0,0]),this.thickness=o,this.uniforms.outlineColor=new Float32Array([0,0,0,1]),this.color=i,this.quality=l}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={color:{configurable:!0}};return n.prototype.apply=function(e,o,t,r){this.uniforms.thickness[0]=this.thickness/o.size.width,this.uniforms.thickness[1]=this.thickness/o.size.height,e.applyFilter(this,o,t,r)},i.color.get=function(){return o.utils.rgb2hex(this.uniforms.outlineColor)},i.color.set=function(e){o.utils.hex2rgb(e,this.uniforms.outlineColor)},Object.defineProperties(n.prototype,i),n}(o.Filter);n.MIN_SAMPLES=1,n.MAX_SAMPLES=100,e.OutlineFilter=n,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],62:[function(require,module,exports){
-/*!
- * @pixi/filter-pixelate - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-pixelate is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o(e.__filters={},e.PIXI)}(this,function(e,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform vec2 size;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n\treturn floor( coord / size ) * size;\n}\n\nvoid main(void)\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = pixelate(coord, size);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord);\n}\n",t=function(e){function o(o){void 0===o&&(o=10),e.call(this,r,n),this.size=o}e&&(o.__proto__=e),o.prototype=Object.create(e&&e.prototype),o.prototype.constructor=o;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.size},t.size.set=function(e){"number"==typeof e&&(e=[e,e]),this.uniforms.size=e},Object.defineProperties(o.prototype,t),o}(o.Filter);e.PixelateFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],63:[function(require,module,exports){
-/*!
- * @pixi/filter-radial-blur - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-radial-blur is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform float uRadian;\nuniform vec2 uCenter;\nuniform float uRadius;\nuniform int uKernelSize;\n\nconst int MAX_KERNEL_SIZE = 2048;\n\nvoid main(void)\n{\n    vec4 color = texture2D(uSampler, vTextureCoord);\n\n    if (uKernelSize == 0)\n    {\n        gl_FragColor = color;\n        return;\n    }\n\n    float aspect = filterArea.y / filterArea.x;\n    vec2 center = uCenter.xy / filterArea.xy;\n    float gradient = uRadius / filterArea.x * 0.3;\n    float radius = uRadius / filterArea.x - gradient * 0.5;\n    int k = uKernelSize - 1;\n\n    vec2 coord = vTextureCoord;\n    vec2 dir = vec2(center - coord);\n    float dist = length(vec2(dir.x, dir.y * aspect));\n\n    float radianStep = uRadian;\n    if (radius >= 0.0 && dist > radius) {\n        float delta = dist - radius;\n        float gap = gradient;\n        float scale = 1.0 - abs(delta / gap);\n        if (scale <= 0.0) {\n            gl_FragColor = color;\n            return;\n        }\n        radianStep *= scale;\n    }\n    radianStep /= float(k);\n\n    float s = sin(radianStep);\n    float c = cos(radianStep);\n    mat2 rotationMatrix = mat2(vec2(c, -s), vec2(s, c));\n\n    for(int i = 0; i < MAX_KERNEL_SIZE - 1; i++) {\n        if (i == k) {\n            break;\n        }\n\n        coord -= center;\n        coord.y *= aspect;\n        coord = rotationMatrix * coord;\n        coord.y /= aspect;\n        coord += center;\n\n        vec4 sample = texture2D(uSampler, coord);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample;\n    }\n\n    gl_FragColor = color / float(uKernelSize);\n}\n",i=function(e){function n(n,i,o,a){void 0===n&&(n=0),void 0===i&&(i=[0,0]),void 0===o&&(o=5),void 0===a&&(a=-1),e.call(this,t,r),this._angle=0,this.angle=n,this.center=i,this.kernelSize=o,this.radius=a}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var i={angle:{configurable:!0},center:{configurable:!0},radius:{configurable:!0}};return n.prototype.apply=function(e,n,t,r){this.uniforms.uKernelSize=0!==this._angle?this.kernelSize:0,e.applyFilter(this,n,t,r)},i.angle.set=function(e){this._angle=e,this.uniforms.uRadian=e*Math.PI/180},i.angle.get=function(){return this._angle},i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(e){this.uniforms.uCenter=e},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(e){(e<0||e===1/0)&&(e=-1),this.uniforms.uRadius=e},Object.defineProperties(n.prototype,i),n}(n.Filter);e.RadialBlurFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],64:[function(require,module,exports){
-/*!
- * @pixi/filter-reflection - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-reflection is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(e.__filters={},e.PIXI)}(this,function(e,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",t="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\n\nuniform bool mirror;\nuniform float boundary;\nuniform vec2 amplitude;\nuniform vec2 waveLength;\nuniform vec2 alpha;\nuniform float time;\n\nfloat rand(vec2 co) {\n    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid main(void)\n{\n    vec2 pixelCoord = vTextureCoord.xy * filterArea.xy;\n    vec2 coord = pixelCoord / dimensions;\n\n    if (coord.y < boundary) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    float k = (coord.y - boundary) / (1. - boundary + 0.0001);\n    float areaY = boundary * dimensions.y / filterArea.y;\n    float v = areaY + areaY - vTextureCoord.y;\n    float y = mirror ? v : vTextureCoord.y;\n\n    float _amplitude = ((amplitude.y - amplitude.x) * k + amplitude.x ) / filterArea.x;\n    float _waveLength = ((waveLength.y - waveLength.x) * k + waveLength.x) / filterArea.y;\n    float _alpha = (alpha.y - alpha.x) * k + alpha.x;\n\n    float x = vTextureCoord.x + cos(v * 6.28 / _waveLength - time) * _amplitude;\n    x = clamp(x, filterClamp.x, filterClamp.z);\n\n    vec4 color = texture2D(uSampler, vec2(x, y));\n\n    gl_FragColor = color * _alpha;\n}\n",o=function(e){function n(n){e.call(this,r,t),this.uniforms.amplitude=new Float32Array(2),this.uniforms.waveLength=new Float32Array(2),this.uniforms.alpha=new Float32Array(2),this.uniforms.dimensions=new Float32Array(2),Object.assign(this,{mirror:!0,boundary:.5,amplitude:[0,20],waveLength:[30,100],alpha:[1,1],time:0},n)}e&&(n.__proto__=e),n.prototype=Object.create(e&&e.prototype),n.prototype.constructor=n;var o={mirror:{configurable:!0},boundary:{configurable:!0},amplitude:{configurable:!0},waveLength:{configurable:!0},alpha:{configurable:!0}};return n.prototype.apply=function(e,n,r,t){this.uniforms.dimensions[0]=n.sourceFrame.width,this.uniforms.dimensions[1]=n.sourceFrame.height,this.uniforms.time=this.time,e.applyFilter(this,n,r,t)},o.mirror.set=function(e){this.uniforms.mirror=e},o.mirror.get=function(){return this.uniforms.mirror},o.boundary.set=function(e){this.uniforms.boundary=e},o.boundary.get=function(){return this.uniforms.boundary},o.amplitude.set=function(e){this.uniforms.amplitude[0]=e[0],this.uniforms.amplitude[1]=e[1]},o.amplitude.get=function(){return this.uniforms.amplitude},o.waveLength.set=function(e){this.uniforms.waveLength[0]=e[0],this.uniforms.waveLength[1]=e[1]},o.waveLength.get=function(){return this.uniforms.waveLength},o.alpha.set=function(e){this.uniforms.alpha[0]=e[0],this.uniforms.alpha[1]=e[1]},o.alpha.get=function(){return this.uniforms.alpha},Object.defineProperties(n.prototype,o),n}(n.Filter);e.ReflectionFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],65:[function(require,module,exports){
-/*!
- * @pixi/filter-rgb-split - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-rgb-split is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,r){"object"==typeof exports&&"undefined"!=typeof module?r(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],r):r(e.__filters={},e.PIXI)}(this,function(e,r){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nvoid main(void)\n{\n   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/filterArea.xy).r;\n   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/filterArea.xy).g;\n   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/filterArea.xy).b;\n   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;\n}\n",o=function(e){function r(r,o,i){void 0===r&&(r=[-10,0]),void 0===o&&(o=[0,10]),void 0===i&&(i=[0,0]),e.call(this,t,n),this.red=r,this.green=o,this.blue=i}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var o={red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return o.red.get=function(){return this.uniforms.red},o.red.set=function(e){this.uniforms.red=e},o.green.get=function(){return this.uniforms.green},o.green.set=function(e){this.uniforms.green=e},o.blue.get=function(){return this.uniforms.blue},o.blue.set=function(e){this.uniforms.blue=e},Object.defineProperties(r.prototype,o),r}(r.Filter);e.RGBSplitFilter=o,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],66:[function(require,module,exports){
-/*!
- * @pixi/filter-shockwave - v2.6.1
- * Compiled Thu, 03 May 2018 14:20:43 UTC
- *
- * @pixi/filter-shockwave is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var n="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\n\nuniform vec2 center;\n\nuniform float amplitude;\nuniform float wavelength;\n// uniform float power;\nuniform float brightness;\nuniform float speed;\nuniform float radius;\n\nuniform float time;\n\nconst float PI = 3.14159;\n\nvoid main()\n{\n    float halfWavelength = wavelength * 0.5 / filterArea.x;\n    float maxRadius = radius / filterArea.x;\n    float currentRadius = time * speed / filterArea.x;\n\n    float fade = 1.0;\n\n    if (maxRadius > 0.0) {\n        if (currentRadius > maxRadius) {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n        fade = 1.0 - pow(currentRadius / maxRadius, 2.0);\n    }\n\n    vec2 dir = vec2(vTextureCoord - center / filterArea.xy);\n    dir.y *= filterArea.y / filterArea.x;\n    float dist = length(dir);\n\n    if (dist <= 0.0 || dist < currentRadius - halfWavelength || dist > currentRadius + halfWavelength) {\n        gl_FragColor = texture2D(uSampler, vTextureCoord);\n        return;\n    }\n\n    vec2 diffUV = normalize(dir);\n\n    float diff = (dist - currentRadius) / halfWavelength;\n\n    float p = 1.0 - pow(abs(diff), 2.0);\n\n    // float powDiff = diff * pow(p, 2.0) * ( amplitude * fade );\n    float powDiff = 1.25 * sin(diff * PI) * p * ( amplitude * fade );\n\n    vec2 offset = diffUV * powDiff / filterArea.xy;\n\n    // Do clamp :\n    vec2 coord = vTextureCoord + offset;\n    vec2 clampedCoord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    vec4 color = texture2D(uSampler, clampedCoord);\n    if (coord != clampedCoord) {\n        color *= max(0.0, 1.0 - length(coord - clampedCoord));\n    }\n\n    // No clamp :\n    // gl_FragColor = texture2D(uSampler, vTextureCoord + offset);\n\n    color.rgb *= 1.0 + (brightness - 1.0) * p * fade;\n\n    gl_FragColor = color;\n}\n",i=function(e){function t(t,i,o){void 0===t&&(t=[0,0]),void 0===i&&(i={}),void 0===o&&(o=0),e.call(this,n,r),this.center=t,Array.isArray(i)&&(console.warn("Deprecated Warning: ShockwaveFilter params Array has been changed to options Object."),i={}),i=Object.assign({amplitude:30,wavelength:160,brightness:1,speed:500,radius:-1},i),this.amplitude=i.amplitude,this.wavelength=i.wavelength,this.brightness=i.brightness,this.speed=i.speed,this.radius=i.radius,this.time=o}e&&(t.__proto__=e),t.prototype=Object.create(e&&e.prototype),t.prototype.constructor=t;var i={center:{configurable:!0},amplitude:{configurable:!0},wavelength:{configurable:!0},brightness:{configurable:!0},speed:{configurable:!0},radius:{configurable:!0}};return t.prototype.apply=function(e,t,n,r){this.uniforms.time=this.time,e.applyFilter(this,t,n,r)},i.center.get=function(){return this.uniforms.center},i.center.set=function(e){this.uniforms.center=e},i.amplitude.get=function(){return this.uniforms.amplitude},i.amplitude.set=function(e){this.uniforms.amplitude=e},i.wavelength.get=function(){return this.uniforms.wavelength},i.wavelength.set=function(e){this.uniforms.wavelength=e},i.brightness.get=function(){return this.uniforms.brightness},i.brightness.set=function(e){this.uniforms.brightness=e},i.speed.get=function(){return this.uniforms.speed},i.speed.set=function(e){this.uniforms.speed=e},i.radius.get=function(){return this.uniforms.radius},i.radius.set=function(e){this.uniforms.radius=e},Object.defineProperties(t.prototype,i),t}(t.Filter);e.ShockwaveFilter=i,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
-
-
-},{"pixi.js":262}],67:[function(require,module,exports){
-/*!
- * @pixi/filter-simple-lightmap - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-simple-lightmap is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],t):t(e.__filters={},e.PIXI)}(this,function(e,t){"use strict";var o="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",i="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform sampler2D uLightmap;\nuniform vec4 filterArea;\nuniform vec2 dimensions;\nuniform vec4 ambientColor;\nvoid main() {\n    vec4 diffuseColor = texture2D(uSampler, vTextureCoord);\n    vec2 lightCoord = (vTextureCoord * filterArea.xy) / dimensions;\n    vec4 light = texture2D(uLightmap, lightCoord);\n    vec3 ambient = ambientColor.rgb * ambientColor.a;\n    vec3 intensity = ambient + light.rgb;\n    vec3 finalColor = diffuseColor.rgb * intensity;\n    gl_FragColor = vec4(finalColor, diffuseColor.a);\n}\n",r=function(e){function r(t,r,n){void 0===r&&(r=0),void 0===n&&(n=1),e.call(this,o,i),this.uniforms.dimensions=new Float32Array(2),this.uniforms.ambientColor=new Float32Array([0,0,0,n]),this.texture=t,this.color=r}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var n={texture:{configurable:!0},color:{configurable:!0},alpha:{configurable:!0}};return r.prototype.apply=function(e,t,o,i){this.uniforms.dimensions[0]=t.sourceFrame.width,this.uniforms.dimensions[1]=t.sourceFrame.height,e.applyFilter(this,t,o,i)},n.texture.get=function(){return this.uniforms.uLightmap},n.texture.set=function(e){this.uniforms.uLightmap=e},n.color.set=function(e){var o=this.uniforms.ambientColor;"number"==typeof e?(t.utils.hex2rgb(e,o),this._color=e):(o[0]=e[0],o[1]=e[1],o[2]=e[2],o[3]=e[3],this._color=t.utils.rgb2hex(o))},n.color.get=function(){return this._color},n.alpha.get=function(){return this.uniforms.ambientColor[3]},n.alpha.set=function(e){this.uniforms.ambientColor[3]=e},Object.defineProperties(r.prototype,n),r}(t.Filter);e.SimpleLightmapFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],68:[function(require,module,exports){
-/*!
- * @pixi/filter-tilt-shift - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-tilt-shift is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(t.__filters={},t.PIXI)}(this,function(t,e){"use strict";var i="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float blur;\nuniform float gradientBlur;\nuniform vec2 start;\nuniform vec2 end;\nuniform vec2 delta;\nuniform vec2 texSize;\n\nfloat random(vec3 scale, float seed)\n{\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main(void)\n{\n    vec4 color = vec4(0.0);\n    float total = 0.0;\n\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n    vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n    float radius = smoothstep(0.0, 1.0, abs(dot(vTextureCoord * texSize - start, normal)) / gradientBlur) * blur;\n\n    for (float t = -30.0; t <= 30.0; t++)\n    {\n        float percent = (t + offset - 0.5) / 30.0;\n        float weight = 1.0 - abs(percent);\n        vec4 sample = texture2D(uSampler, vTextureCoord + delta / texSize * percent * radius);\n        sample.rgb *= sample.a;\n        color += sample * weight;\n        total += weight;\n    }\n\n    color /= total;\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",n=function(t){function n(n,o,s,l){void 0===n&&(n=100),void 0===o&&(o=600),void 0===s&&(s=null),void 0===l&&(l=null),t.call(this,i,r),this.uniforms.blur=n,this.uniforms.gradientBlur=o,this.uniforms.start=s||new e.Point(0,window.innerHeight/2),this.uniforms.end=l||new e.Point(600,window.innerHeight/2),this.uniforms.delta=new e.Point(30,30),this.uniforms.texSize=new e.Point(window.innerWidth,window.innerHeight),this.updateDelta()}t&&(n.__proto__=t),n.prototype=Object.create(t&&t.prototype),n.prototype.constructor=n;var o={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return n.prototype.updateDelta=function(){this.uniforms.delta.x=0,this.uniforms.delta.y=0},o.blur.get=function(){return this.uniforms.blur},o.blur.set=function(t){this.uniforms.blur=t},o.gradientBlur.get=function(){return this.uniforms.gradientBlur},o.gradientBlur.set=function(t){this.uniforms.gradientBlur=t},o.start.get=function(){return this.uniforms.start},o.start.set=function(t){this.uniforms.start=t,this.updateDelta()},o.end.get=function(){return this.uniforms.end},o.end.set=function(t){this.uniforms.end=t,this.updateDelta()},Object.defineProperties(n.prototype,o),n}(e.Filter),o=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=t/i,this.uniforms.delta.y=e/i},e}(n),s=function(t){function e(){t.apply(this,arguments)}return t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e,e.prototype.updateDelta=function(){var t=this.uniforms.end.x-this.uniforms.start.x,e=this.uniforms.end.y-this.uniforms.start.y,i=Math.sqrt(t*t+e*e);this.uniforms.delta.x=-e/i,this.uniforms.delta.y=t/i},e}(n),l=function(t){function e(e,i,r,n){void 0===e&&(e=100),void 0===i&&(i=600),void 0===r&&(r=null),void 0===n&&(n=null),t.call(this),this.tiltShiftXFilter=new o(e,i,r,n),this.tiltShiftYFilter=new s(e,i,r,n)}t&&(e.__proto__=t),e.prototype=Object.create(t&&t.prototype),e.prototype.constructor=e;var i={blur:{configurable:!0},gradientBlur:{configurable:!0},start:{configurable:!0},end:{configurable:!0}};return e.prototype.apply=function(t,e,i){var r=t.getRenderTarget(!0);this.tiltShiftXFilter.apply(t,e,r),this.tiltShiftYFilter.apply(t,r,i),t.returnRenderTarget(r)},i.blur.get=function(){return this.tiltShiftXFilter.blur},i.blur.set=function(t){this.tiltShiftXFilter.blur=this.tiltShiftYFilter.blur=t},i.gradientBlur.get=function(){return this.tiltShiftXFilter.gradientBlur},i.gradientBlur.set=function(t){this.tiltShiftXFilter.gradientBlur=this.tiltShiftYFilter.gradientBlur=t},i.start.get=function(){return this.tiltShiftXFilter.start},i.start.set=function(t){this.tiltShiftXFilter.start=this.tiltShiftYFilter.start=t},i.end.get=function(){return this.tiltShiftXFilter.end},i.end.set=function(t){this.tiltShiftXFilter.end=this.tiltShiftYFilter.end=t},Object.defineProperties(e.prototype,i),e}(e.Filter);t.TiltShiftFilter=l,t.TiltShiftXFilter=o,t.TiltShiftYFilter=s,t.TiltShiftAxisFilter=n,Object.defineProperty(t,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],69:[function(require,module,exports){
-/*!
- * @pixi/filter-twist - v2.5.0
- * Compiled Wed, 10 Jan 2018 17:38:59 UTC
- *
- * @pixi/filter-twist is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(o,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],n):n(o.__filters={},o.PIXI)}(this,function(o,n){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",e="varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nuniform float radius;\nuniform float angle;\nuniform vec2 offset;\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 twist(vec2 coord)\n{\n    coord -= offset;\n\n    float dist = length(coord);\n\n    if (dist < radius)\n    {\n        float ratioDist = (radius - dist) / radius;\n        float angleMod = ratioDist * ratioDist * angle;\n        float s = sin(angleMod);\n        float c = cos(angleMod);\n        coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);\n    }\n\n    coord += offset;\n\n    return coord;\n}\n\nvoid main(void)\n{\n\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = twist(coord);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord );\n\n}\n",t=function(o){function n(n,t,i){void 0===n&&(n=200),void 0===t&&(t=4),void 0===i&&(i=20),o.call(this,r,e),this.radius=n,this.angle=t,this.padding=i}o&&(n.__proto__=o),n.prototype=Object.create(o&&o.prototype),n.prototype.constructor=n;var t={offset:{configurable:!0},radius:{configurable:!0},angle:{configurable:!0}};return t.offset.get=function(){return this.uniforms.offset},t.offset.set=function(o){this.uniforms.offset=o},t.radius.get=function(){return this.uniforms.radius},t.radius.set=function(o){this.uniforms.radius=o},t.angle.get=function(){return this.uniforms.angle},t.angle.set=function(o){this.uniforms.angle=o},Object.defineProperties(n.prototype,t),n}(n.Filter);o.TwistFilter=t,Object.defineProperty(o,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],70:[function(require,module,exports){
-/*!
- * @pixi/filter-zoom-blur - v2.6.0
- * Compiled Wed, 28 Feb 2018 22:04:57 UTC
- *
- * @pixi/filter-zoom-blur is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-!function(n,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],e):e(n.__filters={},n.PIXI)}(this,function(n,e){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",r="varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec4 filterArea;\n\nuniform vec2 uCenter;\nuniform float uStrength;\nuniform float uInnerRadius;\nuniform float uRadius;\n\nconst float MAX_KERNEL_SIZE = 32.0;\n\nfloat random(vec3 scale, float seed) {\n    // use the fragment position for a different seed per-pixel\n    return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n}\n\nvoid main() {\n\n    float minGradient = uInnerRadius * 0.3;\n    float innerRadius = (uInnerRadius + minGradient * 0.5) / filterArea.x;\n\n    float gradient = uRadius * 0.3;\n    float radius = (uRadius - gradient * 0.5) / filterArea.x;\n\n    float countLimit = MAX_KERNEL_SIZE;\n\n    vec2 dir = vec2(uCenter.xy / filterArea.xy - vTextureCoord);\n    float dist = length(vec2(dir.x, dir.y * filterArea.y / filterArea.x));\n\n    float strength = uStrength;\n\n    float delta = 0.0;\n    float gap;\n    if (dist < innerRadius) {\n        delta = innerRadius - dist;\n        gap = minGradient;\n    } else if (radius >= 0.0 && dist > radius) { // radius < 0 means it's infinity\n        delta = dist - radius;\n        gap = gradient;\n    }\n\n    if (delta > 0.0) {\n        float normalCount = gap / filterArea.x;\n        delta = (normalCount - delta) / normalCount;\n        countLimit *= delta;\n        strength *= delta;\n        if (countLimit < 1.0)\n        {\n            gl_FragColor = texture2D(uSampler, vTextureCoord);\n            return;\n        }\n    }\n\n    // randomize the lookup values to hide the fixed number of samples\n    float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n    float total = 0.0;\n    vec4 color = vec4(0.0);\n\n    dir *= strength;\n\n    for (float t = 0.0; t < MAX_KERNEL_SIZE; t++) {\n        float percent = (t + offset) / MAX_KERNEL_SIZE;\n        float weight = 4.0 * (percent - percent * percent);\n        vec2 p = vTextureCoord + dir * percent;\n        vec4 sample = texture2D(uSampler, p);\n\n        // switch to pre-multiplied alpha to correctly blur transparent images\n        // sample.rgb *= sample.a;\n\n        color += sample * weight;\n        total += weight;\n\n        if (t > countLimit){\n            break;\n        }\n    }\n\n    color /= total;\n    // switch back from pre-multiplied alpha\n    color.rgb /= color.a + 0.00001;\n\n    gl_FragColor = color;\n}\n",i=function(n){function e(e,i,o,a){void 0===e&&(e=.1),void 0===i&&(i=[0,0]),void 0===o&&(o=0),void 0===a&&(a=-1),n.call(this,t,r),this.center=i,this.strength=e,this.innerRadius=o,this.radius=a}n&&(e.__proto__=n),e.prototype=Object.create(n&&n.prototype),e.prototype.constructor=e;var i={center:{configurable:!0},strength:{configurable:!0},innerRadius:{configurable:!0},radius:{configurable:!0}};return i.center.get=function(){return this.uniforms.uCenter},i.center.set=function(n){this.uniforms.uCenter=n},i.strength.get=function(){return this.uniforms.uStrength},i.strength.set=function(n){this.uniforms.uStrength=n},i.innerRadius.get=function(){return this.uniforms.uInnerRadius},i.innerRadius.set=function(n){this.uniforms.uInnerRadius=n},i.radius.get=function(){return this.uniforms.uRadius},i.radius.set=function(n){(n<0||n===1/0)&&(n=-1),this.uniforms.uRadius=n},Object.defineProperties(e.prototype,i),e}(e.Filter);n.ZoomBlurFilter=i,Object.defineProperty(n,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this.__filters);
-
-
-},{"pixi.js":262}],71:[function(require,module,exports){
-module.exports = after
-
-function after(count, callback, err_cb) {
-    var bail = false
-    err_cb = err_cb || noop
-    proxy.count = count
-
-    return (count === 0) ? callback() : proxy
-
-    function proxy(err, result) {
-        if (proxy.count <= 0) {
-            throw new Error('after called too many times')
-        }
-        --proxy.count
-
-        // after first error, rest are passed to err_cb
-        if (err) {
-            bail = true
-            callback(err)
-            // future error callbacks will go to error handler
-            callback = err_cb
-        } else if (proxy.count === 0 && !bail) {
-            callback(null, result)
-        }
-    }
-}
-
-function noop() {}
-
-},{}],72:[function(require,module,exports){
-/**
- * An abstraction for slicing an arraybuffer even when
- * ArrayBuffer.prototype.slice is not supported
- *
- * @api public
- */
-
-module.exports = function(arraybuffer, start, end) {
-  var bytes = arraybuffer.byteLength;
-  start = start || 0;
-  end = end || bytes;
-
-  if (arraybuffer.slice) { return arraybuffer.slice(start, end); }
-
-  if (start < 0) { start += bytes; }
-  if (end < 0) { end += bytes; }
-  if (end > bytes) { end = bytes; }
-
-  if (start >= bytes || start >= end || bytes === 0) {
-    return new ArrayBuffer(0);
-  }
-
-  var abv = new Uint8Array(arraybuffer);
-  var result = new Uint8Array(end - start);
-  for (var i = start, ii = 0; i < end; i++, ii++) {
-    result[ii] = abv[i];
-  }
-  return result.buffer;
-};
-
-},{}],73:[function(require,module,exports){
-
-/**
- * Expose `Backoff`.
- */
-
-module.exports = Backoff;
-
-/**
- * Initialize backoff timer with `opts`.
- *
- * - `min` initial timeout in milliseconds [100]
- * - `max` max timeout [10000]
- * - `jitter` [0]
- * - `factor` [2]
- *
- * @param {Object} opts
- * @api public
- */
-
-function Backoff(opts) {
-  opts = opts || {};
-  this.ms = opts.min || 100;
-  this.max = opts.max || 10000;
-  this.factor = opts.factor || 2;
-  this.jitter = opts.jitter > 0 && opts.jitter <= 1 ? opts.jitter : 0;
-  this.attempts = 0;
-}
-
-/**
- * Return the backoff duration.
- *
- * @return {Number}
- * @api public
- */
-
-Backoff.prototype.duration = function(){
-  var ms = this.ms * Math.pow(this.factor, this.attempts++);
-  if (this.jitter) {
-    var rand =  Math.random();
-    var deviation = Math.floor(rand * this.jitter * ms);
-    ms = (Math.floor(rand * 10) & 1) == 0  ? ms - deviation : ms + deviation;
-  }
-  return Math.min(ms, this.max) | 0;
-};
-
-/**
- * Reset the number of attempts.
- *
- * @api public
- */
-
-Backoff.prototype.reset = function(){
-  this.attempts = 0;
-};
-
-/**
- * Set the minimum duration
- *
- * @api public
- */
-
-Backoff.prototype.setMin = function(min){
-  this.ms = min;
-};
-
-/**
- * Set the maximum duration
- *
- * @api public
- */
-
-Backoff.prototype.setMax = function(max){
-  this.max = max;
-};
-
-/**
- * Set the jitter
- *
- * @api public
- */
-
-Backoff.prototype.setJitter = function(jitter){
-  this.jitter = jitter;
-};
-
-
-},{}],74:[function(require,module,exports){
-/*
- * base64-arraybuffer
- * https://github.com/niklasvh/base64-arraybuffer
- *
- * Copyright (c) 2012 Niklas von Hertzen
- * Licensed under the MIT license.
- */
-(function(){
-  "use strict";
-
-  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-  // Use a lookup table to find the index.
-  var lookup = new Uint8Array(256);
-  for (var i = 0; i < chars.length; i++) {
-    lookup[chars.charCodeAt(i)] = i;
-  }
-
-  exports.encode = function(arraybuffer) {
-    var bytes = new Uint8Array(arraybuffer),
-    i, len = bytes.length, base64 = "";
-
-    for (i = 0; i < len; i+=3) {
-      base64 += chars[bytes[i] >> 2];
-      base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
-      base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
-      base64 += chars[bytes[i + 2] & 63];
-    }
-
-    if ((len % 3) === 2) {
-      base64 = base64.substring(0, base64.length - 1) + "=";
-    } else if (len % 3 === 1) {
-      base64 = base64.substring(0, base64.length - 2) + "==";
-    }
-
-    return base64;
-  };
-
-  exports.decode =  function(base64) {
-    var bufferLength = base64.length * 0.75,
-    len = base64.length, i, p = 0,
-    encoded1, encoded2, encoded3, encoded4;
-
-    if (base64[base64.length - 1] === "=") {
-      bufferLength--;
-      if (base64[base64.length - 2] === "=") {
-        bufferLength--;
-      }
-    }
-
-    var arraybuffer = new ArrayBuffer(bufferLength),
-    bytes = new Uint8Array(arraybuffer);
-
-    for (i = 0; i < len; i+=4) {
-      encoded1 = lookup[base64.charCodeAt(i)];
-      encoded2 = lookup[base64.charCodeAt(i+1)];
-      encoded3 = lookup[base64.charCodeAt(i+2)];
-      encoded4 = lookup[base64.charCodeAt(i+3)];
-
-      bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
-      bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
-      bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
-    }
-
-    return arraybuffer;
-  };
-})();
-
-},{}],75:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -10651,305 +8790,7 @@ exports.nextCombination = function(v) {
 }
 
 
-},{}],76:[function(require,module,exports){
-(function (global){
-/**
- * Create a blob builder even when vendor prefixes exist
- */
-
-var BlobBuilder = global.BlobBuilder
-  || global.WebKitBlobBuilder
-  || global.MSBlobBuilder
-  || global.MozBlobBuilder;
-
-/**
- * Check if Blob constructor is supported
- */
-
-var blobSupported = (function() {
-  try {
-    var a = new Blob(['hi']);
-    return a.size === 2;
-  } catch(e) {
-    return false;
-  }
-})();
-
-/**
- * Check if Blob constructor supports ArrayBufferViews
- * Fails in Safari 6, so we need to map to ArrayBuffers there.
- */
-
-var blobSupportsArrayBufferView = blobSupported && (function() {
-  try {
-    var b = new Blob([new Uint8Array([1,2])]);
-    return b.size === 2;
-  } catch(e) {
-    return false;
-  }
-})();
-
-/**
- * Check if BlobBuilder is supported
- */
-
-var blobBuilderSupported = BlobBuilder
-  && BlobBuilder.prototype.append
-  && BlobBuilder.prototype.getBlob;
-
-/**
- * Helper function that maps ArrayBufferViews to ArrayBuffers
- * Used by BlobBuilder constructor and old browsers that didn't
- * support it in the Blob constructor.
- */
-
-function mapArrayBufferViews(ary) {
-  for (var i = 0; i < ary.length; i++) {
-    var chunk = ary[i];
-    if (chunk.buffer instanceof ArrayBuffer) {
-      var buf = chunk.buffer;
-
-      // if this is a subarray, make a copy so we only
-      // include the subarray region from the underlying buffer
-      if (chunk.byteLength !== buf.byteLength) {
-        var copy = new Uint8Array(chunk.byteLength);
-        copy.set(new Uint8Array(buf, chunk.byteOffset, chunk.byteLength));
-        buf = copy.buffer;
-      }
-
-      ary[i] = buf;
-    }
-  }
-}
-
-function BlobBuilderConstructor(ary, options) {
-  options = options || {};
-
-  var bb = new BlobBuilder();
-  mapArrayBufferViews(ary);
-
-  for (var i = 0; i < ary.length; i++) {
-    bb.append(ary[i]);
-  }
-
-  return (options.type) ? bb.getBlob(options.type) : bb.getBlob();
-};
-
-function BlobConstructor(ary, options) {
-  mapArrayBufferViews(ary);
-  return new Blob(ary, options || {});
-};
-
-module.exports = (function() {
-  if (blobSupported) {
-    return blobSupportsArrayBufferView ? global.Blob : BlobConstructor;
-  } else if (blobBuilderSupported) {
-    return BlobBuilderConstructor;
-  } else {
-    return undefined;
-  }
-})();
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],77:[function(require,module,exports){
-/**
- * Slice reference.
- */
-
-var slice = [].slice;
-
-/**
- * Bind `obj` to `fn`.
- *
- * @param {Object} obj
- * @param {Function|String} fn or string
- * @return {Function}
- * @api public
- */
-
-module.exports = function(obj, fn){
-  if ('string' == typeof fn) fn = obj[fn];
-  if ('function' != typeof fn) throw new Error('bind() requires a function');
-  var args = slice.call(arguments, 2);
-  return function(){
-    return fn.apply(obj, args.concat(slice.call(arguments)));
-  }
-};
-
-},{}],78:[function(require,module,exports){
-
-/**
- * Expose `Emitter`.
- */
-
-if (typeof module !== 'undefined') {
-  module.exports = Emitter;
-}
-
-/**
- * Initialize a new `Emitter`.
- *
- * @api public
- */
-
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
-  }
-  return obj;
-}
-
-/**
- * Listen on the given `event` with `fn`.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.on =
-Emitter.prototype.addEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
-    .push(fn);
-  return this;
-};
-
-/**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.once = function(event, fn){
-  function on() {
-    this.off(event, on);
-    fn.apply(this, arguments);
-  }
-
-  on.fn = fn;
-  this.on(event, on);
-  return this;
-};
-
-/**
- * Remove the given callback for `event` or all
- * registered callbacks.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners =
-Emitter.prototype.removeEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
-  // all
-  if (0 == arguments.length) {
-    this._callbacks = {};
-    return this;
-  }
-
-  // specific event
-  var callbacks = this._callbacks['$' + event];
-  if (!callbacks) return this;
-
-  // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks['$' + event];
-    return this;
-  }
-
-  // remove specific handler
-  var cb;
-  for (var i = 0; i < callbacks.length; i++) {
-    cb = callbacks[i];
-    if (cb === fn || cb.fn === fn) {
-      callbacks.splice(i, 1);
-      break;
-    }
-  }
-  return this;
-};
-
-/**
- * Emit `event` with the given args.
- *
- * @param {String} event
- * @param {Mixed} ...
- * @return {Emitter}
- */
-
-Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks['$' + event];
-
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return array of callbacks for `event`.
- *
- * @param {String} event
- * @return {Array}
- * @api public
- */
-
-Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
-  return this._callbacks['$' + event] || [];
-};
-
-/**
- * Check if this emitter has `event` handlers.
- *
- * @param {String} event
- * @return {Boolean}
- * @api public
- */
-
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
-};
-
-},{}],79:[function(require,module,exports){
-
-module.exports = function(a, b){
-  var fn = function(){};
-  fn.prototype = b.prototype;
-  a.prototype = new fn;
-  a.prototype.constructor = a;
-};
-},{}],80:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -11601,7 +9442,7 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],81:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /**
 *   EasyStar.js
 *   github.com/prettymuchbryce/EasyStarJS
@@ -12159,7 +10000,7 @@ EasyStar.BOTTOM_LEFT = 'BOTTOM_LEFT'
 EasyStar.LEFT = 'LEFT'
 EasyStar.TOP_LEFT = 'TOP_LEFT'
 
-},{"./instance":82,"./node":83,"heap":102}],82:[function(require,module,exports){
+},{"./instance":37,"./node":38,"heap":40}],37:[function(require,module,exports){
 /**
  * Represents a single instance of EasyStar.
  * A path that is in the queue to eventually be found.
@@ -12174,7 +10015,7 @@ module.exports = function() {
     this.nodeHash = {};
     this.openList;
 };
-},{}],83:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
 * A simple Node that represents a single tile on the grid.
 * @param {Object} parent The parent node.
@@ -12197,3527 +10038,7 @@ module.exports = function(parent, x, y, costSoFar, simpleDistanceToTarget) {
         return this.costSoFar + this.simpleDistanceToTarget;
     }
 };
-},{}],84:[function(require,module,exports){
-
-module.exports = require('./socket');
-
-/**
- * Exports parser
- *
- * @api public
- *
- */
-module.exports.parser = require('engine.io-parser');
-
-},{"./socket":85,"engine.io-parser":95}],85:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies.
- */
-
-var transports = require('./transports/index');
-var Emitter = require('component-emitter');
-var debug = require('debug')('engine.io-client:socket');
-var index = require('indexof');
-var parser = require('engine.io-parser');
-var parseuri = require('parseuri');
-var parseqs = require('parseqs');
-
-/**
- * Module exports.
- */
-
-module.exports = Socket;
-
-/**
- * Socket constructor.
- *
- * @param {String|Object} uri or options
- * @param {Object} options
- * @api public
- */
-
-function Socket (uri, opts) {
-  if (!(this instanceof Socket)) return new Socket(uri, opts);
-
-  opts = opts || {};
-
-  if (uri && 'object' === typeof uri) {
-    opts = uri;
-    uri = null;
-  }
-
-  if (uri) {
-    uri = parseuri(uri);
-    opts.hostname = uri.host;
-    opts.secure = uri.protocol === 'https' || uri.protocol === 'wss';
-    opts.port = uri.port;
-    if (uri.query) opts.query = uri.query;
-  } else if (opts.host) {
-    opts.hostname = parseuri(opts.host).host;
-  }
-
-  this.secure = null != opts.secure ? opts.secure
-    : (global.location && 'https:' === location.protocol);
-
-  if (opts.hostname && !opts.port) {
-    // if no port is specified manually, use the protocol default
-    opts.port = this.secure ? '443' : '80';
-  }
-
-  this.agent = opts.agent || false;
-  this.hostname = opts.hostname ||
-    (global.location ? location.hostname : 'localhost');
-  this.port = opts.port || (global.location && location.port
-      ? location.port
-      : (this.secure ? 443 : 80));
-  this.query = opts.query || {};
-  if ('string' === typeof this.query) this.query = parseqs.decode(this.query);
-  this.upgrade = false !== opts.upgrade;
-  this.path = (opts.path || '/engine.io').replace(/\/$/, '') + '/';
-  this.forceJSONP = !!opts.forceJSONP;
-  this.jsonp = false !== opts.jsonp;
-  this.forceBase64 = !!opts.forceBase64;
-  this.enablesXDR = !!opts.enablesXDR;
-  this.timestampParam = opts.timestampParam || 't';
-  this.timestampRequests = opts.timestampRequests;
-  this.transports = opts.transports || ['polling', 'websocket'];
-  this.transportOptions = opts.transportOptions || {};
-  this.readyState = '';
-  this.writeBuffer = [];
-  this.prevBufferLen = 0;
-  this.policyPort = opts.policyPort || 843;
-  this.rememberUpgrade = opts.rememberUpgrade || false;
-  this.binaryType = null;
-  this.onlyBinaryUpgrades = opts.onlyBinaryUpgrades;
-  this.perMessageDeflate = false !== opts.perMessageDeflate ? (opts.perMessageDeflate || {}) : false;
-
-  if (true === this.perMessageDeflate) this.perMessageDeflate = {};
-  if (this.perMessageDeflate && null == this.perMessageDeflate.threshold) {
-    this.perMessageDeflate.threshold = 1024;
-  }
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx || null;
-  this.key = opts.key || null;
-  this.passphrase = opts.passphrase || null;
-  this.cert = opts.cert || null;
-  this.ca = opts.ca || null;
-  this.ciphers = opts.ciphers || null;
-  this.rejectUnauthorized = opts.rejectUnauthorized === undefined ? true : opts.rejectUnauthorized;
-  this.forceNode = !!opts.forceNode;
-
-  // other options for Node.js client
-  var freeGlobal = typeof global === 'object' && global;
-  if (freeGlobal.global === freeGlobal) {
-    if (opts.extraHeaders && Object.keys(opts.extraHeaders).length > 0) {
-      this.extraHeaders = opts.extraHeaders;
-    }
-
-    if (opts.localAddress) {
-      this.localAddress = opts.localAddress;
-    }
-  }
-
-  // set on handshake
-  this.id = null;
-  this.upgrades = null;
-  this.pingInterval = null;
-  this.pingTimeout = null;
-
-  // set on heartbeat
-  this.pingIntervalTimer = null;
-  this.pingTimeoutTimer = null;
-
-  this.open();
-}
-
-Socket.priorWebsocketSuccess = false;
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Socket.prototype);
-
-/**
- * Protocol version.
- *
- * @api public
- */
-
-Socket.protocol = parser.protocol; // this is an int
-
-/**
- * Expose deps for legacy compatibility
- * and standalone browser access.
- */
-
-Socket.Socket = Socket;
-Socket.Transport = require('./transport');
-Socket.transports = require('./transports/index');
-Socket.parser = require('engine.io-parser');
-
-/**
- * Creates transport of the given type.
- *
- * @param {String} transport name
- * @return {Transport}
- * @api private
- */
-
-Socket.prototype.createTransport = function (name) {
-  debug('creating transport "%s"', name);
-  var query = clone(this.query);
-
-  // append engine.io protocol identifier
-  query.EIO = parser.protocol;
-
-  // transport name
-  query.transport = name;
-
-  // per-transport options
-  var options = this.transportOptions[name] || {};
-
-  // session id if we already have one
-  if (this.id) query.sid = this.id;
-
-  var transport = new transports[name]({
-    query: query,
-    socket: this,
-    agent: options.agent || this.agent,
-    hostname: options.hostname || this.hostname,
-    port: options.port || this.port,
-    secure: options.secure || this.secure,
-    path: options.path || this.path,
-    forceJSONP: options.forceJSONP || this.forceJSONP,
-    jsonp: options.jsonp || this.jsonp,
-    forceBase64: options.forceBase64 || this.forceBase64,
-    enablesXDR: options.enablesXDR || this.enablesXDR,
-    timestampRequests: options.timestampRequests || this.timestampRequests,
-    timestampParam: options.timestampParam || this.timestampParam,
-    policyPort: options.policyPort || this.policyPort,
-    pfx: options.pfx || this.pfx,
-    key: options.key || this.key,
-    passphrase: options.passphrase || this.passphrase,
-    cert: options.cert || this.cert,
-    ca: options.ca || this.ca,
-    ciphers: options.ciphers || this.ciphers,
-    rejectUnauthorized: options.rejectUnauthorized || this.rejectUnauthorized,
-    perMessageDeflate: options.perMessageDeflate || this.perMessageDeflate,
-    extraHeaders: options.extraHeaders || this.extraHeaders,
-    forceNode: options.forceNode || this.forceNode,
-    localAddress: options.localAddress || this.localAddress,
-    requestTimeout: options.requestTimeout || this.requestTimeout,
-    protocols: options.protocols || void (0)
-  });
-
-  return transport;
-};
-
-function clone (obj) {
-  var o = {};
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      o[i] = obj[i];
-    }
-  }
-  return o;
-}
-
-/**
- * Initializes transport to use and starts probe.
- *
- * @api private
- */
-Socket.prototype.open = function () {
-  var transport;
-  if (this.rememberUpgrade && Socket.priorWebsocketSuccess && this.transports.indexOf('websocket') !== -1) {
-    transport = 'websocket';
-  } else if (0 === this.transports.length) {
-    // Emit error on next tick so it can be listened to
-    var self = this;
-    setTimeout(function () {
-      self.emit('error', 'No transports available');
-    }, 0);
-    return;
-  } else {
-    transport = this.transports[0];
-  }
-  this.readyState = 'opening';
-
-  // Retry with the next transport if the transport is disabled (jsonp: false)
-  try {
-    transport = this.createTransport(transport);
-  } catch (e) {
-    this.transports.shift();
-    this.open();
-    return;
-  }
-
-  transport.open();
-  this.setTransport(transport);
-};
-
-/**
- * Sets the current transport. Disables the existing one (if any).
- *
- * @api private
- */
-
-Socket.prototype.setTransport = function (transport) {
-  debug('setting transport %s', transport.name);
-  var self = this;
-
-  if (this.transport) {
-    debug('clearing existing transport %s', this.transport.name);
-    this.transport.removeAllListeners();
-  }
-
-  // set up transport
-  this.transport = transport;
-
-  // set up transport listeners
-  transport
-  .on('drain', function () {
-    self.onDrain();
-  })
-  .on('packet', function (packet) {
-    self.onPacket(packet);
-  })
-  .on('error', function (e) {
-    self.onError(e);
-  })
-  .on('close', function () {
-    self.onClose('transport close');
-  });
-};
-
-/**
- * Probes a transport.
- *
- * @param {String} transport name
- * @api private
- */
-
-Socket.prototype.probe = function (name) {
-  debug('probing transport "%s"', name);
-  var transport = this.createTransport(name, { probe: 1 });
-  var failed = false;
-  var self = this;
-
-  Socket.priorWebsocketSuccess = false;
-
-  function onTransportOpen () {
-    if (self.onlyBinaryUpgrades) {
-      var upgradeLosesBinary = !this.supportsBinary && self.transport.supportsBinary;
-      failed = failed || upgradeLosesBinary;
-    }
-    if (failed) return;
-
-    debug('probe transport "%s" opened', name);
-    transport.send([{ type: 'ping', data: 'probe' }]);
-    transport.once('packet', function (msg) {
-      if (failed) return;
-      if ('pong' === msg.type && 'probe' === msg.data) {
-        debug('probe transport "%s" pong', name);
-        self.upgrading = true;
-        self.emit('upgrading', transport);
-        if (!transport) return;
-        Socket.priorWebsocketSuccess = 'websocket' === transport.name;
-
-        debug('pausing current transport "%s"', self.transport.name);
-        self.transport.pause(function () {
-          if (failed) return;
-          if ('closed' === self.readyState) return;
-          debug('changing transport and sending upgrade packet');
-
-          cleanup();
-
-          self.setTransport(transport);
-          transport.send([{ type: 'upgrade' }]);
-          self.emit('upgrade', transport);
-          transport = null;
-          self.upgrading = false;
-          self.flush();
-        });
-      } else {
-        debug('probe transport "%s" failed', name);
-        var err = new Error('probe error');
-        err.transport = transport.name;
-        self.emit('upgradeError', err);
-      }
-    });
-  }
-
-  function freezeTransport () {
-    if (failed) return;
-
-    // Any callback called by transport should be ignored since now
-    failed = true;
-
-    cleanup();
-
-    transport.close();
-    transport = null;
-  }
-
-  // Handle any error that happens while probing
-  function onerror (err) {
-    var error = new Error('probe error: ' + err);
-    error.transport = transport.name;
-
-    freezeTransport();
-
-    debug('probe transport "%s" failed because of error: %s', name, err);
-
-    self.emit('upgradeError', error);
-  }
-
-  function onTransportClose () {
-    onerror('transport closed');
-  }
-
-  // When the socket is closed while we're probing
-  function onclose () {
-    onerror('socket closed');
-  }
-
-  // When the socket is upgraded while we're probing
-  function onupgrade (to) {
-    if (transport && to.name !== transport.name) {
-      debug('"%s" works - aborting "%s"', to.name, transport.name);
-      freezeTransport();
-    }
-  }
-
-  // Remove all listeners on the transport and on self
-  function cleanup () {
-    transport.removeListener('open', onTransportOpen);
-    transport.removeListener('error', onerror);
-    transport.removeListener('close', onTransportClose);
-    self.removeListener('close', onclose);
-    self.removeListener('upgrading', onupgrade);
-  }
-
-  transport.once('open', onTransportOpen);
-  transport.once('error', onerror);
-  transport.once('close', onTransportClose);
-
-  this.once('close', onclose);
-  this.once('upgrading', onupgrade);
-
-  transport.open();
-};
-
-/**
- * Called when connection is deemed open.
- *
- * @api public
- */
-
-Socket.prototype.onOpen = function () {
-  debug('socket open');
-  this.readyState = 'open';
-  Socket.priorWebsocketSuccess = 'websocket' === this.transport.name;
-  this.emit('open');
-  this.flush();
-
-  // we check for `readyState` in case an `open`
-  // listener already closed the socket
-  if ('open' === this.readyState && this.upgrade && this.transport.pause) {
-    debug('starting upgrade probes');
-    for (var i = 0, l = this.upgrades.length; i < l; i++) {
-      this.probe(this.upgrades[i]);
-    }
-  }
-};
-
-/**
- * Handles a packet.
- *
- * @api private
- */
-
-Socket.prototype.onPacket = function (packet) {
-  if ('opening' === this.readyState || 'open' === this.readyState ||
-      'closing' === this.readyState) {
-    debug('socket receive: type "%s", data "%s"', packet.type, packet.data);
-
-    this.emit('packet', packet);
-
-    // Socket is live - any packet counts
-    this.emit('heartbeat');
-
-    switch (packet.type) {
-      case 'open':
-        this.onHandshake(JSON.parse(packet.data));
-        break;
-
-      case 'pong':
-        this.setPing();
-        this.emit('pong');
-        break;
-
-      case 'error':
-        var err = new Error('server error');
-        err.code = packet.data;
-        this.onError(err);
-        break;
-
-      case 'message':
-        this.emit('data', packet.data);
-        this.emit('message', packet.data);
-        break;
-    }
-  } else {
-    debug('packet received with socket readyState "%s"', this.readyState);
-  }
-};
-
-/**
- * Called upon handshake completion.
- *
- * @param {Object} handshake obj
- * @api private
- */
-
-Socket.prototype.onHandshake = function (data) {
-  this.emit('handshake', data);
-  this.id = data.sid;
-  this.transport.query.sid = data.sid;
-  this.upgrades = this.filterUpgrades(data.upgrades);
-  this.pingInterval = data.pingInterval;
-  this.pingTimeout = data.pingTimeout;
-  this.onOpen();
-  // In case open handler closes socket
-  if ('closed' === this.readyState) return;
-  this.setPing();
-
-  // Prolong liveness of socket on heartbeat
-  this.removeListener('heartbeat', this.onHeartbeat);
-  this.on('heartbeat', this.onHeartbeat);
-};
-
-/**
- * Resets ping timeout.
- *
- * @api private
- */
-
-Socket.prototype.onHeartbeat = function (timeout) {
-  clearTimeout(this.pingTimeoutTimer);
-  var self = this;
-  self.pingTimeoutTimer = setTimeout(function () {
-    if ('closed' === self.readyState) return;
-    self.onClose('ping timeout');
-  }, timeout || (self.pingInterval + self.pingTimeout));
-};
-
-/**
- * Pings server every `this.pingInterval` and expects response
- * within `this.pingTimeout` or closes connection.
- *
- * @api private
- */
-
-Socket.prototype.setPing = function () {
-  var self = this;
-  clearTimeout(self.pingIntervalTimer);
-  self.pingIntervalTimer = setTimeout(function () {
-    debug('writing ping packet - expecting pong within %sms', self.pingTimeout);
-    self.ping();
-    self.onHeartbeat(self.pingTimeout);
-  }, self.pingInterval);
-};
-
-/**
-* Sends a ping packet.
-*
-* @api private
-*/
-
-Socket.prototype.ping = function () {
-  var self = this;
-  this.sendPacket('ping', function () {
-    self.emit('ping');
-  });
-};
-
-/**
- * Called on `drain` event
- *
- * @api private
- */
-
-Socket.prototype.onDrain = function () {
-  this.writeBuffer.splice(0, this.prevBufferLen);
-
-  // setting prevBufferLen = 0 is very important
-  // for example, when upgrading, upgrade packet is sent over,
-  // and a nonzero prevBufferLen could cause problems on `drain`
-  this.prevBufferLen = 0;
-
-  if (0 === this.writeBuffer.length) {
-    this.emit('drain');
-  } else {
-    this.flush();
-  }
-};
-
-/**
- * Flush write buffers.
- *
- * @api private
- */
-
-Socket.prototype.flush = function () {
-  if ('closed' !== this.readyState && this.transport.writable &&
-    !this.upgrading && this.writeBuffer.length) {
-    debug('flushing %d packets in socket', this.writeBuffer.length);
-    this.transport.send(this.writeBuffer);
-    // keep track of current length of writeBuffer
-    // splice writeBuffer and callbackBuffer on `drain`
-    this.prevBufferLen = this.writeBuffer.length;
-    this.emit('flush');
-  }
-};
-
-/**
- * Sends a message.
- *
- * @param {String} message.
- * @param {Function} callback function.
- * @param {Object} options.
- * @return {Socket} for chaining.
- * @api public
- */
-
-Socket.prototype.write =
-Socket.prototype.send = function (msg, options, fn) {
-  this.sendPacket('message', msg, options, fn);
-  return this;
-};
-
-/**
- * Sends a packet.
- *
- * @param {String} packet type.
- * @param {String} data.
- * @param {Object} options.
- * @param {Function} callback function.
- * @api private
- */
-
-Socket.prototype.sendPacket = function (type, data, options, fn) {
-  if ('function' === typeof data) {
-    fn = data;
-    data = undefined;
-  }
-
-  if ('function' === typeof options) {
-    fn = options;
-    options = null;
-  }
-
-  if ('closing' === this.readyState || 'closed' === this.readyState) {
-    return;
-  }
-
-  options = options || {};
-  options.compress = false !== options.compress;
-
-  var packet = {
-    type: type,
-    data: data,
-    options: options
-  };
-  this.emit('packetCreate', packet);
-  this.writeBuffer.push(packet);
-  if (fn) this.once('flush', fn);
-  this.flush();
-};
-
-/**
- * Closes the connection.
- *
- * @api private
- */
-
-Socket.prototype.close = function () {
-  if ('opening' === this.readyState || 'open' === this.readyState) {
-    this.readyState = 'closing';
-
-    var self = this;
-
-    if (this.writeBuffer.length) {
-      this.once('drain', function () {
-        if (this.upgrading) {
-          waitForUpgrade();
-        } else {
-          close();
-        }
-      });
-    } else if (this.upgrading) {
-      waitForUpgrade();
-    } else {
-      close();
-    }
-  }
-
-  function close () {
-    self.onClose('forced close');
-    debug('socket closing - telling transport to close');
-    self.transport.close();
-  }
-
-  function cleanupAndClose () {
-    self.removeListener('upgrade', cleanupAndClose);
-    self.removeListener('upgradeError', cleanupAndClose);
-    close();
-  }
-
-  function waitForUpgrade () {
-    // wait for upgrade to finish since we can't send packets while pausing a transport
-    self.once('upgrade', cleanupAndClose);
-    self.once('upgradeError', cleanupAndClose);
-  }
-
-  return this;
-};
-
-/**
- * Called upon transport error
- *
- * @api private
- */
-
-Socket.prototype.onError = function (err) {
-  debug('socket error %j', err);
-  Socket.priorWebsocketSuccess = false;
-  this.emit('error', err);
-  this.onClose('transport error', err);
-};
-
-/**
- * Called upon transport close.
- *
- * @api private
- */
-
-Socket.prototype.onClose = function (reason, desc) {
-  if ('opening' === this.readyState || 'open' === this.readyState || 'closing' === this.readyState) {
-    debug('socket close with reason: "%s"', reason);
-    var self = this;
-
-    // clear timers
-    clearTimeout(this.pingIntervalTimer);
-    clearTimeout(this.pingTimeoutTimer);
-
-    // stop event from firing again for transport
-    this.transport.removeAllListeners('close');
-
-    // ensure transport won't stay open
-    this.transport.close();
-
-    // ignore further transport communication
-    this.transport.removeAllListeners();
-
-    // set ready state
-    this.readyState = 'closed';
-
-    // clear session id
-    this.id = null;
-
-    // emit close event
-    this.emit('close', reason, desc);
-
-    // clean buffers after, so users can still
-    // grab the buffers on `close` event
-    self.writeBuffer = [];
-    self.prevBufferLen = 0;
-  }
-};
-
-/**
- * Filters upgrades, returning only those matching client transports.
- *
- * @param {Array} server upgrades
- * @api private
- *
- */
-
-Socket.prototype.filterUpgrades = function (upgrades) {
-  var filteredUpgrades = [];
-  for (var i = 0, j = upgrades.length; i < j; i++) {
-    if (~index(this.transports, upgrades[i])) filteredUpgrades.push(upgrades[i]);
-  }
-  return filteredUpgrades;
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":86,"./transports/index":87,"component-emitter":78,"debug":93,"engine.io-parser":95,"indexof":104,"parseqs":110,"parseuri":111}],86:[function(require,module,exports){
-/**
- * Module dependencies.
- */
-
-var parser = require('engine.io-parser');
-var Emitter = require('component-emitter');
-
-/**
- * Module exports.
- */
-
-module.exports = Transport;
-
-/**
- * Transport abstract constructor.
- *
- * @param {Object} options.
- * @api private
- */
-
-function Transport (opts) {
-  this.path = opts.path;
-  this.hostname = opts.hostname;
-  this.port = opts.port;
-  this.secure = opts.secure;
-  this.query = opts.query;
-  this.timestampParam = opts.timestampParam;
-  this.timestampRequests = opts.timestampRequests;
-  this.readyState = '';
-  this.agent = opts.agent || false;
-  this.socket = opts.socket;
-  this.enablesXDR = opts.enablesXDR;
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx;
-  this.key = opts.key;
-  this.passphrase = opts.passphrase;
-  this.cert = opts.cert;
-  this.ca = opts.ca;
-  this.ciphers = opts.ciphers;
-  this.rejectUnauthorized = opts.rejectUnauthorized;
-  this.forceNode = opts.forceNode;
-
-  // other options for Node.js client
-  this.extraHeaders = opts.extraHeaders;
-  this.localAddress = opts.localAddress;
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Transport.prototype);
-
-/**
- * Emits an error.
- *
- * @param {String} str
- * @return {Transport} for chaining
- * @api public
- */
-
-Transport.prototype.onError = function (msg, desc) {
-  var err = new Error(msg);
-  err.type = 'TransportError';
-  err.description = desc;
-  this.emit('error', err);
-  return this;
-};
-
-/**
- * Opens the transport.
- *
- * @api public
- */
-
-Transport.prototype.open = function () {
-  if ('closed' === this.readyState || '' === this.readyState) {
-    this.readyState = 'opening';
-    this.doOpen();
-  }
-
-  return this;
-};
-
-/**
- * Closes the transport.
- *
- * @api private
- */
-
-Transport.prototype.close = function () {
-  if ('opening' === this.readyState || 'open' === this.readyState) {
-    this.doClose();
-    this.onClose();
-  }
-
-  return this;
-};
-
-/**
- * Sends multiple packets.
- *
- * @param {Array} packets
- * @api private
- */
-
-Transport.prototype.send = function (packets) {
-  if ('open' === this.readyState) {
-    this.write(packets);
-  } else {
-    throw new Error('Transport not open');
-  }
-};
-
-/**
- * Called upon open
- *
- * @api private
- */
-
-Transport.prototype.onOpen = function () {
-  this.readyState = 'open';
-  this.writable = true;
-  this.emit('open');
-};
-
-/**
- * Called with data.
- *
- * @param {String} data
- * @api private
- */
-
-Transport.prototype.onData = function (data) {
-  var packet = parser.decodePacket(data, this.socket.binaryType);
-  this.onPacket(packet);
-};
-
-/**
- * Called with a decoded packet.
- */
-
-Transport.prototype.onPacket = function (packet) {
-  this.emit('packet', packet);
-};
-
-/**
- * Called upon close.
- *
- * @api private
- */
-
-Transport.prototype.onClose = function () {
-  this.readyState = 'closed';
-  this.emit('close');
-};
-
-},{"component-emitter":78,"engine.io-parser":95}],87:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies
- */
-
-var XMLHttpRequest = require('xmlhttprequest-ssl');
-var XHR = require('./polling-xhr');
-var JSONP = require('./polling-jsonp');
-var websocket = require('./websocket');
-
-/**
- * Export transports.
- */
-
-exports.polling = polling;
-exports.websocket = websocket;
-
-/**
- * Polling transport polymorphic constructor.
- * Decides on xhr vs jsonp based on feature detection.
- *
- * @api private
- */
-
-function polling (opts) {
-  var xhr;
-  var xd = false;
-  var xs = false;
-  var jsonp = false !== opts.jsonp;
-
-  if (global.location) {
-    var isSSL = 'https:' === location.protocol;
-    var port = location.port;
-
-    // some user agents have empty `location.port`
-    if (!port) {
-      port = isSSL ? 443 : 80;
-    }
-
-    xd = opts.hostname !== location.hostname || port !== opts.port;
-    xs = opts.secure !== isSSL;
-  }
-
-  opts.xdomain = xd;
-  opts.xscheme = xs;
-  xhr = new XMLHttpRequest(opts);
-
-  if ('open' in xhr && !opts.forceJSONP) {
-    return new XHR(opts);
-  } else {
-    if (!jsonp) throw new Error('JSONP disabled');
-    return new JSONP(opts);
-  }
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":88,"./polling-xhr":89,"./websocket":91,"xmlhttprequest-ssl":92}],88:[function(require,module,exports){
-(function (global){
-
-/**
- * Module requirements.
- */
-
-var Polling = require('./polling');
-var inherit = require('component-inherit');
-
-/**
- * Module exports.
- */
-
-module.exports = JSONPPolling;
-
-/**
- * Cached regular expressions.
- */
-
-var rNewline = /\n/g;
-var rEscapedNewline = /\\n/g;
-
-/**
- * Global JSONP callbacks.
- */
-
-var callbacks;
-
-/**
- * Noop.
- */
-
-function empty () { }
-
-/**
- * JSONP Polling constructor.
- *
- * @param {Object} opts.
- * @api public
- */
-
-function JSONPPolling (opts) {
-  Polling.call(this, opts);
-
-  this.query = this.query || {};
-
-  // define global callbacks array if not present
-  // we do this here (lazily) to avoid unneeded global pollution
-  if (!callbacks) {
-    // we need to consider multiple engines in the same page
-    if (!global.___eio) global.___eio = [];
-    callbacks = global.___eio;
-  }
-
-  // callback identifier
-  this.index = callbacks.length;
-
-  // add callback to jsonp global
-  var self = this;
-  callbacks.push(function (msg) {
-    self.onData(msg);
-  });
-
-  // append to query string
-  this.query.j = this.index;
-
-  // prevent spurious errors from being emitted when the window is unloaded
-  if (global.document && global.addEventListener) {
-    global.addEventListener('beforeunload', function () {
-      if (self.script) self.script.onerror = empty;
-    }, false);
-  }
-}
-
-/**
- * Inherits from Polling.
- */
-
-inherit(JSONPPolling, Polling);
-
-/*
- * JSONP only supports binary as base64 encoded strings
- */
-
-JSONPPolling.prototype.supportsBinary = false;
-
-/**
- * Closes the socket.
- *
- * @api private
- */
-
-JSONPPolling.prototype.doClose = function () {
-  if (this.script) {
-    this.script.parentNode.removeChild(this.script);
-    this.script = null;
-  }
-
-  if (this.form) {
-    this.form.parentNode.removeChild(this.form);
-    this.form = null;
-    this.iframe = null;
-  }
-
-  Polling.prototype.doClose.call(this);
-};
-
-/**
- * Starts a poll cycle.
- *
- * @api private
- */
-
-JSONPPolling.prototype.doPoll = function () {
-  var self = this;
-  var script = document.createElement('script');
-
-  if (this.script) {
-    this.script.parentNode.removeChild(this.script);
-    this.script = null;
-  }
-
-  script.async = true;
-  script.src = this.uri();
-  script.onerror = function (e) {
-    self.onError('jsonp poll error', e);
-  };
-
-  var insertAt = document.getElementsByTagName('script')[0];
-  if (insertAt) {
-    insertAt.parentNode.insertBefore(script, insertAt);
-  } else {
-    (document.head || document.body).appendChild(script);
-  }
-  this.script = script;
-
-  var isUAgecko = 'undefined' !== typeof navigator && /gecko/i.test(navigator.userAgent);
-
-  if (isUAgecko) {
-    setTimeout(function () {
-      var iframe = document.createElement('iframe');
-      document.body.appendChild(iframe);
-      document.body.removeChild(iframe);
-    }, 100);
-  }
-};
-
-/**
- * Writes with a hidden iframe.
- *
- * @param {String} data to send
- * @param {Function} called upon flush.
- * @api private
- */
-
-JSONPPolling.prototype.doWrite = function (data, fn) {
-  var self = this;
-
-  if (!this.form) {
-    var form = document.createElement('form');
-    var area = document.createElement('textarea');
-    var id = this.iframeId = 'eio_iframe_' + this.index;
-    var iframe;
-
-    form.className = 'socketio';
-    form.style.position = 'absolute';
-    form.style.top = '-1000px';
-    form.style.left = '-1000px';
-    form.target = id;
-    form.method = 'POST';
-    form.setAttribute('accept-charset', 'utf-8');
-    area.name = 'd';
-    form.appendChild(area);
-    document.body.appendChild(form);
-
-    this.form = form;
-    this.area = area;
-  }
-
-  this.form.action = this.uri();
-
-  function complete () {
-    initIframe();
-    fn();
-  }
-
-  function initIframe () {
-    if (self.iframe) {
-      try {
-        self.form.removeChild(self.iframe);
-      } catch (e) {
-        self.onError('jsonp polling iframe removal error', e);
-      }
-    }
-
-    try {
-      // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
-      var html = '<iframe src="javascript:0" name="' + self.iframeId + '">';
-      iframe = document.createElement(html);
-    } catch (e) {
-      iframe = document.createElement('iframe');
-      iframe.name = self.iframeId;
-      iframe.src = 'javascript:0';
-    }
-
-    iframe.id = self.iframeId;
-
-    self.form.appendChild(iframe);
-    self.iframe = iframe;
-  }
-
-  initIframe();
-
-  // escape \n to prevent it from being converted into \r\n by some UAs
-  // double escaping is required for escaped new lines because unescaping of new lines can be done safely on server-side
-  data = data.replace(rEscapedNewline, '\\\n');
-  this.area.value = data.replace(rNewline, '\\n');
-
-  try {
-    this.form.submit();
-  } catch (e) {}
-
-  if (this.iframe.attachEvent) {
-    this.iframe.onreadystatechange = function () {
-      if (self.iframe.readyState === 'complete') {
-        complete();
-      }
-    };
-  } else {
-    this.iframe.onload = complete;
-  }
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":90,"component-inherit":79}],89:[function(require,module,exports){
-(function (global){
-/**
- * Module requirements.
- */
-
-var XMLHttpRequest = require('xmlhttprequest-ssl');
-var Polling = require('./polling');
-var Emitter = require('component-emitter');
-var inherit = require('component-inherit');
-var debug = require('debug')('engine.io-client:polling-xhr');
-
-/**
- * Module exports.
- */
-
-module.exports = XHR;
-module.exports.Request = Request;
-
-/**
- * Empty function
- */
-
-function empty () {}
-
-/**
- * XHR Polling constructor.
- *
- * @param {Object} opts
- * @api public
- */
-
-function XHR (opts) {
-  Polling.call(this, opts);
-  this.requestTimeout = opts.requestTimeout;
-  this.extraHeaders = opts.extraHeaders;
-
-  if (global.location) {
-    var isSSL = 'https:' === location.protocol;
-    var port = location.port;
-
-    // some user agents have empty `location.port`
-    if (!port) {
-      port = isSSL ? 443 : 80;
-    }
-
-    this.xd = opts.hostname !== global.location.hostname ||
-      port !== opts.port;
-    this.xs = opts.secure !== isSSL;
-  }
-}
-
-/**
- * Inherits from Polling.
- */
-
-inherit(XHR, Polling);
-
-/**
- * XHR supports binary
- */
-
-XHR.prototype.supportsBinary = true;
-
-/**
- * Creates a request.
- *
- * @param {String} method
- * @api private
- */
-
-XHR.prototype.request = function (opts) {
-  opts = opts || {};
-  opts.uri = this.uri();
-  opts.xd = this.xd;
-  opts.xs = this.xs;
-  opts.agent = this.agent || false;
-  opts.supportsBinary = this.supportsBinary;
-  opts.enablesXDR = this.enablesXDR;
-
-  // SSL options for Node.js client
-  opts.pfx = this.pfx;
-  opts.key = this.key;
-  opts.passphrase = this.passphrase;
-  opts.cert = this.cert;
-  opts.ca = this.ca;
-  opts.ciphers = this.ciphers;
-  opts.rejectUnauthorized = this.rejectUnauthorized;
-  opts.requestTimeout = this.requestTimeout;
-
-  // other options for Node.js client
-  opts.extraHeaders = this.extraHeaders;
-
-  return new Request(opts);
-};
-
-/**
- * Sends data.
- *
- * @param {String} data to send.
- * @param {Function} called upon flush.
- * @api private
- */
-
-XHR.prototype.doWrite = function (data, fn) {
-  var isBinary = typeof data !== 'string' && data !== undefined;
-  var req = this.request({ method: 'POST', data: data, isBinary: isBinary });
-  var self = this;
-  req.on('success', fn);
-  req.on('error', function (err) {
-    self.onError('xhr post error', err);
-  });
-  this.sendXhr = req;
-};
-
-/**
- * Starts a poll cycle.
- *
- * @api private
- */
-
-XHR.prototype.doPoll = function () {
-  debug('xhr poll');
-  var req = this.request();
-  var self = this;
-  req.on('data', function (data) {
-    self.onData(data);
-  });
-  req.on('error', function (err) {
-    self.onError('xhr poll error', err);
-  });
-  this.pollXhr = req;
-};
-
-/**
- * Request constructor
- *
- * @param {Object} options
- * @api public
- */
-
-function Request (opts) {
-  this.method = opts.method || 'GET';
-  this.uri = opts.uri;
-  this.xd = !!opts.xd;
-  this.xs = !!opts.xs;
-  this.async = false !== opts.async;
-  this.data = undefined !== opts.data ? opts.data : null;
-  this.agent = opts.agent;
-  this.isBinary = opts.isBinary;
-  this.supportsBinary = opts.supportsBinary;
-  this.enablesXDR = opts.enablesXDR;
-  this.requestTimeout = opts.requestTimeout;
-
-  // SSL options for Node.js client
-  this.pfx = opts.pfx;
-  this.key = opts.key;
-  this.passphrase = opts.passphrase;
-  this.cert = opts.cert;
-  this.ca = opts.ca;
-  this.ciphers = opts.ciphers;
-  this.rejectUnauthorized = opts.rejectUnauthorized;
-
-  // other options for Node.js client
-  this.extraHeaders = opts.extraHeaders;
-
-  this.create();
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Request.prototype);
-
-/**
- * Creates the XHR object and sends the request.
- *
- * @api private
- */
-
-Request.prototype.create = function () {
-  var opts = { agent: this.agent, xdomain: this.xd, xscheme: this.xs, enablesXDR: this.enablesXDR };
-
-  // SSL options for Node.js client
-  opts.pfx = this.pfx;
-  opts.key = this.key;
-  opts.passphrase = this.passphrase;
-  opts.cert = this.cert;
-  opts.ca = this.ca;
-  opts.ciphers = this.ciphers;
-  opts.rejectUnauthorized = this.rejectUnauthorized;
-
-  var xhr = this.xhr = new XMLHttpRequest(opts);
-  var self = this;
-
-  try {
-    debug('xhr open %s: %s', this.method, this.uri);
-    xhr.open(this.method, this.uri, this.async);
-    try {
-      if (this.extraHeaders) {
-        xhr.setDisableHeaderCheck && xhr.setDisableHeaderCheck(true);
-        for (var i in this.extraHeaders) {
-          if (this.extraHeaders.hasOwnProperty(i)) {
-            xhr.setRequestHeader(i, this.extraHeaders[i]);
-          }
-        }
-      }
-    } catch (e) {}
-
-    if ('POST' === this.method) {
-      try {
-        if (this.isBinary) {
-          xhr.setRequestHeader('Content-type', 'application/octet-stream');
-        } else {
-          xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
-        }
-      } catch (e) {}
-    }
-
-    try {
-      xhr.setRequestHeader('Accept', '*/*');
-    } catch (e) {}
-
-    // ie6 check
-    if ('withCredentials' in xhr) {
-      xhr.withCredentials = true;
-    }
-
-    if (this.requestTimeout) {
-      xhr.timeout = this.requestTimeout;
-    }
-
-    if (this.hasXDR()) {
-      xhr.onload = function () {
-        self.onLoad();
-      };
-      xhr.onerror = function () {
-        self.onError(xhr.responseText);
-      };
-    } else {
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 2) {
-          try {
-            var contentType = xhr.getResponseHeader('Content-Type');
-            if (self.supportsBinary && contentType === 'application/octet-stream') {
-              xhr.responseType = 'arraybuffer';
-            }
-          } catch (e) {}
-        }
-        if (4 !== xhr.readyState) return;
-        if (200 === xhr.status || 1223 === xhr.status) {
-          self.onLoad();
-        } else {
-          // make sure the `error` event handler that's user-set
-          // does not throw in the same tick and gets caught here
-          setTimeout(function () {
-            self.onError(xhr.status);
-          }, 0);
-        }
-      };
-    }
-
-    debug('xhr data %s', this.data);
-    xhr.send(this.data);
-  } catch (e) {
-    // Need to defer since .create() is called directly fhrom the constructor
-    // and thus the 'error' event can only be only bound *after* this exception
-    // occurs.  Therefore, also, we cannot throw here at all.
-    setTimeout(function () {
-      self.onError(e);
-    }, 0);
-    return;
-  }
-
-  if (global.document) {
-    this.index = Request.requestsCount++;
-    Request.requests[this.index] = this;
-  }
-};
-
-/**
- * Called upon successful response.
- *
- * @api private
- */
-
-Request.prototype.onSuccess = function () {
-  this.emit('success');
-  this.cleanup();
-};
-
-/**
- * Called if we have data.
- *
- * @api private
- */
-
-Request.prototype.onData = function (data) {
-  this.emit('data', data);
-  this.onSuccess();
-};
-
-/**
- * Called upon error.
- *
- * @api private
- */
-
-Request.prototype.onError = function (err) {
-  this.emit('error', err);
-  this.cleanup(true);
-};
-
-/**
- * Cleans up house.
- *
- * @api private
- */
-
-Request.prototype.cleanup = function (fromError) {
-  if ('undefined' === typeof this.xhr || null === this.xhr) {
-    return;
-  }
-  // xmlhttprequest
-  if (this.hasXDR()) {
-    this.xhr.onload = this.xhr.onerror = empty;
-  } else {
-    this.xhr.onreadystatechange = empty;
-  }
-
-  if (fromError) {
-    try {
-      this.xhr.abort();
-    } catch (e) {}
-  }
-
-  if (global.document) {
-    delete Request.requests[this.index];
-  }
-
-  this.xhr = null;
-};
-
-/**
- * Called upon load.
- *
- * @api private
- */
-
-Request.prototype.onLoad = function () {
-  var data;
-  try {
-    var contentType;
-    try {
-      contentType = this.xhr.getResponseHeader('Content-Type');
-    } catch (e) {}
-    if (contentType === 'application/octet-stream') {
-      data = this.xhr.response || this.xhr.responseText;
-    } else {
-      data = this.xhr.responseText;
-    }
-  } catch (e) {
-    this.onError(e);
-  }
-  if (null != data) {
-    this.onData(data);
-  }
-};
-
-/**
- * Check if it has XDomainRequest.
- *
- * @api private
- */
-
-Request.prototype.hasXDR = function () {
-  return 'undefined' !== typeof global.XDomainRequest && !this.xs && this.enablesXDR;
-};
-
-/**
- * Aborts the request.
- *
- * @api public
- */
-
-Request.prototype.abort = function () {
-  this.cleanup();
-};
-
-/**
- * Aborts pending requests when unloading the window. This is needed to prevent
- * memory leaks (e.g. when using IE) and to ensure that no spurious error is
- * emitted.
- */
-
-Request.requestsCount = 0;
-Request.requests = {};
-
-if (global.document) {
-  if (global.attachEvent) {
-    global.attachEvent('onunload', unloadHandler);
-  } else if (global.addEventListener) {
-    global.addEventListener('beforeunload', unloadHandler, false);
-  }
-}
-
-function unloadHandler () {
-  for (var i in Request.requests) {
-    if (Request.requests.hasOwnProperty(i)) {
-      Request.requests[i].abort();
-    }
-  }
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":90,"component-emitter":78,"component-inherit":79,"debug":93,"xmlhttprequest-ssl":92}],90:[function(require,module,exports){
-/**
- * Module dependencies.
- */
-
-var Transport = require('../transport');
-var parseqs = require('parseqs');
-var parser = require('engine.io-parser');
-var inherit = require('component-inherit');
-var yeast = require('yeast');
-var debug = require('debug')('engine.io-client:polling');
-
-/**
- * Module exports.
- */
-
-module.exports = Polling;
-
-/**
- * Is XHR2 supported?
- */
-
-var hasXHR2 = (function () {
-  var XMLHttpRequest = require('xmlhttprequest-ssl');
-  var xhr = new XMLHttpRequest({ xdomain: false });
-  return null != xhr.responseType;
-})();
-
-/**
- * Polling interface.
- *
- * @param {Object} opts
- * @api private
- */
-
-function Polling (opts) {
-  var forceBase64 = (opts && opts.forceBase64);
-  if (!hasXHR2 || forceBase64) {
-    this.supportsBinary = false;
-  }
-  Transport.call(this, opts);
-}
-
-/**
- * Inherits from Transport.
- */
-
-inherit(Polling, Transport);
-
-/**
- * Transport name.
- */
-
-Polling.prototype.name = 'polling';
-
-/**
- * Opens the socket (triggers polling). We write a PING message to determine
- * when the transport is open.
- *
- * @api private
- */
-
-Polling.prototype.doOpen = function () {
-  this.poll();
-};
-
-/**
- * Pauses polling.
- *
- * @param {Function} callback upon buffers are flushed and transport is paused
- * @api private
- */
-
-Polling.prototype.pause = function (onPause) {
-  var self = this;
-
-  this.readyState = 'pausing';
-
-  function pause () {
-    debug('paused');
-    self.readyState = 'paused';
-    onPause();
-  }
-
-  if (this.polling || !this.writable) {
-    var total = 0;
-
-    if (this.polling) {
-      debug('we are currently polling - waiting to pause');
-      total++;
-      this.once('pollComplete', function () {
-        debug('pre-pause polling complete');
-        --total || pause();
-      });
-    }
-
-    if (!this.writable) {
-      debug('we are currently writing - waiting to pause');
-      total++;
-      this.once('drain', function () {
-        debug('pre-pause writing complete');
-        --total || pause();
-      });
-    }
-  } else {
-    pause();
-  }
-};
-
-/**
- * Starts polling cycle.
- *
- * @api public
- */
-
-Polling.prototype.poll = function () {
-  debug('polling');
-  this.polling = true;
-  this.doPoll();
-  this.emit('poll');
-};
-
-/**
- * Overloads onData to detect payloads.
- *
- * @api private
- */
-
-Polling.prototype.onData = function (data) {
-  var self = this;
-  debug('polling got data %s', data);
-  var callback = function (packet, index, total) {
-    // if its the first message we consider the transport open
-    if ('opening' === self.readyState) {
-      self.onOpen();
-    }
-
-    // if its a close packet, we close the ongoing requests
-    if ('close' === packet.type) {
-      self.onClose();
-      return false;
-    }
-
-    // otherwise bypass onData and handle the message
-    self.onPacket(packet);
-  };
-
-  // decode payload
-  parser.decodePayload(data, this.socket.binaryType, callback);
-
-  // if an event did not trigger closing
-  if ('closed' !== this.readyState) {
-    // if we got data we're not polling
-    this.polling = false;
-    this.emit('pollComplete');
-
-    if ('open' === this.readyState) {
-      this.poll();
-    } else {
-      debug('ignoring poll - transport state "%s"', this.readyState);
-    }
-  }
-};
-
-/**
- * For polling, send a close packet.
- *
- * @api private
- */
-
-Polling.prototype.doClose = function () {
-  var self = this;
-
-  function close () {
-    debug('writing close packet');
-    self.write([{ type: 'close' }]);
-  }
-
-  if ('open' === this.readyState) {
-    debug('transport open - closing');
-    close();
-  } else {
-    // in case we're trying to close while
-    // handshaking is in progress (GH-164)
-    debug('transport not open - deferring close');
-    this.once('open', close);
-  }
-};
-
-/**
- * Writes a packets payload.
- *
- * @param {Array} data packets
- * @param {Function} drain callback
- * @api private
- */
-
-Polling.prototype.write = function (packets) {
-  var self = this;
-  this.writable = false;
-  var callbackfn = function () {
-    self.writable = true;
-    self.emit('drain');
-  };
-
-  parser.encodePayload(packets, this.supportsBinary, function (data) {
-    self.doWrite(data, callbackfn);
-  });
-};
-
-/**
- * Generates uri for connection.
- *
- * @api private
- */
-
-Polling.prototype.uri = function () {
-  var query = this.query || {};
-  var schema = this.secure ? 'https' : 'http';
-  var port = '';
-
-  // cache busting is forced
-  if (false !== this.timestampRequests) {
-    query[this.timestampParam] = yeast();
-  }
-
-  if (!this.supportsBinary && !query.sid) {
-    query.b64 = 1;
-  }
-
-  query = parseqs.encode(query);
-
-  // avoid port if default for schema
-  if (this.port && (('https' === schema && Number(this.port) !== 443) ||
-     ('http' === schema && Number(this.port) !== 80))) {
-    port = ':' + this.port;
-  }
-
-  // prepend ? to query
-  if (query.length) {
-    query = '?' + query;
-  }
-
-  var ipv6 = this.hostname.indexOf(':') !== -1;
-  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-};
-
-},{"../transport":86,"component-inherit":79,"debug":93,"engine.io-parser":95,"parseqs":110,"xmlhttprequest-ssl":92,"yeast":318}],91:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies.
- */
-
-var Transport = require('../transport');
-var parser = require('engine.io-parser');
-var parseqs = require('parseqs');
-var inherit = require('component-inherit');
-var yeast = require('yeast');
-var debug = require('debug')('engine.io-client:websocket');
-var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
-var NodeWebSocket;
-if (typeof window === 'undefined') {
-  try {
-    NodeWebSocket = require('ws');
-  } catch (e) { }
-}
-
-/**
- * Get either the `WebSocket` or `MozWebSocket` globals
- * in the browser or try to resolve WebSocket-compatible
- * interface exposed by `ws` for Node-like environment.
- */
-
-var WebSocket = BrowserWebSocket;
-if (!WebSocket && typeof window === 'undefined') {
-  WebSocket = NodeWebSocket;
-}
-
-/**
- * Module exports.
- */
-
-module.exports = WS;
-
-/**
- * WebSocket transport constructor.
- *
- * @api {Object} connection options
- * @api public
- */
-
-function WS (opts) {
-  var forceBase64 = (opts && opts.forceBase64);
-  if (forceBase64) {
-    this.supportsBinary = false;
-  }
-  this.perMessageDeflate = opts.perMessageDeflate;
-  this.usingBrowserWebSocket = BrowserWebSocket && !opts.forceNode;
-  this.protocols = opts.protocols;
-  if (!this.usingBrowserWebSocket) {
-    WebSocket = NodeWebSocket;
-  }
-  Transport.call(this, opts);
-}
-
-/**
- * Inherits from Transport.
- */
-
-inherit(WS, Transport);
-
-/**
- * Transport name.
- *
- * @api public
- */
-
-WS.prototype.name = 'websocket';
-
-/*
- * WebSockets support binary
- */
-
-WS.prototype.supportsBinary = true;
-
-/**
- * Opens socket.
- *
- * @api private
- */
-
-WS.prototype.doOpen = function () {
-  if (!this.check()) {
-    // let probe timeout
-    return;
-  }
-
-  var uri = this.uri();
-  var protocols = this.protocols;
-  var opts = {
-    agent: this.agent,
-    perMessageDeflate: this.perMessageDeflate
-  };
-
-  // SSL options for Node.js client
-  opts.pfx = this.pfx;
-  opts.key = this.key;
-  opts.passphrase = this.passphrase;
-  opts.cert = this.cert;
-  opts.ca = this.ca;
-  opts.ciphers = this.ciphers;
-  opts.rejectUnauthorized = this.rejectUnauthorized;
-  if (this.extraHeaders) {
-    opts.headers = this.extraHeaders;
-  }
-  if (this.localAddress) {
-    opts.localAddress = this.localAddress;
-  }
-
-  try {
-    this.ws = this.usingBrowserWebSocket ? (protocols ? new WebSocket(uri, protocols) : new WebSocket(uri)) : new WebSocket(uri, protocols, opts);
-  } catch (err) {
-    return this.emit('error', err);
-  }
-
-  if (this.ws.binaryType === undefined) {
-    this.supportsBinary = false;
-  }
-
-  if (this.ws.supports && this.ws.supports.binary) {
-    this.supportsBinary = true;
-    this.ws.binaryType = 'nodebuffer';
-  } else {
-    this.ws.binaryType = 'arraybuffer';
-  }
-
-  this.addEventListeners();
-};
-
-/**
- * Adds event listeners to the socket
- *
- * @api private
- */
-
-WS.prototype.addEventListeners = function () {
-  var self = this;
-
-  this.ws.onopen = function () {
-    self.onOpen();
-  };
-  this.ws.onclose = function () {
-    self.onClose();
-  };
-  this.ws.onmessage = function (ev) {
-    self.onData(ev.data);
-  };
-  this.ws.onerror = function (e) {
-    self.onError('websocket error', e);
-  };
-};
-
-/**
- * Writes data to socket.
- *
- * @param {Array} array of packets.
- * @api private
- */
-
-WS.prototype.write = function (packets) {
-  var self = this;
-  this.writable = false;
-
-  // encodePacket efficient as it uses WS framing
-  // no need for encodePayload
-  var total = packets.length;
-  for (var i = 0, l = total; i < l; i++) {
-    (function (packet) {
-      parser.encodePacket(packet, self.supportsBinary, function (data) {
-        if (!self.usingBrowserWebSocket) {
-          // always create a new object (GH-437)
-          var opts = {};
-          if (packet.options) {
-            opts.compress = packet.options.compress;
-          }
-
-          if (self.perMessageDeflate) {
-            var len = 'string' === typeof data ? global.Buffer.byteLength(data) : data.length;
-            if (len < self.perMessageDeflate.threshold) {
-              opts.compress = false;
-            }
-          }
-        }
-
-        // Sometimes the websocket has already been closed but the browser didn't
-        // have a chance of informing us about it yet, in that case send will
-        // throw an error
-        try {
-          if (self.usingBrowserWebSocket) {
-            // TypeError is thrown when passing the second argument on Safari
-            self.ws.send(data);
-          } else {
-            self.ws.send(data, opts);
-          }
-        } catch (e) {
-          debug('websocket closed before onclose event');
-        }
-
-        --total || done();
-      });
-    })(packets[i]);
-  }
-
-  function done () {
-    self.emit('flush');
-
-    // fake drain
-    // defer to next tick to allow Socket to clear writeBuffer
-    setTimeout(function () {
-      self.writable = true;
-      self.emit('drain');
-    }, 0);
-  }
-};
-
-/**
- * Called upon close
- *
- * @api private
- */
-
-WS.prototype.onClose = function () {
-  Transport.prototype.onClose.call(this);
-};
-
-/**
- * Closes socket.
- *
- * @api private
- */
-
-WS.prototype.doClose = function () {
-  if (typeof this.ws !== 'undefined') {
-    this.ws.close();
-  }
-};
-
-/**
- * Generates uri for connection.
- *
- * @api private
- */
-
-WS.prototype.uri = function () {
-  var query = this.query || {};
-  var schema = this.secure ? 'wss' : 'ws';
-  var port = '';
-
-  // avoid port if default for schema
-  if (this.port && (('wss' === schema && Number(this.port) !== 443) ||
-    ('ws' === schema && Number(this.port) !== 80))) {
-    port = ':' + this.port;
-  }
-
-  // append timestamp to URI
-  if (this.timestampRequests) {
-    query[this.timestampParam] = yeast();
-  }
-
-  // communicate binary support capabilities
-  if (!this.supportsBinary) {
-    query.b64 = 1;
-  }
-
-  query = parseqs.encode(query);
-
-  // prepend ? to query
-  if (query.length) {
-    query = '?' + query;
-  }
-
-  var ipv6 = this.hostname.indexOf(':') !== -1;
-  return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
-};
-
-/**
- * Feature detection for WebSocket.
- *
- * @return {Boolean} whether this transport is available.
- * @api public
- */
-
-WS.prototype.check = function () {
-  return !!WebSocket && !('__initialize' in WebSocket && this.name === WS.prototype.name);
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":86,"component-inherit":79,"debug":93,"engine.io-parser":95,"parseqs":110,"ws":320,"yeast":318}],92:[function(require,module,exports){
-(function (global){
-// browser shim for xmlhttprequest module
-
-var hasCORS = require('has-cors');
-
-module.exports = function (opts) {
-  var xdomain = opts.xdomain;
-
-  // scheme must be same when usign XDomainRequest
-  // http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
-  var xscheme = opts.xscheme;
-
-  // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
-  // https://github.com/Automattic/engine.io-client/pull/217
-  var enablesXDR = opts.enablesXDR;
-
-  // XMLHttpRequest can be disabled on IE
-  try {
-    if ('undefined' !== typeof XMLHttpRequest && (!xdomain || hasCORS)) {
-      return new XMLHttpRequest();
-    }
-  } catch (e) { }
-
-  // Use XDomainRequest for IE8 if enablesXDR is true
-  // because loading bar keeps flashing when using jsonp-polling
-  // https://github.com/yujiosaka/socke.io-ie8-loading-example
-  try {
-    if ('undefined' !== typeof XDomainRequest && !xscheme && enablesXDR) {
-      return new XDomainRequest();
-    }
-  } catch (e) { }
-
-  if (!xdomain) {
-    try {
-      return new global[['Active'].concat('Object').join('X')]('Microsoft.XMLHTTP');
-    } catch (e) { }
-  }
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":101}],93:[function(require,module,exports){
-(function (process){
-/**
- * This is the web browser implementation of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-exports = module.exports = require('./debug');
-exports.log = log;
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.storage = 'undefined' != typeof chrome
-               && 'undefined' != typeof chrome.storage
-                  ? chrome.storage.local
-                  : localstorage();
-
-/**
- * Colors.
- */
-
-exports.colors = [
-  '#0000CC', '#0000FF', '#0033CC', '#0033FF', '#0066CC', '#0066FF', '#0099CC',
-  '#0099FF', '#00CC00', '#00CC33', '#00CC66', '#00CC99', '#00CCCC', '#00CCFF',
-  '#3300CC', '#3300FF', '#3333CC', '#3333FF', '#3366CC', '#3366FF', '#3399CC',
-  '#3399FF', '#33CC00', '#33CC33', '#33CC66', '#33CC99', '#33CCCC', '#33CCFF',
-  '#6600CC', '#6600FF', '#6633CC', '#6633FF', '#66CC00', '#66CC33', '#9900CC',
-  '#9900FF', '#9933CC', '#9933FF', '#99CC00', '#99CC33', '#CC0000', '#CC0033',
-  '#CC0066', '#CC0099', '#CC00CC', '#CC00FF', '#CC3300', '#CC3333', '#CC3366',
-  '#CC3399', '#CC33CC', '#CC33FF', '#CC6600', '#CC6633', '#CC9900', '#CC9933',
-  '#CCCC00', '#CCCC33', '#FF0000', '#FF0033', '#FF0066', '#FF0099', '#FF00CC',
-  '#FF00FF', '#FF3300', '#FF3333', '#FF3366', '#FF3399', '#FF33CC', '#FF33FF',
-  '#FF6600', '#FF6633', '#FF9900', '#FF9933', '#FFCC00', '#FFCC33'
-];
-
-/**
- * Currently only WebKit-based Web Inspectors, Firefox >= v31,
- * and the Firebug extension (any Firefox version) are known
- * to support "%c" CSS customizations.
- *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
- */
-
-function useColors() {
-  // NB: In an Electron preload script, document will be defined but not fully
-  // initialized. Since we know we're in Chrome, we'll just detect this case
-  // explicitly
-  if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
-    return true;
-  }
-
-  // Internet Explorer and Edge do not support colors.
-  if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
-    return false;
-  }
-
-  // is webkit? http://stackoverflow.com/a/16459606/376773
-  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
-    // is firebug? http://stackoverflow.com/a/398120/376773
-    (typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
-    // is firefox >= v31?
-    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
-    // double check webkit in userAgent just in case we are in a worker
-    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
-}
-
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
-
-exports.formatters.j = function(v) {
-  try {
-    return JSON.stringify(v);
-  } catch (err) {
-    return '[UnexpectedJSONParseError]: ' + err.message;
-  }
-};
-
-
-/**
- * Colorize log arguments if enabled.
- *
- * @api public
- */
-
-function formatArgs(args) {
-  var useColors = this.useColors;
-
-  args[0] = (useColors ? '%c' : '')
-    + this.namespace
-    + (useColors ? ' %c' : ' ')
-    + args[0]
-    + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(this.diff);
-
-  if (!useColors) return;
-
-  var c = 'color: ' + this.color;
-  args.splice(1, 0, c, 'color: inherit')
-
-  // the final "%c" is somewhat tricky, because there could be other
-  // arguments passed either before or after the %c, so we need to
-  // figure out the correct index to insert the CSS into
-  var index = 0;
-  var lastC = 0;
-  args[0].replace(/%[a-zA-Z%]/g, function(match) {
-    if ('%%' === match) return;
-    index++;
-    if ('%c' === match) {
-      // we only are interested in the *last* %c
-      // (the user may have provided their own)
-      lastC = index;
-    }
-  });
-
-  args.splice(lastC, 0, c);
-}
-
-/**
- * Invokes `console.log()` when available.
- * No-op when `console.log` is not a "function".
- *
- * @api public
- */
-
-function log() {
-  // this hackery is required for IE8/9, where
-  // the `console.log` function doesn't have 'apply'
-  return 'object' === typeof console
-    && console.log
-    && Function.prototype.apply.call(console.log, console, arguments);
-}
-
-/**
- * Save `namespaces`.
- *
- * @param {String} namespaces
- * @api private
- */
-
-function save(namespaces) {
-  try {
-    if (null == namespaces) {
-      exports.storage.removeItem('debug');
-    } else {
-      exports.storage.debug = namespaces;
-    }
-  } catch(e) {}
-}
-
-/**
- * Load `namespaces`.
- *
- * @return {String} returns the previously persisted debug modes
- * @api private
- */
-
-function load() {
-  var r;
-  try {
-    r = exports.storage.debug;
-  } catch(e) {}
-
-  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (!r && typeof process !== 'undefined' && 'env' in process) {
-    r = process.env.DEBUG;
-  }
-
-  return r;
-}
-
-/**
- * Enable namespaces listed in `localStorage.debug` initially.
- */
-
-exports.enable(load());
-
-/**
- * Localstorage attempts to return the localstorage.
- *
- * This is necessary because safari throws
- * when a user disables cookies/localstorage
- * and you attempt to access it.
- *
- * @return {LocalStorage}
- * @api private
- */
-
-function localstorage() {
-  try {
-    return window.localStorage;
-  } catch (e) {}
-}
-
-}).call(this,require('_process'))
-},{"./debug":94,"_process":324}],94:[function(require,module,exports){
-
-/**
- * This is the common logic for both the Node.js and web browser
- * implementations of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-exports = module.exports = createDebug.debug = createDebug['default'] = createDebug;
-exports.coerce = coerce;
-exports.disable = disable;
-exports.enable = enable;
-exports.enabled = enabled;
-exports.humanize = require('ms');
-
-/**
- * Active `debug` instances.
- */
-exports.instances = [];
-
-/**
- * The currently active debug mode names, and names to skip.
- */
-
-exports.names = [];
-exports.skips = [];
-
-/**
- * Map of special "%n" handling functions, for the debug "format" argument.
- *
- * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
- */
-
-exports.formatters = {};
-
-/**
- * Select a color.
- * @param {String} namespace
- * @return {Number}
- * @api private
- */
-
-function selectColor(namespace) {
-  var hash = 0, i;
-
-  for (i in namespace) {
-    hash  = ((hash << 5) - hash) + namespace.charCodeAt(i);
-    hash |= 0; // Convert to 32bit integer
-  }
-
-  return exports.colors[Math.abs(hash) % exports.colors.length];
-}
-
-/**
- * Create a debugger with the given `namespace`.
- *
- * @param {String} namespace
- * @return {Function}
- * @api public
- */
-
-function createDebug(namespace) {
-
-  var prevTime;
-
-  function debug() {
-    // disabled?
-    if (!debug.enabled) return;
-
-    var self = debug;
-
-    // set `diff` timestamp
-    var curr = +new Date();
-    var ms = curr - (prevTime || curr);
-    self.diff = ms;
-    self.prev = prevTime;
-    self.curr = curr;
-    prevTime = curr;
-
-    // turn the `arguments` into a proper Array
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-
-    args[0] = exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %O
-      args.unshift('%O');
-    }
-
-    // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
-
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
-
-    // apply env-specific formatting (colors, etc.)
-    exports.formatArgs.call(self, args);
-
-    var logFn = debug.log || exports.log || console.log.bind(console);
-    logFn.apply(self, args);
-  }
-
-  debug.namespace = namespace;
-  debug.enabled = exports.enabled(namespace);
-  debug.useColors = exports.useColors();
-  debug.color = selectColor(namespace);
-  debug.destroy = destroy;
-
-  // env-specific initialization logic for debug instances
-  if ('function' === typeof exports.init) {
-    exports.init(debug);
-  }
-
-  exports.instances.push(debug);
-
-  return debug;
-}
-
-function destroy () {
-  var index = exports.instances.indexOf(this);
-  if (index !== -1) {
-    exports.instances.splice(index, 1);
-    return true;
-  } else {
-    return false;
-  }
-}
-
-/**
- * Enables a debug mode by namespaces. This can include modes
- * separated by a colon and wildcards.
- *
- * @param {String} namespaces
- * @api public
- */
-
-function enable(namespaces) {
-  exports.save(namespaces);
-
-  exports.names = [];
-  exports.skips = [];
-
-  var i;
-  var split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-  var len = split.length;
-
-  for (i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      exports.names.push(new RegExp('^' + namespaces + '$'));
-    }
-  }
-
-  for (i = 0; i < exports.instances.length; i++) {
-    var instance = exports.instances[i];
-    instance.enabled = exports.enabled(instance.namespace);
-  }
-}
-
-/**
- * Disable debug output.
- *
- * @api public
- */
-
-function disable() {
-  exports.enable('');
-}
-
-/**
- * Returns true if the given mode name is enabled, false otherwise.
- *
- * @param {String} name
- * @return {Boolean}
- * @api public
- */
-
-function enabled(name) {
-  if (name[name.length - 1] === '*') {
-    return true;
-  }
-  var i, len;
-  for (i = 0, len = exports.skips.length; i < len; i++) {
-    if (exports.skips[i].test(name)) {
-      return false;
-    }
-  }
-  for (i = 0, len = exports.names.length; i < len; i++) {
-    if (exports.names[i].test(name)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Coerce `val`.
- *
- * @param {Mixed} val
- * @return {Mixed}
- * @api private
- */
-
-function coerce(val) {
-  if (val instanceof Error) return val.stack || val.message;
-  return val;
-}
-
-},{"ms":107}],95:[function(require,module,exports){
-(function (global){
-/**
- * Module dependencies.
- */
-
-var keys = require('./keys');
-var hasBinary = require('has-binary2');
-var sliceBuffer = require('arraybuffer.slice');
-var after = require('after');
-var utf8 = require('./utf8');
-
-var base64encoder;
-if (global && global.ArrayBuffer) {
-  base64encoder = require('base64-arraybuffer');
-}
-
-/**
- * Check if we are running an android browser. That requires us to use
- * ArrayBuffer with polling transports...
- *
- * http://ghinda.net/jpeg-blob-ajax-android/
- */
-
-var isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
-
-/**
- * Check if we are running in PhantomJS.
- * Uploading a Blob with PhantomJS does not work correctly, as reported here:
- * https://github.com/ariya/phantomjs/issues/11395
- * @type boolean
- */
-var isPhantomJS = typeof navigator !== 'undefined' && /PhantomJS/i.test(navigator.userAgent);
-
-/**
- * When true, avoids using Blobs to encode payloads.
- * @type boolean
- */
-var dontSendBlobs = isAndroid || isPhantomJS;
-
-/**
- * Current protocol version.
- */
-
-exports.protocol = 3;
-
-/**
- * Packet types.
- */
-
-var packets = exports.packets = {
-    open:     0    // non-ws
-  , close:    1    // non-ws
-  , ping:     2
-  , pong:     3
-  , message:  4
-  , upgrade:  5
-  , noop:     6
-};
-
-var packetslist = keys(packets);
-
-/**
- * Premade error packet.
- */
-
-var err = { type: 'error', data: 'parser error' };
-
-/**
- * Create a blob api even for blob builder when vendor prefixes exist
- */
-
-var Blob = require('blob');
-
-/**
- * Encodes a packet.
- *
- *     <packet type id> [ <data> ]
- *
- * Example:
- *
- *     5hello world
- *     3
- *     4
- *
- * Binary is encoded in an identical principle
- *
- * @api private
- */
-
-exports.encodePacket = function (packet, supportsBinary, utf8encode, callback) {
-  if (typeof supportsBinary === 'function') {
-    callback = supportsBinary;
-    supportsBinary = false;
-  }
-
-  if (typeof utf8encode === 'function') {
-    callback = utf8encode;
-    utf8encode = null;
-  }
-
-  var data = (packet.data === undefined)
-    ? undefined
-    : packet.data.buffer || packet.data;
-
-  if (global.ArrayBuffer && data instanceof ArrayBuffer) {
-    return encodeArrayBuffer(packet, supportsBinary, callback);
-  } else if (Blob && data instanceof global.Blob) {
-    return encodeBlob(packet, supportsBinary, callback);
-  }
-
-  // might be an object with { base64: true, data: dataAsBase64String }
-  if (data && data.base64) {
-    return encodeBase64Object(packet, callback);
-  }
-
-  // Sending data as a utf-8 string
-  var encoded = packets[packet.type];
-
-  // data fragment is optional
-  if (undefined !== packet.data) {
-    encoded += utf8encode ? utf8.encode(String(packet.data), { strict: false }) : String(packet.data);
-  }
-
-  return callback('' + encoded);
-
-};
-
-function encodeBase64Object(packet, callback) {
-  // packet data is an object { base64: true, data: dataAsBase64String }
-  var message = 'b' + exports.packets[packet.type] + packet.data.data;
-  return callback(message);
-}
-
-/**
- * Encode packet helpers for binary types
- */
-
-function encodeArrayBuffer(packet, supportsBinary, callback) {
-  if (!supportsBinary) {
-    return exports.encodeBase64Packet(packet, callback);
-  }
-
-  var data = packet.data;
-  var contentArray = new Uint8Array(data);
-  var resultBuffer = new Uint8Array(1 + data.byteLength);
-
-  resultBuffer[0] = packets[packet.type];
-  for (var i = 0; i < contentArray.length; i++) {
-    resultBuffer[i+1] = contentArray[i];
-  }
-
-  return callback(resultBuffer.buffer);
-}
-
-function encodeBlobAsArrayBuffer(packet, supportsBinary, callback) {
-  if (!supportsBinary) {
-    return exports.encodeBase64Packet(packet, callback);
-  }
-
-  var fr = new FileReader();
-  fr.onload = function() {
-    packet.data = fr.result;
-    exports.encodePacket(packet, supportsBinary, true, callback);
-  };
-  return fr.readAsArrayBuffer(packet.data);
-}
-
-function encodeBlob(packet, supportsBinary, callback) {
-  if (!supportsBinary) {
-    return exports.encodeBase64Packet(packet, callback);
-  }
-
-  if (dontSendBlobs) {
-    return encodeBlobAsArrayBuffer(packet, supportsBinary, callback);
-  }
-
-  var length = new Uint8Array(1);
-  length[0] = packets[packet.type];
-  var blob = new Blob([length.buffer, packet.data]);
-
-  return callback(blob);
-}
-
-/**
- * Encodes a packet with binary data in a base64 string
- *
- * @param {Object} packet, has `type` and `data`
- * @return {String} base64 encoded message
- */
-
-exports.encodeBase64Packet = function(packet, callback) {
-  var message = 'b' + exports.packets[packet.type];
-  if (Blob && packet.data instanceof global.Blob) {
-    var fr = new FileReader();
-    fr.onload = function() {
-      var b64 = fr.result.split(',')[1];
-      callback(message + b64);
-    };
-    return fr.readAsDataURL(packet.data);
-  }
-
-  var b64data;
-  try {
-    b64data = String.fromCharCode.apply(null, new Uint8Array(packet.data));
-  } catch (e) {
-    // iPhone Safari doesn't let you apply with typed arrays
-    var typed = new Uint8Array(packet.data);
-    var basic = new Array(typed.length);
-    for (var i = 0; i < typed.length; i++) {
-      basic[i] = typed[i];
-    }
-    b64data = String.fromCharCode.apply(null, basic);
-  }
-  message += global.btoa(b64data);
-  return callback(message);
-};
-
-/**
- * Decodes a packet. Changes format to Blob if requested.
- *
- * @return {Object} with `type` and `data` (if any)
- * @api private
- */
-
-exports.decodePacket = function (data, binaryType, utf8decode) {
-  if (data === undefined) {
-    return err;
-  }
-  // String data
-  if (typeof data === 'string') {
-    if (data.charAt(0) === 'b') {
-      return exports.decodeBase64Packet(data.substr(1), binaryType);
-    }
-
-    if (utf8decode) {
-      data = tryDecode(data);
-      if (data === false) {
-        return err;
-      }
-    }
-    var type = data.charAt(0);
-
-    if (Number(type) != type || !packetslist[type]) {
-      return err;
-    }
-
-    if (data.length > 1) {
-      return { type: packetslist[type], data: data.substring(1) };
-    } else {
-      return { type: packetslist[type] };
-    }
-  }
-
-  var asArray = new Uint8Array(data);
-  var type = asArray[0];
-  var rest = sliceBuffer(data, 1);
-  if (Blob && binaryType === 'blob') {
-    rest = new Blob([rest]);
-  }
-  return { type: packetslist[type], data: rest };
-};
-
-function tryDecode(data) {
-  try {
-    data = utf8.decode(data, { strict: false });
-  } catch (e) {
-    return false;
-  }
-  return data;
-}
-
-/**
- * Decodes a packet encoded in a base64 string
- *
- * @param {String} base64 encoded message
- * @return {Object} with `type` and `data` (if any)
- */
-
-exports.decodeBase64Packet = function(msg, binaryType) {
-  var type = packetslist[msg.charAt(0)];
-  if (!base64encoder) {
-    return { type: type, data: { base64: true, data: msg.substr(1) } };
-  }
-
-  var data = base64encoder.decode(msg.substr(1));
-
-  if (binaryType === 'blob' && Blob) {
-    data = new Blob([data]);
-  }
-
-  return { type: type, data: data };
-};
-
-/**
- * Encodes multiple messages (payload).
- *
- *     <length>:data
- *
- * Example:
- *
- *     11:hello world2:hi
- *
- * If any contents are binary, they will be encoded as base64 strings. Base64
- * encoded strings are marked with a b before the length specifier
- *
- * @param {Array} packets
- * @api private
- */
-
-exports.encodePayload = function (packets, supportsBinary, callback) {
-  if (typeof supportsBinary === 'function') {
-    callback = supportsBinary;
-    supportsBinary = null;
-  }
-
-  var isBinary = hasBinary(packets);
-
-  if (supportsBinary && isBinary) {
-    if (Blob && !dontSendBlobs) {
-      return exports.encodePayloadAsBlob(packets, callback);
-    }
-
-    return exports.encodePayloadAsArrayBuffer(packets, callback);
-  }
-
-  if (!packets.length) {
-    return callback('0:');
-  }
-
-  function setLengthHeader(message) {
-    return message.length + ':' + message;
-  }
-
-  function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, !isBinary ? false : supportsBinary, false, function(message) {
-      doneCallback(null, setLengthHeader(message));
-    });
-  }
-
-  map(packets, encodeOne, function(err, results) {
-    return callback(results.join(''));
-  });
-};
-
-/**
- * Async array map using after
- */
-
-function map(ary, each, done) {
-  var result = new Array(ary.length);
-  var next = after(ary.length, done);
-
-  var eachWithIndex = function(i, el, cb) {
-    each(el, function(error, msg) {
-      result[i] = msg;
-      cb(error, result);
-    });
-  };
-
-  for (var i = 0; i < ary.length; i++) {
-    eachWithIndex(i, ary[i], next);
-  }
-}
-
-/*
- * Decodes data when a payload is maybe expected. Possible binary contents are
- * decoded from their base64 representation
- *
- * @param {String} data, callback method
- * @api public
- */
-
-exports.decodePayload = function (data, binaryType, callback) {
-  if (typeof data !== 'string') {
-    return exports.decodePayloadAsBinary(data, binaryType, callback);
-  }
-
-  if (typeof binaryType === 'function') {
-    callback = binaryType;
-    binaryType = null;
-  }
-
-  var packet;
-  if (data === '') {
-    // parser error - ignoring payload
-    return callback(err, 0, 1);
-  }
-
-  var length = '', n, msg;
-
-  for (var i = 0, l = data.length; i < l; i++) {
-    var chr = data.charAt(i);
-
-    if (chr !== ':') {
-      length += chr;
-      continue;
-    }
-
-    if (length === '' || (length != (n = Number(length)))) {
-      // parser error - ignoring payload
-      return callback(err, 0, 1);
-    }
-
-    msg = data.substr(i + 1, n);
-
-    if (length != msg.length) {
-      // parser error - ignoring payload
-      return callback(err, 0, 1);
-    }
-
-    if (msg.length) {
-      packet = exports.decodePacket(msg, binaryType, false);
-
-      if (err.type === packet.type && err.data === packet.data) {
-        // parser error in individual packet - ignoring payload
-        return callback(err, 0, 1);
-      }
-
-      var ret = callback(packet, i + n, l);
-      if (false === ret) return;
-    }
-
-    // advance cursor
-    i += n;
-    length = '';
-  }
-
-  if (length !== '') {
-    // parser error - ignoring payload
-    return callback(err, 0, 1);
-  }
-
-};
-
-/**
- * Encodes multiple messages (payload) as binary.
- *
- * <1 = binary, 0 = string><number from 0-9><number from 0-9>[...]<number
- * 255><data>
- *
- * Example:
- * 1 3 255 1 2 3, if the binary contents are interpreted as 8 bit integers
- *
- * @param {Array} packets
- * @return {ArrayBuffer} encoded payload
- * @api private
- */
-
-exports.encodePayloadAsArrayBuffer = function(packets, callback) {
-  if (!packets.length) {
-    return callback(new ArrayBuffer(0));
-  }
-
-  function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, true, true, function(data) {
-      return doneCallback(null, data);
-    });
-  }
-
-  map(packets, encodeOne, function(err, encodedPackets) {
-    var totalLength = encodedPackets.reduce(function(acc, p) {
-      var len;
-      if (typeof p === 'string'){
-        len = p.length;
-      } else {
-        len = p.byteLength;
-      }
-      return acc + len.toString().length + len + 2; // string/binary identifier + separator = 2
-    }, 0);
-
-    var resultArray = new Uint8Array(totalLength);
-
-    var bufferIndex = 0;
-    encodedPackets.forEach(function(p) {
-      var isString = typeof p === 'string';
-      var ab = p;
-      if (isString) {
-        var view = new Uint8Array(p.length);
-        for (var i = 0; i < p.length; i++) {
-          view[i] = p.charCodeAt(i);
-        }
-        ab = view.buffer;
-      }
-
-      if (isString) { // not true binary
-        resultArray[bufferIndex++] = 0;
-      } else { // true binary
-        resultArray[bufferIndex++] = 1;
-      }
-
-      var lenStr = ab.byteLength.toString();
-      for (var i = 0; i < lenStr.length; i++) {
-        resultArray[bufferIndex++] = parseInt(lenStr[i]);
-      }
-      resultArray[bufferIndex++] = 255;
-
-      var view = new Uint8Array(ab);
-      for (var i = 0; i < view.length; i++) {
-        resultArray[bufferIndex++] = view[i];
-      }
-    });
-
-    return callback(resultArray.buffer);
-  });
-};
-
-/**
- * Encode as Blob
- */
-
-exports.encodePayloadAsBlob = function(packets, callback) {
-  function encodeOne(packet, doneCallback) {
-    exports.encodePacket(packet, true, true, function(encoded) {
-      var binaryIdentifier = new Uint8Array(1);
-      binaryIdentifier[0] = 1;
-      if (typeof encoded === 'string') {
-        var view = new Uint8Array(encoded.length);
-        for (var i = 0; i < encoded.length; i++) {
-          view[i] = encoded.charCodeAt(i);
-        }
-        encoded = view.buffer;
-        binaryIdentifier[0] = 0;
-      }
-
-      var len = (encoded instanceof ArrayBuffer)
-        ? encoded.byteLength
-        : encoded.size;
-
-      var lenStr = len.toString();
-      var lengthAry = new Uint8Array(lenStr.length + 1);
-      for (var i = 0; i < lenStr.length; i++) {
-        lengthAry[i] = parseInt(lenStr[i]);
-      }
-      lengthAry[lenStr.length] = 255;
-
-      if (Blob) {
-        var blob = new Blob([binaryIdentifier.buffer, lengthAry.buffer, encoded]);
-        doneCallback(null, blob);
-      }
-    });
-  }
-
-  map(packets, encodeOne, function(err, results) {
-    return callback(new Blob(results));
-  });
-};
-
-/*
- * Decodes data when a payload is maybe expected. Strings are decoded by
- * interpreting each byte as a key code for entries marked to start with 0. See
- * description of encodePayloadAsBinary
- *
- * @param {ArrayBuffer} data, callback method
- * @api public
- */
-
-exports.decodePayloadAsBinary = function (data, binaryType, callback) {
-  if (typeof binaryType === 'function') {
-    callback = binaryType;
-    binaryType = null;
-  }
-
-  var bufferTail = data;
-  var buffers = [];
-
-  while (bufferTail.byteLength > 0) {
-    var tailArray = new Uint8Array(bufferTail);
-    var isString = tailArray[0] === 0;
-    var msgLength = '';
-
-    for (var i = 1; ; i++) {
-      if (tailArray[i] === 255) break;
-
-      // 310 = char length of Number.MAX_VALUE
-      if (msgLength.length > 310) {
-        return callback(err, 0, 1);
-      }
-
-      msgLength += tailArray[i];
-    }
-
-    bufferTail = sliceBuffer(bufferTail, 2 + msgLength.length);
-    msgLength = parseInt(msgLength);
-
-    var msg = sliceBuffer(bufferTail, 0, msgLength);
-    if (isString) {
-      try {
-        msg = String.fromCharCode.apply(null, new Uint8Array(msg));
-      } catch (e) {
-        // iPhone Safari doesn't let you apply to typed arrays
-        var typed = new Uint8Array(msg);
-        msg = '';
-        for (var i = 0; i < typed.length; i++) {
-          msg += String.fromCharCode(typed[i]);
-        }
-      }
-    }
-
-    buffers.push(msg);
-    bufferTail = sliceBuffer(bufferTail, msgLength);
-  }
-
-  var total = buffers.length;
-  buffers.forEach(function(buffer, i) {
-    callback(exports.decodePacket(buffer, binaryType, true), i, total);
-  });
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":96,"./utf8":97,"after":71,"arraybuffer.slice":72,"base64-arraybuffer":74,"blob":76,"has-binary2":99}],96:[function(require,module,exports){
-
-/**
- * Gets the keys for an object.
- *
- * @return {Array} keys
- * @api private
- */
-
-module.exports = Object.keys || function keys (obj){
-  var arr = [];
-  var has = Object.prototype.hasOwnProperty;
-
-  for (var i in obj) {
-    if (has.call(obj, i)) {
-      arr.push(i);
-    }
-  }
-  return arr;
-};
-
-},{}],97:[function(require,module,exports){
-(function (global){
-/*! https://mths.be/utf8js v2.1.2 by @mathias */
-;(function(root) {
-
-	// Detect free variables `exports`
-	var freeExports = typeof exports == 'object' && exports;
-
-	// Detect free variable `module`
-	var freeModule = typeof module == 'object' && module &&
-		module.exports == freeExports && module;
-
-	// Detect free variable `global`, from Node.js or Browserified code,
-	// and use it as `root`
-	var freeGlobal = typeof global == 'object' && global;
-	if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
-		root = freeGlobal;
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	var stringFromCharCode = String.fromCharCode;
-
-	// Taken from https://mths.be/punycode
-	function ucs2decode(string) {
-		var output = [];
-		var counter = 0;
-		var length = string.length;
-		var value;
-		var extra;
-		while (counter < length) {
-			value = string.charCodeAt(counter++);
-			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-				// high surrogate, and there is a next character
-				extra = string.charCodeAt(counter++);
-				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-				} else {
-					// unmatched surrogate; only append this code unit, in case the next
-					// code unit is the high surrogate of a surrogate pair
-					output.push(value);
-					counter--;
-				}
-			} else {
-				output.push(value);
-			}
-		}
-		return output;
-	}
-
-	// Taken from https://mths.be/punycode
-	function ucs2encode(array) {
-		var length = array.length;
-		var index = -1;
-		var value;
-		var output = '';
-		while (++index < length) {
-			value = array[index];
-			if (value > 0xFFFF) {
-				value -= 0x10000;
-				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-				value = 0xDC00 | value & 0x3FF;
-			}
-			output += stringFromCharCode(value);
-		}
-		return output;
-	}
-
-	function checkScalarValue(codePoint, strict) {
-		if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
-			if (strict) {
-				throw Error(
-					'Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
-					' is not a scalar value'
-				);
-			}
-			return false;
-		}
-		return true;
-	}
-	/*--------------------------------------------------------------------------*/
-
-	function createByte(codePoint, shift) {
-		return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
-	}
-
-	function encodeCodePoint(codePoint, strict) {
-		if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
-			return stringFromCharCode(codePoint);
-		}
-		var symbol = '';
-		if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
-			symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
-		}
-		else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
-			if (!checkScalarValue(codePoint, strict)) {
-				codePoint = 0xFFFD;
-			}
-			symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
-			symbol += createByte(codePoint, 6);
-		}
-		else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
-			symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
-			symbol += createByte(codePoint, 12);
-			symbol += createByte(codePoint, 6);
-		}
-		symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
-		return symbol;
-	}
-
-	function utf8encode(string, opts) {
-		opts = opts || {};
-		var strict = false !== opts.strict;
-
-		var codePoints = ucs2decode(string);
-		var length = codePoints.length;
-		var index = -1;
-		var codePoint;
-		var byteString = '';
-		while (++index < length) {
-			codePoint = codePoints[index];
-			byteString += encodeCodePoint(codePoint, strict);
-		}
-		return byteString;
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	function readContinuationByte() {
-		if (byteIndex >= byteCount) {
-			throw Error('Invalid byte index');
-		}
-
-		var continuationByte = byteArray[byteIndex] & 0xFF;
-		byteIndex++;
-
-		if ((continuationByte & 0xC0) == 0x80) {
-			return continuationByte & 0x3F;
-		}
-
-		// If we end up here, it’s not a continuation byte
-		throw Error('Invalid continuation byte');
-	}
-
-	function decodeSymbol(strict) {
-		var byte1;
-		var byte2;
-		var byte3;
-		var byte4;
-		var codePoint;
-
-		if (byteIndex > byteCount) {
-			throw Error('Invalid byte index');
-		}
-
-		if (byteIndex == byteCount) {
-			return false;
-		}
-
-		// Read first byte
-		byte1 = byteArray[byteIndex] & 0xFF;
-		byteIndex++;
-
-		// 1-byte sequence (no continuation bytes)
-		if ((byte1 & 0x80) == 0) {
-			return byte1;
-		}
-
-		// 2-byte sequence
-		if ((byte1 & 0xE0) == 0xC0) {
-			byte2 = readContinuationByte();
-			codePoint = ((byte1 & 0x1F) << 6) | byte2;
-			if (codePoint >= 0x80) {
-				return codePoint;
-			} else {
-				throw Error('Invalid continuation byte');
-			}
-		}
-
-		// 3-byte sequence (may include unpaired surrogates)
-		if ((byte1 & 0xF0) == 0xE0) {
-			byte2 = readContinuationByte();
-			byte3 = readContinuationByte();
-			codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
-			if (codePoint >= 0x0800) {
-				return checkScalarValue(codePoint, strict) ? codePoint : 0xFFFD;
-			} else {
-				throw Error('Invalid continuation byte');
-			}
-		}
-
-		// 4-byte sequence
-		if ((byte1 & 0xF8) == 0xF0) {
-			byte2 = readContinuationByte();
-			byte3 = readContinuationByte();
-			byte4 = readContinuationByte();
-			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
-				(byte3 << 0x06) | byte4;
-			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
-				return codePoint;
-			}
-		}
-
-		throw Error('Invalid UTF-8 detected');
-	}
-
-	var byteArray;
-	var byteCount;
-	var byteIndex;
-	function utf8decode(byteString, opts) {
-		opts = opts || {};
-		var strict = false !== opts.strict;
-
-		byteArray = ucs2decode(byteString);
-		byteCount = byteArray.length;
-		byteIndex = 0;
-		var codePoints = [];
-		var tmp;
-		while ((tmp = decodeSymbol(strict)) !== false) {
-			codePoints.push(tmp);
-		}
-		return ucs2encode(codePoints);
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	var utf8 = {
-		'version': '2.1.2',
-		'encode': utf8encode,
-		'decode': utf8decode
-	};
-
-	// Some AMD build optimizers, like r.js, check for specific condition patterns
-	// like the following:
-	if (
-		typeof define == 'function' &&
-		typeof define.amd == 'object' &&
-		define.amd
-	) {
-		define(function() {
-			return utf8;
-		});
-	}	else if (freeExports && !freeExports.nodeType) {
-		if (freeModule) { // in Node.js or RingoJS v0.8.0+
-			freeModule.exports = utf8;
-		} else { // in Narwhal or RingoJS v0.7.0-
-			var object = {};
-			var hasOwnProperty = object.hasOwnProperty;
-			for (var key in utf8) {
-				hasOwnProperty.call(utf8, key) && (freeExports[key] = utf8[key]);
-			}
-		}
-	} else { // in Rhino or a web browser
-		root.utf8 = utf8;
-	}
-
-}(this));
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],98:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -16030,104 +10351,10 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],99:[function(require,module,exports){
-(function (Buffer){
-/* global Blob File */
-
-/*
- * Module requirements.
- */
-
-var isArray = require('isarray');
-
-var toString = Object.prototype.toString;
-var withNativeBlob = typeof Blob === 'function' ||
-                        typeof Blob !== 'undefined' && toString.call(Blob) === '[object BlobConstructor]';
-var withNativeFile = typeof File === 'function' ||
-                        typeof File !== 'undefined' && toString.call(File) === '[object FileConstructor]';
-
-/**
- * Module exports.
- */
-
-module.exports = hasBinary;
-
-/**
- * Checks for binary data.
- *
- * Supports Buffer, ArrayBuffer, Blob and File.
- *
- * @param {Object} anything
- * @api public
- */
-
-function hasBinary (obj) {
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-
-  if (isArray(obj)) {
-    for (var i = 0, l = obj.length; i < l; i++) {
-      if (hasBinary(obj[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  if ((typeof Buffer === 'function' && Buffer.isBuffer && Buffer.isBuffer(obj)) ||
-    (typeof ArrayBuffer === 'function' && obj instanceof ArrayBuffer) ||
-    (withNativeBlob && obj instanceof Blob) ||
-    (withNativeFile && obj instanceof File)
-  ) {
-    return true;
-  }
-
-  // see: https://github.com/Automattic/has-binary/pull/4
-  if (obj.toJSON && typeof obj.toJSON === 'function' && arguments.length === 1) {
-    return hasBinary(obj.toJSON(), true);
-  }
-
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key) && hasBinary(obj[key])) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-}).call(this,require("buffer").Buffer)
-},{"buffer":321,"isarray":100}],100:[function(require,module,exports){
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-},{}],101:[function(require,module,exports){
-
-/**
- * Module exports.
- *
- * Logic borrowed from Modernizr:
- *
- *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
- */
-
-try {
-  module.exports = typeof XMLHttpRequest !== 'undefined' &&
-    'withCredentials' in new XMLHttpRequest();
-} catch (err) {
-  // if XMLHttp support is disabled in IE then it will throw
-  // when trying to create
-  module.exports = false;
-}
-
-},{}],102:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 module.exports = require('./lib/heap');
 
-},{"./lib/heap":103}],103:[function(require,module,exports){
+},{"./lib/heap":41}],41:[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 (function() {
   var Heap, defaultCmp, floor, heapify, heappop, heappush, heappushpop, heapreplace, insort, min, nlargest, nsmallest, updateItem, _siftdown, _siftup;
@@ -16504,18 +10731,7 @@ module.exports = require('./lib/heap');
 
 }).call(this);
 
-},{}],104:[function(require,module,exports){
-
-var indexOf = [].indexOf;
-
-module.exports = function(arr, obj){
-  if (indexOf) return arr.indexOf(obj);
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) return i;
-  }
-  return -1;
-};
-},{}],105:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * isMobile.js v0.4.1
  *
@@ -16654,7 +10870,7 @@ module.exports = function(arr, obj){
 
 })(this);
 
-},{}],106:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -16821,161 +11037,7 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],107:[function(require,module,exports){
-/**
- * Helpers.
- */
-
-var s = 1000;
-var m = s * 60;
-var h = m * 60;
-var d = h * 24;
-var y = d * 365.25;
-
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} [options]
- * @throws {Error} throw an error if val is not a non-empty string or a number
- * @return {String|Number}
- * @api public
- */
-
-module.exports = function(val, options) {
-  options = options || {};
-  var type = typeof val;
-  if (type === 'string' && val.length > 0) {
-    return parse(val);
-  } else if (type === 'number' && isNaN(val) === false) {
-    return options.long ? fmtLong(val) : fmtShort(val);
-  }
-  throw new Error(
-    'val is not a non-empty string or a valid number. val=' +
-      JSON.stringify(val)
-  );
-};
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function parse(str) {
-  str = String(str);
-  if (str.length > 100) {
-    return;
-  }
-  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(
-    str
-  );
-  if (!match) {
-    return;
-  }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * y;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * d;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * s;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtShort(ms) {
-  if (ms >= d) {
-    return Math.round(ms / d) + 'd';
-  }
-  if (ms >= h) {
-    return Math.round(ms / h) + 'h';
-  }
-  if (ms >= m) {
-    return Math.round(ms / m) + 'm';
-  }
-  if (ms >= s) {
-    return Math.round(ms / s) + 's';
-  }
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtLong(ms) {
-  return plural(ms, d, 'day') ||
-    plural(ms, h, 'hour') ||
-    plural(ms, m, 'minute') ||
-    plural(ms, s, 'second') ||
-    ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function plural(ms, n, name) {
-  if (ms < n) {
-    return;
-  }
-  if (ms < n * 1.5) {
-    return Math.floor(ms / n) + ' ' + name;
-  }
-  return Math.ceil(ms / n) + ' ' + name + 's';
-}
-
-},{}],108:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -17067,7 +11129,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],109:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -17099,87 +11161,7 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],110:[function(require,module,exports){
-/**
- * Compiles a querystring
- * Returns string representation of the object
- *
- * @param {Object}
- * @api private
- */
-
-exports.encode = function (obj) {
-  var str = '';
-
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      if (str.length) str += '&';
-      str += encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]);
-    }
-  }
-
-  return str;
-};
-
-/**
- * Parses a simple querystring into an object
- *
- * @param {String} qs
- * @api private
- */
-
-exports.decode = function(qs){
-  var qry = {};
-  var pairs = qs.split('&');
-  for (var i = 0, l = pairs.length; i < l; i++) {
-    var pair = pairs[i].split('=');
-    qry[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
-  }
-  return qry;
-};
-
-},{}],111:[function(require,module,exports){
-/**
- * Parses an URI
- *
- * @author Steven Levithan <stevenlevithan.com> (MIT license)
- * @api private
- */
-
-var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
-
-var parts = [
-    'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
-];
-
-module.exports = function parseuri(str) {
-    var src = str,
-        b = str.indexOf('['),
-        e = str.indexOf(']');
-
-    if (b != -1 && e != -1) {
-        str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
-    }
-
-    var m = re.exec(str || ''),
-        uri = {},
-        i = 14;
-
-    while (i--) {
-        uri[parts[i]] = m[i] || '';
-    }
-
-    if (b != -1 && e != -1) {
-        uri.source = src;
-        uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
-        uri.authority = uri.authority.replace('[', '').replace(']', '').replace(/;/g, ':');
-        uri.ipv6uri = true;
-    }
-
-    return uri;
-};
-
-},{}],112:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -17447,18 +11429,7 @@ module.exports = function parseuri(str) {
 
 }).call(this);
 
-},{}],113:[function(require,module,exports){
-/*!
- * pixi-filters - v2.6.1
- * Compiled Thu, 03 May 2018 14:20:43 UTC
- *
- * pixi-filters is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var filterAdjustment=require("@pixi/filter-adjustment"),filterAdvancedBloom=require("@pixi/filter-advanced-bloom"),filterAscii=require("@pixi/filter-ascii"),filterBevel=require("@pixi/filter-bevel"),filterBloom=require("@pixi/filter-bloom"),filterBulgePinch=require("@pixi/filter-bulge-pinch"),filterColorMap=require("@pixi/filter-color-map"),filterColorReplace=require("@pixi/filter-color-replace"),filterConvolution=require("@pixi/filter-convolution"),filterCrossHatch=require("@pixi/filter-cross-hatch"),filterCrt=require("@pixi/filter-crt"),filterDot=require("@pixi/filter-dot"),filterDropShadow=require("@pixi/filter-drop-shadow"),filterEmboss=require("@pixi/filter-emboss"),filterGlitch=require("@pixi/filter-glitch"),filterGlow=require("@pixi/filter-glow"),filterGodray=require("@pixi/filter-godray"),filterKawaseBlur=require("@pixi/filter-kawase-blur"),filterMotionBlur=require("@pixi/filter-motion-blur"),filterMultiColorReplace=require("@pixi/filter-multi-color-replace"),filterOldFilm=require("@pixi/filter-old-film"),filterOutline=require("@pixi/filter-outline"),filterPixelate=require("@pixi/filter-pixelate"),filterRadialBlur=require("@pixi/filter-radial-blur"),filterReflection=require("@pixi/filter-reflection"),filterRgbSplit=require("@pixi/filter-rgb-split"),filterShockwave=require("@pixi/filter-shockwave"),filterSimpleLightmap=require("@pixi/filter-simple-lightmap"),filterTiltShift=require("@pixi/filter-tilt-shift"),filterTwist=require("@pixi/filter-twist"),filterZoomBlur=require("@pixi/filter-zoom-blur");exports.AdjustmentFilter=filterAdjustment.AdjustmentFilter,exports.AdvancedBloomFilter=filterAdvancedBloom.AdvancedBloomFilter,exports.AsciiFilter=filterAscii.AsciiFilter,exports.BevelFilter=filterBevel.BevelFilter,exports.BloomFilter=filterBloom.BloomFilter,exports.BulgePinchFilter=filterBulgePinch.BulgePinchFilter,exports.ColorMapFilter=filterColorMap.ColorMapFilter,exports.ColorReplaceFilter=filterColorReplace.ColorReplaceFilter,exports.ConvolutionFilter=filterConvolution.ConvolutionFilter,exports.CrossHatchFilter=filterCrossHatch.CrossHatchFilter,exports.CRTFilter=filterCrt.CRTFilter,exports.DotFilter=filterDot.DotFilter,exports.DropShadowFilter=filterDropShadow.DropShadowFilter,exports.EmbossFilter=filterEmboss.EmbossFilter,exports.GlitchFilter=filterGlitch.GlitchFilter,exports.GlowFilter=filterGlow.GlowFilter,exports.GodrayFilter=filterGodray.GodrayFilter,exports.KawaseBlurFilter=filterKawaseBlur.KawaseBlurFilter,exports.MotionBlurFilter=filterMotionBlur.MotionBlurFilter,exports.MultiColorReplaceFilter=filterMultiColorReplace.MultiColorReplaceFilter,exports.OldFilmFilter=filterOldFilm.OldFilmFilter,exports.OutlineFilter=filterOutline.OutlineFilter,exports.PixelateFilter=filterPixelate.PixelateFilter,exports.RadialBlurFilter=filterRadialBlur.RadialBlurFilter,exports.ReflectionFilter=filterReflection.ReflectionFilter,exports.RGBSplitFilter=filterRgbSplit.RGBSplitFilter,exports.ShockwaveFilter=filterShockwave.ShockwaveFilter,exports.SimpleLightmapFilter=filterSimpleLightmap.SimpleLightmapFilter,exports.TiltShiftFilter=filterTiltShift.TiltShiftFilter,exports.TiltShiftAxisFilter=filterTiltShift.TiltShiftAxisFilter,exports.TiltShiftXFilter=filterTiltShift.TiltShiftXFilter,exports.TiltShiftYFilter=filterTiltShift.TiltShiftYFilter,exports.TwistFilter=filterTwist.TwistFilter,exports.ZoomBlurFilter=filterZoomBlur.ZoomBlurFilter;
-
-
-},{"@pixi/filter-adjustment":40,"@pixi/filter-advanced-bloom":41,"@pixi/filter-ascii":42,"@pixi/filter-bevel":43,"@pixi/filter-bloom":44,"@pixi/filter-bulge-pinch":45,"@pixi/filter-color-map":46,"@pixi/filter-color-replace":47,"@pixi/filter-convolution":48,"@pixi/filter-cross-hatch":49,"@pixi/filter-crt":50,"@pixi/filter-dot":51,"@pixi/filter-drop-shadow":52,"@pixi/filter-emboss":53,"@pixi/filter-glitch":54,"@pixi/filter-glow":55,"@pixi/filter-godray":56,"@pixi/filter-kawase-blur":57,"@pixi/filter-motion-blur":58,"@pixi/filter-multi-color-replace":59,"@pixi/filter-old-film":60,"@pixi/filter-outline":61,"@pixi/filter-pixelate":62,"@pixi/filter-radial-blur":63,"@pixi/filter-reflection":64,"@pixi/filter-rgb-split":65,"@pixi/filter-shockwave":66,"@pixi/filter-simple-lightmap":67,"@pixi/filter-tilt-shift":68,"@pixi/filter-twist":69,"@pixi/filter-zoom-blur":70}],114:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -17579,7 +11550,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],115:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -17807,7 +11778,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":117}],116:[function(require,module,exports){
+},{"./GLTexture":50}],49:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -17903,7 +11874,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":122,"./shader/extractAttributes":124,"./shader/extractUniforms":125,"./shader/generateUniformAccessObject":126,"./shader/setPrecision":130}],117:[function(require,module,exports){
+},{"./shader/compileProgram":55,"./shader/extractAttributes":57,"./shader/extractUniforms":58,"./shader/generateUniformAccessObject":59,"./shader/setPrecision":63}],50:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -18238,7 +12209,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],118:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -18506,7 +12477,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":121}],119:[function(require,module,exports){
+},{"./setVertexAttribArrays":54}],52:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -18534,7 +12505,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],120:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -18561,7 +12532,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":114,"./GLFramebuffer":115,"./GLShader":116,"./GLTexture":117,"./VertexArrayObject":118,"./createContext":119,"./setVertexAttribArrays":121,"./shader":127}],121:[function(require,module,exports){
+},{"./GLBuffer":47,"./GLFramebuffer":48,"./GLShader":49,"./GLTexture":50,"./VertexArrayObject":51,"./createContext":52,"./setVertexAttribArrays":54,"./shader":60}],54:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -18618,7 +12589,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],122:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 
 /**
  * @class
@@ -18700,7 +12671,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],123:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -18780,7 +12751,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],124:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -18823,7 +12794,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":128,"./mapType":129}],125:[function(require,module,exports){
+},{"./mapSize":61,"./mapType":62}],58:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -18860,7 +12831,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":123,"./mapType":129}],126:[function(require,module,exports){
+},{"./defaultValue":56,"./mapType":62}],59:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -18983,7 +12954,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],127:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -18994,7 +12965,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":122,"./defaultValue":123,"./extractAttributes":124,"./extractUniforms":125,"./generateUniformAccessObject":126,"./mapSize":128,"./mapType":129,"./setPrecision":130}],128:[function(require,module,exports){
+},{"./compileProgram":55,"./defaultValue":56,"./extractAttributes":57,"./extractUniforms":58,"./generateUniformAccessObject":59,"./mapSize":61,"./mapType":62,"./setPrecision":63}],61:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -19032,7 +13003,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],129:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -19080,7 +13051,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],130:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -19100,7 +13071,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],131:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -19221,10 +13192,10 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":302}],132:[function(require,module,exports){
+},{"resource-loader":235}],65:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],133:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19433,7 +13404,7 @@ module.exports = function (_Plugin) {
     return Bounce;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],134:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],67:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19511,7 +13482,7 @@ module.exports = function (_Plugin) {
     return ClampZoom;
 }(Plugin);
 
-},{"./plugin":141}],135:[function(require,module,exports){
+},{"./plugin":74}],68:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19676,7 +13647,7 @@ module.exports = function (_Plugin) {
     return clamp;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],136:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],69:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19831,7 +13802,7 @@ module.exports = function (_Plugin) {
     return Decelerate;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],137:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],70:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20045,7 +14016,7 @@ module.exports = function (_Plugin) {
     return Drag;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],138:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],71:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20123,7 +14094,7 @@ module.exports = function (_Plugin) {
     return Follow;
 }(Plugin);
 
-},{"./plugin":141}],139:[function(require,module,exports){
+},{"./plugin":74}],72:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20297,7 +14268,7 @@ module.exports = function (_Plugin) {
     return MouseEdges;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],140:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],73:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20416,7 +14387,7 @@ module.exports = function (_Plugin) {
     return Pinch;
 }(Plugin);
 
-},{"./plugin":141}],141:[function(require,module,exports){
+},{"./plugin":74}],74:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20467,7 +14438,7 @@ module.exports = function () {
     return Plugin;
 }();
 
-},{}],142:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20643,7 +14614,7 @@ module.exports = function (_Plugin) {
     return SnapZoom;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],143:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],76:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20788,7 +14759,7 @@ module.exports = function (_Plugin) {
     return Snap;
 }(Plugin);
 
-},{"./plugin":141,"./utils":144}],144:[function(require,module,exports){
+},{"./plugin":74,"./utils":77}],77:[function(require,module,exports){
 'use strict';
 
 var Penner = require('penner');
@@ -20823,7 +14794,7 @@ module.exports = {
     ease: ease
 };
 
-},{"penner":112}],145:[function(require,module,exports){
+},{"penner":46}],78:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22358,7 +16329,7 @@ PIXI.extras.Viewport = Viewport;
 
 module.exports = Viewport;
 
-},{"./bounce":133,"./clamp":135,"./clamp-zoom":134,"./decelerate":136,"./drag":137,"./follow":138,"./mouse-edges":139,"./pinch":140,"./snap":143,"./snap-zoom":142,"./utils":144,"./wheel":146}],146:[function(require,module,exports){
+},{"./bounce":66,"./clamp":68,"./clamp-zoom":67,"./decelerate":69,"./drag":70,"./follow":71,"./mouse-edges":72,"./pinch":73,"./snap":76,"./snap-zoom":75,"./utils":77,"./wheel":79}],79:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22488,7 +16459,7 @@ module.exports = function (_Plugin) {
     return Wheel;
 }(Plugin);
 
-},{"./plugin":141}],147:[function(require,module,exports){
+},{"./plugin":74}],80:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23017,7 +16988,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":172,"./accessibleTarget":148,"ismobilejs":105}],148:[function(require,module,exports){
+},{"../core":105,"./accessibleTarget":81,"ismobilejs":42}],81:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -23075,7 +17046,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],149:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23100,7 +17071,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":147,"./accessibleTarget":148}],150:[function(require,module,exports){
+},{"./AccessibilityManager":80,"./accessibleTarget":81}],83:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23332,7 +17303,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":152,"./const":153,"./display/Container":155,"./settings":208,"./ticker":228}],151:[function(require,module,exports){
+},{"./autoDetectRenderer":85,"./const":86,"./display/Container":88,"./settings":141,"./ticker":161}],84:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23399,7 +17370,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":208,"pixi-gl-core":120}],152:[function(require,module,exports){
+},{"./settings":141,"pixi-gl-core":53}],85:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23468,7 +17439,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":184,"./renderers/webgl/WebGLRenderer":191,"./utils":232}],153:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":117,"./renderers/webgl/WebGLRenderer":124,"./utils":165}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23811,7 +17782,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],154:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24154,7 +18125,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":177}],155:[function(require,module,exports){
+},{"../math":110}],88:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24772,7 +18743,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":232,"./DisplayObject":156}],156:[function(require,module,exports){
+},{"../utils":165,"./DisplayObject":89}],89:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25466,7 +19437,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":153,"../math":177,"../settings":208,"./Bounds":154,"./Transform":157,"./TransformStatic":159,"eventemitter3":98}],157:[function(require,module,exports){
+},{"../const":86,"../math":110,"../settings":141,"./Bounds":87,"./Transform":90,"./TransformStatic":92,"eventemitter3":39}],90:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25647,7 +19618,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":177,"./TransformBase":158}],158:[function(require,module,exports){
+},{"../math":110,"./TransformBase":91}],91:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25734,7 +19705,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":177}],159:[function(require,module,exports){
+},{"../math":110}],92:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25944,7 +19915,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":177,"./TransformBase":158}],160:[function(require,module,exports){
+},{"../math":110,"./TransformBase":91}],93:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27321,7 +21292,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":153,"../display/Bounds":154,"../display/Container":155,"../math":177,"../renderers/canvas/CanvasRenderer":184,"../sprites/Sprite":209,"../textures/RenderTexture":220,"../textures/Texture":222,"../utils":232,"./GraphicsData":161,"./utils/bezierCurveTo":163}],161:[function(require,module,exports){
+},{"../const":86,"../display/Bounds":87,"../display/Container":88,"../math":110,"../renderers/canvas/CanvasRenderer":117,"../sprites/Sprite":142,"../textures/RenderTexture":153,"../textures/Texture":155,"../utils":165,"./GraphicsData":94,"./utils/bezierCurveTo":96}],94:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -27466,7 +21437,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],162:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27731,7 +21702,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":153,"../../renderers/canvas/CanvasRenderer":184}],163:[function(require,module,exports){
+},{"../../const":86,"../../renderers/canvas/CanvasRenderer":117}],96:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -27781,7 +21752,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],164:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28046,7 +22017,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":153,"../../renderers/webgl/WebGLRenderer":191,"../../renderers/webgl/utils/ObjectRenderer":201,"../../utils":232,"./WebGLGraphicsData":165,"./shaders/PrimitiveShader":166,"./utils/buildCircle":167,"./utils/buildPoly":169,"./utils/buildRectangle":170,"./utils/buildRoundedRectangle":171}],165:[function(require,module,exports){
+},{"../../const":86,"../../renderers/webgl/WebGLRenderer":124,"../../renderers/webgl/utils/ObjectRenderer":134,"../../utils":165,"./WebGLGraphicsData":98,"./shaders/PrimitiveShader":99,"./utils/buildCircle":100,"./utils/buildPoly":102,"./utils/buildRectangle":103,"./utils/buildRoundedRectangle":104}],98:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28189,7 +22160,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":120}],166:[function(require,module,exports){
+},{"pixi-gl-core":53}],99:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28234,7 +22205,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":151}],167:[function(require,module,exports){
+},{"../../../Shader":84}],100:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28329,7 +22300,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":153,"../../../utils":232,"./buildLine":168}],168:[function(require,module,exports){
+},{"../../../const":86,"../../../utils":165,"./buildLine":101}],101:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28603,7 +22574,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":177,"../../../utils":232}],169:[function(require,module,exports){
+},{"../../../math":110,"../../../utils":165}],102:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28689,7 +22660,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":232,"./buildLine":168,"earcut":80}],170:[function(require,module,exports){
+},{"../../../utils":165,"./buildLine":101,"earcut":35}],103:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28765,7 +22736,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":232,"./buildLine":168}],171:[function(require,module,exports){
+},{"../../../utils":165,"./buildLine":101}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28921,7 +22892,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":232,"./buildLine":168,"earcut":80}],172:[function(require,module,exports){
+},{"../../../utils":165,"./buildLine":101,"earcut":35}],105:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29307,7 +23278,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":150,"./Shader":151,"./autoDetectRenderer":152,"./const":153,"./display/Bounds":154,"./display/Container":155,"./display/DisplayObject":156,"./display/Transform":157,"./display/TransformBase":158,"./display/TransformStatic":159,"./graphics/Graphics":160,"./graphics/GraphicsData":161,"./graphics/canvas/CanvasGraphicsRenderer":162,"./graphics/webgl/GraphicsRenderer":164,"./math":177,"./renderers/canvas/CanvasRenderer":184,"./renderers/canvas/utils/CanvasRenderTarget":186,"./renderers/webgl/WebGLRenderer":191,"./renderers/webgl/filters/Filter":193,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":196,"./renderers/webgl/managers/WebGLManager":200,"./renderers/webgl/utils/ObjectRenderer":201,"./renderers/webgl/utils/Quad":202,"./renderers/webgl/utils/RenderTarget":203,"./settings":208,"./sprites/Sprite":209,"./sprites/canvas/CanvasSpriteRenderer":210,"./sprites/canvas/CanvasTinter":211,"./sprites/webgl/SpriteRenderer":213,"./text/Text":215,"./text/TextMetrics":216,"./text/TextStyle":217,"./textures/BaseRenderTexture":218,"./textures/BaseTexture":219,"./textures/RenderTexture":220,"./textures/Spritesheet":221,"./textures/Texture":222,"./textures/TextureMatrix":223,"./textures/TextureUvs":224,"./textures/VideoBaseTexture":225,"./ticker":228,"./utils":232,"pixi-gl-core":120}],173:[function(require,module,exports){
+},{"./Application":83,"./Shader":84,"./autoDetectRenderer":85,"./const":86,"./display/Bounds":87,"./display/Container":88,"./display/DisplayObject":89,"./display/Transform":90,"./display/TransformBase":91,"./display/TransformStatic":92,"./graphics/Graphics":93,"./graphics/GraphicsData":94,"./graphics/canvas/CanvasGraphicsRenderer":95,"./graphics/webgl/GraphicsRenderer":97,"./math":110,"./renderers/canvas/CanvasRenderer":117,"./renderers/canvas/utils/CanvasRenderTarget":119,"./renderers/webgl/WebGLRenderer":124,"./renderers/webgl/filters/Filter":126,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":129,"./renderers/webgl/managers/WebGLManager":133,"./renderers/webgl/utils/ObjectRenderer":134,"./renderers/webgl/utils/Quad":135,"./renderers/webgl/utils/RenderTarget":136,"./settings":141,"./sprites/Sprite":142,"./sprites/canvas/CanvasSpriteRenderer":143,"./sprites/canvas/CanvasTinter":144,"./sprites/webgl/SpriteRenderer":146,"./text/Text":148,"./text/TextMetrics":149,"./text/TextStyle":150,"./textures/BaseRenderTexture":151,"./textures/BaseTexture":152,"./textures/RenderTexture":153,"./textures/Spritesheet":154,"./textures/Texture":155,"./textures/TextureMatrix":156,"./textures/TextureUvs":157,"./textures/VideoBaseTexture":158,"./ticker":161,"./utils":165,"pixi-gl-core":53}],106:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29500,7 +23471,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":174}],174:[function(require,module,exports){
+},{"./Matrix":107}],107:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30022,7 +23993,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":153,"./Point":176}],175:[function(require,module,exports){
+},{"../const":86,"./Point":109}],108:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -30173,7 +24144,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],176:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -30264,7 +24235,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],177:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30352,7 +24323,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":173,"./Matrix":174,"./ObservablePoint":175,"./Point":176,"./shapes/Circle":178,"./shapes/Ellipse":179,"./shapes/Polygon":180,"./shapes/Rectangle":181,"./shapes/RoundedRectangle":182}],178:[function(require,module,exports){
+},{"./GroupD8":106,"./Matrix":107,"./ObservablePoint":108,"./Point":109,"./shapes/Circle":111,"./shapes/Ellipse":112,"./shapes/Polygon":113,"./shapes/Rectangle":114,"./shapes/RoundedRectangle":115}],111:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30466,7 +24437,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":153,"./Rectangle":181}],179:[function(require,module,exports){
+},{"../../const":86,"./Rectangle":114}],112:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30588,7 +24559,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":153,"./Rectangle":181}],180:[function(require,module,exports){
+},{"../../const":86,"./Rectangle":114}],113:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30719,7 +24690,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":153,"../Point":176}],181:[function(require,module,exports){
+},{"../../const":86,"../Point":109}],114:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30982,7 +24953,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":153}],182:[function(require,module,exports){
+},{"../../const":86}],115:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31115,7 +25086,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":153}],183:[function(require,module,exports){
+},{"../../const":86}],116:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31480,7 +25451,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":153,"../display/Container":155,"../math":177,"../settings":208,"../textures/RenderTexture":220,"../utils":232,"eventemitter3":98}],184:[function(require,module,exports){
+},{"../const":86,"../display/Container":88,"../math":110,"../settings":141,"../textures/RenderTexture":153,"../utils":165,"eventemitter3":39}],117:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31845,7 +25816,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":153,"../../settings":208,"../../utils":232,"../SystemRenderer":183,"./utils/CanvasMaskManager":185,"./utils/CanvasRenderTarget":186,"./utils/mapCanvasBlendModesToPixi":188}],185:[function(require,module,exports){
+},{"../../const":86,"../../settings":141,"../../utils":165,"../SystemRenderer":116,"./utils/CanvasMaskManager":118,"./utils/CanvasRenderTarget":119,"./utils/mapCanvasBlendModesToPixi":121}],118:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32014,7 +25985,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":153}],186:[function(require,module,exports){
+},{"../../../const":86}],119:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32138,7 +26109,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":208}],187:[function(require,module,exports){
+},{"../../../settings":141}],120:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32199,7 +26170,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],188:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32271,7 +26242,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":153,"./canUseNewCanvasBlendModes":187}],189:[function(require,module,exports){
+},{"../../../const":86,"./canUseNewCanvasBlendModes":120}],122:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32391,7 +26362,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":153,"../../settings":208}],190:[function(require,module,exports){
+},{"../../const":86,"../../settings":141}],123:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32647,7 +26618,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":153,"../../utils":232,"./utils/RenderTarget":203,"pixi-gl-core":120}],191:[function(require,module,exports){
+},{"../../const":86,"../../utils":165,"./utils/RenderTarget":136,"pixi-gl-core":53}],124:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33464,7 +27435,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":153,"../../textures/BaseTexture":219,"../../utils":232,"../SystemRenderer":183,"./TextureGarbageCollector":189,"./TextureManager":190,"./WebGLState":192,"./managers/FilterManager":197,"./managers/MaskManager":198,"./managers/StencilManager":199,"./utils/ObjectRenderer":201,"./utils/RenderTarget":203,"./utils/mapWebGLDrawModesToPixi":206,"./utils/validateContext":207,"pixi-gl-core":120}],192:[function(require,module,exports){
+},{"../../const":86,"../../textures/BaseTexture":152,"../../utils":165,"../SystemRenderer":116,"./TextureGarbageCollector":122,"./TextureManager":123,"./WebGLState":125,"./managers/FilterManager":130,"./managers/MaskManager":131,"./managers/StencilManager":132,"./utils/ObjectRenderer":134,"./utils/RenderTarget":136,"./utils/mapWebGLDrawModesToPixi":139,"./utils/validateContext":140,"pixi-gl-core":53}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33744,7 +27715,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":205}],193:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":138}],126:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33940,7 +27911,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":153,"../../../settings":208,"../../../utils":232,"./extractUniformsFromSrc":194}],194:[function(require,module,exports){
+},{"../../../const":86,"../../../settings":141,"../../../utils":165,"./extractUniformsFromSrc":127}],127:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34002,7 +27973,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":120}],195:[function(require,module,exports){
+},{"pixi-gl-core":53}],128:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34062,7 +28033,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":177}],196:[function(require,module,exports){
+},{"../../../math":110}],129:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34150,7 +28121,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":177,"../../../../textures/TextureMatrix":223,"../Filter":193,"path":323}],197:[function(require,module,exports){
+},{"../../../../math":110,"../../../../textures/TextureMatrix":156,"../Filter":126,"path":237}],130:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34800,7 +28771,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":151,"../../../math":177,"../filters/filterTransforms":195,"../utils/Quad":202,"../utils/RenderTarget":203,"./WebGLManager":200,"bit-twiddle":75}],198:[function(require,module,exports){
+},{"../../../Shader":84,"../../../math":110,"../filters/filterTransforms":128,"../utils/Quad":135,"../utils/RenderTarget":136,"./WebGLManager":133,"bit-twiddle":34}],131:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35010,7 +28981,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":196,"./WebGLManager":200}],199:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":129,"./WebGLManager":133}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35163,7 +29134,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":200}],200:[function(require,module,exports){
+},{"./WebGLManager":133}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35218,7 +29189,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],201:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35296,7 +29267,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":200}],202:[function(require,module,exports){
+},{"../managers/WebGLManager":133}],135:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35477,7 +29448,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":230,"pixi-gl-core":120}],203:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":163,"pixi-gl-core":53}],136:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35811,7 +29782,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":153,"../../../math":177,"../../../settings":208,"pixi-gl-core":120}],204:[function(require,module,exports){
+},{"../../../const":86,"../../../math":110,"../../../settings":141,"pixi-gl-core":53}],137:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35886,7 +29857,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":120}],205:[function(require,module,exports){
+},{"pixi-gl-core":53}],138:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35935,7 +29906,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":153}],206:[function(require,module,exports){
+},{"../../../const":86}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35967,7 +29938,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":153}],207:[function(require,module,exports){
+},{"../../../const":86}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35983,7 +29954,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],208:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36228,7 +30199,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":229,"./utils/maxRecommendedTextures":234}],209:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":162,"./utils/maxRecommendedTextures":167}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36869,7 +30840,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":153,"../display/Container":155,"../math":177,"../textures/Texture":222,"../utils":232}],210:[function(require,module,exports){
+},{"../const":86,"../display/Container":88,"../math":110,"../textures/Texture":155,"../utils":165}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37022,7 +30993,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":153,"../../math":177,"../../renderers/canvas/CanvasRenderer":184,"./CanvasTinter":211}],211:[function(require,module,exports){
+},{"../../const":86,"../../math":110,"../../renderers/canvas/CanvasRenderer":117,"./CanvasTinter":144}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37273,7 +31244,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":187,"../../utils":232}],212:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":120,"../../utils":165}],145:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37326,7 +31297,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],213:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37879,7 +31850,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":191,"../../renderers/webgl/utils/ObjectRenderer":201,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":204,"../../settings":208,"../../utils":232,"../../utils/createIndicesForQuads":230,"./BatchBuffer":212,"./generateMultiTextureShader":214,"bit-twiddle":75,"pixi-gl-core":120}],214:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":124,"../../renderers/webgl/utils/ObjectRenderer":134,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":137,"../../settings":141,"../../utils":165,"../../utils/createIndicesForQuads":163,"./BatchBuffer":145,"./generateMultiTextureShader":147,"bit-twiddle":34,"pixi-gl-core":53}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37942,7 +31913,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":151,"path":323}],215:[function(require,module,exports){
+},{"../../Shader":84,"path":237}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38600,7 +32571,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":153,"../math":177,"../settings":208,"../sprites/Sprite":209,"../textures/Texture":222,"../utils":232,"../utils/trimCanvas":237,"./TextMetrics":216,"./TextStyle":217}],216:[function(require,module,exports){
+},{"../const":86,"../math":110,"../settings":141,"../sprites/Sprite":142,"../textures/Texture":155,"../utils":165,"../utils/trimCanvas":170,"./TextMetrics":149,"./TextStyle":150}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39300,7 +33271,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],217:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40134,7 +34105,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":153,"../utils":232}],218:[function(require,module,exports){
+},{"../const":86,"../utils":165}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40296,7 +34267,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":208,"./BaseTexture":219}],219:[function(require,module,exports){
+},{"../settings":141,"./BaseTexture":152}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41142,7 +35113,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":208,"../utils":232,"../utils/determineCrossOrigin":231,"bit-twiddle":75,"eventemitter3":98}],220:[function(require,module,exports){
+},{"../settings":141,"../utils":165,"../utils/determineCrossOrigin":164,"bit-twiddle":34,"eventemitter3":39}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41296,7 +35267,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":218,"./Texture":222}],221:[function(require,module,exports){
+},{"./BaseRenderTexture":151,"./Texture":155}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41625,7 +35596,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":172,"../utils":232}],222:[function(require,module,exports){
+},{"../":105,"../utils":165}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42326,7 +36297,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":177,"../settings":208,"../utils":232,"./BaseTexture":219,"./TextureUvs":224,"./VideoBaseTexture":225,"eventemitter3":98}],223:[function(require,module,exports){
+},{"../math":110,"../settings":141,"../utils":165,"./BaseTexture":152,"./TextureUvs":157,"./VideoBaseTexture":158,"eventemitter3":39}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42490,7 +36461,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":174}],224:[function(require,module,exports){
+},{"../math/Matrix":107}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42595,7 +36566,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":173}],225:[function(require,module,exports){
+},{"../math/GroupD8":106}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42938,7 +36909,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":153,"../ticker":228,"../utils":232,"../utils/determineCrossOrigin":231,"./BaseTexture":219}],226:[function(require,module,exports){
+},{"../const":86,"../ticker":161,"../utils":165,"../utils/determineCrossOrigin":164,"./BaseTexture":152}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43411,7 +37382,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":153,"../settings":208,"./TickerListener":227}],227:[function(require,module,exports){
+},{"../const":86,"../settings":141,"./TickerListener":160}],160:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -43585,7 +37556,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],228:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43665,7 +37636,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":226}],229:[function(require,module,exports){
+},{"./Ticker":159}],162:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -43679,7 +37650,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],230:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -43713,7 +37684,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],231:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43769,7 +37740,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":329}],232:[function(require,module,exports){
+},{"url":243}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44252,7 +38223,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":153,"../settings":208,"./mapPremultipliedBlendModes":233,"./mixin":235,"./pluginTarget":236,"earcut":80,"eventemitter3":98,"ismobilejs":105,"remove-array-items":297}],233:[function(require,module,exports){
+},{"../const":86,"../settings":141,"./mapPremultipliedBlendModes":166,"./mixin":168,"./pluginTarget":169,"earcut":35,"eventemitter3":39,"ismobilejs":42,"remove-array-items":230}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44295,7 +38266,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":153}],234:[function(require,module,exports){
+},{"../const":86}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44317,7 +38288,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":105}],235:[function(require,module,exports){
+},{"ismobilejs":42}],168:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -44379,7 +38350,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],236:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -44445,7 +38416,7 @@ exports.default = {
     }
 };
 
-},{}],237:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44523,7 +38494,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],238:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45679,7 +39650,7 @@ function deprecation(core) {
     }
 }
 
-},{}],239:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45859,7 +39830,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":172}],240:[function(require,module,exports){
+},{"../../core":105}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45884,7 +39855,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":239,"./webgl/WebGLExtract":241}],241:[function(require,module,exports){
+},{"./canvas/CanvasExtract":172,"./webgl/WebGLExtract":174}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46119,7 +40090,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":172}],242:[function(require,module,exports){
+},{"../../core":105}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46541,7 +40512,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":172}],243:[function(require,module,exports){
+},{"../core":105}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47186,7 +41157,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":172,"../core/math/ObservablePoint":175,"../core/settings":208,"../core/utils":232}],244:[function(require,module,exports){
+},{"../core":105,"../core/math/ObservablePoint":108,"../core/settings":141,"../core/utils":165}],177:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47632,7 +41603,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":172,"../core/sprites/canvas/CanvasTinter":211}],245:[function(require,module,exports){
+},{"../core":105,"../core/sprites/canvas/CanvasTinter":144}],178:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -48036,7 +42007,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":172,"../core/textures/BaseTexture":219,"../core/textures/Texture":222,"../core/utils":232}],246:[function(require,module,exports){
+},{"../core":105,"../core/textures/BaseTexture":152,"../core/textures/Texture":155,"../core/utils":165}],179:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -48071,7 +42042,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":172}],247:[function(require,module,exports){
+},{"../core":105}],180:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -48105,7 +42076,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":172}],248:[function(require,module,exports){
+},{"../core":105}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48157,7 +42128,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":242,"./BitmapText":243,"./TilingSprite":244,"./cacheAsBitmap":245,"./getChildByName":246,"./getGlobalPosition":247,"./webgl/TilingSpriteRenderer":249}],249:[function(require,module,exports){
+},{"./AnimatedSprite":175,"./BitmapText":176,"./TilingSprite":177,"./cacheAsBitmap":178,"./getChildByName":179,"./getGlobalPosition":180,"./webgl/TilingSpriteRenderer":182}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48319,7 +42290,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":172,"../../core/const":153,"path":323}],250:[function(require,module,exports){
+},{"../../core":105,"../../core/const":86,"path":237}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48403,7 +42374,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":172,"path":323}],251:[function(require,module,exports){
+},{"../../core":105,"path":237}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48577,7 +42548,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":172,"./BlurXFilter":252,"./BlurYFilter":253}],252:[function(require,module,exports){
+},{"../../core":105,"./BlurXFilter":185,"./BlurYFilter":186}],185:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48743,7 +42714,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":172,"./generateBlurFragSource":254,"./generateBlurVertSource":255,"./getMaxBlurKernelSize":256}],253:[function(require,module,exports){
+},{"../../core":105,"./generateBlurFragSource":187,"./generateBlurVertSource":188,"./getMaxBlurKernelSize":189}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48908,7 +42879,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":172,"./generateBlurFragSource":254,"./generateBlurVertSource":255,"./getMaxBlurKernelSize":256}],254:[function(require,module,exports){
+},{"../../core":105,"./generateBlurFragSource":187,"./generateBlurVertSource":188,"./getMaxBlurKernelSize":189}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48955,7 +42926,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],255:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48999,7 +42970,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],256:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49015,7 +42986,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],257:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49566,7 +43537,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":172,"path":323}],258:[function(require,module,exports){
+},{"../../core":105,"path":237}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49674,7 +43645,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":172,"path":323}],259:[function(require,module,exports){
+},{"../../core":105,"path":237}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49728,7 +43699,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":172,"path":323}],260:[function(require,module,exports){
+},{"../../core":105,"path":237}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49807,7 +43778,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":250,"./blur/BlurFilter":251,"./blur/BlurXFilter":252,"./blur/BlurYFilter":253,"./colormatrix/ColorMatrixFilter":257,"./displacement/DisplacementFilter":258,"./fxaa/FXAAFilter":259,"./noise/NoiseFilter":261}],261:[function(require,module,exports){
+},{"./alpha/AlphaFilter":183,"./blur/BlurFilter":184,"./blur/BlurXFilter":185,"./blur/BlurYFilter":186,"./colormatrix/ColorMatrixFilter":190,"./displacement/DisplacementFilter":191,"./fxaa/FXAAFilter":192,"./noise/NoiseFilter":194}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49904,7 +43875,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":172,"path":323}],262:[function(require,module,exports){
+},{"../../core":105,"path":237}],195:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -50018,7 +43989,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":149,"./core":172,"./deprecation":238,"./extract":240,"./extras":248,"./filters":260,"./interaction":267,"./loaders":270,"./mesh":279,"./particles":282,"./polyfill":289,"./prepare":293}],263:[function(require,module,exports){
+},{"./accessibility":82,"./core":105,"./deprecation":171,"./extract":173,"./extras":181,"./filters":193,"./interaction":200,"./loaders":203,"./mesh":212,"./particles":215,"./polyfill":222,"./prepare":226}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50241,7 +44212,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":172}],264:[function(require,module,exports){
+},{"../core":105}],197:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -50324,7 +44295,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],265:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52106,7 +46077,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":172,"./InteractionData":263,"./InteractionEvent":264,"./InteractionTrackingData":266,"./interactiveTarget":268,"eventemitter3":98}],266:[function(require,module,exports){
+},{"../core":105,"./InteractionData":196,"./InteractionEvent":197,"./InteractionTrackingData":199,"./interactiveTarget":201,"eventemitter3":39}],199:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -52282,7 +46253,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],267:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52334,7 +46305,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":263,"./InteractionEvent":264,"./InteractionManager":265,"./InteractionTrackingData":266,"./interactiveTarget":268}],268:[function(require,module,exports){
+},{"./InteractionData":196,"./InteractionEvent":197,"./InteractionManager":198,"./InteractionTrackingData":199,"./interactiveTarget":201}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52451,7 +46422,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],269:[function(require,module,exports){
+},{}],202:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52571,7 +46542,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":248,"path":323,"resource-loader":302}],270:[function(require,module,exports){
+},{"../extras":181,"path":237,"resource-loader":235}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52699,7 +46670,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":150,"./bitmapFontParser":269,"./loader":271,"./spritesheetParser":272,"./textureParser":273,"resource-loader":302}],271:[function(require,module,exports){
+},{"../core/Application":83,"./bitmapFontParser":202,"./loader":204,"./spritesheetParser":205,"./textureParser":206,"resource-loader":235}],204:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52870,7 +46841,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":269,"./spritesheetParser":272,"./textureParser":273,"eventemitter3":98,"resource-loader":302,"resource-loader/lib/middlewares/parsing/blob":303}],272:[function(require,module,exports){
+},{"./bitmapFontParser":202,"./spritesheetParser":205,"./textureParser":206,"eventemitter3":39,"resource-loader":235,"resource-loader/lib/middlewares/parsing/blob":236}],205:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52934,7 +46905,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":172,"resource-loader":302,"url":329}],273:[function(require,module,exports){
+},{"../core":105,"resource-loader":235,"url":243}],206:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52957,7 +46928,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":222,"resource-loader":302}],274:[function(require,module,exports){
+},{"../core/textures/Texture":155,"resource-loader":235}],207:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53388,7 +47359,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":172,"../core/textures/Texture":222}],275:[function(require,module,exports){
+},{"../core":105,"../core/textures/Texture":155}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53781,7 +47752,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":276}],276:[function(require,module,exports){
+},{"./Plane":209}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53922,7 +47893,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":274}],277:[function(require,module,exports){
+},{"./Mesh":207}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54158,7 +48129,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":274}],278:[function(require,module,exports){
+},{"./Mesh":207}],211:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54444,7 +48415,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":172,"../Mesh":274}],279:[function(require,module,exports){
+},{"../../core":105,"../Mesh":207}],212:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54505,7 +48476,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":274,"./NineSlicePlane":275,"./Plane":276,"./Rope":277,"./canvas/CanvasMeshRenderer":278,"./webgl/MeshRenderer":280}],280:[function(require,module,exports){
+},{"./Mesh":207,"./NineSlicePlane":208,"./Plane":209,"./Rope":210,"./canvas/CanvasMeshRenderer":211,"./webgl/MeshRenderer":213}],213:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54660,7 +48631,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":172,"../Mesh":274,"path":323,"pixi-gl-core":120}],281:[function(require,module,exports){
+},{"../../core":105,"../Mesh":207,"path":237,"pixi-gl-core":53}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55050,7 +49021,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":172,"../core/utils":232}],282:[function(require,module,exports){
+},{"../core":105,"../core/utils":165}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55075,7 +49046,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":281,"./webgl/ParticleRenderer":284}],283:[function(require,module,exports){
+},{"./ParticleContainer":214,"./webgl/ParticleRenderer":217}],216:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55324,7 +49295,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":230,"pixi-gl-core":120}],284:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":163,"pixi-gl-core":53}],217:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55805,7 +49776,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":172,"../../core/utils":232,"./ParticleBuffer":283,"./ParticleShader":285}],285:[function(require,module,exports){
+},{"../../core":105,"../../core/utils":165,"./ParticleBuffer":216,"./ParticleShader":218}],218:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55848,7 +49819,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":151}],286:[function(require,module,exports){
+},{"../../core/Shader":84}],219:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -55866,7 +49837,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],287:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -55878,7 +49849,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],288:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -55893,7 +49864,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":108}],289:[function(require,module,exports){
+},{"object-assign":44}],222:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -55920,7 +49891,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":286,"./Number.isInteger":287,"./Object.assign":288,"./requestAnimationFrame":290}],290:[function(require,module,exports){
+},{"./Math.sign":219,"./Number.isInteger":220,"./Object.assign":221,"./requestAnimationFrame":223}],223:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55997,7 +49968,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],291:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56485,7 +50456,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":172,"./limiters/CountLimiter":294}],292:[function(require,module,exports){
+},{"../core":105,"./limiters/CountLimiter":227}],225:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56605,7 +50576,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":172,"../BasePrepare":291}],293:[function(require,module,exports){
+},{"../../core":105,"../BasePrepare":224}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56657,7 +50628,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":291,"./canvas/CanvasPrepare":292,"./limiters/CountLimiter":294,"./limiters/TimeLimiter":295,"./webgl/WebGLPrepare":296}],294:[function(require,module,exports){
+},{"./BasePrepare":224,"./canvas/CanvasPrepare":225,"./limiters/CountLimiter":227,"./limiters/TimeLimiter":228,"./webgl/WebGLPrepare":229}],227:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -56715,7 +50686,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],295:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -56773,7 +50744,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],296:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56895,7 +50866,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":172,"../BasePrepare":291}],297:[function(require,module,exports){
+},{"../../core":105,"../BasePrepare":224}],230:[function(require,module,exports){
 'use strict'
 
 /**
@@ -56925,7 +50896,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],298:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57578,7 +51549,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":299,"./async":300,"mini-signals":106,"parse-uri":109}],299:[function(require,module,exports){
+},{"./Resource":232,"./async":233,"mini-signals":43,"parse-uri":45}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58734,7 +52705,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":106,"parse-uri":109}],300:[function(require,module,exports){
+},{"mini-signals":43,"parse-uri":45}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58943,7 +52914,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],301:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59011,7 +52982,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],302:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -59035,7 +53006,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":298,"./Resource":299,"./async":300,"./b64":301}],303:[function(require,module,exports){
+},{"./Loader":231,"./Resource":232,"./async":233,"./b64":234}],236:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -59123,3930 +53094,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":299,"../../b64":301}],304:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var url = require('./url');
-var parser = require('socket.io-parser');
-var Manager = require('./manager');
-var debug = require('debug')('socket.io-client');
-
-/**
- * Module exports.
- */
-
-module.exports = exports = lookup;
-
-/**
- * Managers cache.
- */
-
-var cache = exports.managers = {};
-
-/**
- * Looks up an existing `Manager` for multiplexing.
- * If the user summons:
- *
- *   `io('http://localhost/a');`
- *   `io('http://localhost/b');`
- *
- * We reuse the existing instance based on same scheme/port/host,
- * and we initialize sockets for each namespace.
- *
- * @api public
- */
-
-function lookup (uri, opts) {
-  if (typeof uri === 'object') {
-    opts = uri;
-    uri = undefined;
-  }
-
-  opts = opts || {};
-
-  var parsed = url(uri);
-  var source = parsed.source;
-  var id = parsed.id;
-  var path = parsed.path;
-  var sameNamespace = cache[id] && path in cache[id].nsps;
-  var newConnection = opts.forceNew || opts['force new connection'] ||
-                      false === opts.multiplex || sameNamespace;
-
-  var io;
-
-  if (newConnection) {
-    debug('ignoring socket cache for %s', source);
-    io = Manager(source, opts);
-  } else {
-    if (!cache[id]) {
-      debug('new io instance for %s', source);
-      cache[id] = Manager(source, opts);
-    }
-    io = cache[id];
-  }
-  if (parsed.query && !opts.query) {
-    opts.query = parsed.query;
-  }
-  return io.socket(parsed.path, opts);
-}
-
-/**
- * Protocol version.
- *
- * @api public
- */
-
-exports.protocol = parser.protocol;
-
-/**
- * `connect`.
- *
- * @param {String} uri
- * @api public
- */
-
-exports.connect = lookup;
-
-/**
- * Expose constructors for standalone build.
- *
- * @api public
- */
-
-exports.Manager = require('./manager');
-exports.Socket = require('./socket');
-
-},{"./manager":305,"./socket":307,"./url":308,"debug":309,"socket.io-parser":312}],305:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var eio = require('engine.io-client');
-var Socket = require('./socket');
-var Emitter = require('component-emitter');
-var parser = require('socket.io-parser');
-var on = require('./on');
-var bind = require('component-bind');
-var debug = require('debug')('socket.io-client:manager');
-var indexOf = require('indexof');
-var Backoff = require('backo2');
-
-/**
- * IE6+ hasOwnProperty
- */
-
-var has = Object.prototype.hasOwnProperty;
-
-/**
- * Module exports
- */
-
-module.exports = Manager;
-
-/**
- * `Manager` constructor.
- *
- * @param {String} engine instance or engine uri/opts
- * @param {Object} options
- * @api public
- */
-
-function Manager (uri, opts) {
-  if (!(this instanceof Manager)) return new Manager(uri, opts);
-  if (uri && ('object' === typeof uri)) {
-    opts = uri;
-    uri = undefined;
-  }
-  opts = opts || {};
-
-  opts.path = opts.path || '/socket.io';
-  this.nsps = {};
-  this.subs = [];
-  this.opts = opts;
-  this.reconnection(opts.reconnection !== false);
-  this.reconnectionAttempts(opts.reconnectionAttempts || Infinity);
-  this.reconnectionDelay(opts.reconnectionDelay || 1000);
-  this.reconnectionDelayMax(opts.reconnectionDelayMax || 5000);
-  this.randomizationFactor(opts.randomizationFactor || 0.5);
-  this.backoff = new Backoff({
-    min: this.reconnectionDelay(),
-    max: this.reconnectionDelayMax(),
-    jitter: this.randomizationFactor()
-  });
-  this.timeout(null == opts.timeout ? 20000 : opts.timeout);
-  this.readyState = 'closed';
-  this.uri = uri;
-  this.connecting = [];
-  this.lastPing = null;
-  this.encoding = false;
-  this.packetBuffer = [];
-  var _parser = opts.parser || parser;
-  this.encoder = new _parser.Encoder();
-  this.decoder = new _parser.Decoder();
-  this.autoConnect = opts.autoConnect !== false;
-  if (this.autoConnect) this.open();
-}
-
-/**
- * Propagate given event to sockets and emit on `this`
- *
- * @api private
- */
-
-Manager.prototype.emitAll = function () {
-  this.emit.apply(this, arguments);
-  for (var nsp in this.nsps) {
-    if (has.call(this.nsps, nsp)) {
-      this.nsps[nsp].emit.apply(this.nsps[nsp], arguments);
-    }
-  }
-};
-
-/**
- * Update `socket.id` of all sockets
- *
- * @api private
- */
-
-Manager.prototype.updateSocketIds = function () {
-  for (var nsp in this.nsps) {
-    if (has.call(this.nsps, nsp)) {
-      this.nsps[nsp].id = this.generateId(nsp);
-    }
-  }
-};
-
-/**
- * generate `socket.id` for the given `nsp`
- *
- * @param {String} nsp
- * @return {String}
- * @api private
- */
-
-Manager.prototype.generateId = function (nsp) {
-  return (nsp === '/' ? '' : (nsp + '#')) + this.engine.id;
-};
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Manager.prototype);
-
-/**
- * Sets the `reconnection` config.
- *
- * @param {Boolean} true/false if it should automatically reconnect
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnection = function (v) {
-  if (!arguments.length) return this._reconnection;
-  this._reconnection = !!v;
-  return this;
-};
-
-/**
- * Sets the reconnection attempts config.
- *
- * @param {Number} max reconnection attempts before giving up
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnectionAttempts = function (v) {
-  if (!arguments.length) return this._reconnectionAttempts;
-  this._reconnectionAttempts = v;
-  return this;
-};
-
-/**
- * Sets the delay between reconnections.
- *
- * @param {Number} delay
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnectionDelay = function (v) {
-  if (!arguments.length) return this._reconnectionDelay;
-  this._reconnectionDelay = v;
-  this.backoff && this.backoff.setMin(v);
-  return this;
-};
-
-Manager.prototype.randomizationFactor = function (v) {
-  if (!arguments.length) return this._randomizationFactor;
-  this._randomizationFactor = v;
-  this.backoff && this.backoff.setJitter(v);
-  return this;
-};
-
-/**
- * Sets the maximum delay between reconnections.
- *
- * @param {Number} delay
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.reconnectionDelayMax = function (v) {
-  if (!arguments.length) return this._reconnectionDelayMax;
-  this._reconnectionDelayMax = v;
-  this.backoff && this.backoff.setMax(v);
-  return this;
-};
-
-/**
- * Sets the connection timeout. `false` to disable
- *
- * @return {Manager} self or value
- * @api public
- */
-
-Manager.prototype.timeout = function (v) {
-  if (!arguments.length) return this._timeout;
-  this._timeout = v;
-  return this;
-};
-
-/**
- * Starts trying to reconnect if reconnection is enabled and we have not
- * started reconnecting yet
- *
- * @api private
- */
-
-Manager.prototype.maybeReconnectOnOpen = function () {
-  // Only try to reconnect if it's the first time we're connecting
-  if (!this.reconnecting && this._reconnection && this.backoff.attempts === 0) {
-    // keeps reconnection from firing twice for the same reconnection loop
-    this.reconnect();
-  }
-};
-
-/**
- * Sets the current transport `socket`.
- *
- * @param {Function} optional, callback
- * @return {Manager} self
- * @api public
- */
-
-Manager.prototype.open =
-Manager.prototype.connect = function (fn, opts) {
-  debug('readyState %s', this.readyState);
-  if (~this.readyState.indexOf('open')) return this;
-
-  debug('opening %s', this.uri);
-  this.engine = eio(this.uri, this.opts);
-  var socket = this.engine;
-  var self = this;
-  this.readyState = 'opening';
-  this.skipReconnect = false;
-
-  // emit `open`
-  var openSub = on(socket, 'open', function () {
-    self.onopen();
-    fn && fn();
-  });
-
-  // emit `connect_error`
-  var errorSub = on(socket, 'error', function (data) {
-    debug('connect_error');
-    self.cleanup();
-    self.readyState = 'closed';
-    self.emitAll('connect_error', data);
-    if (fn) {
-      var err = new Error('Connection error');
-      err.data = data;
-      fn(err);
-    } else {
-      // Only do this if there is no fn to handle the error
-      self.maybeReconnectOnOpen();
-    }
-  });
-
-  // emit `connect_timeout`
-  if (false !== this._timeout) {
-    var timeout = this._timeout;
-    debug('connect attempt will timeout after %d', timeout);
-
-    // set timer
-    var timer = setTimeout(function () {
-      debug('connect attempt timed out after %d', timeout);
-      openSub.destroy();
-      socket.close();
-      socket.emit('error', 'timeout');
-      self.emitAll('connect_timeout', timeout);
-    }, timeout);
-
-    this.subs.push({
-      destroy: function () {
-        clearTimeout(timer);
-      }
-    });
-  }
-
-  this.subs.push(openSub);
-  this.subs.push(errorSub);
-
-  return this;
-};
-
-/**
- * Called upon transport open.
- *
- * @api private
- */
-
-Manager.prototype.onopen = function () {
-  debug('open');
-
-  // clear old subs
-  this.cleanup();
-
-  // mark as open
-  this.readyState = 'open';
-  this.emit('open');
-
-  // add new subs
-  var socket = this.engine;
-  this.subs.push(on(socket, 'data', bind(this, 'ondata')));
-  this.subs.push(on(socket, 'ping', bind(this, 'onping')));
-  this.subs.push(on(socket, 'pong', bind(this, 'onpong')));
-  this.subs.push(on(socket, 'error', bind(this, 'onerror')));
-  this.subs.push(on(socket, 'close', bind(this, 'onclose')));
-  this.subs.push(on(this.decoder, 'decoded', bind(this, 'ondecoded')));
-};
-
-/**
- * Called upon a ping.
- *
- * @api private
- */
-
-Manager.prototype.onping = function () {
-  this.lastPing = new Date();
-  this.emitAll('ping');
-};
-
-/**
- * Called upon a packet.
- *
- * @api private
- */
-
-Manager.prototype.onpong = function () {
-  this.emitAll('pong', new Date() - this.lastPing);
-};
-
-/**
- * Called with data.
- *
- * @api private
- */
-
-Manager.prototype.ondata = function (data) {
-  this.decoder.add(data);
-};
-
-/**
- * Called when parser fully decodes a packet.
- *
- * @api private
- */
-
-Manager.prototype.ondecoded = function (packet) {
-  this.emit('packet', packet);
-};
-
-/**
- * Called upon socket error.
- *
- * @api private
- */
-
-Manager.prototype.onerror = function (err) {
-  debug('error', err);
-  this.emitAll('error', err);
-};
-
-/**
- * Creates a new socket for the given `nsp`.
- *
- * @return {Socket}
- * @api public
- */
-
-Manager.prototype.socket = function (nsp, opts) {
-  var socket = this.nsps[nsp];
-  if (!socket) {
-    socket = new Socket(this, nsp, opts);
-    this.nsps[nsp] = socket;
-    var self = this;
-    socket.on('connecting', onConnecting);
-    socket.on('connect', function () {
-      socket.id = self.generateId(nsp);
-    });
-
-    if (this.autoConnect) {
-      // manually call here since connecting event is fired before listening
-      onConnecting();
-    }
-  }
-
-  function onConnecting () {
-    if (!~indexOf(self.connecting, socket)) {
-      self.connecting.push(socket);
-    }
-  }
-
-  return socket;
-};
-
-/**
- * Called upon a socket close.
- *
- * @param {Socket} socket
- */
-
-Manager.prototype.destroy = function (socket) {
-  var index = indexOf(this.connecting, socket);
-  if (~index) this.connecting.splice(index, 1);
-  if (this.connecting.length) return;
-
-  this.close();
-};
-
-/**
- * Writes a packet.
- *
- * @param {Object} packet
- * @api private
- */
-
-Manager.prototype.packet = function (packet) {
-  debug('writing packet %j', packet);
-  var self = this;
-  if (packet.query && packet.type === 0) packet.nsp += '?' + packet.query;
-
-  if (!self.encoding) {
-    // encode, then write to engine with result
-    self.encoding = true;
-    this.encoder.encode(packet, function (encodedPackets) {
-      for (var i = 0; i < encodedPackets.length; i++) {
-        self.engine.write(encodedPackets[i], packet.options);
-      }
-      self.encoding = false;
-      self.processPacketQueue();
-    });
-  } else { // add packet to the queue
-    self.packetBuffer.push(packet);
-  }
-};
-
-/**
- * If packet buffer is non-empty, begins encoding the
- * next packet in line.
- *
- * @api private
- */
-
-Manager.prototype.processPacketQueue = function () {
-  if (this.packetBuffer.length > 0 && !this.encoding) {
-    var pack = this.packetBuffer.shift();
-    this.packet(pack);
-  }
-};
-
-/**
- * Clean up transport subscriptions and packet buffer.
- *
- * @api private
- */
-
-Manager.prototype.cleanup = function () {
-  debug('cleanup');
-
-  var subsLength = this.subs.length;
-  for (var i = 0; i < subsLength; i++) {
-    var sub = this.subs.shift();
-    sub.destroy();
-  }
-
-  this.packetBuffer = [];
-  this.encoding = false;
-  this.lastPing = null;
-
-  this.decoder.destroy();
-};
-
-/**
- * Close the current socket.
- *
- * @api private
- */
-
-Manager.prototype.close =
-Manager.prototype.disconnect = function () {
-  debug('disconnect');
-  this.skipReconnect = true;
-  this.reconnecting = false;
-  if ('opening' === this.readyState) {
-    // `onclose` will not fire because
-    // an open event never happened
-    this.cleanup();
-  }
-  this.backoff.reset();
-  this.readyState = 'closed';
-  if (this.engine) this.engine.close();
-};
-
-/**
- * Called upon engine close.
- *
- * @api private
- */
-
-Manager.prototype.onclose = function (reason) {
-  debug('onclose');
-
-  this.cleanup();
-  this.backoff.reset();
-  this.readyState = 'closed';
-  this.emit('close', reason);
-
-  if (this._reconnection && !this.skipReconnect) {
-    this.reconnect();
-  }
-};
-
-/**
- * Attempt a reconnection.
- *
- * @api private
- */
-
-Manager.prototype.reconnect = function () {
-  if (this.reconnecting || this.skipReconnect) return this;
-
-  var self = this;
-
-  if (this.backoff.attempts >= this._reconnectionAttempts) {
-    debug('reconnect failed');
-    this.backoff.reset();
-    this.emitAll('reconnect_failed');
-    this.reconnecting = false;
-  } else {
-    var delay = this.backoff.duration();
-    debug('will wait %dms before reconnect attempt', delay);
-
-    this.reconnecting = true;
-    var timer = setTimeout(function () {
-      if (self.skipReconnect) return;
-
-      debug('attempting reconnect');
-      self.emitAll('reconnect_attempt', self.backoff.attempts);
-      self.emitAll('reconnecting', self.backoff.attempts);
-
-      // check again for the case socket closed in above events
-      if (self.skipReconnect) return;
-
-      self.open(function (err) {
-        if (err) {
-          debug('reconnect attempt error');
-          self.reconnecting = false;
-          self.reconnect();
-          self.emitAll('reconnect_error', err.data);
-        } else {
-          debug('reconnect success');
-          self.onreconnect();
-        }
-      });
-    }, delay);
-
-    this.subs.push({
-      destroy: function () {
-        clearTimeout(timer);
-      }
-    });
-  }
-};
-
-/**
- * Called upon successful reconnect.
- *
- * @api private
- */
-
-Manager.prototype.onreconnect = function () {
-  var attempt = this.backoff.attempts;
-  this.reconnecting = false;
-  this.backoff.reset();
-  this.updateSocketIds();
-  this.emitAll('reconnect', attempt);
-};
-
-},{"./on":306,"./socket":307,"backo2":73,"component-bind":77,"component-emitter":78,"debug":309,"engine.io-client":84,"indexof":104,"socket.io-parser":312}],306:[function(require,module,exports){
-
-/**
- * Module exports.
- */
-
-module.exports = on;
-
-/**
- * Helper for subscriptions.
- *
- * @param {Object|EventEmitter} obj with `Emitter` mixin or `EventEmitter`
- * @param {String} event name
- * @param {Function} callback
- * @api public
- */
-
-function on (obj, ev, fn) {
-  obj.on(ev, fn);
-  return {
-    destroy: function () {
-      obj.removeListener(ev, fn);
-    }
-  };
-}
-
-},{}],307:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var parser = require('socket.io-parser');
-var Emitter = require('component-emitter');
-var toArray = require('to-array');
-var on = require('./on');
-var bind = require('component-bind');
-var debug = require('debug')('socket.io-client:socket');
-var parseqs = require('parseqs');
-var hasBin = require('has-binary2');
-
-/**
- * Module exports.
- */
-
-module.exports = exports = Socket;
-
-/**
- * Internal events (blacklisted).
- * These events can't be emitted by the user.
- *
- * @api private
- */
-
-var events = {
-  connect: 1,
-  connect_error: 1,
-  connect_timeout: 1,
-  connecting: 1,
-  disconnect: 1,
-  error: 1,
-  reconnect: 1,
-  reconnect_attempt: 1,
-  reconnect_failed: 1,
-  reconnect_error: 1,
-  reconnecting: 1,
-  ping: 1,
-  pong: 1
-};
-
-/**
- * Shortcut to `Emitter#emit`.
- */
-
-var emit = Emitter.prototype.emit;
-
-/**
- * `Socket` constructor.
- *
- * @api public
- */
-
-function Socket (io, nsp, opts) {
-  this.io = io;
-  this.nsp = nsp;
-  this.json = this; // compat
-  this.ids = 0;
-  this.acks = {};
-  this.receiveBuffer = [];
-  this.sendBuffer = [];
-  this.connected = false;
-  this.disconnected = true;
-  this.flags = {};
-  if (opts && opts.query) {
-    this.query = opts.query;
-  }
-  if (this.io.autoConnect) this.open();
-}
-
-/**
- * Mix in `Emitter`.
- */
-
-Emitter(Socket.prototype);
-
-/**
- * Subscribe to open, close and packet events
- *
- * @api private
- */
-
-Socket.prototype.subEvents = function () {
-  if (this.subs) return;
-
-  var io = this.io;
-  this.subs = [
-    on(io, 'open', bind(this, 'onopen')),
-    on(io, 'packet', bind(this, 'onpacket')),
-    on(io, 'close', bind(this, 'onclose'))
-  ];
-};
-
-/**
- * "Opens" the socket.
- *
- * @api public
- */
-
-Socket.prototype.open =
-Socket.prototype.connect = function () {
-  if (this.connected) return this;
-
-  this.subEvents();
-  this.io.open(); // ensure open
-  if ('open' === this.io.readyState) this.onopen();
-  this.emit('connecting');
-  return this;
-};
-
-/**
- * Sends a `message` event.
- *
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.send = function () {
-  var args = toArray(arguments);
-  args.unshift('message');
-  this.emit.apply(this, args);
-  return this;
-};
-
-/**
- * Override `emit`.
- * If the event is in `events`, it's emitted normally.
- *
- * @param {String} event name
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.emit = function (ev) {
-  if (events.hasOwnProperty(ev)) {
-    emit.apply(this, arguments);
-    return this;
-  }
-
-  var args = toArray(arguments);
-  var packet = {
-    type: (this.flags.binary !== undefined ? this.flags.binary : hasBin(args)) ? parser.BINARY_EVENT : parser.EVENT,
-    data: args
-  };
-
-  packet.options = {};
-  packet.options.compress = !this.flags || false !== this.flags.compress;
-
-  // event ack callback
-  if ('function' === typeof args[args.length - 1]) {
-    debug('emitting packet with ack id %d', this.ids);
-    this.acks[this.ids] = args.pop();
-    packet.id = this.ids++;
-  }
-
-  if (this.connected) {
-    this.packet(packet);
-  } else {
-    this.sendBuffer.push(packet);
-  }
-
-  this.flags = {};
-
-  return this;
-};
-
-/**
- * Sends a packet.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.packet = function (packet) {
-  packet.nsp = this.nsp;
-  this.io.packet(packet);
-};
-
-/**
- * Called upon engine `open`.
- *
- * @api private
- */
-
-Socket.prototype.onopen = function () {
-  debug('transport is open - connecting');
-
-  // write connect packet if necessary
-  if ('/' !== this.nsp) {
-    if (this.query) {
-      var query = typeof this.query === 'object' ? parseqs.encode(this.query) : this.query;
-      debug('sending connect packet with query %s', query);
-      this.packet({type: parser.CONNECT, query: query});
-    } else {
-      this.packet({type: parser.CONNECT});
-    }
-  }
-};
-
-/**
- * Called upon engine `close`.
- *
- * @param {String} reason
- * @api private
- */
-
-Socket.prototype.onclose = function (reason) {
-  debug('close (%s)', reason);
-  this.connected = false;
-  this.disconnected = true;
-  delete this.id;
-  this.emit('disconnect', reason);
-};
-
-/**
- * Called with socket packet.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.onpacket = function (packet) {
-  var sameNamespace = packet.nsp === this.nsp;
-  var rootNamespaceError = packet.type === parser.ERROR && packet.nsp === '/';
-
-  if (!sameNamespace && !rootNamespaceError) return;
-
-  switch (packet.type) {
-    case parser.CONNECT:
-      this.onconnect();
-      break;
-
-    case parser.EVENT:
-      this.onevent(packet);
-      break;
-
-    case parser.BINARY_EVENT:
-      this.onevent(packet);
-      break;
-
-    case parser.ACK:
-      this.onack(packet);
-      break;
-
-    case parser.BINARY_ACK:
-      this.onack(packet);
-      break;
-
-    case parser.DISCONNECT:
-      this.ondisconnect();
-      break;
-
-    case parser.ERROR:
-      this.emit('error', packet.data);
-      break;
-  }
-};
-
-/**
- * Called upon a server event.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.onevent = function (packet) {
-  var args = packet.data || [];
-  debug('emitting event %j', args);
-
-  if (null != packet.id) {
-    debug('attaching ack callback to event');
-    args.push(this.ack(packet.id));
-  }
-
-  if (this.connected) {
-    emit.apply(this, args);
-  } else {
-    this.receiveBuffer.push(args);
-  }
-};
-
-/**
- * Produces an ack callback to emit with an event.
- *
- * @api private
- */
-
-Socket.prototype.ack = function (id) {
-  var self = this;
-  var sent = false;
-  return function () {
-    // prevent double callbacks
-    if (sent) return;
-    sent = true;
-    var args = toArray(arguments);
-    debug('sending ack %j', args);
-
-    self.packet({
-      type: hasBin(args) ? parser.BINARY_ACK : parser.ACK,
-      id: id,
-      data: args
-    });
-  };
-};
-
-/**
- * Called upon a server acknowlegement.
- *
- * @param {Object} packet
- * @api private
- */
-
-Socket.prototype.onack = function (packet) {
-  var ack = this.acks[packet.id];
-  if ('function' === typeof ack) {
-    debug('calling ack %s with %j', packet.id, packet.data);
-    ack.apply(this, packet.data);
-    delete this.acks[packet.id];
-  } else {
-    debug('bad ack %s', packet.id);
-  }
-};
-
-/**
- * Called upon server connect.
- *
- * @api private
- */
-
-Socket.prototype.onconnect = function () {
-  this.connected = true;
-  this.disconnected = false;
-  this.emit('connect');
-  this.emitBuffered();
-};
-
-/**
- * Emit buffered events (received and emitted).
- *
- * @api private
- */
-
-Socket.prototype.emitBuffered = function () {
-  var i;
-  for (i = 0; i < this.receiveBuffer.length; i++) {
-    emit.apply(this, this.receiveBuffer[i]);
-  }
-  this.receiveBuffer = [];
-
-  for (i = 0; i < this.sendBuffer.length; i++) {
-    this.packet(this.sendBuffer[i]);
-  }
-  this.sendBuffer = [];
-};
-
-/**
- * Called upon server disconnect.
- *
- * @api private
- */
-
-Socket.prototype.ondisconnect = function () {
-  debug('server disconnect (%s)', this.nsp);
-  this.destroy();
-  this.onclose('io server disconnect');
-};
-
-/**
- * Called upon forced client/server side disconnections,
- * this method ensures the manager stops tracking us and
- * that reconnections don't get triggered for this.
- *
- * @api private.
- */
-
-Socket.prototype.destroy = function () {
-  if (this.subs) {
-    // clean subscriptions to avoid reconnections
-    for (var i = 0; i < this.subs.length; i++) {
-      this.subs[i].destroy();
-    }
-    this.subs = null;
-  }
-
-  this.io.destroy(this);
-};
-
-/**
- * Disconnects the socket manually.
- *
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.close =
-Socket.prototype.disconnect = function () {
-  if (this.connected) {
-    debug('performing disconnect (%s)', this.nsp);
-    this.packet({ type: parser.DISCONNECT });
-  }
-
-  // remove socket from pool
-  this.destroy();
-
-  if (this.connected) {
-    // fire events
-    this.onclose('io client disconnect');
-  }
-  return this;
-};
-
-/**
- * Sets the compress flag.
- *
- * @param {Boolean} if `true`, compresses the sending data
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.compress = function (compress) {
-  this.flags.compress = compress;
-  return this;
-};
-
-/**
- * Sets the binary flag
- *
- * @param {Boolean} whether the emitted data contains binary
- * @return {Socket} self
- * @api public
- */
-
-Socket.prototype.binary = function (binary) {
-  this.flags.binary = binary;
-  return this;
-};
-
-},{"./on":306,"component-bind":77,"component-emitter":78,"debug":309,"has-binary2":99,"parseqs":110,"socket.io-parser":312,"to-array":317}],308:[function(require,module,exports){
-(function (global){
-
-/**
- * Module dependencies.
- */
-
-var parseuri = require('parseuri');
-var debug = require('debug')('socket.io-client:url');
-
-/**
- * Module exports.
- */
-
-module.exports = url;
-
-/**
- * URL parser.
- *
- * @param {String} url
- * @param {Object} An object meant to mimic window.location.
- *                 Defaults to window.location.
- * @api public
- */
-
-function url (uri, loc) {
-  var obj = uri;
-
-  // default to window.location
-  loc = loc || global.location;
-  if (null == uri) uri = loc.protocol + '//' + loc.host;
-
-  // relative path support
-  if ('string' === typeof uri) {
-    if ('/' === uri.charAt(0)) {
-      if ('/' === uri.charAt(1)) {
-        uri = loc.protocol + uri;
-      } else {
-        uri = loc.host + uri;
-      }
-    }
-
-    if (!/^(https?|wss?):\/\//.test(uri)) {
-      debug('protocol-less url %s', uri);
-      if ('undefined' !== typeof loc) {
-        uri = loc.protocol + '//' + uri;
-      } else {
-        uri = 'https://' + uri;
-      }
-    }
-
-    // parse
-    debug('parse %s', uri);
-    obj = parseuri(uri);
-  }
-
-  // make sure we treat `localhost:80` and `localhost` equally
-  if (!obj.port) {
-    if (/^(http|ws)$/.test(obj.protocol)) {
-      obj.port = '80';
-    } else if (/^(http|ws)s$/.test(obj.protocol)) {
-      obj.port = '443';
-    }
-  }
-
-  obj.path = obj.path || '/';
-
-  var ipv6 = obj.host.indexOf(':') !== -1;
-  var host = ipv6 ? '[' + obj.host + ']' : obj.host;
-
-  // define unique id
-  obj.id = obj.protocol + '://' + host + ':' + obj.port;
-  // define href
-  obj.href = obj.protocol + '://' + host + (loc && loc.port === obj.port ? '' : (':' + obj.port));
-
-  return obj;
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":309,"parseuri":111}],309:[function(require,module,exports){
-arguments[4][93][0].apply(exports,arguments)
-},{"./debug":310,"_process":324,"dup":93}],310:[function(require,module,exports){
-arguments[4][94][0].apply(exports,arguments)
-},{"dup":94,"ms":107}],311:[function(require,module,exports){
-(function (global){
-/*global Blob,File*/
-
-/**
- * Module requirements
- */
-
-var isArray = require('isarray');
-var isBuf = require('./is-buffer');
-var toString = Object.prototype.toString;
-var withNativeBlob = typeof global.Blob === 'function' || toString.call(global.Blob) === '[object BlobConstructor]';
-var withNativeFile = typeof global.File === 'function' || toString.call(global.File) === '[object FileConstructor]';
-
-/**
- * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
- * Anything with blobs or files should be fed through removeBlobs before coming
- * here.
- *
- * @param {Object} packet - socket.io event packet
- * @return {Object} with deconstructed packet and list of buffers
- * @api public
- */
-
-exports.deconstructPacket = function(packet) {
-  var buffers = [];
-  var packetData = packet.data;
-  var pack = packet;
-  pack.data = _deconstructPacket(packetData, buffers);
-  pack.attachments = buffers.length; // number of binary 'attachments'
-  return {packet: pack, buffers: buffers};
-};
-
-function _deconstructPacket(data, buffers) {
-  if (!data) return data;
-
-  if (isBuf(data)) {
-    var placeholder = { _placeholder: true, num: buffers.length };
-    buffers.push(data);
-    return placeholder;
-  } else if (isArray(data)) {
-    var newData = new Array(data.length);
-    for (var i = 0; i < data.length; i++) {
-      newData[i] = _deconstructPacket(data[i], buffers);
-    }
-    return newData;
-  } else if (typeof data === 'object' && !(data instanceof Date)) {
-    var newData = {};
-    for (var key in data) {
-      newData[key] = _deconstructPacket(data[key], buffers);
-    }
-    return newData;
-  }
-  return data;
-}
-
-/**
- * Reconstructs a binary packet from its placeholder packet and buffers
- *
- * @param {Object} packet - event packet with placeholders
- * @param {Array} buffers - binary buffers to put in placeholder positions
- * @return {Object} reconstructed packet
- * @api public
- */
-
-exports.reconstructPacket = function(packet, buffers) {
-  packet.data = _reconstructPacket(packet.data, buffers);
-  packet.attachments = undefined; // no longer useful
-  return packet;
-};
-
-function _reconstructPacket(data, buffers) {
-  if (!data) return data;
-
-  if (data && data._placeholder) {
-    return buffers[data.num]; // appropriate buffer (should be natural order anyway)
-  } else if (isArray(data)) {
-    for (var i = 0; i < data.length; i++) {
-      data[i] = _reconstructPacket(data[i], buffers);
-    }
-  } else if (typeof data === 'object') {
-    for (var key in data) {
-      data[key] = _reconstructPacket(data[key], buffers);
-    }
-  }
-
-  return data;
-}
-
-/**
- * Asynchronously removes Blobs or Files from data via
- * FileReader's readAsArrayBuffer method. Used before encoding
- * data as msgpack. Calls callback with the blobless data.
- *
- * @param {Object} data
- * @param {Function} callback
- * @api private
- */
-
-exports.removeBlobs = function(data, callback) {
-  function _removeBlobs(obj, curKey, containingObject) {
-    if (!obj) return obj;
-
-    // convert any blob
-    if ((withNativeBlob && obj instanceof Blob) ||
-        (withNativeFile && obj instanceof File)) {
-      pendingBlobs++;
-
-      // async filereader
-      var fileReader = new FileReader();
-      fileReader.onload = function() { // this.result == arraybuffer
-        if (containingObject) {
-          containingObject[curKey] = this.result;
-        }
-        else {
-          bloblessData = this.result;
-        }
-
-        // if nothing pending its callback time
-        if(! --pendingBlobs) {
-          callback(bloblessData);
-        }
-      };
-
-      fileReader.readAsArrayBuffer(obj); // blob -> arraybuffer
-    } else if (isArray(obj)) { // handle array
-      for (var i = 0; i < obj.length; i++) {
-        _removeBlobs(obj[i], i, obj);
-      }
-    } else if (typeof obj === 'object' && !isBuf(obj)) { // and object
-      for (var key in obj) {
-        _removeBlobs(obj[key], key, obj);
-      }
-    }
-  }
-
-  var pendingBlobs = 0;
-  var bloblessData = data;
-  _removeBlobs(bloblessData);
-  if (!pendingBlobs) {
-    callback(bloblessData);
-  }
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":313,"isarray":316}],312:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var debug = require('debug')('socket.io-parser');
-var Emitter = require('component-emitter');
-var binary = require('./binary');
-var isArray = require('isarray');
-var isBuf = require('./is-buffer');
-
-/**
- * Protocol version.
- *
- * @api public
- */
-
-exports.protocol = 4;
-
-/**
- * Packet types.
- *
- * @api public
- */
-
-exports.types = [
-  'CONNECT',
-  'DISCONNECT',
-  'EVENT',
-  'ACK',
-  'ERROR',
-  'BINARY_EVENT',
-  'BINARY_ACK'
-];
-
-/**
- * Packet type `connect`.
- *
- * @api public
- */
-
-exports.CONNECT = 0;
-
-/**
- * Packet type `disconnect`.
- *
- * @api public
- */
-
-exports.DISCONNECT = 1;
-
-/**
- * Packet type `event`.
- *
- * @api public
- */
-
-exports.EVENT = 2;
-
-/**
- * Packet type `ack`.
- *
- * @api public
- */
-
-exports.ACK = 3;
-
-/**
- * Packet type `error`.
- *
- * @api public
- */
-
-exports.ERROR = 4;
-
-/**
- * Packet type 'binary event'
- *
- * @api public
- */
-
-exports.BINARY_EVENT = 5;
-
-/**
- * Packet type `binary ack`. For acks with binary arguments.
- *
- * @api public
- */
-
-exports.BINARY_ACK = 6;
-
-/**
- * Encoder constructor.
- *
- * @api public
- */
-
-exports.Encoder = Encoder;
-
-/**
- * Decoder constructor.
- *
- * @api public
- */
-
-exports.Decoder = Decoder;
-
-/**
- * A socket.io Encoder instance
- *
- * @api public
- */
-
-function Encoder() {}
-
-var ERROR_PACKET = exports.ERROR + '"encode error"';
-
-/**
- * Encode a packet as a single string if non-binary, or as a
- * buffer sequence, depending on packet type.
- *
- * @param {Object} obj - packet object
- * @param {Function} callback - function to handle encodings (likely engine.write)
- * @return Calls callback with Array of encodings
- * @api public
- */
-
-Encoder.prototype.encode = function(obj, callback){
-  debug('encoding packet %j', obj);
-
-  if (exports.BINARY_EVENT === obj.type || exports.BINARY_ACK === obj.type) {
-    encodeAsBinary(obj, callback);
-  } else {
-    var encoding = encodeAsString(obj);
-    callback([encoding]);
-  }
-};
-
-/**
- * Encode packet as string.
- *
- * @param {Object} packet
- * @return {String} encoded
- * @api private
- */
-
-function encodeAsString(obj) {
-
-  // first is type
-  var str = '' + obj.type;
-
-  // attachments if we have them
-  if (exports.BINARY_EVENT === obj.type || exports.BINARY_ACK === obj.type) {
-    str += obj.attachments + '-';
-  }
-
-  // if we have a namespace other than `/`
-  // we append it followed by a comma `,`
-  if (obj.nsp && '/' !== obj.nsp) {
-    str += obj.nsp + ',';
-  }
-
-  // immediately followed by the id
-  if (null != obj.id) {
-    str += obj.id;
-  }
-
-  // json data
-  if (null != obj.data) {
-    var payload = tryStringify(obj.data);
-    if (payload !== false) {
-      str += payload;
-    } else {
-      return ERROR_PACKET;
-    }
-  }
-
-  debug('encoded %j as %s', obj, str);
-  return str;
-}
-
-function tryStringify(str) {
-  try {
-    return JSON.stringify(str);
-  } catch(e){
-    return false;
-  }
-}
-
-/**
- * Encode packet as 'buffer sequence' by removing blobs, and
- * deconstructing packet into object with placeholders and
- * a list of buffers.
- *
- * @param {Object} packet
- * @return {Buffer} encoded
- * @api private
- */
-
-function encodeAsBinary(obj, callback) {
-
-  function writeEncoding(bloblessData) {
-    var deconstruction = binary.deconstructPacket(bloblessData);
-    var pack = encodeAsString(deconstruction.packet);
-    var buffers = deconstruction.buffers;
-
-    buffers.unshift(pack); // add packet info to beginning of data list
-    callback(buffers); // write all the buffers
-  }
-
-  binary.removeBlobs(obj, writeEncoding);
-}
-
-/**
- * A socket.io Decoder instance
- *
- * @return {Object} decoder
- * @api public
- */
-
-function Decoder() {
-  this.reconstructor = null;
-}
-
-/**
- * Mix in `Emitter` with Decoder.
- */
-
-Emitter(Decoder.prototype);
-
-/**
- * Decodes an ecoded packet string into packet JSON.
- *
- * @param {String} obj - encoded packet
- * @return {Object} packet
- * @api public
- */
-
-Decoder.prototype.add = function(obj) {
-  var packet;
-  if (typeof obj === 'string') {
-    packet = decodeString(obj);
-    if (exports.BINARY_EVENT === packet.type || exports.BINARY_ACK === packet.type) { // binary packet's json
-      this.reconstructor = new BinaryReconstructor(packet);
-
-      // no attachments, labeled binary but no binary data to follow
-      if (this.reconstructor.reconPack.attachments === 0) {
-        this.emit('decoded', packet);
-      }
-    } else { // non-binary full packet
-      this.emit('decoded', packet);
-    }
-  }
-  else if (isBuf(obj) || obj.base64) { // raw binary data
-    if (!this.reconstructor) {
-      throw new Error('got binary data when not reconstructing a packet');
-    } else {
-      packet = this.reconstructor.takeBinaryData(obj);
-      if (packet) { // received final buffer
-        this.reconstructor = null;
-        this.emit('decoded', packet);
-      }
-    }
-  }
-  else {
-    throw new Error('Unknown type: ' + obj);
-  }
-};
-
-/**
- * Decode a packet String (JSON data)
- *
- * @param {String} str
- * @return {Object} packet
- * @api private
- */
-
-function decodeString(str) {
-  var i = 0;
-  // look up type
-  var p = {
-    type: Number(str.charAt(0))
-  };
-
-  if (null == exports.types[p.type]) {
-    return error('unknown packet type ' + p.type);
-  }
-
-  // look up attachments if type binary
-  if (exports.BINARY_EVENT === p.type || exports.BINARY_ACK === p.type) {
-    var buf = '';
-    while (str.charAt(++i) !== '-') {
-      buf += str.charAt(i);
-      if (i == str.length) break;
-    }
-    if (buf != Number(buf) || str.charAt(i) !== '-') {
-      throw new Error('Illegal attachments');
-    }
-    p.attachments = Number(buf);
-  }
-
-  // look up namespace (if any)
-  if ('/' === str.charAt(i + 1)) {
-    p.nsp = '';
-    while (++i) {
-      var c = str.charAt(i);
-      if (',' === c) break;
-      p.nsp += c;
-      if (i === str.length) break;
-    }
-  } else {
-    p.nsp = '/';
-  }
-
-  // look up id
-  var next = str.charAt(i + 1);
-  if ('' !== next && Number(next) == next) {
-    p.id = '';
-    while (++i) {
-      var c = str.charAt(i);
-      if (null == c || Number(c) != c) {
-        --i;
-        break;
-      }
-      p.id += str.charAt(i);
-      if (i === str.length) break;
-    }
-    p.id = Number(p.id);
-  }
-
-  // look up json data
-  if (str.charAt(++i)) {
-    var payload = tryParse(str.substr(i));
-    var isPayloadValid = payload !== false && (p.type === exports.ERROR || isArray(payload));
-    if (isPayloadValid) {
-      p.data = payload;
-    } else {
-      return error('invalid payload');
-    }
-  }
-
-  debug('decoded %s as %j', str, p);
-  return p;
-}
-
-function tryParse(str) {
-  try {
-    return JSON.parse(str);
-  } catch(e){
-    return false;
-  }
-}
-
-/**
- * Deallocates a parser's resources
- *
- * @api public
- */
-
-Decoder.prototype.destroy = function() {
-  if (this.reconstructor) {
-    this.reconstructor.finishedReconstruction();
-  }
-};
-
-/**
- * A manager of a binary event's 'buffer sequence'. Should
- * be constructed whenever a packet of type BINARY_EVENT is
- * decoded.
- *
- * @param {Object} packet
- * @return {BinaryReconstructor} initialized reconstructor
- * @api private
- */
-
-function BinaryReconstructor(packet) {
-  this.reconPack = packet;
-  this.buffers = [];
-}
-
-/**
- * Method to be called when binary data received from connection
- * after a BINARY_EVENT packet.
- *
- * @param {Buffer | ArrayBuffer} binData - the raw binary data received
- * @return {null | Object} returns null if more binary data is expected or
- *   a reconstructed packet object if all buffers have been received.
- * @api private
- */
-
-BinaryReconstructor.prototype.takeBinaryData = function(binData) {
-  this.buffers.push(binData);
-  if (this.buffers.length === this.reconPack.attachments) { // done with buffer list
-    var packet = binary.reconstructPacket(this.reconPack, this.buffers);
-    this.finishedReconstruction();
-    return packet;
-  }
-  return null;
-};
-
-/**
- * Cleans up binary packet reconstruction variables.
- *
- * @api private
- */
-
-BinaryReconstructor.prototype.finishedReconstruction = function() {
-  this.reconPack = null;
-  this.buffers = [];
-};
-
-function error(msg) {
-  return {
-    type: exports.ERROR,
-    data: 'parser error: ' + msg
-  };
-}
-
-},{"./binary":311,"./is-buffer":313,"component-emitter":78,"debug":314,"isarray":316}],313:[function(require,module,exports){
-(function (global){
-
-module.exports = isBuf;
-
-var withNativeBuffer = typeof global.Buffer === 'function' && typeof global.Buffer.isBuffer === 'function';
-var withNativeArrayBuffer = typeof global.ArrayBuffer === 'function';
-
-var isView = (function () {
-  if (withNativeArrayBuffer && typeof global.ArrayBuffer.isView === 'function') {
-    return global.ArrayBuffer.isView;
-  } else {
-    return function (obj) { return obj.buffer instanceof global.ArrayBuffer; };
-  }
-})();
-
-/**
- * Returns true if obj is a buffer or an arraybuffer.
- *
- * @api private
- */
-
-function isBuf(obj) {
-  return (withNativeBuffer && global.Buffer.isBuffer(obj)) ||
-          (withNativeArrayBuffer && (obj instanceof global.ArrayBuffer || isView(obj)));
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],314:[function(require,module,exports){
-arguments[4][93][0].apply(exports,arguments)
-},{"./debug":315,"_process":324,"dup":93}],315:[function(require,module,exports){
-arguments[4][94][0].apply(exports,arguments)
-},{"dup":94,"ms":107}],316:[function(require,module,exports){
-arguments[4][100][0].apply(exports,arguments)
-},{"dup":100}],317:[function(require,module,exports){
-module.exports = toArray
-
-function toArray(list, index) {
-    var array = []
-
-    index = index || 0
-
-    for (var i = index || 0; i < list.length; i++) {
-        array[i - index] = list[i]
-    }
-
-    return array
-}
-
-},{}],318:[function(require,module,exports){
-'use strict';
-
-var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
-  , length = 64
-  , map = {}
-  , seed = 0
-  , i = 0
-  , prev;
-
-/**
- * Return a string representing the specified number.
- *
- * @param {Number} num The number to convert.
- * @returns {String} The string representation of the number.
- * @api public
- */
-function encode(num) {
-  var encoded = '';
-
-  do {
-    encoded = alphabet[num % length] + encoded;
-    num = Math.floor(num / length);
-  } while (num > 0);
-
-  return encoded;
-}
-
-/**
- * Return the integer value specified by the given string.
- *
- * @param {String} str The string to convert.
- * @returns {Number} The integer value represented by the string.
- * @api public
- */
-function decode(str) {
-  var decoded = 0;
-
-  for (i = 0; i < str.length; i++) {
-    decoded = decoded * length + map[str.charAt(i)];
-  }
-
-  return decoded;
-}
-
-/**
- * Yeast: A tiny growing id generator.
- *
- * @returns {String} A unique id.
- * @api public
- */
-function yeast() {
-  var now = encode(+new Date());
-
-  if (now !== prev) return seed = 0, prev = now;
-  return now +'.'+ encode(seed++);
-}
-
-//
-// Map each character to its index.
-//
-for (; i < length; i++) map[alphabet[i]] = i;
-
-//
-// Expose the `yeast`, `encode` and `decode` functions.
-//
-yeast.encode = encode;
-yeast.decode = decode;
-module.exports = yeast;
-
-},{}],319:[function(require,module,exports){
-'use strict'
-
-exports.byteLength = byteLength
-exports.toByteArray = toByteArray
-exports.fromByteArray = fromByteArray
-
-var lookup = []
-var revLookup = []
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-
-var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-for (var i = 0, len = code.length; i < len; ++i) {
-  lookup[i] = code[i]
-  revLookup[code.charCodeAt(i)] = i
-}
-
-// Support decoding URL-safe base64 strings, as Node.js does.
-// See: https://en.wikipedia.org/wiki/Base64#URL_applications
-revLookup['-'.charCodeAt(0)] = 62
-revLookup['_'.charCodeAt(0)] = 63
-
-function getLens (b64) {
-  var len = b64.length
-
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // Trim off extra bytes after placeholder bytes are found
-  // See: https://github.com/beatgammit/base64-js/issues/42
-  var validLen = b64.indexOf('=')
-  if (validLen === -1) validLen = len
-
-  var placeHoldersLen = validLen === len
-    ? 0
-    : 4 - (validLen % 4)
-
-  return [validLen, placeHoldersLen]
-}
-
-// base64 is 4/3 + up to two characters of the original data
-function byteLength (b64) {
-  var lens = getLens(b64)
-  var validLen = lens[0]
-  var placeHoldersLen = lens[1]
-  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
-}
-
-function _byteLength (b64, validLen, placeHoldersLen) {
-  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
-}
-
-function toByteArray (b64) {
-  var tmp
-  var lens = getLens(b64)
-  var validLen = lens[0]
-  var placeHoldersLen = lens[1]
-
-  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
-
-  var curByte = 0
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  var len = placeHoldersLen > 0
-    ? validLen - 4
-    : validLen
-
-  for (var i = 0; i < len; i += 4) {
-    tmp =
-      (revLookup[b64.charCodeAt(i)] << 18) |
-      (revLookup[b64.charCodeAt(i + 1)] << 12) |
-      (revLookup[b64.charCodeAt(i + 2)] << 6) |
-      revLookup[b64.charCodeAt(i + 3)]
-    arr[curByte++] = (tmp >> 16) & 0xFF
-    arr[curByte++] = (tmp >> 8) & 0xFF
-    arr[curByte++] = tmp & 0xFF
-  }
-
-  if (placeHoldersLen === 2) {
-    tmp =
-      (revLookup[b64.charCodeAt(i)] << 2) |
-      (revLookup[b64.charCodeAt(i + 1)] >> 4)
-    arr[curByte++] = tmp & 0xFF
-  }
-
-  if (placeHoldersLen === 1) {
-    tmp =
-      (revLookup[b64.charCodeAt(i)] << 10) |
-      (revLookup[b64.charCodeAt(i + 1)] << 4) |
-      (revLookup[b64.charCodeAt(i + 2)] >> 2)
-    arr[curByte++] = (tmp >> 8) & 0xFF
-    arr[curByte++] = tmp & 0xFF
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] +
-    lookup[num >> 12 & 0x3F] +
-    lookup[num >> 6 & 0x3F] +
-    lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp
-  var output = []
-  for (var i = start; i < end; i += 3) {
-    tmp =
-      ((uint8[i] << 16) & 0xFF0000) +
-      ((uint8[i + 1] << 8) & 0xFF00) +
-      (uint8[i + 2] & 0xFF)
-    output.push(tripletToBase64(tmp))
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  var tmp
-  var len = uint8.length
-  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-  var parts = []
-  var maxChunkLength = 16383 // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(
-      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
-    ))
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1]
-    parts.push(
-      lookup[tmp >> 2] +
-      lookup[(tmp << 4) & 0x3F] +
-      '=='
-    )
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
-    parts.push(
-      lookup[tmp >> 10] +
-      lookup[(tmp >> 4) & 0x3F] +
-      lookup[(tmp << 2) & 0x3F] +
-      '='
-    )
-  }
-
-  return parts.join('')
-}
-
-},{}],320:[function(require,module,exports){
-
-},{}],321:[function(require,module,exports){
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-/* eslint-disable no-proto */
-
-'use strict'
-
-var base64 = require('base64-js')
-var ieee754 = require('ieee754')
-
-exports.Buffer = Buffer
-exports.SlowBuffer = SlowBuffer
-exports.INSPECT_MAX_BYTES = 50
-
-var K_MAX_LENGTH = 0x7fffffff
-exports.kMaxLength = K_MAX_LENGTH
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Print warning and recommend using `buffer` v4.x which has an Object
- *               implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * We report that the browser does not support typed arrays if the are not subclassable
- * using __proto__. Firefox 4-29 lacks support for adding new properties to `Uint8Array`
- * (See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438). IE 10 lacks support
- * for __proto__ and has a buggy typed array implementation.
- */
-Buffer.TYPED_ARRAY_SUPPORT = typedArraySupport()
-
-if (!Buffer.TYPED_ARRAY_SUPPORT && typeof console !== 'undefined' &&
-    typeof console.error === 'function') {
-  console.error(
-    'This browser lacks typed array (Uint8Array) support which is required by ' +
-    '`buffer` v5.x. Use `buffer` v4.x if you require old browser support.'
-  )
-}
-
-function typedArraySupport () {
-  // Can typed array instances can be augmented?
-  try {
-    var arr = new Uint8Array(1)
-    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
-    return arr.foo() === 42
-  } catch (e) {
-    return false
-  }
-}
-
-Object.defineProperty(Buffer.prototype, 'parent', {
-  enumerable: true,
-  get: function () {
-    if (!Buffer.isBuffer(this)) return undefined
-    return this.buffer
-  }
-})
-
-Object.defineProperty(Buffer.prototype, 'offset', {
-  enumerable: true,
-  get: function () {
-    if (!Buffer.isBuffer(this)) return undefined
-    return this.byteOffset
-  }
-})
-
-function createBuffer (length) {
-  if (length > K_MAX_LENGTH) {
-    throw new RangeError('The value "' + length + '" is invalid for option "size"')
-  }
-  // Return an augmented `Uint8Array` instance
-  var buf = new Uint8Array(length)
-  buf.__proto__ = Buffer.prototype
-  return buf
-}
-
-/**
- * The Buffer constructor returns instances of `Uint8Array` that have their
- * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
- * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
- * and the `Uint8Array` methods. Square bracket notation works as expected -- it
- * returns a single octet.
- *
- * The `Uint8Array` prototype remains unmodified.
- */
-
-function Buffer (arg, encodingOrOffset, length) {
-  // Common case.
-  if (typeof arg === 'number') {
-    if (typeof encodingOrOffset === 'string') {
-      throw new TypeError(
-        'The "string" argument must be of type string. Received type number'
-      )
-    }
-    return allocUnsafe(arg)
-  }
-  return from(arg, encodingOrOffset, length)
-}
-
-// Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
-if (typeof Symbol !== 'undefined' && Symbol.species != null &&
-    Buffer[Symbol.species] === Buffer) {
-  Object.defineProperty(Buffer, Symbol.species, {
-    value: null,
-    configurable: true,
-    enumerable: false,
-    writable: false
-  })
-}
-
-Buffer.poolSize = 8192 // not used by this implementation
-
-function from (value, encodingOrOffset, length) {
-  if (typeof value === 'string') {
-    return fromString(value, encodingOrOffset)
-  }
-
-  if (ArrayBuffer.isView(value)) {
-    return fromArrayLike(value)
-  }
-
-  if (value == null) {
-    throw TypeError(
-      'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
-      'or Array-like Object. Received type ' + (typeof value)
-    )
-  }
-
-  if (isInstance(value, ArrayBuffer) ||
-      (value && isInstance(value.buffer, ArrayBuffer))) {
-    return fromArrayBuffer(value, encodingOrOffset, length)
-  }
-
-  if (typeof value === 'number') {
-    throw new TypeError(
-      'The "value" argument must not be of type number. Received type number'
-    )
-  }
-
-  var valueOf = value.valueOf && value.valueOf()
-  if (valueOf != null && valueOf !== value) {
-    return Buffer.from(valueOf, encodingOrOffset, length)
-  }
-
-  var b = fromObject(value)
-  if (b) return b
-
-  if (typeof Symbol !== 'undefined' && Symbol.toPrimitive != null &&
-      typeof value[Symbol.toPrimitive] === 'function') {
-    return Buffer.from(
-      value[Symbol.toPrimitive]('string'), encodingOrOffset, length
-    )
-  }
-
-  throw new TypeError(
-    'The first argument must be one of type string, Buffer, ArrayBuffer, Array, ' +
-    'or Array-like Object. Received type ' + (typeof value)
-  )
-}
-
-/**
- * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
- * if value is a number.
- * Buffer.from(str[, encoding])
- * Buffer.from(array)
- * Buffer.from(buffer)
- * Buffer.from(arrayBuffer[, byteOffset[, length]])
- **/
-Buffer.from = function (value, encodingOrOffset, length) {
-  return from(value, encodingOrOffset, length)
-}
-
-// Note: Change prototype *after* Buffer.from is defined to workaround Chrome bug:
-// https://github.com/feross/buffer/pull/148
-Buffer.prototype.__proto__ = Uint8Array.prototype
-Buffer.__proto__ = Uint8Array
-
-function assertSize (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('"size" argument must be of type number')
-  } else if (size < 0) {
-    throw new RangeError('The value "' + size + '" is invalid for option "size"')
-  }
-}
-
-function alloc (size, fill, encoding) {
-  assertSize(size)
-  if (size <= 0) {
-    return createBuffer(size)
-  }
-  if (fill !== undefined) {
-    // Only pay attention to encoding if it's a string. This
-    // prevents accidentally sending in a number that would
-    // be interpretted as a start offset.
-    return typeof encoding === 'string'
-      ? createBuffer(size).fill(fill, encoding)
-      : createBuffer(size).fill(fill)
-  }
-  return createBuffer(size)
-}
-
-/**
- * Creates a new filled Buffer instance.
- * alloc(size[, fill[, encoding]])
- **/
-Buffer.alloc = function (size, fill, encoding) {
-  return alloc(size, fill, encoding)
-}
-
-function allocUnsafe (size) {
-  assertSize(size)
-  return createBuffer(size < 0 ? 0 : checked(size) | 0)
-}
-
-/**
- * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
- * */
-Buffer.allocUnsafe = function (size) {
-  return allocUnsafe(size)
-}
-/**
- * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
- */
-Buffer.allocUnsafeSlow = function (size) {
-  return allocUnsafe(size)
-}
-
-function fromString (string, encoding) {
-  if (typeof encoding !== 'string' || encoding === '') {
-    encoding = 'utf8'
-  }
-
-  if (!Buffer.isEncoding(encoding)) {
-    throw new TypeError('Unknown encoding: ' + encoding)
-  }
-
-  var length = byteLength(string, encoding) | 0
-  var buf = createBuffer(length)
-
-  var actual = buf.write(string, encoding)
-
-  if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
-    buf = buf.slice(0, actual)
-  }
-
-  return buf
-}
-
-function fromArrayLike (array) {
-  var length = array.length < 0 ? 0 : checked(array.length) | 0
-  var buf = createBuffer(length)
-  for (var i = 0; i < length; i += 1) {
-    buf[i] = array[i] & 255
-  }
-  return buf
-}
-
-function fromArrayBuffer (array, byteOffset, length) {
-  if (byteOffset < 0 || array.byteLength < byteOffset) {
-    throw new RangeError('"offset" is outside of buffer bounds')
-  }
-
-  if (array.byteLength < byteOffset + (length || 0)) {
-    throw new RangeError('"length" is outside of buffer bounds')
-  }
-
-  var buf
-  if (byteOffset === undefined && length === undefined) {
-    buf = new Uint8Array(array)
-  } else if (length === undefined) {
-    buf = new Uint8Array(array, byteOffset)
-  } else {
-    buf = new Uint8Array(array, byteOffset, length)
-  }
-
-  // Return an augmented `Uint8Array` instance
-  buf.__proto__ = Buffer.prototype
-  return buf
-}
-
-function fromObject (obj) {
-  if (Buffer.isBuffer(obj)) {
-    var len = checked(obj.length) | 0
-    var buf = createBuffer(len)
-
-    if (buf.length === 0) {
-      return buf
-    }
-
-    obj.copy(buf, 0, 0, len)
-    return buf
-  }
-
-  if (obj.length !== undefined) {
-    if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
-      return createBuffer(0)
-    }
-    return fromArrayLike(obj)
-  }
-
-  if (obj.type === 'Buffer' && Array.isArray(obj.data)) {
-    return fromArrayLike(obj.data)
-  }
-}
-
-function checked (length) {
-  // Note: cannot use `length < K_MAX_LENGTH` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
-  if (length >= K_MAX_LENGTH) {
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + K_MAX_LENGTH.toString(16) + ' bytes')
-  }
-  return length | 0
-}
-
-function SlowBuffer (length) {
-  if (+length != length) { // eslint-disable-line eqeqeq
-    length = 0
-  }
-  return Buffer.alloc(+length)
-}
-
-Buffer.isBuffer = function isBuffer (b) {
-  return b != null && b._isBuffer === true &&
-    b !== Buffer.prototype // so Buffer.isBuffer(Buffer.prototype) will be false
-}
-
-Buffer.compare = function compare (a, b) {
-  if (isInstance(a, Uint8Array)) a = Buffer.from(a, a.offset, a.byteLength)
-  if (isInstance(b, Uint8Array)) b = Buffer.from(b, b.offset, b.byteLength)
-  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-    throw new TypeError(
-      'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
-    )
-  }
-
-  if (a === b) return 0
-
-  var x = a.length
-  var y = b.length
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i]
-      y = b[i]
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-}
-
-Buffer.isEncoding = function isEncoding (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'latin1':
-    case 'binary':
-    case 'base64':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-}
-
-Buffer.concat = function concat (list, length) {
-  if (!Array.isArray(list)) {
-    throw new TypeError('"list" argument must be an Array of Buffers')
-  }
-
-  if (list.length === 0) {
-    return Buffer.alloc(0)
-  }
-
-  var i
-  if (length === undefined) {
-    length = 0
-    for (i = 0; i < list.length; ++i) {
-      length += list[i].length
-    }
-  }
-
-  var buffer = Buffer.allocUnsafe(length)
-  var pos = 0
-  for (i = 0; i < list.length; ++i) {
-    var buf = list[i]
-    if (isInstance(buf, Uint8Array)) {
-      buf = Buffer.from(buf)
-    }
-    if (!Buffer.isBuffer(buf)) {
-      throw new TypeError('"list" argument must be an Array of Buffers')
-    }
-    buf.copy(buffer, pos)
-    pos += buf.length
-  }
-  return buffer
-}
-
-function byteLength (string, encoding) {
-  if (Buffer.isBuffer(string)) {
-    return string.length
-  }
-  if (ArrayBuffer.isView(string) || isInstance(string, ArrayBuffer)) {
-    return string.byteLength
-  }
-  if (typeof string !== 'string') {
-    throw new TypeError(
-      'The "string" argument must be one of type string, Buffer, or ArrayBuffer. ' +
-      'Received type ' + typeof string
-    )
-  }
-
-  var len = string.length
-  var mustMatch = (arguments.length > 2 && arguments[2] === true)
-  if (!mustMatch && len === 0) return 0
-
-  // Use a for loop to avoid recursion
-  var loweredCase = false
-  for (;;) {
-    switch (encoding) {
-      case 'ascii':
-      case 'latin1':
-      case 'binary':
-        return len
-      case 'utf8':
-      case 'utf-8':
-        return utf8ToBytes(string).length
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return len * 2
-      case 'hex':
-        return len >>> 1
-      case 'base64':
-        return base64ToBytes(string).length
-      default:
-        if (loweredCase) {
-          return mustMatch ? -1 : utf8ToBytes(string).length // assume utf8
-        }
-        encoding = ('' + encoding).toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-Buffer.byteLength = byteLength
-
-function slowToString (encoding, start, end) {
-  var loweredCase = false
-
-  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
-  // property of a typed array.
-
-  // This behaves neither like String nor Uint8Array in that we set start/end
-  // to their upper/lower bounds if the value passed is out of range.
-  // undefined is handled specially as per ECMA-262 6th Edition,
-  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
-  if (start === undefined || start < 0) {
-    start = 0
-  }
-  // Return early if start > this.length. Done here to prevent potential uint32
-  // coercion fail below.
-  if (start > this.length) {
-    return ''
-  }
-
-  if (end === undefined || end > this.length) {
-    end = this.length
-  }
-
-  if (end <= 0) {
-    return ''
-  }
-
-  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
-  end >>>= 0
-  start >>>= 0
-
-  if (end <= start) {
-    return ''
-  }
-
-  if (!encoding) encoding = 'utf8'
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice(this, start, end)
-
-      case 'ascii':
-        return asciiSlice(this, start, end)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Slice(this, start, end)
-
-      case 'base64':
-        return base64Slice(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice(this, start, end)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-// This property is used by `Buffer.isBuffer` (and the `is-buffer` npm package)
-// to detect a Buffer instance. It's not possible to use `instanceof Buffer`
-// reliably in a browserify context because there could be multiple different
-// copies of the 'buffer' package in use. This method works even for Buffer
-// instances that were created from another copy of the `buffer` package.
-// See: https://github.com/feross/buffer/issues/154
-Buffer.prototype._isBuffer = true
-
-function swap (b, n, m) {
-  var i = b[n]
-  b[n] = b[m]
-  b[m] = i
-}
-
-Buffer.prototype.swap16 = function swap16 () {
-  var len = this.length
-  if (len % 2 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 16-bits')
-  }
-  for (var i = 0; i < len; i += 2) {
-    swap(this, i, i + 1)
-  }
-  return this
-}
-
-Buffer.prototype.swap32 = function swap32 () {
-  var len = this.length
-  if (len % 4 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 32-bits')
-  }
-  for (var i = 0; i < len; i += 4) {
-    swap(this, i, i + 3)
-    swap(this, i + 1, i + 2)
-  }
-  return this
-}
-
-Buffer.prototype.swap64 = function swap64 () {
-  var len = this.length
-  if (len % 8 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 64-bits')
-  }
-  for (var i = 0; i < len; i += 8) {
-    swap(this, i, i + 7)
-    swap(this, i + 1, i + 6)
-    swap(this, i + 2, i + 5)
-    swap(this, i + 3, i + 4)
-  }
-  return this
-}
-
-Buffer.prototype.toString = function toString () {
-  var length = this.length
-  if (length === 0) return ''
-  if (arguments.length === 0) return utf8Slice(this, 0, length)
-  return slowToString.apply(this, arguments)
-}
-
-Buffer.prototype.toLocaleString = Buffer.prototype.toString
-
-Buffer.prototype.equals = function equals (b) {
-  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return true
-  return Buffer.compare(this, b) === 0
-}
-
-Buffer.prototype.inspect = function inspect () {
-  var str = ''
-  var max = exports.INSPECT_MAX_BYTES
-  str = this.toString('hex', 0, max).replace(/(.{2})/g, '$1 ').trim()
-  if (this.length > max) str += ' ... '
-  return '<Buffer ' + str + '>'
-}
-
-Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
-  if (isInstance(target, Uint8Array)) {
-    target = Buffer.from(target, target.offset, target.byteLength)
-  }
-  if (!Buffer.isBuffer(target)) {
-    throw new TypeError(
-      'The "target" argument must be one of type Buffer or Uint8Array. ' +
-      'Received type ' + (typeof target)
-    )
-  }
-
-  if (start === undefined) {
-    start = 0
-  }
-  if (end === undefined) {
-    end = target ? target.length : 0
-  }
-  if (thisStart === undefined) {
-    thisStart = 0
-  }
-  if (thisEnd === undefined) {
-    thisEnd = this.length
-  }
-
-  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
-    throw new RangeError('out of range index')
-  }
-
-  if (thisStart >= thisEnd && start >= end) {
-    return 0
-  }
-  if (thisStart >= thisEnd) {
-    return -1
-  }
-  if (start >= end) {
-    return 1
-  }
-
-  start >>>= 0
-  end >>>= 0
-  thisStart >>>= 0
-  thisEnd >>>= 0
-
-  if (this === target) return 0
-
-  var x = thisEnd - thisStart
-  var y = end - start
-  var len = Math.min(x, y)
-
-  var thisCopy = this.slice(thisStart, thisEnd)
-  var targetCopy = target.slice(start, end)
-
-  for (var i = 0; i < len; ++i) {
-    if (thisCopy[i] !== targetCopy[i]) {
-      x = thisCopy[i]
-      y = targetCopy[i]
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-}
-
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
-function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
-  // Empty buffer means no match
-  if (buffer.length === 0) return -1
-
-  // Normalize byteOffset
-  if (typeof byteOffset === 'string') {
-    encoding = byteOffset
-    byteOffset = 0
-  } else if (byteOffset > 0x7fffffff) {
-    byteOffset = 0x7fffffff
-  } else if (byteOffset < -0x80000000) {
-    byteOffset = -0x80000000
-  }
-  byteOffset = +byteOffset // Coerce to Number.
-  if (numberIsNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
-    byteOffset = dir ? 0 : (buffer.length - 1)
-  }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
-  if (byteOffset >= buffer.length) {
-    if (dir) return -1
-    else byteOffset = buffer.length - 1
-  } else if (byteOffset < 0) {
-    if (dir) byteOffset = 0
-    else return -1
-  }
-
-  // Normalize val
-  if (typeof val === 'string') {
-    val = Buffer.from(val, encoding)
-  }
-
-  // Finally, search either indexOf (if dir is true) or lastIndexOf
-  if (Buffer.isBuffer(val)) {
-    // Special case: looking for empty string/buffer always fails
-    if (val.length === 0) {
-      return -1
-    }
-    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
-  } else if (typeof val === 'number') {
-    val = val & 0xFF // Search for a byte value [0-255]
-    if (typeof Uint8Array.prototype.indexOf === 'function') {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
-      }
-    }
-    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
-  var indexSize = 1
-  var arrLength = arr.length
-  var valLength = val.length
-
-  if (encoding !== undefined) {
-    encoding = String(encoding).toLowerCase()
-    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
-        encoding === 'utf16le' || encoding === 'utf-16le') {
-      if (arr.length < 2 || val.length < 2) {
-        return -1
-      }
-      indexSize = 2
-      arrLength /= 2
-      valLength /= 2
-      byteOffset /= 2
-    }
-  }
-
-  function read (buf, i) {
-    if (indexSize === 1) {
-      return buf[i]
-    } else {
-      return buf.readUInt16BE(i * indexSize)
-    }
-  }
-
-  var i
-  if (dir) {
-    var foundIndex = -1
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1) foundIndex = i
-        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
-      } else {
-        if (foundIndex !== -1) i -= i - foundIndex
-        foundIndex = -1
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false
-          break
-        }
-      }
-      if (found) return i
-    }
-  }
-
-  return -1
-}
-
-Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
-  return this.indexOf(val, byteOffset, encoding) !== -1
-}
-
-Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
-}
-
-Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
-}
-
-function hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0
-  var remaining = buf.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-
-  var strLen = string.length
-
-  if (length > strLen / 2) {
-    length = strLen / 2
-  }
-  for (var i = 0; i < length; ++i) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16)
-    if (numberIsNaN(parsed)) return i
-    buf[offset + i] = parsed
-  }
-  return i
-}
-
-function utf8Write (buf, string, offset, length) {
-  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-function asciiWrite (buf, string, offset, length) {
-  return blitBuffer(asciiToBytes(string), buf, offset, length)
-}
-
-function latin1Write (buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length)
-}
-
-function base64Write (buf, string, offset, length) {
-  return blitBuffer(base64ToBytes(string), buf, offset, length)
-}
-
-function ucs2Write (buf, string, offset, length) {
-  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-Buffer.prototype.write = function write (string, offset, length, encoding) {
-  // Buffer#write(string)
-  if (offset === undefined) {
-    encoding = 'utf8'
-    length = this.length
-    offset = 0
-  // Buffer#write(string, encoding)
-  } else if (length === undefined && typeof offset === 'string') {
-    encoding = offset
-    length = this.length
-    offset = 0
-  // Buffer#write(string, offset[, length][, encoding])
-  } else if (isFinite(offset)) {
-    offset = offset >>> 0
-    if (isFinite(length)) {
-      length = length >>> 0
-      if (encoding === undefined) encoding = 'utf8'
-    } else {
-      encoding = length
-      length = undefined
-    }
-  } else {
-    throw new Error(
-      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
-    )
-  }
-
-  var remaining = this.length - offset
-  if (length === undefined || length > remaining) length = remaining
-
-  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-    throw new RangeError('Attempt to write outside buffer bounds')
-  }
-
-  if (!encoding) encoding = 'utf8'
-
-  var loweredCase = false
-  for (;;) {
-    switch (encoding) {
-      case 'hex':
-        return hexWrite(this, string, offset, length)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Write(this, string, offset, length)
-
-      case 'ascii':
-        return asciiWrite(this, string, offset, length)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Write(this, string, offset, length)
-
-      case 'base64':
-        // Warning: maxLength not taken into account in base64Write
-        return base64Write(this, string, offset, length)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return ucs2Write(this, string, offset, length)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = ('' + encoding).toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-Buffer.prototype.toJSON = function toJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-}
-
-function base64Slice (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return base64.fromByteArray(buf)
-  } else {
-    return base64.fromByteArray(buf.slice(start, end))
-  }
-}
-
-function utf8Slice (buf, start, end) {
-  end = Math.min(buf.length, end)
-  var res = []
-
-  var i = start
-  while (i < end) {
-    var firstByte = buf[i]
-    var codePoint = null
-    var bytesPerSequence = (firstByte > 0xEF) ? 4
-      : (firstByte > 0xDF) ? 3
-        : (firstByte > 0xBF) ? 2
-          : 1
-
-    if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint
-
-      switch (bytesPerSequence) {
-        case 1:
-          if (firstByte < 0x80) {
-            codePoint = firstByte
-          }
-          break
-        case 2:
-          secondByte = buf[i + 1]
-          if ((secondByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
-            if (tempCodePoint > 0x7F) {
-              codePoint = tempCodePoint
-            }
-          }
-          break
-        case 3:
-          secondByte = buf[i + 1]
-          thirdByte = buf[i + 2]
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
-            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
-              codePoint = tempCodePoint
-            }
-          }
-          break
-        case 4:
-          secondByte = buf[i + 1]
-          thirdByte = buf[i + 2]
-          fourthByte = buf[i + 3]
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
-            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
-              codePoint = tempCodePoint
-            }
-          }
-      }
-    }
-
-    if (codePoint === null) {
-      // we did not generate a valid codePoint so insert a
-      // replacement char (U+FFFD) and advance only 1 byte
-      codePoint = 0xFFFD
-      bytesPerSequence = 1
-    } else if (codePoint > 0xFFFF) {
-      // encode to utf16 (surrogate pair dance)
-      codePoint -= 0x10000
-      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
-      codePoint = 0xDC00 | codePoint & 0x3FF
-    }
-
-    res.push(codePoint)
-    i += bytesPerSequence
-  }
-
-  return decodeCodePointsArray(res)
-}
-
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
-// the lowest limit is Chrome, with 0x10000 args.
-// We go 1 magnitude less, for safety
-var MAX_ARGUMENTS_LENGTH = 0x1000
-
-function decodeCodePointsArray (codePoints) {
-  var len = codePoints.length
-  if (len <= MAX_ARGUMENTS_LENGTH) {
-    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
-  }
-
-  // Decode in chunks to avoid "call stack size exceeded".
-  var res = ''
-  var i = 0
-  while (i < len) {
-    res += String.fromCharCode.apply(
-      String,
-      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-    )
-  }
-  return res
-}
-
-function asciiSlice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i] & 0x7F)
-  }
-  return ret
-}
-
-function latin1Slice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i])
-  }
-  return ret
-}
-
-function hexSlice (buf, start, end) {
-  var len = buf.length
-
-  if (!start || start < 0) start = 0
-  if (!end || end < 0 || end > len) end = len
-
-  var out = ''
-  for (var i = start; i < end; ++i) {
-    out += toHex(buf[i])
-  }
-  return out
-}
-
-function utf16leSlice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var res = ''
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + (bytes[i + 1] * 256))
-  }
-  return res
-}
-
-Buffer.prototype.slice = function slice (start, end) {
-  var len = this.length
-  start = ~~start
-  end = end === undefined ? len : ~~end
-
-  if (start < 0) {
-    start += len
-    if (start < 0) start = 0
-  } else if (start > len) {
-    start = len
-  }
-
-  if (end < 0) {
-    end += len
-    if (end < 0) end = 0
-  } else if (end > len) {
-    end = len
-  }
-
-  if (end < start) end = start
-
-  var newBuf = this.subarray(start, end)
-  // Return an augmented `Uint8Array` instance
-  newBuf.__proto__ = Buffer.prototype
-  return newBuf
-}
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul
-  }
-
-  return val
-}
-
-Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert) {
-    checkOffset(offset, byteLength, this.length)
-  }
-
-  var val = this[offset + --byteLength]
-  var mul = 1
-  while (byteLength > 0 && (mul *= 0x100)) {
-    val += this[offset + --byteLength] * mul
-  }
-
-  return val
-}
-
-Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 1, this.length)
-  return this[offset]
-}
-
-Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  return this[offset] | (this[offset + 1] << 8)
-}
-
-Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  return (this[offset] << 8) | this[offset + 1]
-}
-
-Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-}
-
-Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset] * 0x1000000) +
-    ((this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    this[offset + 3])
-}
-
-Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul
-  }
-  mul *= 0x80
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var i = byteLength
-  var mul = 1
-  var val = this[offset + --i]
-  while (i > 0 && (mul *= 0x100)) {
-    val += this[offset + --i] * mul
-  }
-  mul *= 0x80
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 1, this.length)
-  if (!(this[offset] & 0x80)) return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-}
-
-Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  var val = this[offset] | (this[offset + 1] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  var val = this[offset + 1] | (this[offset] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset]) |
-    (this[offset + 1] << 8) |
-    (this[offset + 2] << 16) |
-    (this[offset + 3] << 24)
-}
-
-Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset] << 24) |
-    (this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    (this[offset + 3])
-}
-
-Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, true, 23, 4)
-}
-
-Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, false, 23, 4)
-}
-
-Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, true, 52, 8)
-}
-
-Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-  offset = offset >>> 0
-  if (!noAssert) checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, false, 52, 8)
-}
-
-function checkInt (buf, value, offset, ext, max, min) {
-  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-}
-
-Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1
-    checkInt(this, value, offset, byteLength, maxBytes, 0)
-  }
-
-  var mul = 1
-  var i = 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  byteLength = byteLength >>> 0
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1
-    checkInt(this, value, offset, byteLength, maxBytes, 0)
-  }
-
-  var i = byteLength - 1
-  var mul = 1
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
-  this[offset] = (value & 0xff)
-  return offset + 1
-}
-
-Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-  this[offset] = (value & 0xff)
-  this[offset + 1] = (value >>> 8)
-  return offset + 2
-}
-
-Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-  this[offset] = (value >>> 8)
-  this[offset + 1] = (value & 0xff)
-  return offset + 2
-}
-
-Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-  this[offset + 3] = (value >>> 24)
-  this[offset + 2] = (value >>> 16)
-  this[offset + 1] = (value >>> 8)
-  this[offset] = (value & 0xff)
-  return offset + 4
-}
-
-Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-  this[offset] = (value >>> 24)
-  this[offset + 1] = (value >>> 16)
-  this[offset + 2] = (value >>> 8)
-  this[offset + 3] = (value & 0xff)
-  return offset + 4
-}
-
-Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) {
-    var limit = Math.pow(2, (8 * byteLength) - 1)
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-  }
-
-  var i = 0
-  var mul = 1
-  var sub = 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
-      sub = 1
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) {
-    var limit = Math.pow(2, (8 * byteLength) - 1)
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-  }
-
-  var i = byteLength - 1
-  var mul = 1
-  var sub = 0
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
-      sub = 1
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
-  if (value < 0) value = 0xff + value + 1
-  this[offset] = (value & 0xff)
-  return offset + 1
-}
-
-Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  this[offset] = (value & 0xff)
-  this[offset + 1] = (value >>> 8)
-  return offset + 2
-}
-
-Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  this[offset] = (value >>> 8)
-  this[offset + 1] = (value & 0xff)
-  return offset + 2
-}
-
-Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  this[offset] = (value & 0xff)
-  this[offset + 1] = (value >>> 8)
-  this[offset + 2] = (value >>> 16)
-  this[offset + 3] = (value >>> 24)
-  return offset + 4
-}
-
-Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (value < 0) value = 0xffffffff + value + 1
-  this[offset] = (value >>> 24)
-  this[offset + 1] = (value >>> 16)
-  this[offset + 2] = (value >>> 8)
-  this[offset + 3] = (value & 0xff)
-  return offset + 4
-}
-
-function checkIEEE754 (buf, value, offset, ext, max, min) {
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-  if (offset < 0) throw new RangeError('Index out of range')
-}
-
-function writeFloat (buf, value, offset, littleEndian, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
-  }
-  ieee754.write(buf, value, offset, littleEndian, 23, 4)
-  return offset + 4
-}
-
-Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, false, noAssert)
-}
-
-function writeDouble (buf, value, offset, littleEndian, noAssert) {
-  value = +value
-  offset = offset >>> 0
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
-  }
-  ieee754.write(buf, value, offset, littleEndian, 52, 8)
-  return offset + 8
-}
-
-Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, false, noAssert)
-}
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer.prototype.copy = function copy (target, targetStart, start, end) {
-  if (!Buffer.isBuffer(target)) throw new TypeError('argument should be a Buffer')
-  if (!start) start = 0
-  if (!end && end !== 0) end = this.length
-  if (targetStart >= target.length) targetStart = target.length
-  if (!targetStart) targetStart = 0
-  if (end > 0 && end < start) end = start
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || this.length === 0) return 0
-
-  // Fatal error conditions
-  if (targetStart < 0) {
-    throw new RangeError('targetStart out of bounds')
-  }
-  if (start < 0 || start >= this.length) throw new RangeError('Index out of range')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length) end = this.length
-  if (target.length - targetStart < end - start) {
-    end = target.length - targetStart + start
-  }
-
-  var len = end - start
-
-  if (this === target && typeof Uint8Array.prototype.copyWithin === 'function') {
-    // Use built-in when available, missing from IE11
-    this.copyWithin(targetStart, start, end)
-  } else if (this === target && start < targetStart && targetStart < end) {
-    // descending copy from end
-    for (var i = len - 1; i >= 0; --i) {
-      target[i + targetStart] = this[i + start]
-    }
-  } else {
-    Uint8Array.prototype.set.call(
-      target,
-      this.subarray(start, end),
-      targetStart
-    )
-  }
-
-  return len
-}
-
-// Usage:
-//    buffer.fill(number[, offset[, end]])
-//    buffer.fill(buffer[, offset[, end]])
-//    buffer.fill(string[, offset[, end]][, encoding])
-Buffer.prototype.fill = function fill (val, start, end, encoding) {
-  // Handle string cases:
-  if (typeof val === 'string') {
-    if (typeof start === 'string') {
-      encoding = start
-      start = 0
-      end = this.length
-    } else if (typeof end === 'string') {
-      encoding = end
-      end = this.length
-    }
-    if (encoding !== undefined && typeof encoding !== 'string') {
-      throw new TypeError('encoding must be a string')
-    }
-    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
-      throw new TypeError('Unknown encoding: ' + encoding)
-    }
-    if (val.length === 1) {
-      var code = val.charCodeAt(0)
-      if ((encoding === 'utf8' && code < 128) ||
-          encoding === 'latin1') {
-        // Fast path: If `val` fits into a single byte, use that numeric value.
-        val = code
-      }
-    }
-  } else if (typeof val === 'number') {
-    val = val & 255
-  }
-
-  // Invalid ranges are not set to a default, so can range check early.
-  if (start < 0 || this.length < start || this.length < end) {
-    throw new RangeError('Out of range index')
-  }
-
-  if (end <= start) {
-    return this
-  }
-
-  start = start >>> 0
-  end = end === undefined ? this.length : end >>> 0
-
-  if (!val) val = 0
-
-  var i
-  if (typeof val === 'number') {
-    for (i = start; i < end; ++i) {
-      this[i] = val
-    }
-  } else {
-    var bytes = Buffer.isBuffer(val)
-      ? val
-      : Buffer.from(val, encoding)
-    var len = bytes.length
-    if (len === 0) {
-      throw new TypeError('The value "' + val +
-        '" is invalid for argument "value"')
-    }
-    for (i = 0; i < end - start; ++i) {
-      this[i + start] = bytes[i % len]
-    }
-  }
-
-  return this
-}
-
-// HELPER FUNCTIONS
-// ================
-
-var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g
-
-function base64clean (str) {
-  // Node takes equal signs as end of the Base64 encoding
-  str = str.split('=')[0]
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = str.trim().replace(INVALID_BASE64_RE, '')
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '='
-  }
-  return str
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes (string, units) {
-  units = units || Infinity
-  var codePoint
-  var length = string.length
-  var leadSurrogate = null
-  var bytes = []
-
-  for (var i = 0; i < length; ++i) {
-    codePoint = string.charCodeAt(i)
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-      // last char was a lead
-      if (!leadSurrogate) {
-        // no lead yet
-        if (codePoint > 0xDBFF) {
-          // unexpected trail
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        } else if (i + 1 === length) {
-          // unpaired lead
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        }
-
-        // valid lead
-        leadSurrogate = codePoint
-
-        continue
-      }
-
-      // 2 leads in a row
-      if (codePoint < 0xDC00) {
-        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-        leadSurrogate = codePoint
-        continue
-      }
-
-      // valid surrogate pair
-      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
-    } else if (leadSurrogate) {
-      // valid bmp char, but last char was a lead
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-    }
-
-    leadSurrogate = null
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint)
-    } else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      )
-    } else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      )
-    } else if (codePoint < 0x110000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      )
-    } else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes (str) {
-  var byteArray = []
-  for (var i = 0; i < str.length; ++i) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF)
-  }
-  return byteArray
-}
-
-function utf16leToBytes (str, units) {
-  var c, hi, lo
-  var byteArray = []
-  for (var i = 0; i < str.length; ++i) {
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i)
-    hi = c >> 8
-    lo = c % 256
-    byteArray.push(lo)
-    byteArray.push(hi)
-  }
-
-  return byteArray
-}
-
-function base64ToBytes (str) {
-  return base64.toByteArray(base64clean(str))
-}
-
-function blitBuffer (src, dst, offset, length) {
-  for (var i = 0; i < length; ++i) {
-    if ((i + offset >= dst.length) || (i >= src.length)) break
-    dst[i + offset] = src[i]
-  }
-  return i
-}
-
-// ArrayBuffer or Uint8Array objects from other contexts (i.e. iframes) do not pass
-// the `instanceof` check but they should be treated as of that type.
-// See: https://github.com/feross/buffer/issues/166
-function isInstance (obj, type) {
-  return obj instanceof type ||
-    (obj != null && obj.constructor != null && obj.constructor.name != null &&
-      obj.constructor.name === type.name)
-}
-function numberIsNaN (obj) {
-  // For IE11 support
-  return obj !== obj // eslint-disable-line no-self-compare
-}
-
-},{"base64-js":319,"ieee754":322}],322:[function(require,module,exports){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = (nBytes * 8) - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = (nBytes * 8) - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = ((value * c) - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
-},{}],323:[function(require,module,exports){
+},{"../../Resource":232,"../../b64":234}],237:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -63352,7 +53400,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":324}],324:[function(require,module,exports){
+},{"_process":238}],238:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -63538,7 +53586,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],325:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -64075,7 +54123,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],326:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64161,7 +54209,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],327:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64248,13 +54296,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],328:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":326,"./encode":327}],329:[function(require,module,exports){
+},{"./decode":240,"./encode":241}],243:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64988,7 +55036,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":330,"punycode":325,"querystring":328}],330:[function(require,module,exports){
+},{"./util":244,"punycode":239,"querystring":242}],244:[function(require,module,exports){
 'use strict';
 
 module.exports = {

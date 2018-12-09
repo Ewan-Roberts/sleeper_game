@@ -1,7 +1,7 @@
+'use strict';
 
+const PIXI = require('pixi.js');
 
-
-// add the viewport to the stage
 module.exports = new PIXI.Application({
   width: global.window.innerWidth,
   height: global.window.innerHeight,
