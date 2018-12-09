@@ -151,11 +151,9 @@ class Keyboard {
 
   inventory() {
     if ( this.inventory_open === false ) {
-      ticker.add(() => gui.update_location());
       gui.show();
       this.inventory_open = true;
     } else {
-      ticker.remove(() => gui.update_location());
       gui.hide();
       this.inventory_open = false;
     }
