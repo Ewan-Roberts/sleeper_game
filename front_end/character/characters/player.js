@@ -1,10 +1,11 @@
 'use strict';
 
 const PIXI              = require('pixi.js');
-const viewport          = require('../engine/viewport.js');
-const { Character }     = require('./character_model');
-const { Keyboard }      = require('../input/keyboard');
-const { Mouse }         = require('../input/mouse');
+const viewport          = require('../../engine/viewport.js');
+
+const { Character }     = require('../character_model');
+const { Keyboard }      = require('../../input/keyboard');
+const { Mouse }         = require('../../input/mouse');
 
 class Player extends Character{
   constructor() {
@@ -25,22 +26,12 @@ class Player extends Character{
     this.sprite.play();
     this.sprite.zIndex = -1;
     this.sprite.name = 'player';
-    this.shift_pressed = false;
-    this.inventory_open = false;
-    this.weapon = 'bow';
-    this.power = 1000;
-    this.allow_shoot = true;
-    this.movement_speed = 15;
 
     viewport.addChild(this.sprite);
   }
 
   follow_player() {
     viewport.follow(this.sprite);
-  }
-
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
   }
 
   create_bow_idle_frames() {

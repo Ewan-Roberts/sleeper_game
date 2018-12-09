@@ -27,7 +27,6 @@ class Keyboard {
     this.moveable = true;
     this.movement_speed = 15;
     this.buffer = 50;
-    
     this.player = viewport.getChildByName('player');
     this.player.shift_pressed = false;
   }

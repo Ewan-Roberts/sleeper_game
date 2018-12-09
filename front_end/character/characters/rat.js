@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../engine/viewport');
+const viewport = require('../../engine/viewport');
 
 const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';

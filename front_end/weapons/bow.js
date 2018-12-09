@@ -4,6 +4,7 @@ const PIXI = require('pixi.js');
 const sprite_helper = require('../utils/sprite_helper.js');
 const viewport = require('../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
+
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
 arrow_container.zIndex = -10;
@@ -65,7 +66,6 @@ function create_arrow_tween(arrow, power, arrow_path) {
 
   return arrow_tween;
 }
-
 function arrow_management(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
@@ -73,7 +73,6 @@ function arrow_management(power, origin, target) {
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
-
     viewport.getChildByName('enemy_container').children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();

@@ -1,8 +1,6 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-//const io = require('socket.io-client');
-//const viewport = require('../engine/viewport.js');
 
 const padding = 1;
 const box_size = 100-padding;

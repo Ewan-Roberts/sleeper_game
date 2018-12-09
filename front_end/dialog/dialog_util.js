@@ -3,24 +3,13 @@
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 
-//const enemyDialogOptions = [
-// 'Oh shit, there he is',
-// 'Who the fuck are you',
-// 'Dont fucking move',
-// 'Stop stop stop',
-// 'No more, not again',
-// 'Karl? That you?',
-// 'Are you real?',
-// 'Ill help you die',
-// 'Give me that now',
-// 'Isabella? Is that you?',
-//};
+const container = new PIXI.Container();
+container.name = 'dialog_container';
+container.zIndex = -20;
+viewport.addChild(container);
 
 class Dialog {
   constructor() {
-    this.container = new PIXI.Container();
-    this.container.zIndex = -20;
-    viewport.addChild(this.container);
   }
 
   create_background() {
@@ -33,7 +22,7 @@ class Dialog {
     this.background.height = viewport.height;
     this.background.position.set(0,0);
 
-    this.container.addChild(this.background);
+    container.addChild(this.background);
   }
 
   add_script(script) {
@@ -46,16 +35,16 @@ class Dialog {
     this.portrait.zIndex = -11;
     this.portrait.position.set(point.x - 800, point.y);
 
-    this.container.addChild(this.portrait);
+    container.addChild(this.portrait);
   }
 
   clear_slide_text() {
 
-    this.container.getChildByName('actor_text').text = '';
-    this.container.getChildByName('render_text').text = '';
-    this.container.getChildByName('button_text').text = '';
-    this.container.getChildByName('choice_one').text = '';
-    this.container.getChildByName('choice_two').text = '';
+    container.getChildByName('actor_text').text = '';
+    container.getChildByName('render_text').text = '';
+    container.getChildByName('button_text').text = '';
+    container.getChildByName('choice_one').text = '';
+    container.getChildByName('choice_two').text = '';
 
   }
 
@@ -64,7 +53,7 @@ class Dialog {
     let current_text = '';
 
     if(this.timeout) {
-      this.container.getChildByName('render_text').text = '';
+      container.getChildByName('render_text').text = '';
       clearInterval(this.timeout);
     } else {
       this.timeout = setInterval(()=> {
@@ -73,7 +62,7 @@ class Dialog {
           return;
         }
         current_text += text_array[i] + ' ';
-        this.container.getChildByName('render_text').text = current_text;
+        container.getChildByName('render_text').text = current_text;
         i++;
       }, 150);
     }
@@ -84,9 +73,9 @@ class Dialog {
     const text_array = this.script[step].name.split(' ');
     this.create_text_timeout(text_array);
 
-    this.container.getChildByName('actor_text').text = this.script[step].actor;
-    this.container.getChildByName('button_text').text = 'next';
-    this.container.getChildByName('button_text').click = () => {
+    container.getChildByName('actor_text').text = this.script[step].actor;
+    container.getChildByName('button_text').text = 'next';
+    container.getChildByName('button_text').click = () => {
 
       for(let i = 0; i < this.script.length; i++) {
         if(this.script[i].id === this.script[step].id){
@@ -98,8 +87,8 @@ class Dialog {
 
   refresh_branch_slide() {
     this.clear_slide_text();
-    this.container.getChildByName('choice_one').text = 'yes';
-    this.container.getChildByName('choice_two').text = 'no' ;
+    container.getChildByName('choice_one').text = 'yes';
+    container.getChildByName('choice_two').text = 'no' ;
   }
 
   enter_dialog_slide(point) {
@@ -127,7 +116,7 @@ class Dialog {
     choice_text.name = 'choice_two';
     choice_text.position.set(x,y);
 
-    this.container.addChild(choice_text);
+    container.addChild(choice_text);
   }
 
   render_choice_one(x, y, text) {
@@ -139,7 +128,7 @@ class Dialog {
     choice_text.name = 'choice_one';
     choice_text.position.set(x,y);
 
-    this.container.addChild(choice_text);
+    container.addChild(choice_text);
   }
 
   render_actor(x, y, text) {
@@ -152,7 +141,7 @@ class Dialog {
 
     actor_text.position.set(x,y);
 
-    this.container.addChild(actor_text);
+    container.addChild(actor_text);
   }
 
   render_action(x, y, text) {
@@ -167,7 +156,7 @@ class Dialog {
     button_text.interactive = true;
     button_text.buttonMode = true;
 
-    this.container.addChild(button_text);
+    container.addChild(button_text);
   }
 
   render_text(x, y, text) {

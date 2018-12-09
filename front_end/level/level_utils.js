@@ -7,10 +7,11 @@ const {
   create_level_grid,
   move_sprite_on_route_straight,
 } = require('../engine/pathfind.js');
-const { Enemy } = require('../character/enemy.js');
-const { Friend } = require('../character/friend.js');
-const { Rat } = require('../character/rat');
-const { Player } = require('../character/player.js');
+
+const { Enemy } = require('../character/characters/enemy.js');
+const { Friend } = require('../character/characters/friend.js');
+const { Rat } = require('../character/characters/rat');
+const { Player } = require('../character/characters/player.js');
 const { Door } = require('../object_management/hard_furnishing/door.js');
 const { Chest } = require('../object_management/items/chest');
 

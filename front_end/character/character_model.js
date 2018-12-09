@@ -68,7 +68,6 @@ class Character {
     return enemy_frames;
   }
 
-
   set_position(x,y) {
     this.sprite.position.set(x, y);
   }

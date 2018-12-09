@@ -1,11 +1,10 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-//const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
-const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
-const { arrow_shoot_from_sprite_to_sprite } = require('../../weapons/bow.js');
-const { createjs } = require('@createjs/tweenjs');
 const viewport = require('../../engine/viewport');
+
+const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
+const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
 
 const container = new PIXI.Container();
@@ -23,17 +22,8 @@ class Enemy extends Character {
       render_text.alpha = 1;
       container.addChild(render_text);
     };
+
     container.addChild(this.sprite);
-  }
-
-  stop_and_shoot_player(player_sprite) {
-    this.path.paused = true;
-    let shot = false;
-
-    if(!shot) {
-      arrow_shoot_from_sprite_to_sprite(this.sprite, player_sprite);
-      shot = true;
-    }
   }
 
   create_patrol_path(path_data) {
