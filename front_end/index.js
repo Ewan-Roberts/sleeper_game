@@ -7,13 +7,15 @@ const pixiPackerParser = require('pixi-packer-parser');
 const app = require('./engine/app');
 const ticker = require('./engine/ticker');
 const viewport = require('./engine/viewport');
+const tweenManager = require('pixi-tween');
 
-ticker.add(() => PIXI.tweenManager.update());
 global.document.body.appendChild(app.view);
 
 global.is_development = true;
 
 app.stage.addChild(viewport);
+
+ticker.add(() => PIXI.tweenManager.update());
 
 const loader = new PIXI.loaders.Loader();
 loader.use(pixiPackerParser(PIXI));
