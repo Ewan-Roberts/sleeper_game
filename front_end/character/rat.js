@@ -30,7 +30,6 @@ class Rat {
 
   create_patrol_path(path_data) {
     this.sprite.patrol_path = path_data;
-    console.log('thing')
   }
 
   set_position(x,y) {

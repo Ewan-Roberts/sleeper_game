@@ -1,3 +1,5 @@
+'use strict';
+
 const keymap = {
   w: 'up',
   a: 'left',

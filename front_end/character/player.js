@@ -122,7 +122,7 @@ class Player extends Character{
 
   mouse_move() {
     viewport.on('mousemove', (event) => {
-      const mouse_position = get_mouse_position(event,viewport);
+      //const mouse_position = get_mouse_position(event,viewport);
       const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
 
       this.aiming_cone.position.set(this.sprite.position.x, this.sprite.position.y);

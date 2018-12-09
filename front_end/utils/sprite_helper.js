@@ -1,3 +1,5 @@
+'use strict';
+
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {
     if (o.anchor[axis] !== 0) {

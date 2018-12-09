@@ -8330,6 +8330,8 @@ module.exports = {
 };
 
 },{"../../engine/viewport.js":11,"../../gui/container":12,"pixi.js":195}],30:[function(require,module,exports){
+'use strict';
+
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {
     if (o.anchor[axis] !== 0) {
@@ -8532,6 +8534,8 @@ module.exports = {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../engine/viewport.js":11,"../utils/sprite_helper.js":30,"@createjs/tweenjs":33,"pixi.js":195}],32:[function(require,module,exports){
 (function (global){
+'use strict';
+
 const PIXI = require('pixi.js');
 
 function getRandomArbitrary(min, max) {
