@@ -39,6 +39,10 @@ class Player extends Character{
     viewport.follow(this.sprite);
   }
 
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
   create_bow_idle_frames() {
     const bow_frames = [];
     for (let i = 0; i <= 21; i += 1) {
@@ -79,9 +83,6 @@ class Player extends Character{
     return walk_frames;
   }
 
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
 
   add_controls() {
     this.keyboard = new Keyboard();
@@ -94,7 +95,6 @@ class Player extends Character{
     viewport.on('mousemove', (event) => {
       this.mouse.move(event);
     });
-    console.log(viewport)
 
     viewport.on('mousedown', (event) => {
       this.mouse.down(event);

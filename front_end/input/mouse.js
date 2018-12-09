@@ -5,6 +5,7 @@ const sprite_helper     = require('../utils/sprite_helper.js');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
 const bow_helper        = require('../weapons/bow.js');
+
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
   y: event.data.global.y - viewport.screenHeight / 2,
@@ -56,7 +57,7 @@ class Mouse {
 
     ticker.remove(this.count_down);
     this.aiming_cone.alpha = 0;
-    if (this.weapon === 'bow' && this.allow_shoot /*&& this.shift_pressed*/) {
+    if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
       bow_helper.arrow_management(this.power, this.player, mouse_position_player);
     }
@@ -99,11 +100,9 @@ class Mouse {
         this.power -= 5;
       }
     };
-
     ticker.add(this.count_down);
 
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
-
     this.player.rotation = sprite_helper.get_angle_from_point_to_point(this.player, mouse_position_player);
     this.player.gotoAndPlay(0);
   }

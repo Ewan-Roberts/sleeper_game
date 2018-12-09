@@ -392,6 +392,10 @@ class Player extends Character{
     viewport.follow(this.sprite);
   }
 
+  set_position(x,y) {
+    this.sprite.position.set(x, y);
+  }
+
   create_bow_idle_frames() {
     const bow_frames = [];
     for (let i = 0; i <= 21; i += 1) {
@@ -432,9 +436,6 @@ class Player extends Character{
     return walk_frames;
   }
 
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
 
   add_controls() {
     this.keyboard = new Keyboard();
@@ -447,7 +448,6 @@ class Player extends Character{
     viewport.on('mousemove', (event) => {
       this.mouse.move(event);
     });
-    console.log(viewport)
 
     viewport.on('mousedown', (event) => {
       this.mouse.down(event);
@@ -1691,6 +1691,7 @@ const sprite_helper     = require('../utils/sprite_helper.js');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
 const bow_helper        = require('../weapons/bow.js');
+
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
   y: event.data.global.y - viewport.screenHeight / 2,
@@ -1742,7 +1743,7 @@ class Mouse {
 
     ticker.remove(this.count_down);
     this.aiming_cone.alpha = 0;
-    if (this.weapon === 'bow' && this.allow_shoot /*&& this.shift_pressed*/) {
+    if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
       bow_helper.arrow_management(this.power, this.player, mouse_position_player);
     }
@@ -1785,11 +1786,9 @@ class Mouse {
         this.power -= 5;
       }
     };
-
     ticker.add(this.count_down);
 
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
-
     this.player.rotation = sprite_helper.get_angle_from_point_to_point(this.player, mouse_position_player);
     this.player.gotoAndPlay(0);
   }
@@ -7971,7 +7970,38 @@ module.exports.load_bedroom_map = () => {
   const level_data = require('./bedroom/level_data/bedroom_level_data.json');
   const tiles_data = require('./bedroom/level_data/flat_floor_data.json');
   const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
-  const friend_script = [{type:'Text',id:'7a69da96-639e-4292-a26f-59a47b934884',actor:'trader',name:'Welcome to a dialog option, want to \ngo to the next line?\n \n Well here we go, welcome to the end \n of the world',next:'274625c9-0d31-49a3-87dc-129a721ee698'},{type:'Branch',id:'274625c9-0d31-49a3-87dc-129a721ee698',variable:'first choice ',branches:{yes:'e2e31f77-0614-43b4-9e4e-b996379ea43d',no:'4f2717a2-11de-4f42-a358-907e8e3eb656'}},{type:'Text',id:'ee68a265-ba7e-4284-856d-43d2b1c3594d',actor:'trader',name:'final node after the yes choice ',next:null},{type:'Text',id:'e2e31f77-0614-43b4-9e4e-b996379ea43d',actor:'trader',name:'this is the first yes choice',next:'ee68a265-ba7e-4284-856d-43d2b1c3594d'},{type:'Text',id:'4f2717a2-11de-4f42-a358-907e8e3eb656',actor:'trader',name:'this is the first no choice',next:null}];
+  const friend_script = [{
+    type:'Text',
+    id:'7a69da96-639e-4292-a26f-59a47b934884',
+    actor:'trader',
+    name:'Welcome to a dialog option, want to \ngo to the next line?\n \n Well here we go, welcome to the end \n of the world',
+    next:'274625c9-0d31-49a3-87dc-129a721ee698',
+  },{
+    type:'Branch',id:'274625c9-0d31-49a3-87dc-129a721ee698',
+    variable:'first choice ',
+    branches: {
+      yes:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
+      no:'4f2717a2-11de-4f42-a358-907e8e3eb656',
+    },
+  },{
+    type:'Text',
+    id:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
+    actor:'trader',
+    name:'final node after the yes choice ',
+    next:null,
+  },{
+    type:'Text',
+    id:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
+    actor:'trader',
+    name:'this is the first yes choice',
+    next:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
+  },{
+    type:'Text',
+    id:'4f2717a2-11de-4f42-a358-907e8e3eb656',
+    actor:'trader',
+    name:'this is the first no choice',
+    next:null,
+  }];
 
   const bedroom_schema = {
     player_data: {
