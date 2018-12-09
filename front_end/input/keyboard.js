@@ -4,6 +4,7 @@ const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
 const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
+const PIXI = require('pixi.js');
 
 const keymap = {
   w: 'up',
@@ -68,15 +69,15 @@ class Keyboard {
   }
 
   up() {
-    const player_point = {
-      x: this.player_position.x,
-      y: this.player_position.y,
-    };
-    for(let i =0; i< this.collision_objects.length; i++){
-      player_point.y -= this.buffer;
+    const collision_objects = viewport.getChildByName('collision_items');
 
-      if(this.collision_objects[i].containsPoint(player_point)){
-        //console.log('poo');
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
+      player_position.y -= this.buffer;
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
     }
@@ -86,42 +87,55 @@ class Keyboard {
   }
 
   down() {
-    const player_position = this.player.getGlobalPosition();
+    const collision_objects = viewport.getChildByName('collision_items');
 
-    this.collision_objects.forEach(object => {
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
       player_position.y += this.buffer;
-      if(object.containsPoint(player_position)){
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
-    });
+    }
+
 
     this.player.y += this.movement_speed;
     this.player.rotation = 2;
   }
 
   left() {
-    const player_position = this.player.getGlobalPosition();
+    const collision_objects = viewport.getChildByName('collision_items');
 
-    this.collision_objects.forEach(object => {
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
       player_position.x -= this.buffer;
-      if(object.containsPoint(player_position)){
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
-    });
+    }
 
     this.player.x -= this.movement_speed;
     this.player.rotation = -3;
   }
 
   right() {
-    const player_position = this.player.getGlobalPosition();
+    const collision_objects = viewport.getChildByName('collision_items');
 
-    this.collision_objects.forEach(object => {
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
       player_position.x += this.buffer;
-      if(object.containsPoint(player_position)){
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
-    });
+    }
 
     this.player.x += this.movement_speed;
     this.player.rotation = 0;

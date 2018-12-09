@@ -217,7 +217,7 @@ module.exports = {
 'use strict';
 
 const PIXI = require('pixi.js');
-const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
+//const { put_blood_splatter_under_sprite } = require('../utils/sprite_helper.js');
 const { pathfind_from_enemy_to_player } = require('../engine/pathfind.js');
 const { arrow_shoot_from_sprite_to_sprite } = require('../weapons/bow.js');
 const { createjs } = require('@createjs/tweenjs');
@@ -293,7 +293,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pathfind.js":9,"../engine/viewport":11,"../utils/sprite_helper.js":30,"../weapons/bow.js":31,"./character_model":1,"@createjs/tweenjs":33,"pixi.js":195}],3:[function(require,module,exports){
+},{"../engine/pathfind.js":9,"../engine/viewport":11,"../weapons/bow.js":31,"./character_model":1,"@createjs/tweenjs":33,"pixi.js":195}],3:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -475,7 +475,7 @@ class Player extends Character{
 
   mouse_move() {
     viewport.on('mousemove', (event) => {
-      const mouse_position = get_mouse_position(event,viewport);
+      //const mouse_position = get_mouse_position(event,viewport);
       const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
 
       this.aiming_cone.position.set(this.sprite.position.x, this.sprite.position.y);
@@ -609,7 +609,6 @@ class Rat {
 
   create_patrol_path(path_data) {
     this.sprite.patrol_path = path_data;
-    console.log('thing')
   }
 
   set_position(x,y) {
@@ -1701,6 +1700,7 @@ const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
 const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
+const PIXI = require('pixi.js');
 
 const keymap = {
   w: 'up',
@@ -1765,15 +1765,15 @@ class Keyboard {
   }
 
   up() {
-    const player_point = {
-      x: this.player_position.x,
-      y: this.player_position.y,
-    };
-    for(let i =0; i< this.collision_objects.length; i++){
-      player_point.y -= this.buffer;
+    const collision_objects = viewport.getChildByName('collision_items');
 
-      if(this.collision_objects[i].containsPoint(player_point)){
-        //console.log('poo');
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
+      player_position.y -= this.buffer;
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
     }
@@ -1783,42 +1783,55 @@ class Keyboard {
   }
 
   down() {
-    const player_position = this.player.getGlobalPosition();
+    const collision_objects = viewport.getChildByName('collision_items');
 
-    this.collision_objects.forEach(object => {
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
       player_position.y += this.buffer;
-      if(object.containsPoint(player_position)){
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
-    });
+    }
+
 
     this.player.y += this.movement_speed;
     this.player.rotation = 2;
   }
 
   left() {
-    const player_position = this.player.getGlobalPosition();
+    const collision_objects = viewport.getChildByName('collision_items');
 
-    this.collision_objects.forEach(object => {
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
       player_position.x -= this.buffer;
-      if(object.containsPoint(player_position)){
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
-    });
+    }
 
     this.player.x -= this.movement_speed;
     this.player.rotation = -3;
   }
 
   right() {
-    const player_position = this.player.getGlobalPosition();
+    const collision_objects = viewport.getChildByName('collision_items');
 
-    this.collision_objects.forEach(object => {
+    for(let i = 0; i < collision_objects.children.length; i++){
+      const player_position = this.player.getGlobalPosition();
+
       player_position.x += this.buffer;
-      if(object.containsPoint(player_position)){
+
+      if(collision_objects.children[i].containsPoint(player_position)){
+        this.player.gotoAndStop(1);
         return;
       }
-    });
+    }
 
     this.player.x += this.movement_speed;
     this.player.rotation = 0;
@@ -1845,7 +1858,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../engine/ticker":10,"../engine/viewport":11,"../gui/hud":13}],16:[function(require,module,exports){
+},{"../engine/ticker":10,"../engine/viewport":11,"../gui/hud":13,"pixi.js":195}],16:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {
