@@ -7,6 +7,7 @@ const server = require('http').Server(app);
 const port = process.env.PORT || 3000;
 const io = require('socket.io')(server, {});
 
+// put in DB and cache in this layer
 const player_inventory = {
   items: [
     {
