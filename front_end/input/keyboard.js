@@ -62,7 +62,6 @@ class Keyboard {
 
   swap_player_to_walking_animation() {
     if(this.player.textures !== this.player.animations.bow.walk) {
-      console.log('here')
       this.player.textures = this.player.animations.bow.walk;
       this.player.play();
     }
@@ -95,7 +94,6 @@ class Keyboard {
 
   down() {
     this.swap_player_to_walking_animation();
-
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -108,7 +106,6 @@ class Keyboard {
         return;
       }
     }
-
 
     this.player.y += this.movement_speed;
     this.player.rotation = 2;

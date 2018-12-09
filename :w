@@ -13,10 +13,10 @@ viewport.addChild(container);
 class GUI_HUD {
   constructor() {
     this.sprite = PIXI.Sprite.fromFrame('black_dot');
-    this.sprite.width = 500;
-    this.sprite.height = viewport.worldHeight;
-    this.sprite.anchor.set(1);
-    this.sprite.name = 'inventory_background';
+    this.sprite.width = viewport.worldWidth;
+    this.sprite.height = 500;
+    this.sprite.anchor.set(0.5);
+    this.sprite.name = 'background';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
     this.sprite.zIndex = -60;
@@ -28,7 +28,7 @@ class GUI_HUD {
 
   update_location() {
     this.sprite.position.y = viewport.bottom;
-    this.sprite.position.x = viewport.right;
+    this.sprite.position.x = viewport.center.x;
   }
 
   show() {
@@ -43,10 +43,10 @@ class GUI_HUD {
     const character_tile = PIXI.Sprite.fromFrame('item_slot');
     character_tile.name = 'character_tile';
     character_tile.width = 100;
-    character_tile.height = 140;
+    character_tile.height = 100;
     character_tile.zIndex = -60;
     character_tile.alpha = 1;
-    character_tile.y = -150;
+    character_tile.y = -100;
     character_tile.x = -150;
     console.log(this.sprite);
     //character_tile.position.x = this.sprite.x-this.sprite.width/2 + padding;

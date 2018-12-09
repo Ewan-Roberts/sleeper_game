@@ -1543,19 +1543,22 @@ viewport.addChild(container);
 class GUI_HUD {
   constructor() {
     this.sprite = PIXI.Sprite.fromFrame('black_dot');
-    this.sprite.width = viewport.worldWidth;
-    this.sprite.height = 500;
-    this.sprite.anchor.set(0.5);
-    this.sprite.name = 'background';
+    this.sprite.width = 500;
+    this.sprite.height = viewport.worldHeight;
+    this.sprite.anchor.set(1);
+    this.sprite.name = 'inventory_background';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
     this.sprite.zIndex = -60;
+    this.sprite.alpha = 1;
+    this.add_character_tile();
+    console.log(this.sprite)
     container.addChild(this.sprite);
   }
 
   update_location() {
     this.sprite.position.y = viewport.bottom;
-    this.sprite.position.x = viewport.center.x;
+    this.sprite.position.x = viewport.right;
   }
 
   show() {
@@ -1566,36 +1569,19 @@ class GUI_HUD {
     this.sprite.alpha = 0;
   }
 
-  add_item_tiles() {
-    const item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
-    item_slot_1.name = 'item_slot_1';
-    item_slot_1.width = box_size;
-    item_slot_1.height = box_size;
-    item_slot_1.anchor.y = 0.5;
-    item_slot_1.position.x = this.sprite.x-this.sprite.width/2 + padding;
+  add_character_tile() {
+    const character_tile = PIXI.Sprite.fromFrame('item_slot');
+    character_tile.name = 'character_tile';
+    character_tile.width = 100;
+    character_tile.height = 140;
+    character_tile.zIndex = -60;
+    character_tile.alpha = 1;
+    character_tile.y = -150;
+    character_tile.x = -150;
+    console.log(this.sprite);
+    //character_tile.position.x = this.sprite.x-this.sprite.width/2 + padding;
 
-    const item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
-    item_slot_2.name = 'item_slot_2';
-    item_slot_2.width = box_size;
-    item_slot_2.height = box_size;
-    item_slot_2.anchor.y = 0.5;
-    item_slot_2.position.x = this.sprite.x-this.sprite.width/4 + padding;
-
-    const item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
-    item_slot_3.name = 'item_slot_3';
-    item_slot_3.width = box_size;
-    item_slot_3.height = box_size;
-    item_slot_3.anchor.y = 0.5;
-    item_slot_3.position.x = this.sprite.x + padding;
-
-    const item_slot_4 = PIXI.Sprite.fromFrame('item_slot');
-    item_slot_4.name = 'item_slot_4';
-    item_slot_4.width = box_size;
-    item_slot_4.height = box_size;
-    item_slot_4.anchor.y = 0.5;
-    item_slot_4.position.x = this.sprite.x +this.sprite.width/4 + padding;
-
-    this.container.addChild(item_slot_1, item_slot_2, item_slot_3, item_slot_4);
+    this.sprite.addChild(character_tile);
   }
 
   populate_slot_1(name) {
@@ -1759,7 +1745,6 @@ class Keyboard {
 
   swap_player_to_walking_animation() {
     if(this.player.textures !== this.player.animations.bow.walk) {
-      console.log('here')
       this.player.textures = this.player.animations.bow.walk;
       this.player.play();
     }
@@ -1792,7 +1777,6 @@ class Keyboard {
 
   down() {
     this.swap_player_to_walking_animation();
-
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1805,7 +1789,6 @@ class Keyboard {
         return;
       }
     }
-
 
     this.player.y += this.movement_speed;
     this.player.rotation = 2;
