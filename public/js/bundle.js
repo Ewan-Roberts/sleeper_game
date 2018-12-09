@@ -566,7 +566,8 @@ class Player extends Character{
     });
 
     global.document.addEventListener('keyup', () => {
-      keyboard.key_down();
+      keyboard.key_up();
+      console.log('there')
     });
   }
 }
@@ -1700,7 +1701,6 @@ const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
 const ticker = require('../engine/ticker');
 const viewport = require('../engine/viewport');
-const PIXI = require('pixi.js');
 
 const keymap = {
   w: 'up',
@@ -1723,7 +1723,6 @@ class Keyboard {
     this.inventory_open = false;
     this.shift_pressed = false;
     this.moveable = true;
-    this.collision_objects = viewport.getChildByName('collision_items').children;
     this.movement_speed = 15;
     this.buffer = 50;
     this.player = viewport.getChildByName('player');
@@ -1758,13 +1757,22 @@ class Keyboard {
     }
   }
 
+  swap_player_to_walking_animation() {
+    if(this.player.textures !== this.player.animations.bow.walk) {
+      console.log('here')
+      this.player.textures = this.player.animations.bow.walk;
+      this.player.play();
+    }
+  }
+
   key_up() {
     this.shift_pressed = false;
-    this.player.textures = this.sprite.animations.bow.idle;
+    this.player.textures = this.player.animations.bow.idle;
     this.player.play();
   }
 
   up() {
+    this.swap_player_to_walking_animation();
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1783,6 +1791,8 @@ class Keyboard {
   }
 
   down() {
+    this.swap_player_to_walking_animation();
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1802,6 +1812,7 @@ class Keyboard {
   }
 
   left() {
+    this.swap_player_to_walking_animation();
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1820,6 +1831,7 @@ class Keyboard {
   }
 
   right() {
+    this.swap_player_to_walking_animation();
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1858,7 +1870,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../engine/ticker":10,"../engine/viewport":11,"../gui/hud":13,"pixi.js":195}],16:[function(require,module,exports){
+},{"../engine/ticker":10,"../engine/viewport":11,"../gui/hud":13}],16:[function(require,module,exports){
 module.exports={ "columns":0,
  "grid":
     {

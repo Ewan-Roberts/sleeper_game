@@ -213,7 +213,8 @@ class Player extends Character{
     });
 
     global.document.addEventListener('keyup', () => {
-      keyboard.key_down();
+      keyboard.key_up();
+      console.log('there')
     });
   }
 }
