@@ -1,32 +1,14 @@
 'use strict';
 
 const PIXI              = require('pixi.js');
-const sprite_helper     = require('../utils/sprite_helper.js');
-const bow_helper        = require('../weapons/bow.js');
-const ticker            = require('../engine/ticker');
 const viewport          = require('../engine/viewport.js');
 const { Character }     = require('./character_model');
 const { Keyboard }      = require('../input/keyboard');
 const { Mouse }         = require('../input/mouse');
 
-const get_mouse_position = (event, viewport) => ({
-  x: event.data.global.x - viewport.screenWidth / 2,
-  y: event.data.global.y - viewport.screenHeight / 2,
-});
-
-const get_mouse_position_from_player = (event, sprite, viewport) => {
-  const mouse_position = get_mouse_position(event, viewport);
-
-  mouse_position.x += sprite.x;
-  mouse_position.y += sprite.y;
-
-  return mouse_position;
-};
-
 class Player extends Character{
   constructor() {
     super();
-
     this.sprite = new PIXI.extras.AnimatedSprite(this.create_bow_idle_frames());
     this.sprite.animations = {
       bow: {
@@ -106,20 +88,20 @@ class Player extends Character{
     this.mouse = new Mouse();
 
     viewport.on('mouseup', (event) => {
-      this.mouse.mouse_up(event);
+      this.mouse.up(event);
     });
 
     viewport.on('mousemove', (event) => {
-      this.mouse.mouse_move(event);
+      this.mouse.move(event);
     });
+    console.log(viewport)
 
     viewport.on('mousedown', (event) => {
-      this.mouse.mouse_down(event);
+      this.mouse.down(event);
     });
 
-    global.document.addEventListener('keydown', (e) => {
-      this.keyboard.player_position = this.sprite.position;
-      this.keyboard.key_down(e);
+    global.document.addEventListener('keydown', (event) => {
+      this.keyboard.key_down(event);
     });
 
     global.document.addEventListener('keyup', () => {

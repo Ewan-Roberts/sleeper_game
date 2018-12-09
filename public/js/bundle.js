@@ -354,32 +354,14 @@ module.exports = {
 'use strict';
 
 const PIXI              = require('pixi.js');
-const sprite_helper     = require('../utils/sprite_helper.js');
-const bow_helper        = require('../weapons/bow.js');
-const ticker            = require('../engine/ticker');
 const viewport          = require('../engine/viewport.js');
 const { Character }     = require('./character_model');
 const { Keyboard }      = require('../input/keyboard');
 const { Mouse }         = require('../input/mouse');
 
-const get_mouse_position = (event, viewport) => ({
-  x: event.data.global.x - viewport.screenWidth / 2,
-  y: event.data.global.y - viewport.screenHeight / 2,
-});
-
-const get_mouse_position_from_player = (event, sprite, viewport) => {
-  const mouse_position = get_mouse_position(event, viewport);
-
-  mouse_position.x += sprite.x;
-  mouse_position.y += sprite.y;
-
-  return mouse_position;
-};
-
 class Player extends Character{
   constructor() {
     super();
-
     this.sprite = new PIXI.extras.AnimatedSprite(this.create_bow_idle_frames());
     this.sprite.animations = {
       bow: {
@@ -459,20 +441,20 @@ class Player extends Character{
     this.mouse = new Mouse();
 
     viewport.on('mouseup', (event) => {
-      this.mouse.mouse_up(event);
+      this.mouse.up(event);
     });
 
     viewport.on('mousemove', (event) => {
-      this.mouse.mouse_move(event);
+      this.mouse.move(event);
     });
+    console.log(viewport)
 
     viewport.on('mousedown', (event) => {
-      this.mouse.mouse_down(event);
+      this.mouse.down(event);
     });
 
-    global.document.addEventListener('keydown', (e) => {
-      this.keyboard.player_position = this.sprite.position;
-      this.keyboard.key_down(e);
+    global.document.addEventListener('keydown', (event) => {
+      this.keyboard.key_down(event);
     });
 
     global.document.addEventListener('keyup', () => {
@@ -486,7 +468,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/ticker":11,"../engine/viewport.js":12,"../input/keyboard":16,"../input/mouse":17,"../utils/sprite_helper.js":32,"../weapons/bow.js":33,"./character_model":1,"pixi.js":226}],5:[function(require,module,exports){
+},{"../engine/viewport.js":12,"../input/keyboard":16,"../input/mouse":17,"./character_model":1,"pixi.js":226}],5:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1738,7 +1720,20 @@ class Mouse {
     viewport.addChild(this.aiming_line);
   }
 
-  mouse_up(event) {
+  add_aiming_cone() {
+    this.aiming_cone = PIXI.Sprite.fromFrame('yellow_triangle');
+
+    this.aiming_cone.height = 800;
+    this.aiming_cone.width = 400;
+    this.aiming_cone.anchor.x = 0.5;
+    this.aiming_cone.alpha = 0;
+    //this.aiming_cone.filters = [new PIXI.filters.BlurFilter()];
+    this.aiming_cone.name = 'aiming_cone';
+
+    viewport.addChild(this.aiming_cone);
+  }
+
+  up(event) {
     if(!this.player.shift_pressed) return;
 
     this.moveable = true;
@@ -1753,20 +1748,7 @@ class Mouse {
     }
   }
 
-  add_aiming_cone() {
-    this.aiming_cone = PIXI.Sprite.fromFrame('yellow_triangle');
-
-    this.aiming_cone.height = 800;
-    this.aiming_cone.width = 400;
-    this.aiming_cone.anchor.x = 0.5;
-    this.aiming_cone.alpha = 0;
-    //this.aiming_cone.filters = [new PIXI.filters.BlurFilter()];
-    this.aiming_cone.name = 'aiming_cone';
-
-    viewport.addChild(this.aiming_cone);
-  }
-
-  mouse_down(event) {
+  down(event) {
     if(!this.player.shift_pressed) return;
     this.aiming_cone.alpha = 0;
     this.aiming_cone.count = 10;
@@ -1812,7 +1794,7 @@ class Mouse {
     this.player.gotoAndPlay(0);
   }
 
-  mouse_move(event) {
+  move(event) {
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
 
     this.aiming_cone.position.set(this.player.x, this.player.y);
