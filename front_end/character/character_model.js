@@ -4,7 +4,7 @@ const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
 const { move_sprite_to_point } = require('../engine/pathfind');
-const character_animations = require('../animations/character');
+const character_animations = require('./animations/character');
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1

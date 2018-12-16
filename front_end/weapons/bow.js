@@ -1,7 +1,6 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const sprite_helper = require('../utils/sprite_helper.js');
 const viewport = require('../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
 
@@ -9,6 +8,22 @@ const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow containter';
 arrow_container.zIndex = -10;
 viewport.addChild(arrow_container);
+
+function getCenter(o, dimension, axis) {
+  if (o.anchor !== undefined) {
+    if (o.anchor[axis] !== 0) {
+      return 0;
+    }
+    return dimension / 2;
+  }
+  return dimension;
+}
+
+function get_angle_from_point_to_point(sprite, point){ return Math.atan2(
+    (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
+    (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
+  );
+};
 
 // const arrowSounds = [
 //   new Audio('audio/arrow_hit_00.wav'),
@@ -35,7 +50,7 @@ class Arrow {
 
 function create_rotated_arrow(origin, target) {
   const arrow = new Arrow();
-  arrow.sprite.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
+  arrow.sprite.rotation = get_angle_from_point_to_point(origin, target);
   return arrow.sprite;
 }
 
@@ -98,7 +113,7 @@ function arrow_management(power, origin, target) {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
+        arrow.rotation = get_angle_from_point_to_point(origin, target);
         arrow.width = 600;
 
         door.rotation += 0.05;
@@ -112,7 +127,7 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        arrow.rotation = sprite_helper.get_angle_from_point_to_point(origin, target);
+        arrow.rotation = get_angle_from_point_to_point(origin, target);
         arrow.width = 600;
         const tween = createjs.Tween.get(critter);
         tween.pause();

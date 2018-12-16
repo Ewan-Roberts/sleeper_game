@@ -1,10 +1,27 @@
 'use strict';
 
 const viewport          = require('../engine/viewport');
-const sprite_helper     = require('../utils/sprite_helper.js');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
 const bow_helper        = require('../weapons/bow.js');
+
+function getCenter(o, dimension, axis) {
+  if (o.anchor !== undefined) {
+    if (o.anchor[axis] !== 0) {
+      return 0;
+    }
+    return dimension / 2;
+  }
+  return dimension;
+}
+
+function get_angle_from_point_to_point(sprite, point){
+  return Math.atan2(
+    (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
+    (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
+  );
+};
+
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -104,7 +121,7 @@ class Mouse {
     ticker.add(this.count_down);
 
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    this.player.rotation = sprite_helper.get_angle_from_point_to_point(this.player, mouse_position_player);
+    this.player.rotation = get_angle_from_point_to_point(this.player, mouse_position_player);
     this.player.gotoAndPlay(0);
   }
 
@@ -112,9 +129,9 @@ class Mouse {
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
 
     this.aiming_cone.position.set(this.player.x, this.player.y);
-    this.aiming_cone.rotation = sprite_helper.get_angle_from_point_to_point(this.player, mouse_position_player) - 1.575;
+    this.aiming_cone.rotation = get_angle_from_point_to_point(this.player, mouse_position_player) - 1.575;
 
-    this.player.rotation = sprite_helper.get_angle_from_point_to_point(this.player, mouse_position_player);
+    this.player.rotation = get_angle_from_point_to_point(this.player, mouse_position_player);
 
     viewport.addChild(this.aiming_cone, this.aiming_line);
   }

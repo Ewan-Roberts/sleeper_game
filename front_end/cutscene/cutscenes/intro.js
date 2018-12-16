@@ -3,7 +3,7 @@
 const { Cutscene } = require('../cutscene_model');
 const { Cutscene_Character } = require('../../character/characters/cutscene_character');
 const viewport = require('../../engine/viewport.js');
-const { Caption_Dialog } = require('../../dialog/DOM_dialog');
+const { Caption_Dialog } = require('../../gui/caption');
 const { Dialog } = require('../../dialog/dialog_util');
 
 //const Keyboard = require('../../input/keyboard');
