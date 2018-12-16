@@ -20,9 +20,10 @@ class Intro_Cutscene extends Cutscene {
     this.fade_screen_in_at_point(300,200);
     const player = viewport.getChildByName('player');
     player.position.set(300,200);
-
+    console.log(player);
     //Keyboard.stop_input();
     this.cutscene_character = new Cutscene_Character(200, 300);
+    this.cutscene_character.walk();
 
     this.bystander = new Cutscene_Character(100, 600);
     this.bystander.facing('up');
@@ -38,7 +39,6 @@ class Intro_Cutscene extends Cutscene {
     //dumb, sort out a consistent model for function binding
     this.cutscene_character.sprite.move_to_point(1200, 300);
     player.move_to_point(1200, 200);
-
 
     this.dialog_dom.play_audio_track('intro/test_speech.wav');
     this.dialog_dom.show();

@@ -14,8 +14,7 @@ viewport.addChild(container);
 class Friend extends Character {
   constructor() {
     super();
-    const idle_frames = this.create_idle_frames();
-    this.sprite = new PIXI.extras.AnimatedSprite(idle_frames);
+    this.sprite.switch_to_idle();
     this.sprite.name = 'friend';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;

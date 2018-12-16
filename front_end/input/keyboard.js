@@ -69,13 +69,6 @@ class Keyboard {
     this.moveable = false;
   }
 
-  swap_player_to_walking_animation() {
-    if(this.player.textures !== this.player.animations.bow.walk) {
-      this.player.textures = this.player.animations.bow.walk;
-      this.player.play();
-    }
-  }
-
   key_up() {
     this.player.shift_pressed = false;
     this.player.textures = this.player.animations.bow.idle;
@@ -83,7 +76,7 @@ class Keyboard {
   }
 
   up() {
-    this.swap_player_to_walking_animation();
+    this.player.switch_to_walk();
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -102,7 +95,8 @@ class Keyboard {
   }
 
   down() {
-    this.swap_player_to_walking_animation();
+    this.player.switch_to_walk();
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -121,7 +115,8 @@ class Keyboard {
   }
 
   left() {
-    this.swap_player_to_walking_animation();
+    this.player.switch_to_walk();
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -140,7 +135,8 @@ class Keyboard {
   }
 
   right() {
-    this.swap_player_to_walking_animation();
+    this.player.switch_to_walk();
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){

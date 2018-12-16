@@ -15,13 +15,6 @@ viewport.addChild(container);
 class Enemy extends Character {
   constructor() {
     super();
-    this.sprite.speak = (text) => {
-      const render_text = new PIXI.Text(text);
-      render_text.x = this.sprite.x - 100;
-      render_text.y = this.sprite.y - 80;
-      render_text.alpha = 1;
-      container.addChild(render_text);
-    };
 
     container.addChild(this.sprite);
   }

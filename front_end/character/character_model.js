@@ -4,6 +4,8 @@ const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
 const { move_sprite_to_point } = require('../engine/pathfind');
+const character_animations = require('../animations/character')
+
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1
@@ -46,48 +48,52 @@ class Character {
     this.container = new PIXI.Container();
     this.container.name = name;
 
-    const default_frames = this.create_default_frames();
+    const default_frames = character_animations.default;
     this.sprite = new PIXI.extras.AnimatedSprite(default_frames);
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
+
     this.sprite.vitals = {
       health: 100,
       status: 'alive',
     };
-  }
 
-  create_default_frames() {
-    const enemy_frames = [];
+    this.sprite.animations = character_animations;
 
-    for (let i = 0; i < 19; i++) {
-      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-move_knife_${i}`));
-    }
+    this.sprite.switch_to_walk = () => {
+      if(this.sprite.textures !== this.sprite.animations.bow.walk) {
+        this.sprite.textures = this.sprite.animations.bow.walk;
+        this.sprite.loop = true;
+        this.sprite.play();
+      }
+    };
 
-    return enemy_frames;
+    this.sprite.switch_to_idle = () => {
+      if(this.sprite.textures !== this.sprite.animations.nothing.idle) {
+        this.sprite.textures = this.sprite.animations.nothing.idle;
+        this.sprite.loop = true;
+        this.sprite.play();
+      }
+    };
+
+    this.sprite.speak = (text) => {
+      const render_text = new PIXI.Text(text);
+      render_text.x = this.sprite.x - 100;
+      render_text.y = this.sprite.y - 80;
+      render_text.alpha = 1;
+      this.container.addChild(render_text);
+    };
   }
 
   set_position(x,y) {
     this.sprite.position.set(x, y);
   }
 
-  create_idle_frames() {
-    const idle_frames = [];
-    for (let i = 0; i <= 21; i += 1) {
-      let name = `survivor-idle_0${i}`;
-
-      if (i >= 10) {
-        name = `survivor-idle_${i}`;
-      }
-      idle_frames.push(PIXI.Texture.fromFrame(name));
-    }
-    const reversed = idle_frames.reverse();
-    return idle_frames.concat(reversed);
-  }
-
   move_to_point(x,y) {
+
     move_sprite_to_point(this, {
       middle: {
         x,
