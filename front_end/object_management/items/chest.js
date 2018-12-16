@@ -21,6 +21,8 @@ class Chest {
     this.sprite.anchor.set(0.5);
     this.sprite.zIndex = -5;
     this.sprite.name = 'chest';
+    this.sprite.height *= 2;
+    this.sprite.width *= 2;
     this.sprite.position.set(item_data.x, item_data.y);
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;

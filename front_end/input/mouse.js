@@ -58,7 +58,8 @@ class Mouse {
     ticker.remove(this.count_down);
     this.aiming_cone.alpha = 0;
     if (this.weapon === 'bow' && this.allow_shoot) {
-      const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
+      const mouse_position_player = event.data.getLocalPosition(viewport);
+
       bow_helper.arrow_management(this.power, this.player, mouse_position_player);
     }
   }
@@ -73,36 +74,36 @@ class Mouse {
 
     this.player.textures = this.player.animations.bow.ready;
     this.player.loop = false;
-    this.count_down = () => {
-      if (!this.player.shift_pressed){
-        ticker.remove(this.count_down);
-        this.aiming_cone.alpha = 0;
-        return;
-      }
-      if(this.power < 300) {
-        this.player.textures = this.player.animations.bow.idle;
-        ticker.remove(this.count_down);
-        return;
-      }
-      if (this.power > 650) {
-        this.allow_shoot = false;
-      } else {
-        this.allow_shoot = true;
-      }
+    //this.count_down = () => {
+    //  if (!this.player.shift_pressed){
+    //    ticker.remove(this.count_down);
+    //    this.aiming_cone.alpha = 0;
+    //    return;
+    //  }
+    //  if(this.power < 300) {
+    //    this.player.textures = this.player.animations.bow.idle;
+    //    ticker.remove(this.count_down);
+    //    return;
+    //  }
+    //  if (this.power > 650) {
+    //    this.allow_shoot = false;
+    //  } else {
+    //    this.allow_shoot = true;
+    //  }
 
-      this.aiming_cone.width -= 1.5;
-      this.aiming_cone.height += 3;
-      this.aiming_cone.alpha += 0.002;
-      this.aiming_cone.count -= 0.04;
-      //this.aiming_cone.filters[0].blur = this.aiming_cone.count;
+    //  this.aiming_cone.width -= 1.5;
+    //  this.aiming_cone.height += 3;
+    //  this.aiming_cone.alpha += 0.002;
+    //  this.aiming_cone.count -= 0.04;
+    //  //this.aiming_cone.filters[0].blur = this.aiming_cone.count;
 
-      if (this.power > 400) {
-        this.power -= 5;
-      }
-    };
+    //  if (this.power > 400) {
+    //    this.power -= 5;
+    //  }
+    //};
     ticker.add(this.count_down);
 
-    const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
+    const mouse_position_player = event.data.getLocalPosition(viewport);
     this.player.rotation = sprite_helper.get_angle_from_point_to_point(this.player, mouse_position_player);
     this.player.gotoAndPlay(0);
   }

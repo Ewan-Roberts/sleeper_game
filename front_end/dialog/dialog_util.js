@@ -168,7 +168,7 @@ class Dialog {
     render_text.name = 'render_text';
     render_text.position.set(x,y);
 
-    this.container.addChild(render_text);
+    container.addChild(render_text);
   }
 
 }

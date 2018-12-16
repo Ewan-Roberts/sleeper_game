@@ -8,6 +8,7 @@ const app = require('./engine/app');
 const ticker = require('./engine/ticker');
 const viewport = require('./engine/viewport');
 const tweenManager = require('pixi-tween');
+const load_start_menu = require('./gui/start_menu')
 
 global.document.body.appendChild(app.view);
 
