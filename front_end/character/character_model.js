@@ -4,8 +4,7 @@ const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
 const { move_sprite_to_point } = require('../engine/pathfind');
-const character_animations = require('../animations/character')
-
+const character_animations = require('../animations/character');
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1
@@ -48,8 +47,7 @@ class Character {
     this.container = new PIXI.Container();
     this.container.name = name;
 
-    const default_frames = character_animations.default;
-    this.sprite = new PIXI.extras.AnimatedSprite(default_frames);
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.anchor.set(0.5);
@@ -63,17 +61,9 @@ class Character {
 
     this.sprite.animations = character_animations;
 
-    this.sprite.switch_to_walk = () => {
-      if(this.sprite.textures !== this.sprite.animations.bow.walk) {
-        this.sprite.textures = this.sprite.animations.bow.walk;
-        this.sprite.loop = true;
-        this.sprite.play();
-      }
-    };
-
-    this.sprite.switch_to_idle = () => {
-      if(this.sprite.textures !== this.sprite.animations.nothing.idle) {
-        this.sprite.textures = this.sprite.animations.nothing.idle;
+    this.sprite.animation_switch = (type, action) => {
+      if(this.sprite.textures !== this.sprite.animations[type][action]) {
+        this.sprite.textures = this.sprite.animations[type][action];
         this.sprite.loop = true;
         this.sprite.play();
       }

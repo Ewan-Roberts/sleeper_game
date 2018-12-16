@@ -44,7 +44,7 @@ class character_animations {
     return walk_frames;
   }
 
-  static default_frames() {
+  static knife_idle_frames() {
     const enemy_frames = [];
 
     for (let i = 0; i < 19; i++) {
@@ -82,9 +82,6 @@ class character_animations {
 
 }
 
-
-
-
 module.exports = {
   bow: {
     idle:   character_animations.bow_idle_frames(),
@@ -94,7 +91,9 @@ module.exports = {
   nothing: {
     idle:   character_animations.idle_frames(),
   },
-  default: character_animations.default_frames(),
+  knife: {
+    idle:  character_animations.knife_idle_frames(),
+  }
 }
 
 

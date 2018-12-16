@@ -45,7 +45,7 @@ class character_animations {
     return walk_frames;
   }
 
-  static default_frames() {
+  static knife_idle_frames() {
     const enemy_frames = [];
 
     for (let i = 0; i < 19; i++) {
@@ -83,9 +83,6 @@ class character_animations {
 
 }
 
-
-
-
 module.exports = {
   bow: {
     idle:   character_animations.bow_idle_frames(),
@@ -95,7 +92,9 @@ module.exports = {
   nothing: {
     idle:   character_animations.idle_frames(),
   },
-  default: character_animations.default_frames(),
+  knife: {
+    idle:  character_animations.knife_idle_frames(),
+  }
 }
 
 
@@ -110,8 +109,7 @@ const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
 const { move_sprite_to_point } = require('../engine/pathfind');
-const character_animations = require('../animations/character')
-
+const character_animations = require('../animations/character');
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1
@@ -154,8 +152,7 @@ class Character {
     this.container = new PIXI.Container();
     this.container.name = name;
 
-    const default_frames = character_animations.default;
-    this.sprite = new PIXI.extras.AnimatedSprite(default_frames);
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.anchor.set(0.5);
@@ -169,17 +166,9 @@ class Character {
 
     this.sprite.animations = character_animations;
 
-    this.sprite.switch_to_walk = () => {
-      if(this.sprite.textures !== this.sprite.animations.bow.walk) {
-        this.sprite.textures = this.sprite.animations.bow.walk;
-        this.sprite.loop = true;
-        this.sprite.play();
-      }
-    };
-
-    this.sprite.switch_to_idle = () => {
-      if(this.sprite.textures !== this.sprite.animations.nothing.idle) {
-        this.sprite.textures = this.sprite.animations.nothing.idle;
+    this.sprite.animation_switch = (type, action) => {
+      if(this.sprite.textures !== this.sprite.animations[type][action]) {
+        this.sprite.textures = this.sprite.animations[type][action];
         this.sprite.loop = true;
         this.sprite.play();
       }
@@ -341,7 +330,7 @@ const { Character }     = require('../character_model');
 class Cutscene_Character extends Character{
   constructor(x,y) {
     super();
-    this.sprite.switch_to_idle();
+    this.sprite.animation_switch('nothing', 'idle');
     this.sprite.name = 'cutscene_npc';
     this.sprite.position.set(x,y);
     this.sprite.move_to_point = this.move_to_point;
@@ -468,7 +457,7 @@ viewport.addChild(container);
 class Friend extends Character {
   constructor() {
     super();
-    this.sprite.switch_to_idle();
+    this.sprite.animation_switch('knife', 'idle');
     this.sprite.name = 'friend';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
@@ -1865,7 +1854,7 @@ class Keyboard {
   }
 
   up() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1884,7 +1873,8 @@ class Keyboard {
   }
 
   down() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
+
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -1904,7 +1894,7 @@ class Keyboard {
   }
 
   left() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -1924,7 +1914,7 @@ class Keyboard {
   }
 
   right() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
 
     const collision_objects = viewport.getChildByName('collision_items');
 

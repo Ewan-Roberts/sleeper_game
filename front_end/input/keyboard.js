@@ -76,7 +76,7 @@ class Keyboard {
   }
 
   up() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -95,7 +95,8 @@ class Keyboard {
   }
 
   down() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
+
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -115,7 +116,7 @@ class Keyboard {
   }
 
   left() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -135,7 +136,7 @@ class Keyboard {
   }
 
   right() {
-    this.player.switch_to_walk();
+    this.player.animation_switch('bow', 'walk');
 
     const collision_objects = viewport.getChildByName('collision_items');
 

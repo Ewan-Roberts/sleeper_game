@@ -14,7 +14,7 @@ viewport.addChild(container);
 class Friend extends Character {
   constructor() {
     super();
-    this.sprite.switch_to_idle();
+    this.sprite.animation_switch('knife', 'idle');
     this.sprite.name = 'friend';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;

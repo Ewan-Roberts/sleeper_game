@@ -7,7 +7,7 @@ const { Character }     = require('../character_model');
 class Cutscene_Character extends Character{
   constructor(x,y) {
     super();
-    this.sprite.switch_to_idle();
+    this.sprite.animation_switch('nothing', 'idle');
     this.sprite.name = 'cutscene_npc';
     this.sprite.position.set(x,y);
     this.sprite.move_to_point = this.move_to_point;
