@@ -36,6 +36,7 @@ function get_angle_from_point_to_point(sprite, point){ return Math.atan2(
 //   new Audio('audio/arrow_hit_07.wav'),
 // ];
 
+
 class Arrow {
   constructor() {
     this.sprite = new PIXI.Sprite.fromFrame('arrow');

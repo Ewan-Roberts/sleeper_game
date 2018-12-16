@@ -28,6 +28,22 @@ div {
   color: white;
 }
 
+.note {
+  opacity: 0.9;
+  position: absolute;
+  top: 20%;
+  left: 30%;
+}
+
+.note_words {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  right: 20%;
+  text-align: justify;
+  font-size: 1vw;
+}
+
 .dialog_caption_holder{
   background-color: black;
   opacity: 0.5;
