@@ -3,6 +3,7 @@
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
+const { move_sprite_to_point } = require('../engine/pathfind');
 
 function get_intersection(ray, segment){
   // RAY in parametric: Point + Delta*T1
@@ -84,6 +85,15 @@ class Character {
     }
     const reversed = idle_frames.reverse();
     return idle_frames.concat(reversed);
+  }
+
+  move_to_point(x,y) {
+    move_sprite_to_point(this, {
+      middle: {
+        x,
+        y,
+      },
+    });
   }
 
   add_sight_line() {

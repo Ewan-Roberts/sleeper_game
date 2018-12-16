@@ -29,11 +29,11 @@ function fade_in_sprite(sprite, speed, limit){
 
 class Effects {
 
-  static fade_to_black(sprite) {
+  fade_to_black(sprite) {
     fade_out_sprite(sprite);
   }
 
-  static fade_to_normal(sprite) {
+  fade_to_normal(sprite) {
     fade_in_sprite(sprite);
   }
 }

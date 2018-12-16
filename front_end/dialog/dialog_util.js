@@ -99,6 +99,7 @@ class Dialog {
     }
   }
 
+
   create_slide_format(point) {
     this.render_actor(point.x - 720, point.y -80, '');
     this.render_text(point.x - 400, point.y - 200, '');
@@ -159,10 +160,10 @@ class Dialog {
     container.addChild(button_text);
   }
 
-  render_text(x, y, text) {
+  render_text(x, y, text, font_size) {
     const render_text = new PIXI.Text(text, {
       fontFamily : 'Arial',
-      fontSize: 35,
+      fontSize: font_size || 35,
       fill : 0xffffff,
     });
     render_text.name = 'render_text';

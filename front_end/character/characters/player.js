@@ -26,7 +26,7 @@ class Player extends Character{
     this.sprite.play();
     this.sprite.zIndex = -1;
     this.sprite.name = 'player';
-
+    this.sprite.move_to_point = this.move_to_point;
     viewport.addChild(this.sprite);
   }
 

@@ -3,6 +3,7 @@
 const { GUI_HUD } = require('../gui/hud');
 const gui = new GUI_HUD();
 const viewport = require('../engine/viewport');
+const { Intro_Cutscene } = require('../cutscene/intro/intro');
 
 const keymap = {
   w: 'up',
@@ -18,6 +19,7 @@ const keymap = {
   ArrowDown: 'down',
   ArrowRight: 'right',
   i: 'i',
+  o: 'o',
   Shift: 'Shift',
 };
 
@@ -54,10 +56,17 @@ class Keyboard {
       case 'i':
         this.inventory();
         break;
+      case 'o':
+        this.start_intro();
+        break;
       case 'Shift':
         this.shift();
         break;
     }
+  }
+
+  static stop_input() {
+    this.moveable = false;
   }
 
   swap_player_to_walking_animation() {
@@ -157,6 +166,12 @@ class Keyboard {
       gui.hide();
       this.inventory_open = false;
     }
+  }
+
+  start_intro() {
+    console.log('here22')
+    const intro = new Intro_Cutscene();
+    intro.start();
   }
 
   shift() {

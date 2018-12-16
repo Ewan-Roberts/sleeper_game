@@ -173,7 +173,7 @@ function move_sprite_on_path(sprite, path_array) {
   });
 }
 
-function move_enemy_to_point(sprite, point) {
+function move_sprite_to_point(sprite, point) {
   return new Promise(resolve => {
 
     const tween = createjs.Tween.get(sprite);
@@ -208,7 +208,7 @@ function path_enemy_on_points(enemy_sprite, point_array) {
   ));
 
   // move from the current position to the start of the path
-  move_enemy_to_point(enemy_sprite, path_array[0])
+  move_sprite_to_point(enemy_sprite, path_array[0])
     .then(() => move_sprite_on_path(enemy_sprite, path_array))
     .then(() => wait_sprite(enemy_sprite, 500))
     .then(() => look_around_sprite(enemy_sprite, 1000, 1))
@@ -346,6 +346,7 @@ function move_sprite_on_route(sprite) {
 module.exports = {
   create_level_grid,
   pathfind_from_enemy_to_player,
+  move_sprite_to_point,
   move_sprite_on_path,
   move_sprite_on_route,
   move_sprite_on_route_straight,
