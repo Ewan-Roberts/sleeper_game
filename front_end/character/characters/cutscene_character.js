@@ -39,12 +39,12 @@ class Cutscene_Character extends Character{
   create_walk_frames() {
     const walk_frames = [];
     for (let i = 0; i <= 19; i++) {
-      let name = `survivor-move_knife_${i}`;
+      const name = `survivor-move_knife_${i}`;
 
       walk_frames.push(PIXI.Texture.fromFrame(name));
     }
 
-    return walk_frames;    
+    return walk_frames;
   }
 
 }

@@ -55,7 +55,6 @@ class Cutscene {
     this.image_to_fade.height = viewport.screenHeight;
     this.image_to_fade.anchor.set(0.5);
     //this.image_to_fade.position.set(500,500);
-    console.log(viewport);
     container.addChild(this.image_to_fade);
   }
 

@@ -54,7 +54,7 @@ class character_animations {
 
     return enemy_frames;
   }
-  
+
   static idle_frames() {
     const idle_frames = [];
     for (let i = 0; i <= 21; i++) {
@@ -94,8 +94,8 @@ module.exports = {
   },
   knife: {
     idle:  character_animations.knife_idle_frames(),
-  }
-}
+  },
+};
 
 
 
@@ -362,12 +362,12 @@ class Cutscene_Character extends Character{
   create_walk_frames() {
     const walk_frames = [];
     for (let i = 0; i <= 19; i++) {
-      let name = `survivor-move_knife_${i}`;
+      const name = `survivor-move_knife_${i}`;
 
       walk_frames.push(PIXI.Texture.fromFrame(name));
     }
 
-    return walk_frames;    
+    return walk_frames;
   }
 
 }
@@ -496,7 +496,6 @@ module.exports = {
 (function (global){
 'use strict';
 
-const PIXI              = require('pixi.js');
 const viewport          = require('../../engine/viewport.js');
 
 const { Character }     = require('../character_model');
@@ -549,7 +548,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport.js":15,"../../input/keyboard":21,"../../input/mouse":22,"../character_model":2,"pixi.js":225}],7:[function(require,module,exports){
+},{"../../engine/viewport.js":15,"../../input/keyboard":21,"../../input/mouse":22,"../character_model":2}],7:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -711,7 +710,6 @@ class Cutscene {
     this.image_to_fade.height = viewport.screenHeight;
     this.image_to_fade.anchor.set(0.5);
     //this.image_to_fade.position.set(500,500);
-    console.log(viewport);
     container.addChild(this.image_to_fade);
   }
 
@@ -1464,7 +1462,7 @@ module.exports = viewport;
 const dialog_caption_holder = global.document.querySelector('.dialog_caption_holder');
 
 class Caption_Dialog {
-  
+
   play_audio_track(track) {
     const track_to_play = new Audio('audio/'+track)
     //track_to_play.play();
@@ -1520,11 +1518,11 @@ class Caption_Dialog {
   clear_text() {
     dialog_caption_holder.children.innerHTML = '';
   }
-};
+}
 
 module.exports = {
   Caption_Dialog,
-}
+};
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],17:[function(require,module,exports){
@@ -1932,7 +1930,6 @@ class Keyboard {
   }
 
   start_intro() {
-    console.log('here22')
     const intro = new Intro_Cutscene();
     intro.start();
   }
@@ -1969,8 +1966,7 @@ function get_angle_from_point_to_point(sprite, point){
     (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
     (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
   );
-};
-
+}
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -8138,10 +8134,10 @@ function getCenter(o, dimension, axis) {
 }
 
 function get_angle_from_point_to_point(sprite, point){ return Math.atan2(
-    (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-    (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-  );
-};
+  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
+  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
+);
+}
 
 // const arrowSounds = [
 //   new Audio('audio/arrow_hit_00.wav'),

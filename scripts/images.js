@@ -1,3 +1,5 @@
+'use strict';
+
 const pngQuant = require('imagemin-pngquant');
 
 module.exports = {

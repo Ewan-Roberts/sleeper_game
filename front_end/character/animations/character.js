@@ -53,7 +53,7 @@ class character_animations {
 
     return enemy_frames;
   }
-  
+
   static idle_frames() {
     const idle_frames = [];
     for (let i = 0; i <= 21; i++) {
@@ -93,8 +93,8 @@ module.exports = {
   },
   knife: {
     idle:  character_animations.knife_idle_frames(),
-  }
-}
+  },
+};
 
 
 

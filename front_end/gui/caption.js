@@ -3,7 +3,7 @@
 const dialog_caption_holder = global.document.querySelector('.dialog_caption_holder');
 
 class Caption_Dialog {
-  
+
   play_audio_track(track) {
     const track_to_play = new Audio('audio/'+track)
     //track_to_play.play();
@@ -59,8 +59,8 @@ class Caption_Dialog {
   clear_text() {
     dialog_caption_holder.children.innerHTML = '';
   }
-};
+}
 
 module.exports = {
   Caption_Dialog,
-}
+};

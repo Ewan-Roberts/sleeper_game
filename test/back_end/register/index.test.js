@@ -47,9 +47,14 @@ describe('back_end/register/index', function() {
 
   });
 
+  context('get_user_by_id(...)', function() {});
 
+  context('delete_user_by_id(...)', function() {});
 
-
+  context('get_account_detials(...)', function() {});
 
 
 });
+
+
+

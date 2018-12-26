@@ -20,10 +20,10 @@ function getCenter(o, dimension, axis) {
 }
 
 function get_angle_from_point_to_point(sprite, point){ return Math.atan2(
-    (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-    (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-  );
-};
+  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
+  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
+);
+}
 
 // const arrowSounds = [
 //   new Audio('audio/arrow_hit_00.wav'),

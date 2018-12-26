@@ -1,6 +1,5 @@
 'use strict';
 
-const PIXI              = require('pixi.js');
 const viewport          = require('../../engine/viewport.js');
 
 const { Character }     = require('../character_model');

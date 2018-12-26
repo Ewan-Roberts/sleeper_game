@@ -166,7 +166,6 @@ class Keyboard {
   }
 
   start_intro() {
-    console.log('here22')
     const intro = new Intro_Cutscene();
     intro.start();
   }

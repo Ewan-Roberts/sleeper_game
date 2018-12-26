@@ -20,8 +20,7 @@ function get_angle_from_point_to_point(sprite, point){
     (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
     (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
   );
-};
-
+}
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
