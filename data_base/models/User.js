@@ -1,6 +1,8 @@
 'use strict';
 
-const mongoose = require('mongoose');
+const { mongoose } = require('../init');
+console.log(mongoose);
+console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
 
 const user_schema = new mongoose.Schema({
 
