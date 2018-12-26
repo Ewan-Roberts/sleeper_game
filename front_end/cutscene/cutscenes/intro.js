@@ -40,7 +40,7 @@ class Intro_Cutscene extends Cutscene {
     this.cutscene_character.sprite.move_to_point(1200, 300);
     player.move_to_point(1200, 200);
 
-    this.dialog_dom.play_audio_track('intro/test_speech.wav');
+    this.dialog_dom.play_audio_track('/test_speech.wav');
     this.dialog_dom.show();
     this.dialog_dom.render_text(string_to_write);
   }
