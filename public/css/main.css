@@ -29,6 +29,7 @@ div {
 }
 
 .note {
+  display: none;
   opacity: 0.9;
   position: absolute;
   top: 20%;

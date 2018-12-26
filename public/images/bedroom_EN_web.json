@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "92a02e83ae4e0091b64519f488644e0d295a87d0.png",
-            "filesize": 9258915,
+            "image": "c28da092dbd6e871e9a2c2199b575cfbf8276b6d.png",
+            "filesize": 9053227,
             "sprites": [
                 {
                     "name": "park",
@@ -45,6 +45,17 @@
                     "dimension": {
                         "w": 500,
                         "h": 300
+                    }
+                },
+                {
+                    "name": "full-note-written",
+                    "position": {
+                        "x": 2500,
+                        "y": 600
+                    },
+                    "dimension": {
+                        "w": 396,
+                        "h": 466
                     }
                 },
                 {
@@ -128,7 +139,7 @@
                     "name": "item_slot",
                     "position": {
                         "x": 2500,
-                        "y": 600
+                        "y": 1066
                     },
                     "dimension": {
                         "w": 194,
@@ -136,7 +147,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_2",
+                    "name": "survivor-meleeattack_shotgun_9",
                     "position": {
                         "x": 1895,
                         "y": 5000
@@ -147,7 +158,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_9",
+                    "name": "survivor-meleeattack_shotgun_8",
                     "position": {
                         "x": 2074,
                         "y": 5000
@@ -158,7 +169,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_8",
+                    "name": "survivor-meleeattack_shotgun_7",
                     "position": {
                         "x": 2253,
                         "y": 5000
@@ -169,7 +180,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_7",
+                    "name": "survivor-meleeattack_shotgun_6",
                     "position": {
                         "x": 2432,
                         "y": 5000
@@ -180,7 +191,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_6",
+                    "name": "survivor-meleeattack_shotgun_5",
                     "position": {
                         "x": 2611,
                         "y": 5000
@@ -191,7 +202,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_5",
+                    "name": "survivor-meleeattack_shotgun_4",
                     "position": {
                         "x": 2790,
                         "y": 5000
@@ -202,10 +213,10 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_4",
+                    "name": "survivor-meleeattack_shotgun_3",
                     "position": {
                         "x": 2500,
-                        "y": 797
+                        "y": 1263
                     },
                     "dimension": {
                         "w": 179,
@@ -213,10 +224,10 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_shotgun_3",
+                    "name": "survivor-meleeattack_shotgun_2",
                     "position": {
                         "x": 2500,
-                        "y": 974
+                        "y": 1440
                     },
                     "dimension": {
                         "w": 179,
@@ -227,29 +238,7 @@
                     "name": "survivor-meleeattack_rifle_1",
                     "position": {
                         "x": 2500,
-                        "y": 1151
-                    },
-                    "dimension": {
-                        "w": 179,
-                        "h": 177
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_rifle_11",
-                    "position": {
-                        "x": 2500,
-                        "y": 1328
-                    },
-                    "dimension": {
-                        "w": 179,
-                        "h": 177
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_rifle_0",
-                    "position": {
-                        "x": 2500,
-                        "y": 1505
+                        "y": 1617
                     },
                     "dimension": {
                         "w": 179,
@@ -260,7 +249,18 @@
                     "name": "survivor-meleeattack_rifle_10",
                     "position": {
                         "x": 2500,
-                        "y": 1682
+                        "y": 1794
+                    },
+                    "dimension": {
+                        "w": 179,
+                        "h": 177
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_rifle_0",
+                    "position": {
+                        "x": 2500,
+                        "y": 1971
                     },
                     "dimension": {
                         "w": 179,
@@ -271,7 +271,7 @@
                     "name": "survivor-meleeattack_shotgun_14",
                     "position": {
                         "x": 2500,
-                        "y": 1859
+                        "y": 2148
                     },
                     "dimension": {
                         "w": 179,
@@ -282,7 +282,7 @@
                     "name": "survivor-meleeattack_shotgun_13",
                     "position": {
                         "x": 2500,
-                        "y": 2036
+                        "y": 2325
                     },
                     "dimension": {
                         "w": 179,
@@ -293,7 +293,7 @@
                     "name": "survivor-meleeattack_shotgun_12",
                     "position": {
                         "x": 2500,
-                        "y": 2213
+                        "y": 2502
                     },
                     "dimension": {
                         "w": 179,
@@ -304,7 +304,7 @@
                     "name": "survivor-meleeattack_shotgun_11",
                     "position": {
                         "x": 2500,
-                        "y": 2390
+                        "y": 2679
                     },
                     "dimension": {
                         "w": 179,
@@ -315,7 +315,7 @@
                     "name": "survivor-meleeattack_shotgun_10",
                     "position": {
                         "x": 2500,
-                        "y": 2567
+                        "y": 2856
                     },
                     "dimension": {
                         "w": 179,
@@ -326,7 +326,7 @@
                     "name": "survivor-meleeattack_shotgun_1",
                     "position": {
                         "x": 2500,
-                        "y": 2744
+                        "y": 3033
                     },
                     "dimension": {
                         "w": 179,
@@ -337,7 +337,18 @@
                     "name": "survivor-meleeattack_shotgun_0",
                     "position": {
                         "x": 2500,
-                        "y": 2921
+                        "y": 3210
+                    },
+                    "dimension": {
+                        "w": 179,
+                        "h": 177
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_rifle_11",
+                    "position": {
+                        "x": 2500,
+                        "y": 3387
                     },
                     "dimension": {
                         "w": 179,
@@ -348,7 +359,7 @@
                     "name": "survivor-meleeattack_rifle_12",
                     "position": {
                         "x": 2500,
-                        "y": 3098
+                        "y": 3564
                     },
                     "dimension": {
                         "w": 179,
@@ -359,7 +370,7 @@
                     "name": "survivor-meleeattack_rifle_13",
                     "position": {
                         "x": 2500,
-                        "y": 3275
+                        "y": 3741
                     },
                     "dimension": {
                         "w": 179,
@@ -370,7 +381,7 @@
                     "name": "survivor-meleeattack_rifle_14",
                     "position": {
                         "x": 2500,
-                        "y": 3452
+                        "y": 3918
                     },
                     "dimension": {
                         "w": 179,
@@ -378,10 +389,10 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_rifle_2",
+                    "name": "survivor-meleeattack_rifle_9",
                     "position": {
                         "x": 2500,
-                        "y": 3629
+                        "y": 4095
                     },
                     "dimension": {
                         "w": 179,
@@ -392,7 +403,18 @@
                     "name": "survivor-meleeattack_rifle_5",
                     "position": {
                         "x": 2500,
-                        "y": 3806
+                        "y": 4272
+                    },
+                    "dimension": {
+                        "w": 179,
+                        "h": 177
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_rifle_2",
+                    "position": {
+                        "x": 2500,
+                        "y": 4449
                     },
                     "dimension": {
                         "w": 179,
@@ -403,7 +425,7 @@
                     "name": "survivor-meleeattack_rifle_3",
                     "position": {
                         "x": 2500,
-                        "y": 3983
+                        "y": 4626
                     },
                     "dimension": {
                         "w": 179,
@@ -414,7 +436,7 @@
                     "name": "survivor-meleeattack_rifle_4",
                     "position": {
                         "x": 2500,
-                        "y": 4160
+                        "y": 4803
                     },
                     "dimension": {
                         "w": 179,
@@ -424,8 +446,8 @@
                 {
                     "name": "survivor-meleeattack_rifle_6",
                     "position": {
-                        "x": 2500,
-                        "y": 4337
+                        "x": 2679,
+                        "y": 4803
                     },
                     "dimension": {
                         "w": 179,
@@ -435,8 +457,8 @@
                 {
                     "name": "survivor-meleeattack_rifle_7",
                     "position": {
-                        "x": 2500,
-                        "y": 4514
+                        "x": 2679,
+                        "y": 4626
                     },
                     "dimension": {
                         "w": 179,
@@ -446,19 +468,8 @@
                 {
                     "name": "survivor-meleeattack_rifle_8",
                     "position": {
-                        "x": 2500,
-                        "y": 4691
-                    },
-                    "dimension": {
-                        "w": 179,
-                        "h": 177
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_rifle_9",
-                    "position": {
                         "x": 2679,
-                        "y": 4691
+                        "y": 4449
                     },
                     "dimension": {
                         "w": 179,
@@ -466,31 +477,20 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_knife_11",
+                    "name": "campfire",
                     "position": {
                         "x": 350,
                         "y": 5318
                     },
                     "dimension": {
-                        "w": 165,
-                        "h": 150
+                        "w": 175,
+                        "h": 175
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_knife_14",
+                    "name": "survivor-meleeattack_knife_10",
                     "position": {
-                        "x": 515,
-                        "y": 5318
-                    },
-                    "dimension": {
-                        "w": 165,
-                        "h": 150
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_knife_13",
-                    "position": {
-                        "x": 680,
+                        "x": 525,
                         "y": 5318
                     },
                     "dimension": {
@@ -501,7 +501,7 @@
                 {
                     "name": "survivor-meleeattack_knife_2",
                     "position": {
-                        "x": 845,
+                        "x": 690,
                         "y": 5318
                     },
                     "dimension": {
@@ -512,7 +512,7 @@
                 {
                     "name": "survivor-meleeattack_knife_3",
                     "position": {
-                        "x": 1010,
+                        "x": 855,
                         "y": 5318
                     },
                     "dimension": {
@@ -523,29 +523,7 @@
                 {
                     "name": "survivor-meleeattack_knife_4",
                     "position": {
-                        "x": 1175,
-                        "y": 5318
-                    },
-                    "dimension": {
-                        "w": 165,
-                        "h": 150
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_knife_1",
-                    "position": {
-                        "x": 1340,
-                        "y": 5318
-                    },
-                    "dimension": {
-                        "w": 165,
-                        "h": 150
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_knife_10",
-                    "position": {
-                        "x": 1505,
+                        "x": 1020,
                         "y": 5318
                     },
                     "dimension": {
@@ -556,7 +534,7 @@
                 {
                     "name": "survivor-meleeattack_knife_5",
                     "position": {
-                        "x": 1670,
+                        "x": 1185,
                         "y": 5318
                     },
                     "dimension": {
@@ -567,7 +545,18 @@
                 {
                     "name": "survivor-meleeattack_knife_6",
                     "position": {
-                        "x": 1835,
+                        "x": 1350,
+                        "y": 5318
+                    },
+                    "dimension": {
+                        "w": 165,
+                        "h": 150
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_knife_1",
+                    "position": {
+                        "x": 1515,
                         "y": 5318
                     },
                     "dimension": {
@@ -578,7 +567,18 @@
                 {
                     "name": "survivor-meleeattack_knife_7",
                     "position": {
-                        "x": 2000,
+                        "x": 1680,
+                        "y": 5318
+                    },
+                    "dimension": {
+                        "w": 165,
+                        "h": 150
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_knife_11",
+                    "position": {
+                        "x": 1845,
                         "y": 5318
                     },
                     "dimension": {
@@ -589,18 +589,7 @@
                 {
                     "name": "survivor-meleeattack_knife_8",
                     "position": {
-                        "x": 2165,
-                        "y": 5318
-                    },
-                    "dimension": {
-                        "w": 165,
-                        "h": 150
-                    }
-                },
-                {
-                    "name": "survivor-meleeattack_knife_12",
-                    "position": {
-                        "x": 2330,
+                        "x": 2010,
                         "y": 5318
                     },
                     "dimension": {
@@ -611,7 +600,40 @@
                 {
                     "name": "survivor-meleeattack_knife_9",
                     "position": {
-                        "x": 2495,
+                        "x": 2175,
+                        "y": 5318
+                    },
+                    "dimension": {
+                        "w": 165,
+                        "h": 150
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_knife_13",
+                    "position": {
+                        "x": 2340,
+                        "y": 5318
+                    },
+                    "dimension": {
+                        "w": 165,
+                        "h": 150
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_knife_12",
+                    "position": {
+                        "x": 2505,
+                        "y": 5318
+                    },
+                    "dimension": {
+                        "w": 165,
+                        "h": 150
+                    }
+                },
+                {
+                    "name": "survivor-meleeattack_knife_14",
+                    "position": {
+                        "x": 2670,
                         "y": 5318
                     },
                     "dimension": {
@@ -622,7 +644,7 @@
                 {
                     "name": "survivor-meleeattack_knife_0",
                     "position": {
-                        "x": 2660,
+                        "x": 2835,
                         "y": 5318
                     },
                     "dimension": {
@@ -631,10 +653,10 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_rifle_4",
+                    "name": "survivor-reload_rifle_3",
                     "position": {
-                        "x": 2825,
-                        "y": 5318
+                        "x": 2679,
+                        "y": 4272
                     },
                     "dimension": {
                         "w": 161,
@@ -642,10 +664,10 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_rifle_3",
+                    "name": "survivor-reload_rifle_4",
                     "position": {
-                        "x": 2500,
-                        "y": 4868
+                        "x": 2679,
+                        "y": 4095
                     },
                     "dimension": {
                         "w": 161,
@@ -655,8 +677,8 @@
                 {
                     "name": "survivor-reload_rifle_19",
                     "position": {
-                        "x": 2661,
-                        "y": 4868
+                        "x": 2679,
+                        "y": 3918
                     },
                     "dimension": {
                         "w": 161,
@@ -666,8 +688,8 @@
                 {
                     "name": "survivor-reload_rifle_18",
                     "position": {
-                        "x": 2822,
-                        "y": 4868
+                        "x": 2679,
+                        "y": 3741
                     },
                     "dimension": {
                         "w": 161,
@@ -678,7 +700,7 @@
                     "name": "survivor-reload_rifle_17",
                     "position": {
                         "x": 2679,
-                        "y": 4514
+                        "y": 3564
                     },
                     "dimension": {
                         "w": 161,
@@ -689,7 +711,7 @@
                     "name": "survivor-reload_rifle_16",
                     "position": {
                         "x": 2679,
-                        "y": 4337
+                        "y": 3387
                     },
                     "dimension": {
                         "w": 161,
@@ -700,7 +722,7 @@
                     "name": "survivor-reload_rifle_15",
                     "position": {
                         "x": 2679,
-                        "y": 4160
+                        "y": 3210
                     },
                     "dimension": {
                         "w": 161,
@@ -711,7 +733,7 @@
                     "name": "survivor-reload_rifle_14",
                     "position": {
                         "x": 2679,
-                        "y": 3983
+                        "y": 3033
                     },
                     "dimension": {
                         "w": 161,
@@ -722,7 +744,7 @@
                     "name": "survivor-reload_rifle_13",
                     "position": {
                         "x": 2679,
-                        "y": 3806
+                        "y": 2856
                     },
                     "dimension": {
                         "w": 161,
@@ -733,7 +755,7 @@
                     "name": "survivor-reload_rifle_12",
                     "position": {
                         "x": 2679,
-                        "y": 3629
+                        "y": 2679
                     },
                     "dimension": {
                         "w": 161,
@@ -744,7 +766,7 @@
                     "name": "survivor-reload_rifle_11",
                     "position": {
                         "x": 2679,
-                        "y": 3452
+                        "y": 2502
                     },
                     "dimension": {
                         "w": 161,
@@ -755,7 +777,7 @@
                     "name": "survivor-reload_rifle_10",
                     "position": {
                         "x": 2679,
-                        "y": 3275
+                        "y": 2325
                     },
                     "dimension": {
                         "w": 161,
@@ -766,7 +788,7 @@
                     "name": "survivor-reload_rifle_1",
                     "position": {
                         "x": 2679,
-                        "y": 3098
+                        "y": 2148
                     },
                     "dimension": {
                         "w": 161,
@@ -777,7 +799,7 @@
                     "name": "survivor-reload_rifle_0",
                     "position": {
                         "x": 2679,
-                        "y": 2921
+                        "y": 1971
                     },
                     "dimension": {
                         "w": 161,
@@ -788,7 +810,7 @@
                     "name": "survivor-reload_rifle_5",
                     "position": {
                         "x": 2679,
-                        "y": 2744
+                        "y": 1794
                     },
                     "dimension": {
                         "w": 161,
@@ -799,7 +821,7 @@
                     "name": "survivor-reload_rifle_6",
                     "position": {
                         "x": 2679,
-                        "y": 2567
+                        "y": 1617
                     },
                     "dimension": {
                         "w": 161,
@@ -810,7 +832,7 @@
                     "name": "survivor-reload_rifle_7",
                     "position": {
                         "x": 2679,
-                        "y": 2390
+                        "y": 1440
                     },
                     "dimension": {
                         "w": 161,
@@ -821,7 +843,7 @@
                     "name": "survivor-reload_rifle_8",
                     "position": {
                         "x": 2679,
-                        "y": 2213
+                        "y": 1263
                     },
                     "dimension": {
                         "w": 161,
@@ -831,8 +853,8 @@
                 {
                     "name": "survivor-reload_rifle_9",
                     "position": {
-                        "x": 2679,
-                        "y": 2036
+                        "x": 2694,
+                        "y": 1066
                     },
                     "dimension": {
                         "w": 161,
@@ -841,94 +863,6 @@
                 },
                 {
                     "name": "survivor-reload_shotgun_9",
-                    "position": {
-                        "x": 2679,
-                        "y": 1859
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_rifle_2",
-                    "position": {
-                        "x": 2679,
-                        "y": 1682
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_0",
-                    "position": {
-                        "x": 2679,
-                        "y": 1505
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_1",
-                    "position": {
-                        "x": 2679,
-                        "y": 1328
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_10",
-                    "position": {
-                        "x": 2679,
-                        "y": 1151
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_11",
-                    "position": {
-                        "x": 2679,
-                        "y": 974
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_12",
-                    "position": {
-                        "x": 2679,
-                        "y": 797
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_13",
-                    "position": {
-                        "x": 2694,
-                        "y": 600
-                    },
-                    "dimension": {
-                        "w": 161,
-                        "h": 109
-                    }
-                },
-                {
-                    "name": "survivor-reload_shotgun_14",
                     "position": {
                         "x": 2765,
                         "y": 0
@@ -939,7 +873,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_15",
+                    "name": "survivor-reload_rifle_2",
                     "position": {
                         "x": 2765,
                         "y": 109
@@ -950,7 +884,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_16",
+                    "name": "survivor-reload_shotgun_0",
                     "position": {
                         "x": 2765,
                         "y": 218
@@ -961,7 +895,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_17",
+                    "name": "survivor-reload_shotgun_1",
                     "position": {
                         "x": 2765,
                         "y": 327
@@ -972,7 +906,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_18",
+                    "name": "survivor-reload_shotgun_10",
                     "position": {
                         "x": 2765,
                         "y": 436
@@ -986,7 +920,7 @@
                     "name": "cupboard",
                     "position": {
                         "x": 2858,
-                        "y": 4691
+                        "y": 4803
                     },
                     "dimension": {
                         "w": 58,
@@ -994,10 +928,10 @@
                     }
                 },
                 {
-                    "name": "survivor-move_rifle_2",
+                    "name": "survivor-move_rifle_3",
                     "position": {
                         "x": 2840,
-                        "y": 4514
+                        "y": 4272
                     },
                     "dimension": {
                         "w": 157,
@@ -1008,7 +942,7 @@
                     "name": "survivor-move_rifle_8",
                     "position": {
                         "x": 2840,
-                        "y": 4337
+                        "y": 4095
                     },
                     "dimension": {
                         "w": 157,
@@ -1019,7 +953,7 @@
                     "name": "survivor-move_rifle_7",
                     "position": {
                         "x": 2840,
-                        "y": 4160
+                        "y": 3918
                     },
                     "dimension": {
                         "w": 157,
@@ -1030,40 +964,7 @@
                     "name": "survivor-move_rifle_6",
                     "position": {
                         "x": 2840,
-                        "y": 3983
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_5",
-                    "position": {
-                        "x": 2840,
-                        "y": 3806
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_4",
-                    "position": {
-                        "x": 2840,
-                        "y": 3629
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_3",
-                    "position": {
-                        "x": 2840,
-                        "y": 3452
+                        "y": 3741
                     },
                     "dimension": {
                         "w": 157,
@@ -1074,7 +975,7 @@
                     "name": "survivor-idle_shotgun_3",
                     "position": {
                         "x": 2840,
-                        "y": 3275
+                        "y": 3564
                     },
                     "dimension": {
                         "w": 157,
@@ -1082,131 +983,10 @@
                     }
                 },
                 {
-                    "name": "survivor-move_rifle_19",
+                    "name": "survivor-move_rifle_4",
                     "position": {
                         "x": 2840,
-                        "y": 3098
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_18",
-                    "position": {
-                        "x": 2840,
-                        "y": 2921
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_17",
-                    "position": {
-                        "x": 2840,
-                        "y": 2744
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_16",
-                    "position": {
-                        "x": 2840,
-                        "y": 2567
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_15",
-                    "position": {
-                        "x": 2840,
-                        "y": 2390
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_14",
-                    "position": {
-                        "x": 2840,
-                        "y": 2213
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_13",
-                    "position": {
-                        "x": 2840,
-                        "y": 2036
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_12",
-                    "position": {
-                        "x": 2840,
-                        "y": 1859
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_11",
-                    "position": {
-                        "x": 2840,
-                        "y": 1682
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_10",
-                    "position": {
-                        "x": 2840,
-                        "y": 1505
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_1",
-                    "position": {
-                        "x": 2840,
-                        "y": 1328
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_rifle_0",
-                    "position": {
-                        "x": 2840,
-                        "y": 1151
+                        "y": 3387
                     },
                     "dimension": {
                         "w": 157,
@@ -1217,7 +997,7 @@
                     "name": "survivor-idle_shotgun_2",
                     "position": {
                         "x": 2840,
-                        "y": 974
+                        "y": 3210
                     },
                     "dimension": {
                         "w": 157,
@@ -1225,10 +1005,10 @@
                     }
                 },
                 {
-                    "name": "survivor-move_shotgun_9",
+                    "name": "survivor-move_rifle_2",
                     "position": {
                         "x": 2840,
-                        "y": 797
+                        "y": 3033
                     },
                     "dimension": {
                         "w": 157,
@@ -1236,10 +1016,142 @@
                     }
                 },
                 {
+                    "name": "survivor-move_rifle_19",
+                    "position": {
+                        "x": 2840,
+                        "y": 2856
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_18",
+                    "position": {
+                        "x": 2840,
+                        "y": 2679
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_17",
+                    "position": {
+                        "x": 2840,
+                        "y": 2502
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_16",
+                    "position": {
+                        "x": 2840,
+                        "y": 2325
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_15",
+                    "position": {
+                        "x": 2840,
+                        "y": 2148
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_14",
+                    "position": {
+                        "x": 2840,
+                        "y": 1971
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_13",
+                    "position": {
+                        "x": 2840,
+                        "y": 1794
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_12",
+                    "position": {
+                        "x": 2840,
+                        "y": 1617
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_11",
+                    "position": {
+                        "x": 2840,
+                        "y": 1440
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_10",
+                    "position": {
+                        "x": 2840,
+                        "y": 1263
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_knife_9",
+                    "position": {
+                        "x": 2858,
+                        "y": 4626
+                    },
+                    "dimension": {
+                        "w": 140,
+                        "h": 110
+                    }
+                },
+                {
+                    "name": "survivor-move_knife_7",
+                    "position": {
+                        "x": 2858,
+                        "y": 4449
+                    },
+                    "dimension": {
+                        "w": 140,
+                        "h": 110
+                    }
+                },
+                {
                     "name": "survivor-shoot_handgun_1",
                     "position": {
                         "x": 2855,
-                        "y": 600
+                        "y": 1066
                     },
                     "dimension": {
                         "w": 128,
@@ -1269,7 +1181,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_13",
+                    "name": "raindrop_01",
                     "position": {
                         "x": 1644,
                         "y": 5186
@@ -1280,7 +1192,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_12",
+                    "name": "raindrop_04",
                     "position": {
                         "x": 1699,
                         "y": 5186
@@ -1291,7 +1203,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_11",
+                    "name": "raindrop_13",
                     "position": {
                         "x": 1754,
                         "y": 5186
@@ -1302,7 +1214,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_10",
+                    "name": "raindrop_12",
                     "position": {
                         "x": 1809,
                         "y": 5186
@@ -1313,7 +1225,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_09",
+                    "name": "raindrop_11",
                     "position": {
                         "x": 1864,
                         "y": 5186
@@ -1324,7 +1236,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_01",
+                    "name": "raindrop_10",
                     "position": {
                         "x": 1919,
                         "y": 5186
@@ -1335,7 +1247,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_07",
+                    "name": "raindrop_09",
                     "position": {
                         "x": 1974,
                         "y": 5186
@@ -1346,7 +1258,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_06",
+                    "name": "raindrop_08",
                     "position": {
                         "x": 2029,
                         "y": 5186
@@ -1357,7 +1269,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_05",
+                    "name": "raindrop_07",
                     "position": {
                         "x": 2084,
                         "y": 5186
@@ -1368,7 +1280,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_04",
+                    "name": "raindrop_06",
                     "position": {
                         "x": 2139,
                         "y": 5186
@@ -1379,7 +1291,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_03",
+                    "name": "raindrop_05",
                     "position": {
                         "x": 2194,
                         "y": 5186
@@ -1401,7 +1313,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_08",
+                    "name": "raindrop_03",
                     "position": {
                         "x": 2304,
                         "y": 5186
@@ -1414,7 +1326,7 @@
                 {
                     "name": "chest_full",
                     "position": {
-                        "x": 350,
+                        "x": 525,
                         "y": 5468
                     },
                     "dimension": {
@@ -1425,7 +1337,7 @@
                 {
                     "name": "chest_empty",
                     "position": {
-                        "x": 400,
+                        "x": 575,
                         "y": 5468
                     },
                     "dimension": {
@@ -1445,7 +1357,7 @@
                     }
                 },
                 {
-                    "name": "rat_48",
+                    "name": "rat_49",
                     "position": {
                         "x": 2374,
                         "y": 5186
@@ -1456,7 +1368,7 @@
                     }
                 },
                 {
-                    "name": "rat_44",
+                    "name": "rat_48",
                     "position": {
                         "x": 2389,
                         "y": 5186
@@ -1467,7 +1379,7 @@
                     }
                 },
                 {
-                    "name": "rat_43",
+                    "name": "rat_06",
                     "position": {
                         "x": 2404,
                         "y": 5186
@@ -1478,7 +1390,7 @@
                     }
                 },
                 {
-                    "name": "rat_42",
+                    "name": "rat_43",
                     "position": {
                         "x": 2419,
                         "y": 5186
@@ -1489,7 +1401,7 @@
                     }
                 },
                 {
-                    "name": "rat_02",
+                    "name": "rat_42",
                     "position": {
                         "x": 2434,
                         "y": 5186
@@ -1500,7 +1412,7 @@
                     }
                 },
                 {
-                    "name": "rat_04",
+                    "name": "rat_02",
                     "position": {
                         "x": 2449,
                         "y": 5186
@@ -1511,7 +1423,7 @@
                     }
                 },
                 {
-                    "name": "rat_06",
+                    "name": "rat_04",
                     "position": {
                         "x": 2464,
                         "y": 5186
@@ -1522,7 +1434,7 @@
                     }
                 },
                 {
-                    "name": "rat_49",
+                    "name": "rat_44",
                     "position": {
                         "x": 2479,
                         "y": 5186
@@ -1533,9 +1445,20 @@
                     }
                 },
                 {
-                    "name": "rat_01",
+                    "name": "full-note-written-small",
                     "position": {
                         "x": 2494,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 40,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_47",
+                    "position": {
+                        "x": 2534,
                         "y": 5186
                     },
                     "dimension": {
@@ -1544,9 +1467,9 @@
                     }
                 },
                 {
-                    "name": "rat_45",
+                    "name": "rat_46",
                     "position": {
-                        "x": 2509,
+                        "x": 2549,
                         "y": 5186
                     },
                     "dimension": {
@@ -1557,7 +1480,7 @@
                 {
                     "name": "rat_03",
                     "position": {
-                        "x": 2524,
+                        "x": 2564,
                         "y": 5186
                     },
                     "dimension": {
@@ -1566,20 +1489,20 @@
                     }
                 },
                 {
-                    "name": "rat_24",
+                    "name": "rat_45",
                     "position": {
-                        "x": 2539,
+                        "x": 2579,
                         "y": 5186
                     },
                     "dimension": {
-                        "w": 19,
+                        "w": 15,
                         "h": 47
                     }
                 },
                 {
                     "name": "rat_05",
                     "position": {
-                        "x": 2558,
+                        "x": 2594,
                         "y": 5186
                     },
                     "dimension": {
@@ -1588,9 +1511,9 @@
                     }
                 },
                 {
-                    "name": "rat_47",
+                    "name": "rat_01",
                     "position": {
-                        "x": 2573,
+                        "x": 2609,
                         "y": 5186
                     },
                     "dimension": {
@@ -1601,7 +1524,7 @@
                 {
                     "name": "rat_07",
                     "position": {
-                        "x": 2588,
+                        "x": 2624,
                         "y": 5186
                     },
                     "dimension": {
@@ -1612,7 +1535,7 @@
                 {
                     "name": "rat_08",
                     "position": {
-                        "x": 2603,
+                        "x": 2639,
                         "y": 5186
                     },
                     "dimension": {
@@ -1621,9 +1544,20 @@
                     }
                 },
                 {
+                    "name": "full-note-written-small-read",
+                    "position": {
+                        "x": 2654,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 40,
+                        "h": 47
+                    }
+                },
+                {
                     "name": "rat_09",
                     "position": {
-                        "x": 2618,
+                        "x": 2694,
                         "y": 5186
                     },
                     "dimension": {
@@ -1634,7 +1568,7 @@
                 {
                     "name": "rat_10",
                     "position": {
-                        "x": 2633,
+                        "x": 2709,
                         "y": 5186
                     },
                     "dimension": {
@@ -1645,7 +1579,7 @@
                 {
                     "name": "rat_21",
                     "position": {
-                        "x": 2648,
+                        "x": 2724,
                         "y": 5186
                     },
                     "dimension": {
@@ -1654,20 +1588,20 @@
                     }
                 },
                 {
-                    "name": "rat_46",
+                    "name": "rat_24",
                     "position": {
-                        "x": 2666,
+                        "x": 2742,
                         "y": 5186
                     },
                     "dimension": {
-                        "w": 15,
+                        "w": 19,
                         "h": 47
                     }
                 },
                 {
                     "name": "rat_25",
                     "position": {
-                        "x": 2681,
+                        "x": 2761,
                         "y": 5186
                     },
                     "dimension": {
@@ -1676,9 +1610,9 @@
                     }
                 },
                 {
-                    "name": "rat_36",
+                    "name": "rat_12",
                     "position": {
-                        "x": 2698,
+                        "x": 2778,
                         "y": 5186
                     },
                     "dimension": {
@@ -1687,31 +1621,9 @@
                     }
                 },
                 {
-                    "name": "rat_11",
+                    "name": "rat_36",
                     "position": {
-                        "x": 2714,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 46
-                    }
-                },
-                {
-                    "name": "rat_23",
-                    "position": {
-                        "x": 2729,
-                        "y": 5186
-                    },
-                    "dimension": {
-                        "w": 21,
-                        "h": 46
-                    }
-                },
-                {
-                    "name": "rat_12",
-                    "position": {
-                        "x": 2750,
+                        "x": 2794,
                         "y": 5186
                     },
                     "dimension": {
@@ -1722,7 +1634,29 @@
                 {
                     "name": "rat_14",
                     "position": {
-                        "x": 2766,
+                        "x": 2810,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 46
+                    }
+                },
+                {
+                    "name": "rat_23",
+                    "position": {
+                        "x": 2825,
+                        "y": 5186
+                    },
+                    "dimension": {
+                        "w": 21,
+                        "h": 46
+                    }
+                },
+                {
+                    "name": "rat_11",
+                    "position": {
+                        "x": 2846,
                         "y": 5186
                     },
                     "dimension": {
@@ -1733,7 +1667,7 @@
                 {
                     "name": "rat_13",
                     "position": {
-                        "x": 2781,
+                        "x": 2861,
                         "y": 5186
                     },
                     "dimension": {
@@ -1744,7 +1678,7 @@
                 {
                     "name": "rat_22",
                     "position": {
-                        "x": 2797,
+                        "x": 2877,
                         "y": 5186
                     },
                     "dimension": {
@@ -1753,9 +1687,9 @@
                     }
                 },
                 {
-                    "name": "rat_15",
+                    "name": "rat_16",
                     "position": {
-                        "x": 2819,
+                        "x": 2899,
                         "y": 5186
                     },
                     "dimension": {
@@ -1764,9 +1698,9 @@
                     }
                 },
                 {
-                    "name": "rat_16",
+                    "name": "rat_15",
                     "position": {
-                        "x": 2835,
+                        "x": 2915,
                         "y": 5186
                     },
                     "dimension": {
@@ -1777,7 +1711,7 @@
                 {
                     "name": "rat_18",
                     "position": {
-                        "x": 2851,
+                        "x": 2931,
                         "y": 5186
                     },
                     "dimension": {
@@ -1788,7 +1722,7 @@
                 {
                     "name": "rat_17",
                     "position": {
-                        "x": 2869,
+                        "x": 2949,
                         "y": 5186
                     },
                     "dimension": {
@@ -1799,8 +1733,8 @@
                 {
                     "name": "rat_19",
                     "position": {
-                        "x": 2825,
-                        "y": 5427
+                        "x": 2967,
+                        "y": 5186
                     },
                     "dimension": {
                         "w": 19,
@@ -1810,8 +1744,8 @@
                 {
                     "name": "rat_20",
                     "position": {
-                        "x": 2844,
-                        "y": 5427
+                        "x": 2969,
+                        "y": 5000
                     },
                     "dimension": {
                         "w": 19,
@@ -1821,8 +1755,8 @@
                 {
                     "name": "rat_37",
                     "position": {
-                        "x": 2863,
-                        "y": 5427
+                        "x": 2969,
+                        "y": 5041
                     },
                     "dimension": {
                         "w": 16,
@@ -1832,8 +1766,8 @@
                 {
                     "name": "rat_35",
                     "position": {
-                        "x": 2879,
-                        "y": 5427
+                        "x": 2969,
+                        "y": 5081
                     },
                     "dimension": {
                         "w": 17,
@@ -1843,8 +1777,8 @@
                 {
                     "name": "rat_34",
                     "position": {
-                        "x": 2896,
-                        "y": 5427
+                        "x": 2969,
+                        "y": 5121
                     },
                     "dimension": {
                         "w": 16,
@@ -1854,8 +1788,8 @@
                 {
                     "name": "rat_38",
                     "position": {
-                        "x": 2912,
-                        "y": 5427
+                        "x": 1388,
+                        "y": 5256
                     },
                     "dimension": {
                         "w": 16,
@@ -1865,8 +1799,8 @@
                 {
                     "name": "rat_51",
                     "position": {
-                        "x": 2928,
-                        "y": 5427
+                        "x": 1404,
+                        "y": 5256
                     },
                     "dimension": {
                         "w": 16,
@@ -1876,8 +1810,8 @@
                 {
                     "name": "rat_40",
                     "position": {
-                        "x": 2944,
-                        "y": 5427
+                        "x": 1420,
+                        "y": 5256
                     },
                     "dimension": {
                         "w": 16,
@@ -1887,8 +1821,8 @@
                 {
                     "name": "rat_41",
                     "position": {
-                        "x": 2960,
-                        "y": 5427
+                        "x": 1436,
+                        "y": 5256
                     },
                     "dimension": {
                         "w": 16,
@@ -1898,8 +1832,8 @@
                 {
                     "name": "rat_39",
                     "position": {
-                        "x": 2976,
-                        "y": 5427
+                        "x": 1452,
+                        "y": 5256
                     },
                     "dimension": {
                         "w": 16,
@@ -1909,8 +1843,8 @@
                 {
                     "name": "rat_33",
                     "position": {
-                        "x": 2986,
-                        "y": 5318
+                        "x": 1468,
+                        "y": 5256
                     },
                     "dimension": {
                         "w": 14,
@@ -1920,7 +1854,7 @@
                 {
                     "name": "rat_27",
                     "position": {
-                        "x": 450,
+                        "x": 625,
                         "y": 5468
                     },
                     "dimension": {
@@ -1929,20 +1863,9 @@
                     }
                 },
                 {
-                    "name": "rat_30",
-                    "position": {
-                        "x": 465,
-                        "y": 5468
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 24
-                    }
-                },
-                {
                     "name": "rat_26",
                     "position": {
-                        "x": 480,
+                        "x": 640,
                         "y": 5468
                     },
                     "dimension": {
@@ -1951,20 +1874,20 @@
                     }
                 },
                 {
-                    "name": "rat_32",
+                    "name": "rat_30",
                     "position": {
-                        "x": 495,
+                        "x": 655,
                         "y": 5468
                     },
                     "dimension": {
-                        "w": 13,
-                        "h": 23
+                        "w": 15,
+                        "h": 24
                     }
                 },
                 {
                     "name": "rat_31",
                     "position": {
-                        "x": 508,
+                        "x": 670,
                         "y": 5468
                     },
                     "dimension": {
@@ -1973,9 +1896,20 @@
                     }
                 },
                 {
+                    "name": "rat_32",
+                    "position": {
+                        "x": 684,
+                        "y": 5468
+                    },
+                    "dimension": {
+                        "w": 13,
+                        "h": 23
+                    }
+                },
+                {
                     "name": "rat_29",
                     "position": {
-                        "x": 522,
+                        "x": 697,
                         "y": 5468
                     },
                     "dimension": {
@@ -1986,7 +1920,7 @@
                 {
                     "name": "rat_28",
                     "position": {
-                        "x": 537,
+                        "x": 712,
                         "y": 5468
                     },
                     "dimension": {
@@ -1997,7 +1931,7 @@
                 {
                     "name": "bunny",
                     "position": {
-                        "x": 553,
+                        "x": 728,
                         "y": 5468
                     },
                     "dimension": {
@@ -2008,8 +1942,8 @@
             ]
         },
         {
-            "image": "b01816fd42a1e8bf1a489444eb248331f7d2b85c.png",
-            "filesize": 5798862,
+            "image": "22fa7ffad6a8af5dbfd7b6aaa1e7ebdfe38a8f9b.png",
+            "filesize": 5905797,
             "sprites": [
                 {
                     "name": "flat_floor2",
@@ -2045,7 +1979,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_19",
+                    "name": "survivor-reload_shotgun_11",
                     "position": {
                         "x": 0,
                         "y": 4750
@@ -2056,7 +1990,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_2",
+                    "name": "survivor-reload_shotgun_12",
                     "position": {
                         "x": 0,
                         "y": 4859
@@ -2067,7 +2001,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_3",
+                    "name": "survivor-reload_shotgun_13",
                     "position": {
                         "x": 0,
                         "y": 4968
@@ -2078,7 +2012,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_4",
+                    "name": "survivor-reload_shotgun_14",
                     "position": {
                         "x": 0,
                         "y": 5077
@@ -2089,7 +2023,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_5",
+                    "name": "survivor-reload_shotgun_15",
                     "position": {
                         "x": 0,
                         "y": 5186
@@ -2100,7 +2034,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_6",
+                    "name": "survivor-reload_shotgun_16",
                     "position": {
                         "x": 0,
                         "y": 5295
@@ -2111,7 +2045,7 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_7",
+                    "name": "survivor-reload_shotgun_17",
                     "position": {
                         "x": 161,
                         "y": 5295
@@ -2122,9 +2056,97 @@
                     }
                 },
                 {
-                    "name": "survivor-reload_shotgun_8",
+                    "name": "survivor-reload_shotgun_18",
                     "position": {
                         "x": 322,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_19",
+                    "position": {
+                        "x": 483,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_2",
+                    "position": {
+                        "x": 644,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_3",
+                    "position": {
+                        "x": 805,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_4",
+                    "position": {
+                        "x": 966,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_5",
+                    "position": {
+                        "x": 1127,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_6",
+                    "position": {
+                        "x": 1288,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_7",
+                    "position": {
+                        "x": 1449,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 161,
+                        "h": 109
+                    }
+                },
+                {
+                    "name": "survivor-reload_shotgun_8",
+                    "position": {
+                        "x": 1610,
                         "y": 5295
                     },
                     "dimension": {
@@ -2298,9 +2320,31 @@
                     }
                 },
                 {
+                    "name": "survivor-move_rifle_1",
+                    "position": {
+                        "x": 1771,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_0",
+                    "position": {
+                        "x": 1928,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
                     "name": "survivor-move_shotgun_8",
                     "position": {
-                        "x": 483,
+                        "x": 2085,
                         "y": 5295
                     },
                     "dimension": {
@@ -2311,7 +2355,7 @@
                 {
                     "name": "survivor-move_shotgun_7",
                     "position": {
-                        "x": 640,
+                        "x": 2242,
                         "y": 5295
                     },
                     "dimension": {
@@ -2339,6 +2383,28 @@
                     "dimension": {
                         "w": 157,
                         "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_6",
+                    "position": {
+                        "x": 2399,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_5",
+                    "position": {
+                        "x": 2556,
+                        "y": 5295
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
                     }
                 },
                 {
@@ -2672,31 +2738,9 @@
                     }
                 },
                 {
-                    "name": "survivor-move_shotgun_6",
-                    "position": {
-                        "x": 797,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_5",
-                    "position": {
-                        "x": 954,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
                     "name": "survivor-move_shotgun_4",
                     "position": {
-                        "x": 1111,
+                        "x": 2713,
                         "y": 5295
                     },
                     "dimension": {
@@ -2707,8 +2751,8 @@
                 {
                     "name": "survivor-move_shotgun_3",
                     "position": {
-                        "x": 1268,
-                        "y": 5295
+                        "x": 2359,
+                        "y": 5077
                     },
                     "dimension": {
                         "w": 157,
@@ -2718,8 +2762,8 @@
                 {
                     "name": "survivor-move_shotgun_2",
                     "position": {
-                        "x": 1425,
-                        "y": 5295
+                        "x": 2516,
+                        "y": 5077
                     },
                     "dimension": {
                         "w": 157,
@@ -2729,8 +2773,8 @@
                 {
                     "name": "survivor-move_shotgun_19",
                     "position": {
-                        "x": 1582,
-                        "y": 5295
+                        "x": 2673,
+                        "y": 5077
                     },
                     "dimension": {
                         "w": 157,
@@ -2740,8 +2784,8 @@
                 {
                     "name": "survivor-move_shotgun_18",
                     "position": {
-                        "x": 1739,
-                        "y": 5295
+                        "x": 2830,
+                        "y": 5077
                     },
                     "dimension": {
                         "w": 157,
@@ -2751,8 +2795,8 @@
                 {
                     "name": "survivor-move_shotgun_17",
                     "position": {
-                        "x": 1896,
-                        "y": 5295
+                        "x": 161,
+                        "y": 4968
                     },
                     "dimension": {
                         "w": 157,
@@ -2761,127 +2805,6 @@
                 },
                 {
                     "name": "survivor-move_shotgun_16",
-                    "position": {
-                        "x": 2053,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_15",
-                    "position": {
-                        "x": 2210,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_14",
-                    "position": {
-                        "x": 2367,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_13",
-                    "position": {
-                        "x": 2524,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_12",
-                    "position": {
-                        "x": 2681,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_11",
-                    "position": {
-                        "x": 2838,
-                        "y": 5295
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 103
-                    }
-                },
-                {
-                    "name": "survivor-idle_shotgun_9",
-                    "position": {
-                        "x": 2359,
-                        "y": 5077
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 104
-                    }
-                },
-                {
-                    "name": "survivor-idle_shotgun_8",
-                    "position": {
-                        "x": 2516,
-                        "y": 5077
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 104
-                    }
-                },
-                {
-                    "name": "survivor-idle_shotgun_7",
-                    "position": {
-                        "x": 2673,
-                        "y": 5077
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 104
-                    }
-                },
-                {
-                    "name": "survivor-idle_shotgun_6",
-                    "position": {
-                        "x": 2830,
-                        "y": 5077
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 104
-                    }
-                },
-                {
-                    "name": "survivor-idle_shotgun_5",
-                    "position": {
-                        "x": 161,
-                        "y": 4968
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 104
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_10",
                     "position": {
                         "x": 318,
                         "y": 4968
@@ -2892,18 +2815,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_shotgun_4",
-                    "position": {
-                        "x": 161,
-                        "y": 4859
-                    },
-                    "dimension": {
-                        "w": 157,
-                        "h": 104
-                    }
-                },
-                {
-                    "name": "survivor-move_shotgun_1",
+                    "name": "survivor-move_shotgun_15",
                     "position": {
                         "x": 475,
                         "y": 4968
@@ -2914,7 +2826,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_shotgun_0",
+                    "name": "survivor-move_shotgun_14",
                     "position": {
                         "x": 632,
                         "y": 4968
@@ -2925,7 +2837,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_rifle_9",
+                    "name": "survivor-move_shotgun_13",
                     "position": {
                         "x": 789,
                         "y": 4968
@@ -2936,9 +2848,163 @@
                     }
                 },
                 {
-                    "name": "survivor-shoot_shotgun_2",
+                    "name": "survivor-move_shotgun_12",
                     "position": {
                         "x": 946,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_11",
+                    "position": {
+                        "x": 1103,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-idle_shotgun_9",
+                    "position": {
+                        "x": 161,
+                        "y": 4859
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-idle_shotgun_8",
+                    "position": {
+                        "x": 318,
+                        "y": 4859
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-idle_shotgun_7",
+                    "position": {
+                        "x": 475,
+                        "y": 4859
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-idle_shotgun_6",
+                    "position": {
+                        "x": 632,
+                        "y": 4859
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-idle_shotgun_5",
+                    "position": {
+                        "x": 789,
+                        "y": 4859
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_10",
+                    "position": {
+                        "x": 1260,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-idle_shotgun_4",
+                    "position": {
+                        "x": 946,
+                        "y": 4859
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 104
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_1",
+                    "position": {
+                        "x": 1417,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_0",
+                    "position": {
+                        "x": 1574,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_5",
+                    "position": {
+                        "x": 1731,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_shotgun_9",
+                    "position": {
+                        "x": 1888,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-move_rifle_9",
+                    "position": {
+                        "x": 2045,
+                        "y": 4968
+                    },
+                    "dimension": {
+                        "w": 157,
+                        "h": 103
+                    }
+                },
+                {
+                    "name": "survivor-shoot_shotgun_2",
+                    "position": {
+                        "x": 2202,
                         "y": 4968
                     },
                     "dimension": {
@@ -2949,7 +3015,7 @@
                 {
                     "name": "survivor-shoot_shotgun_0",
                     "position": {
-                        "x": 1102,
+                        "x": 2358,
                         "y": 4968
                     },
                     "dimension": {
@@ -2960,7 +3026,7 @@
                 {
                     "name": "survivor-shoot_rifle_2",
                     "position": {
-                        "x": 1258,
+                        "x": 2514,
                         "y": 4968
                     },
                     "dimension": {
@@ -2971,7 +3037,7 @@
                 {
                     "name": "survivor-shoot_rifle_1",
                     "position": {
-                        "x": 1414,
+                        "x": 2670,
                         "y": 4968
                     },
                     "dimension": {
@@ -2982,7 +3048,7 @@
                 {
                     "name": "survivor-shoot_rifle_0",
                     "position": {
-                        "x": 1570,
+                        "x": 2826,
                         "y": 4968
                     },
                     "dimension": {
@@ -2993,8 +3059,8 @@
                 {
                     "name": "survivor-shoot_shotgun_1",
                     "position": {
-                        "x": 1726,
-                        "y": 4968
+                        "x": 1103,
+                        "y": 4859
                     },
                     "dimension": {
                         "w": 156,
@@ -3002,7 +3068,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_flashlight_13",
+                    "name": "survivor-move_flashlight_11",
                     "position": {
                         "x": 2160,
                         "y": 4595
@@ -3134,7 +3200,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_flashlight_0",
+                    "name": "survivor-move_flashlight_16",
                     "position": {
                         "x": 2777,
                         "y": 4349
@@ -3145,9 +3211,31 @@
                     }
                 },
                 {
-                    "name": "survivor-move_flashlight_1",
+                    "name": "survivor-move_flashlight_15",
                     "position": {
                         "x": 2318,
+                        "y": 4226
+                    },
+                    "dimension": {
+                        "w": 153,
+                        "h": 116
+                    }
+                },
+                {
+                    "name": "survivor-move_flashlight_0",
+                    "position": {
+                        "x": 2471,
+                        "y": 4226
+                    },
+                    "dimension": {
+                        "w": 153,
+                        "h": 116
+                    }
+                },
+                {
+                    "name": "survivor-move_flashlight_1",
+                    "position": {
+                        "x": 2624,
                         "y": 4226
                     },
                     "dimension": {
@@ -3158,28 +3246,6 @@
                 {
                     "name": "survivor-move_flashlight_10",
                     "position": {
-                        "x": 2471,
-                        "y": 4226
-                    },
-                    "dimension": {
-                        "w": 153,
-                        "h": 116
-                    }
-                },
-                {
-                    "name": "survivor-move_flashlight_11",
-                    "position": {
-                        "x": 2624,
-                        "y": 4226
-                    },
-                    "dimension": {
-                        "w": 153,
-                        "h": 116
-                    }
-                },
-                {
-                    "name": "survivor-move_flashlight_12",
-                    "position": {
                         "x": 2777,
                         "y": 4226
                     },
@@ -3189,7 +3255,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_flashlight_16",
+                    "name": "survivor-move_flashlight_14",
                     "position": {
                         "x": 2318,
                         "y": 4103
@@ -3200,7 +3266,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_flashlight_14",
+                    "name": "survivor-move_flashlight_12",
                     "position": {
                         "x": 2471,
                         "y": 4103
@@ -3211,7 +3277,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_flashlight_15",
+                    "name": "survivor-move_flashlight_13",
                     "position": {
                         "x": 2624,
                         "y": 4103
@@ -3222,7 +3288,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_19",
+                    "name": "survivor-idle_flashlight_17",
                     "position": {
                         "x": 2777,
                         "y": 4103
@@ -3233,9 +3299,31 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_8",
+                    "name": "survivor-idle_flashlight_6",
                     "position": {
                         "x": 2318,
+                        "y": 3980
+                    },
+                    "dimension": {
+                        "w": 152,
+                        "h": 112
+                    }
+                },
+                {
+                    "name": "survivor-idle_flashlight_1",
+                    "position": {
+                        "x": 2470,
+                        "y": 3980
+                    },
+                    "dimension": {
+                        "w": 152,
+                        "h": 112
+                    }
+                },
+                {
+                    "name": "survivor-idle_flashlight_10",
+                    "position": {
+                        "x": 2622,
                         "y": 3980
                     },
                     "dimension": {
@@ -3246,7 +3334,7 @@
                 {
                     "name": "survivor-idle_flashlight_11",
                     "position": {
-                        "x": 2470,
+                        "x": 2774,
                         "y": 3980
                     },
                     "dimension": {
@@ -3257,8 +3345,8 @@
                 {
                     "name": "survivor-idle_flashlight_12",
                     "position": {
-                        "x": 2622,
-                        "y": 3980
+                        "x": 2318,
+                        "y": 3857
                     },
                     "dimension": {
                         "w": 152,
@@ -3268,8 +3356,8 @@
                 {
                     "name": "survivor-idle_flashlight_13",
                     "position": {
-                        "x": 2774,
-                        "y": 3980
+                        "x": 2470,
+                        "y": 3857
                     },
                     "dimension": {
                         "w": 152,
@@ -3279,7 +3367,7 @@
                 {
                     "name": "survivor-idle_flashlight_14",
                     "position": {
-                        "x": 2318,
+                        "x": 2622,
                         "y": 3857
                     },
                     "dimension": {
@@ -3290,7 +3378,7 @@
                 {
                     "name": "survivor-idle_flashlight_15",
                     "position": {
-                        "x": 2470,
+                        "x": 2774,
                         "y": 3857
                     },
                     "dimension": {
@@ -3301,28 +3389,6 @@
                 {
                     "name": "survivor-idle_flashlight_16",
                     "position": {
-                        "x": 2622,
-                        "y": 3857
-                    },
-                    "dimension": {
-                        "w": 152,
-                        "h": 112
-                    }
-                },
-                {
-                    "name": "survivor-idle_flashlight_17",
-                    "position": {
-                        "x": 2774,
-                        "y": 3857
-                    },
-                    "dimension": {
-                        "w": 152,
-                        "h": 112
-                    }
-                },
-                {
-                    "name": "survivor-idle_flashlight_18",
-                    "position": {
                         "x": 2318,
                         "y": 3734
                     },
@@ -3332,7 +3398,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_10",
+                    "name": "survivor-idle_flashlight_0",
                     "position": {
                         "x": 2470,
                         "y": 3734
@@ -3343,7 +3409,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_2",
+                    "name": "survivor-idle_flashlight_18",
                     "position": {
                         "x": 2622,
                         "y": 3734
@@ -3354,7 +3420,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_1",
+                    "name": "survivor-idle_flashlight_19",
                     "position": {
                         "x": 2774,
                         "y": 3734
@@ -3365,7 +3431,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_0",
+                    "name": "survivor-idle_flashlight_2",
                     "position": {
                         "x": 2318,
                         "y": 3611
@@ -3398,7 +3464,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_5",
+                    "name": "survivor-idle_flashlight_9",
                     "position": {
                         "x": 2774,
                         "y": 3611
@@ -3409,7 +3475,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_6",
+                    "name": "survivor-idle_flashlight_8",
                     "position": {
                         "x": 2318,
                         "y": 3488
@@ -3420,7 +3486,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_9",
+                    "name": "survivor-idle_flashlight_7",
                     "position": {
                         "x": 2470,
                         "y": 3488
@@ -3431,7 +3497,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_flashlight_7",
+                    "name": "survivor-idle_flashlight_5",
                     "position": {
                         "x": 2622,
                         "y": 3488
@@ -3585,7 +3651,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_handgun_0",
+                    "name": "survivor-meleeattack_handgun_1",
                     "position": {
                         "x": 1900,
                         "y": 2514
@@ -3596,7 +3662,7 @@
                     }
                 },
                 {
-                    "name": "survivor-meleeattack_handgun_1",
+                    "name": "survivor-meleeattack_handgun_0",
                     "position": {
                         "x": 2046,
                         "y": 2514
@@ -3607,7 +3673,7 @@
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_12",
+                    "name": "survivor-idle_20",
                     "position": {
                         "x": 2774,
                         "y": 3488
@@ -3618,7 +3684,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-ready-03",
+                    "name": "survivor-bow-ready-02",
                     "position": {
                         "x": 2318,
                         "y": 3365
@@ -4124,7 +4190,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-pull-16",
+                    "name": "survivor-walk_bow_12",
                     "position": {
                         "x": 2771,
                         "y": 2130
@@ -4135,9 +4201,31 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-pull-17",
+                    "name": "survivor-walk_bow_11",
                     "position": {
                         "x": 2046,
+                        "y": 2002
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    }
+                },
+                {
+                    "name": "survivor-bow-pull-16",
+                    "position": {
+                        "x": 2191,
+                        "y": 2002
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    }
+                },
+                {
+                    "name": "survivor-bow-pull-17",
+                    "position": {
+                        "x": 2336,
                         "y": 2002
                     },
                     "dimension": {
@@ -4148,7 +4236,7 @@
                 {
                     "name": "survivor-bow-pull-18",
                     "position": {
-                        "x": 2191,
+                        "x": 2481,
                         "y": 2002
                     },
                     "dimension": {
@@ -4159,7 +4247,7 @@
                 {
                     "name": "survivor-bow-pull-19",
                     "position": {
-                        "x": 2336,
+                        "x": 2626,
                         "y": 2002
                     },
                     "dimension": {
@@ -4170,7 +4258,7 @@
                 {
                     "name": "survivor-bow-pull-20",
                     "position": {
-                        "x": 2481,
+                        "x": 2771,
                         "y": 2002
                     },
                     "dimension": {
@@ -4181,8 +4269,8 @@
                 {
                     "name": "survivor-bow-pull-21",
                     "position": {
-                        "x": 2626,
-                        "y": 2002
+                        "x": 2046,
+                        "y": 1874
                     },
                     "dimension": {
                         "w": 145,
@@ -4192,8 +4280,8 @@
                 {
                     "name": "survivor-bow-pull-22",
                     "position": {
-                        "x": 2771,
-                        "y": 2002
+                        "x": 2191,
+                        "y": 1874
                     },
                     "dimension": {
                         "w": 145,
@@ -4203,7 +4291,7 @@
                 {
                     "name": "survivor-bow-pull-23",
                     "position": {
-                        "x": 2046,
+                        "x": 2336,
                         "y": 1874
                     },
                     "dimension": {
@@ -4214,7 +4302,7 @@
                 {
                     "name": "survivor-bow-pull-24",
                     "position": {
-                        "x": 2191,
+                        "x": 2481,
                         "y": 1874
                     },
                     "dimension": {
@@ -4225,7 +4313,7 @@
                 {
                     "name": "survivor-bow-pull-25",
                     "position": {
-                        "x": 2336,
+                        "x": 2626,
                         "y": 1874
                     },
                     "dimension": {
@@ -4236,7 +4324,7 @@
                 {
                     "name": "survivor-bow-pull-26",
                     "position": {
-                        "x": 2481,
+                        "x": 2771,
                         "y": 1874
                     },
                     "dimension": {
@@ -4247,8 +4335,8 @@
                 {
                     "name": "survivor-bow-pull-27",
                     "position": {
-                        "x": 2626,
-                        "y": 1874
+                        "x": 2046,
+                        "y": 1746
                     },
                     "dimension": {
                         "w": 145,
@@ -4258,8 +4346,8 @@
                 {
                     "name": "survivor-bow-pull-28",
                     "position": {
-                        "x": 2771,
-                        "y": 1874
+                        "x": 2191,
+                        "y": 1746
                     },
                     "dimension": {
                         "w": 145,
@@ -4269,7 +4357,7 @@
                 {
                     "name": "survivor-bow-pull-29",
                     "position": {
-                        "x": 2046,
+                        "x": 2336,
                         "y": 1746
                     },
                     "dimension": {
@@ -4280,7 +4368,7 @@
                 {
                     "name": "survivor-bow-pull-30",
                     "position": {
-                        "x": 2191,
+                        "x": 2481,
                         "y": 1746
                     },
                     "dimension": {
@@ -4291,7 +4379,7 @@
                 {
                     "name": "survivor-bow-pull-31",
                     "position": {
-                        "x": 2336,
+                        "x": 2626,
                         "y": 1746
                     },
                     "dimension": {
@@ -4302,7 +4390,7 @@
                 {
                     "name": "survivor-bow-pull-32",
                     "position": {
-                        "x": 2481,
+                        "x": 2771,
                         "y": 1746
                     },
                     "dimension": {
@@ -4313,8 +4401,8 @@
                 {
                     "name": "survivor-bow-pull-33",
                     "position": {
-                        "x": 2626,
-                        "y": 1746
+                        "x": 2046,
+                        "y": 1618
                     },
                     "dimension": {
                         "w": 145,
@@ -4324,8 +4412,8 @@
                 {
                     "name": "survivor-bow-pull-34",
                     "position": {
-                        "x": 2771,
-                        "y": 1746
+                        "x": 2191,
+                        "y": 1618
                     },
                     "dimension": {
                         "w": 145,
@@ -4335,7 +4423,7 @@
                 {
                     "name": "survivor-bow-pull-35",
                     "position": {
-                        "x": 2046,
+                        "x": 2336,
                         "y": 1618
                     },
                     "dimension": {
@@ -4346,7 +4434,7 @@
                 {
                     "name": "survivor-idle_00",
                     "position": {
-                        "x": 2191,
+                        "x": 2481,
                         "y": 1618
                     },
                     "dimension": {
@@ -4357,7 +4445,7 @@
                 {
                     "name": "survivor-idle_01",
                     "position": {
-                        "x": 2336,
+                        "x": 2626,
                         "y": 1618
                     },
                     "dimension": {
@@ -4368,7 +4456,7 @@
                 {
                     "name": "survivor-idle_02",
                     "position": {
-                        "x": 2481,
+                        "x": 2771,
                         "y": 1618
                     },
                     "dimension": {
@@ -4379,8 +4467,8 @@
                 {
                     "name": "survivor-idle_03",
                     "position": {
-                        "x": 2626,
-                        "y": 1618
+                        "x": 2046,
+                        "y": 1490
                     },
                     "dimension": {
                         "w": 145,
@@ -4390,8 +4478,8 @@
                 {
                     "name": "survivor-idle_04",
                     "position": {
-                        "x": 2771,
-                        "y": 1618
+                        "x": 2191,
+                        "y": 1490
                     },
                     "dimension": {
                         "w": 145,
@@ -4401,7 +4489,7 @@
                 {
                     "name": "survivor-idle_05",
                     "position": {
-                        "x": 2046,
+                        "x": 2336,
                         "y": 1490
                     },
                     "dimension": {
@@ -4412,7 +4500,7 @@
                 {
                     "name": "survivor-idle_06",
                     "position": {
-                        "x": 2191,
+                        "x": 2481,
                         "y": 1490
                     },
                     "dimension": {
@@ -4423,7 +4511,7 @@
                 {
                     "name": "survivor-idle_07",
                     "position": {
-                        "x": 2336,
+                        "x": 2626,
                         "y": 1490
                     },
                     "dimension": {
@@ -4434,7 +4522,7 @@
                 {
                     "name": "survivor-idle_08",
                     "position": {
-                        "x": 2481,
+                        "x": 2771,
                         "y": 1490
                     },
                     "dimension": {
@@ -4445,8 +4533,8 @@
                 {
                     "name": "survivor-idle_09",
                     "position": {
-                        "x": 2626,
-                        "y": 1490
+                        "x": 2046,
+                        "y": 1362
                     },
                     "dimension": {
                         "w": 145,
@@ -4456,8 +4544,8 @@
                 {
                     "name": "survivor-idle_10",
                     "position": {
-                        "x": 2771,
-                        "y": 1490
+                        "x": 2191,
+                        "y": 1362
                     },
                     "dimension": {
                         "w": 145,
@@ -4467,7 +4555,7 @@
                 {
                     "name": "survivor-idle_11",
                     "position": {
-                        "x": 2046,
+                        "x": 2336,
                         "y": 1362
                     },
                     "dimension": {
@@ -4478,7 +4566,7 @@
                 {
                     "name": "survivor-idle_12",
                     "position": {
-                        "x": 2191,
+                        "x": 2481,
                         "y": 1362
                     },
                     "dimension": {
@@ -4489,7 +4577,7 @@
                 {
                     "name": "survivor-idle_13",
                     "position": {
-                        "x": 2336,
+                        "x": 2626,
                         "y": 1362
                     },
                     "dimension": {
@@ -4500,7 +4588,7 @@
                 {
                     "name": "survivor-idle_14",
                     "position": {
-                        "x": 2481,
+                        "x": 2771,
                         "y": 1362
                     },
                     "dimension": {
@@ -4511,28 +4599,6 @@
                 {
                     "name": "survivor-idle_15",
                     "position": {
-                        "x": 2626,
-                        "y": 1362
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    }
-                },
-                {
-                    "name": "survivor-idle_16",
-                    "position": {
-                        "x": 2771,
-                        "y": 1362
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    }
-                },
-                {
-                    "name": "survivor-idle_17",
-                    "position": {
                         "x": 2046,
                         "y": 1234
                     },
@@ -4542,7 +4608,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_18",
+                    "name": "survivor-idle_16",
                     "position": {
                         "x": 2191,
                         "y": 1234
@@ -4553,7 +4619,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_19",
+                    "name": "survivor-idle_17",
                     "position": {
                         "x": 2336,
                         "y": 1234
@@ -4564,7 +4630,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_20",
+                    "name": "survivor-idle_18",
                     "position": {
                         "x": 2481,
                         "y": 1234
@@ -4575,7 +4641,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_21",
+                    "name": "survivor-idle_19",
                     "position": {
                         "x": 2626,
                         "y": 1234
@@ -4597,7 +4663,7 @@
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_11",
+                    "name": "survivor-idle_21",
                     "position": {
                         "x": 2046,
                         "y": 1106
@@ -4817,7 +4883,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_3",
+                    "name": "survivor-idle_handgun_13",
                     "position": {
                         "x": 417,
                         "y": 4750
@@ -4828,7 +4894,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_2",
+                    "name": "survivor-idle_handgun_9",
                     "position": {
                         "x": 544,
                         "y": 4750
@@ -4839,7 +4905,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_19",
+                    "name": "survivor-idle_handgun_7",
                     "position": {
                         "x": 671,
                         "y": 4750
@@ -4850,7 +4916,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_18",
+                    "name": "survivor-idle_handgun_6",
                     "position": {
                         "x": 798,
                         "y": 4750
@@ -4861,7 +4927,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_17",
+                    "name": "survivor-idle_handgun_5",
                     "position": {
                         "x": 925,
                         "y": 4750
@@ -4872,7 +4938,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_16",
+                    "name": "survivor-idle_handgun_4",
                     "position": {
                         "x": 1052,
                         "y": 4750
@@ -4883,7 +4949,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_15",
+                    "name": "survivor-idle_handgun_3",
                     "position": {
                         "x": 1179,
                         "y": 4750
@@ -4894,7 +4960,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_9",
+                    "name": "survivor-idle_handgun_2",
                     "position": {
                         "x": 1306,
                         "y": 4750
@@ -4905,7 +4971,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_7",
+                    "name": "survivor-idle_handgun_19",
                     "position": {
                         "x": 1433,
                         "y": 4750
@@ -4916,7 +4982,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_14",
+                    "name": "survivor-idle_handgun_18",
                     "position": {
                         "x": 1560,
                         "y": 4750
@@ -4927,7 +4993,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_13",
+                    "name": "survivor-idle_handgun_17",
                     "position": {
                         "x": 1687,
                         "y": 4750
@@ -4982,7 +5048,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_8",
+                    "name": "survivor-idle_handgun_0",
                     "position": {
                         "x": 2322,
                         "y": 4750
@@ -4993,7 +5059,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_0",
+                    "name": "survivor-idle_handgun_8",
                     "position": {
                         "x": 2449,
                         "y": 4750
@@ -5004,7 +5070,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_6",
+                    "name": "survivor-idle_handgun_16",
                     "position": {
                         "x": 2576,
                         "y": 4750
@@ -5015,7 +5081,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_5",
+                    "name": "survivor-idle_handgun_15",
                     "position": {
                         "x": 2703,
                         "y": 4750
@@ -5026,7 +5092,7 @@
                     }
                 },
                 {
-                    "name": "survivor-idle_handgun_4",
+                    "name": "survivor-idle_handgun_14",
                     "position": {
                         "x": 2830,
                         "y": 4750
@@ -5039,8 +5105,8 @@
             ]
         },
         {
-            "image": "1e37c881dbdc1ef23ed24c670b5bcde622a8da21.png",
-            "filesize": 310113,
+            "image": "c4597ecc81fa839774367fea93a5d20a60036c14.png",
+            "filesize": 300996,
             "sprites": [
                 {
                     "name": "survivor-bow-ready-09",
@@ -5109,7 +5175,7 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-ready-02",
+                    "name": "survivor-bow-ready-03",
                     "position": {
                         "x": 0,
                         "y": 672
@@ -5175,7 +5241,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_9",
+                    "name": "survivor-move_knife_6",
                     "position": {
                         "x": 0,
                         "y": 1344
@@ -5186,7 +5252,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_7",
+                    "name": "survivor-move_knife_5",
                     "position": {
                         "x": 0,
                         "y": 1454
@@ -5197,7 +5263,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_6",
+                    "name": "survivor-move_knife_4",
                     "position": {
                         "x": 0,
                         "y": 1564
@@ -5208,7 +5274,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_5",
+                    "name": "survivor-move_knife_3",
                     "position": {
                         "x": 0,
                         "y": 1674
@@ -5219,7 +5285,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_4",
+                    "name": "survivor-move_knife_2",
                     "position": {
                         "x": 0,
                         "y": 1784
@@ -5230,7 +5296,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_3",
+                    "name": "survivor-move_knife_19",
                     "position": {
                         "x": 0,
                         "y": 1894
@@ -5241,7 +5307,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_2",
+                    "name": "survivor-move_knife_18",
                     "position": {
                         "x": 0,
                         "y": 2004
@@ -5252,7 +5318,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_19",
+                    "name": "survivor-move_knife_8",
                     "position": {
                         "x": 0,
                         "y": 2114
@@ -5263,7 +5329,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_18",
+                    "name": "survivor-move_knife_16",
                     "position": {
                         "x": 0,
                         "y": 2224
@@ -5274,7 +5340,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_8",
+                    "name": "survivor-move_knife_15",
                     "position": {
                         "x": 0,
                         "y": 2334
@@ -5285,7 +5351,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_16",
+                    "name": "survivor-move_knife_14",
                     "position": {
                         "x": 0,
                         "y": 2444
@@ -5296,7 +5362,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_15",
+                    "name": "survivor-move_knife_13",
                     "position": {
                         "x": 0,
                         "y": 2554
@@ -5307,7 +5373,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_14",
+                    "name": "survivor-move_knife_12",
                     "position": {
                         "x": 0,
                         "y": 2664
@@ -5318,7 +5384,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_13",
+                    "name": "survivor-move_knife_11",
                     "position": {
                         "x": 0,
                         "y": 2774
@@ -5329,7 +5395,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_12",
+                    "name": "survivor-move_knife_10",
                     "position": {
                         "x": 0,
                         "y": 2884
@@ -5340,7 +5406,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_11",
+                    "name": "survivor-move_knife_1",
                     "position": {
                         "x": 0,
                         "y": 2994
@@ -5351,7 +5417,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_10",
+                    "name": "survivor-move_knife_0",
                     "position": {
                         "x": 0,
                         "y": 3104
@@ -5362,7 +5428,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_1",
+                    "name": "survivor-move_knife_17",
                     "position": {
                         "x": 0,
                         "y": 3214
@@ -5373,32 +5439,10 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_0",
-                    "position": {
-                        "x": 0,
-                        "y": 3324
-                    },
-                    "dimension": {
-                        "w": 140,
-                        "h": 110
-                    }
-                },
-                {
-                    "name": "survivor-move_knife_17",
-                    "position": {
-                        "x": 0,
-                        "y": 3434
-                    },
-                    "dimension": {
-                        "w": 140,
-                        "h": 110
-                    }
-                },
-                {
                     "name": "survivor-reload_handgun_0",
                     "position": {
                         "x": 0,
-                        "y": 3544
+                        "y": 3324
                     },
                     "dimension": {
                         "w": 130,
@@ -5409,7 +5453,7 @@
                     "name": "survivor-reload_handgun_1",
                     "position": {
                         "x": 0,
-                        "y": 3659
+                        "y": 3439
                     },
                     "dimension": {
                         "w": 130,
@@ -5420,7 +5464,7 @@
                     "name": "survivor-reload_handgun_10",
                     "position": {
                         "x": 0,
-                        "y": 3774
+                        "y": 3554
                     },
                     "dimension": {
                         "w": 130,
@@ -5431,7 +5475,7 @@
                     "name": "survivor-reload_handgun_9",
                     "position": {
                         "x": 0,
-                        "y": 3889
+                        "y": 3669
                     },
                     "dimension": {
                         "w": 130,
@@ -5442,7 +5486,7 @@
                     "name": "survivor-reload_handgun_8",
                     "position": {
                         "x": 0,
-                        "y": 4004
+                        "y": 3784
                     },
                     "dimension": {
                         "w": 130,
@@ -5453,7 +5497,7 @@
                     "name": "survivor-reload_handgun_7",
                     "position": {
                         "x": 0,
-                        "y": 4119
+                        "y": 3899
                     },
                     "dimension": {
                         "w": 130,
@@ -5464,7 +5508,7 @@
                     "name": "survivor-reload_handgun_6",
                     "position": {
                         "x": 0,
-                        "y": 4234
+                        "y": 4014
                     },
                     "dimension": {
                         "w": 130,
@@ -5475,7 +5519,7 @@
                     "name": "survivor-reload_handgun_5",
                     "position": {
                         "x": 0,
-                        "y": 4349
+                        "y": 4129
                     },
                     "dimension": {
                         "w": 130,
@@ -5486,7 +5530,7 @@
                     "name": "survivor-reload_handgun_4",
                     "position": {
                         "x": 0,
-                        "y": 4464
+                        "y": 4244
                     },
                     "dimension": {
                         "w": 130,
@@ -5497,7 +5541,7 @@
                     "name": "survivor-reload_handgun_3",
                     "position": {
                         "x": 0,
-                        "y": 4579
+                        "y": 4359
                     },
                     "dimension": {
                         "w": 130,
@@ -5508,7 +5552,7 @@
                     "name": "survivor-reload_handgun_2",
                     "position": {
                         "x": 0,
-                        "y": 4694
+                        "y": 4474
                     },
                     "dimension": {
                         "w": 130,
@@ -5519,7 +5563,7 @@
                     "name": "survivor-reload_handgun_14",
                     "position": {
                         "x": 0,
-                        "y": 4809
+                        "y": 4589
                     },
                     "dimension": {
                         "w": 130,
@@ -5530,7 +5574,7 @@
                     "name": "survivor-reload_handgun_13",
                     "position": {
                         "x": 0,
-                        "y": 4924
+                        "y": 4704
                     },
                     "dimension": {
                         "w": 130,
@@ -5541,7 +5585,7 @@
                     "name": "survivor-reload_handgun_12",
                     "position": {
                         "x": 0,
-                        "y": 5039
+                        "y": 4819
                     },
                     "dimension": {
                         "w": 130,
@@ -5552,7 +5596,7 @@
                     "name": "survivor-reload_handgun_11",
                     "position": {
                         "x": 0,
-                        "y": 5154
+                        "y": 4934
                     },
                     "dimension": {
                         "w": 130,
@@ -5563,7 +5607,7 @@
                     "name": "survivor-move_handgun_19",
                     "position": {
                         "x": 0,
-                        "y": 5269
+                        "y": 5049
                     },
                     "dimension": {
                         "w": 129,
@@ -5574,7 +5618,7 @@
                     "name": "survivor-move_handgun_0",
                     "position": {
                         "x": 0,
-                        "y": 5379
+                        "y": 5159
                     },
                     "dimension": {
                         "w": 129,
@@ -5584,8 +5628,8 @@
                 {
                     "name": "survivor-move_handgun_1",
                     "position": {
-                        "x": 129,
-                        "y": 5379
+                        "x": 0,
+                        "y": 5269
                     },
                     "dimension": {
                         "w": 129,
@@ -5595,7 +5639,7 @@
                 {
                     "name": "survivor-move_handgun_9",
                     "position": {
-                        "x": 258,
+                        "x": 0,
                         "y": 5379
                     },
                     "dimension": {
@@ -5606,7 +5650,7 @@
                 {
                     "name": "survivor-move_handgun_8",
                     "position": {
-                        "x": 387,
+                        "x": 129,
                         "y": 5379
                     },
                     "dimension": {
@@ -5617,7 +5661,7 @@
                 {
                     "name": "survivor-move_handgun_7",
                     "position": {
-                        "x": 516,
+                        "x": 258,
                         "y": 5379
                     },
                     "dimension": {
@@ -5628,7 +5672,7 @@
                 {
                     "name": "survivor-move_handgun_6",
                     "position": {
-                        "x": 645,
+                        "x": 387,
                         "y": 5379
                     },
                     "dimension": {
@@ -5639,7 +5683,7 @@
                 {
                     "name": "survivor-move_handgun_5",
                     "position": {
-                        "x": 774,
+                        "x": 516,
                         "y": 5379
                     },
                     "dimension": {
@@ -5650,7 +5694,7 @@
                 {
                     "name": "survivor-move_handgun_4",
                     "position": {
-                        "x": 903,
+                        "x": 645,
                         "y": 5379
                     },
                     "dimension": {
@@ -5661,7 +5705,7 @@
                 {
                     "name": "survivor-move_handgun_3",
                     "position": {
-                        "x": 1032,
+                        "x": 774,
                         "y": 5379
                     },
                     "dimension": {
@@ -5672,7 +5716,7 @@
                 {
                     "name": "survivor-move_handgun_2",
                     "position": {
-                        "x": 1161,
+                        "x": 903,
                         "y": 5379
                     },
                     "dimension": {
@@ -5683,7 +5727,7 @@
                 {
                     "name": "survivor-move_handgun_10",
                     "position": {
-                        "x": 1290,
+                        "x": 1032,
                         "y": 5379
                     },
                     "dimension": {
@@ -5694,7 +5738,7 @@
                 {
                     "name": "survivor-move_handgun_18",
                     "position": {
-                        "x": 1419,
+                        "x": 1161,
                         "y": 5379
                     },
                     "dimension": {
@@ -5705,7 +5749,7 @@
                 {
                     "name": "survivor-move_handgun_17",
                     "position": {
-                        "x": 1548,
+                        "x": 1290,
                         "y": 5379
                     },
                     "dimension": {
@@ -5716,7 +5760,7 @@
                 {
                     "name": "survivor-move_handgun_16",
                     "position": {
-                        "x": 1677,
+                        "x": 1419,
                         "y": 5379
                     },
                     "dimension": {
@@ -5727,7 +5771,7 @@
                 {
                     "name": "survivor-move_handgun_15",
                     "position": {
-                        "x": 1806,
+                        "x": 1548,
                         "y": 5379
                     },
                     "dimension": {
@@ -5738,7 +5782,7 @@
                 {
                     "name": "survivor-move_handgun_14",
                     "position": {
-                        "x": 1935,
+                        "x": 1677,
                         "y": 5379
                     },
                     "dimension": {
@@ -5749,7 +5793,7 @@
                 {
                     "name": "survivor-move_handgun_13",
                     "position": {
-                        "x": 2064,
+                        "x": 1806,
                         "y": 5379
                     },
                     "dimension": {
@@ -5760,7 +5804,7 @@
                 {
                     "name": "survivor-move_handgun_12",
                     "position": {
-                        "x": 2193,
+                        "x": 1935,
                         "y": 5379
                     },
                     "dimension": {
@@ -5771,7 +5815,7 @@
                 {
                     "name": "survivor-move_handgun_11",
                     "position": {
-                        "x": 2322,
+                        "x": 2064,
                         "y": 5379
                     },
                     "dimension": {

@@ -13,7 +13,9 @@ const { Friend } = require('../character/characters/friend.js');
 const { Rat } = require('../character/characters/rat');
 const { Player } = require('../character/characters/player.js');
 const { Door } = require('../object_management/hard_furnishing/door.js');
+const { Note } = require('../object_management/items/note');
 const { Chest } = require('../object_management/items/chest');
+const { Campfire } = require('../object_management/items/fire_place');
 
 class Level {
   constructor() {
@@ -70,6 +72,12 @@ class Level {
 
     const chest = new Chest(item_array);
     chest.add_state_handling();
+
+    const note = new Note({x: 900, y: 850});
+    note.add_state_handling();
+
+    const campfire = new Campfire({x: 1100, y: 800});
+    campfire.add_state_handling();
   }
 
   render_doors(door_array) {

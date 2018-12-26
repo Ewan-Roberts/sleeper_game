@@ -5,39 +5,10 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const port = process.env.PORT || 3000;
-const io = require('socket.io')(server, {});
+const init = require('./data_base/init');
+const { socket_management } = require('./back_end/engine/socket');
 
-// put in DB and cache in this layer
-const player_inventory = {
-  items: [
-    {
-      name: 'bunny',
-      item_id: 'an id',
-      slot: 0,
-    },
-    {
-      name: 'bunny',
-      item_id: 'an id',
-      slot: 1,
-    },
-    {
-      name: 'bunny',
-      item_id: 'an id',
-      slot: 2,
-    },
-    {
-      name: 'bunny',
-      item_id: 'an id',
-      slot: 3,
-    },
-  ],
-};
-
-io.on('connection', (socket) => {
-  socket.on('get_inventory', () => {
-    socket.emit('player_inventory', player_inventory);
-  });
-});
+socket_management(server);
 
 app.use(express.static('./public'));
 
@@ -51,6 +22,8 @@ server.listen(port, () => {
   //console.log(`server is listening on port: ${port}`);
 });
 
-io.on('connection', () => {
-  //console.log('Client connected.');
-});
+
+
+
+// put in DB and cache in this layer
+
