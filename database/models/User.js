@@ -1,8 +1,6 @@
 'use strict';
 
-const { mongoose } = require('../init');
-console.log(mongoose);
-console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
+const { mongoose } = require('../local_database');
 
 const user_schema = new mongoose.Schema({
 

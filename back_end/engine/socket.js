@@ -30,7 +30,9 @@ function socket_management(server) {
 
 
   io.on('connection', () => {
-    //console.log('Client connected.');
+
+    console.log(' ... Sockets connected on port: 3000');
+
   });
 
 }

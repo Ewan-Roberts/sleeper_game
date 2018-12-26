@@ -8,7 +8,7 @@
     "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.js --compress --mangle",
     "start": "nodemon server",
     "spritesheet": "pixi-packer ./scripts/images.js public/images/",
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "eslint.options": {
     "configFile": "./.eslintrc.json"
