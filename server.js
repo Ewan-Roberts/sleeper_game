@@ -1,34 +1,26 @@
 'use strict';
 
-const process = require('process');
 require('dotenv').config();
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const port = process.env.PORT || 3000;
-const { database } = require('./database/local_database');
+const init = require('./database/local_database');
 const { socket_management } = require('./back_end/engine/socket');
 
-database.once('open', function() {
-  process.stdout.write('\x1B[2J');
+socket_management(server);
 
-  console.log(' ... Database connected on port: 27017');
+app.use(express.static('./public'));
 
-  socket_management(server);
+app.get('/', (req, res) => {
 
-  app.use(express.static('./public'));
+  res.sendFile(`${__dirname}/public/index.html`);
 
-  app.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/public/index.html`);
-  });
-
-  server.listen(port, () => {
-    console.log(` ... Server listening on port: ${port}`);
-  });
 });
 
-
-
+server.listen(port, () => {
+  console.log(` ... Server listening on port: ${port}`);
+});
 
 
 
