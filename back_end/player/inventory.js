@@ -5,9 +5,7 @@ class Inventory {
     this.id = attributes.id;
     this.items= attributes.items;
   }
-
 }
-
 
 async function get_player_inventory_on_id() {
   return({
