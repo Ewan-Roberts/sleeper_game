@@ -3,7 +3,7 @@
 const { expect } = require('chai');
 const { get_player_vitals } = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/player/meters');
 
-describe('/back_end/player/meters', function() {
+xdescribe('/back_end/player/meters', function() {
 
   context('get_player_status(...)', function() {
     it('provids player vitals', function() {
