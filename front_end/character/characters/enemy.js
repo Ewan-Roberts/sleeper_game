@@ -7,16 +7,12 @@ const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
 
-const container = new PIXI.Container();
-container.name = 'enemy_container';
-container.zIndex = -10;
-viewport.addChild(container);
 
 class Enemy extends Character {
   constructor() {
     super();
 
-    container.addChild(this.sprite);
+    viewport.getChildByName('enemy_container').addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {

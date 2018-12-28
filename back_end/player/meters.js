@@ -1,3 +1,27 @@
+'use strict';
+
+const User = require('../../database/models/User');
+
+async function get_player_vitals_by_id(user_info) {
+  if(!user_info) throw new Error('nothing provided');
+
+  const result = await User.find({ id: user_info.id });
+
+  return result;
+}
+
+
+module.exports = {
+  get_player_vitals_by_id,
+};
+
+
+
+
+
+
+
+
 //
 //const   dynamoose       = require('mongoose'),
 //  User            = require('../models/User.js');

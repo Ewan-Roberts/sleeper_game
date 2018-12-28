@@ -1,16 +1,44 @@
 'use strict';
 
 const { expect } = require('chai');
-const { get_player_vitals } = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/player/meters');
+const { get_player_vitals_by_id }
+  = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/player/meters');
 
-xdescribe('/back_end/player/meters', function() {
+const { create_user }
+  = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/register/index');
+
+const uuid = require('uuid/v4');
+
+const valid_schema = {
+  user_name: 'Taka',
+  id: uuid(),
+  password: 'cool',
+  vitals: {
+    health: 100,
+    hunger: 100,
+  },
+  location: {
+    x: 0,
+    y: 0,
+  },
+};
+
+describe('/back_end/player/vitals', function() {
+  let test_player;
+
+  before(async function() {
+    test_player = await create_user(valid_schema);
+  });
 
   context('get_player_status(...)', function() {
-    it('provids player vitals', function() {
-      const player_vitals = get_player_vitals('7f7d7124-d822-4550-a1bb-d2f2ac8e9bb6');
 
-      console.log(player_vitals);
-      expect(player_vitals).to.be.ok;
+    it('Provides player vitals', async function() {
+      const found_player = await get_player_vitals_by_id(test_player);
+
+      expect(found_player[0].vitals).to.deep.equal({
+        health: 100,
+        hunger: 100,
+      });
     });
 
   });

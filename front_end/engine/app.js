@@ -7,5 +7,5 @@ module.exports = new PIXI.Application({
   height: global.window.innerHeight,
   antialias: false,
   autoResize: true,
-  backgroundColor: 0x000000, //0xC1C1C1
+  backgroundColor: 0x2F4F4F, //0xC1C1C1
 });

@@ -82,6 +82,7 @@ function create_arrow_tween(arrow, power, arrow_path) {
 
   return arrow_tween;
 }
+
 function arrow_management(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
@@ -89,7 +90,9 @@ function arrow_management(power, origin, target) {
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
-    viewport.getChildByName('enemy_container').children.forEach(enemy => {
+
+    const enemy_containter = viewport.getChildByName('enemy_container');
+    enemy_containter.children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
@@ -103,6 +106,8 @@ function arrow_management(power, origin, target) {
     });
 
     viewport.getChildByName('collision_items').children.forEach(object => {
+      if(!object.hitable_with_arrow) return;
+
       if(object.containsPoint(arrow_point)){
         arrow_tween.stop();
 

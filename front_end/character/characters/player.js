@@ -5,6 +5,8 @@ const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 const { Keyboard }      = require('../../input/keyboard');
 const { Mouse }         = require('../../input/mouse');
+const { socket }        = require('../../engine/socket');
+//const uuid              = require('uuid/v4');
 
 class Player extends Character{
   constructor() {
@@ -15,6 +17,16 @@ class Player extends Character{
     this.sprite.move_to_point = this.move_to_point;
 
     viewport.addChild(this.sprite);
+    socket.on('update_location_from_server', details => {
+      this.sprite.x = details.x;
+      this.sprite.y = details.y;
+    });
+    //console.log(socket)
+
+    //socket.on('server_location_update', details => {
+    //  this.sprite.x = details.x;
+    //  this.sprite.y = details.y;
+    //});
   }
 
   follow_player() {
@@ -39,6 +51,10 @@ class Player extends Character{
 
     global.document.addEventListener('keydown', (event) => {
       this.keyboard.key_down(event);
+      socket.emit('send_player_location', {
+        x: this.sprite.x,
+        y: this.sprite.y,
+      });
     });
 
     global.document.addEventListener('keyup', () => {

@@ -5,8 +5,13 @@ const User = require('../../database/models/User');
 async function create_user(user_info) {
   if(!user_info) throw new Error('nothing provided');
 
-  const user = await new User(user_info).save();
+  const searched_user = await User.find({ user_name : user_info.user_name });
 
+  if(searched_user) {
+    return ({ error: 'user_name already exists'});
+  }
+
+  const user = await new User(user_info).save();
   return user;
 }
 

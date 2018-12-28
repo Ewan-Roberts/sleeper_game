@@ -20,6 +20,7 @@ const user_schema = new mongoose.Schema({
 
   password: {
     type:           String,
+    required:       true,
   },
 
   location: {
@@ -28,8 +29,9 @@ const user_schema = new mongoose.Schema({
   },
   inventory: {
     type:           Array,
+    required:       true,
   },
-  meters: {
+  vitals: {
     type:           Object,
   },
 },

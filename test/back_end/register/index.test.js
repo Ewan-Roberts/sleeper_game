@@ -10,8 +10,13 @@ const {
 } = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/register/index');
 
 const valid_schema = {
-  user_name: 'taka',
+  user_name: 'Taka',
   id: uuid(),
+  password: 'cool',
+  location: {
+    x: 0,
+    y: 0,
+  },
 };
 
 
@@ -19,9 +24,7 @@ describe('back_end/register/index', function() {
   let test_user;
 
   before(async function() {
-
     test_user = await create_user(valid_schema);
-
   });
 
   context('create_user(...)', function() {
@@ -61,17 +64,20 @@ describe('back_end/register/index', function() {
   });
 
   context('delete_user_by_id(...)', function() {
-
-    const user_to_delete_data = {
-      user_name: 'i should not exist',
-      id: uuid(),
-    };
-
     let user_to_delete;
 
     before(async function() {
-      user_to_delete = create_user(user_to_delete_data);
+      const user_to_delete_data = {
+        user_name: 'i should not exist',
+        id: uuid(),
+        password: 'cool',
+        location: {
+          x: 0,
+          y: 0,
+        },
+      };
 
+      user_to_delete = create_user(user_to_delete_data);
     });
 
     it('should delete a user on id', async function() {

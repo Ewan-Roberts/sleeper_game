@@ -101,7 +101,7 @@ module.exports = {
 
 
 
-},{"pixi.js":225}],2:[function(require,module,exports){
+},{"pixi.js":217}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -183,8 +183,8 @@ class Character {
     };
   }
 
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
+  set_position(point) {
+    this.sprite.position.set(point.x, point.y);
   }
 
   move_to_point(x,y) {
@@ -221,13 +221,13 @@ class Character {
     this.sprite.addChild(influence_box);
   }
 
-  create_light() {
+  with_light() {
     const light = PIXI.Sprite.fromFrame('light_gradient');
     light.name = 'light';
 
     light.anchor.set(0.5);
-    light.width   = 4000;
-    light.height  = 4000;
+    light.width   = 2000;
+    light.height  = 2000;
     light.alpha   = 0.1;
 
     this.sprite.addChild(light);
@@ -320,7 +320,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pathfind":12,"../engine/ticker":14,"../engine/viewport":15,"./animations/character":1,"pixi.js":225}],3:[function(require,module,exports){
+},{"../engine/pathfind":9,"../engine/ticker":11,"../engine/viewport":12,"./animations/character":1,"pixi.js":217}],3:[function(require,module,exports){
 'use strict';
 
 const PIXI              = require('pixi.js');
@@ -376,123 +376,7 @@ module.exports = {
   Cutscene_Character,
 }
 
-},{"../../engine/viewport.js":15,"../character_model":2,"pixi.js":225}],4:[function(require,module,exports){
-(function (global){
-'use strict';
-
-const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport');
-
-const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
-const { createjs } = require('@createjs/tweenjs');
-const { Character } = require('../character_model');
-
-const container = new PIXI.Container();
-container.name = 'enemy_container';
-container.zIndex = -10;
-viewport.addChild(container);
-
-class Enemy extends Character {
-  constructor() {
-    super();
-
-    container.addChild(this.sprite);
-  }
-
-  create_patrol_path(path_data) {
-    this.sprite.patrol_path = path_data;
-  }
-
-  //for testing
-  create_direction_line() {
-    const direction_line = PIXI.Sprite.fromFrame('black_dot');
-
-    direction_line.width = 200;
-    direction_line.height = 15;
-    direction_line.anchor.x =0;
-    direction_line.anchor.y =0.5;
-
-    if(!global.is_development) {
-      direction_line.alpha = 0;
-    }
-
-    this.sprite.addChild(direction_line);
-  }
-
-  action_on_seeing_player(player_sprite) {
-    if(!this.player_seen) {
-      this.sprite.speak('now, calm down, dont move');
-      this.sprite.stop();
-      createjs.Tween.removeTweens(this.sprite);
-    }
-
-    this.player_seen = true;
-    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
-  }
-
-  action_on_hearing_player(player_sprite) {
-    pathfind_from_enemy_to_player(this.sprite, player_sprite);
-  }
-}
-
-module.exports = {
-  Enemy,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pathfind.js":12,"../../engine/viewport":15,"../character_model":2,"@createjs/tweenjs":34,"pixi.js":225}],5:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport');
-
-const { Character } = require('../character_model');
-const { Dialog } = require('../../dialog/dialog_util');
-
-const container = new PIXI.Container();
-container.name = 'friend_container';
-container.zIndex = -10;
-viewport.addChild(container);
-
-class Friend extends Character {
-  constructor() {
-    super();
-    this.sprite.animation_switch('knife', 'idle');
-    this.sprite.name = 'friend';
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    container.addChild(this.sprite);
-  }
-
-  add_script(script) {
-    this.sprite.dialog = {
-      script: script,
-      current_step: 0,
-    };
-  }
-
-  add_dialog_handling() {
-    this.dialog = new Dialog();
-    this.dialog_open = false;
-  }
-
-  add_state_handling() {
-    this.sprite.click = () => {
-      const player = viewport.getChildByName('player');
-      this.dialog.create_background();
-      this.dialog.add_script(this.sprite.dialog.script);
-      this.dialog.add_portrait(player, 'merc_portrait');
-      this.dialog.enter_dialog_slide(player);
-    };
-  }
-}
-
-module.exports = {
-  Friend,
-};
-
-
-},{"../../dialog/dialog_util":10,"../../engine/viewport":15,"../character_model":2,"pixi.js":225}],6:[function(require,module,exports){
+},{"../../engine/viewport.js":12,"../character_model":2,"pixi.js":217}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -501,6 +385,8 @@ const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 const { Keyboard }      = require('../../input/keyboard');
 const { Mouse }         = require('../../input/mouse');
+const { socket }        = require('../../engine/socket');
+//const uuid              = require('uuid/v4');
 
 class Player extends Character{
   constructor() {
@@ -511,6 +397,16 @@ class Player extends Character{
     this.sprite.move_to_point = this.move_to_point;
 
     viewport.addChild(this.sprite);
+    socket.on('update_location_from_server', details => {
+      this.sprite.x = details.x;
+      this.sprite.y = details.y;
+    });
+    //console.log(socket)
+
+    //socket.on('server_location_update', details => {
+    //  this.sprite.x = details.x;
+    //  this.sprite.y = details.y;
+    //});
   }
 
   follow_player() {
@@ -535,6 +431,10 @@ class Player extends Character{
 
     global.document.addEventListener('keydown', (event) => {
       this.keyboard.key_down(event);
+      socket.emit('send_player_location', {
+        x: this.sprite.x,
+        y: this.sprite.y,
+      });
     });
 
     global.document.addEventListener('keyup', () => {
@@ -548,111 +448,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport.js":15,"../../input/keyboard":21,"../../input/mouse":22,"../character_model":2}],7:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport');
-
-const critter_container = new PIXI.Container();
-critter_container.name = 'critter_container';
-
-class Rat {
-  constructor() {
-    viewport.addChild(critter_container);
-
-    this.animations = {
-      move: this.create_move_frames(),
-      wait: this.create_wait_frames(),
-      dead: this.create_dead_frames(),
-      eat:  this.create_eat_frames(),
-    };
-
-    this.sprite = new PIXI.extras.AnimatedSprite(this.animations.move);
-    this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.rotation = -0.5;
-    this.sprite.play();
-    this.sprite.name = 'rat';
-    this.sprite.zIndex = -3;
-
-    critter_container.addChild(this.sprite);
-  }
-
-  create_patrol_path(path_data) {
-    this.sprite.patrol_path = path_data;
-  }
-
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
-
-  create_move_frames() {
-    const moving_frames = [];
-
-    for (let i = 1; i < 15; i += 1) {
-      const val = i < 10 ? `0${i}` : i;
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
-    }
-
-    for (let i = 15; i > 0; i -= 1) {
-      const val = i < 10 ? `0${i}` : i;
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
-    }
-
-    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
-
-    return moving_frames;
-  }
-
-  create_wait_frames() {
-
-    const waiting_frames = [
-      PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_51'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_01'),
-    ];
-
-    return waiting_frames;
-  }
-
-  create_dead_frames() {
-    return PIXI.Texture.fromFrame('rat_35');
-  }
-
-  create_eat_frames() {
-
-    const eating_frames = [
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_41'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_37'),
-    ];
-
-    return eating_frames;
-  }
-}
-
-module.exports = {
-  Rat,
-};
-
-},{"../../engine/viewport":15,"pixi.js":225}],8:[function(require,module,exports){
+},{"../../engine/socket":10,"../../engine/viewport.js":12,"../../input/keyboard":18,"../../input/mouse":19,"../character_model":2}],5:[function(require,module,exports){
 'use strict';
 
 const viewport = require('../engine/viewport');
@@ -728,7 +524,7 @@ module.exports = {
 
 
 
-},{"../engine/ticker":14,"../engine/viewport":15,"pixi.js":225}],9:[function(require,module,exports){
+},{"../engine/ticker":11,"../engine/viewport":12,"pixi.js":217}],6:[function(require,module,exports){
 'use strict';
 
 const { Cutscene } = require('../cutscene_model');
@@ -782,7 +578,7 @@ module.exports = {
   Intro_Cutscene,
 };
 
-},{"../../character/characters/cutscene_character":3,"../../dialog/dialog_util":10,"../../engine/viewport.js":15,"../../gui/caption":16,"../cutscene_model":8}],10:[function(require,module,exports){
+},{"../../character/characters/cutscene_character":3,"../../dialog/dialog_util":7,"../../engine/viewport.js":12,"../../gui/caption":13,"../cutscene_model":5}],7:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -963,7 +759,7 @@ module.exports = {
   Dialog,
 };
 
-},{"../engine/viewport":15,"pixi.js":225}],11:[function(require,module,exports){
+},{"../engine/viewport":12,"pixi.js":217}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -974,11 +770,11 @@ module.exports = new PIXI.Application({
   height: global.window.innerHeight,
   antialias: false,
   autoResize: true,
-  backgroundColor: 0x000000, //0xC1C1C1
+  backgroundColor: 0x2F4F4F, //0xC1C1C1
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":225}],12:[function(require,module,exports){
+},{"pixi.js":217}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1423,23 +1219,53 @@ module.exports = {
 // }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./viewport":15,"@createjs/tweenjs":34,"easystarjs":45,"pixi.js":225}],13:[function(require,module,exports){
+},{"./viewport":12,"@createjs/tweenjs":26,"easystarjs":37,"pixi.js":217}],10:[function(require,module,exports){
 'use strict';
 
 const io = require('socket.io-client');
 
 const socket = io.connect();
 
-module.exports = socket;
+async function register_user(user_details) {
 
-},{"socket.io-client":267}],14:[function(require,module,exports){
+  const input = {
+    user_name: 'ewan',
+    password: 'yoyoyyo',
+  };
+
+  socket.emit('register', input);
+}
+
+socket.on('register_success', response => {
+
+  //console.log(response);
+
+});
+
+socket.on('other_players', response => {
+
+  //if(not the current player) { return };
+  //rendertheplayer
+
+  console.log(response);
+
+});
+
+
+
+module.exports = {
+  register_user,
+  socket,
+};
+
+},{"socket.io-client":259}],11:[function(require,module,exports){
 'use strict';
 
 const app = require('./app');
 
 module.exports = app.ticker;
 
-},{"./app":11}],15:[function(require,module,exports){
+},{"./app":8}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1455,7 +1281,7 @@ const viewport = new Viewport({
 module.exports = viewport;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-viewport":108}],16:[function(require,module,exports){
+},{"pixi-viewport":100}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1525,7 +1351,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1648,25 +1474,25 @@ module.exports = {
   GUI_Container,
 };
 
-},{"pixi.js":225}],18:[function(require,module,exports){
+},{"pixi.js":217}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
 const dom_hud = global.document.querySelector('.characterInventory');
 const inventory_top_section = global.document.querySelector('.inventory_top_section');
-const socket = require('../engine/socket');
+//const socket = require('../engine/socket');
 
 class GUI_HUD {
   constructor() {
     // only store inventory on the backend
     // future Ewan, bind this to the player
-    socket.on('player_inventory', inventory_data => {
+    //socket.on('player_inventory', inventory_data => {
 
-      inventory_data.items.forEach(item => {
-        this.fill_slot(item);
-      });
+    //  inventory_data.items.forEach(item => {
+    //    this.fill_slot(item);
+    //  });
 
-    });
+    //});
 
     this.inventory = {};
   }
@@ -1677,7 +1503,7 @@ class GUI_HUD {
 
     // replace with uuid and shit
     player.id = '1';
-    socket.emit('get_inventory', player.id);
+    //socket.emit('get_inventory', player.id);
   }
 
   hide() {
@@ -1701,7 +1527,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/socket":13}],19:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1729,7 +1555,7 @@ new Start_Menu();
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1740,8 +1566,10 @@ const pixiPackerParser = require('pixi-packer-parser');
 const app = require('./engine/app');
 const ticker = require('./engine/ticker');
 const viewport = require('./engine/viewport');
+//const { register_user } = require('./engine/socket');
 const tweenManager = require('pixi-tween');
 const load_start_menu = require('./gui/start_menu')
+
 
 global.document.body.appendChild(app.view);
 
@@ -1754,14 +1582,46 @@ ticker.add(() => PIXI.tweenManager.update());
 const loader = new PIXI.loaders.Loader();
 loader.use(pixiPackerParser(PIXI));
 loader.add('../../images/bedroom_EN_web.json');
-loader.load(() => {
-  const debug = require('./level/debug/debug_layout.js');
-  debug.add_floor();
+
+const collision_container = new PIXI.Container();
+collision_container.name = 'collision_items';
+viewport.addChild(collision_container);
+
+const non_collision_container = new PIXI.Container();
+non_collision_container.name = 'non_collision_items';
+viewport.addChild(non_collision_container);
+
+
+const enemy_container = new PIXI.Container();
+enemy_container.name = 'enemy_container';
+enemy_container.zIndex = -10;
+viewport.addChild(enemy_container);
+
+
+const door_container = new PIXI.Container();
+door_container.name     = 'door_container';
+door_container.zIndex   = -2;
+viewport.addChild(door_container);
+
+
+const critter_container = new PIXI.Container();
+critter_container.name = 'critter_container';
+viewport.addChild(critter_container);
+
+
+loader.load(async function() {
+
+  //await register_user();
+  const { DevelopmentLevel } = require('./level/development/dev_level.js');
+  const level_load = new DevelopmentLevel();
+  //const development_room = require('./level/debug/debug_layout.js');
+  //const debug = require('./level/debug/debug_layout.js');
+  //debug.add_floor();
 });
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./engine/app":11,"./engine/ticker":14,"./engine/viewport":15,"./gui/start_menu":19,"./level/debug/debug_layout.js":25,"pixi-packer-parser":94,"pixi-tween":95,"pixi.js":225}],21:[function(require,module,exports){
+},{"./engine/app":8,"./engine/ticker":11,"./engine/viewport":12,"./gui/start_menu":16,"./level/development/dev_level.js":20,"pixi-packer-parser":86,"pixi-tween":87,"pixi.js":217}],18:[function(require,module,exports){
 'use strict';
 
 const { GUI_HUD } = require('../gui/inventory');
@@ -1841,6 +1701,8 @@ class Keyboard {
 
   up() {
     this.player.animation_switch('bow', 'walk');
+    this.player.rotation = -2;
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1850,17 +1712,21 @@ class Keyboard {
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.player.gotoAndStop(1);
+        if(collision_objects.children[i].moveable) {
+          this.player.y -= this.movement_speed / 4;
+          collision_objects.children[i].y -= this.movement_speed / 4;
+        }
         return;
       }
     }
 
     this.player.y -= this.movement_speed;
-    this.player.rotation = -2;
+
   }
 
   down() {
     this.player.animation_switch('bow', 'walk');
-
+    this.player.rotation = 2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -1871,17 +1737,22 @@ class Keyboard {
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.player.gotoAndStop(1);
+
+        if(collision_objects.children[i].moveable) {
+          this.player.y += this.movement_speed / 4;
+          collision_objects.children[i].y += this.movement_speed / 4;
+        }
         return;
       }
     }
 
     this.player.y += this.movement_speed;
-    this.player.rotation = 2;
   }
 
   left() {
     this.player.animation_switch('bow', 'walk');
 
+    this.player.rotation = -3;
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -1891,16 +1762,21 @@ class Keyboard {
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.player.gotoAndStop(1);
+
+        if(collision_objects.children[i].moveable) {
+          this.player.x -= this.movement_speed / 4;
+          collision_objects.children[i].x -= this.movement_speed / 4;
+        }
         return;
       }
     }
-
     this.player.x -= this.movement_speed;
-    this.player.rotation = -3;
+
   }
 
   right() {
     this.player.animation_switch('bow', 'walk');
+    this.player.rotation = 0;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -1911,12 +1787,17 @@ class Keyboard {
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.player.gotoAndStop(1);
+
+
+        if(collision_objects.children[i].moveable) {
+          this.player.x += this.movement_speed / 4;
+          collision_objects.children[i].x += this.movement_speed / 4;
+        }
         return;
       }
     }
-
     this.player.x += this.movement_speed;
-    this.player.rotation = 0;
+
   }
 
   inventory() {
@@ -1943,7 +1824,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../cutscene/cutscenes/intro":9,"../engine/viewport":15,"../gui/inventory":18}],22:[function(require,module,exports){
+},{"../cutscene/cutscenes/intro":6,"../engine/viewport":12,"../gui/inventory":15}],19:[function(require,module,exports){
 'use strict';
 
 const viewport          = require('../engine/viewport');
@@ -2021,6 +1902,7 @@ class Mouse {
     this.aiming_cone.alpha = 0;
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
+      console.log('ppoo')
 
       bow_helper.arrow_management(this.power, this.player, mouse_position_player);
     }
@@ -2063,8 +1945,7 @@ class Mouse {
     //    this.power -= 5;
     //  }
     //};
-    ticker.add(this.count_down);
-
+    //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
     this.player.rotation = get_angle_from_point_to_point(this.player, mouse_position_player);
     this.player.gotoAndPlay(0);
@@ -2086,5831 +1967,129 @@ module.exports = {
   Mouse,
 };
 
-},{"../engine/ticker":14,"../engine/viewport":15,"../weapons/bow.js":33,"pixi.js":225}],23:[function(require,module,exports){
-module.exports={ "height":100,
- "infinite":true,
- "layers":[
-        {
-         "layers":[
-                {
-                 "chunks":[
-                        {
-                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAQAAAAFAAAABgAAAAcAAAAIAAAACQAAAAoAAAALAAAADAAAAA0AAAAOAAAADwAAABAAAAAnAAAAKAAAACkAAAAqAAAAKwAAACwAAAAtAAAALgAAAC8AAAAwAAAAMQAAADIAAAAzAAAANAAAADUAAAA2AAAATQAAAE4AAABPAAAAUAAAAFEAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAHMAAAB0AAAAdQAAAHYAAAB3AAAAeAAAAHkAAAB6AAAAewAAAHwAAAB9AAAAfgAAAH8AAACAAAAAgQAAAIIAAACZAAAAmgAAAJsAAACcAAAAnQAAAJ4AAACfAAAAoAAAAKEAAACiAAAAowAAAKQAAAClAAAApgAAAKcAAACoAAAAvwAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAMYAAADHAAAAyAAAAMkAAADKAAAAywAAAMwAAADNAAAAzgAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA7QAAAO4AAADvAAAA8AAAAPEAAADyAAAA8wAAAPQAAAALAQAADAEAAA0BAAAOAQAADwEAABABAAARAQAAEgEAABMBAAAUAQAAFQEAABYBAAAXAQAAGAEAABkBAAAaAQAAMQEAADIBAAAzAQAANAEAADUBAAA2AQAANwEAADgBAAA5AQAAOgEAADsBAAA8AQAAPQEAAD4BAAA\/AQAAQAEAAFcBAABYAQAAWQEAAFoBAABbAQAAXAEAAF0BAABeAQAAXwEAAGABAABhAQAAYgEAAGMBAABkAQAAZQEAAGYBAAB9AQAAfgEAAH8BAACAAQAAgQEAAIIBAACDAQAAhAEAAIUBAACGAQAAhwEAAIgBAACJAQAAigEAAIsBAACMAQAAowEAAKQBAAClAQAApgEAAKcBAACoAQAAqQEAAKoBAACrAQAArAEAAK0BAACuAQAArwEAALABAACxAQAAsgEAAMkBAADKAQAAywEAAMwBAADNAQAAzgEAAM8BAADQAQAA0QEAANIBAADTAQAA1AEAANUBAADWAQAA1wEAANgBAADvAQAA8AEAAPEBAADyAQAA8wEAAPQBAAD1AQAA9gEAAPcBAAD4AQAA+QEAAPoBAAD7AQAA\/AEAAP0BAAD+AQAAFQIAABYCAAAXAgAAGAIAABkCAAAaAgAAGwIAABwCAAAdAgAAHgIAAB8CAAAgAgAAIQIAACICAAAjAgAAJAIAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGQAAABoAAAAbAAAAHAAAAB0AAAAeAAAAHwAAACAAAAA3AAAAOAAAADkAAAA6AAAAOwAAADwAAAA9AAAAPgAAAD8AAABAAAAAQQAAAEIAAABDAAAARAAAAEUAAABGAAAAXQAAAF4AAABfAAAAYAAAAGEAAABiAAAAYwAAAGQAAABlAAAAZgAAAGcAAABoAAAAaQAAAGoAAABrAAAAbAAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAIkAAACKAAAAiwAAAIwAAACNAAAAjgAAAI8AAACQAAAAkQAAAJIAAACpAAAAqgAAAKsAAACsAAAArQAAAK4AAACvAAAAsAAAALEAAACyAAAAswAAALQAAAC1AAAAtgAAALcAAAC4AAAAzwAAANAAAADRAAAA0gAAANMAAADUAAAA1QAAANYAAADXAAAA2AAAANkAAADaAAAA2wAAANwAAADdAAAA3gAAAPUAAAD2AAAA9wAAAPgAAAD5AAAA+gAAAPsAAAD8AAAA\/QAAAP4AAAD\/AAAAAAEAAAEBAAACAQAAAwEAAAQBAAAbAQAAHAEAAB0BAAAeAQAAHwEAACABAAAhAQAAIgEAACMBAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAQQEAAEIBAABDAQAARAEAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAGcBAABoAQAAaQEAAGoBAABrAQAAbAEAAG0BAABuAQAAbwEAAHABAABxAQAAcgEAAHMBAAB0AQAAdQEAAHYBAACNAQAAjgEAAI8BAACQAQAAkQEAAJIBAACTAQAAlAEAAJUBAACWAQAAlwEAAJgBAACZAQAAmgEAAJsBAACcAQAAswEAALQBAAC1AQAAtgEAALcBAAC4AQAAuQEAALoBAAC7AQAAvAEAAL0BAAC+AQAAvwEAAMABAADBAQAAwgEAANkBAADaAQAA2wEAANwBAADdAQAA3gEAAN8BAADgAQAA4QEAAOIBAADjAQAA5AEAAOUBAADmAQAA5wEAAOgBAAD\/AQAAAAIAAAECAAACAgAAAwIAAAQCAAAFAgAABgIAAAcCAAAIAgAACQIAAAoCAAALAgAADAIAAA0CAAAOAgAAJQIAACYCAAAnAgAAKAIAACkCAAAqAgAAKwIAACwCAAAtAgAALgIAAC8CAAAwAgAAMQIAADICAAAzAgAANAIAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":0
-                        }, 
-                        {
-                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEAAAAiAAAAIwAAACQAAAAlAAAAJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHAAAASAAAAEkAAABKAAAASwAAAEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbQAAAG4AAABvAAAAcAAAAHEAAAByAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5AAAAugAAALsAAAC8AAAAvQAAAL4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3wAAAOAAAADhAAAA4gAAAOMAAADkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUBAAAGAQAABwEAAAgBAAAJAQAACgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArAQAALAEAAC0BAAAuAQAALwEAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUQEAAFIBAABTAQAAVAEAAFUBAABWAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHcBAAB4AQAAeQEAAHoBAAB7AQAAfAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACdAQAAngEAAJ8BAACgAQAAoQEAAKIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwwEAAMQBAADFAQAAxgEAAMcBAADIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOkBAADqAQAA6wEAAOwBAADtAQAA7gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAgAAEAIAABECAAASAgAAEwIAABQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANQIAADYCAAA3AgAAOAIAADkCAAA6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":0
-                        }, 
-                        {
-                         "data":"OwIAADwCAAA9AgAAPgIAAD8CAABAAgAAQQIAAEICAABDAgAARAIAAEUCAABGAgAARwIAAEgCAABJAgAASgIAAGECAABiAgAAYwIAAGQCAABlAgAAZgIAAGcCAABoAgAAaQIAAGoCAABrAgAAbAIAAG0CAABuAgAAbwIAAHACAACHAgAAiAIAAIkCAACKAgAAiwIAAIwCAACNAgAAjgIAAI8CAACQAgAAkQIAAJICAACTAgAAlAIAAJUCAACWAgAArQIAAK4CAACvAgAAsAIAALECAACyAgAAswIAALQCAAC1AgAAtgIAALcCAAC4AgAAuQIAALoCAAC7AgAAvAIAANMCAADUAgAA1QIAANYCAADXAgAA2AIAANkCAADaAgAA2wIAANwCAADdAgAA3gIAAN8CAADgAgAA4QIAAOICAAD5AgAA+gIAAPsCAAD8AgAA\/QIAAP4CAAD\/AgAAAAMAAAEDAAACAwAAAwMAAAQDAAAFAwAABgMAAAcDAAAIAwAAHwMAACADAAAhAwAAIgMAACMDAAAkAwAAJQMAACYDAAAnAwAAKAMAACkDAAAqAwAAKwMAACwDAAAtAwAALgMAAEUDAABGAwAARwMAAEgDAABJAwAASgMAAEsDAABMAwAATQMAAE4DAABPAwAAUAMAAFEDAABSAwAAUwMAAFQDAABrAwAAbAMAAG0DAABuAwAAbwMAAHADAABxAwAAcgMAAHMDAAB0AwAAdQMAAHYDAAB3AwAAeAMAAHkDAAB6AwAAkQMAAJIDAACTAwAAlAMAAJUDAACWAwAAlwMAAJgDAACZAwAAmgMAAJsDAACcAwAAnQMAAJ4DAACfAwAAoAMAALcDAAC4AwAAuQMAALoDAAC7AwAAvAMAAL0DAAC+AwAAvwMAAMADAADBAwAAwgMAAMMDAADEAwAAxQMAAMYDAADdAwAA3gMAAN8DAADgAwAA4QMAAOIDAADjAwAA5AMAAOUDAADmAwAA5wMAAOgDAADpAwAA6gMAAOsDAADsAwAAAwQAAAQEAAAFBAAABgQAAAcEAAAIBAAACQQAAAoEAAALBAAADAQAAA0EAAAOBAAADwQAABAEAAARBAAAEgQAACkEAAAqBAAAKwQAACwEAAAtBAAALgQAAC8EAAAwBAAAMQQAADIEAAAzBAAANAQAADUEAAA2BAAANwQAADgEAABPBAAAUAQAAFEEAABSBAAAUwQAAFQEAABVBAAAVgQAAFcEAABYBAAAWQQAAFoEAABbBAAAXAQAAF0EAABeBAAAdQQAAHYEAAB3BAAAeAQAAHkEAAB6BAAAewQAAHwEAAB9BAAAfgQAAH8EAACABAAAgQQAAIIEAACDBAAAhAQAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":16
-                        }, 
-                        {
-                         "data":"SwIAAEwCAABNAgAATgIAAE8CAABQAgAAUQIAAFICAABTAgAAVAIAAFUCAABWAgAAVwIAAFgCAABZAgAAWgIAAHECAAByAgAAcwIAAHQCAAB1AgAAdgIAAHcCAAB4AgAAeQIAAHoCAAB7AgAAfAIAAH0CAAB+AgAAfwIAAIACAACXAgAAmAIAAJkCAACaAgAAmwIAAJwCAACdAgAAngIAAJ8CAACgAgAAoQIAAKICAACjAgAApAIAAKUCAACmAgAAvQIAAL4CAAC\/AgAAwAIAAMECAADCAgAAwwIAAMQCAADFAgAAxgIAAMcCAADIAgAAyQIAAMoCAADLAgAAzAIAAOMCAADkAgAA5QIAAOYCAADnAgAA6AIAAOkCAADqAgAA6wIAAOwCAADtAgAA7gIAAO8CAADwAgAA8QIAAPICAAAJAwAACgMAAAsDAAAMAwAADQMAAA4DAAAPAwAAEAMAABEDAAASAwAAEwMAABQDAAAVAwAAFgMAABcDAAAYAwAALwMAADADAAAxAwAAMgMAADMDAAA0AwAANQMAADYDAAA3AwAAOAMAADkDAAA6AwAAOwMAADwDAAA9AwAAPgMAAFUDAABWAwAAVwMAAFgDAABZAwAAWgMAAFsDAABcAwAAXQMAAF4DAABfAwAAYAMAAGEDAABiAwAAYwMAAGQDAAB7AwAAfAMAAH0DAAB+AwAAfwMAAIADAACBAwAAggMAAIMDAACEAwAAhQMAAIYDAACHAwAAiAMAAIkDAACKAwAAoQMAAKIDAACjAwAApAMAAKUDAACmAwAApwMAAKgDAACpAwAAqgMAAKsDAACsAwAArQMAAK4DAACvAwAAsAMAAMcDAADIAwAAyQMAAMoDAADLAwAAzAMAAM0DAADOAwAAzwMAANADAADRAwAA0gMAANMDAADUAwAA1QMAANYDAADtAwAA7gMAAO8DAADwAwAA8QMAAPIDAADzAwAA9AMAAPUDAAD2AwAA9wMAAPgDAAD5AwAA+gMAAPsDAAD8AwAAEwQAABQEAAAVBAAAFgQAABcEAAAYBAAAGQQAABoEAAAbBAAAHAQAAB0EAAAeBAAAHwQAACAEAAAhBAAAIgQAADkEAAA6BAAAOwQAADwEAAA9BAAAPgQAAD8EAABABAAAQQQAAEIEAABDBAAARAQAAEUEAABGBAAARwQAAEgEAABfBAAAYAQAAGEEAABiBAAAYwQAAGQEAABlBAAAZgQAAGcEAABoBAAAaQQAAGoEAABrBAAAbAQAAG0EAABuBAAAhQQAAIYEAACHBAAAiAQAAIkEAACKBAAAiwQAAIwEAACNBAAAjgQAAI8EAACQBAAAkQQAAJIEAACTBAAAlAQAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":16
-                        }, 
-                        {
-                         "data":"WwIAAFwCAABdAgAAXgIAAF8CAABgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIECAACCAgAAgwIAAIQCAACFAgAAhgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACnAgAAqAIAAKkCAACqAgAAqwIAAKwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzQIAAM4CAADPAgAA0AIAANECAADSAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPMCAAD0AgAA9QIAAPYCAAD3AgAA+AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAwAAGgMAABsDAAAcAwAAHQMAAB4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwMAAEADAABBAwAAQgMAAEMDAABEAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGUDAABmAwAAZwMAAGgDAABpAwAAagMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACLAwAAjAMAAI0DAACOAwAAjwMAAJADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsQMAALIDAACzAwAAtAMAALUDAAC2AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANcDAADYAwAA2QMAANoDAADbAwAA3AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9AwAA\/gMAAP8DAAAABAAAAQQAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIwQAACQEAAAlBAAAJgQAACcEAAAoBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEkEAABKBAAASwQAAEwEAABNBAAATgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABvBAAAcAQAAHEEAAByBAAAcwQAAHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlQQAAJYEAACXBAAAmAQAAJkEAACaBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":16
-                        }, 
-                        {
-                         "data":"mwQAAJwEAACdBAAAngQAAJ8EAACgBAAAoQQAAKIEAACjBAAApAQAAKUEAACmBAAApwQAAKgEAACpBAAAqgQAAMEEAADCBAAAwwQAAMQEAADFBAAAxgQAAMcEAADIBAAAyQQAAMoEAADLBAAAzAQAAM0EAADOBAAAzwQAANAEAADnBAAA6AQAAOkEAADqBAAA6wQAAOwEAADtBAAA7gQAAO8EAADwBAAA8QQAAPIEAADzBAAA9AQAAPUEAAD2BAAADQUAAA4FAAAPBQAAEAUAABEFAAASBQAAEwUAABQFAAAVBQAAFgUAABcFAAAYBQAAGQUAABoFAAAbBQAAHAUAADMFAAA0BQAANQUAADYFAAA3BQAAOAUAADkFAAA6BQAAOwUAADwFAAA9BQAAPgUAAD8FAABABQAAQQUAAEIFAABZBQAAWgUAAFsFAABcBQAAXQUAAF4FAABfBQAAYAUAAGEFAABiBQAAYwUAAGQFAABlBQAAZgUAAGcFAABoBQAAfwUAAIAFAACBBQAAggUAAIMFAACEBQAAhQUAAIYFAACHBQAAiAUAAIkFAACKBQAAiwUAAIwFAACNBQAAjgUAAKUFAACmBQAApwUAAKgFAACpBQAAqgUAAKsFAACsBQAArQUAAK4FAACvBQAAsAUAALEFAACyBQAAswUAALQFAADLBQAAzAUAAM0FAADOBQAAzwUAANAFAADRBQAA0gUAANMFAADUBQAA1QUAANYFAADXBQAA2AUAANkFAADaBQAA8QUAAPIFAADzBQAA9AUAAPUFAAD2BQAA9wUAAPgFAAD5BQAA+gUAAPsFAAD8BQAA\/QUAAP4FAAD\/BQAAAAYAABcGAAAYBgAAGQYAABoGAAAbBgAAHAYAAB0GAAAeBgAAHwYAACAGAAAhBgAAIgYAACMGAAAkBgAAJQYAACYGAAA9BgAAPgYAAD8GAABABgAAQQYAAEIGAABDBgAARAYAAEUGAABGBgAARwYAAEgGAABJBgAASgYAAEsGAABMBgAAYwYAAGQGAABlBgAAZgYAAGcGAABoBgAAaQYAAGoGAABrBgAAbAYAAG0GAABuBgAAbwYAAHAGAABxBgAAcgYAAIkGAACKBgAAiwYAAIwGAACNBgAAjgYAAI8GAACQBgAAkQYAAJIGAACTBgAAlAYAAJUGAACWBgAAlwYAAJgGAACvBgAAsAYAALEGAACyBgAAswYAALQGAAC1BgAAtgYAALcGAAC4BgAAuQYAALoGAAC7BgAAvAYAAL0GAAC+BgAA1QYAANYGAADXBgAA2AYAANkGAADaBgAA2wYAANwGAADdBgAA3gYAAN8GAADgBgAA4QYAAOIGAADjBgAA5AYAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":32
-                        }, 
-                        {
-                         "data":"qwQAAKwEAACtBAAArgQAAK8EAACwBAAAsQQAALIEAACzBAAAtAQAALUEAAC2BAAAtwQAALgEAAC5BAAAugQAANEEAADSBAAA0wQAANQEAADVBAAA1gQAANcEAADYBAAA2QQAANoEAADbBAAA3AQAAN0EAADeBAAA3wQAAOAEAAD3BAAA+AQAAPkEAAD6BAAA+wQAAPwEAAD9BAAA\/gQAAP8EAAAABQAAAQUAAAIFAAADBQAABAUAAAUFAAAGBQAAHQUAAB4FAAAfBQAAIAUAACEFAAAiBQAAIwUAACQFAAAlBQAAJgUAACcFAAAoBQAAKQUAACoFAAArBQAALAUAAEMFAABEBQAARQUAAEYFAABHBQAASAUAAEkFAABKBQAASwUAAEwFAABNBQAATgUAAE8FAABQBQAAUQUAAFIFAABpBQAAagUAAGsFAABsBQAAbQUAAG4FAABvBQAAcAUAAHEFAAByBQAAcwUAAHQFAAB1BQAAdgUAAHcFAAB4BQAAjwUAAJAFAACRBQAAkgUAAJMFAACUBQAAlQUAAJYFAACXBQAAmAUAAJkFAACaBQAAmwUAAJwFAACdBQAAngUAALUFAAC2BQAAtwUAALgFAAC5BQAAugUAALsFAAC8BQAAvQUAAL4FAAC\/BQAAwAUAAMEFAADCBQAAwwUAAMQFAADbBQAA3AUAAN0FAADeBQAA3wUAAOAFAADhBQAA4gUAAOMFAADkBQAA5QUAAOYFAADnBQAA6AUAAOkFAADqBQAAAQYAAAIGAAADBgAABAYAAAUGAAAGBgAABwYAAAgGAAAJBgAACgYAAAsGAAAMBgAADQYAAA4GAAAPBgAAEAYAACcGAAAoBgAAKQYAACoGAAArBgAALAYAAC0GAAAuBgAALwYAADAGAAAxBgAAMgYAADMGAAA0BgAANQYAADYGAABNBgAATgYAAE8GAABQBgAAUQYAAFIGAABTBgAAVAYAAFUGAABWBgAAVwYAAFgGAABZBgAAWgYAAFsGAABcBgAAcwYAAHQGAAB1BgAAdgYAAHcGAAB4BgAAeQYAAHoGAAB7BgAAfAYAAH0GAAB+BgAAfwYAAIAGAACBBgAAggYAAJkGAACaBgAAmwYAAJwGAACdBgAAngYAAJ8GAACgBgAAoQYAAKIGAACjBgAApAYAAKUGAACmBgAApwYAAKgGAAC\/BgAAwAYAAMEGAADCBgAAwwYAAMQGAADFBgAAxgYAAMcGAADIBgAAyQYAAMoGAADLBgAAzAYAAM0GAADOBgAA5QYAAOYGAADnBgAA6AYAAOkGAADqBgAA6wYAAOwGAADtBgAA7gYAAO8GAADwBgAA8QYAAPIGAADzBgAA9AYAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":32
-                        }, 
-                        {
-                         "data":"uwQAALwEAAC9BAAAvgQAAL8EAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEEAADiBAAA4wQAAOQEAADlBAAA5gQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBQAACAUAAAkFAAAKBQAACwUAAAwFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALQUAAC4FAAAvBQAAMAUAADEFAAAyBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFMFAABUBQAAVQUAAFYFAABXBQAAWAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5BQAAegUAAHsFAAB8BQAAfQUAAH4FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnwUAAKAFAAChBQAAogUAAKMFAACkBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMUFAADGBQAAxwUAAMgFAADJBQAAygUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADrBQAA7AUAAO0FAADuBQAA7wUAAPAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQYAABIGAAATBgAAFAYAABUGAAAWBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcGAAA4BgAAOQYAADoGAAA7BgAAPAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABdBgAAXgYAAF8GAABgBgAAYQYAAGIGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgwYAAIQGAACFBgAAhgYAAIcGAACIBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKkGAACqBgAAqwYAAKwGAACtBgAArgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADPBgAA0AYAANEGAADSBgAA0wYAANQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9QYAAPYGAAD3BgAA+AYAAPkGAAD6BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":32
-                        }, 
-                        {
-                         "data":"+wYAAPwGAAD9BgAA\/gYAAP8GAAAABwAAAQcAAAIHAAADBwAABAcAAAUHAAAGBwAABwcAAAgHAAAJBwAACgcAACEHAAAiBwAAIwcAACQHAAAlBwAAJgcAACcHAAAoBwAAKQcAACoHAAArBwAALAcAAC0HAAAuBwAALwcAADAHAABHBwAASAcAAEkHAABKBwAASwcAAEwHAABNBwAATgcAAE8HAABQBwAAUQcAAFIHAABTBwAAVAcAAFUHAABWBwAAbQcAAG4HAABvBwAAcAcAAHEHAAByBwAAcwcAAHQHAAB1BwAAdgcAAHcHAAB4BwAAeQcAAHoHAAB7BwAAfAcAAJMHAACUBwAAlQcAAJYHAACXBwAAmAcAAJkHAACaBwAAmwcAAJwHAACdBwAAngcAAJ8HAACgBwAAoQcAAKIHAAC5BwAAugcAALsHAAC8BwAAvQcAAL4HAAC\/BwAAwAcAAMEHAADCBwAAwwcAAMQHAADFBwAAxgcAAMcHAADIBwAA3wcAAOAHAADhBwAA4gcAAOMHAADkBwAA5QcAAOYHAADnBwAA6AcAAOkHAADqBwAA6wcAAOwHAADtBwAA7gcAAAUIAAAGCAAABwgAAAgIAAAJCAAACggAAAsIAAAMCAAADQgAAA4IAAAPCAAAEAgAABEIAAASCAAAEwgAABQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":48
-                        }, 
-                        {
-                         "data":"CwcAAAwHAAANBwAADgcAAA8HAAAQBwAAEQcAABIHAAATBwAAFAcAABUHAAAWBwAAFwcAABgHAAAZBwAAGgcAADEHAAAyBwAAMwcAADQHAAA1BwAANgcAADcHAAA4BwAAOQcAADoHAAA7BwAAPAcAAD0HAAA+BwAAPwcAAEAHAABXBwAAWAcAAFkHAABaBwAAWwcAAFwHAABdBwAAXgcAAF8HAABgBwAAYQcAAGIHAABjBwAAZAcAAGUHAABmBwAAfQcAAH4HAAB\/BwAAgAcAAIEHAACCBwAAgwcAAIQHAACFBwAAhgcAAIcHAACIBwAAiQcAAIoHAACLBwAAjAcAAKMHAACkBwAApQcAAKYHAACnBwAAqAcAAKkHAACqBwAAqwcAAKwHAACtBwAArgcAAK8HAACwBwAAsQcAALIHAADJBwAAygcAAMsHAADMBwAAzQcAAM4HAADPBwAA0AcAANEHAADSBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA7wcAAPAHAADxBwAA8gcAAPMHAAD0BwAA9QcAAPYHAAD3BwAA+AcAAPkHAAD6BwAA+wcAAPwHAAD9BwAA\/gcAABUIAAAWCAAAFwgAABgIAAAZCAAAGggAABsIAAAcCAAAHQgAAB4IAAAfCAAAIAgAACEIAAAiCAAAIwgAACQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":48
-                        }, 
-                        {
-                         "data":"GwcAABwHAAAdBwAAHgcAAB8HAAAgBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEHAABCBwAAQwcAAEQHAABFBwAARgcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnBwAAaAcAAGkHAABqBwAAawcAAGwHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjQcAAI4HAACPBwAAkAcAAJEHAACSBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALMHAAC0BwAAtQcAALYHAAC3BwAAuAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZBwAA2gcAANsHAADcBwAA3QcAAN4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\/wcAAAAIAAABCAAAAggAAAMIAAAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUIAAAmCAAAJwgAACgIAAApCAAAKggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":48
-                        }],
-                 "encoding":"base64",
-                 "height":64,
-                 "name":"Tile Layer 1",
-                 "opacity":1,
-                 "startx":0,
-                 "starty":0,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":48,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 1",
-                 "objects":[
-                        {
-                         "height":4287.99483470341,
-                         "id":1,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":71.1878167115903,
-                         "x":140.908152873722,
-                         "y":352.118235782039
-                        }, 
-                        {
-                         "height":98.8078079071574,
-                         "id":2,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1745.42576355132,
-                         "x":-180.469646118797,
-                         "y":4636.83030674721
-                        }, 
-                        {
-                         "height":1295.91907334578,
-                         "id":3,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":96.9776475519793,
-                         "x":1098.40853718636,
-                         "y":3349.16300278899
-                        }, 
-                        {
-                         "height":72.8653023279652,
-                         "id":4,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":329.924150524603,
-                         "x":209.771013726274,
-                         "y":351.680298817159
-                        }, 
-                        {
-                         "height":87.0770370031721,
-                         "id":7,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":613.890964996336,
-                         "x":206.483427979566,
-                         "y":1656.8486826545
-                        }, 
-                        {
-                         "height":84.1867907925027,
-                         "id":8,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":405.990079377138,
-                         "x":1020.00417867435,
-                         "y":1657.90249518416
-                        }, 
-                        {
-                         "height":1288.04870233899,
-                         "id":9,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":96.9696999733776,
-                         "x":1098.25814385151,
-                         "y":1742.85
-                        }, 
-                        {
-                         "height":71.8526517856425,
-                         "id":10,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":668.420569717998,
-                         "x":776.061109603926,
-                         "y":354.483674843146
-                        }, 
-                        {
-                         "height":76.0016320601716,
-                         "id":11,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1702.69133624533,
-                         "x":1677.71698020668,
-                         "y":350.838425015004
-                        }, 
-                        {
-                         "height":369.592008067473,
-                         "id":12,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":73.499527744058,
-                         "x":1992.79544415995,
-                         "y":429.031944530302
-                        }, 
-                        {
-                         "height":2396.01591579894,
-                         "id":13,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":72.9392053016209,
-                         "x":1993.40136243144,
-                         "y":1045.88
-                        }, 
-                        {
-                         "height":89.202968299712,
-                         "id":14,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":310.407419479643,
-                         "x":1682.16619596542,
-                         "y":1657.79976945245
-                        }, 
-                        {
-                         "height":84.1868,
-                         "id":16,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":525.526216808456,
-                         "x":2063.86746648621,
-                         "y":2190.44075828822
-                        }, 
-                        {
-                         "height":84.1868,
-                         "id":17,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":350.223086878061,
-                         "x":2939.09314849188,
-                         "y":2187.86277427172
-                        }, 
-                        {
-                         "height":4298.56489559165,
-                         "id":18,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":90.9850881154937,
-                         "x":3289.12978128384,
-                         "y":432.568544728022
-                        }, 
-                        {
-                         "height":93.6518881154936,
-                         "id":19,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1363.88,
-                         "x":1929.29176076308,
-                         "y":4638.66000592936
-                        }, 
-                        {
-                         "height":89.203,
-                         "id":20,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":797.645979118329,
-                         "x":1198.23810866203,
-                         "y":2535.9605005156
-                        }, 
-                        {
-                         "height":89.203,
-                         "id":21,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":869.829552461975,
-                         "x":1196.94910621294,
-                         "y":3443.41087432328
-                        }],
-                 "offsetx":182.2,
-                 "offsety":377.873003506038,
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 2",
-                 "objects":[
-                        {
-                         "height":0,
-                         "id":6,
-                         "name":"",
-                         "polyline":[
-                                {
-                                 "x":0,
-                                 "y":0
-                                }, 
-                                {
-                                 "x":-1236.9109947644,
-                                 "y":19.633507853403
-                                }, 
-                                {
-                                 "x":-1217.27748691099,
-                                 "y":726.439790575916
-                                }, 
-                                {
-                                 "x":-157.068062827225,
-                                 "y":752.61780104712
-                                }, 
-                                {
-                                 "x":-176.701570680628,
-                                 "y":1341.62303664921
-                                }, 
-                                {
-                                 "x":-320.680628272251,
-                                 "y":1498.69109947644
-                                }, 
-                                {
-                                 "x":-287.958115183246,
-                                 "y":1786.64921465969
-                                }, 
-                                {
-                                 "x":-26.1780104712043,
-                                 "y":1747.38219895288
-                                }, 
-                                {
-                                 "x":150.523560209424,
-                                 "y":1361.25654450262
-                                }, 
-                                {
-                                 "x":-65.4450261780105,
-                                 "y":1191.09947643979
-                                }, 
-                                {
-                                 "x":-346.858638743455,
-                                 "y":575.916230366492
-                                }, 
-                                {
-                                 "x":-536.649214659686,
-                                 "y":510.471204188482
-                                }, 
-                                {
-                                 "x":-726.439790575916,
-                                 "y":759.162303664921
-                                }, 
-                                {
-                                 "x":-778.795811518325,
-                                 "y":1832.46073298429
-                                }, 
-                                {
-                                 "x":-1191.09947643979,
-                                 "y":2257.85340314136
-                                }, 
-                                {
-                                 "x":-1204.18848167539,
-                                 "y":2074.60732984293
-                                }, 
-                                {
-                                 "x":-1204.18848167539,
-                                 "y":1839.00523560209
-                                }, 
-                                {
-                                 "x":-1204.18848167539,
-                                 "y":1551.04712041885
-                                }, 
-                                {
-                                 "x":-1282.72251308901,
-                                 "y":1590.31413612565
-                                }, 
-                                {
-                                 "x":-1341.62303664921,
-                                 "y":2126.96335078534
-                                }, 
-                                {
-                                 "x":-1295.81151832461,
-                                 "y":2676.70157068063
-                                }, 
-                                {
-                                 "x":-1060.20942408377,
-                                 "y":3017.01570680628
-                                }, 
-                                {
-                                 "x":-647.905759162304,
-                                 "y":2565.44502617801
-                                }, 
-                                {
-                                 "x":-32.7225130890054,
-                                 "y":2303.66492146597
-                                }, 
-                                {
-                                 "x":117.801047120419,
-                                 "y":3102.0942408377
-                                }, 
-                                {
-                                 "x":78.5340314136124,
-                                 "y":3481.67539267016
-                                }, 
-                                {
-                                 "x":45.8115183246073,
-                                 "y":4149.21465968586
-                                }, 
-                                {
-                                 "x":-327.225130890052,
-                                 "y":4188.48167539267
-                                }, 
-                                {
-                                 "x":-680.628272251309,
-                                 "y":4077.22513089005
-                                }, 
-                                {
-                                 "x":-693.717277486911,
-                                 "y":4149.21465968586
-                                }, 
-                                {
-                                 "x":-615.183246073299,
-                                 "y":4240.83769633508
-                                }, 
-                                {
-                                 "x":-425.392670157068,
-                                 "y":4319.37172774869
-                                }, 
-                                {
-                                 "x":-111.256544502618,
-                                 "y":4319.37172774869
-                                }, 
-                                {
-                                 "x":111.256544502618,
-                                 "y":4260.47120418848
-                                }, 
-                                {
-                                 "x":157.068062827225,
-                                 "y":4109.94764397906
-                                }, 
-                                {
-                                 "x":209.424083769634,
-                                 "y":3527.48691099476
-                                }, 
-                                {
-                                 "x":575.916230366492,
-                                 "y":3160.99476439791
-                                }, 
-                                {
-                                 "x":1007.85340314136,
-                                 "y":2545.81151832461
-                                }, 
-                                {
-                                 "x":975.130890052356,
-                                 "y":2041.88481675393
-                                }, 
-                                {
-                                 "x":981.675392670157,
-                                 "y":1714.65968586387
-                                }, 
-                                {
-                                 "x":1034.03141361257,
-                                 "y":1295.81151832461
-                                }, 
-                                {
-                                 "x":824.607329842932,
-                                 "y":948.952879581152
-                                }, 
-                                {
-                                 "x":641.361256544503,
-                                 "y":458.115183246073
-                                }, 
-                                {
-                                 "x":680.628272251309,
-                                 "y":45.8115183246073
-                                }, 
-                                {
-                                 "x":1086.38743455497,
-                                 "y":13.0890052356019
-                                }, 
-                                {
-                                 "x":1407.06806282723,
-                                 "y":130.890052356021
-                                }, 
-                                {
-                                 "x":1439.79057591623,
-                                 "y":510.471204188482
-                                }, 
-                                {
-                                 "x":1439.79057591623,
-                                 "y":1047.12041884817
-                                }, 
-                                {
-                                 "x":1263.0890052356,
-                                 "y":1393.97905759162
-                                }, 
-                                {
-                                 "x":1125.65445026178,
-                                 "y":1583.76963350785
-                                }, 
-                                {
-                                 "x":1073.29842931937,
-                                 "y":2454.18848167539
-                                }, 
-                                {
-                                 "x":981.675392670157,
-                                 "y":3154.4502617801
-                                }, 
-                                {
-                                 "x":431.937172774869,
-                                 "y":3507.85340314136
-                                }, 
-                                {
-                                 "x":-215.968586387435,
-                                 "y":3115.1832460733
-                                }, 
-                                {
-                                 "x":-242.146596858639,
-                                 "y":2598.16753926702
-                                }, 
-                                {
-                                 "x":-719.895287958115,
-                                 "y":2329.84293193717
-                                }, 
-                                {
-                                 "x":-765.706806282722,
-                                 "y":2022.25130890052
-                                }, 
-                                {
-                                 "x":-935.86387434555,
-                                 "y":582.460732984293
-                                }, 
-                                {
-                                 "x":-647.905759162304,
-                                 "y":477.748691099476
-                                }, 
-                                {
-                                 "x":-189.79057591623,
-                                 "y":477.748691099476
-                                }, 
-                                {
-                                 "x":0,
-                                 "y":13.0890052356019
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":0,
-                         "x":1871.7277486911,
-                         "y":1099.47643979058
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 3",
-                 "objects":[
-                        {
-                         "height":0,
-                         "id":22,
-                         "name":"",
-                         "polyline":[
-                                {
-                                 "x":0,
-                                 "y":0
-                                }, 
-                                {
-                                 "x":-835.266821345708,
-                                 "y":-5.1559680329982
-                                }, 
-                                {
-                                 "x":-889.404485692189,
-                                 "y":-2.57798401649916
-                                }, 
-                                {
-                                 "x":-920.340293890178,
-                                 "y":28.3578241814901
-                                }, 
-                                {
-                                 "x":-925.496261923176,
-                                 "y":85.0734725444702
-                                }, 
-                                {
-                                 "x":-925.496261923176,
-                                 "y":1185.87264758958
-                                }, 
-                                {
-                                 "x":-915.18432585718,
-                                 "y":1198.76256767208
-                                }, 
-                                {
-                                 "x":-876.514565609693,
-                                 "y":1198.76256767208
-                                }, 
-                                {
-                                 "x":-794.019077081722,
-                                 "y":1188.45063160608
-                                }, 
-                                {
-                                 "x":-747.615364784738,
-                                 "y":1216.80845578757
-                                }, 
-                                {
-                                 "x":-770.81722093323,
-                                 "y":1252.90023201856
-                                }, 
-                                {
-                                 "x":-902.294405774684,
-                                 "y":1252.90023201856
-                                }, 
-                                {
-                                 "x":-933.230213972673,
-                                 "y":1317.34983243104
-                                }, 
-                                {
-                                 "x":-933.230213972673,
-                                 "y":1417.8912090745
-                                }, 
-                                {
-                                 "x":-922.918277906677,
-                                 "y":2549.62619231761
-                                }, 
-                                {
-                                 "x":-928.074245939675,
-                                 "y":4166.02217066254
-                                }, 
-                                {
-                                 "x":-904.872389791183,
-                                 "y":4186.64604279453
-                                }, 
-                                {
-                                 "x":-879.092549626192,
-                                 "y":4263.98556328951
-                                }, 
-                                {
-                                 "x":-884.24851765919,
-                                 "y":4431.55452436195
-                                }, 
-                                {
-                                 "x":-917.762309873679,
-                                 "y":4483.11420469193
-                                }, 
-                                {
-                                 "x":-1142.0469193091,
-                                 "y":4573.3436452694
-                                }, 
-                                {
-                                 "x":-1299.30394431555,
-                                 "y":4547.56380510441
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":0,
-                         "x":1371.48749677752,
-                         "y":853.312709461201
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 4",
-                 "objects":[
-                        {
-                         "height":22.091516827777,
-                         "id":23,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":201.307396009669,
-                         "x":1000.61414056822,
-                         "y":2096.28799025852
-                        }, 
-                        {
-                         "height":21.2004379076902,
-                         "id":24,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":254.403082771456,
-                         "x":1606.55974993989,
-                         "y":2097.14834319237
-                        }, 
-                        {
-                         "height":24.276571466864,
-                         "id":25,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":295.64288488463,
-                         "x":1372.09002099612,
-                         "y":3376.46669593124
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "layers":[
-                        {
-                         "image":"..\/..\/..\/..\/assets\/items\/chest_full.png",
-                         "name":"chest_full",
-                         "offsetx":1143.21093357441,
-                         "offsety":1065.35819304326,
-                         "opacity":1,
-                         "type":"imagelayer",
-                         "visible":true,
-                         "x":0,
-                         "y":0
-                        }],
-                 "name":"items_group",
-                 "opacity":1,
-                 "type":"group",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }],
-         "name":"Group 1",
-         "opacity":1,
-         "type":"group",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextobjectid":27,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.1.6",
- "tileheight":100,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"flat_floor_data.json"
-        }],
- "tilewidth":100,
- "type":"map",
- "version":1,
- "width":95
-}
-},{}],24:[function(require,module,exports){
-module.exports={ "columns":38,
- "image":"..\/..\/..\/..\/assets\/bedroom\/flat_floor2.jpg",
- "imageheight":5500,
- "imagewidth":3800,
- "margin":0,
- "name":"flat_floor2",
- "spacing":0,
- "tilecount":2090,
- "tileheight":100,
- "tileproperties":
-    {
-     "1001":
-        {
-         "wall":"true"
-        },
-     "1010":
-        {
-         "wall":"true"
-        },
-     "1023":
-        {
-         "wall":"true"
-        },
-     "1024":
-        {
-         "wall":"true"
-        },
-     "1025":
-        {
-         "wall":"true"
-        },
-     "1026":
-        {
-         "wall":"true"
-        },
-     "1027":
-        {
-         "wall":"true"
-        },
-     "1028":
-        {
-         "wall":"true"
-        },
-     "1029":
-        {
-         "wall":"true"
-        },
-     "1039":
-        {
-         "wall":"true"
-        },
-     "1048":
-        {
-         "wall":"true"
-        },
-     "1061":
-        {
-         "wall":"true"
-        },
-     "1062":
-        {
-         "wall":"true"
-        },
-     "1063":
-        {
-         "wall":"true"
-        },
-     "1064":
-        {
-         "wall":"true"
-        },
-     "1065":
-        {
-         "wall":"true"
-        },
-     "1066":
-        {
-         "wall":"true"
-        },
-     "1067":
-        {
-         "wall":"true"
-        },
-     "1077":
-        {
-         "wall":"true"
-        },
-     "1080":
-        {
-         "wall":"true"
-        },
-     "1081":
-        {
-         "wall":"true"
-        },
-     "1082":
-        {
-         "wall":"true"
-        },
-     "1083":
-        {
-         "wall":"true"
-        },
-     "1084":
-        {
-         "wall":"true"
-        },
-     "1085":
-        {
-         "wall":"true"
-        },
-     "1086":
-        {
-         "wall":"true"
-        },
-     "1099":
-        {
-         "wall":"true"
-        },
-     "1100":
-        {
-         "wall":"true"
-        },
-     "1101":
-        {
-         "wall":"true"
-        },
-     "1102":
-        {
-         "wall":"true"
-        },
-     "1103":
-        {
-         "wall":"true"
-        },
-     "1104":
-        {
-         "wall":"true"
-        },
-     "1105":
-        {
-         "wall":"true"
-        },
-     "1115":
-        {
-         "wall":"true"
-        },
-     "1124":
-        {
-         "wall":"true"
-        },
-     "1137":
-        {
-         "wall":"true"
-        },
-     "1138":
-        {
-         "wall":"true"
-        },
-     "1139":
-        {
-         "wall":"true"
-        },
-     "1140":
-        {
-         "wall":"true"
-        },
-     "1141":
-        {
-         "wall":"true"
-        },
-     "1142":
-        {
-         "wall":"true"
-        },
-     "1143":
-        {
-         "wall":"true"
-        },
-     "1153":
-        {
-         "wall":"true"
-        },
-     "1162":
-        {
-         "wall":"true"
-        },
-     "1175":
-        {
-         "wall":"true"
-        },
-     "1176":
-        {
-         "wall":"true"
-        },
-     "1177":
-        {
-         "wall":"true"
-        },
-     "1178":
-        {
-         "wall":"true"
-        },
-     "1179":
-        {
-         "wall":"true"
-        },
-     "1180":
-        {
-         "wall":"true"
-        },
-     "1181":
-        {
-         "wall":"true"
-        },
-     "1191":
-        {
-         "wall":"true"
-        },
-     "1200":
-        {
-         "wall":"true"
-        },
-     "1213":
-        {
-         "wall":"true"
-        },
-     "1214":
-        {
-         "wall":"true"
-        },
-     "1215":
-        {
-         "wall":"true"
-        },
-     "1216":
-        {
-         "wall":"true"
-        },
-     "1217":
-        {
-         "wall":"true"
-        },
-     "1218":
-        {
-         "wall":"true"
-        },
-     "1219":
-        {
-         "wall":"true"
-        },
-     "1229":
-        {
-         "wall":"true"
-        },
-     "1238":
-        {
-         "wall":"true"
-        },
-     "1251":
-        {
-         "wall":"true"
-        },
-     "1252":
-        {
-         "wall":"true"
-        },
-     "1253":
-        {
-         "wall":"true"
-        },
-     "1254":
-        {
-         "wall":"true"
-        },
-     "1255":
-        {
-         "wall":"true"
-        },
-     "1256":
-        {
-         "wall":"true"
-        },
-     "1257":
-        {
-         "wall":"true"
-        },
-     "1267":
-        {
-         "wall":"true"
-        },
-     "1276":
-        {
-         "wall":"true"
-        },
-     "1289":
-        {
-         "wall":"true"
-        },
-     "1290":
-        {
-         "wall":"true"
-        },
-     "1291":
-        {
-         "wall":"true"
-        },
-     "1292":
-        {
-         "wall":"true"
-        },
-     "1293":
-        {
-         "wall":"true"
-        },
-     "1294":
-        {
-         "wall":"true"
-        },
-     "1295":
-        {
-         "wall":"true"
-        },
-     "1305":
-        {
-         "wall":"true"
-        },
-     "1314":
-        {
-         "wall":"true"
-        },
-     "1327":
-        {
-         "wall":"true"
-        },
-     "1328":
-        {
-         "wall":"true"
-        },
-     "1329":
-        {
-         "wall":"true"
-        },
-     "1330":
-        {
-         "wall":"true"
-        },
-     "1331":
-        {
-         "wall":"true"
-        },
-     "1332":
-        {
-         "wall":"true"
-        },
-     "1333":
-        {
-         "wall":"true"
-        },
-     "1343":
-        {
-         "wall":"true"
-        },
-     "1352":
-        {
-         "wall":"true"
-        },
-     "1365":
-        {
-         "wall":"true"
-        },
-     "1366":
-        {
-         "wall":"true"
-        },
-     "1367":
-        {
-         "wall":"true"
-        },
-     "1368":
-        {
-         "wall":"true"
-        },
-     "1369":
-        {
-         "wall":"true"
-        },
-     "1370":
-        {
-         "wall":"true"
-        },
-     "1371":
-        {
-         "wall":"true"
-        },
-     "1381":
-        {
-         "wall":"true"
-        },
-     "1390":
-        {
-         "wall":"true"
-        },
-     "1403":
-        {
-         "wall":"true"
-        },
-     "1404":
-        {
-         "wall":"true"
-        },
-     "1405":
-        {
-         "wall":"true"
-        },
-     "1406":
-        {
-         "wall":"true"
-        },
-     "1407":
-        {
-         "wall":"true"
-        },
-     "1408":
-        {
-         "wall":"true"
-        },
-     "1409":
-        {
-         "wall":"true"
-        },
-     "1419":
-        {
-         "wall":"true"
-        },
-     "1420":
-        {
-         "wall":"true"
-        },
-     "1421":
-        {
-         "wall":"true"
-        },
-     "1422":
-        {
-         "wall":"true"
-        },
-     "1423":
-        {
-         "wall":"true"
-        },
-     "1424":
-        {
-         "wall":"true"
-        },
-     "1425":
-        {
-         "wall":"true"
-        },
-     "1426":
-        {
-         "wall":"true"
-        },
-     "1427":
-        {
-         "wall":"true"
-        },
-     "1428":
-        {
-         "wall":"true"
-        },
-     "1441":
-        {
-         "wall":"true"
-        },
-     "1442":
-        {
-         "wall":"true"
-        },
-     "1443":
-        {
-         "wall":"true"
-        },
-     "1444":
-        {
-         "wall":"true"
-        },
-     "1445":
-        {
-         "wall":"true"
-        },
-     "1446":
-        {
-         "wall":"true"
-        },
-     "1447":
-        {
-         "wall":"true"
-        },
-     "1457":
-        {
-         "wall":"true"
-        },
-     "1479":
-        {
-         "wall":"true"
-        },
-     "1480":
-        {
-         "wall":"true"
-        },
-     "1481":
-        {
-         "wall":"true"
-        },
-     "1482":
-        {
-         "wall":"true"
-        },
-     "1483":
-        {
-         "wall":"true"
-        },
-     "1484":
-        {
-         "wall":"true"
-        },
-     "1485":
-        {
-         "wall":"true"
-        },
-     "1495":
-        {
-         "wall":"true"
-        },
-     "1517":
-        {
-         "wall":"true"
-        },
-     "1518":
-        {
-         "wall":"true"
-        },
-     "1519":
-        {
-         "wall":"true"
-        },
-     "1520":
-        {
-         "wall":"true"
-        },
-     "1521":
-        {
-         "wall":"true"
-        },
-     "1522":
-        {
-         "wall":"true"
-        },
-     "1523":
-        {
-         "wall":"true"
-        },
-     "1533":
-        {
-         "wall":"true"
-        },
-     "1555":
-        {
-         "wall":"true"
-        },
-     "1556":
-        {
-         "wall":"true"
-        },
-     "1557":
-        {
-         "wall":"true"
-        },
-     "1558":
-        {
-         "wall":"true"
-        },
-     "1559":
-        {
-         "wall":"true"
-        },
-     "1560":
-        {
-         "wall":"true"
-        },
-     "1561":
-        {
-         "wall":"true"
-        },
-     "1571":
-        {
-         "wall":"true"
-        },
-     "1593":
-        {
-         "wall":"true"
-        },
-     "1594":
-        {
-         "wall":"true"
-        },
-     "1595":
-        {
-         "wall":"true"
-        },
-     "1596":
-        {
-         "wall":"true"
-        },
-     "1597":
-        {
-         "wall":"true"
-        },
-     "1598":
-        {
-         "wall":"true"
-        },
-     "1599":
-        {
-         "wall":"true"
-        },
-     "1609":
-        {
-         "wall":"true"
-        },
-     "1631":
-        {
-         "wall":"true"
-        },
-     "1632":
-        {
-         "wall":"true"
-        },
-     "1633":
-        {
-         "wall":"true"
-        },
-     "1634":
-        {
-         "wall":"true"
-        },
-     "1635":
-        {
-         "wall":"true"
-        },
-     "1636":
-        {
-         "wall":"true"
-        },
-     "1637":
-        {
-         "wall":"true"
-        },
-     "1647":
-        {
-         "wall":"true"
-        },
-     "1669":
-        {
-         "wall":"true"
-        },
-     "1670":
-        {
-         "wall":"true"
-        },
-     "1671":
-        {
-         "wall":"true"
-        },
-     "1672":
-        {
-         "wall":"true"
-        },
-     "1673":
-        {
-         "wall":"true"
-        },
-     "1674":
-        {
-         "wall":"true"
-        },
-     "1675":
-        {
-         "wall":"true"
-        },
-     "1685":
-        {
-         "wall":"true"
-        },
-     "1707":
-        {
-         "wall":"true"
-        },
-     "1708":
-        {
-         "wall":"true"
-        },
-     "1709":
-        {
-         "wall":"true"
-        },
-     "1710":
-        {
-         "wall":"true"
-        },
-     "1711":
-        {
-         "wall":"true"
-        },
-     "1712":
-        {
-         "wall":"true"
-        },
-     "1713":
-        {
-         "wall":"true"
-        },
-     "1723":
-        {
-         "wall":"true"
-        },
-     "1745":
-        {
-         "wall":"true"
-        },
-     "1746":
-        {
-         "wall":"true"
-        },
-     "1747":
-        {
-         "wall":"true"
-        },
-     "1748":
-        {
-         "wall":"true"
-        },
-     "1749":
-        {
-         "wall":"true"
-        },
-     "1750":
-        {
-         "wall":"true"
-        },
-     "1751":
-        {
-         "wall":"true"
-        },
-     "1761":
-        {
-         "wall":"true"
-        },
-     "1783":
-        {
-         "wall":"true"
-        },
-     "1784":
-        {
-         "wall":"true"
-        },
-     "1785":
-        {
-         "wall":"true"
-        },
-     "1786":
-        {
-         "wall":"true"
-        },
-     "1787":
-        {
-         "wall":"true"
-        },
-     "1788":
-        {
-         "wall":"true"
-        },
-     "1789":
-        {
-         "wall":"true"
-        },
-     "1799":
-        {
-         "wall":"true"
-        },
-     "1821":
-        {
-         "wall":"true"
-        },
-     "1822":
-        {
-         "wall":"true"
-        },
-     "1823":
-        {
-         "wall":"true"
-        },
-     "1824":
-        {
-         "wall":"true"
-        },
-     "1825":
-        {
-         "wall":"true"
-        },
-     "1826":
-        {
-         "wall":"true"
-        },
-     "1827":
-        {
-         "wall":"true"
-        },
-     "1837":
-        {
-         "wall":"true"
-        },
-     "1859":
-        {
-         "wall":"true"
-        },
-     "1860":
-        {
-         "wall":"true"
-        },
-     "1861":
-        {
-         "wall":"true"
-        },
-     "1862":
-        {
-         "wall":"true"
-        },
-     "1863":
-        {
-         "wall":"true"
-        },
-     "1864":
-        {
-         "wall":"true"
-        },
-     "1865":
-        {
-         "wall":"true"
-        },
-     "1866":
-        {
-         "wall":"true"
-        },
-     "1867":
-        {
-         "wall":"true"
-        },
-     "1868":
-        {
-         "wall":"true"
-        },
-     "1869":
-        {
-         "wall":"true"
-        },
-     "1870":
-        {
-         "wall":"true"
-        },
-     "1871":
-        {
-         "wall":"true"
-        },
-     "1872":
-        {
-         "wall":"true"
-        },
-     "1873":
-        {
-         "wall":"true"
-        },
-     "1874":
-        {
-         "wall":"true"
-        },
-     "1875":
-        {
-         "wall":"true"
-        },
-     "1876":
-        {
-         "wall":"true"
-        },
-     "1877":
-        {
-         "wall":"true"
-        },
-     "1878":
-        {
-         "wall":"true"
-        },
-     "1883":
-        {
-         "wall":"true"
-        },
-     "1884":
-        {
-         "wall":"true"
-        },
-     "1885":
-        {
-         "wall":"true"
-        },
-     "1886":
-        {
-         "wall":"true"
-        },
-     "1887":
-        {
-         "wall":"true"
-        },
-     "1888":
-        {
-         "wall":"true"
-        },
-     "1889":
-        {
-         "wall":"true"
-        },
-     "1890":
-        {
-         "wall":"true"
-        },
-     "1891":
-        {
-         "wall":"true"
-        },
-     "1892":
-        {
-         "wall":"true"
-        },
-     "1893":
-        {
-         "wall":"true"
-        },
-     "1894":
-        {
-         "wall":"true"
-        },
-     "1895":
-        {
-         "wall":"true"
-        },
-     "1896":
-        {
-         "wall":"true"
-        },
-     "1897":
-        {
-         "wall":"true"
-        },
-     "1898":
-        {
-         "wall":"true"
-        },
-     "1899":
-        {
-         "wall":"true"
-        },
-     "1900":
-        {
-         "wall":"true"
-        },
-     "1901":
-        {
-         "wall":"true"
-        },
-     "1902":
-        {
-         "wall":"true"
-        },
-     "1903":
-        {
-         "wall":"true"
-        },
-     "1937":
-        {
-         "wall":"true"
-        },
-     "1938":
-        {
-         "wall":"true"
-        },
-     "1939":
-        {
-         "wall":"true"
-        },
-     "1940":
-        {
-         "wall":"true"
-        },
-     "1941":
-        {
-         "wall":"true"
-        },
-     "1975":
-        {
-         "wall":"true"
-        },
-     "1976":
-        {
-         "wall":"true"
-        },
-     "1977":
-        {
-         "wall":"true"
-        },
-     "1978":
-        {
-         "wall":"true"
-        },
-     "1979":
-        {
-         "wall":"true"
-        },
-     "1985":
-        {
-         "wall":"true"
-        },
-     "1986":
-        {
-         "wall":"true"
-        },
-     "1987":
-        {
-         "wall":"true"
-        },
-     "2014":
-        {
-         "wall":"true"
-        },
-     "2015":
-        {
-         "wall":"true"
-        },
-     "2016":
-        {
-         "wall":"true"
-        },
-     "2017":
-        {
-         "wall":"true"
-        },
-     "2022":
-        {
-         "wall":"true"
-        },
-     "2023":
-        {
-         "wall":"true"
-        },
-     "2024":
-        {
-         "wall":"true"
-        },
-     "2025":
-        {
-         "wall":"true"
-        },
-     "2052":
-        {
-         "wall":"true"
-        },
-     "2053":
-        {
-         "wall":"true"
-        },
-     "2054":
-        {
-         "wall":"true"
-        },
-     "2055":
-        {
-         "wall":"true"
-        },
-     "2056":
-        {
-         "wall":"true"
-        },
-     "2057":
-        {
-         "wall":"true"
-        },
-     "2058":
-        {
-         "wall":"true"
-        },
-     "2059":
-        {
-         "wall":"true"
-        },
-     "2060":
-        {
-         "wall":"true"
-        },
-     "2061":
-        {
-         "wall":"true"
-        },
-     "2062":
-        {
-         "wall":"true"
-        },
-     "2063":
-        {
-         "wall":"true"
-        },
-     "2064":
-        {
-         "wall":"true"
-        },
-     "2089":
-        {
-         "wall":"true"
-        },
-     "228":
-        {
-         "wall":"true"
-        },
-     "229":
-        {
-         "wall":"true"
-        },
-     "230":
-        {
-         "wall":"true"
-        },
-     "231":
-        {
-         "wall":"true"
-        },
-     "232":
-        {
-         "wall":"true"
-        },
-     "233":
-        {
-         "wall":"true"
-        },
-     "234":
-        {
-         "wall":"true"
-        },
-     "237":
-        {
-         "wall":"true"
-        },
-     "238":
-        {
-         "wall":"true"
-        },
-     "239":
-        {
-         "wall":true
-        },
-     "240":
-        {
-         "wall":"true"
-        },
-     "241":
-        {
-         "wall":"true"
-        },
-     "242":
-        {
-         "wall":"true"
-        },
-     "243":
-        {
-         "wall":"true"
-        },
-     "244":
-        {
-         "wall":"true"
-        },
-     "245":
-        {
-         "wall":"true"
-        },
-     "246":
-        {
-         "wall":"true"
-        },
-     "247":
-        {
-         "wall":"true"
-        },
-     "248":
-        {
-         "wall":"true"
-        },
-     "249":
-        {
-         "wall":"true"
-        },
-     "250":
-        {
-         "wall":"true"
-        },
-     "251":
-        {
-         "wall":"true"
-        },
-     "252":
-        {
-         "wall":"true"
-        },
-     "253":
-        {
-         "wall":"true"
-        },
-     "254":
-        {
-         "wall":"true"
-        },
-     "255":
-        {
-         "wall":"true"
-        },
-     "256":
-        {
-         "wall":"true"
-        },
-     "257":
-        {
-         "wall":"true"
-        },
-     "258":
-        {
-         "wall":"true"
-        },
-     "259":
-        {
-         "wall":"true"
-        },
-     "260":
-        {
-         "wall":"true"
-        },
-     "261":
-        {
-         "wall":"true"
-        },
-     "262":
-        {
-         "wall":"true"
-        },
-     "263":
-        {
-         "wall":"true"
-        },
-     "264":
-        {
-         "wall":"true"
-        },
-     "265":
-        {
-         "wall":"true"
-        },
-     "266":
-        {
-         "wall":"true"
-        },
-     "267":
-        {
-         "wall":"true"
-        },
-     "268":
-        {
-         "wall":"true"
-        },
-     "269":
-        {
-         "wall":"true"
-        },
-     "287":
-        {
-         "wall":"true"
-        },
-     "288":
-        {
-         "wall":"true"
-        },
-     "301":
-        {
-         "wall":"true"
-        },
-     "302":
-        {
-         "wall":"true"
-        },
-     "303":
-        {
-         "wall":"true"
-        },
-     "304":
-        {
-         "wall":"true"
-        },
-     "305":
-        {
-         "wall":"true"
-        },
-     "306":
-        {
-         "wall":"true"
-        },
-     "307":
-        {
-         "wall":"true"
-        },
-     "325":
-        {
-         "wall":"true"
-        },
-     "326":
-        {
-         "wall":"true"
-        },
-     "339":
-        {
-         "wall":"true"
-        },
-     "340":
-        {
-         "wall":"true"
-        },
-     "341":
-        {
-         "wall":"true"
-        },
-     "342":
-        {
-         "wall":"true"
-        },
-     "343":
-        {
-         "wall":"true"
-        },
-     "344":
-        {
-         "wall":"true"
-        },
-     "345":
-        {
-         "wall":"true"
-        },
-     "363":
-        {
-         "wall":"true"
-        },
-     "364":
-        {
-         "wall":"true"
-        },
-     "377":
-        {
-         "wall":"true"
-        },
-     "378":
-        {
-         "wall":"true"
-        },
-     "379":
-        {
-         "wall":"true"
-        },
-     "380":
-        {
-         "wall":"true"
-        },
-     "381":
-        {
-         "wall":"true"
-        },
-     "382":
-        {
-         "wall":"true"
-        },
-     "383":
-        {
-         "wall":"true"
-        },
-     "401":
-        {
-         "wall":"true"
-        },
-     "402":
-        {
-         "wall":"true"
-        },
-     "415":
-        {
-         "wall":"true"
-        },
-     "416":
-        {
-         "wall":"true"
-        },
-     "417":
-        {
-         "wall":"true"
-        },
-     "418":
-        {
-         "wall":"true"
-        },
-     "419":
-        {
-         "wall":"true"
-        },
-     "420":
-        {
-         "wall":"true"
-        },
-     "421":
-        {
-         "wall":"true"
-        },
-     "453":
-        {
-         "wall":"true"
-        },
-     "454":
-        {
-         "wall":"true"
-        },
-     "455":
-        {
-         "wall":"true"
-        },
-     "456":
-        {
-         "wall":"true"
-        },
-     "457":
-        {
-         "wall":"true"
-        },
-     "458":
-        {
-         "wall":"true"
-        },
-     "459":
-        {
-         "wall":"true"
-        },
-     "491":
-        {
-         "wall":"true"
-        },
-     "492":
-        {
-         "wall":"true"
-        },
-     "493":
-        {
-         "wall":"true"
-        },
-     "494":
-        {
-         "wall":"true"
-        },
-     "495":
-        {
-         "wall":"true"
-        },
-     "496":
-        {
-         "wall":"true"
-        },
-     "497":
-        {
-         "wall":"true"
-        },
-     "515":
-        {
-         "wall":"true"
-        },
-     "516":
-        {
-         "wall":"true"
-        },
-     "529":
-        {
-         "wall":"true"
-        },
-     "530":
-        {
-         "wall":"true"
-        },
-     "531":
-        {
-         "wall":"true"
-        },
-     "532":
-        {
-         "wall":"true"
-        },
-     "533":
-        {
-         "wall":"true"
-        },
-     "534":
-        {
-         "wall":"true"
-        },
-     "535":
-        {
-         "wall":"true"
-        },
-     "553":
-        {
-         "wall":"true"
-        },
-     "554":
-        {
-         "wall":"true"
-        },
-     "567":
-        {
-         "wall":"true"
-        },
-     "568":
-        {
-         "wall":"true"
-        },
-     "569":
-        {
-         "wall":"true"
-        },
-     "570":
-        {
-         "wall":"true"
-        },
-     "571":
-        {
-         "wall":"true"
-        },
-     "572":
-        {
-         "wall":"true"
-        },
-     "573":
-        {
-         "wall":"true"
-        },
-     "591":
-        {
-         "wall":"true"
-        },
-     "592":
-        {
-         "wall":"true"
-        },
-     "605":
-        {
-         "wall":"true"
-        },
-     "606":
-        {
-         "wall":"true"
-        },
-     "607":
-        {
-         "wall":"true"
-        },
-     "608":
-        {
-         "wall":"true"
-        },
-     "609":
-        {
-         "wall":"true"
-        },
-     "610":
-        {
-         "wall":"true"
-        },
-     "611":
-        {
-         "wall":"true"
-        },
-     "629":
-        {
-         "wall":"true"
-        },
-     "630":
-        {
-         "wall":"true"
-        },
-     "643":
-        {
-         "wall":"true"
-        },
-     "644":
-        {
-         "wall":"true"
-        },
-     "645":
-        {
-         "wall":"true"
-        },
-     "646":
-        {
-         "wall":"true"
-        },
-     "647":
-        {
-         "wall":"true"
-        },
-     "648":
-        {
-         "wall":"true"
-        },
-     "649":
-        {
-         "wall":"true"
-        },
-     "667":
-        {
-         "wall":"true"
-        },
-     "668":
-        {
-         "wall":"true"
-        },
-     "681":
-        {
-         "wall":"true"
-        },
-     "682":
-        {
-         "wall":"true"
-        },
-     "683":
-        {
-         "wall":"true"
-        },
-     "684":
-        {
-         "wall":"true"
-        },
-     "685":
-        {
-         "wall":"true"
-        },
-     "686":
-        {
-         "wall":"true"
-        },
-     "687":
-        {
-         "wall":"true"
-        },
-     "705":
-        {
-         "wall":"true"
-        },
-     "706":
-        {
-         "wall":"true"
-        },
-     "719":
-        {
-         "wall":"true"
-        },
-     "720":
-        {
-         "wall":"true"
-        },
-     "721":
-        {
-         "wall":"true"
-        },
-     "722":
-        {
-         "wall":"true"
-        },
-     "723":
-        {
-         "wall":"true"
-        },
-     "724":
-        {
-         "wall":"true"
-        },
-     "725":
-        {
-         "wall":"true"
-        },
-     "726":
-        {
-         "wall":"true"
-        },
-     "727":
-        {
-         "wall":"true"
-        },
-     "728":
-        {
-         "wall":"true"
-        },
-     "729":
-        {
-         "wall":"true"
-        },
-     "730":
-        {
-         "wall":"true"
-        },
-     "731":
-        {
-         "wall":"true"
-        },
-     "734":
-        {
-         "wall":"true"
-        },
-     "735":
-        {
-         "wall":"true"
-        },
-     "736":
-        {
-         "wall":"true"
-        },
-     "737":
-        {
-         "wall":"true"
-        },
-     "741":
-        {
-         "wall":"true"
-        },
-     "742":
-        {
-         "wall":"true"
-        },
-     "743":
-        {
-         "wall":"true"
-        },
-     "744":
-        {
-         "wall":"true"
-        },
-     "757":
-        {
-         "wall":"true"
-        },
-     "758":
-        {
-         "wall":"true"
-        },
-     "759":
-        {
-         "wall":"true"
-        },
-     "760":
-        {
-         "wall":"true"
-        },
-     "761":
-        {
-         "wall":"true"
-        },
-     "762":
-        {
-         "wall":"true"
-        },
-     "763":
-        {
-         "wall":"true"
-        },
-     "773":
-        {
-         "wall":"true"
-        },
-     "782":
-        {
-         "wall":"true"
-        },
-     "795":
-        {
-         "wall":"true"
-        },
-     "796":
-        {
-         "wall":"true"
-        },
-     "797":
-        {
-         "wall":"true"
-        },
-     "798":
-        {
-         "wall":"true"
-        },
-     "799":
-        {
-         "wall":"true"
-        },
-     "800":
-        {
-         "wall":"true"
-        },
-     "801":
-        {
-         "wall":"true"
-        },
-     "811":
-        {
-         "wall":"true"
-        },
-     "820":
-        {
-         "wall":"true"
-        },
-     "833":
-        {
-         "wall":"true"
-        },
-     "834":
-        {
-         "wall":"true"
-        },
-     "835":
-        {
-         "wall":"true"
-        },
-     "836":
-        {
-         "wall":"true"
-        },
-     "837":
-        {
-         "wall":"true"
-        },
-     "838":
-        {
-         "wall":"true"
-        },
-     "839":
-        {
-         "wall":"true"
-        },
-     "849":
-        {
-         "wall":"true"
-        },
-     "858":
-        {
-         "wall":"true"
-        },
-     "871":
-        {
-         "wall":"true"
-        },
-     "872":
-        {
-         "wall":"true"
-        },
-     "873":
-        {
-         "wall":"true"
-        },
-     "874":
-        {
-         "wall":"true"
-        },
-     "875":
-        {
-         "wall":"true"
-        },
-     "876":
-        {
-         "wall":"true"
-        },
-     "877":
-        {
-         "wall":"true"
-        },
-     "887":
-        {
-         "wall":"true"
-        },
-     "896":
-        {
-         "wall":"true"
-        },
-     "909":
-        {
-         "wall":"true"
-        },
-     "910":
-        {
-         "wall":"true"
-        },
-     "911":
-        {
-         "wall":"true"
-        },
-     "912":
-        {
-         "wall":"true"
-        },
-     "913":
-        {
-         "wall":"true"
-        },
-     "914":
-        {
-         "wall":"true"
-        },
-     "915":
-        {
-         "wall":"true"
-        },
-     "925":
-        {
-         "wall":"true"
-        },
-     "934":
-        {
-         "wall":"true"
-        },
-     "947":
-        {
-         "wall":"true"
-        },
-     "948":
-        {
-         "wall":"true"
-        },
-     "949":
-        {
-         "wall":"true"
-        },
-     "950":
-        {
-         "wall":"true"
-        },
-     "951":
-        {
-         "wall":"true"
-        },
-     "952":
-        {
-         "wall":"true"
-        },
-     "953":
-        {
-         "wall":"true"
-        },
-     "963":
-        {
-         "wall":"true"
-        },
-     "972":
-        {
-         "wall":"true"
-        },
-     "973":
-        {
-         "wall":"true"
-        },
-     "974":
-        {
-         "wall":"true"
-        },
-     "975":
-        {
-         "wall":"true"
-        },
-     "982":
-        {
-         "wall":"true"
-        },
-     "983":
-        {
-         "wall":"true"
-        },
-     "984":
-        {
-         "wall":"true"
-        },
-     "985":
-        {
-         "wall":"true"
-        },
-     "986":
-        {
-         "wall":"true"
-        },
-     "987":
-        {
-         "wall":"true"
-        },
-     "988":
-        {
-         "wall":"true"
-        },
-     "989":
-        {
-         "wall":"true"
-        },
-     "990":
-        {
-         "wall":"true"
-        },
-     "991":
-        {
-         "wall":"true"
-        }
-    },
- "tilepropertytypes":
-    {
-     "1001":
-        {
-         "wall":"string"
-        },
-     "1010":
-        {
-         "wall":"string"
-        },
-     "1023":
-        {
-         "wall":"string"
-        },
-     "1024":
-        {
-         "wall":"string"
-        },
-     "1025":
-        {
-         "wall":"string"
-        },
-     "1026":
-        {
-         "wall":"string"
-        },
-     "1027":
-        {
-         "wall":"string"
-        },
-     "1028":
-        {
-         "wall":"string"
-        },
-     "1029":
-        {
-         "wall":"string"
-        },
-     "1039":
-        {
-         "wall":"string"
-        },
-     "1048":
-        {
-         "wall":"string"
-        },
-     "1061":
-        {
-         "wall":"string"
-        },
-     "1062":
-        {
-         "wall":"string"
-        },
-     "1063":
-        {
-         "wall":"string"
-        },
-     "1064":
-        {
-         "wall":"string"
-        },
-     "1065":
-        {
-         "wall":"string"
-        },
-     "1066":
-        {
-         "wall":"string"
-        },
-     "1067":
-        {
-         "wall":"string"
-        },
-     "1077":
-        {
-         "wall":"string"
-        },
-     "1080":
-        {
-         "wall":"string"
-        },
-     "1081":
-        {
-         "wall":"string"
-        },
-     "1082":
-        {
-         "wall":"string"
-        },
-     "1083":
-        {
-         "wall":"string"
-        },
-     "1084":
-        {
-         "wall":"string"
-        },
-     "1085":
-        {
-         "wall":"string"
-        },
-     "1086":
-        {
-         "wall":"string"
-        },
-     "1099":
-        {
-         "wall":"string"
-        },
-     "1100":
-        {
-         "wall":"string"
-        },
-     "1101":
-        {
-         "wall":"string"
-        },
-     "1102":
-        {
-         "wall":"string"
-        },
-     "1103":
-        {
-         "wall":"string"
-        },
-     "1104":
-        {
-         "wall":"string"
-        },
-     "1105":
-        {
-         "wall":"string"
-        },
-     "1115":
-        {
-         "wall":"string"
-        },
-     "1124":
-        {
-         "wall":"string"
-        },
-     "1137":
-        {
-         "wall":"string"
-        },
-     "1138":
-        {
-         "wall":"string"
-        },
-     "1139":
-        {
-         "wall":"string"
-        },
-     "1140":
-        {
-         "wall":"string"
-        },
-     "1141":
-        {
-         "wall":"string"
-        },
-     "1142":
-        {
-         "wall":"string"
-        },
-     "1143":
-        {
-         "wall":"string"
-        },
-     "1153":
-        {
-         "wall":"string"
-        },
-     "1162":
-        {
-         "wall":"string"
-        },
-     "1175":
-        {
-         "wall":"string"
-        },
-     "1176":
-        {
-         "wall":"string"
-        },
-     "1177":
-        {
-         "wall":"string"
-        },
-     "1178":
-        {
-         "wall":"string"
-        },
-     "1179":
-        {
-         "wall":"string"
-        },
-     "1180":
-        {
-         "wall":"string"
-        },
-     "1181":
-        {
-         "wall":"string"
-        },
-     "1191":
-        {
-         "wall":"string"
-        },
-     "1200":
-        {
-         "wall":"string"
-        },
-     "1213":
-        {
-         "wall":"string"
-        },
-     "1214":
-        {
-         "wall":"string"
-        },
-     "1215":
-        {
-         "wall":"string"
-        },
-     "1216":
-        {
-         "wall":"string"
-        },
-     "1217":
-        {
-         "wall":"string"
-        },
-     "1218":
-        {
-         "wall":"string"
-        },
-     "1219":
-        {
-         "wall":"string"
-        },
-     "1229":
-        {
-         "wall":"string"
-        },
-     "1238":
-        {
-         "wall":"string"
-        },
-     "1251":
-        {
-         "wall":"string"
-        },
-     "1252":
-        {
-         "wall":"string"
-        },
-     "1253":
-        {
-         "wall":"string"
-        },
-     "1254":
-        {
-         "wall":"string"
-        },
-     "1255":
-        {
-         "wall":"string"
-        },
-     "1256":
-        {
-         "wall":"string"
-        },
-     "1257":
-        {
-         "wall":"string"
-        },
-     "1267":
-        {
-         "wall":"string"
-        },
-     "1276":
-        {
-         "wall":"string"
-        },
-     "1289":
-        {
-         "wall":"string"
-        },
-     "1290":
-        {
-         "wall":"string"
-        },
-     "1291":
-        {
-         "wall":"string"
-        },
-     "1292":
-        {
-         "wall":"string"
-        },
-     "1293":
-        {
-         "wall":"string"
-        },
-     "1294":
-        {
-         "wall":"string"
-        },
-     "1295":
-        {
-         "wall":"string"
-        },
-     "1305":
-        {
-         "wall":"string"
-        },
-     "1314":
-        {
-         "wall":"string"
-        },
-     "1327":
-        {
-         "wall":"string"
-        },
-     "1328":
-        {
-         "wall":"string"
-        },
-     "1329":
-        {
-         "wall":"string"
-        },
-     "1330":
-        {
-         "wall":"string"
-        },
-     "1331":
-        {
-         "wall":"string"
-        },
-     "1332":
-        {
-         "wall":"string"
-        },
-     "1333":
-        {
-         "wall":"string"
-        },
-     "1343":
-        {
-         "wall":"string"
-        },
-     "1352":
-        {
-         "wall":"string"
-        },
-     "1365":
-        {
-         "wall":"string"
-        },
-     "1366":
-        {
-         "wall":"string"
-        },
-     "1367":
-        {
-         "wall":"string"
-        },
-     "1368":
-        {
-         "wall":"string"
-        },
-     "1369":
-        {
-         "wall":"string"
-        },
-     "1370":
-        {
-         "wall":"string"
-        },
-     "1371":
-        {
-         "wall":"string"
-        },
-     "1381":
-        {
-         "wall":"string"
-        },
-     "1390":
-        {
-         "wall":"string"
-        },
-     "1403":
-        {
-         "wall":"string"
-        },
-     "1404":
-        {
-         "wall":"string"
-        },
-     "1405":
-        {
-         "wall":"string"
-        },
-     "1406":
-        {
-         "wall":"string"
-        },
-     "1407":
-        {
-         "wall":"string"
-        },
-     "1408":
-        {
-         "wall":"string"
-        },
-     "1409":
-        {
-         "wall":"string"
-        },
-     "1419":
-        {
-         "wall":"string"
-        },
-     "1420":
-        {
-         "wall":"string"
-        },
-     "1421":
-        {
-         "wall":"string"
-        },
-     "1422":
-        {
-         "wall":"string"
-        },
-     "1423":
-        {
-         "wall":"string"
-        },
-     "1424":
-        {
-         "wall":"string"
-        },
-     "1425":
-        {
-         "wall":"string"
-        },
-     "1426":
-        {
-         "wall":"string"
-        },
-     "1427":
-        {
-         "wall":"string"
-        },
-     "1428":
-        {
-         "wall":"string"
-        },
-     "1441":
-        {
-         "wall":"string"
-        },
-     "1442":
-        {
-         "wall":"string"
-        },
-     "1443":
-        {
-         "wall":"string"
-        },
-     "1444":
-        {
-         "wall":"string"
-        },
-     "1445":
-        {
-         "wall":"string"
-        },
-     "1446":
-        {
-         "wall":"string"
-        },
-     "1447":
-        {
-         "wall":"string"
-        },
-     "1457":
-        {
-         "wall":"string"
-        },
-     "1479":
-        {
-         "wall":"string"
-        },
-     "1480":
-        {
-         "wall":"string"
-        },
-     "1481":
-        {
-         "wall":"string"
-        },
-     "1482":
-        {
-         "wall":"string"
-        },
-     "1483":
-        {
-         "wall":"string"
-        },
-     "1484":
-        {
-         "wall":"string"
-        },
-     "1485":
-        {
-         "wall":"string"
-        },
-     "1495":
-        {
-         "wall":"string"
-        },
-     "1517":
-        {
-         "wall":"string"
-        },
-     "1518":
-        {
-         "wall":"string"
-        },
-     "1519":
-        {
-         "wall":"string"
-        },
-     "1520":
-        {
-         "wall":"string"
-        },
-     "1521":
-        {
-         "wall":"string"
-        },
-     "1522":
-        {
-         "wall":"string"
-        },
-     "1523":
-        {
-         "wall":"string"
-        },
-     "1533":
-        {
-         "wall":"string"
-        },
-     "1555":
-        {
-         "wall":"string"
-        },
-     "1556":
-        {
-         "wall":"string"
-        },
-     "1557":
-        {
-         "wall":"string"
-        },
-     "1558":
-        {
-         "wall":"string"
-        },
-     "1559":
-        {
-         "wall":"string"
-        },
-     "1560":
-        {
-         "wall":"string"
-        },
-     "1561":
-        {
-         "wall":"string"
-        },
-     "1571":
-        {
-         "wall":"string"
-        },
-     "1593":
-        {
-         "wall":"string"
-        },
-     "1594":
-        {
-         "wall":"string"
-        },
-     "1595":
-        {
-         "wall":"string"
-        },
-     "1596":
-        {
-         "wall":"string"
-        },
-     "1597":
-        {
-         "wall":"string"
-        },
-     "1598":
-        {
-         "wall":"string"
-        },
-     "1599":
-        {
-         "wall":"string"
-        },
-     "1609":
-        {
-         "wall":"string"
-        },
-     "1631":
-        {
-         "wall":"string"
-        },
-     "1632":
-        {
-         "wall":"string"
-        },
-     "1633":
-        {
-         "wall":"string"
-        },
-     "1634":
-        {
-         "wall":"string"
-        },
-     "1635":
-        {
-         "wall":"string"
-        },
-     "1636":
-        {
-         "wall":"string"
-        },
-     "1637":
-        {
-         "wall":"string"
-        },
-     "1647":
-        {
-         "wall":"string"
-        },
-     "1669":
-        {
-         "wall":"string"
-        },
-     "1670":
-        {
-         "wall":"string"
-        },
-     "1671":
-        {
-         "wall":"string"
-        },
-     "1672":
-        {
-         "wall":"string"
-        },
-     "1673":
-        {
-         "wall":"string"
-        },
-     "1674":
-        {
-         "wall":"string"
-        },
-     "1675":
-        {
-         "wall":"string"
-        },
-     "1685":
-        {
-         "wall":"string"
-        },
-     "1707":
-        {
-         "wall":"string"
-        },
-     "1708":
-        {
-         "wall":"string"
-        },
-     "1709":
-        {
-         "wall":"string"
-        },
-     "1710":
-        {
-         "wall":"string"
-        },
-     "1711":
-        {
-         "wall":"string"
-        },
-     "1712":
-        {
-         "wall":"string"
-        },
-     "1713":
-        {
-         "wall":"string"
-        },
-     "1723":
-        {
-         "wall":"string"
-        },
-     "1745":
-        {
-         "wall":"string"
-        },
-     "1746":
-        {
-         "wall":"string"
-        },
-     "1747":
-        {
-         "wall":"string"
-        },
-     "1748":
-        {
-         "wall":"string"
-        },
-     "1749":
-        {
-         "wall":"string"
-        },
-     "1750":
-        {
-         "wall":"string"
-        },
-     "1751":
-        {
-         "wall":"string"
-        },
-     "1761":
-        {
-         "wall":"string"
-        },
-     "1783":
-        {
-         "wall":"string"
-        },
-     "1784":
-        {
-         "wall":"string"
-        },
-     "1785":
-        {
-         "wall":"string"
-        },
-     "1786":
-        {
-         "wall":"string"
-        },
-     "1787":
-        {
-         "wall":"string"
-        },
-     "1788":
-        {
-         "wall":"string"
-        },
-     "1789":
-        {
-         "wall":"string"
-        },
-     "1799":
-        {
-         "wall":"string"
-        },
-     "1821":
-        {
-         "wall":"string"
-        },
-     "1822":
-        {
-         "wall":"string"
-        },
-     "1823":
-        {
-         "wall":"string"
-        },
-     "1824":
-        {
-         "wall":"string"
-        },
-     "1825":
-        {
-         "wall":"string"
-        },
-     "1826":
-        {
-         "wall":"string"
-        },
-     "1827":
-        {
-         "wall":"string"
-        },
-     "1837":
-        {
-         "wall":"string"
-        },
-     "1859":
-        {
-         "wall":"string"
-        },
-     "1860":
-        {
-         "wall":"string"
-        },
-     "1861":
-        {
-         "wall":"string"
-        },
-     "1862":
-        {
-         "wall":"string"
-        },
-     "1863":
-        {
-         "wall":"string"
-        },
-     "1864":
-        {
-         "wall":"string"
-        },
-     "1865":
-        {
-         "wall":"string"
-        },
-     "1866":
-        {
-         "wall":"string"
-        },
-     "1867":
-        {
-         "wall":"string"
-        },
-     "1868":
-        {
-         "wall":"string"
-        },
-     "1869":
-        {
-         "wall":"string"
-        },
-     "1870":
-        {
-         "wall":"string"
-        },
-     "1871":
-        {
-         "wall":"string"
-        },
-     "1872":
-        {
-         "wall":"string"
-        },
-     "1873":
-        {
-         "wall":"string"
-        },
-     "1874":
-        {
-         "wall":"string"
-        },
-     "1875":
-        {
-         "wall":"string"
-        },
-     "1876":
-        {
-         "wall":"string"
-        },
-     "1877":
-        {
-         "wall":"string"
-        },
-     "1878":
-        {
-         "wall":"string"
-        },
-     "1883":
-        {
-         "wall":"string"
-        },
-     "1884":
-        {
-         "wall":"string"
-        },
-     "1885":
-        {
-         "wall":"string"
-        },
-     "1886":
-        {
-         "wall":"string"
-        },
-     "1887":
-        {
-         "wall":"string"
-        },
-     "1888":
-        {
-         "wall":"string"
-        },
-     "1889":
-        {
-         "wall":"string"
-        },
-     "1890":
-        {
-         "wall":"string"
-        },
-     "1891":
-        {
-         "wall":"string"
-        },
-     "1892":
-        {
-         "wall":"string"
-        },
-     "1893":
-        {
-         "wall":"string"
-        },
-     "1894":
-        {
-         "wall":"string"
-        },
-     "1895":
-        {
-         "wall":"string"
-        },
-     "1896":
-        {
-         "wall":"string"
-        },
-     "1897":
-        {
-         "wall":"string"
-        },
-     "1898":
-        {
-         "wall":"string"
-        },
-     "1899":
-        {
-         "wall":"string"
-        },
-     "1900":
-        {
-         "wall":"string"
-        },
-     "1901":
-        {
-         "wall":"string"
-        },
-     "1902":
-        {
-         "wall":"string"
-        },
-     "1903":
-        {
-         "wall":"string"
-        },
-     "1937":
-        {
-         "wall":"string"
-        },
-     "1938":
-        {
-         "wall":"string"
-        },
-     "1939":
-        {
-         "wall":"string"
-        },
-     "1940":
-        {
-         "wall":"string"
-        },
-     "1941":
-        {
-         "wall":"string"
-        },
-     "1975":
-        {
-         "wall":"string"
-        },
-     "1976":
-        {
-         "wall":"string"
-        },
-     "1977":
-        {
-         "wall":"string"
-        },
-     "1978":
-        {
-         "wall":"string"
-        },
-     "1979":
-        {
-         "wall":"string"
-        },
-     "1985":
-        {
-         "wall":"string"
-        },
-     "1986":
-        {
-         "wall":"string"
-        },
-     "1987":
-        {
-         "wall":"string"
-        },
-     "2014":
-        {
-         "wall":"string"
-        },
-     "2015":
-        {
-         "wall":"string"
-        },
-     "2016":
-        {
-         "wall":"string"
-        },
-     "2017":
-        {
-         "wall":"string"
-        },
-     "2022":
-        {
-         "wall":"string"
-        },
-     "2023":
-        {
-         "wall":"string"
-        },
-     "2024":
-        {
-         "wall":"string"
-        },
-     "2025":
-        {
-         "wall":"string"
-        },
-     "2052":
-        {
-         "wall":"string"
-        },
-     "2053":
-        {
-         "wall":"string"
-        },
-     "2054":
-        {
-         "wall":"string"
-        },
-     "2055":
-        {
-         "wall":"string"
-        },
-     "2056":
-        {
-         "wall":"string"
-        },
-     "2057":
-        {
-         "wall":"string"
-        },
-     "2058":
-        {
-         "wall":"string"
-        },
-     "2059":
-        {
-         "wall":"string"
-        },
-     "2060":
-        {
-         "wall":"string"
-        },
-     "2061":
-        {
-         "wall":"string"
-        },
-     "2062":
-        {
-         "wall":"string"
-        },
-     "2063":
-        {
-         "wall":"string"
-        },
-     "2064":
-        {
-         "wall":"string"
-        },
-     "2089":
-        {
-         "wall":"string"
-        },
-     "228":
-        {
-         "wall":"string"
-        },
-     "229":
-        {
-         "wall":"string"
-        },
-     "230":
-        {
-         "wall":"string"
-        },
-     "231":
-        {
-         "wall":"string"
-        },
-     "232":
-        {
-         "wall":"string"
-        },
-     "233":
-        {
-         "wall":"string"
-        },
-     "234":
-        {
-         "wall":"string"
-        },
-     "237":
-        {
-         "wall":"string"
-        },
-     "238":
-        {
-         "wall":"string"
-        },
-     "239":
-        {
-         "wall":"bool"
-        },
-     "240":
-        {
-         "wall":"string"
-        },
-     "241":
-        {
-         "wall":"string"
-        },
-     "242":
-        {
-         "wall":"string"
-        },
-     "243":
-        {
-         "wall":"string"
-        },
-     "244":
-        {
-         "wall":"string"
-        },
-     "245":
-        {
-         "wall":"string"
-        },
-     "246":
-        {
-         "wall":"string"
-        },
-     "247":
-        {
-         "wall":"string"
-        },
-     "248":
-        {
-         "wall":"string"
-        },
-     "249":
-        {
-         "wall":"string"
-        },
-     "250":
-        {
-         "wall":"string"
-        },
-     "251":
-        {
-         "wall":"string"
-        },
-     "252":
-        {
-         "wall":"string"
-        },
-     "253":
-        {
-         "wall":"string"
-        },
-     "254":
-        {
-         "wall":"string"
-        },
-     "255":
-        {
-         "wall":"string"
-        },
-     "256":
-        {
-         "wall":"string"
-        },
-     "257":
-        {
-         "wall":"string"
-        },
-     "258":
-        {
-         "wall":"string"
-        },
-     "259":
-        {
-         "wall":"string"
-        },
-     "260":
-        {
-         "wall":"string"
-        },
-     "261":
-        {
-         "wall":"string"
-        },
-     "262":
-        {
-         "wall":"string"
-        },
-     "263":
-        {
-         "wall":"string"
-        },
-     "264":
-        {
-         "wall":"string"
-        },
-     "265":
-        {
-         "wall":"string"
-        },
-     "266":
-        {
-         "wall":"string"
-        },
-     "267":
-        {
-         "wall":"string"
-        },
-     "268":
-        {
-         "wall":"string"
-        },
-     "269":
-        {
-         "wall":"string"
-        },
-     "287":
-        {
-         "wall":"string"
-        },
-     "288":
-        {
-         "wall":"string"
-        },
-     "301":
-        {
-         "wall":"string"
-        },
-     "302":
-        {
-         "wall":"string"
-        },
-     "303":
-        {
-         "wall":"string"
-        },
-     "304":
-        {
-         "wall":"string"
-        },
-     "305":
-        {
-         "wall":"string"
-        },
-     "306":
-        {
-         "wall":"string"
-        },
-     "307":
-        {
-         "wall":"string"
-        },
-     "325":
-        {
-         "wall":"string"
-        },
-     "326":
-        {
-         "wall":"string"
-        },
-     "339":
-        {
-         "wall":"string"
-        },
-     "340":
-        {
-         "wall":"string"
-        },
-     "341":
-        {
-         "wall":"string"
-        },
-     "342":
-        {
-         "wall":"string"
-        },
-     "343":
-        {
-         "wall":"string"
-        },
-     "344":
-        {
-         "wall":"string"
-        },
-     "345":
-        {
-         "wall":"string"
-        },
-     "363":
-        {
-         "wall":"string"
-        },
-     "364":
-        {
-         "wall":"string"
-        },
-     "377":
-        {
-         "wall":"string"
-        },
-     "378":
-        {
-         "wall":"string"
-        },
-     "379":
-        {
-         "wall":"string"
-        },
-     "380":
-        {
-         "wall":"string"
-        },
-     "381":
-        {
-         "wall":"string"
-        },
-     "382":
-        {
-         "wall":"string"
-        },
-     "383":
-        {
-         "wall":"string"
-        },
-     "401":
-        {
-         "wall":"string"
-        },
-     "402":
-        {
-         "wall":"string"
-        },
-     "415":
-        {
-         "wall":"string"
-        },
-     "416":
-        {
-         "wall":"string"
-        },
-     "417":
-        {
-         "wall":"string"
-        },
-     "418":
-        {
-         "wall":"string"
-        },
-     "419":
-        {
-         "wall":"string"
-        },
-     "420":
-        {
-         "wall":"string"
-        },
-     "421":
-        {
-         "wall":"string"
-        },
-     "453":
-        {
-         "wall":"string"
-        },
-     "454":
-        {
-         "wall":"string"
-        },
-     "455":
-        {
-         "wall":"string"
-        },
-     "456":
-        {
-         "wall":"string"
-        },
-     "457":
-        {
-         "wall":"string"
-        },
-     "458":
-        {
-         "wall":"string"
-        },
-     "459":
-        {
-         "wall":"string"
-        },
-     "491":
-        {
-         "wall":"string"
-        },
-     "492":
-        {
-         "wall":"string"
-        },
-     "493":
-        {
-         "wall":"string"
-        },
-     "494":
-        {
-         "wall":"string"
-        },
-     "495":
-        {
-         "wall":"string"
-        },
-     "496":
-        {
-         "wall":"string"
-        },
-     "497":
-        {
-         "wall":"string"
-        },
-     "515":
-        {
-         "wall":"string"
-        },
-     "516":
-        {
-         "wall":"string"
-        },
-     "529":
-        {
-         "wall":"string"
-        },
-     "530":
-        {
-         "wall":"string"
-        },
-     "531":
-        {
-         "wall":"string"
-        },
-     "532":
-        {
-         "wall":"string"
-        },
-     "533":
-        {
-         "wall":"string"
-        },
-     "534":
-        {
-         "wall":"string"
-        },
-     "535":
-        {
-         "wall":"string"
-        },
-     "553":
-        {
-         "wall":"string"
-        },
-     "554":
-        {
-         "wall":"string"
-        },
-     "567":
-        {
-         "wall":"string"
-        },
-     "568":
-        {
-         "wall":"string"
-        },
-     "569":
-        {
-         "wall":"string"
-        },
-     "570":
-        {
-         "wall":"string"
-        },
-     "571":
-        {
-         "wall":"string"
-        },
-     "572":
-        {
-         "wall":"string"
-        },
-     "573":
-        {
-         "wall":"string"
-        },
-     "591":
-        {
-         "wall":"string"
-        },
-     "592":
-        {
-         "wall":"string"
-        },
-     "605":
-        {
-         "wall":"string"
-        },
-     "606":
-        {
-         "wall":"string"
-        },
-     "607":
-        {
-         "wall":"string"
-        },
-     "608":
-        {
-         "wall":"string"
-        },
-     "609":
-        {
-         "wall":"string"
-        },
-     "610":
-        {
-         "wall":"string"
-        },
-     "611":
-        {
-         "wall":"string"
-        },
-     "629":
-        {
-         "wall":"string"
-        },
-     "630":
-        {
-         "wall":"string"
-        },
-     "643":
-        {
-         "wall":"string"
-        },
-     "644":
-        {
-         "wall":"string"
-        },
-     "645":
-        {
-         "wall":"string"
-        },
-     "646":
-        {
-         "wall":"string"
-        },
-     "647":
-        {
-         "wall":"string"
-        },
-     "648":
-        {
-         "wall":"string"
-        },
-     "649":
-        {
-         "wall":"string"
-        },
-     "667":
-        {
-         "wall":"string"
-        },
-     "668":
-        {
-         "wall":"string"
-        },
-     "681":
-        {
-         "wall":"string"
-        },
-     "682":
-        {
-         "wall":"string"
-        },
-     "683":
-        {
-         "wall":"string"
-        },
-     "684":
-        {
-         "wall":"string"
-        },
-     "685":
-        {
-         "wall":"string"
-        },
-     "686":
-        {
-         "wall":"string"
-        },
-     "687":
-        {
-         "wall":"string"
-        },
-     "705":
-        {
-         "wall":"string"
-        },
-     "706":
-        {
-         "wall":"string"
-        },
-     "719":
-        {
-         "wall":"string"
-        },
-     "720":
-        {
-         "wall":"string"
-        },
-     "721":
-        {
-         "wall":"string"
-        },
-     "722":
-        {
-         "wall":"string"
-        },
-     "723":
-        {
-         "wall":"string"
-        },
-     "724":
-        {
-         "wall":"string"
-        },
-     "725":
-        {
-         "wall":"string"
-        },
-     "726":
-        {
-         "wall":"string"
-        },
-     "727":
-        {
-         "wall":"string"
-        },
-     "728":
-        {
-         "wall":"string"
-        },
-     "729":
-        {
-         "wall":"string"
-        },
-     "730":
-        {
-         "wall":"string"
-        },
-     "731":
-        {
-         "wall":"string"
-        },
-     "734":
-        {
-         "wall":"string"
-        },
-     "735":
-        {
-         "wall":"string"
-        },
-     "736":
-        {
-         "wall":"string"
-        },
-     "737":
-        {
-         "wall":"string"
-        },
-     "741":
-        {
-         "wall":"string"
-        },
-     "742":
-        {
-         "wall":"string"
-        },
-     "743":
-        {
-         "wall":"string"
-        },
-     "744":
-        {
-         "wall":"string"
-        },
-     "757":
-        {
-         "wall":"string"
-        },
-     "758":
-        {
-         "wall":"string"
-        },
-     "759":
-        {
-         "wall":"string"
-        },
-     "760":
-        {
-         "wall":"string"
-        },
-     "761":
-        {
-         "wall":"string"
-        },
-     "762":
-        {
-         "wall":"string"
-        },
-     "763":
-        {
-         "wall":"string"
-        },
-     "773":
-        {
-         "wall":"string"
-        },
-     "782":
-        {
-         "wall":"string"
-        },
-     "795":
-        {
-         "wall":"string"
-        },
-     "796":
-        {
-         "wall":"string"
-        },
-     "797":
-        {
-         "wall":"string"
-        },
-     "798":
-        {
-         "wall":"string"
-        },
-     "799":
-        {
-         "wall":"string"
-        },
-     "800":
-        {
-         "wall":"string"
-        },
-     "801":
-        {
-         "wall":"string"
-        },
-     "811":
-        {
-         "wall":"string"
-        },
-     "820":
-        {
-         "wall":"string"
-        },
-     "833":
-        {
-         "wall":"string"
-        },
-     "834":
-        {
-         "wall":"string"
-        },
-     "835":
-        {
-         "wall":"string"
-        },
-     "836":
-        {
-         "wall":"string"
-        },
-     "837":
-        {
-         "wall":"string"
-        },
-     "838":
-        {
-         "wall":"string"
-        },
-     "839":
-        {
-         "wall":"string"
-        },
-     "849":
-        {
-         "wall":"string"
-        },
-     "858":
-        {
-         "wall":"string"
-        },
-     "871":
-        {
-         "wall":"string"
-        },
-     "872":
-        {
-         "wall":"string"
-        },
-     "873":
-        {
-         "wall":"string"
-        },
-     "874":
-        {
-         "wall":"string"
-        },
-     "875":
-        {
-         "wall":"string"
-        },
-     "876":
-        {
-         "wall":"string"
-        },
-     "877":
-        {
-         "wall":"string"
-        },
-     "887":
-        {
-         "wall":"string"
-        },
-     "896":
-        {
-         "wall":"string"
-        },
-     "909":
-        {
-         "wall":"string"
-        },
-     "910":
-        {
-         "wall":"string"
-        },
-     "911":
-        {
-         "wall":"string"
-        },
-     "912":
-        {
-         "wall":"string"
-        },
-     "913":
-        {
-         "wall":"string"
-        },
-     "914":
-        {
-         "wall":"string"
-        },
-     "915":
-        {
-         "wall":"string"
-        },
-     "925":
-        {
-         "wall":"string"
-        },
-     "934":
-        {
-         "wall":"string"
-        },
-     "947":
-        {
-         "wall":"string"
-        },
-     "948":
-        {
-         "wall":"string"
-        },
-     "949":
-        {
-         "wall":"string"
-        },
-     "950":
-        {
-         "wall":"string"
-        },
-     "951":
-        {
-         "wall":"string"
-        },
-     "952":
-        {
-         "wall":"string"
-        },
-     "953":
-        {
-         "wall":"string"
-        },
-     "963":
-        {
-         "wall":"string"
-        },
-     "972":
-        {
-         "wall":"string"
-        },
-     "973":
-        {
-         "wall":"string"
-        },
-     "974":
-        {
-         "wall":"string"
-        },
-     "975":
-        {
-         "wall":"string"
-        },
-     "982":
-        {
-         "wall":"string"
-        },
-     "983":
-        {
-         "wall":"string"
-        },
-     "984":
-        {
-         "wall":"string"
-        },
-     "985":
-        {
-         "wall":"string"
-        },
-     "986":
-        {
-         "wall":"string"
-        },
-     "987":
-        {
-         "wall":"string"
-        },
-     "988":
-        {
-         "wall":"string"
-        },
-     "989":
-        {
-         "wall":"string"
-        },
-     "990":
-        {
-         "wall":"string"
-        },
-     "991":
-        {
-         "wall":"string"
-        }
-    },
- "tilewidth":100,
- "type":"tileset"
-}
-},{}],25:[function(require,module,exports){
+},{"../engine/ticker":11,"../engine/viewport":12,"../weapons/bow.js":25,"pixi.js":217}],20:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-//const { Player } = require('../../character/player.js');
-//const enemy = require('../../character/enemy.js');
-//const dialogUtil = require('../../dialog/dialog_util.js');
-//const rain = require('../../weather/rain.js');
-//const rat = require('../../character/rat.js');
-//const cutsceneUtils = require('../../cutscene/cutscene_utils.js');
-//const bedroomUtil = require('../bedroom/bedroom_util.js');
-//const parkUtil = require('../park/park_util.js');
-//const pathfinding_util = require('../../engine/pathfind.js');
-const level_util = require('../level_utils.js');
-const viewport = require('../../engine/viewport');
+const { Player } = require('../../character/characters/player.js');
+const { Campfire } = require('../../object_management/items/fire_place');
+const { Chest } = require('../../object_management/items/chest');
+const { Note } = require('../../object_management/items/Note');
 
-module.exports.add_floor = () => {
 
-  const door = PIXI.Sprite.fromFrame('black_wall');
-  door.width /= 2;
-  door.position.set(-100, -200);
-
-  level_util.load_bedroom_map();
-
-  viewport.updateLayersOrder = () => {
-    viewport.children.sort((a, b) => {
-      a.zIndex = a.zIndex || 0;
-      b.zIndex = b.zIndex || 0;
-      return b.zIndex - a.zIndex;
-    });
-  };
-
-  viewport.updateLayersOrder();
-};
-
-},{"../../engine/viewport":15,"../level_utils.js":28,"pixi.js":225}],26:[function(require,module,exports){
-module.exports={ "height":100,
- "infinite":true,
- "layers":[
-        {
-         "chunks":[
-                {
-                 "data":"AQAAAAIAAAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAADQAAAA4AAAAPAAAAEAAAABUAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAAcAAAAHQAAAB4AAAAfAAAAIAAAACEAAAAiAAAAIwAAACQAAAApAAAAKgAAACsAAAAsAAAALQAAAC4AAAAvAAAAMAAAADEAAAAyAAAAMwAAADQAAAA1AAAANgAAADcAAAA4AAAAPQAAAD4AAAA\/AAAAQAAAAEEAAABCAAAAQwAAAEQAAABFAAAARgAAAEcAAABIAAAASQAAAEoAAABLAAAATAAAAFEAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAF0AAABeAAAAXwAAAGAAAABlAAAAZgAAAGcAAABoAAAAaQAAAGoAAABrAAAAbAAAAG0AAABuAAAAbwAAAHAAAABxAAAAcgAAAHMAAAB0AAAAeQAAAHoAAAB7AAAAfAAAAH0AAAB+AAAAfwAAAIAAAACBAAAAggAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAI0AAACOAAAAjwAAAJAAAACRAAAAkgAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAJkAAACaAAAAmwAAAJwAAAChAAAAogAAAKMAAACkAAAApQAAAKYAAACnAAAAqAAAAKkAAACqAAAAqwAAAKwAAACtAAAArgAAAK8AAACwAAAAtQAAALYAAAC3AAAAuAAAALkAAAC6AAAAuwAAALwAAAC9AAAAvgAAAL8AAADAAAAAwQAAAMIAAADDAAAAxAAAAMkAAADKAAAAywAAAMwAAADNAAAAzgAAAM8AAADQAAAA0QAAANIAAADTAAAA1AAAANUAAADWAAAA1wAAANgAAADdAAAA3gAAAN8AAADgAAAA4QAAAOIAAADjAAAA5AAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA8QAAAPIAAADzAAAA9AAAAPUAAAD2AAAA9wAAAPgAAAD5AAAA+gAAAPsAAAD8AAAA\/QAAAP4AAAD\/AAAAAAEAAAUBAAAGAQAABwEAAAgBAAAJAQAACgEAAAsBAAAMAQAADQEAAA4BAAAPAQAAEAEAABEBAAASAQAAEwEAABQBAAAZAQAAGgEAABsBAAAcAQAAHQEAAB4BAAAfAQAAIAEAACEBAAAiAQAAIwEAACQBAAAlAQAAJgEAACcBAAAoAQAALQEAAC4BAAAvAQAAMAEAADEBAAAyAQAAMwEAADQBAAA1AQAANgEAADcBAAA4AQAAOQEAADoBAAA7AQAAPAEAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "data":"EQAAABIAAAATAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUAAAAmAAAAJwAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5AAAAOgAAADsAAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATQAAAE4AAABPAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGEAAABiAAAAYwAAAGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1AAAAdgAAAHcAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiQAAAIoAAACLAAAAjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ0AAACeAAAAnwAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACxAAAAsgAAALMAAAC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxQAAAMYAAADHAAAAyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANkAAADaAAAA2wAAANwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADtAAAA7gAAAO8AAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAIBAAADAQAABAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABUBAAAWAQAAFwEAABgBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApAQAAKgEAACsBAAAsAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPQEAAD4BAAA\/AQAAQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":0
-                }, 
-                {
-                 "data":"QQEAAEIBAABDAQAARAEAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":0,
-                 "y":16
-                }, 
-                {
-                 "data":"UQEAAFIBAABTAQAAVAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                 "height":16,
-                 "width":16,
-                 "x":16,
-                 "y":16
-                }],
-         "encoding":"base64",
-         "height":32,
-         "name":"Tile Layer 1",
-         "opacity":1,
-         "startx":0,
-         "starty":0,
-         "type":"tilelayer",
-         "visible":true,
-         "width":32,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"collision_items",
-         "objects":[
-                {
-                 "height":1074.38016528926,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":77.4793388429752,
-                 "x":330.578512396694,
-                 "y":340.909090909091
-                }, 
-                {
-                 "height":98.1404958677685,
-                 "id":2,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":444.214876033058,
-                 "x":397.727272727273,
-                 "y":1317.14876033058
-                }, 
-                {
-                 "height":87.8099173553719,
-                 "id":3,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":625,
-                 "x":1182.85123966942,
-                 "y":1317.14876033058
-                }, 
-                {
-                 "height":1022.72727272727,
-                 "id":4,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":113.636363636364,
-                 "x":1694.21487603306,
-                 "y":320.247933884297
-                }, 
-                {
-                 "height":82.6446280991736,
-                 "id":5,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1430.78512396694,
-                 "x":315.082644628099,
-                 "y":320.247933884298
-                }, 
-                {
-                 "height":366.735537190083,
-                 "id":6,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":87.8099173553719,
-                 "x":1064.04958677686,
-                 "y":371.900826446281
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextobjectid":7,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.1.6",
- "tileheight":100,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"map2_tiles.json"
-        }, 
-        {
-         "firstgid":341,
-         "source":"..\/test4.json"
-        }],
- "tilewidth":100,
- "type":"map",
- "version":1,
- "width":95
-}
-},{}],27:[function(require,module,exports){
-module.exports={ "columns":20,
- "image":"..\/..\/..\/..\/assets\/debug\/debug_room.jpg",
- "imageheight":1700,
- "imagewidth":2000,
- "margin":0,
- "name":"map2_tiles",
- "spacing":0,
- "tilecount":340,
- "tileheight":100,
- "tileproperties":
-    {
-     "103":
-        {
-         "wall":true
-        },
-     "110":
-        {
-         "wall":true
-        },
-     "111":
-        {
-         "wall":true
-        },
-     "117":
-        {
-         "wall":true
-        },
-     "123":
-        {
-         "wall":true
-        },
-     "130":
-        {
-         "wall":true
-        },
-     "131":
-        {
-         "wall":true
-        },
-     "137":
-        {
-         "wall":true
-        },
-     "143":
-        {
-         "wall":true
-        },
-     "150":
-        {
-         "wall":true
-        },
-     "151":
-        {
-         "wall":true
-        },
-     "157":
-        {
-         "wall":true
-        },
-     "163":
-        {
-         "wall":true
-        },
-     "177":
-        {
-         "wall":true
-        },
-     "183":
-        {
-         "wall":true
-        },
-     "197":
-        {
-         "wall":true
-        },
-     "203":
-        {
-         "wall":true
-        },
-     "217":
-        {
-         "wall":true
-        },
-     "223":
-        {
-         "wall":true
-        },
-     "237":
-        {
-         "wall":true
-        },
-     "243":
-        {
-         "wall":true
-        },
-     "257":
-        {
-         "wall":true
-        },
-     "263":
-        {
-         "wall":true
-        },
-     "264":
-        {
-         "wall":true
-        },
-     "265":
-        {
-         "wall":true
-        },
-     "266":
-        {
-         "wall":true
-        },
-     "267":
-        {
-         "wall":true
-        },
-     "268":
-        {
-         "wall":true
-        },
-     "271":
-        {
-         "wall":true
-        },
-     "272":
-        {
-         "wall":true
-        },
-     "273":
-        {
-         "wall":true
-        },
-     "274":
-        {
-         "wall":true
-        },
-     "275":
-        {
-         "wall":true
-        },
-     "276":
-        {
-         "wall":true
-        },
-     "277":
-        {
-         "wall":true
-        },
-     "63":
-        {
-         "wall":true
-        },
-     "64":
-        {
-         "wall":true
-        },
-     "65":
-        {
-         "wall":true
-        },
-     "66":
-        {
-         "wall":true
-        },
-     "67":
-        {
-         "wall":true
-        },
-     "68":
-        {
-         "wall":true
-        },
-     "69":
-        {
-         "wall":true
-        },
-     "70":
-        {
-         "wall":true
-        },
-     "71":
-        {
-         "wall":true
-        },
-     "72":
-        {
-         "wall":true
-        },
-     "73":
-        {
-         "wall":true
-        },
-     "74":
-        {
-         "wall":true
-        },
-     "75":
-        {
-         "wall":true
-        },
-     "76":
-        {
-         "wall":true
-        },
-     "77":
-        {
-         "wall":true
-        },
-     "83":
-        {
-         "wall":true
-        },
-     "90":
-        {
-         "wall":true
-        },
-     "91":
-        {
-         "wall":true
-        },
-     "97":
-        {
-         "wall":true
-        }
-    },
- "tilepropertytypes":
-    {
-     "103":
-        {
-         "wall":"bool"
-        },
-     "110":
-        {
-         "wall":"bool"
-        },
-     "111":
-        {
-         "wall":"bool"
-        },
-     "117":
-        {
-         "wall":"bool"
-        },
-     "123":
-        {
-         "wall":"bool"
-        },
-     "130":
-        {
-         "wall":"bool"
-        },
-     "131":
-        {
-         "wall":"bool"
-        },
-     "137":
-        {
-         "wall":"bool"
-        },
-     "143":
-        {
-         "wall":"bool"
-        },
-     "150":
-        {
-         "wall":"bool"
-        },
-     "151":
-        {
-         "wall":"bool"
-        },
-     "157":
-        {
-         "wall":"bool"
-        },
-     "163":
-        {
-         "wall":"bool"
-        },
-     "177":
-        {
-         "wall":"bool"
-        },
-     "183":
-        {
-         "wall":"bool"
-        },
-     "197":
-        {
-         "wall":"bool"
-        },
-     "203":
-        {
-         "wall":"bool"
-        },
-     "217":
-        {
-         "wall":"bool"
-        },
-     "223":
-        {
-         "wall":"bool"
-        },
-     "237":
-        {
-         "wall":"bool"
-        },
-     "243":
-        {
-         "wall":"bool"
-        },
-     "257":
-        {
-         "wall":"bool"
-        },
-     "263":
-        {
-         "wall":"bool"
-        },
-     "264":
-        {
-         "wall":"bool"
-        },
-     "265":
-        {
-         "wall":"bool"
-        },
-     "266":
-        {
-         "wall":"bool"
-        },
-     "267":
-        {
-         "wall":"bool"
-        },
-     "268":
-        {
-         "wall":"bool"
-        },
-     "271":
-        {
-         "wall":"bool"
-        },
-     "272":
-        {
-         "wall":"bool"
-        },
-     "273":
-        {
-         "wall":"bool"
-        },
-     "274":
-        {
-         "wall":"bool"
-        },
-     "275":
-        {
-         "wall":"bool"
-        },
-     "276":
-        {
-         "wall":"bool"
-        },
-     "277":
-        {
-         "wall":"bool"
-        },
-     "63":
-        {
-         "wall":"bool"
-        },
-     "64":
-        {
-         "wall":"bool"
-        },
-     "65":
-        {
-         "wall":"bool"
-        },
-     "66":
-        {
-         "wall":"bool"
-        },
-     "67":
-        {
-         "wall":"bool"
-        },
-     "68":
-        {
-         "wall":"bool"
-        },
-     "69":
-        {
-         "wall":"bool"
-        },
-     "70":
-        {
-         "wall":"bool"
-        },
-     "71":
-        {
-         "wall":"bool"
-        },
-     "72":
-        {
-         "wall":"bool"
-        },
-     "73":
-        {
-         "wall":"bool"
-        },
-     "74":
-        {
-         "wall":"bool"
-        },
-     "75":
-        {
-         "wall":"bool"
-        },
-     "76":
-        {
-         "wall":"bool"
-        },
-     "77":
-        {
-         "wall":"bool"
-        },
-     "83":
-        {
-         "wall":"bool"
-        },
-     "90":
-        {
-         "wall":"bool"
-        },
-     "91":
-        {
-         "wall":"bool"
-        },
-     "97":
-        {
-         "wall":"bool"
-        }
-    },
- "tilewidth":100,
- "type":"tileset"
-}
-},{}],28:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-const viewport = require('../engine/viewport');
-
-const {
-  create_level_grid,
-  move_sprite_on_route_straight,
-} = require('../engine/pathfind.js');
-
-const { Enemy } = require('../character/characters/enemy.js');
-const { Friend } = require('../character/characters/friend.js');
-const { Rat } = require('../character/characters/rat');
-const { Player } = require('../character/characters/player.js');
-const { Door } = require('../object_management/hard_furnishing/door.js');
-const { Note } = require('../object_management/items/note');
-const { Chest } = require('../object_management/items/chest');
-const { Campfire } = require('../object_management/items/fire_place');
-
-class Level {
+class DevelopmentLevel {
   constructor() {
-    this.segments = [];
-    this.collision_items = new PIXI.Container();
-    this.collision_items.zIndex = -10;
-    this.collision_items.name = 'collision_items';
+    const player = new Player();
 
-    viewport.addChild(this.collision_items);
+    player.set_position({ x: 1000, y: 1000 });
+    player.add_controls();
+    player.follow_player();
+    player.with_light();
+    this.test_chest();
+    this.test_campfire();
+    this.test_note();
   }
 
-  create_grid(level_tiles) {
-    this.grid = create_level_grid(level_tiles);
-  }
+  test_note() {
 
-  add_to_segments(item) {
-    this.segments.push(
-      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
-    );
-  }
-
-  set_background_image(image, tile_data) {
-    this.background_image = image;
-    this.background_image.position.set(0, 0);
-    this.background_image.width = tile_data.imagewidth;
-    this.background_image.height = tile_data.imageheight;
-
-    this.add_to_segments(this.background_image);
-
-    viewport.addChild(this.background_image);
-  }
-
-  render_walls(wall_array) {
-    wall_array.objects.forEach((wall_data) => {
-      const wall = PIXI.Sprite.fromFrame('black_dot');
-
-      wall.position.set(wall_data.x + wall_array.offsetx, wall_data.y + wall_array.offsety- 100);
-      wall.width = wall_data.width;
-      wall.height = wall_data.height;
-      wall.anchor.set(0);
-      wall.zIndex = -20;
-      this.add_to_segments(wall);
-
-      this.collision_items.addChild(wall);
-    });
-  }
-
-  render_items(item_array) {
-    item_array.x = item_array.offsetx;
-    item_array.y = item_array.offsety - 100;
-
-    const chest = new Chest(item_array);
-    chest.add_state_handling();
-
-    const note = new Note({x: 900, y: 850});
-    note.add_state_handling();
-
-    const campfire = new Campfire({x: 1100, y: 800});
-    campfire.add_state_handling();
-  }
-
-  render_doors(door_array) {
-    door_array.objects.forEach((door_data) => {
-      const door = new Door(door_data);
-      door.add_state_handling();
-      door.lock().unlock().open();
-    });
-  }
-
-  create_player(location){
-    const character = new Player();
-
-    character.set_position(location.x,location.y);
-    character.add_controls();
-    character.follow_player();
-    character.create_light();
-    //character.add_raycasting(this.segments)
-  }
-
-  create_friend(location, script) {
-    const friend = new Friend();
-    friend.set_position(location.x,location.y);
-    friend.add_dialog_handling();
-    friend.add_script(script);
-    friend.add_state_handling();
-  }
-
-  create_enemy(location, path) {
-    const enemy = new Enemy();
-
-    enemy.set_position(location.x, location.y);
-    enemy.create_direction_line();
-    enemy.add_sight_line();
-    enemy.add_influence_box();
-    enemy.create_light();
-    enemy.add_raycasting(this.segments);
-
-    const formatted_path_data = format_path_data(path);
-    enemy.create_patrol_path(formatted_path_data);
-  }
-
-  create_rat(location, path) {
-    const rat = new Rat();
-    rat.set_position(location.x, location.y);
-
-    const formatted_path_data = format_path_data(path);
-    rat.create_patrol_path(formatted_path_data);
-    move_sprite_on_route_straight(rat.sprite);
-  }
-}
-
-class Bedroom extends Level {
-  constructor(data, image) {
-    super();
-
-    const {
-      grid_data,
-      wall_data,
-      door_data,
-      item_data,
-      player_data,
-      enemy_data,
-      rat_data,
-      friend_data,
-    } = data;
-
-    this.create_grid(grid_data);
-    this.set_background_image(image, grid_data);
-    this.render_walls(wall_data);
-    this.render_doors(door_data);
-    this.render_items(item_data.layers[0]);
-    this.create_player(player_data.position);
-    this.create_enemy(enemy_data.position, enemy_data.path_data);
-    this.create_rat(rat_data.position, rat_data.path_data);
-    this.create_friend(friend_data.position, friend_data.script);
-  }
-}
-
-module.exports.load_debug_map_image = () => {
-
-  const debug_room_tiled_data = require('./debug/playground/map2_output.json');
-  const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
-  const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-
-  const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
-
-  const options = {
-    wall_offset: {
-      x: 0,
-      y: 0,
-    },
-  };
-
-  debug_room.set_background_image(debug_room_image);
-  debug_room.render_walls(options);
-  debug_room.create_grid();
-  // debug_room.create_enemies();
-};
-
-function format_path_data(path_data){
-  const formatted_path_array = [];
-
-  for (let i = 0; i < path_data.objects[0].polyline.length; i++) {
-    const element = path_data.objects[0].polyline[i];
-    const path_data2 = {
-      x: element.x + path_data.objects[0].x,
-      y: element.y + path_data.objects[0].y - 100,
-    };
-    formatted_path_array.push(path_data2);
-  }
-
-  return formatted_path_array;
-}
-
-module.exports.load_bedroom_map = () => {
-  const level_data = require('./bedroom/level_data/bedroom_level_data.json');
-  const tiles_data = require('./bedroom/level_data/flat_floor_data.json');
-  const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
-  const friend_script = [{
-    type:'Text',
-    id:'7a69da96-639e-4292-a26f-59a47b934884',
-    actor:'trader',
-    name:'Welcome to a dialog option, want to \ngo to the next line?\n \n Well here we go, welcome to the end \n of the world',
-    next:'274625c9-0d31-49a3-87dc-129a721ee698',
-  },{
-    type:'Branch',id:'274625c9-0d31-49a3-87dc-129a721ee698',
-    variable:'first choice ',
-    branches: {
-      yes:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
-      no:'4f2717a2-11de-4f42-a358-907e8e3eb656',
-    },
-  },{
-    type:'Text',
-    id:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
-    actor:'trader',
-    name:'final node after the yes choice ',
-    next:null,
-  },{
-    type:'Text',
-    id:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
-    actor:'trader',
-    name:'this is the first yes choice',
-    next:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
-  },{
-    type:'Text',
-    id:'4f2717a2-11de-4f42-a358-907e8e3eb656',
-    actor:'trader',
-    name:'this is the first no choice',
-    next:null,
-  }];
-
-  const bedroom_schema = {
-    player_data: {
-      position: {
-        x: 1000,
-        y: 1000,
-      },
-    },
-    enemy_data: {
-      position: {
-        x: 1800,
-        y: 1000,
-      },
-      path_data: level_data.layers[0].layers[2],
-    },
-    friend_data: {
-      position: {
-        x: 600,
-        y: 1300,
-      },
-      script: friend_script,
-    },
-    rat_data: {
-      position: {
-        x: 2300,
-        y: 1800,
-      },
-      path_data: level_data.layers[0].layers[3],
-    },
-    wall_data: level_data.layers[0].layers[1],
-    door_data: level_data.layers[0].layers[4],
-    item_data: level_data.layers[0].layers[5],
-    grid_data: tiles_data,
-  };
-
-  new Bedroom(bedroom_schema, bedroom_image);
-};
-
-
-
-},{"../character/characters/enemy.js":4,"../character/characters/friend.js":5,"../character/characters/player.js":6,"../character/characters/rat":7,"../engine/pathfind.js":12,"../engine/viewport":15,"../object_management/hard_furnishing/door.js":29,"../object_management/items/chest":30,"../object_management/items/fire_place":31,"../object_management/items/note":32,"./bedroom/level_data/bedroom_level_data.json":23,"./bedroom/level_data/flat_floor_data.json":24,"./debug/playground/map2_output.json":26,"./debug/playground/map2_tiles.json":27,"pixi.js":225}],29:[function(require,module,exports){
-'use strict';
-
-const PIXI              = require('pixi.js');
-const viewport          = require('../../engine/viewport');
-const { createjs }      = require('@createjs/tweenjs');
-
-const door_container = new PIXI.Container();
-door_container.name     = 'door_container';
-door_container.zIndex   = -2;
-viewport.addChild(door_container);
-
-class Door {
-  constructor(door_data) {
-    this.sprite = PIXI.Sprite.fromFrame('black_dot');
-    this.sprite.position.set(door_data.x, door_data.y);
-    this.sprite.width = door_data.width;
-    this.sprite.height = door_data.height;
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.sprite.name = 'door';
-    this.state = 'closed';
-    door_container.addChild(this.sprite);
+    const note = new Note();
+    note.set_position({ x: 900, y: 900 });
+    note.without_character_collision();
+    note.without_projectile_collision();
+    note.immovable();
 
   }
 
-  add_state_handling() {
-    this.sprite.click = () => {
+  test_chest() {
 
-      switch(this.state) {
-        case 'transition':
-          return;
-        case 'locked':
-          return;
-        case 'closed':
-          this.open();
-          break;
-        case 'open':
-          this.close();
-          break;
-      }
-      this.state = 'transition';
-    };
+    const chest = new Chest();
+    chest.set_position({ x: 700, y: 700 });
+    chest.with_character_collision();
+    chest.without_projectile_collision();
+    chest.moveable();
+
   }
 
-  lock() {
-    this.state = 'locked';
-    return this;
-  }
+  test_campfire() {
 
-  unlock() {
-    this.state = 'closed';
-    return this;
-  }
+    const campfire = new Campfire();
+    campfire.set_position({x: 1100, y: 1100});
+    campfire.with_character_collision();
+    campfire.moveable();
 
-  open()  {
-    const tween = createjs.Tween.get(this.sprite);
-
-    tween.to({
-      rotation: this.sprite.rotation,
-    }).to({
-      rotation: this.sprite.rotation +2,
-    }, 1000).call(()=>{
-      this.state = 'open';
-    });
-    return this;
-  }
-
-  close() {
-    const tween = createjs.Tween.get(this.sprite);
-
-    tween.to({
-      rotation: this.sprite.rotation,
-    }).to({
-      rotation: this.sprite.rotation -2,
-    }, 1000).call(()=>{
-      this.state = 'closed';
-    });
-    return this;
   }
 }
 
 module.exports = {
-  Door,
+  DevelopmentLevel,
 };
 
-},{"../../engine/viewport":15,"@createjs/tweenjs":34,"pixi.js":225}],30:[function(require,module,exports){
+},{"../../character/characters/player.js":4,"../../object_management/items/Note":21,"../../object_management/items/chest":22,"../../object_management/items/fire_place":23}],21:[function(require,module,exports){
+(function (global){
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport.js');
+
+const { Item } = require('./item_model');
+
+console.log(Item)
+
+class Note extends Item {
+  constructor() {
+    super();
+    this.image_state = {
+      un_read:  PIXI.Texture.fromFrame('full-note-written-small'),
+      read:     PIXI.Texture.fromFrame('full-note-written-small-read'),
+    };
+
+    this.sprite = new PIXI.Sprite(this.image_state.un_read);
+
+    this.sprite.anchor.set(0.5);
+    this.sprite.zIndex = -5;
+    this.sprite.name = 'note';
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.state = 'closed';
+
+    this.dom_note = global.document.querySelector('.note');
+    this.dom_note.addEventListener('click', () => {
+      this.hide();
+    });
+  }
+
+  add_state_handling() {
+    this.sprite.click = () => {
+      this.sprite.texture = this.image_state.read;
+
+      this.show();
+    };
+  }
+
+  show() {
+    this.dom_note.style.display = 'block';
+  }
+
+  hide() {
+    this.dom_note.style.display = 'none';
+  }
+}
+
+module.exports = {
+  Note,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./item_model":24,"pixi.js":217}],22:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
 const { GUI_Container } = require('../../gui/container');
 
-const container = new PIXI.Container();
-container.name = 'item_container';
-container.zIndex = -6;
-viewport.addChild(container);
+const { Item } = require('./item_model');
 
-class Chest {
-  constructor(item_data) {
+
+class Chest extends Item {
+  constructor() {
+    super();
     this.image_cache = {
       state: {
         full:   PIXI.Texture.fromFrame('chest_full'),
@@ -7923,12 +2102,11 @@ class Chest {
     this.sprite.name = 'chest';
     this.sprite.height *= 2;
     this.sprite.width *= 2;
-    this.sprite.position.set(item_data.x, item_data.y);
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
     this.state = 'closed';
+    this.sprite.hitable_with_arrow = false;
 
-    container.addChild(this.sprite);
   }
 
   add_state_handling() {
@@ -7976,42 +2154,32 @@ module.exports = {
   Chest,
 };
 
-},{"../../engine/viewport.js":15,"../../gui/container":17,"pixi.js":225}],31:[function(require,module,exports){
+},{"../../gui/container":14,"./item_model":24,"pixi.js":217}],23:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport.js');
+const { Item } = require('./item_model');
 
-const container = new PIXI.Container();
-container.name = 'item_container'; //todo
-container.zIndex = -6;
-viewport.addChild(container);
-
-
-class Campfire {
-  constructor({ x, y }) {
+class Campfire extends Item {
+  constructor() {
+    super();
     this.image_state = {
       smoldering:  PIXI.Texture.fromFrame('campfire'),
     };
 
     this.sprite = new PIXI.Sprite(this.image_state.smoldering);
-    this.sprite.position.set(x, y);
-
     this.sprite.anchor.set(0.5);
     this.sprite.zIndex = -5;
     this.sprite.name = 'campfire';
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.sprite.on('pointerdown', this.drag_start);
-    this.sprite.on('pointerup', this.drag_end);
-    this.sprite.on('pointermove', this.drag_move);
     this.state = 'closed';
     this.placed = false;
 
-    container.addChild(this.sprite);
   }
 
   drag_start(event) {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.on('pointerdown', this.drag_start);
     if(this.placed) {
       this.click();
       return;
@@ -8023,6 +2191,9 @@ class Campfire {
   }
 
   drag_end() {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.on('pointerup', this.drag_end);
     this.data = null;
     this.alpha = 1;
     this.dragging = false;
@@ -8030,13 +2201,15 @@ class Campfire {
   }
 
   drag_move() {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.on('pointermove', this.drag_move);
     if(this.dragging) {
       const new_position = this.data.getLocalPosition(this.parent);
       this.x = new_position.x;
       this.y = new_position.y;
     }
   }
-
 
   add_state_handling() {
     this.sprite.click = () => {
@@ -8050,67 +2223,47 @@ module.exports = {
   Campfire,
 };
 
-},{"../../engine/viewport.js":15,"pixi.js":225}],32:[function(require,module,exports){
-(function (global){
+},{"./item_model":24,"pixi.js":217}],24:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport.js');
 
-const container = new PIXI.Container();
-container.name = 'item_container'; //todo
-container.zIndex = -6;
-viewport.addChild(container);
-
-
-class Note {
-  constructor({ x, y }) {
-    this.image_state = {
-      un_read:  PIXI.Texture.fromFrame('full-note-written-small'),
-      read:     PIXI.Texture.fromFrame('full-note-written-small-read'),
-    };
-
-    this.sprite = new PIXI.Sprite(this.image_state.un_read);
-    this.sprite.position.set(x, y);
-
-    this.sprite.anchor.set(0.5);
-    this.sprite.zIndex = -5;
-    this.sprite.name = 'note';
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.state = 'closed';
-
-    container.addChild(this.sprite);
-
-    this.dom_note = global.document.querySelector('.note');
-    this.dom_note.addEventListener('click', () => {
-      this.hide();
-    });
+class Item {
+  set_position(point) {
+    this.sprite.position.set(point.x, point.y);
   }
 
-  add_state_handling() {
-    this.sprite.click = () => {
-      this.sprite.texture = this.image_state.read;
-
-      this.show();
-    };
+  with_character_collision() {
+    viewport.getChildByName('collision_items').addChild(this.sprite);
   }
 
-  show() {
-    this.dom_note.style.display = 'block';
+  with_projectile_collision() {
+    this.sprite.hitable_with_arrow = true;
   }
 
-  hide() {
-    this.dom_note.style.display = 'none';
+  without_projectile_collision() {
+    this.sprite.hitable_with_arrow = false;
   }
+
+  without_character_collision() {
+    viewport.getChildByName('non_collision_items').addChild(this.sprite);
+  }
+
+  moveable() {
+    this.sprite.moveable = true;
+  }
+
+  immovable() {
+    this.sprite.moveable = false;
+  }
+
 }
 
 module.exports = {
-  Note,
+  Item,
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport.js":15,"pixi.js":225}],33:[function(require,module,exports){
+},{"../../engine/viewport.js":12}],25:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -8196,6 +2349,7 @@ function create_arrow_tween(arrow, power, arrow_path) {
 
   return arrow_tween;
 }
+
 function arrow_management(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin,target);
@@ -8203,7 +2357,9 @@ function arrow_management(power, origin, target) {
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
-    viewport.getChildByName('enemy_container').children.forEach(enemy => {
+
+    const enemy_containter = viewport.getChildByName('enemy_container');
+    enemy_containter.children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
@@ -8217,6 +2373,8 @@ function arrow_management(power, origin, target) {
     });
 
     viewport.getChildByName('collision_items').children.forEach(object => {
+      if(!object.hitable_with_arrow) return;
+
       if(object.containsPoint(arrow_point)){
         arrow_tween.stop();
 
@@ -8309,7 +2467,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/viewport.js":15,"@createjs/tweenjs":34,"pixi.js":225}],34:[function(require,module,exports){
+},{"../engine/viewport.js":12,"@createjs/tweenjs":26,"pixi.js":217}],26:[function(require,module,exports){
 /**
  * @license
  * TweenJS
@@ -8323,7 +2481,7 @@ module.exports = {
  * This notice shall be included in all copies or substantial portions of the Software.
  */
 !function(t){"use strict";var e=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")},n=function(){function t(t,e){for(var i=0;i<e.length;i++){var n=e[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,i,n){return i&&t(e.prototype,i),n&&t(e,n),e}}(),r=function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)},o=function(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e},s=function(){function t(i){var n=arguments.length>1&&void 0!==arguments[1]&&arguments[1],r=arguments.length>2&&void 0!==arguments[2]&&arguments[2];e(this,t),this.type=i,this.target=null,this.currentTarget=null,this.eventPhase=0,this.bubbles=n,this.cancelable=r,this.timeStamp=(new Date).getTime(),this.defaultPrevented=!1,this.propagationStopped=!1,this.immediatePropagationStopped=!1,this.removed=!1}return t.prototype.preventDefault=function(){return this.defaultPrevented=this.cancelable,this},t.prototype.stopPropagation=function(){return this.propagationStopped=!0,this},t.prototype.stopImmediatePropagation=function(){return this.immediatePropagationStopped=this.propagationStopped=!0,this},t.prototype.remove=function(){return this.removed=!0,this},t.prototype.clone=function(){var e=new t(this.type,this.bubbles,this.cancelable);for(var i in this)this.hasOwnProperty(i)&&(e[i]=this[i]);return e},t.prototype.set=function(t){for(var e in t)this[e]=t[e];return this},t.prototype.toString=function(){return"["+this.constructor.name+" (type="+this.type+")]"},t}(),a=function(){function t(){e(this,t),this._listeners=null,this._captureListeners=null}return t.initialize=function(e){var i=t.prototype;e.addEventListener=i.addEventListener,e.on=i.on,e.removeEventListener=e.off=i.removeEventListener,e.removeAllEventListeners=i.removeAllEventListeners,e.hasEventListener=i.hasEventListener,e.dispatchEvent=i.dispatchEvent,e._dispatchEvent=i._dispatchEvent,e.willTrigger=i.willTrigger},t.prototype.addEventListener=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]&&arguments[2],n=void 0,r=(n=i?this._captureListeners=this._captureListeners||{}:this._listeners=this._listeners||{})[t];return r&&(this.removeEventListener(t,e,i),r=n[t]),r?r.push(e):n[t]=[e],e},t.prototype.on=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,n=arguments.length>3&&void 0!==arguments[3]&&arguments[3],r=arguments.length>4&&void 0!==arguments[4]?arguments[4]:{},o=arguments.length>5&&void 0!==arguments[5]&&arguments[5];return e.handleEvent&&(i=i||e,e=e.handleEvent),i=i||this,this.addEventListener(t,function(t){e.call(i,t,r),n&&t.remove()},o)},t.prototype.removeEventListener=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]&&arguments[2]?this._captureListeners:this._listeners;if(i){var n=i[t];if(n)for(var r=n.length,o=0;o<r;o++)if(n[o]===e){1===r?delete i[t]:n.splice(o,1);break}}},t.prototype.off=function(t,e){var i=arguments.length>2&&void 0!==arguments[2]&&arguments[2];this.removeEventListener(t,e,i)},t.prototype.removeAllEventListeners=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;t?(this._listeners&&delete this._listeners[t],this._captureListeners&&delete this._captureListeners[t]):this._listeners=this._captureListeners=null},t.prototype.dispatchEvent=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1],i=arguments.length>2&&void 0!==arguments[2]&&arguments[2];if("string"==typeof t){var n=this._listeners;if(!(e||n&&n[t]))return!0;t=new s(t,e,i)}else t.target&&t.clone&&(t=t.clone());try{t.target=this}catch(t){}if(t.bubbles&&this.parent){for(var r=this,o=[r];r.parent;)o.push(r=r.parent);var a=o.length,u=void 0;for(u=a-1;u>=0&&!t.propagationStopped;u--)o[u]._dispatchEvent(t,1+(0==u));for(u=1;u<a&&!t.propagationStopped;u++)o[u]._dispatchEvent(t,3)}else this._dispatchEvent(t,2);return!t.defaultPrevented},t.prototype.hasEventListener=function(t){var e=this._listeners,i=this._captureListeners;return!!(e&&e[t]||i&&i[t])},t.prototype.willTrigger=function(t){for(var e=this;e;){if(e.hasEventListener(t))return!0;e=e.parent}return!1},t.prototype.toString=function(){return"["+(this.constructor.name+this.name?" "+this.name:"")+"]"},t.prototype._dispatchEvent=function(t,e){var i=1===e?this._captureListeners:this._listeners;if(t&&i){var n=i[t.type],r=void 0;if(!n||0===(r=n.length))return;try{t.currentTarget=this}catch(t){}try{t.eventPhase=e}catch(t){}t.removed=!1,n=n.slice();for(var o=0;o<r&&!t.immediatePropagationStopped;o++){var s=n[o];s.handleEvent?s.handleEvent(t):s(t),t.removed&&(this.off(t.type,s,1===e),t.removed=!1)}}},t}(),u=function(t){function s(i){e(this,s);var n=o(this,t.call(this));return n.ignoreGlobalPause=!1,n.loop=0,n.useTicks=!1,n.reversed=!1,n.bounce=!1,n.timeScale=1,n.duration=0,n.position=0,n.rawPosition=-1,n._paused=!0,n._next=null,n._prev=null,n._parent=null,n._labels=null,n._labelList=null,i&&(n.useTicks=!!i.useTicks,n.ignoreGlobalPause=!!i.ignoreGlobalPause,n.loop=!0===i.loop?-1:i.loop||0,n.reversed=!!i.reversed,n.bounce=!!i.bounce,n.timeScale=i.timeScale||1,i.onChange&&n.addEventListener("change",i.onChange),i.onComplete&&n.addEventListener("complete",i.onComplete)),n}return r(s,t),s.prototype.advance=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1];this.setPosition(this.rawPosition+t*this.timeScale,e)},s.prototype.setPosition=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1],i=arguments.length>2&&void 0!==arguments[2]&&arguments[2],n=arguments[3],r=this.duration,o=this.loop,s=this.rawPosition,a=0,u=0,h=!1;if(t<0&&(t=0),0===r){if(h=!0,-1!==s)return h}else{if(u=t-(a=t/r|0)*r,(h=-1!==o&&t>=o*r+r)&&(t=(u=r)*(a=o)+r),t===s)return h;!this.reversed!=!(this.bounce&&a%2)&&(u=r-u)}this.position=u,this.rawPosition=t,this._updatePosition(i,h),h&&(this.paused=!0),n&&n(this),e||this._runActions(s,t,i,!i&&-1===s),this.dispatchEvent("change"),h&&this.dispatchEvent("complete")},s.prototype.calculatePosition=function(t){var e=this.duration,i=this.loop,n=0,r=0;return 0===e?0:(-1!==i&&t>=i*e+e?(r=e,n=i):r=t<0?0:t-(n=t/e|0)*e,!this.reversed!=!(this.bounce&&n%2)?e-r:r)},s.prototype.addLabel=function(t,e){this._labels||(this._labels={}),this._labels[t]=e;var n=this._labelList;if(n){for(var r=0,o=n.length;r<o&&!(e<n[r].position);r++);n.splice(i,0,{label:t,position:e})}},s.prototype.gotoAndPlay=function(t){this.paused=!1,this._goto(t)},s.prototype.gotoAndStop=function(t){this.paused=!0,this._goto(t)},s.prototype.resolve=function(t){var e=Number(t);return isNaN(e)?this._labels&&this._labels[t]:e},s.prototype.toString=function(){return"["+this.constructor.name+(this.name?" (name="+this.name+")":"")+"]"},s.prototype.clone=function(){throw"AbstractTween cannot be cloned."},s.prototype._init=function(t){t&&t.paused||(this.paused=!1),t&&null!=t.position&&this.setPosition(t.position)},s.prototype._goto=function(t){var e=this.resolve(t);null!=e&&this.setPosition(e,!1,!0)},s.prototype._runActions=function(t,e,i,n){if(this._actionHead||this.tweens){var r=this.duration,o=this.loop,s=this.reversed,a=this.bounce,u=void 0,h=void 0,p=void 0,l=void 0;if(0===r?(u=h=p=l=0,s=a=!1):(p=t-(u=t/r|0)*r,l=e-(h=e/r|0)*r),-1!==o&&(h>o&&(l=r,h=o),u>o&&(p=r,u=o)),i)return this._runActionsRange(l,l,i,n);if(u!==h||p!==l||i||n){-1===u&&(u=p=0);var c=t<=e,d=u;do{var f=d===u?p:c?0:r,v=d===h?l:c?r:0;if(!s!=!(a&&d%2)&&(f=r-f,v=r-v),a&&d!==u&&f===v);else if(this._runActionsRange(f,v,i,n||d!==u&&!a))return!0;n=!1}while(c&&++d<=h||!c&&--d>=h)}}},s.prototype._runActionsRange=function(t,e,i,n){throw"_runActionsRange is abstract and must be overridden by a subclass."},s.prototype._updatePosition=function(t,e){throw"_updatePosition is abstract and must be overridden by a subclass."},n(s,[{key:"labels",get:function(){var t=this._labelList;if(!t){t=this._labelList=[];var e=this._labels;for(var i in e)t.push({label:i,position:e[i]});t.sort(function(t,e){return t.position-e.position})}return t},set:function(t){this._labels=t,this._labelList=null}},{key:"currentLabel",get:function(){for(var t=this.labels,e=this.position,n=0,r=t.length;n<r&&!(e<t[n].position);n++);return 0===i?null:t[i-1].label}},{key:"paused",get:function(){return this._paused},set:function(t){G._register(this,t),this._paused=t}}]),s}(a);function h(t){return t}function p(t){return function(e){return Math.pow(e,t)}}function l(t){return function(e){return 1-Math.pow(1-e,t)}}function c(t){return function(e){return(e*=2)<1?.5*Math.pow(e,t):1-.5*Math.abs(Math.pow(2-e,t))}}function d(t){return function(e){return e*e*((t+1)*e-t)}}function f(t){return function(e){return--e*e*((t+1)*e+t)+1}}function v(t){return t*=1.525,function(e){return(e*=2)<1?e*e*((t+1)*e-t)*.5:.5*((e-=2)*e*((t+1)*e+t)+2)}}function _(t,e){var i=2*Math.PI;return function(n){if(0===n||1===n)return n;var r=e/i*Math.asin(1/t);return-t*Math.pow(2,10*(n-=1))*Math.sin((n-r)*i/e)}}function g(t,e){var i=2*Math.PI;return function(n){if(0===n||1===n)return n;var r=e/i*Math.asin(1/t);return t*Math.pow(2,-10*n)*Math.sin((n-r)*i/e)+1}}function m(t,e){var i=2*Math.PI;return function(n){var r=e/i*Math.asin(1/t);return(n*=2)<1?t*Math.pow(2,10*(n-=1))*Math.sin((n-r)*i/e)*-.5:t*Math.pow(2,-10*(n-=1))*Math.sin((n-r)*i/e)*.5+1}}var y=h,w=p(2),T=l(2),b=c(2),E=p(3),k=l(3),P=c(3),I=p(4),L=l(4),A=c(4),M=p(5),O=l(5),S=c(5),x=d(1.7),j=f(1.7),R=v(1.7),F=_(1,.3),q=g(1,.3),D=m(1,.3*1.5),H=Object.freeze({linear:h,get:function(t){return t<-1?t=-1:t>1&&(t=1),function(e){return 0==t?e:t<0?e*(e*-t+1+t):e*((2-e)*t+(1-t))}},getPowIn:p,getPowOut:l,getPowInOut:c,sineIn:function(t){return 1-Math.cos(t*Math.PI/2)},sineOut:function(t){return Math.sin(t*Math.PI/2)},sineInOut:function(t){return-.5*(Math.cos(Math.PI*t)-1)},getBackIn:d,getBackOut:f,getBackInOut:v,circIn:function(t){return-(Math.sqrt(1-t*t)-1)},circOut:function(t){return Math.sqrt(1- --t*t)},circInOut:function(t){return(t*=2)<1?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-=2)*t)+1)},bounceIn:function(t){return 1-Ease.bounceOut(1-t)},bounceOut:function(t){return t<1/2.75?7.5625*t*t:t<2/2.75?7.5625*(t-=1.5/2.75)*t+.75:t<2.5/2.75?7.5625*(t-=2.25/2.75)*t+.9375:7.5625*(t-=2.625/2.75)*t+.984375},bounceInOut:function(t){return t<.5?.5*Ease.bounceIn(2*t):.5*Ease.bounceOut(2*t-1)+.5},getElasticIn:_,getElasticOut:g,getElasticInOut:m,none:y,quadIn:w,quadOut:T,quadInOut:b,cubicIn:E,cubicOut:k,cubicInOut:P,quartIn:I,quartOut:L,quartInOut:A,quintIn:M,quintOut:O,quintInOut:S,backIn:x,backOut:j,backInOut:R,elasticIn:F,elasticOut:q,elasticInOut:D}),C=function(t){function i(n){e(this,i);var r=o(this,t.call(this));return r.name=n,r.timingMode=i.TIMEOUT,r.maxDelta=0,r.paused=!1,r._inited=!1,r._startTime=0,r._pausedTime=0,r._ticks=0,r._pausedTicks=0,r._interval=50,r._lastTime=0,r._times=null,r._tickTimes=null,r._timerId=null,r._raf=!0,r}return r(i,t),n(i,null,[{key:"RAF_SYNCHED",get:function(){return"synched"}},{key:"RAF",get:function(){return"raf"}},{key:"TIMEOUT",get:function(){return"timeout"}}]),i.prototype.init=function(){this._inited||(this._inited=!0,this._times=[],this._tickTimes=[],this._startTime=this._getTime(),this._times.push(this._lastTime=0),this._setupTick())},i.prototype.reset=function(){if(this._raf){var t=window.cancelAnimationFrame||window.webkitCancelAnimationFrame||window.mozCancelAnimationFrame||window.oCancelAnimationFrame||window.msCancelAnimationFrame;t&&t(this._timerId)}else clearTimeout(this._timerId);this.removeAllEventListeners("tick"),this._timerId=this._times=this._tickTimes=null,this._startTime=this._lastTime=this._ticks=0,this._inited=!1},i.prototype.addEventListener=function(e,i,n){return!this._inited&&this.init(),t.prototype.addEventListener.call(this,e,i,n)},i.prototype.getMeasuredTickTime=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null,e=this._tickTimes;return!e||e.length<1?-1:(t=Math.min(e.length,t||0|this.framerate),e.reduce(function(t,e){return t+e},0)/t)},i.prototype.getMeasuredFPS=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null,e=this._times;return!e||e.length<2?-1:(t=Math.min(e.length-1,t||0|this.framerate),1e3/((e[0]-e[t])/t))},i.prototype.getTime=function(){var t=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return this._startTime?this._getTime()-(t?this._pausedTime:0):-1},i.prototype.getEventTime=function(){var t=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return this._startTime?(this._lastTime||this._startTime)-(t?this._pausedTime:0):-1},i.prototype.getTicks=function(){var t=arguments.length>0&&void 0!==arguments[0]&&arguments[0];return this._ticks-(t?this._pausedTicks:0)},i.prototype._handleSynch=function(){this._timerId=null,this._setupTick(),this._getTime()-this._lastTime>=.97*(this._interval-1)&&this._tick()},i.prototype._handleRAF=function(){this._timerId=null,this._setupTick(),this._tick()},i.prototype._handleTimeout=function(){this._timerId=null,this._setupTick(),this._tick()},i.prototype._setupTick=function(){if(null==this._timerId){var t=this.timingMode||this._raf&&i.RAF;if(t===i.RAF_SYNCHED||t===i.RAF){var e=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame;if(e)return this._timerId=e(t===i.RAF?this._handleRAF.bind(this):this._handleSynch.bind(this)),void(this._raf=!0)}this._raf=!1,this._timerId=setTimeout(this._handleTimeout.bind(this),this._interval)}},i.prototype._tick=function(){var t=this.paused,e=this._getTime(),i=e-this._lastTime;if(this._lastTime=e,this._ticks++,t&&(this._pausedTicks++,this._pausedTime+=i),this.hasEventListener("tick")){var n=new s("tick"),r=this.maxDelta;n.delta=r&&i>r?r:i,n.paused=t,n.time=e,n.runTime=e-this._pausedTime,this.dispatchEvent(n)}for(this._tickTimes.unshift(this._getTime()-e);this._tickTimes.length>100;)this._tickTimes.pop();for(this._times.unshift(e);this._times.length>100;)this._times.pop()},i.prototype._getTime=function(){var t=window.performance&&window.performance.now;return(t&&t.call(performance)||(new Date).getTime())-this._startTime},i.on=function(t,e,i,n,r,o){return N.on(t,e,i,n,r,o)},i.removeEventListener=function(t,e,i){N.removeEventListener(t,e,i)},i.off=function(t,e,i){N.off(t,e,i)},i.removeAllEventListeners=function(t){N.removeAllEventListeners(t)},i.dispatchEvent=function(t,e,i){return N.dispatchEvent(t,e,i)},i.hasEventListener=function(t){return N.hasEventListener(t)},i.willTrigger=function(t){return N.willTrigger(t)},i.toString=function(){return N.toString()},i.init=function(){N.init()},i.reset=function(){N.reset()},i.addEventListener=function(t,e,i){N.addEventListener(t,e,i)},i.getMeasuredTickTime=function(t){return N.getMeasuredTickTime(t)},i.getMeasuredFPS=function(t){return N.getMeasuredFPS(t)},i.getTime=function(t){return N.getTime(t)},i.getEventTime=function(t){return N.getEventTime(t)},i.getTicks=function(t){return N.getTicks(t)},n(i,[{key:"interval",get:function(){return this._interval},set:function(t){this._interval=t,this._inited&&this._setupTick()}},{key:"framerate",get:function(){return 1e3/this._interval},set:function(t){this.interval=1e3/t}}],[{key:"interval",get:function(){return N.interval},set:function(t){N.interval=t}},{key:"framerate",get:function(){return N.framerate},set:function(t){N.framerate=t}},{key:"name",get:function(){return N.name},set:function(t){N.name=t}},{key:"timingMode",get:function(){return N.timingMode},set:function(t){N.timingMode=t}},{key:"maxDelta",get:function(){return N.maxDelta},set:function(t){N.maxDelta=t}},{key:"paused",get:function(){return N.paused},set:function(t){N.paused=t}}]),i}(a),N=new C("createjs.global"),G=function(t){function n(i,r){e(this,n);var s=o(this,t.call(this,r));return s.pluginData=null,s.target=i,s.passive=!1,s._stepHead=new B(null,0,0,{},null,!0),s._stepTail=s._stepHead,s._stepPosition=0,s._actionHead=null,s._actionTail=null,s._plugins=null,s._pluginIds=null,s._injected=null,r&&(s.pluginData=r.pluginData,r.override&&n.removeTweens(i)),s.pluginData||(s.pluginData={}),s._init(r),s}return r(n,t),n.get=function(t,e){return new n(t,e)},n.tick=function(t,e){for(var i=n._tweenHead;i;){var r=i._next;e&&!i.ignoreGlobalPause||i._paused||i.advance(i.useTicks?1:t),i=r}},n.handleEvent=function(t){"tick"===t.type&&this.tick(t.delta,t.paused)},n.removeTweens=function(t){if(t.tweenjs_count){for(var e=n._tweenHead;e;){var i=e._next;e.target===t&&(e.paused=!0),e=i}t.tweenjs_count=0}},n.removeAllTweens=function(){for(var t=n._tweenHead;t;){var e=t._next;t._paused=!0,t.target&&(t.target.tweenjs_count=0),t._next=t._prev=null,t=e}n._tweenHead=n._tweenTail=null},n.hasActiveTweens=function(t){return t?!!t.tweenjs_count:!!n._tweenHead},n.installPlugin=function(t,e){t.install(e);for(var r=t.priority=t.priority||0,o=n._plugins=n._plugins||[],s=0,a=o.length;s<a&&!(r<o[s].priority);s++);o.splice(i,0,t)},n._register=function(t,e){var i=t.target;if(!e&&t._paused){i&&(i.tweenjs_count=i.tweenjs_count?i.tweenjs_count+1:1);var r=n._tweenTail;r?(n._tweenTail=r._next=t,t._prev=r):n._tweenHead=n._tweenTail=t,n._inited||(C.addEventListener("tick",n),n._inited=!0)}else if(e&&!t._paused){i&&i.tweenjs_count--;var o=t._next,s=t._prev;o?o._prev=s:n._tweenTail=s,s?s._next=o:n._tweenHead=o,t._next=t._prev=null}},n.prototype.wait=function(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1];return t>0&&this._addStep(+t,this._stepTail.props,null,e),this},n.prototype.to=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0,i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:h;e<0&&(e=0);var n=this._addStep(+e,null,i);return this._appendProps(t,n),this},n.prototype.label=function(t){return this.addLabel(t,this.duration),this},n.prototype.call=function(t,e,i){return this._addAction(i||this.target,t,e||[this])},n.prototype.set=function(t,e){return this._addAction(e||this.target,this._set,[t])},n.prototype.play=function(t){return this._addAction(t||this,this._set,[{paused:!1}])},n.prototype.pause=function(t){return this._addAction(t||this,this._set,[{paused:!1}])},n.prototype.clone=function(){throw"Tween can not be cloned."},n.prototype._addPlugin=function(t){var e=this._pluginIds||(this._pluginIds={}),i=t.id;if(i&&!e[i]){e[i]=!0;for(var n=this._plugins||(this._plugins=[]),r=t.priority||0,o=0,s=n.length;o<s;o++)if(r<n[o].priority)return void n.splice(o,0,t);n.push(t)}},n.prototype._updatePosition=function(t,e){var i=this._stepHead.next,n=this.position,r=this.duration;if(this.target&&i){for(var o=i.next;o&&o.t<=n;)o=(i=i.next).next;var s=e?0===r?1:n/r:(n-i.t)/i.d;this._updateTargetProps(i,s,e)}this._stepPosition=i?n-i.t:0},n.prototype._updateTargetProps=function(t,e,i){if(!(this.passive=!!t.passive)){var r=void 0,o=void 0,s=void 0,a=void 0,u=t.prev.props,h=t.props;(a=t.ease)&&(e=a(e,0,1,1));var p=this._plugins;t:for(var l in u){if(r=(o=u[l])!==(s=h[l])&&"number"==typeof o?o+(s-o)*e:e>=1?s:o,p)for(var c=0,d=p.length;c<d;c++){var f=p[c].change(this,t,l,r,e,i);if(f===n.IGNORE)continue t;void 0!==f&&(r=f)}this.target[l]=r}}},n.prototype._runActionsRange=function(t,e,i,n){var r=t>e,o=r?this._actionTail:this._actionHead,s=e,a=t;r&&(s=t,a=e);for(var u=this.position;o;){var h=o.t;if((h===e||h>a&&h<s||n&&h===t)&&(o.funct.apply(o.scope,o.params),u!==this.position))return!0;o=r?o.prev:o.next}},n.prototype._appendProps=function(t,e,i){var r,o=this._stepHead.props,s=this.target,a=n._plugins,u=void 0,h=void 0,p=void 0,l=void 0,c=e.prev,d=c.props,f=e.props||(e.props=this._cloneProps(d)),v={};for(u in t)if(t.hasOwnProperty(u)&&(v[u]=f[u]=t[u],void 0===o[u])){if(l=void 0,a)for(h=a.length-1;h>=0;h--)if(void 0!==(p=a[h].init(this,u,l))&&(l=p),l===n.IGNORE){(ignored=ignored||{})[u]=!0,delete f[u],delete v[u];break}l!==n.IGNORE&&(void 0===l&&(l=s[u]),d[u]=void 0===l?null:l)}for(u in v){p=t[u];for(var _=void 0,g=c;(_=g)&&(g=_.prev);)if(g.props!==_.props){if(void 0!==g.props[u])break;g.props[u]=d[u]}}if(i&&(a=this._plugins))for(h=a.length-1;h>=0;h--)a[h].step(this,e,v);(r=this._injected)&&(this._injected=null,this._appendProps(r,e,!1))},n.prototype._injectProp=function(t,e){(this._injected||(this._injected={}))[t]=e},n.prototype._addStep=function(t,e,i){var n=arguments.length>3&&void 0!==arguments[3]&&arguments[3],r=new B(this._stepTail,this.duration,t,e,i,n);return this.duration+=t,this._stepTail=this._stepTail.next=r},n.prototype._addAction=function(t,e,i){var n=new U(this._actionTail,this.duration,t,e,i);return this._actionTail?this._actionTail.next=n:this._actionHead=n,this._actionTail=n,this},n.prototype._set=function(t){for(var e in t)this[e]=t[e]},n.prototype._cloneProps=function(t){var e={};for(var i in t)e[i]=t[i];return e},n}(u),z=G.prototype;z.w=z.wait,z.t=z.to,z.c=z.call,z.s=z.set,G.IGNORE={},G._tweens=[],G._plugins=null,G._tweenHead=null,G._tweenTail=null;var B=function t(i,n,r,o,s,a){e(this,t),this.next=null,this.prev=i,this.t=n,this.d=r,this.props=o,this.ease=s,this.passive=a,this.index=i?i.index+1:0},U=function t(i,n,r,o,s){e(this,t),this.next=null,this.d=0,this.prev=i,this.t=n,this.scope=r,this.funct=o,this.params=s},Y=function(t){function i(){var n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};e(this,i);var r=o(this,t.call(this,n));return r.tweens=[],n.tweens&&r.addTween.apply(r,n.tweens),n.labels&&(r.labels=n.labels),r._init(n),r}return r(i,t),i.prototype.addTween=function(){for(var t=arguments.length,e=Array(t),i=0;i<t;i++)e[i]=arguments[i];var n=e.length;if(1===n){var r=e[0];this.tweens.push(r),r._parent=this,r.paused=!0;var o=r.duration;return r.loop>0&&(o*=r.loop+1),o>this.duration&&(this.duration=o),this.rawPosition>=0&&r.setPosition(this.rawPosition),r}if(n>1){for(var s=0;s<n;s++)this.addTween(e[s]);return e[n-1]}return null},i.prototype.removeTween=function(){for(var t=arguments.length,e=Array(t),i=0;i<t;i++)e[i]=arguments[i];var n=e.length;if(1===n){for(var r=this.tweens,o=e[0],s=r.length;s--;)if(r[s]===o)return r.splice(s,1),o._parent=null,o.duration>=this.duration&&this.updateDuration(),!0;return!1}if(n>1){for(var a=!0,u=0;u<n;u++)a=a&&this.removeTween(e[u]);return a}return!0},i.prototype.updateDuration=function(){this.duration=0;for(var t=0,e=this.tweens.length;t<e;t++){var i=this.tweens[t],n=i.duration;i.loop>0&&(n*=i.loop+1),n>this.duration&&(this.duration=n)}},i.prototype.clone=function(){throw"Timeline can not be cloned."},i.prototype._updatePosition=function(t,e){for(var i=this.position,n=0,r=this.tweens.length;n<r;n++)this.tweens[n].setPosition(i,!0,t)},i.prototype._runActionsRange=function(t,e,i,n){for(var r=this.position,o=0,s=this.tweens.length;o<s;o++)if(this.tweens[o]._runActions(t,e,i,n),r!==this.position)return!0},i}(u);t.Ease=H,t.Tween=G,t.AbstractTween=u,t.Timeline=Y,t.Event=s,t.EventDispatcher=a,t.Ticker=C,(t.versions=t.versions||{}).tweenjs="2.0.0"}(this.createjs=this.createjs||{});
-},{}],35:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = after
 
 function after(count, callback, err_cb) {
@@ -8353,7 +2511,7 @@ function after(count, callback, err_cb) {
 
 function noop() {}
 
-},{}],36:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /**
  * An abstraction for slicing an arraybuffer even when
  * ArrayBuffer.prototype.slice is not supported
@@ -8384,7 +2542,7 @@ module.exports = function(arraybuffer, start, end) {
   return result.buffer;
 };
 
-},{}],37:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 
 /**
  * Expose `Backoff`.
@@ -8471,7 +2629,7 @@ Backoff.prototype.setJitter = function(jitter){
 };
 
 
-},{}],38:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /*
  * base64-arraybuffer
  * https://github.com/niklasvh/base64-arraybuffer
@@ -8540,7 +2698,7 @@ Backoff.prototype.setJitter = function(jitter){
   };
 })();
 
-},{}],39:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -8746,7 +2904,7 @@ exports.nextCombination = function(v) {
 }
 
 
-},{}],40:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (global){
 /**
  * Create a blob builder even when vendor prefixes exist
@@ -8846,7 +3004,7 @@ module.exports = (function() {
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],41:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -8871,7 +3029,7 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],42:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -9036,7 +3194,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],43:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -9044,7 +3202,7 @@ module.exports = function(a, b){
   a.prototype = new fn;
   a.prototype.constructor = a;
 };
-},{}],44:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -9696,7 +3854,7 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],45:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /**
 *   EasyStar.js
 *   github.com/prettymuchbryce/EasyStarJS
@@ -10254,7 +4412,7 @@ EasyStar.BOTTOM_LEFT = 'BOTTOM_LEFT'
 EasyStar.LEFT = 'LEFT'
 EasyStar.TOP_LEFT = 'TOP_LEFT'
 
-},{"./instance":46,"./node":47,"heap":66}],46:[function(require,module,exports){
+},{"./instance":38,"./node":39,"heap":58}],38:[function(require,module,exports){
 /**
  * Represents a single instance of EasyStar.
  * A path that is in the queue to eventually be found.
@@ -10269,7 +4427,7 @@ module.exports = function() {
     this.nodeHash = {};
     this.openList;
 };
-},{}],47:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
 * A simple Node that represents a single tile on the grid.
 * @param {Object} parent The parent node.
@@ -10292,7 +4450,7 @@ module.exports = function(parent, x, y, costSoFar, simpleDistanceToTarget) {
         return this.costSoFar + this.simpleDistanceToTarget;
     }
 };
-},{}],48:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 
 module.exports = require('./socket');
 
@@ -10304,7 +4462,7 @@ module.exports = require('./socket');
  */
 module.exports.parser = require('engine.io-parser');
 
-},{"./socket":49,"engine.io-parser":59}],49:[function(require,module,exports){
+},{"./socket":41,"engine.io-parser":51}],41:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -11051,7 +5209,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":50,"./transports/index":51,"component-emitter":42,"debug":57,"engine.io-parser":59,"indexof":68,"parseqs":74,"parseuri":75}],50:[function(require,module,exports){
+},{"./transport":42,"./transports/index":43,"component-emitter":34,"debug":49,"engine.io-parser":51,"indexof":60,"parseqs":66,"parseuri":67}],42:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -11210,7 +5368,7 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
-},{"component-emitter":42,"engine.io-parser":59}],51:[function(require,module,exports){
+},{"component-emitter":34,"engine.io-parser":51}],43:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies
@@ -11267,7 +5425,7 @@ function polling (opts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":52,"./polling-xhr":53,"./websocket":55,"xmlhttprequest-ssl":56}],52:[function(require,module,exports){
+},{"./polling-jsonp":44,"./polling-xhr":45,"./websocket":47,"xmlhttprequest-ssl":48}],44:[function(require,module,exports){
 (function (global){
 
 /**
@@ -11502,7 +5660,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":54,"component-inherit":43}],53:[function(require,module,exports){
+},{"./polling":46,"component-inherit":35}],45:[function(require,module,exports){
 (function (global){
 /**
  * Module requirements.
@@ -11918,7 +6076,7 @@ function unloadHandler () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":54,"component-emitter":42,"component-inherit":43,"debug":57,"xmlhttprequest-ssl":56}],54:[function(require,module,exports){
+},{"./polling":46,"component-emitter":34,"component-inherit":35,"debug":49,"xmlhttprequest-ssl":48}],46:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -12165,7 +6323,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":50,"component-inherit":43,"debug":57,"engine.io-parser":59,"parseqs":74,"xmlhttprequest-ssl":56,"yeast":281}],55:[function(require,module,exports){
+},{"../transport":42,"component-inherit":35,"debug":49,"engine.io-parser":51,"parseqs":66,"xmlhttprequest-ssl":48,"yeast":273}],47:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -12455,7 +6613,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":50,"component-inherit":43,"debug":57,"engine.io-parser":59,"parseqs":74,"ws":283,"yeast":281}],56:[function(require,module,exports){
+},{"../transport":42,"component-inherit":35,"debug":49,"engine.io-parser":51,"parseqs":66,"ws":275,"yeast":273}],48:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -12496,7 +6654,7 @@ module.exports = function (opts) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":65}],57:[function(require,module,exports){
+},{"has-cors":57}],49:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -12695,7 +6853,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":58,"_process":287}],58:[function(require,module,exports){
+},{"./debug":50,"_process":279}],50:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -12922,7 +7080,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":71}],59:[function(require,module,exports){
+},{"ms":63}],51:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -13532,7 +7690,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":60,"./utf8":61,"after":35,"arraybuffer.slice":36,"base64-arraybuffer":38,"blob":40,"has-binary2":63}],60:[function(require,module,exports){
+},{"./keys":52,"./utf8":53,"after":27,"arraybuffer.slice":28,"base64-arraybuffer":30,"blob":32,"has-binary2":55}],52:[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -13553,7 +7711,7 @@ module.exports = Object.keys || function keys (obj){
   return arr;
 };
 
-},{}],61:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
@@ -13812,7 +7970,7 @@ module.exports = Object.keys || function keys (obj){
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],62:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -14125,7 +8283,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],63:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 (function (Buffer){
 /* global Blob File */
 
@@ -14193,14 +8351,14 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":284,"isarray":64}],64:[function(require,module,exports){
+},{"buffer":276,"isarray":56}],56:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],65:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -14219,10 +8377,10 @@ try {
   module.exports = false;
 }
 
-},{}],66:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 module.exports = require('./lib/heap');
 
-},{"./lib/heap":67}],67:[function(require,module,exports){
+},{"./lib/heap":59}],59:[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 (function() {
   var Heap, defaultCmp, floor, heapify, heappop, heappush, heappushpop, heapreplace, insort, min, nlargest, nsmallest, updateItem, _siftdown, _siftup;
@@ -14599,7 +8757,7 @@ module.exports = require('./lib/heap');
 
 }).call(this);
 
-},{}],68:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -14610,7 +8768,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],69:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 /**
  * isMobile.js v0.4.1
  *
@@ -14749,7 +8907,7 @@ module.exports = function(arr, obj){
 
 })(this);
 
-},{}],70:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -14916,7 +9074,7 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],71:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -15070,7 +9228,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],72:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -15162,7 +9320,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],73:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -15194,7 +9352,7 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],74:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -15233,7 +9391,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],75:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -15274,7 +9432,7 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],76:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -15542,7 +9700,7 @@ module.exports = function parseuri(str) {
 
 }).call(this);
 
-},{}],77:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -15663,7 +9821,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],78:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -15891,7 +10049,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":80}],79:[function(require,module,exports){
+},{"./GLTexture":72}],71:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -15987,7 +10145,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":85,"./shader/extractAttributes":87,"./shader/extractUniforms":88,"./shader/generateUniformAccessObject":89,"./shader/setPrecision":93}],80:[function(require,module,exports){
+},{"./shader/compileProgram":77,"./shader/extractAttributes":79,"./shader/extractUniforms":80,"./shader/generateUniformAccessObject":81,"./shader/setPrecision":85}],72:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -16322,7 +10480,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],81:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -16590,7 +10748,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":84}],82:[function(require,module,exports){
+},{"./setVertexAttribArrays":76}],74:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -16618,7 +10776,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],83:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -16645,7 +10803,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":77,"./GLFramebuffer":78,"./GLShader":79,"./GLTexture":80,"./VertexArrayObject":81,"./createContext":82,"./setVertexAttribArrays":84,"./shader":90}],84:[function(require,module,exports){
+},{"./GLBuffer":69,"./GLFramebuffer":70,"./GLShader":71,"./GLTexture":72,"./VertexArrayObject":73,"./createContext":74,"./setVertexAttribArrays":76,"./shader":82}],76:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -16702,7 +10860,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],85:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 
 /**
  * @class
@@ -16784,7 +10942,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],86:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -16864,7 +11022,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],87:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -16907,7 +11065,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":91,"./mapType":92}],88:[function(require,module,exports){
+},{"./mapSize":83,"./mapType":84}],80:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -16944,7 +11102,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":86,"./mapType":92}],89:[function(require,module,exports){
+},{"./defaultValue":78,"./mapType":84}],81:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -17067,7 +11225,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],90:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -17078,7 +11236,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":85,"./defaultValue":86,"./extractAttributes":87,"./extractUniforms":88,"./generateUniformAccessObject":89,"./mapSize":91,"./mapType":92,"./setPrecision":93}],91:[function(require,module,exports){
+},{"./compileProgram":77,"./defaultValue":78,"./extractAttributes":79,"./extractUniforms":80,"./generateUniformAccessObject":81,"./mapSize":83,"./mapType":84,"./setPrecision":85}],83:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -17116,7 +11274,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],92:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -17164,7 +11322,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],93:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -17184,7 +11342,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],94:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -17305,10 +11463,10 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":265}],95:[function(require,module,exports){
+},{"resource-loader":257}],87:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],96:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -17517,7 +11675,7 @@ module.exports = function (_Plugin) {
     return Bounce;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],97:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],89:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -17595,7 +11753,7 @@ module.exports = function (_Plugin) {
     return ClampZoom;
 }(Plugin);
 
-},{"./plugin":104}],98:[function(require,module,exports){
+},{"./plugin":96}],90:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -17760,7 +11918,7 @@ module.exports = function (_Plugin) {
     return clamp;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],99:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],91:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -17915,7 +12073,7 @@ module.exports = function (_Plugin) {
     return Decelerate;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],100:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],92:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18129,7 +12287,7 @@ module.exports = function (_Plugin) {
     return Drag;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],101:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],93:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18207,7 +12365,7 @@ module.exports = function (_Plugin) {
     return Follow;
 }(Plugin);
 
-},{"./plugin":104}],102:[function(require,module,exports){
+},{"./plugin":96}],94:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18381,7 +12539,7 @@ module.exports = function (_Plugin) {
     return MouseEdges;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],103:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],95:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18500,7 +12658,7 @@ module.exports = function (_Plugin) {
     return Pinch;
 }(Plugin);
 
-},{"./plugin":104}],104:[function(require,module,exports){
+},{"./plugin":96}],96:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18551,7 +12709,7 @@ module.exports = function () {
     return Plugin;
 }();
 
-},{}],105:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18727,7 +12885,7 @@ module.exports = function (_Plugin) {
     return SnapZoom;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],106:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],98:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -18872,7 +13030,7 @@ module.exports = function (_Plugin) {
     return Snap;
 }(Plugin);
 
-},{"./plugin":104,"./utils":107}],107:[function(require,module,exports){
+},{"./plugin":96,"./utils":99}],99:[function(require,module,exports){
 'use strict';
 
 var Penner = require('penner');
@@ -18907,7 +13065,7 @@ module.exports = {
     ease: ease
 };
 
-},{"penner":76}],108:[function(require,module,exports){
+},{"penner":68}],100:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20442,7 +14600,7 @@ PIXI.extras.Viewport = Viewport;
 
 module.exports = Viewport;
 
-},{"./bounce":96,"./clamp":98,"./clamp-zoom":97,"./decelerate":99,"./drag":100,"./follow":101,"./mouse-edges":102,"./pinch":103,"./snap":106,"./snap-zoom":105,"./utils":107,"./wheel":109}],109:[function(require,module,exports){
+},{"./bounce":88,"./clamp":90,"./clamp-zoom":89,"./decelerate":91,"./drag":92,"./follow":93,"./mouse-edges":94,"./pinch":95,"./snap":98,"./snap-zoom":97,"./utils":99,"./wheel":101}],101:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20572,7 +14730,7 @@ module.exports = function (_Plugin) {
     return Wheel;
 }(Plugin);
 
-},{"./plugin":104}],110:[function(require,module,exports){
+},{"./plugin":96}],102:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21101,7 +15259,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":135,"./accessibleTarget":111,"ismobilejs":69}],111:[function(require,module,exports){
+},{"../core":127,"./accessibleTarget":103,"ismobilejs":61}],103:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -21159,7 +15317,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],112:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21184,7 +15342,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":110,"./accessibleTarget":111}],113:[function(require,module,exports){
+},{"./AccessibilityManager":102,"./accessibleTarget":103}],105:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21416,7 +15574,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":115,"./const":116,"./display/Container":118,"./settings":171,"./ticker":191}],114:[function(require,module,exports){
+},{"./autoDetectRenderer":107,"./const":108,"./display/Container":110,"./settings":163,"./ticker":183}],106:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21483,7 +15641,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":171,"pixi-gl-core":83}],115:[function(require,module,exports){
+},{"./settings":163,"pixi-gl-core":75}],107:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21552,7 +15710,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":147,"./renderers/webgl/WebGLRenderer":154,"./utils":195}],116:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":139,"./renderers/webgl/WebGLRenderer":146,"./utils":187}],108:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21895,7 +16053,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],117:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22238,7 +16396,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":140}],118:[function(require,module,exports){
+},{"../math":132}],110:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22856,7 +17014,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":195,"./DisplayObject":119}],119:[function(require,module,exports){
+},{"../utils":187,"./DisplayObject":111}],111:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23550,7 +17708,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":116,"../math":140,"../settings":171,"./Bounds":117,"./Transform":120,"./TransformStatic":122,"eventemitter3":62}],120:[function(require,module,exports){
+},{"../const":108,"../math":132,"../settings":163,"./Bounds":109,"./Transform":112,"./TransformStatic":114,"eventemitter3":54}],112:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23731,7 +17889,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":140,"./TransformBase":121}],121:[function(require,module,exports){
+},{"../math":132,"./TransformBase":113}],113:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23818,7 +17976,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":140}],122:[function(require,module,exports){
+},{"../math":132}],114:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24028,7 +18186,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":140,"./TransformBase":121}],123:[function(require,module,exports){
+},{"../math":132,"./TransformBase":113}],115:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25405,7 +19563,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":116,"../display/Bounds":117,"../display/Container":118,"../math":140,"../renderers/canvas/CanvasRenderer":147,"../sprites/Sprite":172,"../textures/RenderTexture":183,"../textures/Texture":185,"../utils":195,"./GraphicsData":124,"./utils/bezierCurveTo":126}],124:[function(require,module,exports){
+},{"../const":108,"../display/Bounds":109,"../display/Container":110,"../math":132,"../renderers/canvas/CanvasRenderer":139,"../sprites/Sprite":164,"../textures/RenderTexture":175,"../textures/Texture":177,"../utils":187,"./GraphicsData":116,"./utils/bezierCurveTo":118}],116:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -25550,7 +19708,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],125:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25815,7 +19973,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":116,"../../renderers/canvas/CanvasRenderer":147}],126:[function(require,module,exports){
+},{"../../const":108,"../../renderers/canvas/CanvasRenderer":139}],118:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -25865,7 +20023,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],127:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26130,7 +20288,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":116,"../../renderers/webgl/WebGLRenderer":154,"../../renderers/webgl/utils/ObjectRenderer":164,"../../utils":195,"./WebGLGraphicsData":128,"./shaders/PrimitiveShader":129,"./utils/buildCircle":130,"./utils/buildPoly":132,"./utils/buildRectangle":133,"./utils/buildRoundedRectangle":134}],128:[function(require,module,exports){
+},{"../../const":108,"../../renderers/webgl/WebGLRenderer":146,"../../renderers/webgl/utils/ObjectRenderer":156,"../../utils":187,"./WebGLGraphicsData":120,"./shaders/PrimitiveShader":121,"./utils/buildCircle":122,"./utils/buildPoly":124,"./utils/buildRectangle":125,"./utils/buildRoundedRectangle":126}],120:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26273,7 +20431,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":83}],129:[function(require,module,exports){
+},{"pixi-gl-core":75}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26318,7 +20476,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":114}],130:[function(require,module,exports){
+},{"../../../Shader":106}],122:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26413,7 +20571,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":116,"../../../utils":195,"./buildLine":131}],131:[function(require,module,exports){
+},{"../../../const":108,"../../../utils":187,"./buildLine":123}],123:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26687,7 +20845,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":140,"../../../utils":195}],132:[function(require,module,exports){
+},{"../../../math":132,"../../../utils":187}],124:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26773,7 +20931,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":195,"./buildLine":131,"earcut":44}],133:[function(require,module,exports){
+},{"../../../utils":187,"./buildLine":123,"earcut":36}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26849,7 +21007,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":195,"./buildLine":131}],134:[function(require,module,exports){
+},{"../../../utils":187,"./buildLine":123}],126:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27005,7 +21163,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":195,"./buildLine":131,"earcut":44}],135:[function(require,module,exports){
+},{"../../../utils":187,"./buildLine":123,"earcut":36}],127:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27391,7 +21549,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":113,"./Shader":114,"./autoDetectRenderer":115,"./const":116,"./display/Bounds":117,"./display/Container":118,"./display/DisplayObject":119,"./display/Transform":120,"./display/TransformBase":121,"./display/TransformStatic":122,"./graphics/Graphics":123,"./graphics/GraphicsData":124,"./graphics/canvas/CanvasGraphicsRenderer":125,"./graphics/webgl/GraphicsRenderer":127,"./math":140,"./renderers/canvas/CanvasRenderer":147,"./renderers/canvas/utils/CanvasRenderTarget":149,"./renderers/webgl/WebGLRenderer":154,"./renderers/webgl/filters/Filter":156,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":159,"./renderers/webgl/managers/WebGLManager":163,"./renderers/webgl/utils/ObjectRenderer":164,"./renderers/webgl/utils/Quad":165,"./renderers/webgl/utils/RenderTarget":166,"./settings":171,"./sprites/Sprite":172,"./sprites/canvas/CanvasSpriteRenderer":173,"./sprites/canvas/CanvasTinter":174,"./sprites/webgl/SpriteRenderer":176,"./text/Text":178,"./text/TextMetrics":179,"./text/TextStyle":180,"./textures/BaseRenderTexture":181,"./textures/BaseTexture":182,"./textures/RenderTexture":183,"./textures/Spritesheet":184,"./textures/Texture":185,"./textures/TextureMatrix":186,"./textures/TextureUvs":187,"./textures/VideoBaseTexture":188,"./ticker":191,"./utils":195,"pixi-gl-core":83}],136:[function(require,module,exports){
+},{"./Application":105,"./Shader":106,"./autoDetectRenderer":107,"./const":108,"./display/Bounds":109,"./display/Container":110,"./display/DisplayObject":111,"./display/Transform":112,"./display/TransformBase":113,"./display/TransformStatic":114,"./graphics/Graphics":115,"./graphics/GraphicsData":116,"./graphics/canvas/CanvasGraphicsRenderer":117,"./graphics/webgl/GraphicsRenderer":119,"./math":132,"./renderers/canvas/CanvasRenderer":139,"./renderers/canvas/utils/CanvasRenderTarget":141,"./renderers/webgl/WebGLRenderer":146,"./renderers/webgl/filters/Filter":148,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":151,"./renderers/webgl/managers/WebGLManager":155,"./renderers/webgl/utils/ObjectRenderer":156,"./renderers/webgl/utils/Quad":157,"./renderers/webgl/utils/RenderTarget":158,"./settings":163,"./sprites/Sprite":164,"./sprites/canvas/CanvasSpriteRenderer":165,"./sprites/canvas/CanvasTinter":166,"./sprites/webgl/SpriteRenderer":168,"./text/Text":170,"./text/TextMetrics":171,"./text/TextStyle":172,"./textures/BaseRenderTexture":173,"./textures/BaseTexture":174,"./textures/RenderTexture":175,"./textures/Spritesheet":176,"./textures/Texture":177,"./textures/TextureMatrix":178,"./textures/TextureUvs":179,"./textures/VideoBaseTexture":180,"./ticker":183,"./utils":187,"pixi-gl-core":75}],128:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27584,7 +21742,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":137}],137:[function(require,module,exports){
+},{"./Matrix":129}],129:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28106,7 +22264,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":116,"./Point":139}],138:[function(require,module,exports){
+},{"../const":108,"./Point":131}],130:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28257,7 +22415,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],139:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28348,7 +22506,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],140:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28436,7 +22594,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":136,"./Matrix":137,"./ObservablePoint":138,"./Point":139,"./shapes/Circle":141,"./shapes/Ellipse":142,"./shapes/Polygon":143,"./shapes/Rectangle":144,"./shapes/RoundedRectangle":145}],141:[function(require,module,exports){
+},{"./GroupD8":128,"./Matrix":129,"./ObservablePoint":130,"./Point":131,"./shapes/Circle":133,"./shapes/Ellipse":134,"./shapes/Polygon":135,"./shapes/Rectangle":136,"./shapes/RoundedRectangle":137}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28550,7 +22708,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":116,"./Rectangle":144}],142:[function(require,module,exports){
+},{"../../const":108,"./Rectangle":136}],134:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28672,7 +22830,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":116,"./Rectangle":144}],143:[function(require,module,exports){
+},{"../../const":108,"./Rectangle":136}],135:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28803,7 +22961,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":116,"../Point":139}],144:[function(require,module,exports){
+},{"../../const":108,"../Point":131}],136:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29066,7 +23224,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":116}],145:[function(require,module,exports){
+},{"../../const":108}],137:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29199,7 +23357,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":116}],146:[function(require,module,exports){
+},{"../../const":108}],138:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29564,7 +23722,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":116,"../display/Container":118,"../math":140,"../settings":171,"../textures/RenderTexture":183,"../utils":195,"eventemitter3":62}],147:[function(require,module,exports){
+},{"../const":108,"../display/Container":110,"../math":132,"../settings":163,"../textures/RenderTexture":175,"../utils":187,"eventemitter3":54}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29929,7 +24087,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":116,"../../settings":171,"../../utils":195,"../SystemRenderer":146,"./utils/CanvasMaskManager":148,"./utils/CanvasRenderTarget":149,"./utils/mapCanvasBlendModesToPixi":151}],148:[function(require,module,exports){
+},{"../../const":108,"../../settings":163,"../../utils":187,"../SystemRenderer":138,"./utils/CanvasMaskManager":140,"./utils/CanvasRenderTarget":141,"./utils/mapCanvasBlendModesToPixi":143}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30098,7 +24256,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":116}],149:[function(require,module,exports){
+},{"../../../const":108}],141:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30222,7 +24380,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":171}],150:[function(require,module,exports){
+},{"../../../settings":163}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30283,7 +24441,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],151:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30355,7 +24513,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":116,"./canUseNewCanvasBlendModes":150}],152:[function(require,module,exports){
+},{"../../../const":108,"./canUseNewCanvasBlendModes":142}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30475,7 +24633,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":116,"../../settings":171}],153:[function(require,module,exports){
+},{"../../const":108,"../../settings":163}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30731,7 +24889,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":116,"../../utils":195,"./utils/RenderTarget":166,"pixi-gl-core":83}],154:[function(require,module,exports){
+},{"../../const":108,"../../utils":187,"./utils/RenderTarget":158,"pixi-gl-core":75}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31548,7 +25706,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":116,"../../textures/BaseTexture":182,"../../utils":195,"../SystemRenderer":146,"./TextureGarbageCollector":152,"./TextureManager":153,"./WebGLState":155,"./managers/FilterManager":160,"./managers/MaskManager":161,"./managers/StencilManager":162,"./utils/ObjectRenderer":164,"./utils/RenderTarget":166,"./utils/mapWebGLDrawModesToPixi":169,"./utils/validateContext":170,"pixi-gl-core":83}],155:[function(require,module,exports){
+},{"../../const":108,"../../textures/BaseTexture":174,"../../utils":187,"../SystemRenderer":138,"./TextureGarbageCollector":144,"./TextureManager":145,"./WebGLState":147,"./managers/FilterManager":152,"./managers/MaskManager":153,"./managers/StencilManager":154,"./utils/ObjectRenderer":156,"./utils/RenderTarget":158,"./utils/mapWebGLDrawModesToPixi":161,"./utils/validateContext":162,"pixi-gl-core":75}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31828,7 +25986,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":168}],156:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":160}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32024,7 +26182,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":116,"../../../settings":171,"../../../utils":195,"./extractUniformsFromSrc":157}],157:[function(require,module,exports){
+},{"../../../const":108,"../../../settings":163,"../../../utils":187,"./extractUniformsFromSrc":149}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32086,7 +26244,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":83}],158:[function(require,module,exports){
+},{"pixi-gl-core":75}],150:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32146,7 +26304,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":140}],159:[function(require,module,exports){
+},{"../../../math":132}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32234,7 +26392,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":140,"../../../../textures/TextureMatrix":186,"../Filter":156,"path":286}],160:[function(require,module,exports){
+},{"../../../../math":132,"../../../../textures/TextureMatrix":178,"../Filter":148,"path":278}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32884,7 +27042,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":114,"../../../math":140,"../filters/filterTransforms":158,"../utils/Quad":165,"../utils/RenderTarget":166,"./WebGLManager":163,"bit-twiddle":39}],161:[function(require,module,exports){
+},{"../../../Shader":106,"../../../math":132,"../filters/filterTransforms":150,"../utils/Quad":157,"../utils/RenderTarget":158,"./WebGLManager":155,"bit-twiddle":31}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33094,7 +27252,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":159,"./WebGLManager":163}],162:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":151,"./WebGLManager":155}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33247,7 +27405,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":163}],163:[function(require,module,exports){
+},{"./WebGLManager":155}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33302,7 +27460,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],164:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33380,7 +27538,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":163}],165:[function(require,module,exports){
+},{"../managers/WebGLManager":155}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33561,7 +27719,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":193,"pixi-gl-core":83}],166:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":185,"pixi-gl-core":75}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33895,7 +28053,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":116,"../../../math":140,"../../../settings":171,"pixi-gl-core":83}],167:[function(require,module,exports){
+},{"../../../const":108,"../../../math":132,"../../../settings":163,"pixi-gl-core":75}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33970,7 +28128,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":83}],168:[function(require,module,exports){
+},{"pixi-gl-core":75}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34019,7 +28177,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":116}],169:[function(require,module,exports){
+},{"../../../const":108}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34051,7 +28209,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":116}],170:[function(require,module,exports){
+},{"../../../const":108}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34067,7 +28225,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],171:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34312,7 +28470,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":192,"./utils/maxRecommendedTextures":197}],172:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":184,"./utils/maxRecommendedTextures":189}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34953,7 +29111,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":116,"../display/Container":118,"../math":140,"../textures/Texture":185,"../utils":195}],173:[function(require,module,exports){
+},{"../const":108,"../display/Container":110,"../math":132,"../textures/Texture":177,"../utils":187}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35106,7 +29264,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":116,"../../math":140,"../../renderers/canvas/CanvasRenderer":147,"./CanvasTinter":174}],174:[function(require,module,exports){
+},{"../../const":108,"../../math":132,"../../renderers/canvas/CanvasRenderer":139,"./CanvasTinter":166}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35357,7 +29515,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":150,"../../utils":195}],175:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":142,"../../utils":187}],167:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -35410,7 +29568,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],176:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35963,7 +30121,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":154,"../../renderers/webgl/utils/ObjectRenderer":164,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":167,"../../settings":171,"../../utils":195,"../../utils/createIndicesForQuads":193,"./BatchBuffer":175,"./generateMultiTextureShader":177,"bit-twiddle":39,"pixi-gl-core":83}],177:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":146,"../../renderers/webgl/utils/ObjectRenderer":156,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":159,"../../settings":163,"../../utils":187,"../../utils/createIndicesForQuads":185,"./BatchBuffer":167,"./generateMultiTextureShader":169,"bit-twiddle":31,"pixi-gl-core":75}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36026,7 +30184,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":114,"path":286}],178:[function(require,module,exports){
+},{"../../Shader":106,"path":278}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36684,7 +30842,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":116,"../math":140,"../settings":171,"../sprites/Sprite":172,"../textures/Texture":185,"../utils":195,"../utils/trimCanvas":200,"./TextMetrics":179,"./TextStyle":180}],179:[function(require,module,exports){
+},{"../const":108,"../math":132,"../settings":163,"../sprites/Sprite":164,"../textures/Texture":177,"../utils":187,"../utils/trimCanvas":192,"./TextMetrics":171,"./TextStyle":172}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37384,7 +31542,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],180:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38218,7 +32376,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":116,"../utils":195}],181:[function(require,module,exports){
+},{"../const":108,"../utils":187}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38380,7 +32538,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":171,"./BaseTexture":182}],182:[function(require,module,exports){
+},{"../settings":163,"./BaseTexture":174}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39226,7 +33384,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":171,"../utils":195,"../utils/determineCrossOrigin":194,"bit-twiddle":39,"eventemitter3":62}],183:[function(require,module,exports){
+},{"../settings":163,"../utils":187,"../utils/determineCrossOrigin":186,"bit-twiddle":31,"eventemitter3":54}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39380,7 +33538,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":181,"./Texture":185}],184:[function(require,module,exports){
+},{"./BaseRenderTexture":173,"./Texture":177}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39709,7 +33867,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":135,"../utils":195}],185:[function(require,module,exports){
+},{"../":127,"../utils":187}],177:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40410,7 +34568,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":140,"../settings":171,"../utils":195,"./BaseTexture":182,"./TextureUvs":187,"./VideoBaseTexture":188,"eventemitter3":62}],186:[function(require,module,exports){
+},{"../math":132,"../settings":163,"../utils":187,"./BaseTexture":174,"./TextureUvs":179,"./VideoBaseTexture":180,"eventemitter3":54}],178:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40574,7 +34732,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":137}],187:[function(require,module,exports){
+},{"../math/Matrix":129}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40679,7 +34837,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":136}],188:[function(require,module,exports){
+},{"../math/GroupD8":128}],180:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41022,7 +35180,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":116,"../ticker":191,"../utils":195,"../utils/determineCrossOrigin":194,"./BaseTexture":182}],189:[function(require,module,exports){
+},{"../const":108,"../ticker":183,"../utils":187,"../utils/determineCrossOrigin":186,"./BaseTexture":174}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41495,7 +35653,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":116,"../settings":171,"./TickerListener":190}],190:[function(require,module,exports){
+},{"../const":108,"../settings":163,"./TickerListener":182}],182:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41669,7 +35827,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],191:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41749,7 +35907,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":189}],192:[function(require,module,exports){
+},{"./Ticker":181}],184:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41763,7 +35921,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],193:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41797,7 +35955,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],194:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41853,7 +36011,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":292}],195:[function(require,module,exports){
+},{"url":284}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42336,7 +36494,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":116,"../settings":171,"./mapPremultipliedBlendModes":196,"./mixin":198,"./pluginTarget":199,"earcut":44,"eventemitter3":62,"ismobilejs":69,"remove-array-items":260}],196:[function(require,module,exports){
+},{"../const":108,"../settings":163,"./mapPremultipliedBlendModes":188,"./mixin":190,"./pluginTarget":191,"earcut":36,"eventemitter3":54,"ismobilejs":61,"remove-array-items":252}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42379,7 +36537,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":116}],197:[function(require,module,exports){
+},{"../const":108}],189:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42401,7 +36559,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":69}],198:[function(require,module,exports){
+},{"ismobilejs":61}],190:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -42463,7 +36621,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],199:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -42529,7 +36687,7 @@ exports.default = {
     }
 };
 
-},{}],200:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42607,7 +36765,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],201:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43763,7 +37921,7 @@ function deprecation(core) {
     }
 }
 
-},{}],202:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43943,7 +38101,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":135}],203:[function(require,module,exports){
+},{"../../core":127}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43968,7 +38126,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":202,"./webgl/WebGLExtract":204}],204:[function(require,module,exports){
+},{"./canvas/CanvasExtract":194,"./webgl/WebGLExtract":196}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44203,7 +38361,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":135}],205:[function(require,module,exports){
+},{"../../core":127}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44625,7 +38783,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":135}],206:[function(require,module,exports){
+},{"../core":127}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45270,7 +39428,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":135,"../core/math/ObservablePoint":138,"../core/settings":171,"../core/utils":195}],207:[function(require,module,exports){
+},{"../core":127,"../core/math/ObservablePoint":130,"../core/settings":163,"../core/utils":187}],199:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45716,7 +39874,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":135,"../core/sprites/canvas/CanvasTinter":174}],208:[function(require,module,exports){
+},{"../core":127,"../core/sprites/canvas/CanvasTinter":166}],200:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -46120,7 +40278,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":135,"../core/textures/BaseTexture":182,"../core/textures/Texture":185,"../core/utils":195}],209:[function(require,module,exports){
+},{"../core":127,"../core/textures/BaseTexture":174,"../core/textures/Texture":177,"../core/utils":187}],201:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -46155,7 +40313,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":135}],210:[function(require,module,exports){
+},{"../core":127}],202:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -46189,7 +40347,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":135}],211:[function(require,module,exports){
+},{"../core":127}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46241,7 +40399,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":205,"./BitmapText":206,"./TilingSprite":207,"./cacheAsBitmap":208,"./getChildByName":209,"./getGlobalPosition":210,"./webgl/TilingSpriteRenderer":212}],212:[function(require,module,exports){
+},{"./AnimatedSprite":197,"./BitmapText":198,"./TilingSprite":199,"./cacheAsBitmap":200,"./getChildByName":201,"./getGlobalPosition":202,"./webgl/TilingSpriteRenderer":204}],204:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46403,7 +40561,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":135,"../../core/const":116,"path":286}],213:[function(require,module,exports){
+},{"../../core":127,"../../core/const":108,"path":278}],205:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46487,7 +40645,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":135,"path":286}],214:[function(require,module,exports){
+},{"../../core":127,"path":278}],206:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46661,7 +40819,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":135,"./BlurXFilter":215,"./BlurYFilter":216}],215:[function(require,module,exports){
+},{"../../core":127,"./BlurXFilter":207,"./BlurYFilter":208}],207:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46827,7 +40985,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":135,"./generateBlurFragSource":217,"./generateBlurVertSource":218,"./getMaxBlurKernelSize":219}],216:[function(require,module,exports){
+},{"../../core":127,"./generateBlurFragSource":209,"./generateBlurVertSource":210,"./getMaxBlurKernelSize":211}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46992,7 +41150,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":135,"./generateBlurFragSource":217,"./generateBlurVertSource":218,"./getMaxBlurKernelSize":219}],217:[function(require,module,exports){
+},{"../../core":127,"./generateBlurFragSource":209,"./generateBlurVertSource":210,"./getMaxBlurKernelSize":211}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47039,7 +41197,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],218:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47083,7 +41241,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],219:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -47099,7 +41257,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],220:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47650,7 +41808,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":135,"path":286}],221:[function(require,module,exports){
+},{"../../core":127,"path":278}],213:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47758,7 +41916,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":135,"path":286}],222:[function(require,module,exports){
+},{"../../core":127,"path":278}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47812,7 +41970,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":135,"path":286}],223:[function(require,module,exports){
+},{"../../core":127,"path":278}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47891,7 +42049,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":213,"./blur/BlurFilter":214,"./blur/BlurXFilter":215,"./blur/BlurYFilter":216,"./colormatrix/ColorMatrixFilter":220,"./displacement/DisplacementFilter":221,"./fxaa/FXAAFilter":222,"./noise/NoiseFilter":224}],224:[function(require,module,exports){
+},{"./alpha/AlphaFilter":205,"./blur/BlurFilter":206,"./blur/BlurXFilter":207,"./blur/BlurYFilter":208,"./colormatrix/ColorMatrixFilter":212,"./displacement/DisplacementFilter":213,"./fxaa/FXAAFilter":214,"./noise/NoiseFilter":216}],216:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47988,7 +42146,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":135,"path":286}],225:[function(require,module,exports){
+},{"../../core":127,"path":278}],217:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -48102,7 +42260,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":112,"./core":135,"./deprecation":201,"./extract":203,"./extras":211,"./filters":223,"./interaction":230,"./loaders":233,"./mesh":242,"./particles":245,"./polyfill":252,"./prepare":256}],226:[function(require,module,exports){
+},{"./accessibility":104,"./core":127,"./deprecation":193,"./extract":195,"./extras":203,"./filters":215,"./interaction":222,"./loaders":225,"./mesh":234,"./particles":237,"./polyfill":244,"./prepare":248}],218:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -48325,7 +42483,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":135}],227:[function(require,module,exports){
+},{"../core":127}],219:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -48408,7 +42566,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],228:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50190,7 +44348,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":135,"./InteractionData":226,"./InteractionEvent":227,"./InteractionTrackingData":229,"./interactiveTarget":231,"eventemitter3":62}],229:[function(require,module,exports){
+},{"../core":127,"./InteractionData":218,"./InteractionEvent":219,"./InteractionTrackingData":221,"./interactiveTarget":223,"eventemitter3":54}],221:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -50366,7 +44524,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],230:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50418,7 +44576,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":226,"./InteractionEvent":227,"./InteractionManager":228,"./InteractionTrackingData":229,"./interactiveTarget":231}],231:[function(require,module,exports){
+},{"./InteractionData":218,"./InteractionEvent":219,"./InteractionManager":220,"./InteractionTrackingData":221,"./interactiveTarget":223}],223:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50535,7 +44693,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],232:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50655,7 +44813,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":211,"path":286,"resource-loader":265}],233:[function(require,module,exports){
+},{"../extras":203,"path":278,"resource-loader":257}],225:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50783,7 +44941,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":113,"./bitmapFontParser":232,"./loader":234,"./spritesheetParser":235,"./textureParser":236,"resource-loader":265}],234:[function(require,module,exports){
+},{"../core/Application":105,"./bitmapFontParser":224,"./loader":226,"./spritesheetParser":227,"./textureParser":228,"resource-loader":257}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50954,7 +45112,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":232,"./spritesheetParser":235,"./textureParser":236,"eventemitter3":62,"resource-loader":265,"resource-loader/lib/middlewares/parsing/blob":266}],235:[function(require,module,exports){
+},{"./bitmapFontParser":224,"./spritesheetParser":227,"./textureParser":228,"eventemitter3":54,"resource-loader":257,"resource-loader/lib/middlewares/parsing/blob":258}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51018,7 +45176,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":135,"resource-loader":265,"url":292}],236:[function(require,module,exports){
+},{"../core":127,"resource-loader":257,"url":284}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51041,7 +45199,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":185,"resource-loader":265}],237:[function(require,module,exports){
+},{"../core/textures/Texture":177,"resource-loader":257}],229:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51472,7 +45630,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":135,"../core/textures/Texture":185}],238:[function(require,module,exports){
+},{"../core":127,"../core/textures/Texture":177}],230:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51865,7 +46023,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":239}],239:[function(require,module,exports){
+},{"./Plane":231}],231:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52006,7 +46164,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":237}],240:[function(require,module,exports){
+},{"./Mesh":229}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52242,7 +46400,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":237}],241:[function(require,module,exports){
+},{"./Mesh":229}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52528,7 +46686,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":135,"../Mesh":237}],242:[function(require,module,exports){
+},{"../../core":127,"../Mesh":229}],234:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52589,7 +46747,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":237,"./NineSlicePlane":238,"./Plane":239,"./Rope":240,"./canvas/CanvasMeshRenderer":241,"./webgl/MeshRenderer":243}],243:[function(require,module,exports){
+},{"./Mesh":229,"./NineSlicePlane":230,"./Plane":231,"./Rope":232,"./canvas/CanvasMeshRenderer":233,"./webgl/MeshRenderer":235}],235:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52744,7 +46902,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":135,"../Mesh":237,"path":286,"pixi-gl-core":83}],244:[function(require,module,exports){
+},{"../../core":127,"../Mesh":229,"path":278,"pixi-gl-core":75}],236:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53134,7 +47292,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":135,"../core/utils":195}],245:[function(require,module,exports){
+},{"../core":127,"../core/utils":187}],237:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53159,7 +47317,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":244,"./webgl/ParticleRenderer":247}],246:[function(require,module,exports){
+},{"./ParticleContainer":236,"./webgl/ParticleRenderer":239}],238:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53408,7 +47566,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":193,"pixi-gl-core":83}],247:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":185,"pixi-gl-core":75}],239:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53889,7 +48047,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":135,"../../core/utils":195,"./ParticleBuffer":246,"./ParticleShader":248}],248:[function(require,module,exports){
+},{"../../core":127,"../../core/utils":187,"./ParticleBuffer":238,"./ParticleShader":240}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53932,7 +48090,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":114}],249:[function(require,module,exports){
+},{"../../core/Shader":106}],241:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -53950,7 +48108,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],250:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -53962,7 +48120,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],251:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -53977,7 +48135,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":72}],252:[function(require,module,exports){
+},{"object-assign":64}],244:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -54004,7 +48162,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":249,"./Number.isInteger":250,"./Object.assign":251,"./requestAnimationFrame":253}],253:[function(require,module,exports){
+},{"./Math.sign":241,"./Number.isInteger":242,"./Object.assign":243,"./requestAnimationFrame":245}],245:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54081,7 +48239,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],254:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54569,7 +48727,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":135,"./limiters/CountLimiter":257}],255:[function(require,module,exports){
+},{"../core":127,"./limiters/CountLimiter":249}],247:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54689,7 +48847,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":135,"../BasePrepare":254}],256:[function(require,module,exports){
+},{"../../core":127,"../BasePrepare":246}],248:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54741,7 +48899,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":254,"./canvas/CanvasPrepare":255,"./limiters/CountLimiter":257,"./limiters/TimeLimiter":258,"./webgl/WebGLPrepare":259}],257:[function(require,module,exports){
+},{"./BasePrepare":246,"./canvas/CanvasPrepare":247,"./limiters/CountLimiter":249,"./limiters/TimeLimiter":250,"./webgl/WebGLPrepare":251}],249:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -54799,7 +48957,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],258:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -54857,7 +49015,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],259:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54979,7 +49137,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":135,"../BasePrepare":254}],260:[function(require,module,exports){
+},{"../../core":127,"../BasePrepare":246}],252:[function(require,module,exports){
 'use strict'
 
 /**
@@ -55009,7 +49167,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],261:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55662,7 +49820,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":262,"./async":263,"mini-signals":70,"parse-uri":73}],262:[function(require,module,exports){
+},{"./Resource":254,"./async":255,"mini-signals":62,"parse-uri":65}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56818,7 +50976,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":70,"parse-uri":73}],263:[function(require,module,exports){
+},{"mini-signals":62,"parse-uri":65}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57027,7 +51185,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],264:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57095,7 +51253,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],265:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -57119,7 +51277,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":261,"./Resource":262,"./async":263,"./b64":264}],266:[function(require,module,exports){
+},{"./Loader":253,"./Resource":254,"./async":255,"./b64":256}],258:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57207,7 +51365,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":262,"../../b64":264}],267:[function(require,module,exports){
+},{"../../Resource":254,"../../b64":256}],259:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -57303,7 +51461,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":268,"./socket":270,"./url":271,"debug":272,"socket.io-parser":275}],268:[function(require,module,exports){
+},{"./manager":260,"./socket":262,"./url":263,"debug":264,"socket.io-parser":267}],260:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -57878,7 +52036,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":269,"./socket":270,"backo2":37,"component-bind":41,"component-emitter":42,"debug":272,"engine.io-client":48,"indexof":68,"socket.io-parser":275}],269:[function(require,module,exports){
+},{"./on":261,"./socket":262,"backo2":29,"component-bind":33,"component-emitter":34,"debug":264,"engine.io-client":40,"indexof":60,"socket.io-parser":267}],261:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -57904,7 +52062,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],270:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -58344,7 +52502,7 @@ Socket.prototype.binary = function (binary) {
   return this;
 };
 
-},{"./on":269,"component-bind":41,"component-emitter":42,"debug":272,"has-binary2":63,"parseqs":74,"socket.io-parser":275,"to-array":280}],271:[function(require,module,exports){
+},{"./on":261,"component-bind":33,"component-emitter":34,"debug":264,"has-binary2":55,"parseqs":66,"socket.io-parser":267,"to-array":272}],263:[function(require,module,exports){
 (function (global){
 
 /**
@@ -58423,11 +52581,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":272,"parseuri":75}],272:[function(require,module,exports){
-arguments[4][57][0].apply(exports,arguments)
-},{"./debug":273,"_process":287,"dup":57}],273:[function(require,module,exports){
-arguments[4][58][0].apply(exports,arguments)
-},{"dup":58,"ms":71}],274:[function(require,module,exports){
+},{"debug":264,"parseuri":67}],264:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"./debug":265,"_process":279,"dup":49}],265:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"dup":50,"ms":63}],266:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -58572,7 +52730,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":276,"isarray":279}],275:[function(require,module,exports){
+},{"./is-buffer":268,"isarray":271}],267:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -58991,7 +53149,7 @@ function error(msg) {
   };
 }
 
-},{"./binary":274,"./is-buffer":276,"component-emitter":42,"debug":277,"isarray":279}],276:[function(require,module,exports){
+},{"./binary":266,"./is-buffer":268,"component-emitter":34,"debug":269,"isarray":271}],268:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -59019,13 +53177,13 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],277:[function(require,module,exports){
-arguments[4][57][0].apply(exports,arguments)
-},{"./debug":278,"_process":287,"dup":57}],278:[function(require,module,exports){
-arguments[4][58][0].apply(exports,arguments)
-},{"dup":58,"ms":71}],279:[function(require,module,exports){
-arguments[4][64][0].apply(exports,arguments)
-},{"dup":64}],280:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"./debug":270,"_process":279,"dup":49}],270:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"dup":50,"ms":63}],271:[function(require,module,exports){
+arguments[4][56][0].apply(exports,arguments)
+},{"dup":56}],272:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -59040,7 +53198,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],281:[function(require,module,exports){
+},{}],273:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -59110,7 +53268,7 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],282:[function(require,module,exports){
+},{}],274:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -59263,9 +53421,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],283:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 
-},{}],284:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -61044,7 +55202,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":282,"ieee754":285}],285:[function(require,module,exports){
+},{"base64-js":274,"ieee754":277}],277:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -61130,7 +55288,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],286:[function(require,module,exports){
+},{}],278:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -61436,7 +55594,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":287}],287:[function(require,module,exports){
+},{"_process":279}],279:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -61622,7 +55780,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],288:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -62159,7 +56317,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],289:[function(require,module,exports){
+},{}],281:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62245,7 +56403,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],290:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62332,13 +56490,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],291:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":289,"./encode":290}],292:[function(require,module,exports){
+},{"./decode":281,"./encode":282}],284:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63072,7 +57230,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":293,"punycode":288,"querystring":291}],293:[function(require,module,exports){
+},{"./util":285,"punycode":280,"querystring":283}],285:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -63090,4 +57248,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[20]);
+},{}]},{},[17]);

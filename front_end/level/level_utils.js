@@ -12,19 +12,21 @@ const { Enemy } = require('../character/characters/enemy.js');
 const { Friend } = require('../character/characters/friend.js');
 const { Rat } = require('../character/characters/rat');
 const { Player } = require('../character/characters/player.js');
+const { NetworkCharacter } = require('../character/network/network_player.js');
+
 const { Door } = require('../object_management/hard_furnishing/door.js');
 const { Note } = require('../object_management/items/note');
 const { Chest } = require('../object_management/items/chest');
 const { Campfire } = require('../object_management/items/fire_place');
 
+const container = new PIXI.Container();
+container.name = 'collision_items'; //todo
+container.zIndex = -10;
+viewport.addChild(container);
+
 class Level {
   constructor() {
     this.segments = [];
-    this.collision_items = new PIXI.Container();
-    this.collision_items.zIndex = -10;
-    this.collision_items.name = 'collision_items';
-
-    viewport.addChild(this.collision_items);
   }
 
   create_grid(level_tiles) {
@@ -62,7 +64,7 @@ class Level {
       wall.zIndex = -20;
       this.add_to_segments(wall);
 
-      this.collision_items.addChild(wall);
+      container.addChild(wall);
     });
   }
 
@@ -91,29 +93,42 @@ class Level {
   create_player(location){
     const character = new Player();
 
-    character.set_position(location.x,location.y);
+    character.set_position({ x: location.x, y: location.y });
     character.add_controls();
     character.follow_player();
-    character.create_light();
+    character.with_light();
+    console.log(viewport);
     //character.add_raycasting(this.segments)
   }
 
   create_friend(location, script) {
     const friend = new Friend();
-    friend.set_position(location.x,location.y);
+    friend.set_position({ x: location.x, y: location.y });
     friend.add_dialog_handling();
     friend.add_script(script);
     friend.add_state_handling();
   }
 
+  create_network_player() {
+    const player_details = {
+      name: 'Nino',
+      x: 800,
+      y: 800,
+    };
+
+    const network_player = new NetworkCharacter(player_details);
+    network_player.network_update();
+  }
+
+
   create_enemy(location, path) {
     const enemy = new Enemy();
 
-    enemy.set_position(location.x, location.y);
+    enemy.set_position({ x: location.x, y: location.y });
     enemy.create_direction_line();
     enemy.add_sight_line();
     enemy.add_influence_box();
-    enemy.create_light();
+    enemy.with_light();
     enemy.add_raycasting(this.segments);
 
     const formatted_path_data = format_path_data(path);
@@ -122,7 +137,7 @@ class Level {
 
   create_rat(location, path) {
     const rat = new Rat();
-    rat.set_position(location.x, location.y);
+    rat.set_position({ x: location.x, y: location.y });
 
     const formatted_path_data = format_path_data(path);
     rat.create_patrol_path(formatted_path_data);
@@ -154,6 +169,7 @@ class Bedroom extends Level {
     this.create_enemy(enemy_data.position, enemy_data.path_data);
     this.create_rat(rat_data.position, rat_data.path_data);
     this.create_friend(friend_data.position, friend_data.script);
+    this.create_network_player();
   }
 }
 
@@ -266,5 +282,10 @@ module.exports.load_bedroom_map = () => {
 
   new Bedroom(bedroom_schema, bedroom_image);
 };
+
+module.exports = {
+  Level,
+};
+
 
 

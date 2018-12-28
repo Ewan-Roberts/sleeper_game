@@ -7,6 +7,7 @@ class Inventory {
   }
 }
 
+
 async function get_player_inventory_on_id() {
   return({
     items: [

@@ -78,8 +78,8 @@ class Character {
     };
   }
 
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
+  set_position(point) {
+    this.sprite.position.set(point.x, point.y);
   }
 
   move_to_point(x,y) {
@@ -116,13 +116,13 @@ class Character {
     this.sprite.addChild(influence_box);
   }
 
-  create_light() {
+  with_light() {
     const light = PIXI.Sprite.fromFrame('light_gradient');
     light.name = 'light';
 
     light.anchor.set(0.5);
-    light.width   = 4000;
-    light.height  = 4000;
+    light.width   = 2000;
+    light.height  = 2000;
     light.alpha   = 0.1;
 
     this.sprite.addChild(light);

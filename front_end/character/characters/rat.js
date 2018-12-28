@@ -3,12 +3,9 @@
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
-const critter_container = new PIXI.Container();
-critter_container.name = 'critter_container';
 
 class Rat {
   constructor() {
-    viewport.addChild(critter_container);
 
     this.animations = {
       move: this.create_move_frames(),
@@ -25,16 +22,13 @@ class Rat {
     this.sprite.name = 'rat';
     this.sprite.zIndex = -3;
 
-    critter_container.addChild(this.sprite);
+    viewport.getChildByName('critter_container').addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {
     this.sprite.patrol_path = path_data;
   }
 
-  set_position(x,y) {
-    this.sprite.position.set(x, y);
-  }
 
   create_move_frames() {
     const moving_frames = [];

@@ -75,6 +75,7 @@ class Mouse {
     this.aiming_cone.alpha = 0;
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
+      console.log('ppoo')
 
       bow_helper.arrow_management(this.power, this.player, mouse_position_player);
     }
@@ -117,8 +118,7 @@ class Mouse {
     //    this.power -= 5;
     //  }
     //};
-    ticker.add(this.count_down);
-
+    //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
     this.player.rotation = get_angle_from_point_to_point(this.player, mouse_position_player);
     this.player.gotoAndPlay(0);

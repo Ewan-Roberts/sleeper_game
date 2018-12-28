@@ -2,19 +2,19 @@
 
 const dom_hud = global.document.querySelector('.characterInventory');
 const inventory_top_section = global.document.querySelector('.inventory_top_section');
-const socket = require('../engine/socket');
+//const socket = require('../engine/socket');
 
 class GUI_HUD {
   constructor() {
     // only store inventory on the backend
     // future Ewan, bind this to the player
-    socket.on('player_inventory', inventory_data => {
+    //socket.on('player_inventory', inventory_data => {
 
-      inventory_data.items.forEach(item => {
-        this.fill_slot(item);
-      });
+    //  inventory_data.items.forEach(item => {
+    //    this.fill_slot(item);
+    //  });
 
-    });
+    //});
 
     this.inventory = {};
   }
@@ -25,7 +25,7 @@ class GUI_HUD {
 
     // replace with uuid and shit
     player.id = '1';
-    socket.emit('get_inventory', player.id);
+    //socket.emit('get_inventory', player.id);
   }
 
   hide() {
