@@ -1,16 +1,14 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport.js');
 const { GUI_Container } = require('../../gui/container');
 
-const container = new PIXI.Container();
-container.name = 'item_container';
-container.zIndex = -6;
-viewport.addChild(container);
+const { Item } = require('./item_model');
 
-class Chest {
-  constructor(item_data) {
+
+class Chest extends Item {
+  constructor() {
+    super();
     this.image_cache = {
       state: {
         full:   PIXI.Texture.fromFrame('chest_full'),
@@ -23,12 +21,11 @@ class Chest {
     this.sprite.name = 'chest';
     this.sprite.height *= 2;
     this.sprite.width *= 2;
-    this.sprite.position.set(item_data.x, item_data.y);
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
     this.state = 'closed';
+    this.sprite.hitable_with_arrow = false;
 
-    container.addChild(this.sprite);
   }
 
   add_state_handling() {

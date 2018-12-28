@@ -1,23 +1,20 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport.js');
 
-const container = new PIXI.Container();
-container.name = 'item_container'; //todo
-container.zIndex = -6;
-viewport.addChild(container);
+const { Item } = require('./item_model');
 
+console.log(Item)
 
-class Note {
-  constructor({ x, y }) {
+class Note extends Item {
+  constructor() {
+    super();
     this.image_state = {
       un_read:  PIXI.Texture.fromFrame('full-note-written-small'),
       read:     PIXI.Texture.fromFrame('full-note-written-small-read'),
     };
 
     this.sprite = new PIXI.Sprite(this.image_state.un_read);
-    this.sprite.position.set(x, y);
 
     this.sprite.anchor.set(0.5);
     this.sprite.zIndex = -5;
@@ -25,8 +22,6 @@ class Note {
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
     this.state = 'closed';
-
-    container.addChild(this.sprite);
 
     this.dom_note = global.document.querySelector('.note');
     this.dom_note.addEventListener('click', () => {
