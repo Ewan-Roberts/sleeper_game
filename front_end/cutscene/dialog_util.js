@@ -9,9 +9,6 @@ container.zIndex = -20;
 viewport.addChild(container);
 
 class Dialog {
-  constructor() {
-  }
-
   create_background() {
     this.background = new PIXI.Sprite.fromFrame('black_dot');
 

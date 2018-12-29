@@ -10,7 +10,6 @@ class Cutscene_Character extends Character{
     this.sprite.name = 'cutscene_npc';
     this.sprite.position.set(x,y);
     this.sprite.move_to_point = this.move_to_point;
-    //todo
     viewport.getChildByName('cutscene_container').addChild(this.sprite);
   }
 
@@ -30,6 +29,7 @@ class Cutscene_Character extends Character{
         return;
     }
   }
+
 }
 
 module.exports = {

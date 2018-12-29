@@ -9,6 +9,7 @@ const { NetworkCharacter } = require('../../character/network/network_player.js'
 
 //const { start_rain } = require('../../weather/rain');
 const { intro_cutscene } = require('../../cutscene/intro.js');
+const { Rat } = require('../../character/characters/rat');
 
 
 class DevelopmentLevel {
@@ -23,7 +24,8 @@ class DevelopmentLevel {
     player.set_ticker_amount();
     player.set_vitals_ticker();
 
-    this.test_intro();
+    this.test_rat();
+    //this.test_intro();
 
     //this.test_backpack(player);
     //this.test_note();
@@ -36,9 +38,15 @@ class DevelopmentLevel {
 
   }
 
+  test_rat() {
+    const rat = new Rat();
+    rat.set_position({x: 1200, y: 1000});
+    rat.move_to_point({x: 1400, y: 1400});
+
+  }
+
   test_intro() {
     intro_cutscene.start();
-
   }
 
   test_backpack(character) {
