@@ -10,7 +10,6 @@ class NetworkCharacter {
     this.name = 'network_player';
     this.id = player_data.id;
     this.sprite = new PIXI.Sprite.fromFrame('bunny');
-    //this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.position.set(player_data.x, player_data.y);
@@ -40,10 +39,6 @@ class NetworkCharacter {
     this.sprite.position.set(point.x, point.y);
   }
 
-  network_update() {
-
-
-  }
 }
 
 module.exports = {

@@ -3,7 +3,6 @@
 const { GUI_HUD } = require('../gui/inventory');
 const gui = new GUI_HUD();
 const viewport = require('../engine/viewport');
-const { Intro_Cutscene } = require('../cutscene/cutscenes/intro');
 
 const keymap = {
   w: 'up',
@@ -184,11 +183,6 @@ class Keyboard {
       gui.hide();
       this.inventory_open = false;
     }
-  }
-
-  start_intro() {
-    const intro = new Intro_Cutscene();
-    intro.start();
   }
 
   shift() {

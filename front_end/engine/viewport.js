@@ -9,4 +9,12 @@ const viewport = new Viewport({
   worldHeight:  global.window.innerHeight,
 });
 
+viewport.zIndex_layer = {
+  background: -1,
+  far: -3,
+  medium: -6,
+  close: -9,
+  very_close: -12,
+};
+
 module.exports = viewport;

@@ -65,8 +65,6 @@ class character_animations {
       idle_frames.push(PIXI.Texture.fromFrame(name));
     }
     return idle_frames;
-    //const reversed = idle_frames.reverse();
-    //return idle_frames.concat(reversed);
   }
 
   static walk_frames() {

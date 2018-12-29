@@ -19,7 +19,6 @@ class Enemy extends Character {
     this.sprite.patrol_path = path_data;
   }
 
-  //for testing
   create_direction_line() {
     const direction_line = PIXI.Sprite.fromFrame('black_dot');
 

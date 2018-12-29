@@ -1,6 +1,5 @@
 const dynamoose = require('dynamoose');
 
-
 const Weapon = new dynamoose.Schema({
 
   id: {

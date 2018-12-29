@@ -1,15 +1,9 @@
 'use strict';
 
-const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
 const { Character } = require('../character_model');
 const { Dialog } = require('../../dialog/dialog_util');
-
-const container = new PIXI.Container();
-container.name = 'friend_container';
-container.zIndex = -10;
-viewport.addChild(container);
 
 class Friend extends Character {
   constructor() {
@@ -18,7 +12,8 @@ class Friend extends Character {
     this.sprite.name = 'friend';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
-    container.addChild(this.sprite);
+
+    viewport.getChildByName('freind_container').addChild(this.sprite);
   }
 
   add_script(script) {

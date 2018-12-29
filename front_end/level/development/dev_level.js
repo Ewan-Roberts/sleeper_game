@@ -4,9 +4,11 @@ const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../object_management/items/fire_place');
 const { Chest } = require('../../object_management/items/chest');
 const { Note } = require('../../object_management/items/Note');
-const { start_rain } = require('../../weather/rain');
+const { Backpack } = require('../../object_management/items/back_pack');
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
+const { start_rain } = require('../../weather/rain');
+const { intro_cutscene } = require('../../cutscene/intro.js');
 
 
 class DevelopmentLevel {
@@ -17,15 +19,40 @@ class DevelopmentLevel {
     player.add_controls();
     player.follow_player();
     player.with_light();
+    player.set_initial_vitals();
+    player.set_ticker_amount();
+    player.set_vitals_ticker();
 
-    //this.test_chest();
-    this.test_campfire();
+
+    this.test_intro();
+
+    //this.test_backpack(player);
     //this.test_note();
+
+    //this.test_food();
+    //this.test_chest();
+    //this.test_campfire();
     //this.test_rain();
-    this.test_network_player();
+    //this.test_network_player();
 
   }
 
+  test_intro() {
+    intro_cutscene.start();
+
+  }
+
+  test_backpack(character) {
+    const backpack = new Backpack();
+    backpack.set_position({x: 800, y: 800});
+    backpack.without_character_collision();
+    backpack.without_projectile_collision();
+    backpack.immovable();
+
+    backpack.sprite.click = () => {
+      character.increase_food(10);
+    };
+  }
 
   test_network_player() {
 

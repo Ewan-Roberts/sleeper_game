@@ -1,6 +1,5 @@
 'use strict';
 
-const PIXI              = require('pixi.js');
 const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 
@@ -13,10 +12,6 @@ class Cutscene_Character extends Character{
     this.sprite.move_to_point = this.move_to_point;
     //todo
     viewport.getChildByName('cutscene_container').addChild(this.sprite);
-  }
-  walk() {
-    this.sprite.textures = this.create_walk_frames();
-    this.sprite.play();
   }
 
   facing(direction) {
@@ -35,20 +30,8 @@ class Cutscene_Character extends Character{
         return;
     }
   }
-
-  create_walk_frames() {
-    const walk_frames = [];
-    for (let i = 0; i <= 19; i++) {
-      const name = `survivor-move_knife_${i}`;
-
-      walk_frames.push(PIXI.Texture.fromFrame(name));
-    }
-
-    return walk_frames;
-  }
-
 }
 
 module.exports = {
   Cutscene_Character,
-}
+};

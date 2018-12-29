@@ -54,11 +54,6 @@ class Character {
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
 
-    this.sprite.vitals = {
-      health: 100,
-      status: 'alive',
-    };
-
     this.sprite.animations = character_animations;
 
     this.sprite.animation_switch = (type, action) => {

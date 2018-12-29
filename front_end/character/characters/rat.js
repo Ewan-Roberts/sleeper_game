@@ -3,7 +3,6 @@
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
-
 class Rat {
   constructor() {
 
