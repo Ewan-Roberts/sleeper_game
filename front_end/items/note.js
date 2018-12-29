@@ -23,7 +23,6 @@ class Note extends Item {
     this.dom_note = global.document.querySelector('.note');
     this.dom_note.addEventListener('click', () => {
       this.hide();
-      //test
     });
   }
 
