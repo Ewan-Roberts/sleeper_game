@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../engine/viewport.js');
+const viewport = require('../../engine/viewport.js');
 const { createjs } = require('@createjs/tweenjs');
 
 const arrow_container = new PIXI.Container();

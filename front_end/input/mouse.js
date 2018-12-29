@@ -3,7 +3,7 @@
 const viewport          = require('../engine/viewport');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
-const bow_helper        = require('../weapons/bow.js');
+const bow_helper        = require('../character/weapons/bow.js');
 
 function getCenter(o, dimension, axis) {
   if (o.anchor !== undefined) {

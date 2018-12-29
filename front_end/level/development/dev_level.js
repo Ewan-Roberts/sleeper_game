@@ -7,7 +7,7 @@ const { Note } = require('../../object_management/items/Note');
 const { Backpack } = require('../../object_management/items/back_pack');
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
-const { start_rain } = require('../../weather/rain');
+//const { start_rain } = require('../../weather/rain');
 const { intro_cutscene } = require('../../cutscene/intro.js');
 
 
@@ -22,7 +22,6 @@ class DevelopmentLevel {
     player.set_initial_vitals();
     player.set_ticker_amount();
     player.set_vitals_ticker();
-
 
     this.test_intro();
 
@@ -63,7 +62,7 @@ class DevelopmentLevel {
   }
 
   test_rain() {
-    start_rain(400, 1200, 400, 1200);
+    //start_rain(400, 1200, 400, 1200);
   }
 
   test_note() {
