@@ -17,13 +17,12 @@ class Player extends Character{
     this.sprite.move_to_point = this.move_to_point;
 
     viewport.addChild(this.sprite);
-    socket.on('update_location_from_server', details => {
-      this.sprite.x = details.x;
-      this.sprite.y = details.y;
-    });
-    //console.log(socket)
+    //socket.on('send_player_location', details => {
+    //  this.sprite.x = details.x;
+    //  this.sprite.y = details.y;
+    //});
 
-    //socket.on('server_location_update', details => {
+    //socket.on('update_location_from_server', details => {
     //  this.sprite.x = details.x;
     //  this.sprite.y = details.y;
     //});
@@ -51,7 +50,7 @@ class Player extends Character{
 
     global.document.addEventListener('keydown', (event) => {
       this.keyboard.key_down(event);
-      socket.emit('send_player_location', {
+      socket.emit('client_player_location', {
         x: this.sprite.x,
         y: this.sprite.y,
       });

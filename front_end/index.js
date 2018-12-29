@@ -50,6 +50,12 @@ critter_container.name = 'critter_container';
 viewport.addChild(critter_container);
 
 
+const network_player_container = new PIXI.Container();
+network_player_container.name = 'network_players';
+viewport.addChild(network_player_container);
+
+
+
 loader.load(async function() {
 
   //await register_user();

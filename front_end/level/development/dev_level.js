@@ -4,6 +4,9 @@ const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../object_management/items/fire_place');
 const { Chest } = require('../../object_management/items/chest');
 const { Note } = require('../../object_management/items/Note');
+const { start_rain } = require('../../weather/rain');
+const { NetworkCharacter } = require('../../character/network/network_player.js');
+
 
 
 class DevelopmentLevel {
@@ -14,9 +17,26 @@ class DevelopmentLevel {
     player.add_controls();
     player.follow_player();
     player.with_light();
-    this.test_chest();
+
+    //this.test_chest();
     this.test_campfire();
-    this.test_note();
+    //this.test_note();
+    //this.test_rain();
+    this.test_network_player();
+
+  }
+
+
+  test_network_player() {
+
+    const network_player = new NetworkCharacter();
+    network_player.set_position({ x: 900, y: 900 });
+    network_player.network_update();
+
+  }
+
+  test_rain() {
+    start_rain(400, 1200, 400, 1200);
   }
 
   test_note() {
@@ -26,6 +46,7 @@ class DevelopmentLevel {
     note.without_character_collision();
     note.without_projectile_collision();
     note.immovable();
+    note.with_action_on_click();
 
   }
 

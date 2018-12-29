@@ -4,23 +4,19 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const character_animations = require('../animations/character');
 
-const { socket } = require('../../engine/socket');
-
-const container = new PIXI.Container();
-container.name = 'network_players';
 
 class NetworkCharacter {
-  constructor(attributes) {
-    this.name = attributes.name;
-
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
+  constructor(player_data) {
+    this.name = 'network_player';
+    this.id = player_data.id;
+    this.sprite = new PIXI.Sprite.fromFrame('bunny');
+    //this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
+    this.sprite.position.set(player_data.x, player_data.y);
 
-    this.sprite.position.set(attributes.x, attributes.y);
+    this.sprite.height *= 2;
+    this.sprite.width *= 2;
 
     this.vitals = {
       health: 100,
@@ -37,7 +33,7 @@ class NetworkCharacter {
       }
     };
 
-    viewport.addChild(this.sprite);
+    viewport.getChildByName('network_players').addChild(this.sprite);
   }
 
   set_position(point) {
@@ -46,10 +42,6 @@ class NetworkCharacter {
 
   network_update() {
 
-    //socket.on('network_player', player_data => {
-    //  this.sprite.x = player_data.x;
-    //  this.sprite.y = player_data.y;
-    //});
 
   }
 }

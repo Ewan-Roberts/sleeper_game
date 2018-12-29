@@ -4,8 +4,6 @@ const PIXI = require('pixi.js');
 
 const { Item } = require('./item_model');
 
-console.log(Item)
-
 class Note extends Item {
   constructor() {
     super();
@@ -29,7 +27,7 @@ class Note extends Item {
     });
   }
 
-  add_state_handling() {
+  with_action_on_click() {
     this.sprite.click = () => {
       this.sprite.texture = this.image_state.read;
 

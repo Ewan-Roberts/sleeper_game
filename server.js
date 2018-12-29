@@ -38,6 +38,9 @@ const {
 const uuid = require('uuid/v4');
 const io = require('socket.io')(server, {});
 
+
+const current_players = [];
+
 io.on('connection', client => {
 
   //client.on('get_inventory', async function() {
@@ -62,11 +65,58 @@ io.on('connection', client => {
   //  //client.emit('register_success', response);
   //});
 
-  client.on('send_player_location', player_data => {
-    console.log(player_data)
+  setInterval(()=> {
 
-    console.log(client.id);
-    client.emit('update_location_from_server', player_data);
+    client.emit('server_player_pool', current_players);
+    console.log('transmit')
+    console.log(current_players);
+  },2000);
+
+  client.on('client_player_location', player_data => {
+    console.log(client.id)
+
+    const { id } = client;
+
+    const player_server_data = {
+      ...player_data,
+      id,
+    };
+
+    console.log(current_players)
+    console.log(player_data)
+    const is_player_in_pool = current_players.some(player => player.id === player_server_data.id);
+
+    if(is_player_in_pool) {
+      console.log('this player is in the pool');
+
+      for(let i = 0; i < current_players.length; i++) {
+
+        if(current_players[i].id === player_server_data.id) {
+          current_players[i] = player_server_data;
+        }
+      }
+    } else {
+      console.log('here')
+      current_players.push(player_server_data);
+    };
+
+
+    //if(current_players.length <= 0) {
+    //  current_players.push(player_server_data);
+    //} else {
+    //  current_players.forEach(player => {
+    //    console.log('pooo');
+    //    if(player.id === player_server_data.id){
+    //      player = player_server_data;
+    //    } else {
+    //      console.log(current_players);
+    //    }
+
+    //  });
+    //}
+
+
+    //client.emit('update_location_from_server', player_data);
     //client.emit('server_location_update', player_data.position);
   });
 
