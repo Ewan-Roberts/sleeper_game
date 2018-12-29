@@ -2371,7 +2371,6 @@ class Note extends Item {
     };
 
     this.sprite = new PIXI.Sprite(this.image_state.un_read);
-
     this.sprite.anchor.set(0.5);
     this.sprite.zIndex = -5;
     this.sprite.name = 'note';
