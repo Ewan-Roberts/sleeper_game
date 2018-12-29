@@ -1,6 +1,6 @@
 'use strict';
 
-const viewport = require('../../engine/viewport.js');
+const viewport = require('../engine/viewport.js');
 
 class Item {
   set_position(point) {

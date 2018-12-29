@@ -2014,7 +2014,7 @@ loader.load(async function() {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./engine/app":12,"./engine/pixi_containers":14,"./engine/ticker":16,"./engine/viewport":17,"./level/development/dev_level.js":24,"pixi-packer-parser":90,"pixi-tween":91,"pixi.js":221}],22:[function(require,module,exports){
+},{"./engine/app":12,"./engine/pixi_containers":14,"./engine/ticker":16,"./engine/viewport":17,"./level/development/dev_level.js":29,"pixi-packer-parser":90,"pixi-tween":91,"pixi.js":221}],22:[function(require,module,exports){
 'use strict';
 
 const { GUI_HUD } = require('../gui/inventory');
@@ -2355,13 +2355,280 @@ module.exports = {
 };
 
 },{"../character/weapons/bow.js":8,"../engine/ticker":16,"../engine/viewport":17,"pixi.js":221}],24:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const PIXI = require('pixi.js');
+
+const { Item } = require('./item_model');
+
+class Note extends Item {
+  constructor() {
+    super();
+    this.image_state = {
+      un_read:  PIXI.Texture.fromFrame('full-note-written-small'),
+      read:     PIXI.Texture.fromFrame('full-note-written-small-read'),
+    };
+
+    this.sprite = new PIXI.Sprite(this.image_state.un_read);
+
+    this.sprite.anchor.set(0.5);
+    this.sprite.zIndex = -5;
+    this.sprite.name = 'note';
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.state = 'closed';
+
+    this.dom_note = global.document.querySelector('.note');
+    this.dom_note.addEventListener('click', () => {
+      this.hide();
+    });
+  }
+
+  with_action_on_click() {
+    this.sprite.click = () => {
+      this.sprite.texture = this.image_state.read;
+
+      this.show();
+    };
+  }
+
+  show() {
+    this.dom_note.style.display = 'block';
+  }
+
+  hide() {
+    this.dom_note.style.display = 'none';
+  }
+}
+
+module.exports = {
+  Note,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./item_model":28,"pixi.js":221}],25:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+
+const { Item } = require('./item_model');
+
+class Backpack extends Item {
+  constructor() {
+    super();
+
+    const texture = PIXI.Texture.fromFrame('back_pack');
+    this.sprite = new PIXI.Sprite(texture);
+
+    this.sprite.anchor.set(0.5);
+    this.sprite.zIndex = -5;
+    this.sprite.name = 'backpack';
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.state = 'closed';
+
+  }
+
+}
+
+module.exports = {
+  Backpack,
+};
+
+},{"./item_model":28,"pixi.js":221}],26:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+const { GUI_Container } = require('../gui/container');
+
+const { Item } = require('./item_model');
+
+
+class Chest extends Item {
+  constructor() {
+    super();
+    this.image_cache = {
+      state: {
+        full:   PIXI.Texture.fromFrame('chest_full'),
+        empty:  PIXI.Texture.fromFrame('chest_empty'),
+      },
+    };
+    this.sprite = new PIXI.Sprite(this.image_cache.state.full);
+    this.sprite.anchor.set(0.5);
+    this.sprite.zIndex = -5;
+    this.sprite.name = 'chest';
+    this.sprite.height *= 2;
+    this.sprite.width *= 2;
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.state = 'closed';
+    this.sprite.hitable_with_arrow = false;
+
+  }
+
+  add_state_handling() {
+    this.sprite.click = () => {
+      switch(this.state) {
+        case 'closed':
+          this.open_inventory_box();
+          break;
+        case 'full':
+          this.empty();
+          break;
+      }
+    };
+  }
+
+  open_inventory_box() {
+    if(this.state === 'open') {
+      return;
+    }
+    this.state = 'open';
+
+    const inventory_box = new GUI_Container();
+    inventory_box.add_item_tiles();
+    inventory_box.populate_slot_1('bunny');
+    inventory_box.populate_slot_2('bunny');
+    inventory_box.populate_slot_3('bunny');
+    inventory_box.populate_slot_4('bunny');
+    this.sprite.addChild(inventory_box.container);
+  }
+
+  empty() {
+    this.sprite.texture = this.image_cache.state.empty;
+    this.state = 'empty';
+    return this;
+  }
+
+  fill() {
+    this.sprite.texture = this.image_cache.state.full;
+    this.state = 'full';
+    return this;
+  }
+}
+
+module.exports = {
+  Chest,
+};
+
+},{"../gui/container":19,"./item_model":28,"pixi.js":221}],27:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+const { Item } = require('./item_model');
+
+class Campfire extends Item {
+  constructor() {
+    super();
+    this.image_state = {
+      smoldering:  PIXI.Texture.fromFrame('campfire'),
+    };
+
+    this.sprite = new PIXI.Sprite(this.image_state.smoldering);
+    this.sprite.anchor.set(0.5);
+    this.sprite.zIndex = -5;
+    this.sprite.name = 'campfire';
+    this.state = 'closed';
+    this.placed = false;
+
+  }
+
+  drag_start(event) {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.on('pointerdown', this.drag_start);
+    if(this.placed) {
+      this.click();
+      return;
+    }
+
+    this.data = event.data;
+    this.alpha = 0.5;
+    this.dragging = true;
+  }
+
+  drag_end() {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.on('pointerup', this.drag_end);
+    this.data = null;
+    this.alpha = 1;
+    this.dragging = false;
+    this.placed = true;
+  }
+
+  drag_move() {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.sprite.on('pointermove', this.drag_move);
+    if(this.dragging) {
+      const new_position = this.data.getLocalPosition(this.parent);
+      this.x = new_position.x;
+      this.y = new_position.y;
+    }
+  }
+
+  add_state_handling() {
+    this.sprite.click = () => {
+      console.log('open menu');
+    };
+  }
+
+}
+
+module.exports = {
+  Campfire,
+};
+
+},{"./item_model":28,"pixi.js":221}],28:[function(require,module,exports){
+'use strict';
+
+const viewport = require('../engine/viewport.js');
+
+class Item {
+  set_position(point) {
+    this.sprite.position.set(point.x, point.y);
+  }
+
+  with_character_collision() {
+    viewport.getChildByName('collision_items').addChild(this.sprite);
+  }
+
+  with_projectile_collision() {
+    this.sprite.hitable_with_arrow = true;
+  }
+
+  without_projectile_collision() {
+    this.sprite.hitable_with_arrow = false;
+  }
+
+  without_character_collision() {
+    viewport.getChildByName('non_collision_items').addChild(this.sprite);
+  }
+
+  moveable() {
+    this.sprite.moveable = true;
+  }
+
+  immovable() {
+    this.sprite.moveable = false;
+  }
+
+}
+
+module.exports = {
+  Item,
+};
+
+},{"../engine/viewport.js":17}],29:[function(require,module,exports){
 'use strict';
 
 const { Player } = require('../../character/characters/player.js');
-const { Campfire } = require('../../object_management/items/fire_place');
-const { Chest } = require('../../object_management/items/chest');
-const { Note } = require('../../object_management/items/Note');
-const { Backpack } = require('../../object_management/items/back_pack');
+const { Campfire } = require('../../items/fire_place');
+const { Chest } = require('../../items/chest');
+const { Note } = require('../../items/Note');
+const { Backpack } = require('../../items/back_pack');
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
@@ -2465,274 +2732,14 @@ module.exports = {
   DevelopmentLevel,
 };
 
-},{"../../character/characters/player.js":5,"../../character/characters/rat":6,"../../character/network/network_player.js":7,"../../cutscene/intro.js":10,"../../object_management/items/Note":25,"../../object_management/items/back_pack":26,"../../object_management/items/chest":27,"../../object_management/items/fire_place":28}],25:[function(require,module,exports){
-(function (global){
-'use strict';
-
-const PIXI = require('pixi.js');
-
-const { Item } = require('./item_model');
-
-class Note extends Item {
-  constructor() {
-    super();
-    this.image_state = {
-      un_read:  PIXI.Texture.fromFrame('full-note-written-small'),
-      read:     PIXI.Texture.fromFrame('full-note-written-small-read'),
-    };
-
-    this.sprite = new PIXI.Sprite(this.image_state.un_read);
-
-    this.sprite.anchor.set(0.5);
-    this.sprite.zIndex = -5;
-    this.sprite.name = 'note';
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.state = 'closed';
-
-    this.dom_note = global.document.querySelector('.note');
-    this.dom_note.addEventListener('click', () => {
-      this.hide();
-    });
-  }
-
-  with_action_on_click() {
-    this.sprite.click = () => {
-      this.sprite.texture = this.image_state.read;
-
-      this.show();
-    };
-  }
-
-  show() {
-    this.dom_note.style.display = 'block';
-  }
-
-  hide() {
-    this.dom_note.style.display = 'none';
-  }
-}
-
-module.exports = {
-  Note,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./item_model":29,"pixi.js":221}],26:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-
-const { Item } = require('./item_model');
-
-class Backpack extends Item {
-  constructor() {
-    super();
-
-    const texture = PIXI.Texture.fromFrame('back_pack');
-    this.sprite = new PIXI.Sprite(texture);
-
-    this.sprite.anchor.set(0.5);
-    this.sprite.zIndex = -5;
-    this.sprite.name = 'backpack';
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.state = 'closed';
-
-  }
-
-}
-
-module.exports = {
-  Backpack,
-};
-
-},{"./item_model":29,"pixi.js":221}],27:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-const { GUI_Container } = require('../../gui/container');
-
-const { Item } = require('./item_model');
 
 
-class Chest extends Item {
-  constructor() {
-    super();
-    this.image_cache = {
-      state: {
-        full:   PIXI.Texture.fromFrame('chest_full'),
-        empty:  PIXI.Texture.fromFrame('chest_empty'),
-      },
-    };
-    this.sprite = new PIXI.Sprite(this.image_cache.state.full);
-    this.sprite.anchor.set(0.5);
-    this.sprite.zIndex = -5;
-    this.sprite.name = 'chest';
-    this.sprite.height *= 2;
-    this.sprite.width *= 2;
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.state = 'closed';
-    this.sprite.hitable_with_arrow = false;
 
-  }
 
-  add_state_handling() {
-    this.sprite.click = () => {
-      switch(this.state) {
-        case 'closed':
-          this.open_inventory_box();
-          break;
-        case 'full':
-          this.empty();
-          break;
-      }
-    };
-  }
 
-  open_inventory_box() {
-    if(this.state === 'open') {
-      return;
-    }
-    this.state = 'open';
 
-    const inventory_box = new GUI_Container();
-    inventory_box.add_item_tiles();
-    inventory_box.populate_slot_1('bunny');
-    inventory_box.populate_slot_2('bunny');
-    inventory_box.populate_slot_3('bunny');
-    inventory_box.populate_slot_4('bunny');
-    this.sprite.addChild(inventory_box.container);
-  }
 
-  empty() {
-    this.sprite.texture = this.image_cache.state.empty;
-    this.state = 'empty';
-    return this;
-  }
-
-  fill() {
-    this.sprite.texture = this.image_cache.state.full;
-    this.state = 'full';
-    return this;
-  }
-}
-
-module.exports = {
-  Chest,
-};
-
-},{"../../gui/container":19,"./item_model":29,"pixi.js":221}],28:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-const { Item } = require('./item_model');
-
-class Campfire extends Item {
-  constructor() {
-    super();
-    this.image_state = {
-      smoldering:  PIXI.Texture.fromFrame('campfire'),
-    };
-
-    this.sprite = new PIXI.Sprite(this.image_state.smoldering);
-    this.sprite.anchor.set(0.5);
-    this.sprite.zIndex = -5;
-    this.sprite.name = 'campfire';
-    this.state = 'closed';
-    this.placed = false;
-
-  }
-
-  drag_start(event) {
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.sprite.on('pointerdown', this.drag_start);
-    if(this.placed) {
-      this.click();
-      return;
-    }
-
-    this.data = event.data;
-    this.alpha = 0.5;
-    this.dragging = true;
-  }
-
-  drag_end() {
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.sprite.on('pointerup', this.drag_end);
-    this.data = null;
-    this.alpha = 1;
-    this.dragging = false;
-    this.placed = true;
-  }
-
-  drag_move() {
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.sprite.on('pointermove', this.drag_move);
-    if(this.dragging) {
-      const new_position = this.data.getLocalPosition(this.parent);
-      this.x = new_position.x;
-      this.y = new_position.y;
-    }
-  }
-
-  add_state_handling() {
-    this.sprite.click = () => {
-      console.log('open menu');
-    };
-  }
-
-}
-
-module.exports = {
-  Campfire,
-};
-
-},{"./item_model":29,"pixi.js":221}],29:[function(require,module,exports){
-'use strict';
-
-const viewport = require('../../engine/viewport.js');
-
-class Item {
-  set_position(point) {
-    this.sprite.position.set(point.x, point.y);
-  }
-
-  with_character_collision() {
-    viewport.getChildByName('collision_items').addChild(this.sprite);
-  }
-
-  with_projectile_collision() {
-    this.sprite.hitable_with_arrow = true;
-  }
-
-  without_projectile_collision() {
-    this.sprite.hitable_with_arrow = false;
-  }
-
-  without_character_collision() {
-    viewport.getChildByName('non_collision_items').addChild(this.sprite);
-  }
-
-  moveable() {
-    this.sprite.moveable = true;
-  }
-
-  immovable() {
-    this.sprite.moveable = false;
-  }
-
-}
-
-module.exports = {
-  Item,
-};
-
-},{"../../engine/viewport.js":17}],30:[function(require,module,exports){
+},{"../../character/characters/player.js":5,"../../character/characters/rat":6,"../../character/network/network_player.js":7,"../../cutscene/intro.js":10,"../../items/Note":24,"../../items/back_pack":25,"../../items/chest":26,"../../items/fire_place":27}],30:[function(require,module,exports){
 /**
  * @license
  * TweenJS

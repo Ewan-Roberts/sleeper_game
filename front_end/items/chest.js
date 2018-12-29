@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { GUI_Container } = require('../../gui/container');
+const { GUI_Container } = require('../gui/container');
 
 const { Item } = require('./item_model');
 

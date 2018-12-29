@@ -1,10 +1,10 @@
 'use strict';
 
 const { Player } = require('../../character/characters/player.js');
-const { Campfire } = require('../../object_management/items/fire_place');
-const { Chest } = require('../../object_management/items/chest');
-const { Note } = require('../../object_management/items/Note');
-const { Backpack } = require('../../object_management/items/back_pack');
+const { Campfire } = require('../../items/fire_place');
+const { Chest } = require('../../items/chest');
+const { Note } = require('../../items/Note');
+const { Backpack } = require('../../items/back_pack');
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
@@ -107,3 +107,10 @@ class DevelopmentLevel {
 module.exports = {
   DevelopmentLevel,
 };
+
+
+
+
+
+
+
