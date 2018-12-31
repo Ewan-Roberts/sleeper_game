@@ -646,7 +646,7 @@ module.exports = {
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const rat_animations = require('../animations/rat');
-const { move_sprite_to_point, distance_between_two_points } = require('../../engine/pathfind');
+const { move_sprite_to_point, distance_between_two_points, move_sprite_to_sprite_on_grid } = require('../../engine/pathfind');
 const ticker = require('../../engine/ticker');
 
 
@@ -677,56 +677,39 @@ class Rat {
 
   // todo this is from the player model
   add_influence_box() {
-    const influence_box = PIXI.Sprite.fromFrame('black_dot');
+    this.influence_box = PIXI.Sprite.fromFrame('black_dot');
 
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
-    influence_box.height = 2000;
-    influence_box.alpha = 0.4;
-    influence_box.anchor.set(0.5);
+    this.influence_box.name = 'influence_box';
+    this.influence_box.width = 500;
+    this.influence_box.height = 500;
+    this.influence_box.alpha = 0.4;
+    this.influence_box.anchor.set(0.5);
 
-    this.sprite.addChild(influence_box);
+    this.sprite.addChild(this.influence_box);
   }
 
-  add_to_run_to() {
+  is_prey_to(predator) {
+    const prey  = this.sprite;
 
-    const player = viewport.getChildByName('player');
-    const rat = this.sprite;
-
-    const dot = new PIXI.Sprite.fromFrame('bunny');
-    dot.name = 'dot';
-
-    this.sprite.addChild(dot);
+    const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
+    point_to_run_for.name = 'dot';
 
     ticker.add(() => {
+      point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
 
-      dot.position.set(rat.x + (rat.x - player.x), rat.y +(rat.y - player.y));
+      if(this.influence_box.containsPoint(predator.getGlobalPosition())) {
+        move_sprite_to_sprite_on_grid(prey, point_to_run_for);
+      }
 
     });
 
-    viewport.addChild(dot);
-  }
+    viewport.getChildByName('critter_container').addChild(point_to_run_for);
 
-  is_prey_to() {
+    //setInterval(()=> {
 
+    //  move_sprite_to_sprite_on_grid(prey, point_to_run_for);
 
-  }
-
-  add_direction_line() {
-
-    const player = viewport.getChildByName('player');
-    const rat = this.sprite;
-
-    const dot = new PIXI.Sprite.fromFrame('bunny');
-    dot.name = 'dot';
-
-    ticker.add(() => {
-
-      dot.position.set(rat.x + (rat.x - player.x), rat.y +(rat.y - player.y));
-
-    });
-
-    viewport.addChild(dot);
+    //},2000);
   }
 
   distance_to_player() {
@@ -1641,9 +1624,9 @@ function move_sprite_on_route(sprite) {
 
 async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   const grid = grid_container.children;
-  const rat_sprite = viewport.children[5].children[0];
+  const rat_sprite = from_sprite;
 
-  const rat_direction = viewport.getChildByName('critter_container').getChildByName('rat').getChildByName('dot');
+  const rat_direction = to_sprite;
 
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
@@ -1682,6 +1665,7 @@ module.exports = {
   distance_between_two_points,
   highlight_grid_cell_from_path,
   get_sprite_position_on_grid,
+  move_sprite_to_sprite_on_grid,
 };
 
 
@@ -1693,9 +1677,9 @@ module.exports = {
 //testing
 async function run_pathfinding_test() {
   const grid = grid_container.children;
-  const rat_sprite = viewport.children[5].children[0];
+  const rat_sprite = viewport.getChildByName('critter_container').getChildByName('rat');
 
-  const rat_direction = viewport.getChildByName('dot');
+  const rat_direction = viewport.getChildByName('critter_container').getChildByName('dot');
 
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
@@ -1727,7 +1711,7 @@ async function run_pathfinding_test() {
 setInterval(()=>{
   // highlight_start_grid()
 
-  run_pathfinding_test();
+  //run_pathfinding_test();
 },2000);
 
 
@@ -8475,21 +8459,23 @@ class DevelopmentLevel {
     player.set_ticker_amount();
     player.set_vitals_ticker();
 
-    //this.test_intro();
-
-    //this.test_backpack(player);
     this.test_note();
     this.test_load_test_level();
 
     const rat = new Rat();
     rat.set_position({x: 1100, y: 1000});
-    //rat.move_to_point({x: 1400, y: 1400});
     rat.add_influence_box();
     rat.distance_to_player();
-    rat.add_to_run_to();
-    rat.add_direction_line();
+
+    rat.is_prey_to(player.sprite);
+
+    //rat.add_direction_line();
+    //rat.start_running_from();
+
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
+    //this.test_backpack(player);
+    //this.test_intro();
     //this.test_food();
     //this.test_chest();
     //this.test_campfire();
@@ -8520,10 +8506,7 @@ class DevelopmentLevel {
     rat.add_influence_box();
     rat.distance_to_player();
     rat.add_direction_line();
-    console.log(rat)
     //pathfind_from_enemy_to_player(rat.sprite, );
-
-    console.log(grid_sprite);
 
     //highlight_grid_cell_from_point(grid_sprite);
 

@@ -329,9 +329,9 @@ function move_sprite_on_route(sprite) {
 
 async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   const grid = grid_container.children;
-  const rat_sprite = viewport.children[5].children[0];
+  const rat_sprite = from_sprite;
 
-  const rat_direction = viewport.getChildByName('critter_container').getChildByName('rat').getChildByName('dot');
+  const rat_direction = to_sprite;
 
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
@@ -370,6 +370,7 @@ module.exports = {
   distance_between_two_points,
   highlight_grid_cell_from_path,
   get_sprite_position_on_grid,
+  move_sprite_to_sprite_on_grid,
 };
 
 
@@ -381,9 +382,9 @@ module.exports = {
 //testing
 async function run_pathfinding_test() {
   const grid = grid_container.children;
-  const rat_sprite = viewport.children[5].children[0];
+  const rat_sprite = viewport.getChildByName('critter_container').getChildByName('rat');
 
-  const rat_direction = viewport.getChildByName('dot');
+  const rat_direction = viewport.getChildByName('critter_container').getChildByName('dot');
 
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
@@ -415,7 +416,7 @@ async function run_pathfinding_test() {
 setInterval(()=>{
   // highlight_start_grid()
 
-  run_pathfinding_test();
+  //run_pathfinding_test();
 },2000);
 
 

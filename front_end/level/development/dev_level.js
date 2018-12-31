@@ -30,21 +30,23 @@ class DevelopmentLevel {
     player.set_ticker_amount();
     player.set_vitals_ticker();
 
-    //this.test_intro();
-
-    //this.test_backpack(player);
     this.test_note();
     this.test_load_test_level();
 
     const rat = new Rat();
     rat.set_position({x: 1100, y: 1000});
-    //rat.move_to_point({x: 1400, y: 1400});
     rat.add_influence_box();
     rat.distance_to_player();
-    rat.add_to_run_to();
-    rat.add_direction_line();
+
+    rat.is_prey_to(player.sprite);
+
+    //rat.add_direction_line();
+    //rat.start_running_from();
+
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
+    //this.test_backpack(player);
+    //this.test_intro();
     //this.test_food();
     //this.test_chest();
     //this.test_campfire();
@@ -75,10 +77,7 @@ class DevelopmentLevel {
     rat.add_influence_box();
     rat.distance_to_player();
     rat.add_direction_line();
-    console.log(rat)
     //pathfind_from_enemy_to_player(rat.sprite, );
-
-    console.log(grid_sprite);
 
     //highlight_grid_cell_from_point(grid_sprite);
 

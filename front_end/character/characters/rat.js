@@ -3,7 +3,7 @@
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const rat_animations = require('../animations/rat');
-const { move_sprite_to_point, distance_between_two_points } = require('../../engine/pathfind');
+const { move_sprite_to_point, distance_between_two_points, move_sprite_to_sprite_on_grid } = require('../../engine/pathfind');
 const ticker = require('../../engine/ticker');
 
 
@@ -34,56 +34,39 @@ class Rat {
 
   // todo this is from the player model
   add_influence_box() {
-    const influence_box = PIXI.Sprite.fromFrame('black_dot');
+    this.influence_box = PIXI.Sprite.fromFrame('black_dot');
 
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
-    influence_box.height = 2000;
-    influence_box.alpha = 0.4;
-    influence_box.anchor.set(0.5);
+    this.influence_box.name = 'influence_box';
+    this.influence_box.width = 500;
+    this.influence_box.height = 500;
+    this.influence_box.alpha = 0.4;
+    this.influence_box.anchor.set(0.5);
 
-    this.sprite.addChild(influence_box);
+    this.sprite.addChild(this.influence_box);
   }
 
-  add_to_run_to() {
+  is_prey_to(predator) {
+    const prey  = this.sprite;
 
-    const player = viewport.getChildByName('player');
-    const rat = this.sprite;
-
-    const dot = new PIXI.Sprite.fromFrame('bunny');
-    dot.name = 'dot';
-
-    this.sprite.addChild(dot);
+    const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
+    point_to_run_for.name = 'dot';
 
     ticker.add(() => {
+      point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
 
-      dot.position.set(rat.x + (rat.x - player.x), rat.y +(rat.y - player.y));
+      if(this.influence_box.containsPoint(predator.getGlobalPosition())) {
+        move_sprite_to_sprite_on_grid(prey, point_to_run_for);
+      }
 
     });
 
-    viewport.addChild(dot);
-  }
+    viewport.getChildByName('critter_container').addChild(point_to_run_for);
 
-  is_prey_to() {
+    //setInterval(()=> {
 
+    //  move_sprite_to_sprite_on_grid(prey, point_to_run_for);
 
-  }
-
-  add_direction_line() {
-
-    const player = viewport.getChildByName('player');
-    const rat = this.sprite;
-
-    const dot = new PIXI.Sprite.fromFrame('bunny');
-    dot.name = 'dot';
-
-    ticker.add(() => {
-
-      dot.position.set(rat.x + (rat.x - player.x), rat.y +(rat.y - player.y));
-
-    });
-
-    viewport.addChild(dot);
+    //},2000);
   }
 
   distance_to_player() {
