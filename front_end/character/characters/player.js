@@ -13,6 +13,7 @@ class Player extends Character{
     super();
 
     this.sprite.name = 'player';
+    this.sprite.zIndex = -2;
 
     viewport.addChild(this.sprite);
   }

@@ -3,6 +3,11 @@
 const PIXI = require('pixi.js');
 const viewport = require('./viewport');
 
+
+const background_container = new PIXI.Container();
+background_container.name = 'background_image';
+background_container.zIndex = viewport.zIndex_layer.background;
+
 const collision_container = new PIXI.Container();
 collision_container.name = 'collision_items';
 collision_container.zIndex = viewport.zIndex_layer.low;
@@ -21,6 +26,7 @@ door_container.zIndex = viewport.zIndex_layer.low;
 
 const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';
+critter_container.zIndex = viewport.zIndex_layer.low;
 
 const network_player_container = new PIXI.Container();
 network_player_container.name = 'network_players';
@@ -34,6 +40,18 @@ cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = viewport.zIndex_layer.close;
 
 
+const grid_container = new PIXI.Container();
+grid_container.name = 'grid_container';
+
+
+viewport.updateLayersOrder = function () {
+  viewport.children.sort(function(a,b) {
+    a.zIndex = a.zIndex || 0;
+    b.zIndex = b.zIndex || 0;
+    return b.zIndex - a.zIndex;
+  });
+};
+
 viewport.addChild(
   network_player_container,
   critter_container,
@@ -42,6 +60,10 @@ viewport.addChild(
   non_collision_container,
   collision_container,
   friend_container,
-  cutscene_container
+  cutscene_container,
+  background_container,
+  grid_container
 );
+
+viewport.updateLayersOrder();
 

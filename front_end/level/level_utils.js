@@ -14,15 +14,10 @@ const { Rat } = require('../character/characters/rat');
 const { Player } = require('../character/characters/player.js');
 const { NetworkCharacter } = require('../character/network/network_player.js');
 
-const { Door } = require('../object_management/hard_furnishing/door.js');
-const { Note } = require('../object_management/items/note');
-const { Chest } = require('../object_management/items/chest');
-const { Campfire } = require('../object_management/items/fire_place');
-
-const container = new PIXI.Container();
-container.name = 'collision_items'; //todo
-container.zIndex = -10;
-viewport.addChild(container);
+const { Door } = require('../items/door.js');
+const { Note } = require('../items/note');
+const { Chest } = require('../items/chest');
+const { Campfire } = require('../items/fire_place');
 
 class Level {
   constructor() {
@@ -47,10 +42,11 @@ class Level {
     this.background_image.position.set(0, 0);
     this.background_image.width = tile_data.imagewidth;
     this.background_image.height = tile_data.imageheight;
+    this.background_image.opacity = 0.1;
 
     this.add_to_segments(this.background_image);
 
-    viewport.addChild(this.background_image);
+    viewport.getChildByName('background_image').addChild(this.background_image);
   }
 
   render_walls(wall_array) {
@@ -61,10 +57,9 @@ class Level {
       wall.width = wall_data.width;
       wall.height = wall_data.height;
       wall.anchor.set(0);
-      wall.zIndex = -20;
       this.add_to_segments(wall);
 
-      container.addChild(wall);
+      viewport.getChildByName('collision_items').addChild(wall);
     });
   }
 
@@ -97,7 +92,6 @@ class Level {
     character.add_controls();
     character.follow_player();
     character.with_light();
-    console.log(viewport);
     //character.add_raycasting(this.segments)
   }
 
@@ -173,8 +167,7 @@ class Bedroom extends Level {
   }
 }
 
-module.exports.load_debug_map_image = () => {
-
+function load_debug_map_image() {
   const debug_room_tiled_data = require('./debug/playground/map2_output.json');
   const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
   const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
@@ -192,7 +185,7 @@ module.exports.load_debug_map_image = () => {
   debug_room.render_walls(options);
   debug_room.create_grid();
   // debug_room.create_enemies();
-};
+}
 
 function format_path_data(path_data){
   const formatted_path_array = [];
@@ -209,7 +202,7 @@ function format_path_data(path_data){
   return formatted_path_array;
 }
 
-module.exports.load_bedroom_map = () => {
+function load_bedroom_map() {
   const level_data = require('./bedroom/level_data/bedroom_level_data.json');
   const tiles_data = require('./bedroom/level_data/flat_floor_data.json');
   const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
@@ -281,10 +274,12 @@ module.exports.load_bedroom_map = () => {
   };
 
   new Bedroom(bedroom_schema, bedroom_image);
-};
+}
 
 module.exports = {
   Level,
+  load_bedroom_map,
+  load_debug_map_image,
 };
 
 

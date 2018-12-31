@@ -14,7 +14,6 @@ const string_to_write = 'Lorem Ipsum is simply dummy text of the printing and ty
 class intro_cutscene {
 
   static start() {
-
     const dialog_dom = new Caption_Dialog();
     const dialog_canvas = new Dialog();
     visual_effects.fade_screen_to_black_at_point({ x: 300, y:200 });

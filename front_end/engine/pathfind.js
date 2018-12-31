@@ -59,6 +59,7 @@ function create_level_grid(tiles_object) {
     if(tiles_object.tileproperties.hasOwnProperty(i)){
       // is a wall
       grid_cell.alpha = 0.5;
+      grid_cell.type = 'wall';
       binary_line.push(1);
     } else {
       // is walkable ground
@@ -80,11 +81,26 @@ function create_level_grid(tiles_object) {
   easystar.setIterationsPerCalculation(1000);
 }
 
-function get_sprite_position_on_grid(sprite, container) {
+
+function get_grid_sprite_on_point(point, container) {
   if(!container) throw 'gimme a container';
 
   const grid_containing_sprite = container.find(grid => (
-    grid.containsPoint(sprite.getGlobalPosition())
+    grid.containsPoint(point)
+  ));
+
+  if(grid_containing_sprite){
+    return grid_containing_sprite;
+  }
+}
+
+
+function get_sprite_position_on_grid(sprite, container) {
+  if(!container) throw 'gimme a container';
+  const posish = sprite.getGlobalPosition();
+
+  const grid_containing_sprite = container.find(grid => (
+    grid.containsPoint(posish)
   ));
 
   if(grid_containing_sprite){
@@ -310,37 +326,38 @@ function move_sprite_on_route(sprite) {
   });
 }
 
-//testing
-//function run_pathfinding_test() {
-//
-// const enemy_sprite = viewport.children[7].children[0];
-// const player_sprite = global.Player.sprite;
-//
-// const grid = grid_container.children;
-// const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
-// const player_point = get_sprite_position_on_grid(player_sprite, grid);
-//
-// create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-//   .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-//}
 
-// function path_from_enemy_to_player(enemy, player) {
+async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
+  const grid = grid_container.children;
+  const rat_sprite = viewport.children[5].children[0];
 
-//   const grid = grid_container.children;
+  const rat_direction = viewport.getChildByName('critter_container').getChildByName('rat').getChildByName('dot');
 
-//   const enemy_point = get_sprite_position_on_grid(enemy, grid);
-//   const player_point = get_sprite_position_on_grid(player, grid);
+  const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
+  const rat_point = get_sprite_position_on_grid(rat_direction, grid);
 
-//   create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-//     .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-// }
+  sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
 
+  // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
+  //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
 
-// setInterval(()=>{
-//   // highlight_start_grid()
+  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y+1][player_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y-1][player_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x+1].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x-1].alpha += 0.1;
 
-//   run_pathfinding_test();
-// },2000);
+  const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
+
+  highlight_grid_cell_from_path(path_data);
+
+  const path_array = path_data.map(grid => (
+    sprite_grid[grid.y][grid.x]
+  ));
+
+  move_sprite_on_path(rat_sprite, path_array);
+
+}
 
 
 module.exports = {
@@ -350,7 +367,119 @@ module.exports = {
   move_sprite_on_path,
   move_sprite_on_route,
   move_sprite_on_route_straight,
+  distance_between_two_points,
+  highlight_grid_cell_from_path,
+  get_sprite_position_on_grid,
 };
+
+
+
+
+
+
+
+//testing
+async function run_pathfinding_test() {
+  const grid = grid_container.children;
+  const rat_sprite = viewport.children[5].children[0];
+
+  const rat_direction = viewport.getChildByName('dot');
+
+  const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
+  const rat_point = get_sprite_position_on_grid(rat_direction, grid);
+
+  sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
+
+  // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
+  //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
+
+  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y+1][player_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y-1][player_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x+1].alpha += 0.1;
+  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x-1].alpha += 0.1;
+
+  const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
+
+  highlight_grid_cell_from_path(path_data);
+
+  const path_array = path_data.map(grid => (
+    sprite_grid[grid.y][grid.x]
+  ));
+
+  move_sprite_on_path(rat_sprite, path_array);
+
+}
+
+
+setInterval(()=>{
+  // highlight_start_grid()
+
+  run_pathfinding_test();
+},2000);
+
+
+//function run_pathfinding_test() {
+//  //console.log(viewport)
+//  const enemy_sprite = viewport.children[5].children[0];
+//  //console.log(enemy_sprite);
+//  const player_sprite = viewport.children[12];
+//  //console.log(player_sprite);
+//
+//  const grid = grid_container.children;
+//  const enemy_point = get_sprite_position_on_grid(enemy_sprite, grid);
+//  const player_point = get_sprite_position_on_grid(player_sprite, grid);
+//  console.log('9999999999');
+//  console.log(enemy_point);
+//  console.log(player_point);
+//  console.log('9999999999');
+//
+//  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+//    .then(path_data => {
+//
+//      highlight_grid_cell_from_path(path_data);
+//
+//      const path_array = path_data.map(grid => (
+//        sprite_grid[grid.y][grid.x]
+//      ));
+//
+//      // move from the current position to the start of the path
+//      move_sprite_to_point(enemy_sprite, path_array[0])
+//        .then(() => move_sprite_on_path(enemy_sprite, path_array))
+//        .then(() => wait_sprite(enemy_sprite, 500));
+//
+//
+//    });
+//
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//function path_from_enemy_to_player(enemy, player) {
+//
+//  const grid = grid_container.children;
+//
+//  const enemy_point = get_sprite_position_on_grid(enemy, grid);
+//  const player_point = get_sprite_position_on_grid(player, grid);
+//
+//  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
+//    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
+//}
+
+
+
 
 // function continue_sprite_on_default_path(sprite) {
 //   const tween = sprite.path;

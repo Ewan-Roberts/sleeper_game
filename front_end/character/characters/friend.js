@@ -3,7 +3,7 @@
 const viewport = require('../../engine/viewport');
 
 const { Character } = require('../character_model');
-const { Dialog } = require('../../dialog/dialog_util');
+const { Dialog } = require('../../cutscene/dialog_util');
 
 class Friend extends Character {
   constructor() {

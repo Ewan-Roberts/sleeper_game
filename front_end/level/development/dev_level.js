@@ -5,12 +5,18 @@ const { Campfire } = require('../../items/fire_place');
 const { Chest } = require('../../items/chest');
 const { Note } = require('../../items/Note');
 const { Backpack } = require('../../items/back_pack');
+const { Level } = require('../level_utils');
+const {
+  pathfind_from_enemy_to_player,
+} = require('../../engine/pathfind');
+
+
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
 const { intro_cutscene } = require('../../cutscene/intro.js');
 const { Rat } = require('../../character/characters/rat');
-
+const PIXI = require('pixi.js');
 
 class DevelopmentLevel {
   constructor() {
@@ -24,11 +30,20 @@ class DevelopmentLevel {
     player.set_ticker_amount();
     player.set_vitals_ticker();
 
-    this.test_rat();
     //this.test_intro();
 
     //this.test_backpack(player);
-    //this.test_note();
+    this.test_note();
+    this.test_load_test_level();
+
+    const rat = new Rat();
+    rat.set_position({x: 1100, y: 1000});
+    //rat.move_to_point({x: 1400, y: 1400});
+    rat.add_influence_box();
+    rat.distance_to_player();
+    rat.add_to_run_to();
+    rat.add_direction_line();
+    //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
     //this.test_food();
     //this.test_chest();
@@ -38,10 +53,34 @@ class DevelopmentLevel {
 
   }
 
+  test_load_test_level() {
+
+    const debug_room_tiled_data = require('../debug/playground/map2_output.json');
+    const debug_room_tiled_tiles = require('../debug/playground/map2_tiles.json');
+    const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
+    //debug_room_image.alpha= 0.2
+
+    const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
+
+    debug_room.set_background_image(debug_room_image, debug_room_tiled_tiles);
+    debug_room.render_walls(debug_room_tiled_data.layers[1]);
+    debug_room.create_grid(debug_room_tiled_tiles);
+
+  }
+
   test_rat() {
     const rat = new Rat();
-    rat.set_position({x: 1200, y: 1000});
-    rat.move_to_point({x: 1400, y: 1400});
+    rat.set_position({x: 1100, y: 1000});
+    //rat.move_to_point({x: 1400, y: 1400});
+    rat.add_influence_box();
+    rat.distance_to_player();
+    rat.add_direction_line();
+    console.log(rat)
+    //pathfind_from_enemy_to_player(rat.sprite, );
+
+    console.log(grid_sprite);
+
+    //highlight_grid_cell_from_point(grid_sprite);
 
   }
 
