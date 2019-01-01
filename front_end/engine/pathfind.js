@@ -167,13 +167,13 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 function move_sprite_on_path(sprite, path_array) {
   const path = new PIXI.tween.TweenPath();
   path.moveTo(path_array[0].middle.x, path_array[0].middle.y);
-
+  const random_number = Math.floor(Math.random() * 50) +20;
   for (let i = 1; i < path_array.length; i++) {
     path.arcTo(
       path_array[i-1].middle.x,
       path_array[i-1].middle.y,
-      path_array[i].middle.x,
-      path_array[i].middle.y,
+      path_array[i].middle.x+ random_number,
+      path_array[i].middle.y+ random_number,
       50
     );
   }
@@ -182,14 +182,16 @@ function move_sprite_on_path(sprite, path_array) {
 
   const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
   if(get_tween.length > 0) return;
+
   const tween = PIXI.tweenManager.createTween(sprite);
   tween.expire = true;
   tween.path = path;
   tween.time = path_array.length * 300;
   tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
+
   const graphical_path = new PIXI.Graphics();
-  graphical_path.lineStyle(1, 0xffffff, 1);
+  graphical_path.lineStyle(5, 0xffffff, 5);
   graphical_path.drawPath(path);
   viewport.addChild(graphical_path);
 }

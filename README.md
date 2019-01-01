@@ -4,6 +4,20 @@ Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
+
+
+## Update 01.01.19:
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_4.png)
+
+- basic predator/prey pathfinding logic
+- basic multiplayer server side location
+- basic state management for hunger/thirst/sleep...
+- replacing tween management system
+- creating testing functions for ease of development
+- major refactor (on-going)
+
+
 ## Update 16.12.18:
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_3.png)
