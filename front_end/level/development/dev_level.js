@@ -60,7 +60,7 @@ class DevelopmentLevel {
     const debug_room_tiled_data = require('../debug/playground/map2_output.json');
     const debug_room_tiled_tiles = require('../debug/playground/map2_tiles.json');
     const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
-    //debug_room_image.alpha= 0.2
+    debug_room_image.alpha= 0.2;
 
     const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
 

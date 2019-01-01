@@ -166,26 +166,53 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 
 function move_sprite_on_path(sprite, path_array) {
   return new Promise(resolve => {
+    //chill im testing things
+    const path = new PIXI.tween.TweenPath();
+    path.moveTo(path_array[0].middle.x, path_array[0].middle.y);
 
-    const tween = createjs.Tween.get(sprite);
 
-    const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
-    //TODO
-    for (let i = 0; i < path_array.length; i++) {
-      if(path_array[i-1] === undefined) continue;
-
-      const angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
-
-      tween.to({
-        rotation: angle_to_face,
-      }).to({
-        x:path_array[i].middle.x,
-        y:path_array[i].middle.y,
-        rotation: angle_to_face,
-      }, walk_time/2);
+    for (let i = 1; i < path_array.length; i++) {
+      path.arcTo(path_array[i-1].middle.x, path_array[i-1].middle.y, path_array[i].middle.x, path_array[i].middle.y, 50);
     }
 
-    tween.call(()=>resolve());
+
+    //path_array.forEach(point => {
+    //  path.arcTo(point.middle.x, point.middle.y, 20);
+    //});
+    path.closed = false;
+
+    const gPath = new PIXI.Graphics();
+    gPath.lineStyle(1, 0xffffff, 1);
+    gPath.drawPath(path);
+    viewport.addChild(gPath);
+
+    //Tween animation
+    const tween = PIXI.tweenManager.createTween(sprite);
+    tween.path = path;
+    tween.time = 500;
+    //tween.easing = PIXI.tween.Easing.outBounce();
+    //tween.pathReverse  =true;
+    tween.start();
+
+    //const tween = createjs.Tween.get(sprite);
+
+    //const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
+    ////TODO
+    //for (let i = 0; i < path_array.length; i++) {
+    //  if(path_array[i-1] === undefined) continue;
+
+    //  const angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
+
+    //  tween.to({
+    //    rotation: angle_to_face,
+    //  }).to({
+    //    x:path_array[i].middle.x,
+    //    y:path_array[i].middle.y,
+    //    rotation: angle_to_face,
+    //  }, walk_time/2);
+    //}
+
+    //tween.call(()=>resolve());
   });
 }
 
@@ -329,14 +356,11 @@ function move_sprite_on_route(sprite) {
 
 async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   const grid = grid_container.children;
-  const rat_sprite = from_sprite;
 
-  const rat_direction = to_sprite;
+  const from_point = get_sprite_position_on_grid(from_sprite, grid);
+  const to_point = get_sprite_position_on_grid(to_sprite, grid);
 
-  const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
-  const rat_point = get_sprite_position_on_grid(rat_direction, grid);
-
-  sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
+  sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.2;
 
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
@@ -347,7 +371,7 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   //sprite_grid[player_point.cell_position.y][player_point.cell_position.x+1].alpha += 0.1;
   //sprite_grid[player_point.cell_position.y][player_point.cell_position.x-1].alpha += 0.1;
 
-  const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
+  const path_data = await create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
 
   highlight_grid_cell_from_path(path_data);
 
@@ -355,7 +379,7 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     sprite_grid[grid.y][grid.x]
   ));
 
-  move_sprite_on_path(rat_sprite, path_array);
+  move_sprite_on_path(from_sprite, path_array);
 
 }
 
