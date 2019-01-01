@@ -3,11 +3,14 @@
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const rat_animations = require('../animations/rat');
-const { move_sprite_to_point, distance_between_two_points, move_sprite_to_sprite_on_grid } = require('../../engine/pathfind');
+const {
+  move_sprite_to_point,
+  move_sprite_to_sprite_on_grid,
+} = require('../../engine/pathfind');
+
 const ticker = require('../../engine/ticker');
 
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x)
+//const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x)
 
 class Rat {
   constructor() {
@@ -53,7 +56,6 @@ class Rat {
 
     ticker.add(() => {
       point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
-
       if(this.influence_box.containsPoint(predator.getGlobalPosition())) {
         move_sprite_to_sprite_on_grid(prey, point_to_run_for);
       }

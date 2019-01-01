@@ -646,11 +646,14 @@ module.exports = {
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const rat_animations = require('../animations/rat');
-const { move_sprite_to_point, distance_between_two_points, move_sprite_to_sprite_on_grid } = require('../../engine/pathfind');
+const {
+  move_sprite_to_point,
+  move_sprite_to_sprite_on_grid,
+} = require('../../engine/pathfind');
+
 const ticker = require('../../engine/ticker');
 
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x)
+//const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x)
 
 class Rat {
   constructor() {
@@ -696,7 +699,6 @@ class Rat {
 
     ticker.add(() => {
       point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
-
       if(this.influence_box.containsPoint(predator.getGlobalPosition())) {
         move_sprite_to_sprite_on_grid(prey, point_to_run_for);
       }
@@ -1460,55 +1462,33 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 }
 
 function move_sprite_on_path(sprite, path_array) {
-  return new Promise(resolve => {
-    //chill im testing things
-    const path = new PIXI.tween.TweenPath();
-    path.moveTo(path_array[0].middle.x, path_array[0].middle.y);
+  const path = new PIXI.tween.TweenPath();
+  path.moveTo(path_array[0].middle.x, path_array[0].middle.y);
 
+  for (let i = 1; i < path_array.length; i++) {
+    path.arcTo(
+      path_array[i-1].middle.x,
+      path_array[i-1].middle.y,
+      path_array[i].middle.x,
+      path_array[i].middle.y,
+      50
+    );
+  }
 
-    for (let i = 1; i < path_array.length; i++) {
-      path.arcTo(path_array[i-1].middle.x, path_array[i-1].middle.y, path_array[i].middle.x, path_array[i].middle.y, 50);
-    }
+  path.moveTo(path_array[path_array.length-1].middle.x, path_array[path_array.length-1].middle.y);
 
-
-    //path_array.forEach(point => {
-    //  path.arcTo(point.middle.x, point.middle.y, 20);
-    //});
-    path.closed = false;
-
-    const gPath = new PIXI.Graphics();
-    gPath.lineStyle(1, 0xffffff, 1);
-    gPath.drawPath(path);
-    viewport.addChild(gPath);
-
-    //Tween animation
-    const tween = PIXI.tweenManager.createTween(sprite);
-    tween.path = path;
-    tween.time = 500;
-    //tween.easing = PIXI.tween.Easing.outBounce();
-    //tween.pathReverse  =true;
-    tween.start();
-
-    //const tween = createjs.Tween.get(sprite);
-
-    //const walk_time = create_relative_walk_time(path_array[0], path_array[1], 5);
-    ////TODO
-    //for (let i = 0; i < path_array.length; i++) {
-    //  if(path_array[i-1] === undefined) continue;
-
-    //  const angle_to_face = Math.atan2(path_array[i].middle.y -path_array[i-1].middle.y , path_array[i].middle.x - path_array[i-1].middle.x);
-
-    //  tween.to({
-    //    rotation: angle_to_face,
-    //  }).to({
-    //    x:path_array[i].middle.x,
-    //    y:path_array[i].middle.y,
-    //    rotation: angle_to_face,
-    //  }, walk_time/2);
-    //}
-
-    //tween.call(()=>resolve());
-  });
+  const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
+  if(get_tween.length > 0) return;
+  const tween = PIXI.tweenManager.createTween(sprite);
+  tween.expire = true;
+  tween.path = path;
+  tween.time = path_array.length * 300;
+  tween.easing = PIXI.tween.Easing.inOutSine();
+  tween.start();
+  const graphical_path = new PIXI.Graphics();
+  graphical_path.lineStyle(1, 0xffffff, 1);
+  graphical_path.drawPath(path);
+  viewport.addChild(graphical_path);
 }
 
 function move_sprite_to_point(sprite, point) {
@@ -1656,15 +1636,15 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   const to_point = get_sprite_position_on_grid(to_sprite, grid);
 
   sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.2;
-
+  console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
 
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y+1][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y-1][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x+1].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x-1].alpha += 0.1;
+  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[to_point.cell_position.y+1][to_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[to_point.cell_position.y-1][to_point.cell_position.x].alpha += 0.1;
+  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x+1].alpha += 0.1;
+  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x-1].alpha += 0.1;
 
   const path_data = await create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
 
@@ -1691,9 +1671,6 @@ module.exports = {
   get_sprite_position_on_grid,
   move_sprite_to_sprite_on_grid,
 };
-
-
-
 
 
 
