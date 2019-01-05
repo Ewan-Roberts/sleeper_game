@@ -145,7 +145,6 @@ const generate_wait_time_with_threshold = (max, threshold) => {
   return random_number;
 };
 
-
 function create_relative_walk_time(point_one, point_two, velocity = 15) {
   const distance = distance_between_points(point_one, point_two);
 
@@ -161,9 +160,11 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 
 function move_sprite_on_path(sprite, path_array) {
   const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
-  if(get_tween.length > 0) return;
+  if(get_tween.length > 0) {
+    PIXI.tweenManager.removeTween(get_tween[0]);
+  }
   const path = new PIXI.tween.TweenPath();
-  const random_number = () => generate_number_between_min_and_max(-40, 40);
+  const random_number = () => generate_number_between_min_and_max(-30, 30);
 
   path.moveTo(sprite.x, sprite.y);
   path.arcTo(
@@ -180,7 +181,7 @@ function move_sprite_on_path(sprite, path_array) {
       path_array[i-1].middle.y + random_number(),
       path_array[i].middle.x + random_number(),
       path_array[i].middle.y + random_number(),
-      25
+      30
     );
   }
 
@@ -190,8 +191,8 @@ function move_sprite_on_path(sprite, path_array) {
   const tween = PIXI.tweenManager.createTween(sprite);
   tween.expire = true;
   tween.path = path;
-  tween.time = path_array.length * 300;
-  tween.easing = PIXI.tween.Easing.inOutSine();
+  tween.time = path_array.length * 100;
+  //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
 
   const graphical_path = new PIXI.Graphics();
@@ -348,7 +349,7 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     return;
   }
 
-  sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.2;
+  sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.1;
   //console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
