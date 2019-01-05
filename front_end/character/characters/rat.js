@@ -10,7 +10,7 @@ const {
 
 const { Inventory } = require('../attributes/inventory');
 const { Vitals } = require('../attributes/vitals');
-const { GUI_Container } = require('../../gui/container');
+const { distance_between_points } = require('../../engine/math');
 
 const ticker = require('../../engine/ticker');
 
@@ -51,14 +51,17 @@ class Rat {
         get_tween[0].stop();
       }
 
-      this.sprite.click = () => {
-        const inventory_visuals = new GUI_Container(this.sprite);
-        inventory_visuals.add_item_tiles();
+      this.lootable();
+    };
+  }
 
-        this.sprite.inventory.slots.forEach(item => {
-          inventory_visuals.populate_slot_1(item.image_name);
-        });
-      };
+  lootable() {
+    this.sprite.click = () => {
+      this.sprite.inventory.display_inventory(this.sprite);
+
+      this.sprite.inventory.slots.forEach(item => {
+        this.sprite.inventory.populate_slot_1(item.image_name);
+      });
     };
   }
 
@@ -66,21 +69,9 @@ class Rat {
     this.sprite.position.set(point.x, point.y);
   }
 
-  // todo this is from the player model
-  add_influence_box() {
-    this.influence_box = PIXI.Sprite.fromFrame('black_dot');
-
-    this.influence_box.name = 'influence_box';
-    this.influence_box.width = 500;
-    this.influence_box.height = 500;
-    this.influence_box.alpha = 0.4;
-    this.influence_box.anchor.set(0.5);
-
-    this.sprite.addChild(this.influence_box);
-  }
-
   is_prey_to(predator) {
-    this.add_influence_box();
+    this.min_pathfind_distance = 100;
+    this.max_pathfind_distance = 400;
 
     const prey  = this.sprite;
 
@@ -88,11 +79,19 @@ class Rat {
     point_to_run_for.name = 'dot';
 
     ticker.add(() => {
+      const distance_to_act = distance_between_points(predator, prey);
+
+      if(
+        distance_to_act < this.min_pathfind_distance ||
+        distance_to_act > this.max_pathfind_distance ||
+        !this.sprite.status.alive
+      ) {
+        return;
+      }
+
       point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
 
-      if(this.sprite.status.alive && this.influence_box.containsPoint(predator.getGlobalPosition())) {
-        move_sprite_to_sprite_on_grid(prey, point_to_run_for);
-      }
+      move_sprite_to_sprite_on_grid(prey, point_to_run_for);
     });
 
     viewport.getChildByName('critter_container').addChild(point_to_run_for);
