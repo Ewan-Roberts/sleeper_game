@@ -1224,9 +1224,9 @@ module.exports = {
 },{"../character/characters/cutscene_character":6,"../engine/pathfind":17,"../engine/viewport.js":21,"../gui/caption":22,"./dialog_util":13,"./visual_effects":15}],15:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-const ticker = require('../engine/ticker');
-const viewport = require('../engine/viewport.js');
+const PIXI      = require('pixi.js');
+const ticker    = require('../engine/ticker');
+const viewport  = require('../engine/viewport.js');
 
 class visual_effects {
 
@@ -1255,7 +1255,6 @@ class visual_effects {
   }
 
   static fade_screen_to_black_at_point(point) {
-
     const image_to_fade = PIXI.Sprite.fromFrame('black_dot');
 
     image_to_fade.width = viewport.screenWidth;
@@ -1293,12 +1292,16 @@ const app = new PIXI.Application({
   backgroundColor: 0x2F4F4F, //0xC1C1C1
 });
 
+const viewport = require('./viewport');
+
+app.stage.addChild(viewport);
+
 global.document.body.appendChild(app.view);
 
 module.exports = app;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":232}],17:[function(require,module,exports){
+},{"./viewport":21,"pixi.js":232}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1926,7 +1929,6 @@ arrow_container.zIndex = viewport.zIndex_layer.medium;
 const grid_container = new PIXI.Container();
 grid_container.name = 'grid_container';
 
-
 viewport.updateLayersOrder = function () {
   viewport.children.sort(function(a,b) {
     a.zIndex = a.zIndex || 0;
@@ -1956,10 +1958,6 @@ viewport.updateLayersOrder();
 'use strict';
 
 const io = require('socket.io-client');
-
-const { NetworkCharacter } = require('../character/network/network_player');
-const viewport = require('./viewport');
-
 const socket = io.connect();
 
 async function register_user(user_details) {
@@ -1980,7 +1978,6 @@ socket.on('other_players', response => {
 
   //if(not the current player) { return };
   //rendertheplayer
-  console.log(response);
 
 });
 
@@ -2009,14 +2006,18 @@ module.exports = {
   socket,
 };
 
-},{"../character/network/network_player":11,"./viewport":21,"socket.io-client":274}],20:[function(require,module,exports){
+},{"socket.io-client":274}],20:[function(require,module,exports){
 'use strict';
 
+require('pixi-tween');
+const PIXI = require('pixi.js');
 const app = require('./app');
+
+app.ticker.add(() => PIXI.tweenManager.update());
 
 module.exports = app.ticker;
 
-},{"./app":16}],21:[function(require,module,exports){
+},{"./app":16,"pixi-tween":102,"pixi.js":232}],21:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2305,25 +2306,15 @@ module.exports = {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],25:[function(require,module,exports){
-(function (global){
 'use strict';
 
 const PIXI = require('pixi.js');
 const pixiPackerParser = require('pixi-packer-parser');
 
 //engine set up
-const app = require('./engine/app');
-const ticker = require('./engine/ticker');
-const viewport = require('./engine/viewport');
-
+require('./engine/app');
+require('./engine/ticker');
 require('./engine/pixi_containers');
-require('pixi-tween');
-
-global.is_development = true;
-
-app.stage.addChild(viewport);
-
-ticker.add(() => PIXI.tweenManager.update());
 
 const loader = new PIXI.loaders.Loader();
 loader.use(pixiPackerParser(PIXI));
@@ -2331,17 +2322,14 @@ loader.add('../../images/bedroom_EN_web.json');
 
 loader.load(async function() {
 
-  //await register_user();
   const { DevelopmentLevel } = require('./level/development/dev_level.js');
-  const level_load = new DevelopmentLevel();
-  //const development_room = require('./level/debug/debug_layout.js');
-  //const debug = require('./level/debug/debug_layout.js');
-  //debug.add_floor();
+
+  new DevelopmentLevel();
+
 });
 
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./engine/app":16,"./engine/pixi_containers":18,"./engine/ticker":20,"./engine/viewport":21,"./level/development/dev_level.js":39,"pixi-packer-parser":101,"pixi-tween":102,"pixi.js":232}],26:[function(require,module,exports){
+},{"./engine/app":16,"./engine/pixi_containers":18,"./engine/ticker":20,"./level/development/dev_level.js":39,"pixi-packer-parser":101,"pixi.js":232}],26:[function(require,module,exports){
 'use strict';
 
 const { GUI_HUD } = require('../gui/inventory');
@@ -8438,7 +8426,6 @@ module.exports={ "columns":20,
 },{}],39:[function(require,module,exports){
 'use strict';
 
-const viewport = require('../../engine/viewport');
 const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../items/fire_place');
 const { Chest } = require('../../items/chest');
@@ -8473,7 +8460,7 @@ class DevelopmentLevel {
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
-    this.test_backpack();
+    //this.test_backpack();
     //this.test_intro();
     //this.test_food();
     //this.test_chest();
@@ -8578,7 +8565,7 @@ module.exports = {
 
 
 
-},{"../../character/characters/player.js":9,"../../character/characters/rat":10,"../../character/network/network_player.js":11,"../../cutscene/intro.js":14,"../../engine/viewport":21,"../../items/Note":28,"../../items/back_pack":29,"../../items/chest":30,"../../items/fire_place":32,"../debug/playground/map2_output.json":37,"../debug/playground/map2_tiles.json":38,"../level_utils":40,"pixi.js":232}],40:[function(require,module,exports){
+},{"../../character/characters/player.js":9,"../../character/characters/rat":10,"../../character/network/network_player.js":11,"../../cutscene/intro.js":14,"../../items/Note":28,"../../items/back_pack":29,"../../items/chest":30,"../../items/fire_place":32,"../debug/playground/map2_output.json":37,"../debug/playground/map2_tiles.json":38,"../level_utils":40,"pixi.js":232}],40:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');

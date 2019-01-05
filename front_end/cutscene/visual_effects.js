@@ -1,8 +1,8 @@
 'use strict';
 
-const PIXI = require('pixi.js');
-const ticker = require('../engine/ticker');
-const viewport = require('../engine/viewport.js');
+const PIXI      = require('pixi.js');
+const ticker    = require('../engine/ticker');
+const viewport  = require('../engine/viewport.js');
 
 class visual_effects {
 
@@ -31,7 +31,6 @@ class visual_effects {
   }
 
   static fade_screen_to_black_at_point(point) {
-
     const image_to_fade = PIXI.Sprite.fromFrame('black_dot');
 
     image_to_fade.width = viewport.screenWidth;

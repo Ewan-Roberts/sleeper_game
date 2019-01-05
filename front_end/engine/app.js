@@ -10,6 +10,10 @@ const app = new PIXI.Application({
   backgroundColor: 0x2F4F4F, //0xC1C1C1
 });
 
+const viewport = require('./viewport');
+
+app.stage.addChild(viewport);
+
 global.document.body.appendChild(app.view);
 
 module.exports = app;

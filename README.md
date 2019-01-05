@@ -68,14 +68,17 @@ Work in progess, updates below:
 ### back-end:
 
 - Full server-side character state management
-- Server-side rendered images 
-- Re-add multiplayer
+- Server-side rendered images
+- Re-add multiplayer DONE
+- Add register user
+- Add login user
+- Add email user
 
 ### GUI:
 
 - Start screen
 - NPC buy/sell etc
-
+- Manage player inventory
 
 ### ART:
 
@@ -85,14 +88,14 @@ Work in progess, updates below:
 
 ### front-end:
 
-- Movable objects with physicis
-- Containers
+- Movable objects with physics DONE
+- Containers DONE
 - Level loader
 
 ### mechanics:
 
 - Add scavenging
-- Add player inventory
+- Add player inventory DONE
 - Add starting fires
-- Add condition management (thirst etc.)
+- Add condition management (thirst etc.) DONE
 

@@ -45,7 +45,6 @@ arrow_container.zIndex = viewport.zIndex_layer.medium;
 const grid_container = new PIXI.Container();
 grid_container.name = 'grid_container';
 
-
 viewport.updateLayersOrder = function () {
   viewport.children.sort(function(a,b) {
     a.zIndex = a.zIndex || 0;

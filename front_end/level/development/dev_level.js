@@ -1,6 +1,5 @@
 'use strict';
 
-const viewport = require('../../engine/viewport');
 const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../items/fire_place');
 const { Chest } = require('../../items/chest');
@@ -35,7 +34,7 @@ class DevelopmentLevel {
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
-    this.test_backpack();
+    //this.test_backpack();
     //this.test_intro();
     //this.test_food();
     //this.test_chest();
