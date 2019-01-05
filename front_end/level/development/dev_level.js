@@ -35,13 +35,9 @@ class DevelopmentLevel {
 
     const rat = new Rat();
     rat.set_position({x: 1100, y: 1000});
-    rat.add_influence_box();
-    rat.distance_to_player();
-
     rat.is_prey_to(player.sprite);
-
-    //rat.add_direction_line();
-    //rat.start_running_from();
+    rat.add_inventory();
+    rat.lootable_on_death();
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 

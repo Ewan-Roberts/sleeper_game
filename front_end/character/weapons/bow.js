@@ -134,16 +134,8 @@ function arrow_management(power, origin, target) {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
         arrow.rotation = get_angle_from_point_to_point(origin, target);
-        arrow.width = 600;
-        const tween = createjs.Tween.get(critter);
-        tween.pause();
-        tween.paused = true;
-        tween.wait(2000);
-        critter.rotation += 0.05;
-        critter.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
-        critter.addChild(arrow);
-        critter.stop();
-
+        console.log(critter);
+        critter.kill();
         return;
       }
     });

@@ -193,7 +193,7 @@ function move_sprite_on_path(sprite, path_array) {
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(5, 0xffffff, 5);
   graphical_path.drawPath(path);
-  viewport.addChild(graphical_path);
+  viewport.getChildByName('critter_container').addChild(graphical_path);
 }
 
 function move_sprite_to_point(sprite, point) {
@@ -340,8 +340,12 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   const from_point = get_sprite_position_on_grid(from_sprite, grid);
   const to_point = get_sprite_position_on_grid(to_sprite, grid);
 
+  if(!to_point || !from_point) {
+    return;
+  }
+
   sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.2;
-  console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
+  //console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
 
