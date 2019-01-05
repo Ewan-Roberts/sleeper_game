@@ -3,6 +3,10 @@
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
 const viewport = require('./viewport');
+const {
+  distance_between_points,
+  generate_number_between_min_and_max,
+} = require('./math');
 const easystarjs = require('easystarjs');
 
 const grid_container = new PIXI.Container();
@@ -130,15 +134,10 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
   });
 }
 
-const distance_between_two_points = (point_one, point_two) => {
-  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
-};
-
 const generate_wait_time_with_threshold = (max, threshold) => {
 
   const random_number = Math.floor(Math.random() * max);
 
-  // sometimes skip a wait at a point for the shits and giggles
   if(threshold && random_number < threshold) {
     return 0;
   }
@@ -146,13 +145,9 @@ const generate_wait_time_with_threshold = (max, threshold) => {
   return random_number;
 };
 
-// TODO abstract this maths shiattttt
-const generate_wait_time_with_minimum = (max, min) => {
-  return Math.floor(Math.random() * max) + min;
-};
 
 function create_relative_walk_time(point_one, point_two, velocity = 15) {
-  const distance = distance_between_two_points(point_one, point_two);
+  const distance = distance_between_points(point_one, point_two);
 
   //produce a little randomness in speed between points
   const speed = velocity + Math.random();
@@ -165,23 +160,32 @@ function create_relative_walk_time(point_one, point_two, velocity = 15) {
 }
 
 function move_sprite_on_path(sprite, path_array) {
+  const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
+  if(get_tween.length > 0) return;
   const path = new PIXI.tween.TweenPath();
-  path.moveTo(path_array[0].middle.x, path_array[0].middle.y);
-  const random_number = Math.floor(Math.random() * 50) +20;
-  for (let i = 1; i < path_array.length; i++) {
+  const random_number = () => generate_number_between_min_and_max(-40, 40);
+
+  path.moveTo(sprite.x, sprite.y);
+  path.arcTo(
+    path_array[1].middle.x + random_number(),
+    path_array[1].middle.y + random_number(),
+    path_array[2].middle.x,
+    path_array[2].middle.y,
+    25
+  );
+
+  for (let i = 3; i < path_array.length; i++) {
     path.arcTo(
-      path_array[i-1].middle.x,
-      path_array[i-1].middle.y,
-      path_array[i].middle.x+ random_number,
-      path_array[i].middle.y+ random_number,
-      50
+      path_array[i-1].middle.x + random_number(),
+      path_array[i-1].middle.y + random_number(),
+      path_array[i].middle.x + random_number(),
+      path_array[i].middle.y + random_number(),
+      25
     );
   }
 
-  path.moveTo(path_array[path_array.length-1].middle.x, path_array[path_array.length-1].middle.y);
+  //path.moveTo(path_array[path_array.length-1].middle.x, path_array[path_array.length-1].middle.y);
 
-  const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
-  if(get_tween.length > 0) return;
 
   const tween = PIXI.tweenManager.createTween(sprite);
   tween.expire = true;
@@ -314,7 +318,7 @@ function move_sprite_on_route(sprite) {
 
       const walk_time = create_relative_walk_time(sprite.patrol_path[i-1], sprite.patrol_path[i], 10);
       const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
-      const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
+      const random_wait_time_with_minimum = generate_number_between_min_and_max(3000, 1000);
 
       const angle_to_face = Math.atan2(sprite.patrol_path[i].y - sprite.y, sprite.patrol_path[i].x - sprite.x);
 
@@ -375,7 +379,6 @@ module.exports = {
   move_sprite_on_path,
   move_sprite_on_route,
   move_sprite_on_route_straight,
-  distance_between_two_points,
   highlight_grid_cell_from_path,
   get_sprite_position_on_grid,
   move_sprite_to_sprite_on_grid,
