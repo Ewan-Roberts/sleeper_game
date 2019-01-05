@@ -1,9 +1,21 @@
 # sleeper_game
 
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
+
+
 Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
+
+## Update 05.01.19:
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_5.png)
+
+- basic prey inventory
+- basic item management
+- basic death management
 
 
 ## Update 01.01.19:
