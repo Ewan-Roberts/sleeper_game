@@ -9,12 +9,12 @@ const viewport = new Viewport({
   worldHeight:  global.window.innerHeight,
 });
 
-viewport.zIndex_layer = {
-  background: 1,
-  far: 3,
-  medium: 6,
-  close: 9,
-  very_close: 12,
+viewport.updateLayersOrder = function () {
+  viewport.children.sort(function(a,b) {
+    a.zIndex = a.zIndex || 0;
+    b.zIndex = b.zIndex || 0;
+    return b.zIndex - a.zIndex;
+  });
 };
 
 module.exports = viewport;
