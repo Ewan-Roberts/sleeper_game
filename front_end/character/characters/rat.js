@@ -14,12 +14,9 @@ const { GUI_Container } = require('../../gui/container');
 
 const ticker = require('../../engine/ticker');
 
-//const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x)
-
 class Rat {
   constructor() {
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
-
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
@@ -31,8 +28,8 @@ class Rat {
     this.sprite.inventory = new Inventory();
     // for testing
     this.sprite.inventory.spike_populate_inventory();
-
     this.sprite.status = new Vitals();
+
     viewport.getChildByName('critter_container').addChild(this.sprite);
   }
 
@@ -55,21 +52,14 @@ class Rat {
       }
 
       this.sprite.click = () => {
-        console.log(this.sprite.inventory.slots);
-
         const inventory_visuals = new GUI_Container(this.sprite);
         inventory_visuals.add_item_tiles();
-
-        console.log(this.sprite.inventory.slots);
 
         this.sprite.inventory.slots.forEach(item => {
           inventory_visuals.populate_slot_1(item.image_name);
         });
-
       };
-
     };
-
   }
 
   set_position(point) {
@@ -89,9 +79,6 @@ class Rat {
     this.sprite.addChild(this.influence_box);
   }
 
-  add_inventory() {
-  }
-
   is_prey_to(predator) {
     this.add_influence_box();
 
@@ -109,13 +96,6 @@ class Rat {
     });
 
     viewport.getChildByName('critter_container').addChild(point_to_run_for);
-  }
-
-  distance_to_player() {
-    //const player = viewport.getChildByName('player');
-
-    //const distance = distance_between_two_points(this.sprite, player);
-
   }
 
   move_to_point(point) {

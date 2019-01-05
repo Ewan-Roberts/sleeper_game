@@ -3,7 +3,6 @@
 const PIXI = require('pixi.js');
 const viewport = require('./viewport');
 
-
 const background_container = new PIXI.Container();
 background_container.name = 'background_image';
 background_container.zIndex = viewport.zIndex_layer.background;
@@ -39,6 +38,9 @@ const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = viewport.zIndex_layer.close;
 
+const arrow_container = new PIXI.Container();
+arrow_container.name = 'arrow_container';
+arrow_container.zIndex = viewport.zIndex_layer.medium;
 
 const grid_container = new PIXI.Container();
 grid_container.name = 'grid_container';
@@ -62,7 +64,8 @@ viewport.addChild(
   friend_container,
   cutscene_container,
   background_container,
-  grid_container
+  grid_container,
+  arrow_container
 );
 
 viewport.updateLayersOrder();

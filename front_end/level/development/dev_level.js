@@ -1,15 +1,12 @@
 'use strict';
 
+const viewport = require('../../engine/viewport');
 const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../items/fire_place');
 const { Chest } = require('../../items/chest');
 const { Note } = require('../../items/Note');
 const { Backpack } = require('../../items/back_pack');
 const { Level } = require('../level_utils');
-const {
-  pathfind_from_enemy_to_player,
-} = require('../../engine/pathfind');
-
 
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
@@ -26,12 +23,10 @@ class DevelopmentLevel {
     player.add_controls();
     player.follow_player();
     player.with_light();
-    player.set_initial_vitals();
-    player.set_ticker_amount();
-    player.set_vitals_ticker();
+    this.test_load_test_level();
+    //player.add_raycasting(this.level.segments);
 
     this.test_note();
-    this.test_load_test_level();
 
     const rat = new Rat();
     rat.set_position({x: 1100, y: 1000});
@@ -63,7 +58,7 @@ class DevelopmentLevel {
     debug_room.set_background_image(debug_room_image, debug_room_tiled_tiles);
     debug_room.render_walls(debug_room_tiled_data.layers[1]);
     debug_room.create_grid(debug_room_tiled_tiles);
-
+    this.level = debug_room;
   }
 
   test_rat() {

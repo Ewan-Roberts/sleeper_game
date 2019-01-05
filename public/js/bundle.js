@@ -235,12 +235,6 @@ module.exports = {
 
 const dom_hud = global.document.querySelector('.characterInventory');
 
-const test_item = {
-  name: 'meat',
-  id: '1',
-  description: 'rat meat',
-};
-
 class Vitals {
   constructor() {
     this.vitals = {
@@ -309,7 +303,6 @@ class Vitals {
   }
 
   set_vitals_ticker() {
-
     setInterval(()=> {
 
       this.vitals.health -= this.ticker_values.health;
@@ -330,7 +323,6 @@ module.exports = {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],5:[function(require,module,exports){
-(function (global){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -376,18 +368,12 @@ function get_intersection(ray, segment){
 }
 
 class Character {
-  constructor(name) {
-    this.container = new PIXI.Container();
-    this.container.name = name;
-
+  constructor() {
     this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
+    this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
-
-    this.sprite.animations = character_animations;
 
     this.sprite.animation_switch = (type, action) => {
       if(this.sprite.textures !== this.sprite.animations[type][action]) {
@@ -396,14 +382,6 @@ class Character {
         this.sprite.play();
       }
     };
-
-    this.sprite.speak = (text) => {
-      const render_text = new PIXI.Text(text);
-      render_text.x = this.sprite.x - 100;
-      render_text.y = this.sprite.y - 80;
-      render_text.alpha = 1;
-      this.container.addChild(render_text);
-    };
   }
 
   set_position(point) {
@@ -411,7 +389,6 @@ class Character {
   }
 
   move_to_point(x,y) {
-
     move_sprite_to_point(this, {
       middle: {
         x,
@@ -458,15 +435,12 @@ class Character {
 
   add_raycasting(level_segments) {
     const raycast = new PIXI.Graphics();
-
     const points = [];
     level_segments.forEach(seg => points.push(seg.a,seg.b));
 
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast;
-      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-    }
+    const light = this.sprite.getChildByName('light');
+    light.mask = raycast;
+    // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
 
     ticker.add(() => {
       const unique_angles = [];
@@ -512,27 +486,18 @@ class Character {
         raycast.lineTo(intersects[i].x, intersects[i].y);
       }
 
-      const player_sprite = viewport.getChildByName('player');
-      const player_position = player_sprite.getGlobalPosition();
+      //const player_sprite = viewport.getChildByName('player');
+      //const player_position = player_sprite.getGlobalPosition();
 
-      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_seeing_player(player_sprite);
-      }
+      //if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+      //  this.action_on_seeing_player(player_sprite);
+      //}
 
-      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_hearing_player(player_sprite);
-      }
+      //if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
+      //  this.action_on_hearing_player(player_sprite);
+      //}
     });
     viewport.addChild(raycast);
-  }
-
-  kill() {
-    this.sprite.stop();
-
-    //const tween = createjs.Tween.get(this.sprite);
-    //tween.pause();
-
-    this.vitals.status = 'dead';
   }
 }
 
@@ -542,7 +507,6 @@ module.exports = {
 
 
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../engine/pathfind":17,"../engine/ticker":20,"../engine/viewport":21,"./animations/character":1,"pixi.js":232}],6:[function(require,module,exports){
 'use strict';
 
@@ -550,12 +514,12 @@ const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 
 class Cutscene_Character extends Character{
-  constructor(x,y) {
+  constructor() {
     super();
     this.sprite.animation_switch('nothing', 'idle');
     this.sprite.name = 'cutscene_npc';
-    this.sprite.position.set(x,y);
     this.sprite.move_to_point = this.move_to_point;
+
     viewport.getChildByName('cutscene_container').addChild(this.sprite);
   }
 
@@ -593,6 +557,7 @@ const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
 
+const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 class Enemy extends Character {
   constructor() {
@@ -628,7 +593,7 @@ class Enemy extends Character {
     }
 
     this.player_seen = true;
-    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
+    this.sprite.rotation = angle(player_sprite, this.sprite);
   }
 
   action_on_hearing_player(player_sprite) {
@@ -698,14 +663,15 @@ const { Character }     = require('../character_model');
 const { Keyboard }      = require('../../input/keyboard');
 const { Mouse }         = require('../../input/mouse');
 const { socket }        = require('../../engine/socket');
-const { GUI_HUD }       = require('../../gui/inventory');
+const { Vitals }        = require('../attributes/vitals');
 
 class Player extends Character{
   constructor() {
     super();
-
     this.sprite.name = 'player';
-    this.sprite.zIndex = -2;
+    this.sprite.height /= 2;
+    this.sprite.width /= 2;
+    this.sprite.status = new Vitals();
 
     viewport.addChild(this.sprite);
   }
@@ -713,50 +679,6 @@ class Player extends Character{
   follow_player() {
     viewport.follow(this.sprite);
   }
-
-  set_initial_vitals() {
-
-    this.sprite.vitals = {
-      health: 100,
-      food: 40,
-      water: 20,
-      heat: 90,
-      sleep: 100,
-      status: 'alive',
-    };
-  }
-
-  increase_food(number) {
-    if(this.sprite.vitals.food + number < 100 ) {
-      this.sprite.vitals.food += number;
-      GUI_HUD.update_vitals(this.sprite.vitals);
-    }
-  }
-
-  set_ticker_amount() {
-
-    this.sprite.ticker_values = {
-      health: 5,
-      food: 5,
-      water: 5,
-      heat: 5,
-      sleep: 5,
-    };
-  }
-
-  set_vitals_ticker() {
-
-    setInterval(()=> {
-
-      this.sprite.vitals.health -= this.sprite.ticker_values.health;
-      this.sprite.vitals.food -= this.sprite.ticker_values.food;
-      this.sprite.vitals.water -= this.sprite.ticker_values.water;
-      this.sprite.vitals.heat -= this.sprite.ticker_values.heat;
-      this.sprite.vitals.sleep -= this.sprite.ticker_values.sleep;
-      GUI_HUD.update_vitals(this.sprite.vitals);
-    }, 5000);
-  }
-
 
   add_controls() {
     this.keyboard = new Keyboard();
@@ -793,7 +715,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/socket":19,"../../engine/viewport.js":21,"../../gui/inventory":24,"../../input/keyboard":26,"../../input/mouse":27,"../character_model":5}],10:[function(require,module,exports){
+},{"../../engine/socket":19,"../../engine/viewport.js":21,"../../input/keyboard":26,"../../input/mouse":27,"../attributes/vitals":4,"../character_model":5}],10:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -810,12 +732,9 @@ const { GUI_Container } = require('../../gui/container');
 
 const ticker = require('../../engine/ticker');
 
-//const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x)
-
 class Rat {
   constructor() {
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
-
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
@@ -827,8 +746,8 @@ class Rat {
     this.sprite.inventory = new Inventory();
     // for testing
     this.sprite.inventory.spike_populate_inventory();
-
     this.sprite.status = new Vitals();
+
     viewport.getChildByName('critter_container').addChild(this.sprite);
   }
 
@@ -851,21 +770,14 @@ class Rat {
       }
 
       this.sprite.click = () => {
-        console.log(this.sprite.inventory.slots);
-
         const inventory_visuals = new GUI_Container(this.sprite);
         inventory_visuals.add_item_tiles();
-
-        console.log(this.sprite.inventory.slots);
 
         this.sprite.inventory.slots.forEach(item => {
           inventory_visuals.populate_slot_1(item.image_name);
         });
-
       };
-
     };
-
   }
 
   set_position(point) {
@@ -885,9 +797,6 @@ class Rat {
     this.sprite.addChild(this.influence_box);
   }
 
-  add_inventory() {
-  }
-
   is_prey_to(predator) {
     this.add_influence_box();
 
@@ -905,13 +814,6 @@ class Rat {
     });
 
     viewport.getChildByName('critter_container').addChild(point_to_run_for);
-  }
-
-  distance_to_player() {
-    //const player = viewport.getChildByName('player');
-
-    //const distance = distance_between_two_points(this.sprite, player);
-
   }
 
   move_to_point(point) {
@@ -934,7 +836,6 @@ module.exports = {
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const character_animations = require('../animations/character');
-
 
 class NetworkCharacter {
   constructor(player_data) {
@@ -977,45 +878,12 @@ module.exports = {
 };
 
 },{"../../engine/viewport":21,"../animations/character":1,"pixi.js":232}],12:[function(require,module,exports){
-(function (global){
 'use strict';
 
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport.js');
-const { createjs } = require('@createjs/tweenjs');
 
-const arrow_container = new PIXI.Container();
-arrow_container.name = 'arrow containter';
-arrow_container.zIndex = -10;
-viewport.addChild(arrow_container);
-
-function getCenter(o, dimension, axis) {
-  if (o.anchor !== undefined) {
-    if (o.anchor[axis] !== 0) {
-      return 0;
-    }
-    return dimension / 2;
-  }
-  return dimension;
-}
-
-function get_angle_from_point_to_point(sprite, point){ return Math.atan2(
-  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-);
-}
-
-// const arrowSounds = [
-//   new Audio('audio/arrow_hit_00.wav'),
-//   new Audio('audio/arrow_hit_01.wav'),
-//   new Audio('audio/arrow_hit_02.wav'),
-//   new Audio('audio/arrow_hit_03.wav'),
-//   new Audio('audio/arrow_hit_04.wav'),
-//   new Audio('audio/arrow_hit_05.wav'),
-//   new Audio('audio/arrow_hit_06.wav'),
-//   new Audio('audio/arrow_hit_07.wav'),
-// ];
-
+const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 class Arrow {
   constructor() {
@@ -1023,15 +891,14 @@ class Arrow {
     this.sprite.name = 'arrow';
     this.sprite.anchor.set(0.95);
     this.sprite.height *= 3;
-    this.sprite.zIndex = -40;
-    arrow_container.addChild(this.sprite);
-  }
 
+    viewport.getChildByName('arrow_container').addChild(this.sprite);
+  }
 }
 
 function create_rotated_arrow(origin, target) {
   const arrow = new Arrow();
-  arrow.sprite.rotation = get_angle_from_point_to_point(origin, target);
+  arrow.sprite.rotation = angle(target, origin);
   return arrow.sprite;
 }
 
@@ -1071,8 +938,7 @@ function arrow_management(power, origin, target) {
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
-    const enemy_containter = viewport.getChildByName('enemy_container');
-    enemy_containter.children.forEach(enemy => {
+    viewport.getChildByName('enemy_container').children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
@@ -1099,7 +965,7 @@ function arrow_management(power, origin, target) {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
-        arrow.rotation = get_angle_from_point_to_point(origin, target);
+        arrow.rotation = angle(target, origin);
         arrow.width = 600;
 
         door.rotation += 0.05;
@@ -1113,8 +979,7 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        arrow.rotation = get_angle_from_point_to_point(origin, target);
-        console.log(critter);
+        arrow.rotation = angle(target, origin);
         critter.kill();
         return;
       }
@@ -1122,57 +987,12 @@ function arrow_management(power, origin, target) {
   });
 }
 
-// todo move enemy out out of global
-function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
-  if(!global.is_development) return;
-
-  const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin, target);
-  const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
-
-  arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition();
-
-    if(global.Player.sprite.containsPoint(arrow_point)) {
-      arrow_tween.stop();
-
-      global.Player.vitals.health -=40;
-
-      const arrow_in_player = create_embedded_arrow(arrow.rotation -=3.1);
-
-      // TDOO can i retrofit this
-      arrow.destroy();
-      // if(global.Player.vitals.health < 40) {
-
-      //   if(global.is_development) {
-      //     dialog_util.renderText(global.Player.sprite, 'I am dead home slice');
-      //   } else {
-      //     // end the game
-      //     debugger;
-      //   }
-      // }
-
-      global.Player.vitals.health -= 40;
-      global.Player.sprite.addChild(arrow_in_player);
-    }
-
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
-      if(sprite_in_container.containsPoint(arrow_point)){
-        arrow_tween.stop();
-      }
-    }
-  });
-}
-
 module.exports = {
-  arrow_shoot_from_sprite_to_sprite,
   arrow_management,
 };
 
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport.js":21,"@createjs/tweenjs":41,"pixi.js":232}],13:[function(require,module,exports){
+},{"../../engine/viewport.js":21,"pixi.js":232}],13:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2064,7 +1884,6 @@ setInterval(()=>{
 const PIXI = require('pixi.js');
 const viewport = require('./viewport');
 
-
 const background_container = new PIXI.Container();
 background_container.name = 'background_image';
 background_container.zIndex = viewport.zIndex_layer.background;
@@ -2100,6 +1919,9 @@ const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = viewport.zIndex_layer.close;
 
+const arrow_container = new PIXI.Container();
+arrow_container.name = 'arrow_container';
+arrow_container.zIndex = viewport.zIndex_layer.medium;
 
 const grid_container = new PIXI.Container();
 grid_container.name = 'grid_container';
@@ -2123,7 +1945,8 @@ viewport.addChild(
   friend_container,
   cutscene_container,
   background_container,
-  grid_container
+  grid_container,
+  arrow_container
 );
 
 viewport.updateLayersOrder();
@@ -2166,18 +1989,18 @@ socket.on('server_player_pool', player_pool => {
 
   //console.log(player_pool);
 
-  viewport.getChildByName('network_players').removeChildren();
+  //viewport.getChildByName('network_players').removeChildren();
 
-  player_pool.forEach(player => {
-    if(player.id === socket.id) {
-      //console.log('this is your player data');
-      //console.log(player);
-      return;
+  //player_pool.forEach(player => {
+  //  if(player.id === socket.id) {
+  //    //console.log('this is your player data');
+  //    //console.log(player);
+  //    return;
 
-    }
-    const network_player = new NetworkCharacter(player);
+  //  }
+  //  const network_player = new NetworkCharacter(player);
 
-  });
+  //});
 });
 
 
@@ -2723,22 +2546,9 @@ const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
 const bow_helper        = require('../character/weapons/bow.js');
 
-function getCenter(o, dimension, axis) {
-  if (o.anchor !== undefined) {
-    if (o.anchor[axis] !== 0) {
-      return 0;
-    }
-    return dimension / 2;
-  }
-  return dimension;
-}
 
-function get_angle_from_point_to_point(sprite, point){
-  return Math.atan2(
-    (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-    (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-  );
-}
+
+const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -2793,7 +2603,6 @@ class Mouse {
     this.aiming_cone.alpha = 0;
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
-      console.log('ppoo')
 
       bow_helper.arrow_management(this.power, this.player, mouse_position_player);
     }
@@ -2838,7 +2647,7 @@ class Mouse {
     //};
     //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    this.player.rotation = get_angle_from_point_to_point(this.player, mouse_position_player);
+    this.player.rotation = angle(mouse_position_player, this.player);
     this.player.gotoAndPlay(0);
   }
 
@@ -2846,9 +2655,9 @@ class Mouse {
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
 
     this.aiming_cone.position.set(this.player.x, this.player.y);
-    this.aiming_cone.rotation = get_angle_from_point_to_point(this.player, mouse_position_player) - 1.575;
+    this.aiming_cone.rotation = angle(this.player, mouse_position_player);
 
-    this.player.rotation = get_angle_from_point_to_point(this.player, mouse_position_player);
+    this.player.rotation = angle(mouse_position_player, this.player);
 
     viewport.addChild(this.aiming_cone, this.aiming_line);
   }
@@ -8629,16 +8438,13 @@ module.exports={ "columns":20,
 },{}],39:[function(require,module,exports){
 'use strict';
 
+const viewport = require('../../engine/viewport');
 const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../items/fire_place');
 const { Chest } = require('../../items/chest');
 const { Note } = require('../../items/Note');
 const { Backpack } = require('../../items/back_pack');
 const { Level } = require('../level_utils');
-const {
-  pathfind_from_enemy_to_player,
-} = require('../../engine/pathfind');
-
 
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
@@ -8655,12 +8461,10 @@ class DevelopmentLevel {
     player.add_controls();
     player.follow_player();
     player.with_light();
-    player.set_initial_vitals();
-    player.set_ticker_amount();
-    player.set_vitals_ticker();
+    this.test_load_test_level();
+    //player.add_raycasting(this.level.segments);
 
     this.test_note();
-    this.test_load_test_level();
 
     const rat = new Rat();
     rat.set_position({x: 1100, y: 1000});
@@ -8692,7 +8496,7 @@ class DevelopmentLevel {
     debug_room.set_background_image(debug_room_image, debug_room_tiled_tiles);
     debug_room.render_walls(debug_room_tiled_data.layers[1]);
     debug_room.create_grid(debug_room_tiled_tiles);
-
+    this.level = debug_room;
   }
 
   test_rat() {
@@ -8778,7 +8582,7 @@ module.exports = {
 
 
 
-},{"../../character/characters/player.js":9,"../../character/characters/rat":10,"../../character/network/network_player.js":11,"../../cutscene/intro.js":14,"../../engine/pathfind":17,"../../items/Note":28,"../../items/back_pack":29,"../../items/chest":30,"../../items/fire_place":32,"../debug/playground/map2_output.json":37,"../debug/playground/map2_tiles.json":38,"../level_utils":40,"pixi.js":232}],40:[function(require,module,exports){
+},{"../../character/characters/player.js":9,"../../character/characters/rat":10,"../../character/network/network_player.js":11,"../../cutscene/intro.js":14,"../../engine/viewport":21,"../../items/Note":28,"../../items/back_pack":29,"../../items/chest":30,"../../items/fire_place":32,"../debug/playground/map2_output.json":37,"../debug/playground/map2_tiles.json":38,"../level_utils":40,"pixi.js":232}],40:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');

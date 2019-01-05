@@ -2,40 +2,8 @@
 
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport.js');
-const { createjs } = require('@createjs/tweenjs');
 
-const arrow_container = new PIXI.Container();
-arrow_container.name = 'arrow containter';
-arrow_container.zIndex = -10;
-viewport.addChild(arrow_container);
-
-function getCenter(o, dimension, axis) {
-  if (o.anchor !== undefined) {
-    if (o.anchor[axis] !== 0) {
-      return 0;
-    }
-    return dimension / 2;
-  }
-  return dimension;
-}
-
-function get_angle_from_point_to_point(sprite, point){ return Math.atan2(
-  (point.y) - (sprite.y + getCenter(sprite, sprite.height, 'y')),
-  (point.x) - (sprite.x + getCenter(sprite, sprite.width, 'x'))
-);
-}
-
-// const arrowSounds = [
-//   new Audio('audio/arrow_hit_00.wav'),
-//   new Audio('audio/arrow_hit_01.wav'),
-//   new Audio('audio/arrow_hit_02.wav'),
-//   new Audio('audio/arrow_hit_03.wav'),
-//   new Audio('audio/arrow_hit_04.wav'),
-//   new Audio('audio/arrow_hit_05.wav'),
-//   new Audio('audio/arrow_hit_06.wav'),
-//   new Audio('audio/arrow_hit_07.wav'),
-// ];
-
+const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 class Arrow {
   constructor() {
@@ -43,15 +11,14 @@ class Arrow {
     this.sprite.name = 'arrow';
     this.sprite.anchor.set(0.95);
     this.sprite.height *= 3;
-    this.sprite.zIndex = -40;
-    arrow_container.addChild(this.sprite);
-  }
 
+    viewport.getChildByName('arrow_container').addChild(this.sprite);
+  }
 }
 
 function create_rotated_arrow(origin, target) {
   const arrow = new Arrow();
-  arrow.sprite.rotation = get_angle_from_point_to_point(origin, target);
+  arrow.sprite.rotation = angle(target, origin);
   return arrow.sprite;
 }
 
@@ -91,8 +58,7 @@ function arrow_management(power, origin, target) {
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
-    const enemy_containter = viewport.getChildByName('enemy_container');
-    enemy_containter.children.forEach(enemy => {
+    viewport.getChildByName('enemy_container').children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
@@ -119,7 +85,7 @@ function arrow_management(power, origin, target) {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
-        arrow.rotation = get_angle_from_point_to_point(origin, target);
+        arrow.rotation = angle(target, origin);
         arrow.width = 600;
 
         door.rotation += 0.05;
@@ -133,8 +99,7 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        arrow.rotation = get_angle_from_point_to_point(origin, target);
-        console.log(critter);
+        arrow.rotation = angle(target, origin);
         critter.kill();
         return;
       }
@@ -142,51 +107,7 @@ function arrow_management(power, origin, target) {
   });
 }
 
-// todo move enemy out out of global
-function arrow_shoot_from_sprite_to_sprite(origin, target, power) {
-  if(!global.is_development) return;
-
-  const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin, target);
-  const arrow_tween = create_arrow_tween(arrow, power || 2000, arrow_path);
-
-  arrow_tween.on('update', () => {
-    const arrow_point = arrow.getGlobalPosition();
-
-    if(global.Player.sprite.containsPoint(arrow_point)) {
-      arrow_tween.stop();
-
-      global.Player.vitals.health -=40;
-
-      const arrow_in_player = create_embedded_arrow(arrow.rotation -=3.1);
-
-      // TDOO can i retrofit this
-      arrow.destroy();
-      // if(global.Player.vitals.health < 40) {
-
-      //   if(global.is_development) {
-      //     dialog_util.renderText(global.Player.sprite, 'I am dead home slice');
-      //   } else {
-      //     // end the game
-      //     debugger;
-      //   }
-      // }
-
-      global.Player.vitals.health -= 40;
-      global.Player.sprite.addChild(arrow_in_player);
-    }
-
-    for (let i = 0; i < global.collisionItems.children.length; i++) {
-      const sprite_in_container = global.collisionItems.children[i];
-      if(sprite_in_container.containsPoint(arrow_point)){
-        arrow_tween.stop();
-      }
-    }
-  });
-}
-
 module.exports = {
-  arrow_shoot_from_sprite_to_sprite,
   arrow_management,
 };
 

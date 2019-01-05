@@ -43,18 +43,12 @@ function get_intersection(ray, segment){
 }
 
 class Character {
-  constructor(name) {
-    this.container = new PIXI.Container();
-    this.container.name = name;
-
+  constructor() {
     this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
+    this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
-
-    this.sprite.animations = character_animations;
 
     this.sprite.animation_switch = (type, action) => {
       if(this.sprite.textures !== this.sprite.animations[type][action]) {
@@ -63,14 +57,6 @@ class Character {
         this.sprite.play();
       }
     };
-
-    this.sprite.speak = (text) => {
-      const render_text = new PIXI.Text(text);
-      render_text.x = this.sprite.x - 100;
-      render_text.y = this.sprite.y - 80;
-      render_text.alpha = 1;
-      this.container.addChild(render_text);
-    };
   }
 
   set_position(point) {
@@ -78,7 +64,6 @@ class Character {
   }
 
   move_to_point(x,y) {
-
     move_sprite_to_point(this, {
       middle: {
         x,
@@ -125,15 +110,12 @@ class Character {
 
   add_raycasting(level_segments) {
     const raycast = new PIXI.Graphics();
-
     const points = [];
     level_segments.forEach(seg => points.push(seg.a,seg.b));
 
-    if(!global.is_development) {
-      const light = this.sprite.getChildByName('light');
-      light.mask = raycast;
-      // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
-    }
+    const light = this.sprite.getChildByName('light');
+    light.mask = raycast;
+    // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
 
     ticker.add(() => {
       const unique_angles = [];
@@ -179,27 +161,18 @@ class Character {
         raycast.lineTo(intersects[i].x, intersects[i].y);
       }
 
-      const player_sprite = viewport.getChildByName('player');
-      const player_position = player_sprite.getGlobalPosition();
+      //const player_sprite = viewport.getChildByName('player');
+      //const player_position = player_sprite.getGlobalPosition();
 
-      if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_seeing_player(player_sprite);
-      }
+      //if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
+      //  this.action_on_seeing_player(player_sprite);
+      //}
 
-      if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
-        this.action_on_hearing_player(player_sprite);
-      }
+      //if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
+      //  this.action_on_hearing_player(player_sprite);
+      //}
     });
     viewport.addChild(raycast);
-  }
-
-  kill() {
-    this.sprite.stop();
-
-    //const tween = createjs.Tween.get(this.sprite);
-    //tween.pause();
-
-    this.vitals.status = 'dead';
   }
 }
 

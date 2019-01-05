@@ -4,7 +4,6 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const character_animations = require('../animations/character');
 
-
 class NetworkCharacter {
   constructor(player_data) {
     this.name = 'network_player';

@@ -4,12 +4,12 @@ const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 
 class Cutscene_Character extends Character{
-  constructor(x,y) {
+  constructor() {
     super();
     this.sprite.animation_switch('nothing', 'idle');
     this.sprite.name = 'cutscene_npc';
-    this.sprite.position.set(x,y);
     this.sprite.move_to_point = this.move_to_point;
+
     viewport.getChildByName('cutscene_container').addChild(this.sprite);
   }
 

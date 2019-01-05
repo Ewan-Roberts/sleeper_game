@@ -34,18 +34,18 @@ socket.on('server_player_pool', player_pool => {
 
   //console.log(player_pool);
 
-  viewport.getChildByName('network_players').removeChildren();
+  //viewport.getChildByName('network_players').removeChildren();
 
-  player_pool.forEach(player => {
-    if(player.id === socket.id) {
-      //console.log('this is your player data');
-      //console.log(player);
-      return;
+  //player_pool.forEach(player => {
+  //  if(player.id === socket.id) {
+  //    //console.log('this is your player data');
+  //    //console.log(player);
+  //    return;
 
-    }
-    const network_player = new NetworkCharacter(player);
+  //  }
+  //  const network_player = new NetworkCharacter(player);
 
-  });
+  //});
 });
 
 

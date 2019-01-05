@@ -7,6 +7,7 @@ const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
 
+const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 class Enemy extends Character {
   constructor() {
@@ -42,7 +43,7 @@ class Enemy extends Character {
     }
 
     this.player_seen = true;
-    this.sprite.rotation = Math.atan2(player_sprite.y - this.sprite.y, player_sprite.x - this.sprite.x);
+    this.sprite.rotation = angle(player_sprite, this.sprite);
   }
 
   action_on_hearing_player(player_sprite) {

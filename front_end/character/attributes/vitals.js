@@ -2,12 +2,6 @@
 
 const dom_hud = global.document.querySelector('.characterInventory');
 
-const test_item = {
-  name: 'meat',
-  id: '1',
-  description: 'rat meat',
-};
-
 class Vitals {
   constructor() {
     this.vitals = {
@@ -76,7 +70,6 @@ class Vitals {
   }
 
   set_vitals_ticker() {
-
     setInterval(()=> {
 
       this.vitals.health -= this.ticker_values.health;
