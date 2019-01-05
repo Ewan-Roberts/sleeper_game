@@ -177,6 +177,7 @@ module.exports = {
 
 
 },{"pixi.js":233}],3:[function(require,module,exports){
+(function (global){
 'use strict';
 
 // types:
@@ -191,6 +192,8 @@ const viewport = require('../../engine/viewport');
 
 const padding = 1;
 const box_size = 100-padding;
+
+const inventory_top_section = global.document.querySelector('.inventory_top_section');
 
 const test_item = {
   name: 'meat',
@@ -318,6 +321,16 @@ class Inventory {
     viewport.getChildByName('gui_container').getChildByName('item_slot_4').addChild(item);
   }
 
+  fill_dom_slot(item) {
+    inventory_top_section.children[item.slot].innerHTML = '';
+    const elem = global.document.createElement('img');
+    elem.setAttribute('height', '90');
+    elem.setAttribute('width', '90');
+    // todo: need to get from spritesheet
+    elem.src = `images/${item.name}.png`;
+    inventory_top_section.children[item.slot].appendChild(elem);
+  }
+
   empty_slots() {
     this.slots = [];
   }
@@ -346,6 +359,7 @@ module.exports = {
 };
 
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../engine/viewport":22,"pixi.js":233}],4:[function(require,module,exports){
 (function (global){
 'use strict';
@@ -2396,7 +2410,6 @@ module.exports = {
 'use strict';
 
 const dom_hud = global.document.querySelector('.characterInventory');
-const inventory_top_section = global.document.querySelector('.inventory_top_section');
 
 
 class GUI_HUD {
@@ -2437,15 +2450,6 @@ class GUI_HUD {
   }
 
 
-  fill_slot(item) {
-    inventory_top_section.children[item.slot].innerHTML = '';
-    const elem = global.document.createElement('img');
-    elem.setAttribute('height', '90');
-    elem.setAttribute('width', '90');
-    // todo: need to get from spritesheet
-    elem.src = `images/${item.name}.png`;
-    inventory_top_section.children[item.slot].appendChild(elem);
-  }
 
 }
 

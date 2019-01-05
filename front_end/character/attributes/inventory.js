@@ -13,6 +13,8 @@ const viewport = require('../../engine/viewport');
 const padding = 1;
 const box_size = 100-padding;
 
+const inventory_top_section = global.document.querySelector('.inventory_top_section');
+
 const test_item = {
   name: 'meat',
   id: 1,
@@ -137,6 +139,16 @@ class Inventory {
     };
 
     viewport.getChildByName('gui_container').getChildByName('item_slot_4').addChild(item);
+  }
+
+  fill_dom_slot(item) {
+    inventory_top_section.children[item.slot].innerHTML = '';
+    const elem = global.document.createElement('img');
+    elem.setAttribute('height', '90');
+    elem.setAttribute('width', '90');
+    // todo: need to get from spritesheet
+    elem.src = `images/${item.name}.png`;
+    inventory_top_section.children[item.slot].appendChild(elem);
   }
 
   empty_slots() {
