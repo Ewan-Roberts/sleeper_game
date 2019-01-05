@@ -31,12 +31,11 @@ class DevelopmentLevel {
     const rat = new Rat();
     rat.set_position({x: 1100, y: 1000});
     rat.is_prey_to(player.sprite);
-    rat.add_inventory();
     rat.lootable_on_death();
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
-    //this.test_backpack(player);
+    this.test_backpack();
     //this.test_intro();
     //this.test_food();
     //this.test_chest();
@@ -78,16 +77,13 @@ class DevelopmentLevel {
     intro_cutscene.start();
   }
 
-  test_backpack(character) {
+  test_backpack() {
     const backpack = new Backpack();
     backpack.set_position({x: 800, y: 800});
     backpack.without_character_collision();
     backpack.without_projectile_collision();
     backpack.immovable();
 
-    backpack.sprite.click = () => {
-      character.increase_food(10);
-    };
   }
 
   test_network_player() {
