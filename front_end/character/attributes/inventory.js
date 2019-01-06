@@ -8,6 +8,8 @@ const {
   get_random_item_array,
 } = require('../../data/item_data');
 
+const gui_container = viewport.getChildByName('gui_container');
+
 const box_size = 100;
 
 class Inventory {
@@ -21,7 +23,7 @@ class Inventory {
     this.sprite.width = 402;
     this.sprite.anchor.set(0.5);
     this.sprite.visible = false;
-    viewport.getChildByName('gui_container').addChild(this.sprite);
+    gui_container.addChild(this.sprite);
     this.add_item_tiles();
     this.populate_random_inventory();
   }
@@ -100,8 +102,8 @@ class Inventory {
 
       this.show();
     };
-
-    viewport.getChildByName('gui_container').addChild(
+    //todo move to under this container
+    gui_container.addChild(
       this.item_slot_0,
       this.item_slot_1,
       this.item_slot_2,
@@ -127,7 +129,8 @@ class Inventory {
       viewport.getChildByName('player').inventory.add_item(item_details);
     };
 
-    viewport.getChildByName('gui_container').getChildByName(`item_slot_${slot}`).addChild(item);
+    //todo fix this madness
+    this[`item_slot_${slot}`].addChild(item);
   }
 
   empty_slots() {

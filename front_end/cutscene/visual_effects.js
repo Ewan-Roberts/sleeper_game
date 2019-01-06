@@ -4,6 +4,8 @@ const PIXI      = require('pixi.js');
 const ticker    = require('../engine/ticker');
 const viewport  = require('../engine/viewport.js');
 
+const cutscene_container = viewport.getChildByName('cutscene_container');
+
 class visual_effects {
 
   static fade_out_sprite(sprite, speed){
@@ -40,7 +42,7 @@ class visual_effects {
     image_to_fade.zIndex = viewport.zIndex_layer.very_close;
 
     this.fade_out_sprite(image_to_fade);
-    viewport.getChildByName('cutscene_container').addChild(image_to_fade);
+    cutscene_container.addChild(image_to_fade);
   }
 
 }

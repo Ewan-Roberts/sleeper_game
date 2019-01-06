@@ -14,6 +14,8 @@ const { distance_between_points } = require('../../engine/math');
 
 const ticker = require('../../engine/ticker');
 
+const critter_container = viewport.getChildByName('critter_container');
+
 class Rat {
   constructor() {
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
@@ -30,7 +32,7 @@ class Rat {
     // for testing
     this.sprite.status = new Vitals();
 
-    viewport.getChildByName('critter_container').addChild(this.sprite);
+    critter_container.addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {
@@ -92,7 +94,7 @@ class Rat {
       move_sprite_to_sprite_on_grid(prey, point_to_run_for);
     });
 
-    viewport.getChildByName('critter_container').addChild(point_to_run_for);
+    critter_container.addChild(point_to_run_for);
   }
 
   move_to_point(point) {

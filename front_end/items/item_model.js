@@ -2,6 +2,8 @@
 
 const viewport = require('../engine/viewport.js');
 
+const non_collision_items = viewport.getChildByName('non_collision_items');
+
 class Item {
   set_position(point) {
     this.sprite.position.set(point.x, point.y);
@@ -20,7 +22,7 @@ class Item {
   }
 
   without_character_collision() {
-    viewport.getChildByName('non_collision_items').addChild(this.sprite);
+    non_collision_items.addChild(this.sprite);
   }
 
   moveable() {

@@ -6,17 +6,15 @@ const viewport = require('./viewport');
 const {
   distance_between_points,
   generate_number_between_min_and_max,
-  radian,
   radian_positive,
 } = require('./math');
-const easystarjs = require('easystarjs');
 
-const grid_container = new PIXI.Container();
-grid_container.name = 'grid_container';
+const grid_container = viewport.getChildByName('grid_container');
 
 const sprite_grid = [];
 const binary_grid_map = [];
 
+const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
 
 function create_level_grid(tiles_object) {

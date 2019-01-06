@@ -8,11 +8,13 @@ const { radian }         = require('../../engine/math');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
 
+const enemy_container = viewport.getChildByName('enemy_container');
+
 class Enemy extends Character {
   constructor() {
     super();
 
-    viewport.getChildByName('enemy_container').addChild(this.sprite);
+    enemy_container.addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {

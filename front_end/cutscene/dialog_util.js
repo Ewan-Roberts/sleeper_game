@@ -3,10 +3,7 @@
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 
-const container = new PIXI.Container();
-container.name = 'dialog_container';
-container.zIndex = -20;
-viewport.addChild(container);
+const dialog_container = viewport.getChildByName('dialog_container');
 
 class Dialog {
   create_background() {
@@ -19,7 +16,7 @@ class Dialog {
     this.background.height = viewport.height;
     this.background.position.set(0,0);
 
-    container.addChild(this.background);
+    dialog_container.addChild(this.background);
   }
 
   add_script(script) {
@@ -32,16 +29,16 @@ class Dialog {
     this.portrait.zIndex = -11;
     this.portrait.position.set(point.x - 800, point.y);
 
-    container.addChild(this.portrait);
+    dialog_container.addChild(this.portrait);
   }
 
   clear_slide_text() {
 
-    container.getChildByName('actor_text').text = '';
-    container.getChildByName('render_text').text = '';
-    container.getChildByName('button_text').text = '';
-    container.getChildByName('choice_one').text = '';
-    container.getChildByName('choice_two').text = '';
+    dialog_container.getChildByName('actor_text').text = '';
+    dialog_container.getChildByName('render_text').text = '';
+    dialog_container.getChildByName('button_text').text = '';
+    dialog_container.getChildByName('choice_one').text = '';
+    dialog_container.getChildByName('choice_two').text = '';
 
   }
 
@@ -50,7 +47,7 @@ class Dialog {
     let current_text = '';
 
     if(this.timeout) {
-      container.getChildByName('render_text').text = '';
+      dialog_container.getChildByName('render_text').text = '';
       clearInterval(this.timeout);
     } else {
       this.timeout = setInterval(()=> {
@@ -59,7 +56,7 @@ class Dialog {
           return;
         }
         current_text += text_array[i] + ' ';
-        container.getChildByName('render_text').text = current_text;
+        dialog_container.getChildByName('render_text').text = current_text;
         i++;
       }, 150);
     }
@@ -70,9 +67,9 @@ class Dialog {
     const text_array = this.script[step].name.split(' ');
     this.create_text_timeout(text_array);
 
-    container.getChildByName('actor_text').text = this.script[step].actor;
-    container.getChildByName('button_text').text = 'next';
-    container.getChildByName('button_text').click = () => {
+    dialog_container.getChildByName('actor_text').text = this.script[step].actor;
+    dialog_container.getChildByName('button_text').text = 'next';
+    dialog_container.getChildByName('button_text').click = () => {
 
       for(let i = 0; i < this.script.length; i++) {
         if(this.script[i].id === this.script[step].id){
@@ -84,8 +81,8 @@ class Dialog {
 
   refresh_branch_slide() {
     this.clear_slide_text();
-    container.getChildByName('choice_one').text = 'yes';
-    container.getChildByName('choice_two').text = 'no' ;
+    dialog_container.getChildByName('choice_one').text = 'yes';
+    dialog_container.getChildByName('choice_two').text = 'no' ;
   }
 
   enter_dialog_slide(point) {
@@ -114,7 +111,7 @@ class Dialog {
     choice_text.name = 'choice_two';
     choice_text.position.set(x,y);
 
-    container.addChild(choice_text);
+    dialog_container.addChild(choice_text);
   }
 
   render_choice_one(x, y, text) {
@@ -126,7 +123,7 @@ class Dialog {
     choice_text.name = 'choice_one';
     choice_text.position.set(x,y);
 
-    container.addChild(choice_text);
+    dialog_container.addChild(choice_text);
   }
 
   render_actor(x, y, text) {
@@ -139,7 +136,7 @@ class Dialog {
 
     actor_text.position.set(x,y);
 
-    container.addChild(actor_text);
+    dialog_container.addChild(actor_text);
   }
 
   render_action(x, y, text) {
@@ -154,7 +151,7 @@ class Dialog {
     button_text.interactive = true;
     button_text.buttonMode = true;
 
-    container.addChild(button_text);
+    dialog_container.addChild(button_text);
   }
 
   render_text(x, y, text, font_size) {
@@ -166,7 +163,7 @@ class Dialog {
     render_text.name = 'render_text';
     render_text.position.set(x,y);
 
-    container.addChild(render_text);
+    dialog_container.addChild(render_text);
   }
 
 }
