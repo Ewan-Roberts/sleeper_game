@@ -3,7 +3,7 @@
 const viewport          = require('../engine/viewport');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
-const { angle }         = require('../engine/math');
+const { radian }         = require('../engine/math');
 const { arrow_management } = require('../character/weapons/bow.js');
 
 const get_mouse_position = (event, viewport) => ({
@@ -103,7 +103,7 @@ class Mouse {
     //};
     //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    this.player.rotation = angle(mouse_position_player, this.player);
+    this.player.rotation = radian(mouse_position_player, this.player);
     this.player.gotoAndPlay(0);
   }
 
@@ -111,9 +111,9 @@ class Mouse {
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
 
     this.aiming_cone.position.set(this.player.x, this.player.y);
-    this.aiming_cone.rotation = angle(this.player, mouse_position_player);
+    this.aiming_cone.rotation = radian(this.player, mouse_position_player);
 
-    this.player.rotation = angle(mouse_position_player, this.player);
+    this.player.rotation = radian(mouse_position_player, this.player);
 
     viewport.addChild(this.aiming_cone, this.aiming_line);
   }

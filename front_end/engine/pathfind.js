@@ -6,6 +6,7 @@ const viewport = require('./viewport');
 const {
   distance_between_points,
   generate_number_between_min_and_max,
+  radian,
 } = require('./math');
 const easystarjs = require('easystarjs');
 
@@ -194,7 +195,10 @@ function move_sprite_on_path(sprite, path_array) {
   tween.time = path_array.length * 100;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-
+  tween.on('update', ()=> {
+    console.log(radian(sprite, tween.path._tmpPoint));
+    sprite.angle = radian(sprite, tween.path._tmpPoint);
+  });
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(5, 0xffffff, 5);
   graphical_path.drawPath(path);

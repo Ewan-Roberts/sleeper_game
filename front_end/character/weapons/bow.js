@@ -2,7 +2,7 @@
 
 const PIXI      = require('pixi.js');
 const viewport  = require('../../engine/viewport.js');
-const { angle } = require('../../engine/math');
+const { radian } = require('../../engine/math');
 
 class Arrow {
   constructor() {
@@ -17,7 +17,7 @@ class Arrow {
 
 function create_rotated_arrow(origin, target) {
   const arrow = new Arrow();
-  arrow.sprite.rotation = angle(target, origin);
+  arrow.sprite.rotation = radian(target, origin);
   return arrow.sprite;
 }
 
@@ -84,7 +84,7 @@ function arrow_management(power, origin, target) {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
-        arrow.rotation = angle(target, origin);
+        arrow.rotation = radian(target, origin);
         arrow.width = 600;
 
         door.rotation += 0.05;
@@ -98,7 +98,7 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        arrow.rotation = angle(target, origin);
+        arrow.rotation = radian(target, origin);
         critter.kill();
         return;
       }

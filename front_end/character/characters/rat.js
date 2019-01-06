@@ -20,7 +20,6 @@ class Rat {
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
-    this.sprite.rotation = -0.5;
     this.sprite.play();
     this.sprite.name = 'rat';
     this.sprite.height *= 2;

@@ -284,6 +284,8 @@ class Inventory {
       this.item_slot_3,
       this.close_button
     );
+
+    this.hide();
   }
 
   populate_slot(item_details, slot) {
@@ -660,7 +662,7 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
 const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
-const { angle }         = require('../../engine/math');
+const { radian }         = require('../../engine/math');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
 
@@ -698,7 +700,7 @@ class Enemy extends Character {
     }
 
     this.player_seen = true;
-    this.sprite.rotation = angle(player_sprite, this.sprite);
+    this.sprite.rotation = radian(player_sprite, this.sprite);
   }
 
   action_on_hearing_player(player_sprite) {
@@ -843,7 +845,6 @@ class Rat {
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
-    this.sprite.rotation = -0.5;
     this.sprite.play();
     this.sprite.name = 'rat';
     this.sprite.height *= 2;
@@ -983,7 +984,7 @@ module.exports = {
 
 const PIXI      = require('pixi.js');
 const viewport  = require('../../engine/viewport.js');
-const { angle } = require('../../engine/math');
+const { radian } = require('../../engine/math');
 
 class Arrow {
   constructor() {
@@ -998,7 +999,7 @@ class Arrow {
 
 function create_rotated_arrow(origin, target) {
   const arrow = new Arrow();
-  arrow.sprite.rotation = angle(target, origin);
+  arrow.sprite.rotation = radian(target, origin);
   return arrow.sprite;
 }
 
@@ -1065,7 +1066,7 @@ function arrow_management(power, origin, target) {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
-        arrow.rotation = angle(target, origin);
+        arrow.rotation = radian(target, origin);
         arrow.width = 600;
 
         door.rotation += 0.05;
@@ -1079,7 +1080,7 @@ function arrow_management(power, origin, target) {
     viewport.getChildByName('critter_container').children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
-        arrow.rotation = angle(target, origin);
+        arrow.rotation = radian(target, origin);
         critter.kill();
         return;
       }
@@ -1573,7 +1574,6 @@ module.exports = app;
 },{"./viewport":25,"pixi.js":233}],20:[function(require,module,exports){
 'use strict';
 
-
 function distance_between_points(point_1, point_2) {
   const dx = point_2.x - point_1.x;
   const dy = point_2.y - point_1.y;
@@ -1581,17 +1581,29 @@ function distance_between_points(point_1, point_2) {
   return Math.sqrt((dx * dx) + (dy * dy));
 }
 
-
 function generate_number_between_min_and_max(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-function angle(anchor, point){
-  return Math.atan2( anchor.y - point.y,anchor.x - point.x);
+function radian(anchor, point){
+  return Math.atan2(anchor.y - point.y, anchor.x - point.x);
 }
+
+// angle in degrees from -180 to 180
+function angle(anchor, point) {
+  return Math.atan2(point.y - anchor.y, point.x - anchor.x) * 180 / Math.PI;
+}
+
+// angle in degrees from 0 to 360
+function angle_360(anchor, point) {
+  return Math.atan2(anchor.y - point.y, anchor.x - point.x) * 180 / Math.PI + 180;
+}
+
 
 module.exports = {
   angle,
+  radian,
+  angle_360,
   generate_number_between_min_and_max,
   distance_between_points,
 };
@@ -1606,6 +1618,7 @@ const viewport = require('./viewport');
 const {
   distance_between_points,
   generate_number_between_min_and_max,
+  radian,
 } = require('./math');
 const easystarjs = require('easystarjs');
 
@@ -1794,7 +1807,10 @@ function move_sprite_on_path(sprite, path_array) {
   tween.time = path_array.length * 100;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-
+  tween.on('update', ()=> {
+    console.log(radian(sprite, tween.path._tmpPoint));
+    sprite.angle = radian(sprite, tween.path._tmpPoint);
+  });
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(5, 0xffffff, 5);
   graphical_path.drawPath(path);
@@ -2570,7 +2586,7 @@ module.exports = {
 const viewport          = require('../engine/viewport');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
-const { angle }         = require('../engine/math');
+const { radian }         = require('../engine/math');
 const { arrow_management } = require('../character/weapons/bow.js');
 
 const get_mouse_position = (event, viewport) => ({
@@ -2670,7 +2686,7 @@ class Mouse {
     //};
     //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    this.player.rotation = angle(mouse_position_player, this.player);
+    this.player.rotation = radian(mouse_position_player, this.player);
     this.player.gotoAndPlay(0);
   }
 
@@ -2678,9 +2694,9 @@ class Mouse {
     const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
 
     this.aiming_cone.position.set(this.player.x, this.player.y);
-    this.aiming_cone.rotation = angle(this.player, mouse_position_player);
+    this.aiming_cone.rotation = radian(this.player, mouse_position_player);
 
-    this.player.rotation = angle(mouse_position_player, this.player);
+    this.player.rotation = radian(mouse_position_player, this.player);
 
     viewport.addChild(this.aiming_cone, this.aiming_line);
   }

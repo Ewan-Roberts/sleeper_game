@@ -105,6 +105,8 @@ class Inventory {
       this.item_slot_3,
       this.close_button
     );
+
+    this.hide();
   }
 
   populate_slot(item_details, slot) {
