@@ -3,11 +3,8 @@
 const viewport          = require('../engine/viewport');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
-const bow_helper        = require('../character/weapons/bow.js');
-
-
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
+const { angle }         = require('../engine/math');
+const { arrow_management } = require('../character/weapons/bow.js');
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -63,7 +60,7 @@ class Mouse {
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
 
-      bow_helper.arrow_management(this.power, this.player, mouse_position_player);
+      arrow_management(this.power, this.player, mouse_position_player);
     }
   }
 

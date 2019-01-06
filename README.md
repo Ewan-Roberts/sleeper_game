@@ -9,6 +9,13 @@ Currently in the process of building the game engine.
 Work in progess, updates below:
 
 
+## Update 06.01.19:
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_6.png)
+
+- created prey inventory management
+- created a consolidated maths function
+
 ## Update 05.01.19:
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_5.png)

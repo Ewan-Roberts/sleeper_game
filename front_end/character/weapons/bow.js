@@ -1,9 +1,8 @@
 'use strict';
 
-const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport.js');
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
+const PIXI      = require('pixi.js');
+const viewport  = require('../../engine/viewport.js');
+const { angle } = require('../../engine/math');
 
 class Arrow {
   constructor() {

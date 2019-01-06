@@ -179,20 +179,15 @@ module.exports = {
 },{"pixi.js":233}],3:[function(require,module,exports){
 'use strict';
 
-// types:
-// weopons
-// food doing
-// materials
-// armour
-
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
-const padding = 1;
-const box_size = 100-padding;
+const {
+  find_item_by_id,
+  get_random_item_array,
+} = require('../../data/item_data');
 
-//const inventory_top_section = global.document.querySelector('.inventory_top_section');
-const { find_item_by_id } = require('../../data/item_data');
+const box_size = 100;
 
 class Inventory {
   constructor() {
@@ -204,7 +199,7 @@ class Inventory {
     this.sprite.visible = false;
     viewport.getChildByName('gui_container').addChild(this.sprite);
     this.add_item_tiles();
-    this.spike_populate_inventory();
+    this.populate_random_inventory();
   }
 
   hide() {
@@ -228,13 +223,13 @@ class Inventory {
   set_position(point) {
     this.show();
     this.sprite.position.set(point.x + 250, point.y -20);
-    this.item_slot_0.position.x = this.sprite.x-this.sprite.width/2 + padding;
+    this.item_slot_0.position.x = this.sprite.x-this.sprite.width/2;
     this.item_slot_0.position.y = this.sprite.y;
-    this.item_slot_1.position.x = this.sprite.x-this.sprite.width/4 + padding;
+    this.item_slot_1.position.x = this.sprite.x-this.sprite.width/4;
     this.item_slot_1.position.y = this.sprite.y;
-    this.item_slot_2.position.x = this.sprite.x + padding;
+    this.item_slot_2.position.x = this.sprite.x;
     this.item_slot_2.position.y = this.sprite.y;
-    this.item_slot_3.position.x = this.sprite.x +this.sprite.width/4 + padding;
+    this.item_slot_3.position.x = this.sprite.x +this.sprite.width/4;
     this.item_slot_3.position.y = this.sprite.y;
     this.close_button.position.x = this.sprite.x +this.sprite.width/2 - 30;
     this.close_button.position.y = this.sprite.y -35;
@@ -291,13 +286,13 @@ class Inventory {
     );
   }
 
-  populate_slot(slot, item_details) {
+  populate_slot(item_details, slot) {
 
     const item = PIXI.Sprite.fromFrame(item_details.image_name);
-    item.height = box_size;
-    item.width = box_size;
+    item.height = box_size+30;
+    item.width = box_size+40;
     item.anchor.y = 0.5;
-    item.anchor.x = -0.5;
+    item.anchor.x = -0.2;
     item.interactive = true;
     item.buttonMode = true;
     item.click = () => {
@@ -315,13 +310,21 @@ class Inventory {
     this.slots = [];
   }
 
+  populate_random_inventory() {
+    this.slots = get_random_item_array();
+
+    this.slots.forEach((item, i) => {
+      this.populate_slot(item, i);
+    });
+  }
+
   spike_populate_inventory() {
     const rat_meat = find_item_by_id(1);
     const rat_hide = find_item_by_id(2);
 
     this.slots.push(rat_meat, rat_hide);
     this.slots.forEach((item, i) => {
-      this.populate_slot(i, item);
+      this.populate_slot(item, i);
     });
   }
 
@@ -657,10 +660,9 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
 const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
+const { angle }         = require('../../engine/math');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 class Enemy extends Character {
   constructor() {
@@ -709,7 +711,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pathfind.js":21,"../../engine/viewport":25,"../character_model":5,"@createjs/tweenjs":42,"pixi.js":233}],8:[function(require,module,exports){
+},{"../../engine/math":20,"../../engine/pathfind.js":21,"../../engine/viewport":25,"../character_model":5,"@createjs/tweenjs":42,"pixi.js":233}],8:[function(require,module,exports){
 'use strict';
 
 const viewport = require('../../engine/viewport');
@@ -979,10 +981,9 @@ module.exports = {
 },{"../../engine/viewport":25,"../animations/character":1,"pixi.js":233}],12:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport.js');
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
+const PIXI      = require('pixi.js');
+const viewport  = require('../../engine/viewport.js');
+const { angle } = require('../../engine/math');
 
 class Arrow {
   constructor() {
@@ -1091,7 +1092,7 @@ module.exports = {
 };
 
 
-},{"../../engine/viewport.js":25,"pixi.js":233}],13:[function(require,module,exports){
+},{"../../engine/math":20,"../../engine/viewport.js":25,"pixi.js":233}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1379,7 +1380,7 @@ class intro_cutscene {
     move_sprite_to_point(player, {middle: {x:1200, y: 200}});
 
     dialog_dom.play_audio_track('/test_speech.wav');
-    dialog_dom.show();
+    dialog_dom.hide();
     dialog_dom.render_text(lorium_text);
   }
 
@@ -1449,12 +1450,21 @@ module.exports = {
 },{"../engine/ticker":24,"../engine/viewport.js":25,"pixi.js":233}],17:[function(require,module,exports){
 'use strict';
 
+// types:
+// weopons
+// food doing
+// materials
+// armour
+
+const { generate_number_between_min_and_max } = require('../engine/math');
+
 const item_list = [
   {
     name: 'meat',
     id: 1,
     rank: 0,
     cost: 20,
+    type: 'food',
     description: 'rat meat',
     image_name: 'rat_meat',
   },
@@ -1463,8 +1473,45 @@ const item_list = [
     id: 2,
     rank: 0,
     cost: 80,
-    description: 'thie hide of a rat hide',
+    type: 'material',
+    description: 'the hide of a rat hide',
     image_name: 'rat_hide',
+  },
+  {
+    name: 'rat teeth',
+    id: 3,
+    rank: 0,
+    cost: 40,
+    type: 'material',
+    description: 'the teeth of a rat hide',
+    image_name: 'rat_hide',
+  },
+  {
+    name: 'rat femur',
+    id: 4,
+    rank: 0,
+    cost: 20,
+    type: 'material',
+    description: 'the femur of a rat',
+    image_name: 'femur',
+  },
+  {
+    name: 'rat bone chip',
+    id: 5,
+    rank: 0,
+    cost: 10,
+    type: 'material',
+    description: 'a bone chip of a rat',
+    image_name: 'skull_cap_bone',
+  },
+  {
+    name: 'rat leg bone',
+    id: 6,
+    rank: 0,
+    cost: 10,
+    type: 'material',
+    description: 'the leg bone of a rat',
+    image_name: 'right_leg_bone',
   },
 ];
 
@@ -1472,12 +1519,25 @@ function find_item_by_id(id) {
   return item_list.find(item => item.id === id);
 }
 
+function get_random_item_array() {
+  const number_of_items_to_return = generate_number_between_min_and_max(1,3);
+
+  const item_array = [];
+
+  for(let i = 0; i < number_of_items_to_return; i++) {
+    item_array.push(item_list[Math.floor(Math.random()*item_list.length)]);
+  }
+
+  return item_array;
+}
+
 module.exports = {
   find_item_by_id,
+  get_random_item_array,
 };
 
 
-},{}],18:[function(require,module,exports){
+},{"../engine/math":20}],18:[function(require,module,exports){
 'use strict';
 
 const lorium_text = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,';
@@ -1526,13 +1586,12 @@ function generate_number_between_min_and_max(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-
-//const distance_between_two_points = (point_one, point_two) => {
-//  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
-//};
-
+function angle(anchor, point){
+  return Math.atan2( anchor.y - point.y,anchor.x - point.x);
+}
 
 module.exports = {
+  angle,
   generate_number_between_min_and_max,
   distance_between_points,
 };
@@ -2511,11 +2570,8 @@ module.exports = {
 const viewport          = require('../engine/viewport');
 const PIXI              = require('pixi.js');
 const ticker            = require('../engine/ticker');
-const bow_helper        = require('../character/weapons/bow.js');
-
-
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
+const { angle }         = require('../engine/math');
+const { arrow_management } = require('../character/weapons/bow.js');
 
 const get_mouse_position = (event, viewport) => ({
   x: event.data.global.x - viewport.screenWidth / 2,
@@ -2571,7 +2627,7 @@ class Mouse {
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
 
-      bow_helper.arrow_management(this.power, this.player, mouse_position_player);
+      arrow_management(this.power, this.player, mouse_position_player);
     }
   }
 
@@ -2634,7 +2690,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../character/weapons/bow.js":12,"../engine/ticker":24,"../engine/viewport":25,"pixi.js":233}],29:[function(require,module,exports){
+},{"../character/weapons/bow.js":12,"../engine/math":20,"../engine/ticker":24,"../engine/viewport":25,"pixi.js":233}],29:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2765,10 +2821,10 @@ class Chest extends Item {
 
     const inventory_box = new Inventory();
     inventory_box.add_item_tiles();
-    inventory_box.populate_slot(1,'bunny');
-    inventory_box.populate_slot(2,'bunny');
-    inventory_box.populate_slot(3,'bunny');
-    inventory_box.populate_slot(4,'bunny');
+    inventory_box.populate_slot('bunny', 0);
+    inventory_box.populate_slot('bunny', 1);
+    inventory_box.populate_slot('bunny', 2);
+    inventory_box.populate_slot('bunny', 3);
     this.sprite.addChild(inventory_box.container);
   }
 

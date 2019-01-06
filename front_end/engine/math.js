@@ -13,13 +13,12 @@ function generate_number_between_min_and_max(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-
-//const distance_between_two_points = (point_one, point_two) => {
-//  return Math.hypot(point_two.x-point_one.x, point_two.y-point_one.y);
-//};
-
+function angle(anchor, point){
+  return Math.atan2( anchor.y - point.y,anchor.x - point.x);
+}
 
 module.exports = {
+  angle,
   generate_number_between_min_and_max,
   distance_between_points,
 };

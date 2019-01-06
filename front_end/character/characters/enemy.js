@@ -4,10 +4,9 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 
 const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
+const { angle }         = require('../../engine/math');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
-
-const angle = (anchor, point) => Math.atan2( anchor.y - point.y,anchor.x - point.x);
 
 class Enemy extends Character {
   constructor() {

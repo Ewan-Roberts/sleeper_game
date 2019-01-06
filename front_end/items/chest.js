@@ -47,10 +47,10 @@ class Chest extends Item {
 
     const inventory_box = new Inventory();
     inventory_box.add_item_tiles();
-    inventory_box.populate_slot(1,'bunny');
-    inventory_box.populate_slot(2,'bunny');
-    inventory_box.populate_slot(3,'bunny');
-    inventory_box.populate_slot(4,'bunny');
+    inventory_box.populate_slot('bunny', 0);
+    inventory_box.populate_slot('bunny', 1);
+    inventory_box.populate_slot('bunny', 2);
+    inventory_box.populate_slot('bunny', 3);
     this.sprite.addChild(inventory_box.container);
   }
 

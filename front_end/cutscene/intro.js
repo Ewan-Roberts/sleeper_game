@@ -37,7 +37,7 @@ class intro_cutscene {
     move_sprite_to_point(player, {middle: {x:1200, y: 200}});
 
     dialog_dom.play_audio_track('/test_speech.wav');
-    dialog_dom.show();
+    dialog_dom.hide();
     dialog_dom.render_text(lorium_text);
   }
 
