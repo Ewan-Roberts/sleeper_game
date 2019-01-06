@@ -11,8 +11,14 @@ function generate_number_between_min_and_max(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
+// -1.57 to 1.57
 function radian(anchor, point){
   return Math.atan2(anchor.y - point.y, anchor.x - point.x);
+}
+
+// 0 - 3.14 always positive
+function radian_positive(anchor, point){
+  return Math.atan2(anchor.y - point.y, anchor.x - point.x) + 1.57;
 }
 
 // angle in degrees from -180 to 180
@@ -28,6 +34,7 @@ function angle_360(anchor, point) {
 
 module.exports = {
   angle,
+  radian_positive,
   radian,
   angle_360,
   generate_number_between_min_and_max,

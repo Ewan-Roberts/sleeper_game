@@ -7,6 +7,7 @@ const {
   distance_between_points,
   generate_number_between_min_and_max,
   radian,
+  radian_positive,
 } = require('./math');
 const easystarjs = require('easystarjs');
 
@@ -115,7 +116,7 @@ function get_sprite_position_on_grid(sprite, container) {
 
 function highlight_grid_cell_from_path(path) {
   path.forEach(grid => {
-    sprite_grid[grid.y][grid.x].alpha = 0.5;
+    sprite_grid[grid.y][grid.x].alpha = 0.1;
   });
 }
 
@@ -130,6 +131,9 @@ function create_path_from_two_grid_points(sprite_one, sprite_two) {
         resolve(path);
       }
     });
+
+    easystar.enableDiagonals();
+    easystar.enableCornerCutting();
     // has to be here
     easystar.calculate();
   });
@@ -192,15 +196,14 @@ function move_sprite_on_path(sprite, path_array) {
   const tween = PIXI.tweenManager.createTween(sprite);
   tween.expire = true;
   tween.path = path;
-  tween.time = path_array.length * 100;
+  tween.time = path_array.length * 300;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
   tween.on('update', ()=> {
-    console.log(radian(sprite, tween.path._tmpPoint));
-    sprite.angle = radian(sprite, tween.path._tmpPoint);
+    sprite.rotation = radian_positive(sprite, tween.path._tmpPoint);
   });
   const graphical_path = new PIXI.Graphics();
-  graphical_path.lineStyle(5, 0xffffff, 5);
+  graphical_path.lineStyle(2, 0xffffff, 0.1);
   graphical_path.drawPath(path);
   viewport.getChildByName('critter_container').addChild(graphical_path);
 }
@@ -353,7 +356,7 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     return;
   }
 
-  sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.1;
+  sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
   //console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
