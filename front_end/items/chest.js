@@ -1,10 +1,9 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { GUI_Container } = require('../gui/container');
 
+const { Inventory } = require('../character/attributes/inventory');
 const { Item } = require('./item_model');
-
 
 class Chest extends Item {
   constructor() {
@@ -17,7 +16,6 @@ class Chest extends Item {
     };
     this.sprite = new PIXI.Sprite(this.image_cache.state.full);
     this.sprite.anchor.set(0.5);
-    this.sprite.zIndex = -5;
     this.sprite.name = 'chest';
     this.sprite.height *= 2;
     this.sprite.width *= 2;
@@ -47,12 +45,12 @@ class Chest extends Item {
     }
     this.state = 'open';
 
-    const inventory_box = new GUI_Container();
+    const inventory_box = new Inventory();
     inventory_box.add_item_tiles();
-    inventory_box.populate_slot_1('bunny');
-    inventory_box.populate_slot_2('bunny');
-    inventory_box.populate_slot_3('bunny');
-    inventory_box.populate_slot_4('bunny');
+    inventory_box.populate_slot(1,'bunny');
+    inventory_box.populate_slot(2,'bunny');
+    inventory_box.populate_slot(3,'bunny');
+    inventory_box.populate_slot(4,'bunny');
     this.sprite.addChild(inventory_box.container);
   }
 

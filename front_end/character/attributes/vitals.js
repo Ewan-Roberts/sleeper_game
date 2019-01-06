@@ -22,11 +22,11 @@ class Vitals {
     };
   }
 
-  show() {
+  static show_player_inventory() {
     dom_hud.style.display = 'block';
   }
 
-  hide() {
+  static hide_player_inventory() {
     dom_hud.style.display = 'none';
   }
 

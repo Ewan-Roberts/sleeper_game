@@ -4,12 +4,11 @@ const { Cutscene_Character } = require('../character/characters/cutscene_charact
 const viewport = require('../engine/viewport.js');
 const { visual_effects } = require('./visual_effects');
 
-const { Caption_Dialog } = require('../gui/caption');
+const { Caption_Dialog } = require('./caption');
 const { Dialog } = require('./dialog_util');
+const { lorium_text } = require('../data/speech_data');
 
 const { move_sprite_to_point } = require('../engine/pathfind');
-
-const string_to_write = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,';
 
 class intro_cutscene {
 
@@ -39,7 +38,7 @@ class intro_cutscene {
 
     dialog_dom.play_audio_track('/test_speech.wav');
     dialog_dom.show();
-    dialog_dom.render_text(string_to_write);
+    dialog_dom.render_text(lorium_text);
   }
 
 }

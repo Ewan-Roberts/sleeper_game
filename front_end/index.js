@@ -13,10 +13,8 @@ loader.use(pixiPackerParser(PIXI));
 loader.add('../../images/bedroom_EN_web.json');
 
 loader.load(async function() {
-
   const { DevelopmentLevel } = require('./level/development/dev_level.js');
 
   new DevelopmentLevel();
-
 });
 

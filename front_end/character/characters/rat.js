@@ -27,7 +27,6 @@ class Rat {
     this.sprite.width *= 2;
     this.sprite.inventory = new Inventory();
     // for testing
-    this.sprite.inventory.spike_populate_inventory();
     this.sprite.status = new Vitals();
 
     viewport.getChildByName('critter_container').addChild(this.sprite);
@@ -57,11 +56,9 @@ class Rat {
 
   lootable() {
     this.sprite.click = () => {
-      this.sprite.inventory.display_inventory(this.sprite);
+      console.log(this.sprite.inventory)
 
-      this.sprite.inventory.slots.forEach(item => {
-        this.sprite.inventory.populate_slot_1(item.image_name);
-      });
+      this.sprite.inventory.set_position(this.sprite);
     };
   }
 

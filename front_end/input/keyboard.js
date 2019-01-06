@@ -1,7 +1,6 @@
 'use strict';
 
-const { GUI_HUD } = require('../gui/inventory');
-const gui = new GUI_HUD();
+const { Vitals } = require('../character/attributes/inventory');
 const viewport = require('../engine/viewport');
 
 const keymap = {
@@ -177,10 +176,10 @@ class Keyboard {
 
   inventory() {
     if ( this.inventory_open === false ) {
-      gui.show();
+      Vitals.show_player_inventory();
       this.inventory_open = true;
     } else {
-      gui.hide();
+      Vitals.hide_player_inventory();
       this.inventory_open = false;
     }
   }

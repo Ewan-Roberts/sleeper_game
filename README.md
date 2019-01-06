@@ -99,3 +99,14 @@ Work in progess, updates below:
 - Add starting fires
 - Add condition management (thirst etc.) DONE
 
+
+### inventory:
+
+- Fills inventory randomly
+- Close inventory box
+- Move item from inventory to player inventory
+
+
+
+
+
