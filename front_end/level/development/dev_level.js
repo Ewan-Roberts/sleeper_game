@@ -32,6 +32,13 @@ class DevelopmentLevel {
     rat.is_prey_to(player.sprite);
     rat.lootable_on_death();
 
+
+    const rat2 = new Rat();
+    rat2.set_position({x: 900, y: 900});
+    rat2.is_prey_to(player.sprite);
+    rat2.lootable_on_death();
+
+
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
     //this.test_backpack();

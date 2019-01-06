@@ -60,6 +60,8 @@ class rat_animations {
       PIXI.Texture.fromFrame('rat_39'),
       PIXI.Texture.fromFrame('rat_38'),
       PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_36'),
+      PIXI.Texture.fromFrame('rat_01'),
     ];
 
     return eating_frames;

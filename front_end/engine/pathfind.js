@@ -173,8 +173,8 @@ function move_sprite_on_path(sprite, path_array) {
 
   path.moveTo(sprite.x, sprite.y);
   path.arcTo(
-    path_array[1].middle.x + random_number(),
-    path_array[1].middle.y + random_number(),
+    path_array[1].middle.x,
+    path_array[1].middle.y,
     path_array[2].middle.x,
     path_array[2].middle.y,
     25
@@ -190,18 +190,27 @@ function move_sprite_on_path(sprite, path_array) {
     );
   }
 
-  //path.moveTo(path_array[path_array.length-1].middle.x, path_array[path_array.length-1].middle.y);
-
-
   const tween = PIXI.tweenManager.createTween(sprite);
   tween.expire = true;
   tween.path = path;
   tween.time = path_array.length * 300;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-  tween.on('update', ()=> {
+  sprite.textures = sprite.animations.move;
+  sprite.loop = true;
+  sprite.play();
+
+  tween.on('update', () => {
     sprite.rotation = radian_positive(sprite, tween.path._tmpPoint);
+ });
+
+  tween.on('end', () => {
+    sprite.textures = sprite.animations.eat;
+    sprite.animationSpeed = 0.2;
+    sprite.loop = false;
+    sprite.play();
   });
+
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(2, 0xffffff, 0.1);
   graphical_path.drawPath(path);

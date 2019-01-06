@@ -8,6 +8,12 @@ Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
+## Update 06.01.19(2):
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_7.png)
+
+- multi-prey pathfinding (lines show paths run)
+- sprite direction and waiting states
 
 ## Update 06.01.19:
 

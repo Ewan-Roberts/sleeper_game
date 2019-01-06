@@ -5,8 +5,8 @@ const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 const { Keyboard }      = require('../../input/keyboard');
 const { Mouse }         = require('../../input/mouse');
-const { socket }        = require('../../engine/socket');
 const { Vitals }        = require('../attributes/vitals');
+const { Inventory }     = require('../attributes/inventory');
 
 class Player extends Character{
   constructor() {
@@ -15,6 +15,7 @@ class Player extends Character{
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.status = new Vitals();
+    this.sprite.inventory = new Inventory();
 
     viewport.addChild(this.sprite);
   }
@@ -41,10 +42,6 @@ class Player extends Character{
 
     global.document.addEventListener('keydown', (event) => {
       this.keyboard.key_down(event);
-      socket.emit('client_player_location', {
-        x: this.sprite.x,
-        y: this.sprite.y,
-      });
     });
 
     global.document.addEventListener('keyup', () => {

@@ -13,6 +13,9 @@ const box_size = 100;
 class Inventory {
   constructor() {
     this.slots = [];
+  }
+
+  create_visual_container() {
     this.sprite = PIXI.Sprite.fromFrame('black_dot');
     this.sprite.height = 100;
     this.sprite.width = 402;
@@ -120,6 +123,8 @@ class Inventory {
     item.buttonMode = true;
     item.click = () => {
       item.destroy();
+      // todo needs to be bound
+      viewport.getChildByName('player').inventory.add_item(item_details);
     };
 
     viewport.getChildByName('gui_container').getChildByName(`item_slot_${slot}`).addChild(item);
@@ -127,6 +132,10 @@ class Inventory {
 
   empty_slots() {
     this.slots = [];
+  }
+
+  add_item(item) {
+    this.slots.push(item);
   }
 
   randomise_slots() {

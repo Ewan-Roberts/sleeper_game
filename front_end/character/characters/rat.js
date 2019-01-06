@@ -25,6 +25,8 @@ class Rat {
     this.sprite.height *= 2;
     this.sprite.width *= 2;
     this.sprite.inventory = new Inventory();
+    this.sprite.inventory.create_visual_container();
+
     // for testing
     this.sprite.status = new Vitals();
 
