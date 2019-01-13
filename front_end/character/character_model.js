@@ -4,6 +4,7 @@ const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 const ticker = require('../engine/ticker');
 const { move_sprite_to_point } = require('../engine/pathfind');
+
 const character_animations = require('./animations/character');
 
 function get_intersection(ray, segment){
@@ -50,6 +51,7 @@ class Character {
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
 
+    //for example bow, idle or nothing, idle
     this.sprite.animation_switch = (type, action) => {
       if(this.sprite.textures !== this.sprite.animations[type][action]) {
         this.sprite.textures = this.sprite.animations[type][action];

@@ -54,6 +54,16 @@ class character_animations {
     return enemy_frames;
   }
 
+  static knife_attack_frames() {
+    const enemy_frames = [];
+
+    for (let i = 0; i < 14; i++) {
+      enemy_frames.push(PIXI.Texture.fromFrame(`survivor-meleeattack_knife_${i}`));
+    }
+
+    return enemy_frames;
+  }
+
   static idle_frames() {
     const idle_frames = [];
     for (let i = 0; i <= 21; i++) {
@@ -90,7 +100,8 @@ module.exports = {
     idle:   character_animations.idle_frames(),
   },
   knife: {
-    idle:  character_animations.knife_idle_frames(),
+    attack: character_animations.knife_attack_frames(),
+    idle:   character_animations.knife_idle_frames(),
   },
 };
 

@@ -2,41 +2,32 @@
 
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
-const rat_animations = require('../animations/rat');
-const {
-  move_sprite_to_point,
-  move_sprite_to_sprite_on_grid,
-} = require('../../engine/pathfind');
-
-const { Inventory } = require('../attributes/inventory');
-const { Vitals } = require('../attributes/vitals');
-const { distance_between_points } = require('../../engine/math');
-
 const ticker = require('../../engine/ticker');
 
-const critter_container = viewport.getChildByName('critter_container');
+const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind');
+const { distance_between_points       } = require('../../engine/math');
 
-class Rat {
+const { Character } = require('../character_model');
+const { Inventory } = require('../attributes/inventory');
+const { Vitals    } = require('../attributes/vitals');
+
+const critter_container = viewport.getChildByName('critter_container');
+const rat_animations = require('../animations/rat');
+
+class Rat extends Character {
   constructor() {
+    super();
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
     this.sprite.name = 'rat';
     this.sprite.height *= 2;
     this.sprite.width *= 2;
     this.sprite.inventory = new Inventory();
     this.sprite.inventory.create_visual_container();
-
-    // for testing
     this.sprite.status = new Vitals();
 
     critter_container.addChild(this.sprite);
-  }
-
-  create_patrol_path(path_data) {
-    this.sprite.patrol_path = path_data;
   }
 
   lootable_on_death() {
@@ -65,10 +56,6 @@ class Rat {
     };
   }
 
-  set_position(point) {
-    this.sprite.position.set(point.x, point.y);
-  }
-
   is_prey_to(predator) {
     this.min_pathfind_distance = 50;
     this.max_pathfind_distance = 400;
@@ -95,15 +82,6 @@ class Rat {
     });
 
     critter_container.addChild(point_to_run_for);
-  }
-
-  move_to_point(point) {
-    move_sprite_to_point(this.sprite, {
-      middle: {
-        x: point.x,
-        y: point.y,
-      },
-    });
   }
 }
 

@@ -8,19 +8,18 @@ const {
   pathfind_from_enemy_to_player,
   move_sprite_to_sprite_on_grid,
 } = require('../../engine/pathfind.js');
-
-const { radian }         = require('../../engine/math');
-const { createjs } = require('@createjs/tweenjs');
-const { Character } = require('../character_model');
-const { Vitals } = require('../attributes/vitals');
 const { distance_between_points } = require('../../engine/math');
+
+const { radian    } = require('../../engine/math');
+const { createjs  } = require('@createjs/tweenjs');
+const { Character } = require('../character_model');
+const { Vitals    } = require('../attributes/vitals');
 
 const enemy_container = viewport.getChildByName('enemy_container');
 
 class Enemy extends Character {
   constructor() {
     super();
-
     this.sprite.status = new Vitals();
     this.name = 'enemy';
 
@@ -46,9 +45,13 @@ class Enemy extends Character {
     this.sprite.addChild(direction_line);
   }
 
+  attack(sprite) {
+    this.sprite.animation_switch('knife', 'attack');
+
+  }
 
   is_predator_to(prey) {
-    let testing = 0;
+    //let testing = 0;
 
     this.min_pathfind_distance = 10;
     this.max_pathfind_distance = 700;
@@ -57,6 +60,12 @@ class Enemy extends Character {
 
     ticker.add(() => {
       const distance_to_act = distance_between_points(predator, prey);
+
+      if(distance_to_act < 200) {
+        this.attack();
+        return;
+      }
+
       if(
         distance_to_act < this.min_pathfind_distance ||
         distance_to_act > this.max_pathfind_distance ||

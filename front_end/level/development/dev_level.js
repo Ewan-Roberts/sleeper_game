@@ -1,6 +1,8 @@
 /* eslint-disable */  // --> OFF
 
 'use strict';
+const viewport = require('../../engine/viewport');
+
 
 const { Player } = require('../../character/characters/player.js');
 const { Campfire } = require('../../items/fire_place');
@@ -15,6 +17,7 @@ const { NetworkCharacter } = require('../../character/network/network_player.js'
 const { intro_cutscene } = require('../../cutscene/intro.js');
 const { Rat } = require('../../character/characters/rat');
 const { Enemy } = require('../../character/characters/enemy');
+const { AB } = require('../../character/characters/test_character');
 const PIXI = require('pixi.js');
 
 class DevelopmentLevel {
@@ -40,6 +43,17 @@ class DevelopmentLevel {
 
     rat.is_prey_to(enemy.sprite);
     enemy.is_predator_to(rat.sprite);
+
+    const poo = new AB();
+    poo.set_position({x: 1000, y: 1000})
+  
+
+    viewport.addChild(poo.sprite);
+    console.log(poo);
+    console.log(viewport);
+
+
+
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
     //this.test_backpack();
