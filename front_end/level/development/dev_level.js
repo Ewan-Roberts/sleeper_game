@@ -15,43 +15,37 @@ const { NetworkCharacter } = require('../../character/network/network_player.js'
 
 //const { start_rain } = require('../../weather/rain');
 const { intro_cutscene } = require('../../cutscene/intro.js');
-const { Rat } = require('../../character/characters/rat');
 const { Enemy } = require('../../character/characters/enemy');
-const { AB } = require('../../character/characters/test_character');
+const { Rat } = require('../../character/characters/rat');
 const PIXI = require('pixi.js');
 
 class DevelopmentLevel {
   constructor() {
-    //const player = new Player();
-    //player.set_position({ x: 1000, y: 1000 });
-    //player.add_controls();
-    //player.follow_sprite_with_camera();
-    //player.with_light();
+    const player = new Player();
+    player.set_position({ x: 1000, y: 1000 });
+    player.add_controls();
+    player.follow_sprite_with_camera();
+    player.with_light();
     this.test_load_test_level();
     //player.add_raycasting(this.level.segments);
 
     this.test_note();
 
     const enemy = new Enemy();
-    enemy.set_position({ x: 1550, y: 1000 });
+    console.log(enemy);
+    enemy.sprite.position.set(1550,1000);
     enemy.with_light();
-    enemy.follow_sprite_with_camera();
+    //enemy.follow_sprite_with_camera();
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1200});
-    //rat.lootable_on_death();
-
+    rat.lootable_on_death();
+    console.log(rat);
     rat.is_prey_to(enemy.sprite);
     enemy.is_predator_to(rat.sprite);
 
-    const poo = new AB();
-    poo.set_position({x: 1000, y: 1000})
-  
-
-    viewport.addChild(poo.sprite);
-    console.log(poo);
-    console.log(viewport);
-
+    //const poo = new AB();
+    //poo.set_position({x: 1000, y: 1000})
 
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);

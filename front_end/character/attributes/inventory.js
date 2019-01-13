@@ -14,22 +14,20 @@ const box_size = 100;
 
 class Inventory {
   constructor() {
-    this.slots = [];
-  }
-
-  create_visual_container() {
-    this.sprite = PIXI.Sprite.fromFrame('black_dot');
-    this.sprite.height = 100;
-    this.sprite.width = 402;
-    this.sprite.anchor.set(0.5);
-    this.sprite.visible = false;
-    gui_container.addChild(this.sprite);
+    this.inventory = {};
+    this.inventory.slots = [];
+    this.inventory.sprite = PIXI.Sprite.fromFrame('black_dot');
+    this.inventory.sprite.height = 100;
+    this.inventory.sprite.width = 402;
+    this.inventory.sprite.anchor.set(0.5);
+    this.inventory.sprite.visible = false;
+    gui_container.addChild(this.inventory.sprite);
     this.add_item_tiles();
     this.populate_random_inventory();
   }
 
   hide() {
-    this.sprite.visible       = false;
+    this.inventory.sprite.visible       = false;
     this.item_slot_0.visible  = false;
     this.item_slot_1.visible  = false;
     this.item_slot_2.visible  = false;
@@ -38,7 +36,7 @@ class Inventory {
   }
 
   show() {
-    this.sprite.visible       = true;
+    this.inventory.sprite.visible       = true;
     this.item_slot_0.visible  = true;
     this.item_slot_1.visible  = true;
     this.item_slot_2.visible  = true;
@@ -46,19 +44,19 @@ class Inventory {
     this.close_button.visible = true;
   }
 
-  set_position(point) {
+  set_inventory_position(point) {
     this.show();
-    this.sprite.position.set(point.x + 250, point.y -20);
-    this.item_slot_0.position.x = this.sprite.x-this.sprite.width/2;
-    this.item_slot_0.position.y = this.sprite.y;
-    this.item_slot_1.position.x = this.sprite.x-this.sprite.width/4;
-    this.item_slot_1.position.y = this.sprite.y;
-    this.item_slot_2.position.x = this.sprite.x;
-    this.item_slot_2.position.y = this.sprite.y;
-    this.item_slot_3.position.x = this.sprite.x +this.sprite.width/4;
-    this.item_slot_3.position.y = this.sprite.y;
-    this.close_button.position.x = this.sprite.x +this.sprite.width/2 - 30;
-    this.close_button.position.y = this.sprite.y -35;
+    this.inventory.sprite.position.set(point.x + 250, point.y -20);
+    this.item_slot_0.position.x = this.inventory.sprite.x-this.inventory.sprite.width/2;
+    this.item_slot_0.position.y = this.inventory.sprite.y;
+    this.item_slot_1.position.x = this.inventory.sprite.x-this.inventory.sprite.width/4;
+    this.item_slot_1.position.y = this.inventory.sprite.y;
+    this.item_slot_2.position.x = this.inventory.sprite.x;
+    this.item_slot_2.position.y = this.inventory.sprite.y;
+    this.item_slot_3.position.x = this.inventory.sprite.x +this.inventory.sprite.width/4;
+    this.item_slot_3.position.y = this.inventory.sprite.y;
+    this.close_button.position.x = this.inventory.sprite.x +this.inventory.sprite.width/2 - 30;
+    this.close_button.position.y = this.inventory.sprite.y -35;
   }
 
   add_item_tiles() {
@@ -95,7 +93,7 @@ class Inventory {
     this.close_button.buttonMode = true;
     this.close_button.click = () => {
 
-      if(this.sprite.visible){
+      if(this.inventory.sprite.visible){
         this.hide();
         return;
       }
@@ -112,6 +110,32 @@ class Inventory {
     );
 
     this.hide();
+  }
+
+  lootable_on_death() {
+    this.sprite.kill = () => {
+
+      this.sprite.stop();
+      this.sprite.interactive = true;
+      this.sprite.buttonMode = true;
+      this.sprite.texture = this.sprite.animations.dead;
+      this.sprite.status = 'dead';
+
+      const get_tween = PIXI.tweenManager.getTweensForTarget(this.sprite);
+      if(get_tween[0]) {
+        get_tween[0].stop();
+      }
+
+      this.lootable();
+    };
+  }
+
+  lootable() {
+    this.sprite.click = () => {
+      //console.log(this.inventory)
+
+      this.set_inventory_position(this.sprite);
+    };
   }
 
   populate_slot(item_details, slot) {
@@ -134,21 +158,21 @@ class Inventory {
   }
 
   empty_slots() {
-    this.slots = [];
+    this.inventory.slots = [];
   }
 
   add_item(item) {
-    this.slots.push(item);
+    this.inventory.slots.push(item);
   }
 
   randomise_slots() {
-    this.slots = [];
+    this.inventory.slots = [];
   }
 
   populate_random_inventory() {
-    this.slots = get_random_item_array();
+    this.inventory.slots  = get_random_item_array();
 
-    this.slots.forEach((item, i) => {
+    this.inventory.slots.forEach((item, i) => {
       this.populate_slot(item, i);
     });
   }
@@ -157,8 +181,8 @@ class Inventory {
     const rat_meat = find_item_by_id(1);
     const rat_hide = find_item_by_id(2);
 
-    this.slots.push(rat_meat, rat_hide);
-    this.slots.forEach((item, i) => {
+    this.inventory.slots.push(rat_meat, rat_hide);
+    this.inventory.slots.forEach((item, i) => {
       this.populate_slot(item, i);
     });
   }

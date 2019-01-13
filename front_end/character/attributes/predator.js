@@ -37,7 +37,7 @@ class Predator {
       if(
         distance_to_act < this.min_pathfind_distance ||
         distance_to_act > this.max_pathfind_distance ||
-        !this.sprite.status.alive
+        !this.alive
       ) {
         return;
       }
