@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../engine/viewport');
+const { viewport } = require('../engine/viewport');
 
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;

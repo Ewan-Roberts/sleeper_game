@@ -1,4 +1,3 @@
-
 'use strict';
 
 const PIXI = require('pixi.js');

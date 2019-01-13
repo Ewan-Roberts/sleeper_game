@@ -1,23 +1,23 @@
 /* eslint-disable */  // --> OFF
 
 'use strict';
-const viewport = require('../../engine/viewport');
+const PIXI = require('pixi.js');
 
+const { viewport  } = require('../../engine/viewport');
 
-const { Player } = require('../../character/characters/player.js');
-const { Campfire } = require('../../items/fire_place');
-const { Chest } = require('../../items/chest');
-const { Note } = require('../../items/Note');
-const { Backpack } = require('../../items/back_pack');
-const { Level } = require('../level_utils');
+const { Player    } = require('../../character/characters/player.js');
+const { Campfire  } = require('../../items/fire_place');
+const { Chest     } = require('../../items/chest');
+const { Note      } = require('../../items/Note');
+const { Backpack  } = require('../../items/back_pack');
+const { Level     } = require('../level_utils');
 
 const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
-const { intro_cutscene } = require('../../cutscene/intro.js');
-const { Enemy } = require('../../character/characters/enemy');
-const { Rat } = require('../../character/characters/rat');
-const PIXI = require('pixi.js');
+const { intro_cutscene  } = require('../../cutscene/intro.js');
+const { Enemy           } = require('../../character/characters/enemy');
+const { Rat             } = require('../../character/characters/rat');
 
 class DevelopmentLevel {
   constructor() {

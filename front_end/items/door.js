@@ -1,8 +1,8 @@
 'use strict';
 
-const PIXI              = require('pixi.js');
-const viewport          = require('../engine/viewport');
-const { createjs }      = require('@createjs/tweenjs');
+const PIXI         = require('pixi.js');
+const { viewport } = require('../engine/viewport');
+const { createjs } = require('@createjs/tweenjs');
 
 const collision_items = viewport.getChildByName('collision_items');
 

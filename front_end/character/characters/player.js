@@ -1,12 +1,12 @@
 'use strict';
 
-const viewport          = require('../../engine/viewport.js');
+const { viewport  } = require('../../engine/viewport.js');
 
-const { Character }     = require('../character_model');
-const { Keyboard }      = require('../../input/keyboard');
-const { Mouse }         = require('../../input/mouse');
-const { Vitals }        = require('../attributes/vitals');
-const { Inventory }     = require('../attributes/inventory');
+const { Character } = require('../character_model');
+const { Keyboard  } = require('../../input/keyboard');
+const { Mouse     } = require('../../input/mouse');
+const { Vitals    } = require('../attributes/vitals');
+const { Inventory } = require('../attributes/inventory');
 
 class Player extends Character{
   constructor() {

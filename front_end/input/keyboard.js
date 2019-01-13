@@ -1,7 +1,7 @@
 'use strict';
 
-const { Vitals } = require('../character/attributes/inventory');
-const viewport = require('../engine/viewport');
+const { Vitals   } = require('../character/attributes/inventory');
+const { viewport } = require('../engine/viewport');
 
 const keymap = {
   w: 'up',

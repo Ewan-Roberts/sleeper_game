@@ -1,17 +1,15 @@
 'use strict';
 
-const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport');
 const ticker = require('../../engine/ticker');
 
-const {
-  move_sprite_to_sprite_on_grid,
-} = require('../../engine/pathfind.js');
+const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
 
 class Predator {
   constructor() {
     this.type = 'predator';
+    this.min_pathfind_distance = 10;
+    this.max_pathfind_distance = 700;
   }
 
   attack() {
@@ -19,11 +17,6 @@ class Predator {
   }
 
   is_predator_to(prey) {
-    //let testing = 0;
-
-    this.min_pathfind_distance = 10;
-    this.max_pathfind_distance = 700;
-
     const predator = this.sprite;
 
     ticker.add(() => {
@@ -41,13 +34,8 @@ class Predator {
       ) {
         return;
       }
-      //if(testing> 3) return;
-
-      //console.log(distance_to_act);
 
       move_sprite_to_sprite_on_grid(predator, prey);
-
-      //testing++;
     });
   }
 }

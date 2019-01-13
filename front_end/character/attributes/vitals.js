@@ -11,14 +11,13 @@ class Vitals {
       heat: 90,
       sleep: 100,
       status: 'alive',
-    };
-
-    this.ticker_values = {
-      health: 5,
-      food: 5,
-      water: 5,
-      heat: 5,
-      sleep: 5,
+      ticker_values : {
+        health: 5,
+        food: 5,
+        water: 5,
+        heat: 5,
+        sleep: 5,
+      },
     };
   }
 
@@ -52,7 +51,6 @@ class Vitals {
     status.style.opacity = amount / 100;
   }
 
-
   static update_vitals(vital_data) {
 
     this.update_status_meter('.health_remaining', vital_data.health);
@@ -71,16 +69,14 @@ class Vitals {
 
   set_vitals_ticker() {
     setInterval(()=> {
-
-      this.vitals.health -= this.ticker_values.health;
-      this.vitals.food -= this.ticker_values.food;
-      this.vitals.water -= this.ticker_values.water;
-      this.vitals.heat -= this.ticker_values.heat;
-      this.vitals.sleep -= this.ticker_values.sleep;
+      this.vitals.health -= this.vitals.ticker_values.health;
+      this.vitals.food -= this.vitals.ticker_values.food;
+      this.vitals.water -= this.vitals.ticker_values.water;
+      this.vitals.heat -= this.vitals.ticker_values.heat;
+      this.vitals.sleep -= this.vitals.ticker_values.sleep;
       this.update_vitals(this.vitals);
     }, 5000);
   }
-
 }
 
 module.exports = {

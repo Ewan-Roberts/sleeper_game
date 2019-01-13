@@ -1,6 +1,6 @@
 'use strict';
 
-const viewport = require('../engine/viewport.js');
+const { viewport } = require('../engine/viewport.js');
 
 const non_collision_items = viewport.getChildByName('non_collision_items');
 

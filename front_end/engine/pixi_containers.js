@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('./viewport');
+const { viewport } = require('./viewport');
 
 const zIndex_layer = {
   background: 12,

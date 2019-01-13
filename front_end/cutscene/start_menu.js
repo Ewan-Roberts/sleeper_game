@@ -1,6 +1,5 @@
 'use strict';
 
-
 const start_menu = global.document.querySelector('.start_menu');
 const start_button = global.document.querySelector('.start_button');
 

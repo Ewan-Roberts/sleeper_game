@@ -17,4 +17,7 @@ viewport.updateLayersOrder = function () {
   });
 };
 
-module.exports = viewport;
+module.exports = {
+  viewport,
+};
+

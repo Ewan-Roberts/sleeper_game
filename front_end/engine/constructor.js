@@ -1,3 +1,5 @@
+'use strict';
+
 function construct(BaseClass, ...Mixins) {
 
   function copyProperties(target, source) {

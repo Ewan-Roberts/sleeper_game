@@ -1,17 +1,18 @@
 'use strict';
 
-const viewport = require('../../engine/viewport');
+const { viewport  } = require('../../engine/viewport');
+const { construct } = require('../../engine/constructor');
 
 const { Character } = require('../character_model');
-const { Dialog } = require('../../cutscene/dialog_util');
+const { Dialog    } = require('../../cutscene/dialog_util');
 
 const friend_container = viewport.getChildByName('friend_container');
 
-class Friend extends Character {
+class Friend extends construct(Character, Dialog) {
   constructor() {
     super();
+    this.name = 'friend';
     this.sprite.animation_switch('knife', 'idle');
-    this.sprite.name = 'friend';
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
 
@@ -41,7 +42,7 @@ class Friend extends Character {
   }
 }
 
+
 module.exports = {
   Friend,
 };
-

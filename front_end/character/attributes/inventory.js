@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const viewport = require('../../engine/viewport');
+const { viewport } = require('../../engine/viewport');
 
 const {
   find_item_by_id,
@@ -9,7 +9,6 @@ const {
 } = require('../../data/item_data');
 
 const gui_container = viewport.getChildByName('gui_container');
-
 const box_size = 100;
 
 class Inventory {
@@ -27,7 +26,7 @@ class Inventory {
   }
 
   hide() {
-    this.inventory.sprite.visible       = false;
+    this.inventory.sprite.visible = false;
     this.item_slot_0.visible  = false;
     this.item_slot_1.visible  = false;
     this.item_slot_2.visible  = false;
@@ -36,7 +35,7 @@ class Inventory {
   }
 
   show() {
-    this.inventory.sprite.visible       = true;
+    this.inventory.sprite.visible = true;
     this.item_slot_0.visible  = true;
     this.item_slot_1.visible  = true;
     this.item_slot_2.visible  = true;

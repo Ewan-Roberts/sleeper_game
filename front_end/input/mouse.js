@@ -1,9 +1,9 @@
 'use strict';
 
-const viewport          = require('../engine/viewport');
-const PIXI              = require('pixi.js');
-const ticker            = require('../engine/ticker');
-const { radian }         = require('../engine/math');
+const { viewport }         = require('../engine/viewport');
+const PIXI                 = require('pixi.js');
+const ticker               = require('../engine/ticker');
+const { radian }           = require('../engine/math');
 const { arrow_management } = require('../character/weapons/bow.js');
 
 const get_mouse_position = (event, viewport) => ({

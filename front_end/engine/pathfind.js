@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 const { createjs } = require('@createjs/tweenjs');
-const viewport = require('./viewport');
+const { viewport } = require('./viewport');
 const {
   distance_between_points,
   generate_number_between_min_and_max,

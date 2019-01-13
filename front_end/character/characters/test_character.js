@@ -1,16 +1,18 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport  } = require('../../engine/viewport');
+const viewport = require('../../engine/viewport');
 const { construct } = require('../../engine/constructor');
 
 const { Character } = require('../character_model');
-const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
-const { Prey      } = require('../attributes/prey');
+
+
+const rat_animations = require('../animations/rat');
+const { Inventory } = require('../attributes/inventory');
+const { Prey } = require('../attributes/prey');
 
 const critter_container = viewport.getChildByName('critter_container');
-const rat_animations = require('../animations/rat');
 
 class Rat extends construct(Character, Vitals, Prey, Inventory) {
   constructor() {
@@ -24,8 +26,25 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
 
     critter_container.addChild(this.sprite);
   }
+
 }
 
 module.exports = {
   Rat,
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
