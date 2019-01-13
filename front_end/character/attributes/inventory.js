@@ -15,6 +15,7 @@ class Inventory {
   constructor() {
     this.inventory = {};
     this.inventory.slots = [];
+    this.inventory.equiped = undefined;
     this.inventory.sprite = PIXI.Sprite.fromFrame('black_dot');
     this.inventory.sprite.height = 100;
     this.inventory.sprite.width = 402;
@@ -22,7 +23,6 @@ class Inventory {
     this.inventory.sprite.visible = false;
     gui_container.addChild(this.inventory.sprite);
     this.add_item_tiles();
-    this.populate_random_inventory();
   }
 
   hide() {
@@ -137,6 +137,10 @@ class Inventory {
 
   add_item(item) {
     this.inventory.slots.push(item);
+  }
+
+  equip_item(item) {
+    this.inventory.equiped = item;
   }
 
   randomise_slots() {

@@ -12,18 +12,25 @@ class Predator {
     this.max_pathfind_distance = 700;
   }
 
-  attack() {
+  attack(prey) {
     this.sprite.animation_switch('knife', 'attack');
+    console.log(prey);
+
+    prey.damage(this.inventory.equiped.damage);
+    console.log(prey);
+
+    debugger;
   }
 
   is_predator_to(prey) {
-    const predator = this.sprite;
+    const { 'sprite': prey_sprite     } = prey;
+    const { 'sprite': predator_sprite } = this;
 
     ticker.add(() => {
-      const distance_to_act = distance_between_points(predator, prey);
+      const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(distance_to_act < 200) {
-        this.attack();
+        this.attack(prey);
         return;
       }
 
@@ -35,7 +42,7 @@ class Predator {
         return;
       }
 
-      move_sprite_to_sprite_on_grid(predator, prey);
+      move_sprite_to_sprite_on_grid(predator_sprite, prey_sprite);
     });
   }
 }

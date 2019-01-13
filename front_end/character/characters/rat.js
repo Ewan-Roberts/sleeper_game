@@ -21,6 +21,7 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
     this.sprite.name = 'rat';
     this.sprite.height *= 2;
     this.sprite.width *= 2;
+    this.populate_random_inventory();
 
     critter_container.addChild(this.sprite);
   }

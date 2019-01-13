@@ -42,7 +42,7 @@ class DevelopmentLevel {
     rat.lootable_on_death();
     console.log(rat);
     rat.is_prey_to(enemy.sprite);
-    enemy.is_predator_to(rat.sprite);
+    enemy.is_predator_to(rat);
 
     //const poo = new AB();
     //poo.set_position({x: 1000, y: 1000})

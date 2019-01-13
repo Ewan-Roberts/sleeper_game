@@ -33,6 +33,14 @@ class Vitals {
     this.vitals.status = state;
   }
 
+  damage(hit_point) {
+    if(( this.vitals.health - hit_point) < 0) {
+      throw `${this.name} doesnt have enough health`;
+    } else {
+      this.vitals.health -= hit_point;
+    }
+  }
+
   get alive() {
     if(this.vitals.status === 'alive') {
       return true;
