@@ -5,18 +5,18 @@ const dom_hud = global.document.querySelector('.characterInventory');
 class Vitals {
   constructor() {
     this.vitals = {
-      health: 100,
-      food: 40,
-      water: 20,
-      heat: 90,
-      sleep: 100,
-      status: 'alive',
-      ticker_values : {
+      health:   100,
+      food:     40,
+      water:    20,
+      heat:     90,
+      sleep:    100,
+      status:   'alive',
+      ticker_values: {
         health: 5,
-        food: 5,
-        water: 5,
-        heat: 5,
-        sleep: 5,
+        food:   5,
+        water:  5,
+        heat:   5,
+        sleep:  5,
       },
     };
   }

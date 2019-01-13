@@ -8,6 +8,19 @@ Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
+
+## Update 13.01.19:
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_8.png)
+
+May not looks very pretty but an important landmark for the engine
+
+- :tada: Full predator/prey system that can freely scale
+- created more detailed inventory system
+- complete refactor of how characters are constructed to make them very flaxable
+- added basic damage from predator and equiping weapons
+- added useful timer functions
+
 ## Update 06.01.19(2):
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_7.png)
