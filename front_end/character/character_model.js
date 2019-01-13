@@ -72,6 +72,10 @@ class Character {
     });
   }
 
+  follow_sprite_with_camera() {
+    viewport.follow(this.sprite);
+  }
+
   add_sight_line() {
     const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 

@@ -6,7 +6,6 @@ const viewport = require('./viewport');
 const {
   distance_between_points,
   generate_number_between_min_and_max,
-  radian,
   radian_positive,
 } = require('./math');
 const easystarjs = require('easystarjs');
@@ -101,18 +100,6 @@ function get_grid_sprite_on_point(point, container) {
 }
 
 
-function get_sprite_position_on_grid(sprite, container) {
-  if(!container) throw 'gimme a container';
-  const posish = sprite.getGlobalPosition();
-
-  const grid_containing_sprite = container.find(grid => (
-    grid.containsPoint(posish)
-  ));
-
-  if(grid_containing_sprite){
-    return grid_containing_sprite;
-  }
-}
 
 function highlight_grid_cell_from_path(path) {
   path.forEach(grid => {
@@ -170,7 +157,7 @@ function move_sprite_on_path(sprite, path_array) {
   }
   const path = new PIXI.tween.TweenPath();
   const random_number = () => generate_number_between_min_and_max(-30, 30);
-
+  if(path_array[2] === undefined) return;
   path.moveTo(sprite.x, sprite.y);
   path.arcTo(
     path_array[1].middle.x,
@@ -196,20 +183,20 @@ function move_sprite_on_path(sprite, path_array) {
   tween.time = path_array.length * 300;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-  sprite.textures = sprite.animations.move;
-  sprite.loop = true;
-  sprite.play();
+  //sprite.textures = sprite.animations.move;
+  //sprite.loop = true;
+  //sprite.play();
 
   tween.on('update', () => {
     sprite.rotation = radian_positive(sprite, tween.path._tmpPoint);
- });
-
-  tween.on('end', () => {
-    sprite.textures = sprite.animations.eat;
-    sprite.animationSpeed = 0.2;
-    sprite.loop = false;
-    sprite.play();
   });
+
+  //tween.on('end', () => {
+  //  sprite.textures = sprite.animations.eat;
+  //  sprite.animationSpeed = 0.2;
+  //  sprite.loop = false;
+  //  sprite.play();
+  //});
 
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(2, 0xffffff, 0.1);
@@ -354,15 +341,31 @@ function move_sprite_on_route(sprite) {
   });
 }
 
+function get_sprite_position_on_grid(sprite, container) {
+  if(!container) throw 'gimme a container';
+
+  const sprite_position = sprite.getGlobalPosition();
+
+  const grid_containing_sprite = container.find(grid => (
+    grid.containsPoint(sprite_position)
+  ));
+
+  if(grid_containing_sprite){
+    return grid_containing_sprite;
+  }
+}
 
 async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
-  const grid = grid_container.children;
 
-  const from_point = get_sprite_position_on_grid(from_sprite, grid);
-  const to_point = get_sprite_position_on_grid(to_sprite, grid);
+  const grid        = grid_container.children;
+  const from_point  = get_sprite_position_on_grid(from_sprite,  grid);
+  const to_point    = get_sprite_position_on_grid(to_sprite,    grid);
 
-  if(!to_point || !from_point) {
-    return;
+  if(!to_point) {
+    throw `sprite: ${to_sprite.name} was not found`;
+  }
+  if(!from_point) {
+    throw `sprite: ${from_sprite.name} was not found`;
   }
 
   sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
@@ -409,7 +412,7 @@ async function run_pathfinding_test() {
   const grid = grid_container.children;
   const rat_sprite = viewport.getChildByName('critter_container').getChildByName('rat');
 
-  const rat_direction = viewport.getChildByName('critter_container').getChildByName('dot');
+  const rat_direction = viewport.getChildByName('enemy_container').getChildByName('enemy');
 
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
@@ -478,119 +481,3 @@ setInterval(()=>{
 //    });
 //
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//function path_from_enemy_to_player(enemy, player) {
-//
-//  const grid = grid_container.children;
-//
-//  const enemy_point = get_sprite_position_on_grid(enemy, grid);
-//  const player_point = get_sprite_position_on_grid(player, grid);
-//
-//  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-//    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-//}
-
-
-
-
-// function continue_sprite_on_default_path(sprite) {
-//   const tween = sprite.path;
-
-//   for (let i = 0; i < sprite.path.length; i++) {
-//     // TODO
-//     const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
-
-//     const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
-
-//     const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-
-//     let angle_iterator = i + 1;
-
-//     // TODO: you're a monster
-//     if(sprite.path[i+1] === undefined) {
-//       angle_iterator = 0;
-//     }
-
-//     //TODO stop  spinning 360, minus it from the factorial
-//     const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
-
-//     tween.to({
-//       x:sprite.path[i].x +50,
-//       y:sprite.path[i].y +50,
-//     }, walk_time, createjs.Ease.sineInOut)
-//       .wait(random_wait_time_with_threshold)
-//       .to({
-//         rotation: angle_to_face,
-//       }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-//       .wait(random_wait_time_with_threshold);
-//   }
-//   tween.call(()=>{
-//     console.log('end of tween');
-//   });
-
-// }
-
-
-
-// function highlight_start_grid () {
-
-//   const grid = grid_container.children;
-//   const enemy_sprite = global.viewport.children[7].children[0];
-//   const player_sprite = global.Player.sprite;
-
-//   const grid_to_highlight_enemy = get_sprite_position_on_grid(enemy_sprite, grid)
-
-//   const grid_to_highlight_player = get_sprite_position_on_grid(player_sprite, grid)
-
-//   // console.log(grid_to_highlight)
-
-//   grid_to_highlight_enemy.alpha =1;
-//   grid_to_highlight_player.alpha =1;
-
-//   create_path_from_two_grid_points(grid_to_highlight_enemy.cell_position, grid_to_highlight_player.cell_position)
-//   .then(path => {
-//     console.log(path);
-//     highlight_grid_cell_from_path(path)
-//   })
-
-// }
-
-
-// // TODO one time the tween
-// let boolean_time = true;
-
-// function create_tween_on_point_array(sprite, point_array) {
-//   if( boolean_time === false ) return;
-
-//   sprite.path.paused = true;
-
-//   boolean_time = false;
-
-//   if(global.is_development) {
-//     highlight_grid_cell_from_path(point_array);
-//   }
-
-//   const path_array = point_array.map(grid => (
-//     sprite_grid[grid.y][grid.x]
-//   ));
-
-//   const tween_to_player = move_sprite_on_path_with_delay(sprite, path_array);
-
-//   tween_to_player.call(() => {
-//     move_sprite_on_path_with_delay(sprite, path_array.reverse());
-//   })
-// }

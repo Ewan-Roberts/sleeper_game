@@ -516,6 +516,10 @@ class Character {
     });
   }
 
+  follow_sprite_with_camera() {
+    viewport.follow(this.sprite);
+  }
+
   add_sight_line() {
     const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
@@ -671,15 +675,25 @@ module.exports = {
 
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
+const ticker = require('../../engine/ticker');
 
-const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
+const {
+  pathfind_from_enemy_to_player,
+  move_sprite_to_sprite_on_grid,
+} = require('../../engine/pathfind.js');
+
 const { radian }         = require('../../engine/math');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
+const { Vitals } = require('../attributes/vitals');
+const { distance_between_points } = require('../../engine/math');
 
 class Enemy extends Character {
   constructor() {
     super();
+
+    this.sprite.status = new Vitals();
+    this.name = 'enemy';
 
     viewport.getChildByName('enemy_container').addChild(this.sprite);
   }
@@ -703,6 +717,34 @@ class Enemy extends Character {
     this.sprite.addChild(direction_line);
   }
 
+
+  is_predator_to(prey) {
+    let testing = 0;
+
+    this.min_pathfind_distance = 10;
+    this.max_pathfind_distance = 700;
+
+    const predator = this.sprite;
+
+    ticker.add(() => {
+      const distance_to_act = distance_between_points(predator, prey);
+      if(
+        distance_to_act < this.min_pathfind_distance ||
+        distance_to_act > this.max_pathfind_distance ||
+        !this.sprite.status.alive
+      ) {
+        return;
+      }
+      //if(testing> 3) return;
+
+      //console.log(distance_to_act);
+
+      move_sprite_to_sprite_on_grid(predator, prey);
+
+      //testing++;
+    });
+  }
+
   action_on_seeing_player(player_sprite) {
     if(!this.player_seen) {
       this.sprite.speak('now, calm down, dont move');
@@ -724,7 +766,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/math":20,"../../engine/pathfind.js":21,"../../engine/viewport":24,"../character_model":5,"@createjs/tweenjs":41,"pixi.js":203}],8:[function(require,module,exports){
+},{"../../engine/math":20,"../../engine/pathfind.js":21,"../../engine/ticker":23,"../../engine/viewport":24,"../attributes/vitals":4,"../character_model":5,"@createjs/tweenjs":41,"pixi.js":203}],8:[function(require,module,exports){
 'use strict';
 
 const viewport = require('../../engine/viewport');
@@ -795,10 +837,6 @@ class Player extends Character{
     viewport.addChild(this.sprite);
   }
 
-  follow_player() {
-    viewport.follow(this.sprite);
-  }
-
   add_controls() {
     this.keyboard = new Keyboard();
     this.mouse = new Mouse();
@@ -847,6 +885,8 @@ const { distance_between_points } = require('../../engine/math');
 
 const ticker = require('../../engine/ticker');
 
+const critter_container = viewport.getChildByName('critter_container');
+
 class Rat {
   constructor() {
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
@@ -863,7 +903,7 @@ class Rat {
     // for testing
     this.sprite.status = new Vitals();
 
-    viewport.getChildByName('critter_container').addChild(this.sprite);
+    critter_container.addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {
@@ -901,7 +941,7 @@ class Rat {
   }
 
   is_prey_to(predator) {
-    this.min_pathfind_distance = 100;
+    this.min_pathfind_distance = 50;
     this.max_pathfind_distance = 400;
 
     const prey  = this.sprite;
@@ -925,7 +965,7 @@ class Rat {
       move_sprite_to_sprite_on_grid(prey, point_to_run_for);
     });
 
-    viewport.getChildByName('critter_container').addChild(point_to_run_for);
+    critter_container.addChild(point_to_run_for);
   }
 
   move_to_point(point) {
@@ -1635,7 +1675,6 @@ const viewport = require('./viewport');
 const {
   distance_between_points,
   generate_number_between_min_and_max,
-  radian,
   radian_positive,
 } = require('./math');
 const easystarjs = require('easystarjs');
@@ -1730,18 +1769,6 @@ function get_grid_sprite_on_point(point, container) {
 }
 
 
-function get_sprite_position_on_grid(sprite, container) {
-  if(!container) throw 'gimme a container';
-  const posish = sprite.getGlobalPosition();
-
-  const grid_containing_sprite = container.find(grid => (
-    grid.containsPoint(posish)
-  ));
-
-  if(grid_containing_sprite){
-    return grid_containing_sprite;
-  }
-}
 
 function highlight_grid_cell_from_path(path) {
   path.forEach(grid => {
@@ -1799,7 +1826,7 @@ function move_sprite_on_path(sprite, path_array) {
   }
   const path = new PIXI.tween.TweenPath();
   const random_number = () => generate_number_between_min_and_max(-30, 30);
-
+  if(path_array[2] === undefined) return;
   path.moveTo(sprite.x, sprite.y);
   path.arcTo(
     path_array[1].middle.x,
@@ -1825,20 +1852,20 @@ function move_sprite_on_path(sprite, path_array) {
   tween.time = path_array.length * 300;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-  sprite.textures = sprite.animations.move;
-  sprite.loop = true;
-  sprite.play();
+  //sprite.textures = sprite.animations.move;
+  //sprite.loop = true;
+  //sprite.play();
 
   tween.on('update', () => {
     sprite.rotation = radian_positive(sprite, tween.path._tmpPoint);
- });
-
-  tween.on('end', () => {
-    sprite.textures = sprite.animations.eat;
-    sprite.animationSpeed = 0.2;
-    sprite.loop = false;
-    sprite.play();
   });
+
+  //tween.on('end', () => {
+  //  sprite.textures = sprite.animations.eat;
+  //  sprite.animationSpeed = 0.2;
+  //  sprite.loop = false;
+  //  sprite.play();
+  //});
 
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(2, 0xffffff, 0.1);
@@ -1983,15 +2010,31 @@ function move_sprite_on_route(sprite) {
   });
 }
 
+function get_sprite_position_on_grid(sprite, container) {
+  if(!container) throw 'gimme a container';
+
+  const sprite_position = sprite.getGlobalPosition();
+
+  const grid_containing_sprite = container.find(grid => (
+    grid.containsPoint(sprite_position)
+  ));
+
+  if(grid_containing_sprite){
+    return grid_containing_sprite;
+  }
+}
 
 async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
-  const grid = grid_container.children;
 
-  const from_point = get_sprite_position_on_grid(from_sprite, grid);
-  const to_point = get_sprite_position_on_grid(to_sprite, grid);
+  const grid        = grid_container.children;
+  const from_point  = get_sprite_position_on_grid(from_sprite,  grid);
+  const to_point    = get_sprite_position_on_grid(to_sprite,    grid);
 
-  if(!to_point || !from_point) {
-    return;
+  if(!to_point) {
+    throw `sprite: ${to_sprite.name} was not found`;
+  }
+  if(!from_point) {
+    throw `sprite: ${from_sprite.name} was not found`;
   }
 
   sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
@@ -2038,7 +2081,7 @@ async function run_pathfinding_test() {
   const grid = grid_container.children;
   const rat_sprite = viewport.getChildByName('critter_container').getChildByName('rat');
 
-  const rat_direction = viewport.getChildByName('critter_container').getChildByName('dot');
+  const rat_direction = viewport.getChildByName('enemy_container').getChildByName('enemy');
 
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
@@ -2107,122 +2150,6 @@ setInterval(()=>{
 //    });
 //
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//function path_from_enemy_to_player(enemy, player) {
-//
-//  const grid = grid_container.children;
-//
-//  const enemy_point = get_sprite_position_on_grid(enemy, grid);
-//  const player_point = get_sprite_position_on_grid(player, grid);
-//
-//  create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-//    .then(path_data => path_enemy_on_points(enemy_sprite, path_data));
-//}
-
-
-
-
-// function continue_sprite_on_default_path(sprite) {
-//   const tween = sprite.path;
-
-//   for (let i = 0; i < sprite.path.length; i++) {
-//     // TODO
-//     const walk_time = create_relative_walk_time(sprite.path[i-1] || sprite.path[0], sprite.path[i], 10);
-
-//     const random_wait_time_with_threshold = generate_wait_time_with_threshold(2000, 300);
-
-//     const random_wait_time_with_minimum = generate_wait_time_with_minimum(3000, 1000);
-
-//     let angle_iterator = i + 1;
-
-//     // TODO: you're a monster
-//     if(sprite.path[i+1] === undefined) {
-//       angle_iterator = 0;
-//     }
-
-//     //TODO stop  spinning 360, minus it from the factorial
-//     const angle_to_face = Math.atan2(sprite.path[angle_iterator].y - sprite.path[i].y, sprite.path[angle_iterator].x - sprite.path[i].x) || 0;
-
-//     tween.to({
-//       x:sprite.path[i].x +50,
-//       y:sprite.path[i].y +50,
-//     }, walk_time, createjs.Ease.sineInOut)
-//       .wait(random_wait_time_with_threshold)
-//       .to({
-//         rotation: angle_to_face,
-//       }, random_wait_time_with_minimum, createjs.Ease.backInOut)
-//       .wait(random_wait_time_with_threshold);
-//   }
-//   tween.call(()=>{
-//     console.log('end of tween');
-//   });
-
-// }
-
-
-
-// function highlight_start_grid () {
-
-//   const grid = grid_container.children;
-//   const enemy_sprite = global.viewport.children[7].children[0];
-//   const player_sprite = global.Player.sprite;
-
-//   const grid_to_highlight_enemy = get_sprite_position_on_grid(enemy_sprite, grid)
-
-//   const grid_to_highlight_player = get_sprite_position_on_grid(player_sprite, grid)
-
-//   // console.log(grid_to_highlight)
-
-//   grid_to_highlight_enemy.alpha =1;
-//   grid_to_highlight_player.alpha =1;
-
-//   create_path_from_two_grid_points(grid_to_highlight_enemy.cell_position, grid_to_highlight_player.cell_position)
-//   .then(path => {
-//     console.log(path);
-//     highlight_grid_cell_from_path(path)
-//   })
-
-// }
-
-
-// // TODO one time the tween
-// let boolean_time = true;
-
-// function create_tween_on_point_array(sprite, point_array) {
-//   if( boolean_time === false ) return;
-
-//   sprite.path.paused = true;
-
-//   boolean_time = false;
-
-//   if(global.is_development) {
-//     highlight_grid_cell_from_path(point_array);
-//   }
-
-//   const path_array = point_array.map(grid => (
-//     sprite_grid[grid.y][grid.x]
-//   ));
-
-//   const tween_to_player = move_sprite_on_path_with_delay(sprite, path_array);
-
-//   tween_to_player.call(() => {
-//     move_sprite_on_path_with_delay(sprite, path_array.reverse());
-//   })
-// }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./math":20,"./viewport":24,"@createjs/tweenjs":41,"easystarjs":44,"pixi.js":203}],22:[function(require,module,exports){
@@ -8450,6 +8377,8 @@ module.exports={ "columns":20,
  "type":"tileset"
 }
 },{}],39:[function(require,module,exports){
+/* eslint-disable */  // --> OFF
+
 'use strict';
 
 const { Player } = require('../../character/characters/player.js');
@@ -8464,33 +8393,32 @@ const { NetworkCharacter } = require('../../character/network/network_player.js'
 //const { start_rain } = require('../../weather/rain');
 const { intro_cutscene } = require('../../cutscene/intro.js');
 const { Rat } = require('../../character/characters/rat');
+const { Enemy } = require('../../character/characters/enemy');
 const PIXI = require('pixi.js');
 
 class DevelopmentLevel {
   constructor() {
-    const player = new Player();
-
-    player.set_position({ x: 1000, y: 1000 });
-    player.add_controls();
-    player.follow_player();
-    player.with_light();
+    //const player = new Player();
+    //player.set_position({ x: 1000, y: 1000 });
+    //player.add_controls();
+    //player.follow_sprite_with_camera();
+    //player.with_light();
     this.test_load_test_level();
     //player.add_raycasting(this.level.segments);
 
     this.test_note();
 
+    const enemy = new Enemy();
+    enemy.set_position({ x: 1550, y: 1000 });
+    enemy.with_light();
+    enemy.follow_sprite_with_camera();
+
     const rat = new Rat();
-    rat.set_position({x: 1100, y: 1000});
-    rat.is_prey_to(player.sprite);
-    rat.lootable_on_death();
+    rat.set_position({x: 900, y: 1200});
+    //rat.lootable_on_death();
 
-
-    const rat2 = new Rat();
-    rat2.set_position({x: 900, y: 900});
-    rat2.is_prey_to(player.sprite);
-    rat2.lootable_on_death();
-
-
+    rat.is_prey_to(enemy.sprite);
+    enemy.is_predator_to(rat.sprite);
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
     //this.test_backpack();
@@ -8598,7 +8526,7 @@ module.exports = {
 
 
 
-},{"../../character/characters/player.js":9,"../../character/characters/rat":10,"../../character/network/network_player.js":11,"../../cutscene/intro.js":15,"../../items/Note":28,"../../items/back_pack":29,"../../items/chest":30,"../../items/fire_place":32,"../debug/playground/map2_output.json":37,"../debug/playground/map2_tiles.json":38,"../level_utils":40,"pixi.js":203}],40:[function(require,module,exports){
+},{"../../character/characters/enemy":7,"../../character/characters/player.js":9,"../../character/characters/rat":10,"../../character/network/network_player.js":11,"../../cutscene/intro.js":15,"../../items/Note":28,"../../items/back_pack":29,"../../items/chest":30,"../../items/fire_place":32,"../debug/playground/map2_output.json":37,"../debug/playground/map2_tiles.json":38,"../level_utils":40,"pixi.js":203}],40:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');

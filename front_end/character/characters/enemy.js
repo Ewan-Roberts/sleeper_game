@@ -2,15 +2,25 @@
 
 const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
+const ticker = require('../../engine/ticker');
 
-const { pathfind_from_enemy_to_player } = require('../../engine/pathfind.js');
+const {
+  pathfind_from_enemy_to_player,
+  move_sprite_to_sprite_on_grid,
+} = require('../../engine/pathfind.js');
+
 const { radian }         = require('../../engine/math');
 const { createjs } = require('@createjs/tweenjs');
 const { Character } = require('../character_model');
+const { Vitals } = require('../attributes/vitals');
+const { distance_between_points } = require('../../engine/math');
 
 class Enemy extends Character {
   constructor() {
     super();
+
+    this.sprite.status = new Vitals();
+    this.name = 'enemy';
 
     viewport.getChildByName('enemy_container').addChild(this.sprite);
   }
@@ -32,6 +42,34 @@ class Enemy extends Character {
     }
 
     this.sprite.addChild(direction_line);
+  }
+
+
+  is_predator_to(prey) {
+    let testing = 0;
+
+    this.min_pathfind_distance = 10;
+    this.max_pathfind_distance = 700;
+
+    const predator = this.sprite;
+
+    ticker.add(() => {
+      const distance_to_act = distance_between_points(predator, prey);
+      if(
+        distance_to_act < this.min_pathfind_distance ||
+        distance_to_act > this.max_pathfind_distance ||
+        !this.sprite.status.alive
+      ) {
+        return;
+      }
+      //if(testing> 3) return;
+
+      //console.log(distance_to_act);
+
+      move_sprite_to_sprite_on_grid(predator, prey);
+
+      //testing++;
+    });
   }
 
   action_on_seeing_player(player_sprite) {

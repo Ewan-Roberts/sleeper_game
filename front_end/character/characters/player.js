@@ -20,10 +20,6 @@ class Player extends Character{
     viewport.addChild(this.sprite);
   }
 
-  follow_player() {
-    viewport.follow(this.sprite);
-  }
-
   add_controls() {
     this.keyboard = new Keyboard();
     this.mouse = new Mouse();
