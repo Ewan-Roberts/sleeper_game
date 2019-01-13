@@ -9,6 +9,8 @@ const {
   generate_number_between_min_and_max,
 } = require('../engine/math');
 
+//https://www.uihere.com/free-graphics/search?q=knife
+
 const weapon_list = [
   {
     name:       'rusty_knife',
@@ -21,7 +23,20 @@ const weapon_list = [
     condition:  100,
 
     display_name: 'rusty knife',
-    description: 'The rusty knife someone sharpened on what looks like a rock',
+    description:  'The rusty knife someone sharpened on what looks like a rock',
+  },
+  {
+    name:       'wrench_blade',
+    image_name: 'wrench_blade',
+    id:         1002,
+    rank:       1,
+    cost:       80,
+    type:       'weapon',
+    damage:     2,
+    condition:  100,
+
+    display_name: 'wrench blade',
+    description:  'This blade looks to be a hastily sharped from an old wrench',
   },
 ];
 
