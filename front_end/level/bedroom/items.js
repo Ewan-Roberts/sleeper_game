@@ -60,16 +60,3 @@ const addLevelRaycasting = () =>{
         const uniqueAngles = [];
         let intersects = [];
         PIXI.tweenManager.update();
-        $(".fps").html("FPS: "+(app.ticker.FPS).toFixed(1));
-        raycast.clear()
-        raycast.beginFill(0xfffffff,0.14);
-        for(let j=0;j<uniquePoints.length;j++){const uniquePoint = uniquePoints[j];const angle = Math.atan2(uniquePoint.y-Player.sprite.y,uniquePoint.x-Player.sprite.x);uniquePoint.angle = angle;uniqueAngles.push(angle-0.00001,angle-0.00001,angle+0.00001);}
-        for(let k=0;k<uniqueAngles.length;k++){const angle = uniqueAngles[k];const dx = Math.cos(angle);const dy = Math.sin(angle);const ray = {a:{x:Player.sprite.x,y:Player.sprite.y},b:{x:Player.sprite.x+dx,y:Player.sprite.y+dy}};let closestIntersect = null;for(let i=0;i<global.bedroom_segments.length;i++){var intersect = getIntersection(ray,global.bedroom_segments[i]);if(!intersect) continue;if(!closestIntersect || intersect.param<closestIntersect.param){closestIntersect=intersect;}}if(!closestIntersect) continue;closestIntersect.angle = angle;intersects.push(closestIntersect);}
-        intersects = intersects.sort((a,b)=>a.angle-b.angle);
-        raycast.moveTo(intersects[0].x,intersects[0].y);
-        raycast.lineStyle(1, 0xffd900, 1);
-        for (let i = 1; i < intersects.length; i++) raycast.lineTo(intersects[i].x,intersects[i].y);
-  });
-
-  global.viewport.addChild(raycast)
-}

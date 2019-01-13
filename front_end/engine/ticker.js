@@ -1,9 +1,22 @@
 'use strict';
 
-require('pixi-tween');
 const PIXI = require('pixi.js');
+global.window.PIXI = PIXI;
+global.window.PIXI.default = PIXI;
+
+require('pixi-tween');
+require('pixi-timer');
+
 const app = require('./app');
 
-app.ticker.add(() => PIXI.tweenManager.update());
+const timer = PIXI.timerManager.createTimer;
 
-module.exports = app.ticker;
+app.ticker.add(() => {
+  PIXI.timerManager.update();
+  PIXI.tweenManager.update();
+});
+
+module.exports = {
+  ticker: app.ticker,
+  timer,
+};

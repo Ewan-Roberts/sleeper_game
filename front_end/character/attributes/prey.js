@@ -1,8 +1,8 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport } = require('../../engine/viewport');
-const ticker = require('../../engine/ticker');
+const { viewport  } = require('../../engine/viewport');
+const { ticker    } = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');

@@ -27,70 +27,70 @@ class Inventory {
 
   hide() {
     this.inventory.sprite.visible = false;
-    this.item_slot_0.visible  = false;
-    this.item_slot_1.visible  = false;
-    this.item_slot_2.visible  = false;
-    this.item_slot_3.visible  = false;
-    this.close_button.visible = false;
+    this.inventory.item_slot_0.visible  = false;
+    this.inventory.item_slot_1.visible  = false;
+    this.inventory.item_slot_2.visible  = false;
+    this.inventory.item_slot_3.visible  = false;
+    this.inventory.close_button.visible = false;
   }
 
   show() {
     this.inventory.sprite.visible = true;
-    this.item_slot_0.visible  = true;
-    this.item_slot_1.visible  = true;
-    this.item_slot_2.visible  = true;
-    this.item_slot_3.visible  = true;
-    this.close_button.visible = true;
+    this.inventory.item_slot_0.visible  = true;
+    this.inventory.item_slot_1.visible  = true;
+    this.inventory.item_slot_2.visible  = true;
+    this.inventory.item_slot_3.visible  = true;
+    this.inventory.close_button.visible = true;
   }
 
   set_inventory_position(point) {
     this.show();
     this.inventory.sprite.position.set(point.x + 250, point.y -20);
-    this.item_slot_0.position.x = this.inventory.sprite.x-this.inventory.sprite.width/2;
-    this.item_slot_0.position.y = this.inventory.sprite.y;
-    this.item_slot_1.position.x = this.inventory.sprite.x-this.inventory.sprite.width/4;
-    this.item_slot_1.position.y = this.inventory.sprite.y;
-    this.item_slot_2.position.x = this.inventory.sprite.x;
-    this.item_slot_2.position.y = this.inventory.sprite.y;
-    this.item_slot_3.position.x = this.inventory.sprite.x +this.inventory.sprite.width/4;
-    this.item_slot_3.position.y = this.inventory.sprite.y;
-    this.close_button.position.x = this.inventory.sprite.x +this.inventory.sprite.width/2 - 30;
-    this.close_button.position.y = this.inventory.sprite.y -35;
+    this.inventory.item_slot_0.position.x = this.inventory.sprite.x-this.inventory.sprite.width/2;
+    this.inventory.item_slot_0.position.y = this.inventory.sprite.y;
+    this.inventory.item_slot_1.position.x = this.inventory.sprite.x-this.inventory.sprite.width/4;
+    this.inventory.item_slot_1.position.y = this.inventory.sprite.y;
+    this.inventory.item_slot_2.position.x = this.inventory.sprite.x;
+    this.inventory.item_slot_2.position.y = this.inventory.sprite.y;
+    this.inventory.item_slot_3.position.x = this.inventory.sprite.x +this.inventory.sprite.width/4;
+    this.inventory.item_slot_3.position.y = this.inventory.sprite.y;
+    this.inventory.close_button.position.x = this.inventory.sprite.x +this.inventory.sprite.width/2 - 30;
+    this.inventory.close_button.position.y = this.inventory.sprite.y -35;
   }
 
   add_item_tiles() {
-    this.item_slot_0 = PIXI.Sprite.fromFrame('item_slot');
-    this.item_slot_0.name = 'item_slot_0';
-    this.item_slot_0.width = box_size;
-    this.item_slot_0.height = box_size;
-    this.item_slot_0.anchor.y = 0.5;
+    this.inventory.item_slot_0 = PIXI.Sprite.fromFrame('item_slot');
+    this.inventory.item_slot_0.name = 'item_slot_0';
+    this.inventory.item_slot_0.width = box_size;
+    this.inventory.item_slot_0.height = box_size;
+    this.inventory.item_slot_0.anchor.y = 0.5;
 
-    this.item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
-    this.item_slot_1.name = 'item_slot_1';
-    this.item_slot_1.width = box_size;
-    this.item_slot_1.height = box_size;
-    this.item_slot_1.anchor.y = 0.5;
+    this.inventory.item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
+    this.inventory.item_slot_1.name = 'item_slot_1';
+    this.inventory.item_slot_1.width = box_size;
+    this.inventory.item_slot_1.height = box_size;
+    this.inventory.item_slot_1.anchor.y = 0.5;
 
-    this.item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
-    this.item_slot_2.name = 'item_slot_2';
-    this.item_slot_2.width = box_size;
-    this.item_slot_2.height = box_size;
-    this.item_slot_2.anchor.y = 0.5;
+    this.inventory.item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
+    this.inventory.item_slot_2.name = 'item_slot_2';
+    this.inventory.item_slot_2.width = box_size;
+    this.inventory.item_slot_2.height = box_size;
+    this.inventory.item_slot_2.anchor.y = 0.5;
 
-    this.item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
-    this.item_slot_3.name = 'item_slot_3';
-    this.item_slot_3.width = box_size;
-    this.item_slot_3.height = box_size;
-    this.item_slot_3.anchor.y = 0.5;
+    this.inventory.item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
+    this.inventory.item_slot_3.name = 'item_slot_3';
+    this.inventory.item_slot_3.width = box_size;
+    this.inventory.item_slot_3.height = box_size;
+    this.inventory.item_slot_3.anchor.y = 0.5;
 
-    this.close_button = PIXI.Sprite.fromFrame('cancel_button');
-    this.close_button.name = 'close_button';
-    this.close_button.width = 30;
-    this.close_button.height = 30;
-    this.close_button.anchor.y = 0.5;
-    this.close_button.interactive = true;
-    this.close_button.buttonMode = true;
-    this.close_button.click = () => {
+    this.inventory.close_button = PIXI.Sprite.fromFrame('cancel_button');
+    this.inventory.close_button.name = 'close_button';
+    this.inventory.close_button.width = 30;
+    this.inventory.close_button.height = 30;
+    this.inventory.close_button.anchor.y = 0.5;
+    this.inventory.close_button.interactive = true;
+    this.inventory.close_button.buttonMode = true;
+    this.inventory.close_button.click = () => {
 
       if(this.inventory.sprite.visible){
         this.hide();
@@ -101,41 +101,16 @@ class Inventory {
     };
     //todo move to under this container
     gui_container.addChild(
-      this.item_slot_0,
-      this.item_slot_1,
-      this.item_slot_2,
-      this.item_slot_3,
-      this.close_button
+      this.inventory.item_slot_0,
+      this.inventory.item_slot_1,
+      this.inventory.item_slot_2,
+      this.inventory.item_slot_3,
+      this.inventory.close_button
     );
 
     this.hide();
   }
 
-  lootable_on_death() {
-    this.sprite.kill = () => {
-
-      this.sprite.stop();
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.texture = this.sprite.animations.dead;
-      this.sprite.status = 'dead';
-
-      const get_tween = PIXI.tweenManager.getTweensForTarget(this.sprite);
-      if(get_tween[0]) {
-        get_tween[0].stop();
-      }
-
-      this.lootable();
-    };
-  }
-
-  lootable() {
-    this.sprite.click = () => {
-      //console.log(this.inventory)
-
-      this.set_inventory_position(this.sprite);
-    };
-  }
 
   populate_slot(item_details, slot) {
 
@@ -153,7 +128,7 @@ class Inventory {
     };
 
     //todo fix this madness
-    this[`item_slot_${slot}`].addChild(item);
+    this.inventory[`item_slot_${slot}`].addChild(item);
   }
 
   empty_slots() {

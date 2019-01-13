@@ -25,6 +25,7 @@
     "mocha": "^5.2.0",
     "mongoose": "^5.2.15",
     "pixi-packer-parser": "^2.0.0",
+    "pixi-timer": "^1.0.1",
     "pixi-tween": "^0.2.0",
     "pixi-viewport": "^3.7.0",
     "pixi.js": "^4.8.2",

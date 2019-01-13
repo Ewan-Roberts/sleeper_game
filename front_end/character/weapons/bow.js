@@ -1,8 +1,9 @@
 'use strict';
 
-const PIXI      = require('pixi.js');
-const viewport  = require('../../engine/viewport.js');
-const { radian } = require('../../engine/math');
+const PIXI         = require('pixi.js');
+const { viewport } = require('../../engine/viewport.js');
+const { radian   } = require('../../engine/math');
+const { Dialog   }= require('../../cutscene/dialog_util');
 
 class Arrow {
   constructor() {
@@ -61,11 +62,8 @@ function arrow_management(power, origin, target) {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
-        const arrow_in_enemy = create_embedded_arrow(arrow.rotation);
         arrow.destroy();
-        enemy.speak('I am hit');
-        enemy.addChild(arrow_in_enemy);
-
+        Dialog.speak_above_sprite(enemy, 'i am hit');
         return;
       }
     });

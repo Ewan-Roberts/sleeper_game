@@ -1,8 +1,8 @@
 'use strict';
 
-const PIXI      = require('pixi.js');
-const ticker    = require('../engine/ticker');
-const { viewport }  = require('../engine/viewport.js');
+const PIXI          = require('pixi.js');
+const { ticker    } = require('../engine/ticker');
+const { viewport  } = require('../engine/viewport.js');
 
 const cutscene_container = viewport.getChildByName('cutscene_container');
 

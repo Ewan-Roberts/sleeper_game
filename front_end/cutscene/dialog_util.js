@@ -93,6 +93,13 @@ class Dialog {
     }
   }
 
+  static speak_above_sprite(sprite, text) {
+    const render_text = new PIXI.Text(text);
+    render_text.x = sprite.x - 100;
+    render_text.y = sprite.y - 80;
+    render_text.alpha = 1;
+    dialog_container.addChild(render_text);
+  }
 
   create_slide_format(point) {
     this.render_actor(point.x - 720, point.y -80, '');
