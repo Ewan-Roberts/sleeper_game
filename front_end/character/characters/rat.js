@@ -46,8 +46,6 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
 
   lootable() {
     this.sprite.click = () => {
-      //console.log(this.inventory)
-
       this.set_inventory_position(this.sprite);
     };
   }

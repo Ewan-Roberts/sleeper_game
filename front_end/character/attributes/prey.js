@@ -12,12 +12,11 @@ const critter_container = viewport.getChildByName('critter_container');
 class Prey {
   constructor() {
     this.type = 'prey';
+    this.min_pathfind_distance = 50;
+    this.max_pathfind_distance = 400;
   }
 
   is_prey_to(predator) {
-    this.min_pathfind_distance = 50;
-    this.max_pathfind_distance = 400;
-
     const prey  = this.sprite;
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');

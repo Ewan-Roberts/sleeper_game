@@ -14,12 +14,8 @@ class Predator {
 
   attack(prey) {
     this.sprite.animation_switch('knife', 'attack');
-    console.log(prey);
 
     prey.damage(this.inventory.equiped.damage);
-    console.log(prey);
-
-    debugger;
   }
 
   is_predator_to(prey) {

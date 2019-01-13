@@ -8,6 +8,7 @@ const { Dialog   } = require('../../cutscene/dialog_util');
 class Arrow {
   constructor() {
     this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    //const arrow_embedded = PIXI.Sprite.fromFrame('arrow_embedded');
     this.sprite.name = 'arrow';
     this.sprite.anchor.set(0.95);
     this.sprite.height *= 3;
@@ -20,15 +21,6 @@ function create_rotated_arrow(origin, target) {
   const arrow = new Arrow();
   arrow.sprite.rotation = radian(target, origin);
   return arrow.sprite;
-}
-
-function create_embedded_arrow(rotation) {
-  const arrow_embedded = PIXI.Sprite.fromFrame('arrow_embedded');
-
-  arrow_embedded.anchor.set(0.9);
-  arrow_embedded.rotation = rotation;
-
-  return arrow_embedded;
 }
 
 function create_arrow_path(origin, target) {
