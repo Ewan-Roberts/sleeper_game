@@ -6,7 +6,9 @@
 // materials
 // armour
 
-const { generate_number_between_min_and_max } = require('../engine/math');
+const {
+  generate_number_between_min_and_max,
+} = require('../engine/math');
 
 const item_list = [
   {

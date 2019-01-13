@@ -4,6 +4,7 @@ const PIXI              = require('pixi.js');
 const viewport          = require('../engine/viewport');
 const { createjs }      = require('@createjs/tweenjs');
 
+const collision_items = viewport.getChildByName('collision_items');
 
 class Door {
   constructor(door_data) {
@@ -15,7 +16,7 @@ class Door {
     this.sprite.buttonMode = true;
     this.sprite.name = 'door';
     this.state = 'closed';
-    viewport.getChildByName('collision_items').addChild(this.sprite);
+    collision_items.addChild(this.sprite);
 
   }
 

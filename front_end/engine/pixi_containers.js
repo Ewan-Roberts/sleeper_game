@@ -58,6 +58,10 @@ const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = zIndex_layer.very_close;
 
+const dialog_container = new PIXI.Container();
+dialog_container.name = 'dialog_container';
+dialog_container.zIndex = zIndex_layer.close;
+
 viewport.addChild(
   background_container,
   grid_container,
@@ -70,7 +74,8 @@ viewport.addChild(
   arrow_container,
   enemy_container,
   cutscene_container,
-  gui_container
+  gui_container,
+  dialog_container
 );
 
 viewport.updateLayersOrder();

@@ -15,6 +15,8 @@ const { Character } = require('../character_model');
 const { Vitals } = require('../attributes/vitals');
 const { distance_between_points } = require('../../engine/math');
 
+const enemy_container = viewport.getChildByName('enemy_container');
+
 class Enemy extends Character {
   constructor() {
     super();
@@ -22,7 +24,7 @@ class Enemy extends Character {
     this.sprite.status = new Vitals();
     this.name = 'enemy';
 
-    viewport.getChildByName('enemy_container').addChild(this.sprite);
+    enemy_container.addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {

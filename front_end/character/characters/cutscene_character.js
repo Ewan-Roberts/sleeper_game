@@ -3,6 +3,8 @@
 const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 
+const cutscene_container = viewport.getChildByName('cutscene_container');
+
 class Cutscene_Character extends Character{
   constructor() {
     super();
@@ -10,7 +12,7 @@ class Cutscene_Character extends Character{
     this.sprite.name = 'cutscene_npc';
     this.sprite.move_to_point = this.move_to_point;
 
-    viewport.getChildByName('cutscene_container').addChild(this.sprite);
+    cutscene_container.addChild(this.sprite);
   }
 
   facing(direction) {

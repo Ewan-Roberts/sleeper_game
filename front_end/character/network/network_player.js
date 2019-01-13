@@ -4,6 +4,8 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const character_animations = require('../animations/character');
 
+const network_players = viewport.getChildByName('network_players');
+
 class NetworkCharacter {
   constructor(player_data) {
     this.name = 'network_player';
@@ -31,7 +33,7 @@ class NetworkCharacter {
       }
     };
 
-    viewport.getChildByName('network_players').addChild(this.sprite);
+    network_players.addChild(this.sprite);
   }
 
   set_position(point) {

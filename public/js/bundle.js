@@ -189,6 +189,8 @@ const {
   get_random_item_array,
 } = require('../../data/item_data');
 
+const gui_container = viewport.getChildByName('gui_container');
+
 const box_size = 100;
 
 class Inventory {
@@ -202,7 +204,7 @@ class Inventory {
     this.sprite.width = 402;
     this.sprite.anchor.set(0.5);
     this.sprite.visible = false;
-    viewport.getChildByName('gui_container').addChild(this.sprite);
+    gui_container.addChild(this.sprite);
     this.add_item_tiles();
     this.populate_random_inventory();
   }
@@ -281,8 +283,8 @@ class Inventory {
 
       this.show();
     };
-
-    viewport.getChildByName('gui_container').addChild(
+    //todo move to under this container
+    gui_container.addChild(
       this.item_slot_0,
       this.item_slot_1,
       this.item_slot_2,
@@ -308,7 +310,8 @@ class Inventory {
       viewport.getChildByName('player').inventory.add_item(item_details);
     };
 
-    viewport.getChildByName('gui_container').getChildByName(`item_slot_${slot}`).addChild(item);
+    //todo fix this madness
+    this[`item_slot_${slot}`].addChild(item);
   }
 
   empty_slots() {
@@ -636,6 +639,8 @@ module.exports = {
 const viewport          = require('../../engine/viewport.js');
 const { Character }     = require('../character_model');
 
+const cutscene_container = viewport.getChildByName('cutscene_container');
+
 class Cutscene_Character extends Character{
   constructor() {
     super();
@@ -643,7 +648,7 @@ class Cutscene_Character extends Character{
     this.sprite.name = 'cutscene_npc';
     this.sprite.move_to_point = this.move_to_point;
 
-    viewport.getChildByName('cutscene_container').addChild(this.sprite);
+    cutscene_container.addChild(this.sprite);
   }
 
   facing(direction) {
@@ -688,6 +693,8 @@ const { Character } = require('../character_model');
 const { Vitals } = require('../attributes/vitals');
 const { distance_between_points } = require('../../engine/math');
 
+const enemy_container = viewport.getChildByName('enemy_container');
+
 class Enemy extends Character {
   constructor() {
     super();
@@ -695,7 +702,7 @@ class Enemy extends Character {
     this.sprite.status = new Vitals();
     this.name = 'enemy';
 
-    viewport.getChildByName('enemy_container').addChild(this.sprite);
+    enemy_container.addChild(this.sprite);
   }
 
   create_patrol_path(path_data) {
@@ -774,6 +781,8 @@ const viewport = require('../../engine/viewport');
 const { Character } = require('../character_model');
 const { Dialog } = require('../../cutscene/dialog_util');
 
+const friend_container = viewport.getChildByName('friend_container');
+
 class Friend extends Character {
   constructor() {
     super();
@@ -782,7 +791,7 @@ class Friend extends Character {
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
 
-    viewport.getChildByName('freind_container').addChild(this.sprite);
+    friend_container.addChild(this.sprite);
   }
 
   add_script(script) {
@@ -989,6 +998,8 @@ const PIXI = require('pixi.js');
 const viewport = require('../../engine/viewport');
 const character_animations = require('../animations/character');
 
+const network_players = viewport.getChildByName('network_players');
+
 class NetworkCharacter {
   constructor(player_data) {
     this.name = 'network_player';
@@ -1016,7 +1027,7 @@ class NetworkCharacter {
       }
     };
 
-    viewport.getChildByName('network_players').addChild(this.sprite);
+    network_players.addChild(this.sprite);
   }
 
   set_position(point) {
@@ -1219,10 +1230,7 @@ module.exports = {
 const PIXI = require('pixi.js');
 const viewport = require('../engine/viewport');
 
-const container = new PIXI.Container();
-container.name = 'dialog_container';
-container.zIndex = -20;
-viewport.addChild(container);
+const dialog_container = viewport.getChildByName('dialog_container');
 
 class Dialog {
   create_background() {
@@ -1235,7 +1243,7 @@ class Dialog {
     this.background.height = viewport.height;
     this.background.position.set(0,0);
 
-    container.addChild(this.background);
+    dialog_container.addChild(this.background);
   }
 
   add_script(script) {
@@ -1248,16 +1256,16 @@ class Dialog {
     this.portrait.zIndex = -11;
     this.portrait.position.set(point.x - 800, point.y);
 
-    container.addChild(this.portrait);
+    dialog_container.addChild(this.portrait);
   }
 
   clear_slide_text() {
 
-    container.getChildByName('actor_text').text = '';
-    container.getChildByName('render_text').text = '';
-    container.getChildByName('button_text').text = '';
-    container.getChildByName('choice_one').text = '';
-    container.getChildByName('choice_two').text = '';
+    dialog_container.getChildByName('actor_text').text = '';
+    dialog_container.getChildByName('render_text').text = '';
+    dialog_container.getChildByName('button_text').text = '';
+    dialog_container.getChildByName('choice_one').text = '';
+    dialog_container.getChildByName('choice_two').text = '';
 
   }
 
@@ -1266,7 +1274,7 @@ class Dialog {
     let current_text = '';
 
     if(this.timeout) {
-      container.getChildByName('render_text').text = '';
+      dialog_container.getChildByName('render_text').text = '';
       clearInterval(this.timeout);
     } else {
       this.timeout = setInterval(()=> {
@@ -1275,7 +1283,7 @@ class Dialog {
           return;
         }
         current_text += text_array[i] + ' ';
-        container.getChildByName('render_text').text = current_text;
+        dialog_container.getChildByName('render_text').text = current_text;
         i++;
       }, 150);
     }
@@ -1286,9 +1294,9 @@ class Dialog {
     const text_array = this.script[step].name.split(' ');
     this.create_text_timeout(text_array);
 
-    container.getChildByName('actor_text').text = this.script[step].actor;
-    container.getChildByName('button_text').text = 'next';
-    container.getChildByName('button_text').click = () => {
+    dialog_container.getChildByName('actor_text').text = this.script[step].actor;
+    dialog_container.getChildByName('button_text').text = 'next';
+    dialog_container.getChildByName('button_text').click = () => {
 
       for(let i = 0; i < this.script.length; i++) {
         if(this.script[i].id === this.script[step].id){
@@ -1300,8 +1308,8 @@ class Dialog {
 
   refresh_branch_slide() {
     this.clear_slide_text();
-    container.getChildByName('choice_one').text = 'yes';
-    container.getChildByName('choice_two').text = 'no' ;
+    dialog_container.getChildByName('choice_one').text = 'yes';
+    dialog_container.getChildByName('choice_two').text = 'no' ;
   }
 
   enter_dialog_slide(point) {
@@ -1330,7 +1338,7 @@ class Dialog {
     choice_text.name = 'choice_two';
     choice_text.position.set(x,y);
 
-    container.addChild(choice_text);
+    dialog_container.addChild(choice_text);
   }
 
   render_choice_one(x, y, text) {
@@ -1342,7 +1350,7 @@ class Dialog {
     choice_text.name = 'choice_one';
     choice_text.position.set(x,y);
 
-    container.addChild(choice_text);
+    dialog_container.addChild(choice_text);
   }
 
   render_actor(x, y, text) {
@@ -1355,7 +1363,7 @@ class Dialog {
 
     actor_text.position.set(x,y);
 
-    container.addChild(actor_text);
+    dialog_container.addChild(actor_text);
   }
 
   render_action(x, y, text) {
@@ -1370,7 +1378,7 @@ class Dialog {
     button_text.interactive = true;
     button_text.buttonMode = true;
 
-    container.addChild(button_text);
+    dialog_container.addChild(button_text);
   }
 
   render_text(x, y, text, font_size) {
@@ -1382,7 +1390,7 @@ class Dialog {
     render_text.name = 'render_text';
     render_text.position.set(x,y);
 
-    container.addChild(render_text);
+    dialog_container.addChild(render_text);
   }
 
 }
@@ -1448,6 +1456,8 @@ const PIXI      = require('pixi.js');
 const ticker    = require('../engine/ticker');
 const viewport  = require('../engine/viewport.js');
 
+const cutscene_container = viewport.getChildByName('cutscene_container');
+
 class visual_effects {
 
   static fade_out_sprite(sprite, speed){
@@ -1484,7 +1494,7 @@ class visual_effects {
     image_to_fade.zIndex = viewport.zIndex_layer.very_close;
 
     this.fade_out_sprite(image_to_fade);
-    viewport.getChildByName('cutscene_container').addChild(image_to_fade);
+    cutscene_container.addChild(image_to_fade);
   }
 
 }
@@ -1507,7 +1517,9 @@ module.exports = {
 // materials
 // armour
 
-const { generate_number_between_min_and_max } = require('../engine/math');
+const {
+  generate_number_between_min_and_max,
+} = require('../engine/math');
 
 const item_list = [
   {
@@ -1677,14 +1689,13 @@ const {
   generate_number_between_min_and_max,
   radian_positive,
 } = require('./math');
-const easystarjs = require('easystarjs');
 
-const grid_container = new PIXI.Container();
-grid_container.name = 'grid_container';
+const grid_container = viewport.getChildByName('grid_container');
 
 const sprite_grid = [];
 const binary_grid_map = [];
 
+const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
 
 function create_level_grid(tiles_object) {
@@ -2213,6 +2224,10 @@ const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = zIndex_layer.very_close;
 
+const dialog_container = new PIXI.Container();
+dialog_container.name = 'dialog_container';
+dialog_container.zIndex = zIndex_layer.close;
+
 viewport.addChild(
   background_container,
   grid_container,
@@ -2225,7 +2240,8 @@ viewport.addChild(
   arrow_container,
   enemy_container,
   cutscene_container,
-  gui_container
+  gui_container,
+  dialog_container
 );
 
 viewport.updateLayersOrder();
@@ -2772,6 +2788,7 @@ const PIXI              = require('pixi.js');
 const viewport          = require('../engine/viewport');
 const { createjs }      = require('@createjs/tweenjs');
 
+const collision_items = viewport.getChildByName('collision_items');
 
 class Door {
   constructor(door_data) {
@@ -2783,7 +2800,7 @@ class Door {
     this.sprite.buttonMode = true;
     this.sprite.name = 'door';
     this.state = 'closed';
-    viewport.getChildByName('collision_items').addChild(this.sprite);
+    collision_items.addChild(this.sprite);
 
   }
 
@@ -2921,6 +2938,8 @@ module.exports = {
 
 const viewport = require('../engine/viewport.js');
 
+const non_collision_items = viewport.getChildByName('non_collision_items');
+
 class Item {
   set_position(point) {
     this.sprite.position.set(point.x, point.y);
@@ -2939,7 +2958,7 @@ class Item {
   }
 
   without_character_collision() {
-    viewport.getChildByName('non_collision_items').addChild(this.sprite);
+    non_collision_items.addChild(this.sprite);
   }
 
   moveable() {

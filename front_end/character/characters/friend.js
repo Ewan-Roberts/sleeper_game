@@ -5,6 +5,8 @@ const viewport = require('../../engine/viewport');
 const { Character } = require('../character_model');
 const { Dialog } = require('../../cutscene/dialog_util');
 
+const friend_container = viewport.getChildByName('friend_container');
+
 class Friend extends Character {
   constructor() {
     super();
@@ -13,7 +15,7 @@ class Friend extends Character {
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
 
-    viewport.getChildByName('freind_container').addChild(this.sprite);
+    friend_container.addChild(this.sprite);
   }
 
   add_script(script) {
