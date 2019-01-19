@@ -334,6 +334,23 @@ class Inventory {
     this.inventory.equiped = item;
   }
 
+  get weapon_speed() {
+    if(!this.inventory.equiped) {
+      throw new Error('this character has no weapon equiped');
+    }
+
+    return this.inventory.equiped.speed;
+;
+  }
+
+  get weapon_damage() {
+    if(!this.inventory.equiped) {
+      throw new Error('this character has no weapon equiped');
+    }
+
+    return this.inventory.equiped.damage;
+  }
+
   randomise_slots() {
     this.inventory.slots = [];
   }
@@ -394,7 +411,9 @@ arguments[4][3][0].apply(exports,arguments)
 },{"../../data/item_data":21,"../../engine/viewport":30,"dup":3,"pixi.js":210}],6:[function(require,module,exports){
 'use strict';
 
-const { ticker } = require('../../engine/ticker');
+const {
+  timer,
+} = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
@@ -406,23 +425,36 @@ class Predator {
     this.max_pathfind_distance = 700;
   }
 
-  attack(prey) {
-    this.sprite.animation_switch('knife', 'attack');
-
-    prey.damage(this.inventory.equiped.damage);
-  }
-
   is_predator_to(prey) {
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this;
 
-    ticker.add(() => {
+    const attack_timer = timer.createTimer(500);// based on the weapon speed
+    attack_timer.loop = true;
+    attack_timer.on('repeat', () => {
+      if(prey.alive){
+        prey.damage(this.weapon_damage);
+      }
+
+      prey.sprite.animation_switch('dead');
+
+      console.log(prey);
+
+    });
+
+    const movement_timer = timer.createTimer(1000);
+    movement_timer.repeat = 5;
+    movement_timer.on('repeat', () => {
       const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(distance_to_act < 200) {
-        this.attack(prey);
+        this.sprite.animation_switch('knife', 'attack');
+
+        attack_timer.start();
         return;
       }
+
+      attack_timer.stop();
 
       if(
         distance_to_act < this.min_pathfind_distance ||
@@ -434,6 +466,9 @@ class Predator {
 
       move_sprite_to_sprite_on_grid(predator_sprite, prey_sprite);
     });
+
+    movement_timer.start();
+
   }
 }
 
@@ -524,12 +559,20 @@ class Vitals {
     dom_hud.style.display = 'none';
   }
 
+  kill() {
+    //death animation
+    this.sprite.animation_switch('knife', 'attack');
+
+  }
+
   set status(state) {
     this.vitals.status = state;
   }
 
   damage(hit_point) {
     if(( this.vitals.health - hit_point) < 0) {
+      this.status = 'dead';
+
       throw `${this.name} doesnt have enough health`;
     } else {
       this.vitals.health -= hit_point;
@@ -1501,6 +1544,7 @@ const weapon_list = [
     cost:       50,
     type:       'weapon',
     damage:     1,
+    speed:      1,
     condition:  100,
 
     display_name: 'rusty knife',
@@ -1514,6 +1558,7 @@ const weapon_list = [
     cost:       80,
     type:       'weapon',
     damage:     2,
+    speed:      1,
     condition:  100,
 
     display_name: 'wrench blade',
@@ -2348,10 +2393,9 @@ global.window.PIXI.default = PIXI;
 
 require('pixi-tween');
 require('pixi-timer');
-
 const app = require('./app');
 
-const timer = PIXI.timerManager.createTimer;
+const timer = PIXI.timerManager;
 
 app.ticker.add(() => {
   PIXI.timerManager.update();

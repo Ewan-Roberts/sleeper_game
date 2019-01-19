@@ -20,6 +20,7 @@ const weapon_list = [
     cost:       50,
     type:       'weapon',
     damage:     1,
+    speed:      1,
     condition:  100,
 
     display_name: 'rusty knife',
@@ -33,6 +34,7 @@ const weapon_list = [
     cost:       80,
     type:       'weapon',
     damage:     2,
+    speed:      1,
     condition:  100,
 
     display_name: 'wrench blade',

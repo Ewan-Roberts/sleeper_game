@@ -29,12 +29,20 @@ class Vitals {
     dom_hud.style.display = 'none';
   }
 
+  kill() {
+    //death animation
+    this.sprite.animation_switch('knife', 'attack');
+
+  }
+
   set status(state) {
     this.vitals.status = state;
   }
 
   damage(hit_point) {
     if(( this.vitals.health - hit_point) < 0) {
+      this.status = 'dead';
+
       throw `${this.name} doesnt have enough health`;
     } else {
       this.vitals.health -= hit_point;

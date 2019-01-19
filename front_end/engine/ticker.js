@@ -6,10 +6,9 @@ global.window.PIXI.default = PIXI;
 
 require('pixi-tween');
 require('pixi-timer');
-
 const app = require('./app');
 
-const timer = PIXI.timerManager.createTimer;
+const timer = PIXI.timerManager;
 
 app.ticker.add(() => {
   PIXI.timerManager.update();

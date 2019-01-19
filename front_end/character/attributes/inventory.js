@@ -143,6 +143,23 @@ class Inventory {
     this.inventory.equiped = item;
   }
 
+  get weapon_speed() {
+    if(!this.inventory.equiped) {
+      throw new Error('this character has no weapon equiped');
+    }
+
+    return this.inventory.equiped.speed;
+;
+  }
+
+  get weapon_damage() {
+    if(!this.inventory.equiped) {
+      throw new Error('this character has no weapon equiped');
+    }
+
+    return this.inventory.equiped.damage;
+  }
+
   randomise_slots() {
     this.inventory.slots = [];
   }
