@@ -334,6 +334,14 @@ class Inventory {
     this.inventory.equipped = item;
   }
 
+  get equiped_weapon() {
+    if(!this.inventory.equipped) {
+      throw new Error('this character has no weapon equipped');
+    }
+
+    return this.inventory.equipped;
+  }
+
   get weapon_speed() {
     if(!this.inventory.equipped) {
       throw new Error('this character has no weapon equipped');
@@ -428,16 +436,17 @@ class Predator {
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this;
 
-    const attack_timer = timer.createTimer(500);// based on the weapon speed
+    const weapon = this.equiped_weapon;
+    const attack_timer = timer.createTimer(weapon.speed);// based on the weapon speed
     attack_timer.loop = true;
-    attack_timer.on('repeat', () => {
-      if(prey.alive){
-        prey.damage(this.weapon_damage);
+    attack_timer.on('repeat', function() {
+      if(!prey.alive){
+        prey.animation_switch('dead');
+        this.stop();
+        return;
       }
 
-      console.log(prey);
-
-      prey.animation_switch('dead');
+      prey.damage(weapon.damage);
     });
 
     const movement_timer = timer.createTimer(1000);
@@ -649,12 +658,20 @@ class Character {
     this.sprite.play();
   }
 
-  //for example bow, idle or nothing, idle
+  // REFACTOR for example bow, idle or nothing, idle
   animation_switch(type, action) {
-    if(this.sprite.textures !== this.sprite.animations[type][action]) {
-      this.sprite.textures = this.sprite.animations[type][action];
-      this.sprite.loop = true;
-      this.sprite.play();
+    if(action) {
+      if(this.sprite.textures !== this.sprite.animations[type][action]) {
+        this.sprite.textures = this.sprite.animations[type][action];
+        this.sprite.loop = true;
+        this.sprite.play();
+      }
+    } else {
+      if(this.sprite.textures !== this.sprite.animations[type]) {
+        this.sprite.textures = this.sprite.animations[type];
+        this.sprite.loop = true;
+        this.sprite.play();
+      }
     }
   }
 
@@ -964,6 +981,7 @@ const rat_animations = require('../animations/rat');
 class Rat extends construct(Character, Vitals, Prey, Inventory) {
   constructor() {
     super();
+    this.name = 'rat';
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
@@ -973,14 +991,6 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
     this.populate_random_inventory();
 
     critter_container.addChild(this.sprite);
-  }
-
-  animation_switch(type) {
-    if(this.sprite.textures !== this.sprite.animations[type]) {
-      this.sprite.textures = this.sprite.animations[type];
-      this.sprite.loop = true;
-      this.sprite.play();
-    }
   }
 
   lootable_on_death() {
@@ -1549,7 +1559,7 @@ const weapon_list = [
     cost:       50,
     type:       'weapon',
     damage:     10,
-    speed:      1,
+    speed:      400,
     condition:  100,
 
     display_name: 'rusty knife',

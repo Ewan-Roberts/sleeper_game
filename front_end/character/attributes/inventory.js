@@ -143,6 +143,14 @@ class Inventory {
     this.inventory.equipped = item;
   }
 
+  get equiped_weapon() {
+    if(!this.inventory.equipped) {
+      throw new Error('this character has no weapon equipped');
+    }
+
+    return this.inventory.equipped;
+  }
+
   get weapon_speed() {
     if(!this.inventory.equipped) {
       throw new Error('this character has no weapon equipped');
@@ -174,7 +182,6 @@ class Inventory {
   spike_populate_inventory() {
     const rat_meat = find_item_by_id(1);
     const rat_hide = find_item_by_id(2);
-
     this.inventory.slots.push(rat_meat, rat_hide);
     this.inventory.slots.forEach((item, i) => {
       this.populate_slot(item, i);

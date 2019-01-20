@@ -18,16 +18,17 @@ class Predator {
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this;
 
-    const attack_timer = timer.createTimer(500);// based on the weapon speed
+    const weapon = this.equiped_weapon;
+    const attack_timer = timer.createTimer(weapon.speed);// based on the weapon speed
     attack_timer.loop = true;
-    attack_timer.on('repeat', () => {
-      if(prey.alive){
-        prey.damage(this.weapon_damage);
+    attack_timer.on('repeat', function() {
+      if(!prey.alive){
+        prey.animation_switch('dead');
+        this.stop();
+        return;
       }
 
-      console.log(prey);
-
-      prey.animation_switch('dead');
+      prey.damage(weapon.damage);
     });
 
     const movement_timer = timer.createTimer(1000);

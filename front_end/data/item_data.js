@@ -20,7 +20,7 @@ const weapon_list = [
     cost:       50,
     type:       'weapon',
     damage:     10,
-    speed:      1,
+    speed:      400,
     condition:  100,
 
     display_name: 'rusty knife',

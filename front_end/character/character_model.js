@@ -18,12 +18,20 @@ class Character {
     this.sprite.play();
   }
 
-  //for example bow, idle or nothing, idle
+  // REFACTOR for example bow, idle or nothing, idle
   animation_switch(type, action) {
-    if(this.sprite.textures !== this.sprite.animations[type][action]) {
-      this.sprite.textures = this.sprite.animations[type][action];
-      this.sprite.loop = true;
-      this.sprite.play();
+    if(action) {
+      if(this.sprite.textures !== this.sprite.animations[type][action]) {
+        this.sprite.textures = this.sprite.animations[type][action];
+        this.sprite.loop = true;
+        this.sprite.play();
+      }
+    } else {
+      if(this.sprite.textures !== this.sprite.animations[type]) {
+        this.sprite.textures = this.sprite.animations[type];
+        this.sprite.loop = true;
+        this.sprite.play();
+      }
     }
   }
 

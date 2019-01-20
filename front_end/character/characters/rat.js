@@ -15,6 +15,7 @@ const rat_animations = require('../animations/rat');
 class Rat extends construct(Character, Vitals, Prey, Inventory) {
   constructor() {
     super();
+    this.name = 'rat';
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
@@ -24,14 +25,6 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
     this.populate_random_inventory();
 
     critter_container.addChild(this.sprite);
-  }
-
-  animation_switch(type) {
-    if(this.sprite.textures !== this.sprite.animations[type]) {
-      this.sprite.textures = this.sprite.animations[type];
-      this.sprite.loop = true;
-      this.sprite.play();
-    }
   }
 
   lootable_on_death() {
