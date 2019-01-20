@@ -75,7 +75,7 @@ May not looks very pretty but an important landmark for the engine
 - HUD for player
 - level loading
 - OOP and models for most elements
-- basic inventory management 
+- basic inventory management
 
 
 ## Update 12.11.18:
@@ -83,15 +83,16 @@ May not looks very pretty but an important landmark for the engine
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
 
 - pathfinding
-- raycasting 
+- raycasting
 - basic mask lights
 - tweening on path
 
+Key:
+- priority = (low||medium||high||outsource)
 
 ## Roadmap:
 
-### back-end:
-
+### back-end: (high)
 - Full server-side character state management
 - Server-side rendered images
 - Re-add multiplayer DONE
@@ -99,34 +100,92 @@ May not looks very pretty but an important landmark for the engine
 - Add login user
 - Add email user
 
-### GUI:
+## items (medium)
+#### junk
+- create junk schema
+- create junk search function
+- create junk randomiser functions
+- create junk rarity functions
+- create junk database schema and save states
 
+#### weapon
+- create weapon degrading mechanic
+- create weapon schema
+- create weapon search function
+- create weapon randomiser functions
+- create weapon rarity functions
+- create weapon database schema and save states
+
+#### armour
+- create armour degrading mechanic
+- create armour schema
+- create armour search function
+- create armour randomiser functions
+- create armour rarity functions
+- create armour database schema and save states
+
+#### items
+- create items schema
+- create items search function
+- create items randomiser functions
+- create items rarity functions
+- create items database schema and save states
+
+### player inventory (high)
+- player visual model
+- inventory slots
+- primary weapon
+- secondary weapon
+- Move item from inventory to player inventory
+
+### Effects (low)
+- create fire effects
+- create rain effects DONE
+- create blood effects
+- create arrow effects
+- create gun effects
+
+### cutscene (high)
+- create cutscene management engine (stop keyboard inputs etc)
+- create player best friend
+
+### Sound; (low)
+`later`
+
+### GUI: (high)
 - Start screen
 - NPC buy/sell etc
 - Manage player inventory
 
-### ART:
-
+### ART: (outsource)
 - Spine format replacement for spritesheet
 - Large scale art replacement (may need artist)
 - Loaders
 
-### front-end:
-
-- Movable objects with physics DONE
-- Containers DONE
-- Level loader
-
-### mechanics:
-
+### mechanics: (low)
 - Add scavenging
 - Add player inventory DONE
 - Add starting fires
 - Add condition management (thirst etc.) DONE
+- create architype system
+- buy sell/buy engine
+- Level loader
 
-### inventory:
 
-- Fills inventory randomly DONE
-- Close inventory box DONE
-- Move item from inventory to player inventory
+# Needed for ALPHA
+- Create EC2 server (again)
+- basic predetor/prey
+- register users
+- save game states
+- title screen
+- basic item/inventory management
+- basic arrow management
+- basic different graphics
+
+
+
+
+
+
+
 
