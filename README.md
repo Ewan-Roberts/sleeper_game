@@ -90,9 +90,9 @@ May not looks very pretty but an important landmark for the engine
 Key:
 - priority = (low||medium||high||outsource)
 
-## Roadmap:
+# Roadmap:
 
-### back-end: (high)
+## back-end: (high)
 - Full server-side character state management
 - Server-side rendered images
 - Re-add multiplayer DONE
@@ -131,38 +131,38 @@ Key:
 - create items rarity functions
 - create items database schema and save states
 
-### player inventory (high)
+## player inventory (high)
 - player visual model
 - inventory slots
 - primary weapon
 - secondary weapon
 - Move item from inventory to player inventory
 
-### Effects (low)
+## Effects (low)
 - create fire effects
 - create rain effects DONE
 - create blood effects
 - create arrow effects
 - create gun effects
 
-### cutscene (high)
+## cutscene (high)
 - create cutscene management engine (stop keyboard inputs etc)
 - create player best friend
 
-### Sound; (low)
+## Sound; (low)
 `later`
 
-### GUI: (high)
+## GUI: (high)
 - Start screen
 - NPC buy/sell etc
 - Manage player inventory
 
-### ART: (outsource)
+## ART: (outsource)
 - Spine format replacement for spritesheet
 - Large scale art replacement (may need artist)
 - Loaders
 
-### mechanics: (low)
+## mechanics: (low)
 - Add scavenging
 - Add player inventory DONE
 - Add starting fires
