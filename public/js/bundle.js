@@ -911,7 +911,11 @@ module.exports = {
 (function (global){
 'use strict';
 
+const PIXI = require('pixi.js');
 const { viewport  } = require('../../engine/viewport.js');
+const { construct } = require('../../engine/constructor');
+
+const character_animations = require('../animations/character');
 
 const { Character } = require('../character_model');
 const { Keyboard  } = require('../../input/keyboard');
@@ -919,10 +923,18 @@ const { Mouse     } = require('../../input/mouse');
 const { Vitals    } = require('../attributes/vitals');
 const { Inventory } = require('../attributes/inventory');
 
-class Player extends Character{
+class Player extends construct(Character, Keyboard, Mouse) {
   constructor() {
     super();
-    this.sprite.name = 'player';
+    console.log(this)
+
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite.animations = character_animations;
+    this.sprite.anchor.set(0.5);
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.play();
+    this.name = 'player';
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.status = new Vitals();
@@ -932,27 +944,24 @@ class Player extends Character{
   }
 
   add_controls() {
-    this.keyboard = new Keyboard();
-    this.mouse = new Mouse();
-
     viewport.on('mouseup', (event) => {
-      this.mouse.up(event);
+      this.mouse_up(event);
     });
 
     viewport.on('mousemove', (event) => {
-      this.mouse.move(event);
+      this.mouse_move(event);
     });
 
     viewport.on('mousedown', (event) => {
-      this.mouse.down(event);
+      this.mouse_down(event);
     });
 
     global.document.addEventListener('keydown', (event) => {
-      this.keyboard.key_down(event);
+      this.key_down(event);
     });
 
     global.document.addEventListener('keyup', () => {
-      this.keyboard.key_up();
+      this.key_up();
     });
   }
 }
@@ -962,7 +971,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/viewport.js":30,"../../input/keyboard":32,"../../input/mouse":33,"../attributes/inventory":5,"../attributes/vitals":8,"../character_model":9}],14:[function(require,module,exports){
+},{"../../engine/constructor":24,"../../engine/viewport.js":30,"../../input/keyboard":32,"../../input/mouse":33,"../animations/character":1,"../attributes/inventory":5,"../attributes/vitals":8,"../character_model":9,"pixi.js":210}],14:[function(require,module,exports){
 'use strict';
 
 const PIXI          = require('pixi.js');
@@ -2501,8 +2510,8 @@ class Keyboard {
     this.moveable = true;
     this.movement_speed = 15;
     this.buffer = 50;
-    this.player = viewport.getChildByName('player');
-    this.player.shift_pressed = false;
+    this.sprite = viewport.getChildByName('player');
+    this.shift_pressed = false;
   }
 
   key_down(e) {
@@ -2514,13 +2523,13 @@ class Keyboard {
 
     switch(key) {
       case 'up':
-        this.up();
+        this.keyboard_up();
         break;
       case 'left':
         this.left();
         break;
       case 'down':
-        this.down();
+        this.keyboard_down();
         break;
       case 'right':
         this.right();
@@ -2542,109 +2551,108 @@ class Keyboard {
   }
 
   key_up() {
-    this.player.shift_pressed = false;
-    this.player.textures = this.player.animations.bow.idle;
-    this.player.play();
+    this.shift_pressed = false;
+    this.sprite.textures = this.sprite.animations.bow.idle;
+    this.sprite.play();
   }
 
-  up() {
-    //this.animation_switch('bow', 'walk');
-    this.rotation = -2;
+  keyboard_up() {
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = -2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.y -= this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
         if(collision_objects.children[i].moveable) {
-          this.player.y -= this.movement_speed / 4;
+          this.sprite.y -= this.movement_speed / 4;
           collision_objects.children[i].y -= this.movement_speed / 4;
         }
         return;
       }
     }
 
-    this.player.y -= this.movement_speed;
+    this.sprite.y -= this.movement_speed;
 
   }
 
-  down() {
-    //this.animation_switch('bow', 'walk');
-    this.player.rotation = 2;
+  keyboard_down() {
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = 2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.y += this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
 
         if(collision_objects.children[i].moveable) {
-          this.player.y += this.movement_speed / 4;
+          this.sprite.y += this.movement_speed / 4;
           collision_objects.children[i].y += this.movement_speed / 4;
         }
         return;
       }
     }
 
-    this.player.y += this.movement_speed;
+    this.sprite.y += this.movement_speed;
   }
 
   left() {
-    //this.animation_switch('bow', 'walk');
-
-    this.player.rotation = -3;
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = -3;
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.x -= this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
 
         if(collision_objects.children[i].moveable) {
-          this.player.x -= this.movement_speed / 4;
+          this.sprite.x -= this.movement_speed / 4;
           collision_objects.children[i].x -= this.movement_speed / 4;
         }
         return;
       }
     }
-    this.player.x -= this.movement_speed;
+    this.sprite.x -= this.movement_speed;
 
   }
 
   right() {
-    //this.animation_switch('bow', 'walk');
-    this.player.rotation = 0;
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = 0;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.x += this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
 
 
         if(collision_objects.children[i].moveable) {
-          this.player.x += this.movement_speed / 4;
+          this.sprite.x += this.movement_speed / 4;
           collision_objects.children[i].x += this.movement_speed / 4;
         }
         return;
       }
     }
-    this.player.x += this.movement_speed;
+    this.sprite.x += this.movement_speed;
 
   }
 
@@ -2659,7 +2667,7 @@ class Keyboard {
   }
 
   shift() {
-    this.player.shift_pressed = true;
+    this.shift_pressed = true;
   }
 }
 
@@ -2693,7 +2701,6 @@ const get_mouse_position_from_player = (event, sprite, viewport) => {
 class Mouse {
   constructor() {
     this.moveable = true;
-    this.player = viewport.getChildByName('player');
     this.allow_shoot = true;
     this.aiming_cone = viewport.getChildByName('aiming_cone');
     this.weapon = 'bow';
@@ -2718,40 +2725,40 @@ class Mouse {
     viewport.addChild(this.aiming_cone);
   }
 
-  up(event) {
-    if(!this.player.shift_pressed) return;
+  mouse_up(event) {
+    if(!this.shift_pressed) return;
 
     this.moveable = true;
-    this.player.play();
-    this.player.textures = this.player.animations.bow.idle;
+    this.sprite.play();
+    this.animation_switch('bow', 'idle');
 
     ticker.remove(this.count_down);
     this.aiming_cone.alpha = 0;
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
 
-      arrow_management(this.power, this.player, mouse_position_player);
+      arrow_management(this.power, this.sprite, mouse_position_player);
     }
   }
 
-  down(event) {
-    if(!this.player.shift_pressed) return;
+  mouse_down(event) {
+    if(!this.sprite.shift_pressed) return;
     this.aiming_cone.alpha = 0;
     this.aiming_cone.count = 10;
     this.aiming_cone.width = 500;
     this.aiming_cone.height = 300;
     this.power = 900;
 
-    this.player.textures = this.player.animations.bow.ready;
-    this.player.loop = false;
+    this.animation_switch('bow', 'ready');
+    this.sprite.loop = false;
     //this.count_down = () => {
-    //  if (!this.player.shift_pressed){
+    //  if (!this.sprite.shift_pressed){
     //    ticker.remove(this.count_down);
     //    this.aiming_cone.alpha = 0;
     //    return;
     //  }
     //  if(this.power < 300) {
-    //    this.player.textures = this.player.animations.bow.idle;
+    //    this.sprite.textures = this.sprite.animations.bow.idle;
     //    ticker.remove(this.count_down);
     //    return;
     //  }
@@ -2773,17 +2780,17 @@ class Mouse {
     //};
     //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    this.player.rotation = radian(mouse_position_player, this.player);
-    this.player.gotoAndPlay(0);
+    this.sprite.rotation = radian(mouse_position_player, this.sprite);
+    this.sprite.gotoAndPlay(0);
   }
 
-  move(event) {
-    const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
+  mouse_move(event) {
+    const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
 
-    this.aiming_cone.position.set(this.player.x, this.player.y);
-    this.aiming_cone.rotation = radian(this.player, mouse_position_player);
+    this.aiming_cone.position.set(this.sprite.x, this.sprite.y);
+    this.aiming_cone.rotation = radian(this.sprite, mouse_position_player);
 
-    this.player.rotation = radian(mouse_position_player, this.player);
+    this.sprite.rotation = radian(mouse_position_player, this.sprite);
 
     viewport.addChild(this.aiming_cone, this.aiming_line);
   }

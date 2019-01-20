@@ -27,8 +27,8 @@ class Keyboard {
     this.moveable = true;
     this.movement_speed = 15;
     this.buffer = 50;
-    this.player = viewport.getChildByName('player');
-    this.player.shift_pressed = false;
+    this.sprite = viewport.getChildByName('player');
+    this.shift_pressed = false;
   }
 
   key_down(e) {
@@ -40,13 +40,13 @@ class Keyboard {
 
     switch(key) {
       case 'up':
-        this.up();
+        this.keyboard_up();
         break;
       case 'left':
         this.left();
         break;
       case 'down':
-        this.down();
+        this.keyboard_down();
         break;
       case 'right':
         this.right();
@@ -68,109 +68,108 @@ class Keyboard {
   }
 
   key_up() {
-    this.player.shift_pressed = false;
-    this.player.textures = this.player.animations.bow.idle;
-    this.player.play();
+    this.shift_pressed = false;
+    this.sprite.textures = this.sprite.animations.bow.idle;
+    this.sprite.play();
   }
 
-  up() {
-    //this.animation_switch('bow', 'walk');
-    this.rotation = -2;
+  keyboard_up() {
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = -2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.y -= this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
         if(collision_objects.children[i].moveable) {
-          this.player.y -= this.movement_speed / 4;
+          this.sprite.y -= this.movement_speed / 4;
           collision_objects.children[i].y -= this.movement_speed / 4;
         }
         return;
       }
     }
 
-    this.player.y -= this.movement_speed;
+    this.sprite.y -= this.movement_speed;
 
   }
 
-  down() {
-    //this.animation_switch('bow', 'walk');
-    this.player.rotation = 2;
+  keyboard_down() {
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = 2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.y += this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
 
         if(collision_objects.children[i].moveable) {
-          this.player.y += this.movement_speed / 4;
+          this.sprite.y += this.movement_speed / 4;
           collision_objects.children[i].y += this.movement_speed / 4;
         }
         return;
       }
     }
 
-    this.player.y += this.movement_speed;
+    this.sprite.y += this.movement_speed;
   }
 
   left() {
-    //this.animation_switch('bow', 'walk');
-
-    this.player.rotation = -3;
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = -3;
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.x -= this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
 
         if(collision_objects.children[i].moveable) {
-          this.player.x -= this.movement_speed / 4;
+          this.sprite.x -= this.movement_speed / 4;
           collision_objects.children[i].x -= this.movement_speed / 4;
         }
         return;
       }
     }
-    this.player.x -= this.movement_speed;
+    this.sprite.x -= this.movement_speed;
 
   }
 
   right() {
-    //this.animation_switch('bow', 'walk');
-    this.player.rotation = 0;
+    this.animation_switch('bow', 'walk');
+    this.sprite.rotation = 0;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.player.getGlobalPosition();
+      const player_position = this.sprite.getGlobalPosition();
 
       player_position.x += this.buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
-        this.player.gotoAndStop(1);
+        this.sprite.gotoAndStop(1);
 
 
         if(collision_objects.children[i].moveable) {
-          this.player.x += this.movement_speed / 4;
+          this.sprite.x += this.movement_speed / 4;
           collision_objects.children[i].x += this.movement_speed / 4;
         }
         return;
       }
     }
-    this.player.x += this.movement_speed;
+    this.sprite.x += this.movement_speed;
 
   }
 
@@ -185,7 +184,7 @@ class Keyboard {
   }
 
   shift() {
-    this.player.shift_pressed = true;
+    this.shift_pressed = true;
   }
 }
 

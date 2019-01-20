@@ -1,6 +1,10 @@
 'use strict';
 
+const PIXI = require('pixi.js');
 const { viewport  } = require('../../engine/viewport.js');
+const { construct } = require('../../engine/constructor');
+
+const character_animations = require('../animations/character');
 
 const { Character } = require('../character_model');
 const { Keyboard  } = require('../../input/keyboard');
@@ -8,10 +12,18 @@ const { Mouse     } = require('../../input/mouse');
 const { Vitals    } = require('../attributes/vitals');
 const { Inventory } = require('../attributes/inventory');
 
-class Player extends Character{
+class Player extends construct(Character, Keyboard, Mouse) {
   constructor() {
     super();
-    this.sprite.name = 'player';
+    console.log(this)
+
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite.animations = character_animations;
+    this.sprite.anchor.set(0.5);
+    this.sprite.animationSpeed = 0.4;
+    this.sprite.play();
+    this.name = 'player';
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.status = new Vitals();
@@ -21,27 +33,24 @@ class Player extends Character{
   }
 
   add_controls() {
-    this.keyboard = new Keyboard();
-    this.mouse = new Mouse();
-
     viewport.on('mouseup', (event) => {
-      this.mouse.up(event);
+      this.mouse_up(event);
     });
 
     viewport.on('mousemove', (event) => {
-      this.mouse.move(event);
+      this.mouse_move(event);
     });
 
     viewport.on('mousedown', (event) => {
-      this.mouse.down(event);
+      this.mouse_down(event);
     });
 
     global.document.addEventListener('keydown', (event) => {
-      this.keyboard.key_down(event);
+      this.key_down(event);
     });
 
     global.document.addEventListener('keyup', () => {
-      this.keyboard.key_up();
+      this.key_up();
     });
   }
 }

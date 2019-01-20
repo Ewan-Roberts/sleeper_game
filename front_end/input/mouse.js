@@ -23,7 +23,6 @@ const get_mouse_position_from_player = (event, sprite, viewport) => {
 class Mouse {
   constructor() {
     this.moveable = true;
-    this.player = viewport.getChildByName('player');
     this.allow_shoot = true;
     this.aiming_cone = viewport.getChildByName('aiming_cone');
     this.weapon = 'bow';
@@ -48,40 +47,40 @@ class Mouse {
     viewport.addChild(this.aiming_cone);
   }
 
-  up(event) {
-    if(!this.player.shift_pressed) return;
+  mouse_up(event) {
+    if(!this.shift_pressed) return;
 
     this.moveable = true;
-    this.player.play();
-    this.player.textures = this.player.animations.bow.idle;
+    this.sprite.play();
+    this.animation_switch('bow', 'idle');
 
     ticker.remove(this.count_down);
     this.aiming_cone.alpha = 0;
     if (this.weapon === 'bow' && this.allow_shoot) {
       const mouse_position_player = event.data.getLocalPosition(viewport);
 
-      arrow_management(this.power, this.player, mouse_position_player);
+      arrow_management(this.power, this.sprite, mouse_position_player);
     }
   }
 
-  down(event) {
-    if(!this.player.shift_pressed) return;
+  mouse_down(event) {
+    if(!this.sprite.shift_pressed) return;
     this.aiming_cone.alpha = 0;
     this.aiming_cone.count = 10;
     this.aiming_cone.width = 500;
     this.aiming_cone.height = 300;
     this.power = 900;
 
-    this.player.textures = this.player.animations.bow.ready;
-    this.player.loop = false;
+    this.animation_switch('bow', 'ready');
+    this.sprite.loop = false;
     //this.count_down = () => {
-    //  if (!this.player.shift_pressed){
+    //  if (!this.sprite.shift_pressed){
     //    ticker.remove(this.count_down);
     //    this.aiming_cone.alpha = 0;
     //    return;
     //  }
     //  if(this.power < 300) {
-    //    this.player.textures = this.player.animations.bow.idle;
+    //    this.sprite.textures = this.sprite.animations.bow.idle;
     //    ticker.remove(this.count_down);
     //    return;
     //  }
@@ -103,17 +102,17 @@ class Mouse {
     //};
     //ticker.add(this.count_down);
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    this.player.rotation = radian(mouse_position_player, this.player);
-    this.player.gotoAndPlay(0);
+    this.sprite.rotation = radian(mouse_position_player, this.sprite);
+    this.sprite.gotoAndPlay(0);
   }
 
-  move(event) {
-    const mouse_position_player = get_mouse_position_from_player(event, this.player, viewport);
+  mouse_move(event) {
+    const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
 
-    this.aiming_cone.position.set(this.player.x, this.player.y);
-    this.aiming_cone.rotation = radian(this.player, mouse_position_player);
+    this.aiming_cone.position.set(this.sprite.x, this.sprite.y);
+    this.aiming_cone.rotation = radian(this.sprite, mouse_position_player);
 
-    this.player.rotation = radian(mouse_position_player, this.player);
+    this.sprite.rotation = radian(mouse_position_player, this.sprite);
 
     viewport.addChild(this.aiming_cone, this.aiming_line);
   }
