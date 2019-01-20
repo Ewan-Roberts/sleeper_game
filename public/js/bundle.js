@@ -45,7 +45,7 @@ class character_animations {
     return walk_frames;
   }
 
-  static knife_idle_frames() {
+  static knife_walk_frames() {
     const enemy_frames = [];
 
     for (let i = 0; i < 19; i++) {
@@ -102,7 +102,12 @@ module.exports = {
   },
   knife: {
     attack: character_animations.knife_attack_frames(),
-    idle:   character_animations.knife_idle_frames(),
+    walk:   character_animations.knife_walk_frames(),
+  },
+  animated: {
+    knife: {
+      walk: new PIXI.extras.AnimatedSprite(character_animations.knife_walk_frames()),
+    },
   },
 };
 
@@ -417,9 +422,7 @@ arguments[4][3][0].apply(exports,arguments)
 },{"../../data/item_data":21,"../../engine/viewport":30,"dup":3,"pixi.js":210}],6:[function(require,module,exports){
 'use strict';
 
-const {
-  timer,
-} = require('../../engine/ticker');
+const { timer } = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
@@ -434,9 +437,9 @@ class Predator {
   is_predator_to(prey) {
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this;
+    const { speed, damage             } = this.equiped_weapon;
 
-    const weapon = this.equiped_weapon;
-    const attack_timer = timer.createTimer(weapon.speed);// based on the weapon speed
+    const attack_timer = timer.createTimer(speed);// based on the weapon speed
     attack_timer.loop = true;
     attack_timer.on('repeat', function() {
       if(!prey.alive){
@@ -445,11 +448,12 @@ class Predator {
         return;
       }
 
-      prey.damage(weapon.damage);
+      prey.damage(damage);
     });
 
     const movement_timer = timer.createTimer(1000);
     movement_timer.repeat = 5;
+
     movement_timer.on('repeat', () => {
       const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
@@ -457,10 +461,11 @@ class Predator {
         this.animation_switch('knife', 'attack');
 
         attack_timer.start();
-        return;
+      } else {
+        attack_timer.stop();
+        this.animation_switch('knife', 'walk');
       }
 
-      attack_timer.stop();
 
       if(
         distance_to_act < this.min_pathfind_distance ||
@@ -471,9 +476,7 @@ class Predator {
       }
 
       move_sprite_to_sprite_on_grid(predator_sprite, prey_sprite);
-    });
-
-    movement_timer.start();
+    }).start();
   }
 }
 
@@ -486,7 +489,7 @@ module.exports = {
 
 const PIXI = require('pixi.js');
 const { viewport  } = require('../../engine/viewport');
-const { ticker    } = require('../../engine/ticker');
+const { timer     } = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
@@ -501,13 +504,17 @@ class Prey {
   }
 
   is_prey_to(predator) {
-    const prey  = this.sprite;
+    const { 'sprite': prey_sprite     } = this;
+    const { 'sprite': predator_sprite } = predator;
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
     point_to_run_for.name = 'dot';
 
-    ticker.add(() => {
-      const distance_to_act = distance_between_points(predator, prey);
+    const movement_timer = timer.createTimer(500);
+    movement_timer.repeat = 20;
+
+    movement_timer.on('repeat', () => {
+      const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(
         distance_to_act < this.min_pathfind_distance ||
@@ -517,10 +524,10 @@ class Prey {
         return;
       }
 
-      point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
+      point_to_run_for.position.set(prey_sprite.x + (prey_sprite.x - predator_sprite.x), prey_sprite.y +(prey_sprite.y - predator_sprite.y));
 
-      move_sprite_to_sprite_on_grid(prey, point_to_run_for);
-    });
+      move_sprite_to_sprite_on_grid(prey_sprite, point_to_run_for);
+    }).start();
 
     critter_container.addChild(point_to_run_for);
   }
@@ -567,7 +574,6 @@ class Vitals {
   kill() {
     //death animation
     this.animation_switch('knife', 'attack');
-
   }
 
   set status(state) {
@@ -650,7 +656,7 @@ const character_animations = require('./animations/character');
 
 class Character {
   constructor() {
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.walk);
     this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
@@ -911,36 +917,36 @@ module.exports = {
 (function (global){
 'use strict';
 
-const PIXI = require('pixi.js');
 const { viewport  } = require('../../engine/viewport.js');
 const { construct } = require('../../engine/constructor');
 
 const character_animations = require('../animations/character');
+
+const { find_weapon_by_name } = require('../../data/item_data');
 
 const { Character } = require('../character_model');
 const { Keyboard  } = require('../../input/keyboard');
 const { Mouse     } = require('../../input/mouse');
 const { Vitals    } = require('../attributes/vitals');
 const { Inventory } = require('../attributes/inventory');
+const { Predator  } = require('../attributes/predator');
 
-class Player extends construct(Character, Keyboard, Mouse, Vitals) {
+class Player extends construct(Character, Keyboard, Mouse, Inventory, Vitals, Predator) {
   constructor() {
     super();
-
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite = character_animations.animated.knife.walk;
     this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
     this.sprite.play();
+
+    const knife = find_weapon_by_name('rusty_knife');
+    this.equip_item(knife);
+
     this.name = 'player';
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.sprite.inventory = new Inventory();
 
-    viewport.addChild(this.sprite);
-  }
-
-  add_controls() {
     viewport.on('mouseup', (event) => {
       this.mouse_up(event);
     });
@@ -953,13 +959,15 @@ class Player extends construct(Character, Keyboard, Mouse, Vitals) {
       this.mouse_down(event);
     });
 
-    global.document.addEventListener('keydown', (event) => {
+    global.window.addEventListener('keydown', (event) => {
       this.key_down(event);
     });
 
-    global.document.addEventListener('keyup', () => {
+    global.window.addEventListener('keyup', () => {
       this.key_up();
     });
+
+    viewport.addChild(this.sprite);
   }
 }
 
@@ -968,7 +976,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/constructor":24,"../../engine/viewport.js":30,"../../input/keyboard":32,"../../input/mouse":33,"../animations/character":1,"../attributes/inventory":5,"../attributes/vitals":8,"../character_model":9,"pixi.js":210}],14:[function(require,module,exports){
+},{"../../data/item_data":21,"../../engine/constructor":24,"../../engine/viewport.js":30,"../../input/keyboard":32,"../../input/mouse":33,"../animations/character":1,"../attributes/inventory":5,"../attributes/predator":6,"../attributes/vitals":8,"../character_model":9}],14:[function(require,module,exports){
 'use strict';
 
 const PIXI          = require('pixi.js');
@@ -8579,7 +8587,6 @@ class DevelopmentLevel {
   constructor() {
     const player = new Player();
     player.set_position({ x: 1000, y: 1000 });
-    player.add_controls();
     player.follow_sprite_with_camera();
     player.with_light();
     this.test_load_test_level();
@@ -8591,18 +8598,15 @@ class DevelopmentLevel {
     console.log(enemy);
     enemy.sprite.position.set(1550,1000);
     enemy.with_light();
-    //enemy.follow_sprite_with_camera();
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1200});
     rat.lootable_on_death();
-    console.log(rat);
-    rat.is_prey_to(enemy.sprite);
+
+    rat.is_prey_to(enemy);
+    rat.is_prey_to(player);
+
     enemy.is_predator_to(rat);
-
-    //const poo = new AB();
-    //poo.set_position({x: 1000, y: 1000})
-
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 
@@ -8803,7 +8807,6 @@ class Level {
     const character = new Player();
 
     character.set_position({ x: location.x, y: location.y });
-    character.add_controls();
     character.follow_player();
     character.with_light();
     //character.add_raycasting(this.segments)

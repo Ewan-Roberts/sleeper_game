@@ -44,7 +44,7 @@ class character_animations {
     return walk_frames;
   }
 
-  static knife_idle_frames() {
+  static knife_walk_frames() {
     const enemy_frames = [];
 
     for (let i = 0; i < 19; i++) {
@@ -101,7 +101,12 @@ module.exports = {
   },
   knife: {
     attack: character_animations.knife_attack_frames(),
-    idle:   character_animations.knife_idle_frames(),
+    walk:   character_animations.knife_walk_frames(),
+  },
+  animated: {
+    knife: {
+      walk: new PIXI.extras.AnimatedSprite(character_animations.knife_walk_frames()),
+    },
   },
 };
 

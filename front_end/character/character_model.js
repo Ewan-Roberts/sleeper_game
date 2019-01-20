@@ -11,7 +11,7 @@ const character_animations = require('./animations/character');
 
 class Character {
   constructor() {
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
+    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.walk);
     this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;

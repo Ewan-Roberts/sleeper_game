@@ -32,7 +32,6 @@ class Vitals {
   kill() {
     //death animation
     this.animation_switch('knife', 'attack');
-
   }
 
   set status(state) {

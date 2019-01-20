@@ -8,7 +8,6 @@ Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
-
 ## Update 13.01.19:
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_8.png)
@@ -89,7 +88,7 @@ May not looks very pretty but an important landmark for the engine
 - tweening on path
 
 
-## Roadmap: 
+## Roadmap:
 
 ### back-end:
 
@@ -125,14 +124,9 @@ May not looks very pretty but an important landmark for the engine
 - Add starting fires
 - Add condition management (thirst etc.) DONE
 
-
 ### inventory:
 
-- Fills inventory randomly
-- Close inventory box
+- Fills inventory randomly DONE
+- Close inventory box DONE
 - Move item from inventory to player inventory
-
-
-
-
 

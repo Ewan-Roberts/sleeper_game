@@ -1,8 +1,6 @@
 'use strict';
 
-const {
-  timer,
-} = require('../../engine/ticker');
+const { timer } = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
@@ -17,9 +15,9 @@ class Predator {
   is_predator_to(prey) {
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this;
+    const { speed, damage             } = this.equiped_weapon;
 
-    const weapon = this.equiped_weapon;
-    const attack_timer = timer.createTimer(weapon.speed);// based on the weapon speed
+    const attack_timer = timer.createTimer(speed);// based on the weapon speed
     attack_timer.loop = true;
     attack_timer.on('repeat', function() {
       if(!prey.alive){
@@ -28,11 +26,12 @@ class Predator {
         return;
       }
 
-      prey.damage(weapon.damage);
+      prey.damage(damage);
     });
 
     const movement_timer = timer.createTimer(1000);
     movement_timer.repeat = 5;
+
     movement_timer.on('repeat', () => {
       const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
@@ -40,10 +39,11 @@ class Predator {
         this.animation_switch('knife', 'attack');
 
         attack_timer.start();
-        return;
+      } else {
+        attack_timer.stop();
+        this.animation_switch('knife', 'walk');
       }
 
-      attack_timer.stop();
 
       if(
         distance_to_act < this.min_pathfind_distance ||
@@ -54,9 +54,7 @@ class Predator {
       }
 
       move_sprite_to_sprite_on_grid(predator_sprite, prey_sprite);
-    });
-
-    movement_timer.start();
+    }).start();
   }
 }
 

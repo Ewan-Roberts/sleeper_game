@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 const { viewport  } = require('../../engine/viewport');
-const { ticker    } = require('../../engine/ticker');
+const { timer     } = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
@@ -17,13 +17,17 @@ class Prey {
   }
 
   is_prey_to(predator) {
-    const prey  = this.sprite;
+    const { 'sprite': prey_sprite     } = this;
+    const { 'sprite': predator_sprite } = predator;
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
     point_to_run_for.name = 'dot';
 
-    ticker.add(() => {
-      const distance_to_act = distance_between_points(predator, prey);
+    const movement_timer = timer.createTimer(500);
+    movement_timer.repeat = 20;
+
+    movement_timer.on('repeat', () => {
+      const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(
         distance_to_act < this.min_pathfind_distance ||
@@ -33,10 +37,10 @@ class Prey {
         return;
       }
 
-      point_to_run_for.position.set(prey.x + (prey.x - predator.x), prey.y +(prey.y - predator.y));
+      point_to_run_for.position.set(prey_sprite.x + (prey_sprite.x - predator_sprite.x), prey_sprite.y +(prey_sprite.y - predator_sprite.y));
 
-      move_sprite_to_sprite_on_grid(prey, point_to_run_for);
-    });
+      move_sprite_to_sprite_on_grid(prey_sprite, point_to_run_for);
+    }).start();
 
     critter_container.addChild(point_to_run_for);
   }

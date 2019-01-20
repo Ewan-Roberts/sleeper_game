@@ -89,7 +89,6 @@ class Level {
     const character = new Player();
 
     character.set_position({ x: location.x, y: location.y });
-    character.add_controls();
     character.follow_player();
     character.with_light();
     //character.add_raycasting(this.segments)
