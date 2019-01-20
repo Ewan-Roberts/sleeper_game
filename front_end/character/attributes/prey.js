@@ -16,9 +16,8 @@ class Prey {
     this.max_pathfind_distance = 400;
   }
 
-  is_prey_to(predator) {
+  is_prey_to({ 'sprite': predator_sprite }) {
     const { 'sprite': prey_sprite     } = this;
-    const { 'sprite': predator_sprite } = predator;
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
     point_to_run_for.name = 'dot';

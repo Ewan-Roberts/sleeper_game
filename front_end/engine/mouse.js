@@ -1,10 +1,10 @@
 'use strict';
 
 const PIXI                  = require('pixi.js');
-const { viewport          } = require('../engine/viewport');
-const { ticker            } = require('../engine/ticker');
-const { radian            } = require('../engine/math');
-const { arrow_management  } = require('../character/weapons/bow.js');
+const { viewport          } = require('./viewport');
+const { ticker            } = require('./ticker');
+const { radian            } = require('./math');
+const { arrow_management  } = require('./bow.js');
 
 class Mouse {
   constructor() {

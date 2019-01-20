@@ -1,9 +1,9 @@
 'use strict';
 
 const PIXI         = require('pixi.js');
-const { viewport } = require('../../engine/viewport.js');
-const { radian   } = require('../../engine/math');
-const { Dialog   } = require('../../cutscene/dialog_util');
+const { viewport } = require('./viewport.js');
+const { radian   } = require('./math');
+const { Dialog   } = require('../cutscene/dialog_util');
 
 class Arrow {
   constructor() {

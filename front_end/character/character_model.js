@@ -7,7 +7,7 @@ const { ticker               } = require('../engine/ticker');
 const { get_intersection     } = require('../engine/raycasting');
 const { move_sprite_to_point } = require('../engine/pathfind');
 
-const character_animations = require('./animations/character');
+const character_animations = require('./types/animations/character');
 
 class Character {
   constructor() {

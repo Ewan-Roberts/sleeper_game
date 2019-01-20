@@ -1,12 +1,12 @@
 'use strict';
 
-const { Cutscene_Character } = require('../character/characters/cutscene_npc');
+const { Cutscene_Character } = require('../character/types/cutscene_npc');
 const { viewport        } = require('../engine/viewport.js');
 const { visual_effects  } = require('./visual_effects');
 
 const { Caption_Dialog  } = require('./caption');
 const { Dialog          } = require('./dialog_util');
-const { lorium_text     } = require('../data/speech_data');
+const { lorium_text     } = require('./speech_data');
 
 const { move_sprite_to_point } = require('../engine/pathfind');
 

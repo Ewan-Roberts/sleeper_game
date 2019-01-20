@@ -3,7 +3,7 @@
 const { viewport  } = require('../../engine/viewport');
 const { construct } = require('../../engine/constructor');
 
-const { find_weapon_by_name } = require('../../data/item_data');
+const { find_weapon_by_name } = require('../../items/item_data');
 
 const { Character } = require('../character_model');
 const { Vitals    } = require('../attributes/vitals');

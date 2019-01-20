@@ -8,13 +8,13 @@ const {
   move_sprite_on_route_straight,
 } = require('../engine/pathfind.js');
 
-const { Enemy } = require('../character/characters/enemy.js');
-const { Friend } = require('../character/characters/friend.js');
-const { Rat } = require('../character/characters/rat');
-const { Player } = require('../character/characters/player.js');
-const { NetworkCharacter } = require('../character/network/network_player.js');
+const { Enemy } = require('../character/types/enemy.js');
+const { Friend } = require('../character/types/friend.js');
+const { Rat } = require('../character/types/rat');
+const { Player } = require('../character/types/player.js');
+//const { NetworkCharacter } = require('../character/network/network_player.js');
 
-const { Door } = require('../items/door.js');
+const { Door } = require('./door.js');
 const { Note } = require('../items/note');
 const { Chest } = require('../items/chest');
 const { Campfire } = require('../items/fire_place');
@@ -109,8 +109,8 @@ class Level {
       y: 800,
     };
 
-    const network_player = new NetworkCharacter(player_details);
-    network_player.network_update();
+    //const network_player = new NetworkCharacter(player_details);
+    //network_player.network_update();
   }
 
 

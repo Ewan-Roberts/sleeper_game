@@ -10,7 +10,7 @@ const { Vitals    } = require('../attributes/vitals');
 const { Prey      } = require('../attributes/prey');
 
 const critter_container = viewport.getChildByName('critter_container');
-const rat_animations = require('../animations/rat');
+const rat_animations = require('./animations/rat');
 
 class Rat extends construct(Character, Vitals, Prey, Inventory) {
   constructor() {

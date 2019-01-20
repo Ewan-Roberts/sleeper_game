@@ -6,7 +6,7 @@ const { viewport } = require('../../engine/viewport');
 const {
   find_item_by_id,
   get_random_item_array,
-} = require('../../data/item_data');
+} = require('../../items/item_data');
 
 const gui_container = viewport.getChildByName('gui_container');
 const box_size = 100;
