@@ -42,7 +42,7 @@ class rat_animations {
   }
 
   static dead_frames() {
-    return PIXI.Texture.fromFrame('rat_35');
+    return [ PIXI.Texture.fromFrame('rat_35') ];
   }
 
   static eat_frames() {

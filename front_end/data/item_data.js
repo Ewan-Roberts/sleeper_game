@@ -19,7 +19,7 @@ const weapon_list = [
     rank:       0,
     cost:       50,
     type:       'weapon',
-    damage:     1,
+    damage:     10,
     speed:      1,
     condition:  100,
 

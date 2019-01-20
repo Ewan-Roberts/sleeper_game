@@ -155,7 +155,7 @@ class rat_animations {
   }
 
   static dead_frames() {
-    return PIXI.Texture.fromFrame('rat_35');
+    return [ PIXI.Texture.fromFrame('rat_35') ];
   }
 
   static eat_frames() {
@@ -206,7 +206,7 @@ class Inventory {
   constructor() {
     this.inventory = {};
     this.inventory.slots = [];
-    this.inventory.equiped = undefined;
+    this.inventory.equipped = undefined;
     this.inventory.sprite = PIXI.Sprite.fromFrame('black_dot');
     this.inventory.sprite.height = 100;
     this.inventory.sprite.width = 402;
@@ -331,24 +331,23 @@ class Inventory {
   }
 
   equip_item(item) {
-    this.inventory.equiped = item;
+    this.inventory.equipped = item;
   }
 
   get weapon_speed() {
-    if(!this.inventory.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.inventory.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equiped.speed;
-;
+    return this.inventory.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.inventory.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.inventory.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equiped.damage;
+    return this.inventory.equipped.damage;
   }
 
   randomise_slots() {
@@ -436,10 +435,9 @@ class Predator {
         prey.damage(this.weapon_damage);
       }
 
-      prey.sprite.animation_switch('dead');
-
       console.log(prey);
 
+      prey.animation_switch('dead');
     });
 
     const movement_timer = timer.createTimer(1000);
@@ -448,7 +446,7 @@ class Predator {
       const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(distance_to_act < 200) {
-        this.sprite.animation_switch('knife', 'attack');
+        this.animation_switch('knife', 'attack');
 
         attack_timer.start();
         return;
@@ -468,7 +466,6 @@ class Predator {
     });
 
     movement_timer.start();
-
   }
 }
 
@@ -561,7 +558,7 @@ class Vitals {
 
   kill() {
     //death animation
-    this.sprite.animation_switch('knife', 'attack');
+    this.animation_switch('knife', 'attack');
 
   }
 
@@ -650,15 +647,15 @@ class Character {
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
+  }
 
-    //for example bow, idle or nothing, idle
-    this.sprite.animation_switch = (type, action) => {
-      if(this.sprite.textures !== this.sprite.animations[type][action]) {
-        this.sprite.textures = this.sprite.animations[type][action];
-        this.sprite.loop = true;
-        this.sprite.play();
-      }
-    };
+  //for example bow, idle or nothing, idle
+  animation_switch(type, action) {
+    if(this.sprite.textures !== this.sprite.animations[type][action]) {
+      this.sprite.textures = this.sprite.animations[type][action];
+      this.sprite.loop = true;
+      this.sprite.play();
+    }
   }
 
   set_position(point) {
@@ -859,7 +856,7 @@ class Friend extends construct(Character, Dialog) {
   constructor() {
     super();
     this.name = 'friend';
-    this.sprite.animation_switch('knife', 'idle');
+    this.animation_switch('knife', 'idle');
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
 
@@ -976,6 +973,14 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
     this.populate_random_inventory();
 
     critter_container.addChild(this.sprite);
+  }
+
+  animation_switch(type) {
+    if(this.sprite.textures !== this.sprite.animations[type]) {
+      this.sprite.textures = this.sprite.animations[type];
+      this.sprite.loop = true;
+      this.sprite.play();
+    }
   }
 
   lootable_on_death() {
@@ -1543,7 +1548,7 @@ const weapon_list = [
     rank:       0,
     cost:       50,
     type:       'weapon',
-    damage:     1,
+    damage:     10,
     speed:      1,
     condition:  100,
 
@@ -2534,8 +2539,8 @@ class Keyboard {
   }
 
   up() {
-    this.player.animation_switch('bow', 'walk');
-    this.player.rotation = -2;
+    this.animation_switch('bow', 'walk');
+    this.rotation = -2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
@@ -2559,7 +2564,7 @@ class Keyboard {
   }
 
   down() {
-    this.player.animation_switch('bow', 'walk');
+    this.animation_switch('bow', 'walk');
     this.player.rotation = 2;
 
     const collision_objects = viewport.getChildByName('collision_items');
@@ -2584,7 +2589,7 @@ class Keyboard {
   }
 
   left() {
-    this.player.animation_switch('bow', 'walk');
+    this.animation_switch('bow', 'walk');
 
     this.player.rotation = -3;
     const collision_objects = viewport.getChildByName('collision_items');
@@ -2609,7 +2614,7 @@ class Keyboard {
   }
 
   right() {
-    this.player.animation_switch('bow', 'walk');
+    this.animation_switch('bow', 'walk');
     this.player.rotation = 0;
 
     const collision_objects = viewport.getChildByName('collision_items');

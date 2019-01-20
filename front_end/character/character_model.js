@@ -16,15 +16,15 @@ class Character {
     this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 0.4;
     this.sprite.play();
+  }
 
-    //for example bow, idle or nothing, idle
-    this.sprite.animation_switch = (type, action) => {
-      if(this.sprite.textures !== this.sprite.animations[type][action]) {
-        this.sprite.textures = this.sprite.animations[type][action];
-        this.sprite.loop = true;
-        this.sprite.play();
-      }
-    };
+  //for example bow, idle or nothing, idle
+  animation_switch(type, action) {
+    if(this.sprite.textures !== this.sprite.animations[type][action]) {
+      this.sprite.textures = this.sprite.animations[type][action];
+      this.sprite.loop = true;
+      this.sprite.play();
+    }
   }
 
   set_position(point) {

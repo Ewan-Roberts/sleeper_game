@@ -31,7 +31,7 @@ class Vitals {
 
   kill() {
     //death animation
-    this.sprite.animation_switch('knife', 'attack');
+    this.animation_switch('knife', 'attack');
 
   }
 

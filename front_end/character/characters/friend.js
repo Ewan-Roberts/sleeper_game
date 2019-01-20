@@ -12,7 +12,7 @@ class Friend extends construct(Character, Dialog) {
   constructor() {
     super();
     this.name = 'friend';
-    this.sprite.animation_switch('knife', 'idle');
+    this.animation_switch('knife', 'idle');
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
 

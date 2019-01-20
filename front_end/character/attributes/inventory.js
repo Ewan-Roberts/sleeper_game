@@ -15,7 +15,7 @@ class Inventory {
   constructor() {
     this.inventory = {};
     this.inventory.slots = [];
-    this.inventory.equiped = undefined;
+    this.inventory.equipped = undefined;
     this.inventory.sprite = PIXI.Sprite.fromFrame('black_dot');
     this.inventory.sprite.height = 100;
     this.inventory.sprite.width = 402;
@@ -140,24 +140,23 @@ class Inventory {
   }
 
   equip_item(item) {
-    this.inventory.equiped = item;
+    this.inventory.equipped = item;
   }
 
   get weapon_speed() {
-    if(!this.inventory.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.inventory.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equiped.speed;
-;
+    return this.inventory.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.inventory.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.inventory.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equiped.damage;
+    return this.inventory.equipped.damage;
   }
 
   randomise_slots() {

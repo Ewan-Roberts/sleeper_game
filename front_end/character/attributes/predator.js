@@ -25,10 +25,9 @@ class Predator {
         prey.damage(this.weapon_damage);
       }
 
-      prey.sprite.animation_switch('dead');
-
       console.log(prey);
 
+      prey.animation_switch('dead');
     });
 
     const movement_timer = timer.createTimer(1000);
@@ -37,7 +36,7 @@ class Predator {
       const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(distance_to_act < 200) {
-        this.sprite.animation_switch('knife', 'attack');
+        this.animation_switch('knife', 'attack');
 
         attack_timer.start();
         return;
@@ -57,7 +56,6 @@ class Predator {
     });
 
     movement_timer.start();
-
   }
 }
 

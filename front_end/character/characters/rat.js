@@ -26,6 +26,14 @@ class Rat extends construct(Character, Vitals, Prey, Inventory) {
     critter_container.addChild(this.sprite);
   }
 
+  animation_switch(type) {
+    if(this.sprite.textures !== this.sprite.animations[type]) {
+      this.sprite.textures = this.sprite.animations[type];
+      this.sprite.loop = true;
+      this.sprite.play();
+    }
+  }
+
   lootable_on_death() {
     this.sprite.kill = () => {
 
