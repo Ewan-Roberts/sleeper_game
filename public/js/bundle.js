@@ -373,7 +373,6 @@ class Inventory {
   spike_populate_inventory() {
     const rat_meat = find_item_by_id(1);
     const rat_hide = find_item_by_id(2);
-
     this.inventory.slots.push(rat_meat, rat_hide);
     this.inventory.slots.forEach((item, i) => {
       this.populate_slot(item, i);
@@ -2549,7 +2548,7 @@ class Keyboard {
   }
 
   up() {
-    this.animation_switch('bow', 'walk');
+    //this.animation_switch('bow', 'walk');
     this.rotation = -2;
 
     const collision_objects = viewport.getChildByName('collision_items');
@@ -2574,7 +2573,7 @@ class Keyboard {
   }
 
   down() {
-    this.animation_switch('bow', 'walk');
+    //this.animation_switch('bow', 'walk');
     this.player.rotation = 2;
 
     const collision_objects = viewport.getChildByName('collision_items');
@@ -2599,7 +2598,7 @@ class Keyboard {
   }
 
   left() {
-    this.animation_switch('bow', 'walk');
+    //this.animation_switch('bow', 'walk');
 
     this.player.rotation = -3;
     const collision_objects = viewport.getChildByName('collision_items');
@@ -2624,7 +2623,7 @@ class Keyboard {
   }
 
   right() {
-    this.animation_switch('bow', 'walk');
+    //this.animation_switch('bow', 'walk');
     this.player.rotation = 0;
 
     const collision_objects = viewport.getChildByName('collision_items');
