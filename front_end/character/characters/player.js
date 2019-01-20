@@ -12,12 +12,10 @@ const { Mouse     } = require('../../input/mouse');
 const { Vitals    } = require('../attributes/vitals');
 const { Inventory } = require('../attributes/inventory');
 
-class Player extends construct(Character, Keyboard, Mouse) {
+class Player extends construct(Character, Keyboard, Mouse, Vitals) {
   constructor() {
     super();
-    console.log(this)
 
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
@@ -26,7 +24,6 @@ class Player extends construct(Character, Keyboard, Mouse) {
     this.name = 'player';
     this.sprite.height /= 2;
     this.sprite.width /= 2;
-    this.sprite.status = new Vitals();
     this.sprite.inventory = new Inventory();
 
     viewport.addChild(this.sprite);

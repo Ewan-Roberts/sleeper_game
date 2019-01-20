@@ -6,23 +6,8 @@ const { ticker            } = require('../engine/ticker');
 const { radian            } = require('../engine/math');
 const { arrow_management  } = require('../character/weapons/bow.js');
 
-const get_mouse_position = (event, viewport) => ({
-  x: event.data.global.x - viewport.screenWidth / 2,
-  y: event.data.global.y - viewport.screenHeight / 2,
-});
-
-const get_mouse_position_from_player = (event, sprite, viewport) => {
-  const mouse_position = get_mouse_position(event, viewport);
-
-  mouse_position.x += sprite.x;
-  mouse_position.y += sprite.y;
-
-  return mouse_position;
-};
-
 class Mouse {
   constructor() {
-    this.moveable = true;
     this.allow_shoot = true;
     this.aiming_cone = viewport.getChildByName('aiming_cone');
     this.weapon = 'bow';
@@ -107,7 +92,7 @@ class Mouse {
   }
 
   mouse_move(event) {
-    const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
+    const mouse_position_player = event.data.getLocalPosition(viewport);
 
     this.aiming_cone.position.set(this.sprite.x, this.sprite.y);
     this.aiming_cone.rotation = radian(this.sprite, mouse_position_player);

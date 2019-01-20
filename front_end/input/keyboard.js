@@ -1,6 +1,5 @@
 'use strict';
 
-const { Vitals   } = require('../character/attributes/inventory');
 const { viewport } = require('../engine/viewport');
 
 const keymap = {
@@ -27,7 +26,6 @@ class Keyboard {
     this.moveable = true;
     this.movement_speed = 15;
     this.buffer = 50;
-    this.sprite = viewport.getChildByName('player');
     this.shift_pressed = false;
   }
 
@@ -63,14 +61,14 @@ class Keyboard {
     }
   }
 
-  static stop_input() {
+  stop_input() {
     this.moveable = false;
   }
 
   key_up() {
     this.shift_pressed = false;
-    this.sprite.textures = this.sprite.animations.bow.idle;
-    this.sprite.play();
+
+    this.animation_switch('bow', 'idle');
   }
 
   keyboard_up() {
@@ -90,12 +88,12 @@ class Keyboard {
           this.sprite.y -= this.movement_speed / 4;
           collision_objects.children[i].y -= this.movement_speed / 4;
         }
+
         return;
       }
     }
 
     this.sprite.y -= this.movement_speed;
-
   }
 
   keyboard_down() {
@@ -116,6 +114,7 @@ class Keyboard {
           this.sprite.y += this.movement_speed / 4;
           collision_objects.children[i].y += this.movement_speed / 4;
         }
+
         return;
       }
     }
@@ -126,6 +125,7 @@ class Keyboard {
   left() {
     this.animation_switch('bow', 'walk');
     this.sprite.rotation = -3;
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -140,11 +140,12 @@ class Keyboard {
           this.sprite.x -= this.movement_speed / 4;
           collision_objects.children[i].x -= this.movement_speed / 4;
         }
+
         return;
       }
     }
-    this.sprite.x -= this.movement_speed;
 
+    this.sprite.x -= this.movement_speed;
   }
 
   right() {
@@ -166,19 +167,20 @@ class Keyboard {
           this.sprite.x += this.movement_speed / 4;
           collision_objects.children[i].x += this.movement_speed / 4;
         }
+
         return;
       }
     }
-    this.sprite.x += this.movement_speed;
 
+    this.sprite.x += this.movement_speed;
   }
 
   inventory() {
     if ( this.inventory_open === false ) {
-      Vitals.show_player_inventory();
+      this.show_player_inventory();
       this.inventory_open = true;
     } else {
-      Vitals.hide_player_inventory();
+      this.hide_player_inventory();
       this.inventory_open = false;
     }
   }

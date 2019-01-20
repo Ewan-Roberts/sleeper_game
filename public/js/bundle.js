@@ -556,11 +556,11 @@ class Vitals {
     };
   }
 
-  static show_player_inventory() {
+  show_player_inventory() {
     dom_hud.style.display = 'block';
   }
 
-  static hide_player_inventory() {
+  hide_player_inventory() {
     dom_hud.style.display = 'none';
   }
 
@@ -923,12 +923,10 @@ const { Mouse     } = require('../../input/mouse');
 const { Vitals    } = require('../attributes/vitals');
 const { Inventory } = require('../attributes/inventory');
 
-class Player extends construct(Character, Keyboard, Mouse) {
+class Player extends construct(Character, Keyboard, Mouse, Vitals) {
   constructor() {
     super();
-    console.log(this)
 
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.idle);
     this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
@@ -937,7 +935,6 @@ class Player extends construct(Character, Keyboard, Mouse) {
     this.name = 'player';
     this.sprite.height /= 2;
     this.sprite.width /= 2;
-    this.sprite.status = new Vitals();
     this.sprite.inventory = new Inventory();
 
     viewport.addChild(this.sprite);
@@ -2483,7 +2480,6 @@ loader.load(async function() {
 },{"./engine/app":23,"./engine/pixi_containers":27,"./engine/ticker":29,"./level/development/dev_level.js":45,"pixi-packer-parser":78,"pixi.js":210}],32:[function(require,module,exports){
 'use strict';
 
-const { Vitals   } = require('../character/attributes/inventory');
 const { viewport } = require('../engine/viewport');
 
 const keymap = {
@@ -2510,7 +2506,6 @@ class Keyboard {
     this.moveable = true;
     this.movement_speed = 15;
     this.buffer = 50;
-    this.sprite = viewport.getChildByName('player');
     this.shift_pressed = false;
   }
 
@@ -2546,14 +2541,14 @@ class Keyboard {
     }
   }
 
-  static stop_input() {
+  stop_input() {
     this.moveable = false;
   }
 
   key_up() {
     this.shift_pressed = false;
-    this.sprite.textures = this.sprite.animations.bow.idle;
-    this.sprite.play();
+
+    this.animation_switch('bow', 'idle');
   }
 
   keyboard_up() {
@@ -2573,12 +2568,12 @@ class Keyboard {
           this.sprite.y -= this.movement_speed / 4;
           collision_objects.children[i].y -= this.movement_speed / 4;
         }
+
         return;
       }
     }
 
     this.sprite.y -= this.movement_speed;
-
   }
 
   keyboard_down() {
@@ -2599,6 +2594,7 @@ class Keyboard {
           this.sprite.y += this.movement_speed / 4;
           collision_objects.children[i].y += this.movement_speed / 4;
         }
+
         return;
       }
     }
@@ -2609,6 +2605,7 @@ class Keyboard {
   left() {
     this.animation_switch('bow', 'walk');
     this.sprite.rotation = -3;
+
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
@@ -2623,11 +2620,12 @@ class Keyboard {
           this.sprite.x -= this.movement_speed / 4;
           collision_objects.children[i].x -= this.movement_speed / 4;
         }
+
         return;
       }
     }
-    this.sprite.x -= this.movement_speed;
 
+    this.sprite.x -= this.movement_speed;
   }
 
   right() {
@@ -2649,19 +2647,20 @@ class Keyboard {
           this.sprite.x += this.movement_speed / 4;
           collision_objects.children[i].x += this.movement_speed / 4;
         }
+
         return;
       }
     }
-    this.sprite.x += this.movement_speed;
 
+    this.sprite.x += this.movement_speed;
   }
 
   inventory() {
     if ( this.inventory_open === false ) {
-      Vitals.show_player_inventory();
+      this.show_player_inventory();
       this.inventory_open = true;
     } else {
-      Vitals.hide_player_inventory();
+      this.hide_player_inventory();
       this.inventory_open = false;
     }
   }
@@ -2675,7 +2674,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../character/attributes/inventory":5,"../engine/viewport":30}],33:[function(require,module,exports){
+},{"../engine/viewport":30}],33:[function(require,module,exports){
 'use strict';
 
 const PIXI                  = require('pixi.js');
@@ -2684,23 +2683,8 @@ const { ticker            } = require('../engine/ticker');
 const { radian            } = require('../engine/math');
 const { arrow_management  } = require('../character/weapons/bow.js');
 
-const get_mouse_position = (event, viewport) => ({
-  x: event.data.global.x - viewport.screenWidth / 2,
-  y: event.data.global.y - viewport.screenHeight / 2,
-});
-
-const get_mouse_position_from_player = (event, sprite, viewport) => {
-  const mouse_position = get_mouse_position(event, viewport);
-
-  mouse_position.x += sprite.x;
-  mouse_position.y += sprite.y;
-
-  return mouse_position;
-};
-
 class Mouse {
   constructor() {
-    this.moveable = true;
     this.allow_shoot = true;
     this.aiming_cone = viewport.getChildByName('aiming_cone');
     this.weapon = 'bow';
@@ -2785,7 +2769,7 @@ class Mouse {
   }
 
   mouse_move(event) {
-    const mouse_position_player = get_mouse_position_from_player(event, this.sprite, viewport);
+    const mouse_position_player = event.data.getLocalPosition(viewport);
 
     this.aiming_cone.position.set(this.sprite.x, this.sprite.y);
     this.aiming_cone.rotation = radian(this.sprite, mouse_position_player);
