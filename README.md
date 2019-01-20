@@ -8,6 +8,12 @@ Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
+## Update 20.01.19:
+- Refactor:
+  - animation management
+  - keyboard and mouse interactions
+  - bring the player into the mixin structure
+
 ## Update 13.01.19:
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_8.png)
