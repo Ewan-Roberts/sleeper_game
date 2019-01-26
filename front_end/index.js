@@ -1,21 +1,21 @@
 'use strict';
 
-require('./engine/login.js');
-//const PIXI = require('pixi.js');
-//const pixiPackerParser = require('pixi-packer-parser');
+const PIXI = require('pixi.js');
+const pixi_packer_parser = require('pixi-packer-parser');
 
+//require('./engine/login.js');
 //engine set up
-//require('./engine/app');
-//require('./engine/ticker');
-//require('./engine/pixi_containers');
+require('./engine/app');
+require('./engine/ticker');
+require('./engine/pixi_containers');
 
-//const loader = new PIXI.loaders.Loader();
-//loader.use(pixiPackerParser(PIXI));
-//loader.add('../../images/bedroom_EN_web.json');
+const loader = new PIXI.loaders.Loader();
+loader.use(pixi_packer_parser(PIXI));
+loader.add('../../images/bedroom_EN_web.json');
 
-//loader.load(async function() {
-//  const { DevelopmentLevel } = require('./level/development/dev_level.js');
-//
-//new DevelopmentLevel();
-//});
+loader.load(async function() {
+  const { DevelopmentLevel } = require('./level/development/dev_level.js');
+
+  new DevelopmentLevel();
+});
 

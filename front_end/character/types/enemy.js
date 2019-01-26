@@ -3,7 +3,7 @@
 const { viewport  } = require('../../engine/viewport');
 const { construct } = require('../../engine/constructor');
 
-const { find_weapon_by_name } = require('../../items/item_data');
+const { get_item_by_name } = require('../../items/item_data');
 
 const { Character } = require('../character_model');
 const { Vitals    } = require('../attributes/vitals');
@@ -17,7 +17,7 @@ class Enemy extends construct(Character, Vitals, Predator, Inventory) {
     super();
     this.name = 'enemy';
 
-    const knife = find_weapon_by_name('rusty_knife');
+    const knife = get_item_by_name('rusty_knife');
     this.equip_item(knife);
 
     enemy_container.addChild(this.sprite);

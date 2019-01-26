@@ -25,6 +25,7 @@ class DevelopmentLevel {
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
+    player.add_controls();
     this.test_load_test_level();
     //player.add_raycasting(this.level.segments);
 

@@ -5,7 +5,7 @@ const { viewport } = require('../../engine/viewport');
 
 const {
   find_item_by_id,
-  get_random_item_array,
+  get_random_items,
 } = require('../../items/item_data');
 
 const gui_container = viewport.getChildByName('gui_container');
@@ -172,7 +172,7 @@ class Inventory {
   }
 
   populate_random_inventory() {
-    this.inventory.slots  = get_random_item_array();
+    this.inventory.slots  = get_random_items();
 
     this.inventory.slots.forEach((item, i) => {
       this.populate_slot(item, i);

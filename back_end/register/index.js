@@ -26,7 +26,6 @@ async function create_user(user_info) {
 }
 
 async function get_user_by_password(password) {
-  console.log(password)
   const result = await User.find({ password });
 
   return result[0];

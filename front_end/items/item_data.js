@@ -11,39 +11,170 @@ const {
 
 //https://www.uihere.com/free-graphics/search?q=knife
 
-const weapon_list = [
+const items = [
+  //primary
   {
     name:       'rusty_knife',
-    image_name: 'rusty_knife',
     id:         1001,
     rank:       0,
     cost:       50,
-    type:       'weapon',
+    type:       'primary',
+    range:      20,
     damage:     10,
     speed:      400,
     condition:  100,
 
     display_name: 'rusty knife',
     description:  'The rusty knife someone sharpened on what looks like a rock',
+
+    image_name: 'rusty_knife',
+  },
+  {
+    name:       'old_bow',
+    id:         1002,
+    rank:       0,
+    cost:       200,
+    type:       'primary',
+    range:      200,
+    damage:     10,
+    speed:      400,
+    condition:  100,
+
+    display_name: 'old bow',
+    description:  'An old bow still working but not for long...',
+
+    image_name: 'bunny',
   },
   {
     name:       'wrench_blade',
-    image_name: 'wrench_blade',
     id:         1002,
     rank:       1,
     cost:       80,
-    type:       'weapon',
+    type:       'primary',
+    range:      20,
     damage:     2,
     speed:      1,
     condition:  100,
 
     display_name: 'wrench blade',
     description:  'This blade looks to be a hastily sharped from an old wrench',
+
+    image_name: 'bunny',
   },
-];
 
+  //secondary
+  {
+    name:       'pistol',
+    id:         1004,
+    rank:       0,
+    cost:       50,
+    type:       'weapon',
+    range:      20,
+    damage:     10,
+    speed:      400,
+    condition:  100,
 
-const item_list = [
+    display_name: 'a pistol',
+    description:  'a pistol from a cop',
+
+    image_name: 'bunny',
+  },
+
+  //melee
+  {
+    name:       'wrench_blade',
+    id:         1002,
+    rank:       1,
+    cost:       80,
+    type:       'weapon',
+    range:      20,
+    damage:     2,
+    speed:      1,
+    condition:  100,
+
+    display_name: 'wrench blade',
+    description:  'This blade looks to be a hastily sharped from an old wrench',
+
+    image_name: 'bunny',
+  },
+
+  //util
+  {
+    name: 'util',
+    id: 105,
+    rank: 0,
+    cost: 20,
+
+    description: 'some util thing',
+    image_name: 'bunny',
+  },
+
+  //head
+  {
+    name: 'sunglasses',
+    id: 100,
+    rank: 0,
+    cost: 20,
+
+    description: 'a sunglasses',
+    image_name: 'bunny',
+  },
+
+  //chest
+  {
+    name: 'torn_clothes',
+    id: 100,
+    rank: 0,
+    cost: 20,
+
+    description: 'torn clothes',
+    image_name: 'bunny',
+  },
+
+  //feet
+  {
+    name: 'army_boots',
+    id: 100,
+    rank: 0,
+    cost: 20,
+
+    description: 'army boots',
+    image_name: 'bunny',
+  },
+
+  //slot
+  {
+    name: 'keys',
+    id: 101,
+    rank: 0,
+    cost: 20,
+
+    description: 'keys',
+    image_name: 'bunny',
+  },
+  {
+    name: 'ball',
+    id: 102,
+    rank: 0,
+    cost: 20,
+
+    description: 'ball',
+    image_name: 'bunny',
+  },
+
+  //hat
+  {
+    name: 'bandana',
+    position: 'head',
+    id: 100,
+    rank: 0,
+    cost: 20,
+
+    description: 'a bandana',
+    image_name: 'bunny',
+  },
+
+  //misc
   {
     name: 'meat',
     id: 1,
@@ -98,36 +229,28 @@ const item_list = [
     description: 'the leg bone of a rat',
     image_name: 'right_leg_bone',
   },
+
 ];
 
-function find_item_by_id(id) {
-  return item_list.find(item => item.id === id);
-}
-
-function find_weapon_by_id(id) {
-  return weapon_list.find(weapon => weapon.id === id);
-}
-
-function find_weapon_by_name(name) {
-  return weapon_list.find(weapon => weapon.name === name);
-}
-
-function get_random_item_array() {
+function get_random_items() {
   const number_of_items_to_return = generate_number_between_min_and_max(1,3);
 
   const item_array = [];
 
   for(let i = 0; i < number_of_items_to_return; i++) {
-    item_array.push(item_list[Math.floor(Math.random()*item_list.length)]);
+    item_array.push(items[Math.floor(Math.random()*items.length)]);
   }
 
   return item_array;
 }
 
+const get_item_by_name = name => items.find(item => item.name === name);
+
+const get_item_by_id = id => items.find(item => item.id === id);
+
 module.exports = {
-  find_item_by_id,
-  get_random_item_array,
-  find_weapon_by_id,
-  find_weapon_by_name,
+  get_item_by_name,
+  get_item_by_id,
+  get_random_items,
 };
 

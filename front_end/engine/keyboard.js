@@ -50,7 +50,7 @@ class Keyboard {
         this.right();
         break;
       case 'i':
-        this.inventory();
+        this.toggle_player_inventory();
         break;
       case 'o':
         this.start_intro();

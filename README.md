@@ -102,8 +102,7 @@ Key:
 - Full server-side character state management
 - Re-add multiplayer NOT ADDING
 - Add register user DONE
-- Add login user
-- Add email user
+- Add login user DONE
 
 ## items (medium)
 #### junk
@@ -144,8 +143,8 @@ Key:
 - Move item from inventory to player inventory
 
 ## Effects (low)
-- create fire effects
 - create rain effects DONE
+- create fire effects
 - create blood effects
 - create arrow effects
 - create gun effects
@@ -158,10 +157,10 @@ Key:
 `later`
 
 ## GUI: (high)
-- Start screen
+- Start screen DONE
+- error messages for user exists DONE
 - NPC buy/sell etc
 - Manage player inventory
-- error messages for user exists
 - user info box
 
 ## ART: (outsource)
@@ -170,22 +169,24 @@ Key:
 - Loaders
 
 ## mechanics: (low)
-- Add scavenging
 - Add player inventory DONE
+- Add scavenging
 - Add starting fires
 - Add condition management (thirst etc.) DONE
 - create architype system
 - buy sell/buy engine
 - Level loader
 
+# Infra:
+- Create EC2 server (again)
 
 # Needed for ALPHA
 - register users DONE
 - basic predetor/prey DONE
-- login with user details
-- Create EC2 server (again)
+- login with user details DONE
+- title screen DONE
 - save game states
-- title screen
+- prod server
 - basic item/inventory management
 - basic arrow management
 - basic different graphics
@@ -194,3 +195,6 @@ Key:
 # Needed for BETA
 - secure register user
 - Server-side rendered images
+- CD
+- Add email user
+

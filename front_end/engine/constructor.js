@@ -1,11 +1,11 @@
 'use strict';
 
 function construct(BaseClass, ...Mixins) {
+  function copy_properties(target, source) {
 
-  function copyProperties(target, source) {
-    const allPropertyNames = Object.getOwnPropertyNames(source).concat(Object.getOwnPropertySymbols(source));
+    const all_property_names = Object.getOwnPropertyNames(source).concat(Object.getOwnPropertySymbols(source));
 
-    allPropertyNames.forEach((propertyName) => {
+    all_property_names.forEach((propertyName) => {
       if (propertyName.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
         return;
       Object.defineProperty(target, propertyName, Object.getOwnPropertyDescriptor(source, propertyName));
@@ -18,13 +18,13 @@ function construct(BaseClass, ...Mixins) {
       super(...args);
 
       Mixins.forEach((Mixin) => {
-        copyProperties(this, new Mixin(...args));
+        copy_properties(this, new Mixin(...args));
       });
     }
   }
 
   Mixins.forEach((Mixin) => {
-    copyProperties(Base.prototype, Mixin.prototype);
+    copy_properties(Base.prototype, Mixin.prototype);
   });
 
   return Base;
