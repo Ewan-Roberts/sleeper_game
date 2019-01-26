@@ -1,5 +1,7 @@
 'use strict';
 
+const app  = require('../engine/app');
+const PIXI = require('pixi.js');
 // types:
 // food doing
 // materials
@@ -244,13 +246,22 @@ function get_random_items() {
   return item_array;
 }
 
-const get_item_by_name = name => items.find(item => item.name === name);
+const get_item_by_name = name => items.find(item => item.image_name === name);
 
 const get_item_by_id = id => items.find(item => item.id === id);
+
+const extract_item_image_by_name = name => {
+  const { image_name } = get_item_by_name(name);
+
+  const texture = PIXI.Sprite.fromFrame(image_name);
+
+  return app.renderer.plugins.extract.image(texture);
+};
 
 module.exports = {
   get_item_by_name,
   get_item_by_id,
   get_random_items,
+  extract_item_image_by_name,
 };
 

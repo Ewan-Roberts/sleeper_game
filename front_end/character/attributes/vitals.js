@@ -1,6 +1,10 @@
 'use strict';
 
-const dom_hud = global.document.querySelector('.characterInventory');
+const dom_hud    = global.document.querySelector('.characterInventory');
+const model_head = global.document.querySelector('.model_head');
+const {
+  extract_item_image_by_name,
+} = require('../../items/item_data');
 
 class Vitals {
   constructor() {
@@ -22,6 +26,10 @@ class Vitals {
   }
 
   toggle_player_inventory() {
+    const image = extract_item_image_by_name('skull_cap_bone');
+
+    model_head.appendChild(image);
+
     if(dom_hud.style.display === 'block') {
       dom_hud.style.display = 'none';
     } else {

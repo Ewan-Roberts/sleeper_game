@@ -349,7 +349,11 @@ module.exports = {
 (function (global){
 'use strict';
 
-const dom_hud = global.document.querySelector('.characterInventory');
+const dom_hud    = global.document.querySelector('.characterInventory');
+const model_head = global.document.querySelector('.model_head');
+const {
+  extract_item_image_by_name,
+} = require('../../items/item_data');
 
 class Vitals {
   constructor() {
@@ -371,6 +375,10 @@ class Vitals {
   }
 
   toggle_player_inventory() {
+    const image = extract_item_image_by_name('skull_cap_bone');
+
+    model_head.appendChild(image);
+
     if(dom_hud.style.display === 'block') {
       dom_hud.style.display = 'none';
     } else {
@@ -457,7 +465,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{"../../items/item_data":36}],7:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2864,6 +2872,8 @@ module.exports = {
 },{"./item_model":37,"pixi.js":209}],36:[function(require,module,exports){
 'use strict';
 
+const app  = require('../engine/app');
+const PIXI = require('pixi.js');
 // types:
 // food doing
 // materials
@@ -3108,18 +3118,27 @@ function get_random_items() {
   return item_array;
 }
 
-const get_item_by_name = name => items.find(item => item.name === name);
+const get_item_by_name = name => items.find(item => item.image_name === name);
 
 const get_item_by_id = id => items.find(item => item.id === id);
+
+const extract_item_image_by_name = name => {
+  const { image_name } = get_item_by_name(name);
+
+  const texture = PIXI.Sprite.fromFrame(image_name);
+
+  return app.renderer.plugins.extract.image(texture);
+};
 
 module.exports = {
   get_item_by_name,
   get_item_by_id,
   get_random_items,
+  extract_item_image_by_name,
 };
 
 
-},{"../engine/math":24}],37:[function(require,module,exports){
+},{"../engine/app":20,"../engine/math":24,"pixi.js":209}],37:[function(require,module,exports){
 'use strict';
 
 const { viewport } = require('../engine/viewport.js');
