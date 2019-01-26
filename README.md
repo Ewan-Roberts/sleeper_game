@@ -8,6 +8,15 @@ Currently in the process of building the game engine.
 
 Work in progess, updates below:
 
+## Update 26.01.19:
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_9.png)
+
+- Add basic user create
+- Add basic user find by password
+- Add database ability to do the above
+- Add basic item find and refactored interface
+
+
 ## Update 20.01.19:
 - Refactor:
   - animation management

@@ -30,8 +30,6 @@ const player_inventory_model = {
   item_slots:       [],
 };
 
-console.log(player_inventory_model);
-
 
 class Player extends construct(Character, Keyboard, Mouse, Inventory, Vitals, Predator) {
   constructor() {
