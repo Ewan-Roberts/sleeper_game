@@ -17,7 +17,7 @@ class Prey {
   }
 
   is_prey_to({ 'sprite': predator_sprite }) {
-    const { 'sprite': prey_sprite     } = this;
+    const { 'sprite': prey_sprite } = this;
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
     point_to_run_for.name = 'dot';
@@ -36,7 +36,10 @@ class Prey {
         return;
       }
 
-      point_to_run_for.position.set(prey_sprite.x + (prey_sprite.x - predator_sprite.x), prey_sprite.y +(prey_sprite.y - predator_sprite.y));
+      point_to_run_for.position.set(
+        prey_sprite.x + (prey_sprite.x - predator_sprite.x),
+        prey_sprite.y + (prey_sprite.y - predator_sprite.y)
+      );
 
       move_sprite_to_sprite_on_grid(prey_sprite, point_to_run_for);
     }).start();
