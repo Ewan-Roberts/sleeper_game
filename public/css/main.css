@@ -35,7 +35,27 @@ div {
   font-size: 5vw;
   padding: 100px;
   left: 20%;
+}
 
+.response_overlay {
+  padding-left: 80px;
+  padding-top: 25px;
+  position: absolute;
+  font-size: 30px;
+  display: none;
+  margin-left: 35%;
+  margin-top: 15%;
+  background: grey;
+  width: 700px;
+  height: 400px;
+}
+
+.response_overlay h2 {
+  font-size: 40px;
+}
+
+.response_overlay p {
+  font-size: 35px;
 }
 
 .login_menu {
@@ -45,7 +65,6 @@ div {
 .login_menu h2 {
   font-size: 2vw;
 }
-
 
 .login_menu input {
   font-size: 2vw;

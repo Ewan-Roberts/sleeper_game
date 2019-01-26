@@ -2,10 +2,13 @@
 
 const website_port = process.env.PORT || 3000;
 
-const express = require('express');
-const app = express();
+const express    = require('express');
+const app        = express();
 const web_server = require('http').Server(app);
-const io = require('socket.io')(web_server, {});
+const io         = require('socket.io')(web_server, {});
+const {
+  create_user,
+}= require('./back_end/register');
 
 require('./database/local_database');
 
@@ -23,6 +26,12 @@ const current_players = [];
 
 // todo move to folder
 io.on('connection', client => {
+
+  client.on('register', async function(user_details) {
+    const created_user = await create_user(user_details);
+
+    client.emit('user_register_success', created_user);
+  });
 
   client.on('client_player_location', player_data => {
 

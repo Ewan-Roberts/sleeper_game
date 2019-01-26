@@ -24,6 +24,7 @@
     "imagemin-pngquant": "^6.0.0",
     "mocha": "^5.2.0",
     "mongoose": "^5.2.15",
+    "password-generator": "^2.2.0",
     "pixi-packer-parser": "^2.0.0",
     "pixi-timer": "^1.0.1",
     "pixi-tween": "^0.2.0",

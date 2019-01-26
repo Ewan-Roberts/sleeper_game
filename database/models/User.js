@@ -29,7 +29,6 @@ const user_schema = new mongoose.Schema({
   },
   inventory: {
     type:           Array,
-    required:       true,
   },
   vitals: {
     type:           Object,
