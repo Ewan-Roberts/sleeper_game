@@ -17,5 +17,7 @@ loader.load(async function() {
   const { DevelopmentLevel } = require('./level/development/dev_level.js');
 
   new DevelopmentLevel();
+
+  require('./engine/inventory_manager');
 });
 

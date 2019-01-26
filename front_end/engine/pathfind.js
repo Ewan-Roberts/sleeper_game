@@ -367,7 +367,7 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     throw `sprite: ${from_sprite.name} was not found`;
   }
 
-  sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
+  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
   //console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
@@ -416,7 +416,7 @@ async function run_pathfinding_test() {
   const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
 
-  sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
+  //sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
 
   // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
   //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
