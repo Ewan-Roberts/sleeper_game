@@ -25,10 +25,11 @@ async function create_user(user_info) {
   };
 }
 
-async function get_user_by_id(user_id) {
-  const result = await User.find({ id: user_id });
+async function get_user_by_password(password) {
+  console.log(password)
+  const result = await User.find({ password });
 
-  return result;
+  return result[0];
 }
 
 async function delete_user_by_id(user_id) {
@@ -39,6 +40,6 @@ async function delete_user_by_id(user_id) {
 
 module.exports = {
   create_user,
-  get_user_by_id,
+  get_user_by_password,
   delete_user_by_id,
 };

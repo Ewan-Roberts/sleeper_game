@@ -8,6 +8,7 @@ const web_server = require('http').Server(app);
 const io         = require('socket.io')(web_server, {});
 const {
   create_user,
+  get_user_by_password,
 }= require('./back_end/register');
 
 require('./database/local_database');
@@ -31,6 +32,12 @@ io.on('connection', client => {
     const created_user = await create_user(user_details);
 
     client.emit('user_register_success', created_user);
+  });
+
+  client.on('get_user', async function(user_details) {
+    const created_user = await get_user_by_password(user_details.passcode);
+
+    client.emit('find_user_success', created_user);
   });
 
   client.on('client_player_location', player_data => {

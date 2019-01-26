@@ -100,9 +100,8 @@ Key:
 
 ## back-end: (high)
 - Full server-side character state management
-- Server-side rendered images
-- Re-add multiplayer DONE
-- Add register user
+- Re-add multiplayer NOT ADDING
+- Add register user DONE
 - Add login user
 - Add email user
 
@@ -162,6 +161,8 @@ Key:
 - Start screen
 - NPC buy/sell etc
 - Manage player inventory
+- error messages for user exists
+- user info box
 
 ## ART: (outsource)
 - Spine format replacement for spritesheet
@@ -179,9 +180,10 @@ Key:
 
 
 # Needed for ALPHA
+- register users DONE
+- basic predetor/prey DONE
+- login with user details
 - Create EC2 server (again)
-- basic predetor/prey
-- register users
 - save game states
 - title screen
 - basic item/inventory management
@@ -189,9 +191,6 @@ Key:
 - basic different graphics
 
 
-
-
-
-
-
-
+# Needed for BETA
+- secure register user
+- Server-side rendered images
