@@ -2,17 +2,12 @@
 
 const app  = require('../engine/app');
 const PIXI = require('pixi.js');
-// types:
-// food doing
-// materials
-// armour
 
 const {
   generate_number_between_min_and_max,
 } = require('../engine/math');
 
 //https://www.uihere.com/free-graphics/search?q=knife
-
 const items = [
   //primary
   {
@@ -26,10 +21,9 @@ const items = [
     speed:      400,
     condition:  100,
 
-    display_name: 'rusty knife',
+    visual_name: 'rusty knife',
     description:  'The rusty knife someone sharpened on what looks like a rock',
-
-    image_name: 'rusty_knife',
+    image_name:  'rusty_knife',
   },
   {
     name:       'old_bow',
@@ -42,9 +36,8 @@ const items = [
     speed:      400,
     condition:  100,
 
-    display_name: 'old bow',
+    visual_name: 'old bow',
     description:  'An old bow still working but not for long...',
-
     image_name: 'bunny',
   },
   {
@@ -58,10 +51,9 @@ const items = [
     speed:      1,
     condition:  100,
 
-    display_name: 'wrench blade',
-    description:  'This blade looks to be a hastily sharped from an old wrench',
-
-    image_name: 'bunny',
+    visual_name: 'wrench blade',
+    description: 'This blade looks to be a hastily sharped from an old wrench',
+    image_name: 'wrench_blade',
   },
 
   //secondary
@@ -76,7 +68,7 @@ const items = [
     speed:      400,
     condition:  100,
 
-    display_name: 'a pistol',
+    visual_name:  'pistol',
     description:  'a pistol from a cop',
 
     image_name: 'bunny',
@@ -94,6 +86,7 @@ const items = [
     speed:      1,
     condition:  100,
 
+    visual_name:  'wrench blade',
     display_name: 'wrench blade',
     description:  'This blade looks to be a hastily sharped from an old wrench',
 
@@ -107,41 +100,46 @@ const items = [
     rank: 0,
     cost: 20,
 
+    visual_name: 'util',
     description: 'some util thing',
     image_name: 'bunny',
   },
 
-  //head
+  //hat
   {
-    name: 'sunglasses',
+    name: 'old_helmet',
+    position: 'hat',
     id: 100,
     rank: 0,
     cost: 20,
 
-    description: 'a sunglasses',
-    image_name: 'bunny',
+    visual_name: 'old helmet',
+    description: 'A rusty old helmet that looks to be a WW2 replica',
+    image_name: 'old_helmet',
   },
 
   //chest
   {
-    name: 'torn_clothes',
+    name: 'old_clothes',
     id: 100,
     rank: 0,
     cost: 20,
 
+    visual_name: 'torn clothes',
     description: 'torn clothes',
-    image_name: 'bunny',
+    image_name: 'old_clothes',
   },
 
   //feet
   {
-    name: 'army_boots',
+    name: 'old_boots',
     id: 100,
     rank: 0,
     cost: 20,
 
-    description: 'army boots',
-    image_name: 'bunny',
+    visual_name: 'old boots',
+    description: 'A set of old boots, the bottom of them are worn and wont last long...',
+    image_name: 'old_boots',
   },
 
   //slot
@@ -151,6 +149,7 @@ const items = [
     rank: 0,
     cost: 20,
 
+    visual_name: 'keys',
     description: 'keys',
     image_name: 'bunny',
   },
@@ -160,20 +159,21 @@ const items = [
     rank: 0,
     cost: 20,
 
+    visual_name: 'ball',
     description: 'ball',
     image_name: 'bunny',
   },
 
-  //hat
+  //head
   {
-    name: 'bandana',
-    position: 'head',
+    name: 'old_bandana',
     id: 100,
     rank: 0,
     cost: 20,
 
-    description: 'a bandana',
-    image_name: 'bunny',
+    visual_name: 'old bandana',
+    description: 'An old shirt wrapped into a face mask',
+    image_name: 'old_bandana',
   },
 
   //misc
@@ -183,51 +183,63 @@ const items = [
     rank: 0,
     cost: 20,
     type: 'food',
+
+    visual_name: 'hunk of meat',
     description: 'rat meat',
     image_name: 'rat_meat',
   },
   {
-    name: 'rat hide',
+    name: 'rat_hide',
     id: 2,
     rank: 0,
     cost: 80,
     type: 'material',
+
+    visual_name: 'rat hide',
     description: 'the hide of a rat hide',
     image_name: 'rat_hide',
   },
   {
-    name: 'rat teeth',
+    name: 'rat_teeth',
     id: 3,
     rank: 0,
     cost: 40,
     type: 'material',
+
+    visual_name: 'rat teeth',
     description: 'the teeth of a rat hide',
     image_name: 'rat_hide',
   },
   {
-    name: 'rat femur',
+    name: 'rat_femur',
     id: 4,
     rank: 0,
     cost: 20,
     type: 'material',
+
+    visual_name: 'rat femur',
     description: 'the femur of a rat',
     image_name: 'femur',
   },
   {
-    name: 'rat bone chip',
-    id: 5,
+    name: 'skull_cap_bone',
+    id:   5,
     rank: 0,
     cost: 10,
     type: 'material',
+
+    visual_name: 'rat bone chip',
     description: 'a bone chip of a rat',
     image_name: 'skull_cap_bone',
   },
   {
-    name: 'rat leg bone',
-    id: 6,
+    name: 'rat_leg_bone',
+    id:   6,
     rank: 0,
     cost: 10,
     type: 'material',
+
+    visual_name: 'rat leg bone',
     description: 'the leg bone of a rat',
     image_name: 'right_leg_bone',
   },
@@ -246,16 +258,23 @@ function get_random_items() {
   return item_array;
 }
 
-const get_item_by_name = name => items.find(item => item.image_name === name);
+const get_item_by_name = name => items.find(item => item.name === name);
 
 const get_item_by_id = id => items.find(item => item.id === id);
 
 const extract_item_image_by_name = name => {
-  const { image_name } = get_item_by_name(name);
+  const item = get_item_by_name(name);
 
-  const texture = PIXI.Sprite.fromFrame(image_name);
+  const image_name = item ? item.image_name: name;
 
-  return app.renderer.plugins.extract.image(texture);
+  if(!image_name) {
+    throw new Error('Can not find ' + name);
+  }
+
+  const found_sprite = PIXI.Sprite.fromFrame(image_name);
+  const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+
+  return image_from_spritesheet;
 };
 
 module.exports = {

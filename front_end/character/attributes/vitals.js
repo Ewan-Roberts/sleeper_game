@@ -24,10 +24,15 @@ class Vitals {
   toggle_player_inventory() {
 
     if(dom_hud.style.display === 'block') {
+      dom_hud.style.opacity = 0;
       dom_hud.style.display = 'none';
-    } else {
-      dom_hud.style.display = 'block';
+      return;
+
     }
+
+    dom_hud.style.opacity = 1;
+    dom_hud.style.display = 'block';
+
   }
 
   show_player_inventory() {

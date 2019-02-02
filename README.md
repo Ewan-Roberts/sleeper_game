@@ -103,7 +103,7 @@ May not looks very pretty but an important landmark for the engine
 - tweening on path
 
 Key:
-- priority = (low||medium||high||outsource)
+- priority = (low || medium || high || outsource)
 
 # Roadmap:
 
@@ -179,9 +179,9 @@ Key:
 
 ## mechanics: (low)
 - Add player inventory DONE
+- Add condition management (thirst etc.) DONE
 - Add scavenging
 - Add starting fires
-- Add condition management (thirst etc.) DONE
 - create architype system
 - buy sell/buy engine
 - Level loader
@@ -199,7 +199,6 @@ Key:
 - basic item/inventory management
 - basic arrow management
 - basic different graphics
-
 
 # Needed for BETA
 - secure register user

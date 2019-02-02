@@ -9,7 +9,6 @@ const login_register = global.document.querySelector('.login_register');
 const login_register_button = global.document.querySelector('.login_register_button');
 const login_passcode = global.document.querySelector('.login_passcode');
 
-
 const login_start_button = global.document.querySelector('.login_start_button');
 const login_menu   = global.document.querySelectorAll('.login_menu input');
 const login_display = global.document.querySelector('.login_menu');

@@ -31,19 +31,19 @@ class DevelopmentLevel {
 
     this.test_note();
 
-    const enemy = new Enemy();
-    console.log(enemy);
-    enemy.sprite.position.set(1550,1000);
-    enemy.with_light();
+    //const enemy = new Enemy();
+    //console.log(enemy);
+    //enemy.sprite.position.set(1550,1000);
+    //enemy.with_light();
 
-    const rat = new Rat();
-    rat.set_position({x: 900, y: 1200});
-    rat.lootable_on_death();
+    //const rat = new Rat();
+    //rat.set_position({x: 900, y: 1200});
+    //rat.lootable_on_death();
 
-    rat.is_prey_to(enemy);
-    rat.is_prey_to(player);
+    //rat.is_prey_to(enemy);
+    //rat.is_prey_to(player);
 
-    enemy.is_predator_to(rat);
+    //enemy.is_predator_to(rat);
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 

@@ -20,4 +20,3 @@ loader.load(async function() {
 
   require('./engine/inventory_manager');
 });
-
