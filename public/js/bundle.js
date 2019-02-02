@@ -3,7 +3,6 @@
 
 const PIXI = require('pixi.js');
 const { viewport } = require('../../engine/viewport');
-const { populate_free_slot } = require('../../engine/inventory_manager');
 
 const {
   find_item_by_id,
@@ -113,8 +112,8 @@ class Inventory {
     this.hide();
   }
 
-
-  populate_slot(item_details, slot) {
+  //TODO: find a way to remove the player binding
+  populate_slot(item_details, slot, player) {
 
     const item = PIXI.Sprite.fromFrame(item_details.image_name);
     item.height = box_size+30;
@@ -125,12 +124,10 @@ class Inventory {
     item.buttonMode = true;
     item.click = () => {
       item.destroy();
-      populate_free_slot(item_details.image_name);
-      // todo needs to be bound
-      //viewport.getChildByName('player').inventory.add_item(item_details);
+      player.populate_free_slot(item_details.name);
     };
 
-    //todo fix this madness
+    //TODO fix this madness
     this.inventory[`item_slot_${slot}`].addChild(item);
   }
 
@@ -174,11 +171,11 @@ class Inventory {
     this.inventory.slots = [];
   }
 
-  populate_random_inventory() {
+  populate_random_inventory(player) {
     this.inventory.slots  = get_random_items();
 
     this.inventory.slots.forEach((item, i) => {
-      this.populate_slot(item, i);
+      this.populate_slot(item, i, player);
     });
   }
 
@@ -198,7 +195,7 @@ module.exports = {
 };
 
 
-},{"../../engine/inventory_manager":23,"../../engine/viewport":31,"../../items/item_data":37,"pixi.js":210}],2:[function(require,module,exports){
+},{"../../engine/viewport":31,"../../items/item_data":37,"pixi.js":210}],2:[function(require,module,exports){
 'use strict';
 
 class Cutscene {
@@ -226,7 +223,7 @@ module.exports = {
 
 },{}],3:[function(require,module,exports){
 arguments[4][1][0].apply(exports,arguments)
-},{"../../engine/inventory_manager":23,"../../engine/viewport":31,"../../items/item_data":37,"dup":1,"pixi.js":210}],4:[function(require,module,exports){
+},{"../../engine/viewport":31,"../../items/item_data":37,"dup":1,"pixi.js":210}],4:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -943,86 +940,44 @@ const { PlayerVisualModel } = require('../../engine/inventory_manager');
 
 const character_animations = require('./animations/character');
 
-const {
-  get_item_by_name,
-} = require('../../items/item_data');
-
 const { Character } = require('../character_model');
 const { Vitals    } = require('../attributes/vitals');
-const { Inventory } = require('../attributes/inventory');
 const { Predator  } = require('../attributes/predator');
 
-const player_inventory_model = {
-  head:             get_item_by_name('sunglasses'),
-  hat:              get_item_by_name('bandana'),
-  slot_one:         get_item_by_name('keys'),
-  slot_two:         get_item_by_name('ball'),
-  chest:            get_item_by_name('torn_clothes'),
-  feet:             get_item_by_name('army_boots'),
-  primary_weapon:   get_item_by_name('old_bow'),
-  secondary_weapon: get_item_by_name('pistol'),
-  melee_weapon:     get_item_by_name('wrench_blade'),
-  util:             get_item_by_name('util'),
-  item_slots:       [],
-};
-
-const test_inventory = new PlayerVisualModel();
-test_inventory.head('old_bandana');
-test_inventory.hat('old_helmet');
-test_inventory.chest('old_clothes');
-test_inventory.shoes('old_boots');
-test_inventory.background('merc_portrait');
-test_inventory.primary_weapon('wrench_blade');
-test_inventory.secondary_weapon('rusty_knife');
-test_inventory.inventory_slot('rat_leg_bone', 0);
-test_inventory.inventory_slot('rat_femur', 1);
-test_inventory.inventory_slot('meat', 2);
-test_inventory.inventory_slot('skull_cap_bone', 3);
-
-//test_inventory.slot_one('keys');
-//test_inventory.slot_two('ball');
-//test_inventory.inventory('skull_cap_bone');
-//test_inventory.small_weapon('meat');
-
-
-class Player extends construct(Character, Keyboard, Mouse, Inventory, Vitals, Predator) {
+class Player extends construct(Character, Keyboard, Mouse, PlayerVisualModel, Vitals, Predator) {
   constructor() {
     super();
+    this.name = 'player';
+
     this.sprite = character_animations.animated.knife.walk;
     this.sprite.animations = character_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.play();
-
-    const knife = get_item_by_name('rusty_knife');
-    this.equip_item(knife);
-
-    this.name = 'player';
     this.sprite.height /= 2;
     this.sprite.width /= 2;
+
+    this.head('old_bandana');
+    this.hat('old_helmet');
+    this.chest('old_clothes');
+    this.shoes('old_boots');
+    this.background('merc_portrait');
+    this.primary_weapon('wrench_blade');
+    this.secondary_weapon('rusty_knife');
+    this.inventory_slot('rat_leg_bone', 0);
+    this.inventory_slot('rat_femur', 1);
+    this.inventory_slot('meat', 2);
+    this.inventory_slot('skull_cap_bone', 3);
+    console.log(this)
+    viewport.addChild(this.sprite);
   }
 
   add_controls() {
-    viewport.on('mouseup', (event) => {
-      this.mouse_up(event);
-    });
+    viewport.on('mouseup', event => this.mouse_up(event));
+    viewport.on('mousemove', event => this.mouse_move(event));
+    viewport.on('mousedown', event => this.mouse_down(event));
 
-    viewport.on('mousemove', (event) => {
-      this.mouse_move(event);
-    });
-
-    viewport.on('mousedown', (event) => {
-      this.mouse_down(event);
-    });
-
-    global.window.addEventListener('keydown', (event) => {
-      this.key_down(event);
-    });
-
-    global.window.addEventListener('keyup', () => {
-      this.key_up();
-    });
-
-    viewport.addChild(this.sprite);
+    global.window.addEventListener('keydown', event => this.key_down(event));
+    global.window.addEventListener('keyup', () => this.key_up());
   }
 }
 
@@ -1031,7 +986,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/constructor":22,"../../engine/inventory_manager":23,"../../engine/keyboard":24,"../../engine/mouse":26,"../../engine/viewport.js":31,"../../items/item_data":37,"../attributes/inventory":3,"../attributes/predator":4,"../attributes/vitals":6,"../character_model":7,"./animations/character":8}],14:[function(require,module,exports){
+},{"../../engine/constructor":22,"../../engine/inventory_manager":23,"../../engine/keyboard":24,"../../engine/mouse":26,"../../engine/viewport.js":31,"../attributes/predator":4,"../attributes/vitals":6,"../character_model":7,"./animations/character":8}],14:[function(require,module,exports){
 'use strict';
 
 const PIXI          = require('pixi.js');
@@ -1631,6 +1586,8 @@ module.exports = {
 
 const {
   extract_item_image_by_name,
+  get_item_by_name,
+  extract_image_by_item_object,
 } = require('../items/item_data');
 
 function insert_div_with_image(class_name, image_name) {
@@ -1662,59 +1619,82 @@ function insert_all_div_with_image(class_name, image_name) {
 
 class PlayerVisualModel {
   constructor() {
+    this.inventory = {
+      background:       {},
+      primary_weapon:   {},
+      secondary_weapon: {},
+      small_weapon:     {},
+      head:             {},
+      chest:            {},
+      shoes:            {},
+      hat:              {},
+      slot_one:         {},
+      slot_two:         {},
+      item_slots:       [],
+    };
   }
 
   primary_weapon(image_name) {
     insert_div_with_image('.primary_weapon', image_name);
+    this.inventory.primary_weapon = get_item_by_name(image_name);
   }
 
   secondary_weapon(image_name) {
     insert_div_with_image('.secondary_weapon', image_name);
+    this.inventory.secondary_weapon = get_item_by_name(image_name);
   }
 
   small_weapon(image_name) {
     insert_div_with_image('.small_weapon', image_name);
+    this.inventory.small_weapon = get_item_by_name(image_name);
   }
 
   head(image_name) {
     insert_div_with_image('.model_head', image_name);
+    this.inventory.head = get_item_by_name(image_name);
   }
 
-  chest(item_name) {
-    insert_div_with_image('.model_chest', item_name);
+  chest(image_name) {
+    insert_div_with_image('.model_chest', image_name);
+    this.inventory.chest = get_item_by_name(image_name);
   }
 
-  shoes(item_name) {
-    insert_div_with_image('.model_feet', item_name);
+  shoes(image_name) {
+    insert_div_with_image('.model_feet', image_name);
+    this.inventory.shoes = get_item_by_name(image_name);
   }
 
-  hat(item_name) {
-    insert_div_with_image('.model_hat', item_name);
+  hat(image_name) {
+    insert_div_with_image('.model_hat', image_name);
+    this.inventory.hat = get_item_by_name(image_name);
   }
 
-  slot_one(item_name) {
-    insert_div_with_image('.model_slot_1', item_name);
+  slot_one(image_name) {
+    insert_div_with_image('.model_slot_1', image_name);
+    this.inventory.slot_one = get_item_by_name(image_name);
   }
 
-  slot_two(item_name) {
-    insert_div_with_image('.model_slot_2', item_name);
+  slot_two(image_name) {
+    insert_div_with_image('.model_slot_2', image_name);
+    this.inventory.slot_two = get_item_by_name(image_name);
   }
 
-  background(item_name) {
-    insert_div_with_image('.model_background', item_name);
+  background(image_name) {
+    insert_div_with_image('.model_background', image_name);
+    this.inventory.background = get_item_by_name(image_name);
   }
 
-  inventory(item_name) {
-    insert_all_div_with_image('.inventory_slot', item_name);
+  //for testing
+  fill_inventory(image_name) {
+    insert_all_div_with_image('.inventory_slot', image_name);
   }
 
 
-  inventory_slot(item_name, slot_number) {
-
+  inventory_slot(image_name, slot_number) {
     const selected_divs = global.document.querySelectorAll('.inventory_slot');
     const slot_div = selected_divs[slot_number];
 
-    const image = extract_item_image_by_name(item_name);
+    const image = extract_item_image_by_name(image_name);
 
     const style = global.window.getComputedStyle(slot_div, null);
 
@@ -1728,29 +1708,54 @@ class PlayerVisualModel {
     slot_div.appendChild(image);
   }
 
-}
+  add_item_to_inventory_slot(item) {
+    if(this.inventory.item_slots.length > 10) {
+      throw new Error('not enough space');
+    }
 
-function populate_free_slot(item_name) {
-  const inventory_slots = global.document.querySelectorAll('.inventory_slot');
-  const first_free_slot = Array.from(inventory_slots).find(slot => slot.childElementCount === 0);
+    this.inventory.item_slots.push(item);
 
-  //TODO: handle this error and give a nice error to the user
-  if(!first_free_slot) {
-    throw new Error('there are no free slots!');
   }
 
-  const style = global.window.getComputedStyle(first_free_slot, null);
+  get_node_dimensions(div) {
+    const style = global.window.getComputedStyle(div, null);
 
-  const image = extract_item_image_by_name(item_name);
-  image.height = style.getPropertyValue('height').replace('px', '');
-  image.width  = style.getPropertyValue('width').replace('px', '');
+    return {
+      height: style.getPropertyValue('height').replace('px', ''),
+      width:  style.getPropertyValue('width').replace('px', ''),
+    };
+  }
 
-  first_free_slot.appendChild(image);
+  populate_free_slot(image_name) {
+    const item = get_item_by_name(image_name);
+    const inventory_slots = global.document.querySelectorAll('.inventory_slot');
+    const first_free_slot = Array.from(inventory_slots)
+      .find(slot => slot.childElementCount === 0);
+
+    //TODO: handle this error and give a nice error to the user
+    if(!first_free_slot) {
+      throw new Error('there are no free slots!');
+    }
+
+    if(!item) {
+      throw new Error('item doesnt exist ' + image_name);
+    }
+
+    const { height, width } = this.get_node_dimensions(first_free_slot);
+
+    const image  = extract_item_image_by_name(item.image_name);
+    image.height = height;
+    image.width  = width;
+
+    first_free_slot.appendChild(image);
+    this.add_item_to_inventory_slot(item);
+  }
+
 }
+
 
 module.exports = {
   PlayerVisualModel,
-  populate_free_slot,
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -3302,11 +3307,22 @@ const extract_item_image_by_name = name => {
   return image_from_spritesheet;
 };
 
+
+const extract_image_by_item_object = item => {
+
+  const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
+  const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+
+  return image_from_spritesheet;
+};
+
+
 module.exports = {
   get_item_by_name,
   get_item_by_id,
   get_random_items,
   extract_item_image_by_name,
+  extract_image_by_item_object,
 };
 
 
@@ -8808,8 +8824,11 @@ class DevelopmentLevel {
     this.test_note();
 
     const inventory_test = new Inventory();
-    inventory_test.populate_random_inventory();
+
+    //TODO This is a hack I need some way to bind to the player model while testing
+    inventory_test.populate_random_inventory(player);
     inventory_test.set_inventory_position({ x: 1000, y: 1000 });
+
     //const enemy = new Enemy();
     //console.log(enemy);
     //enemy.sprite.position.set(1550,1000);

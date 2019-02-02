@@ -277,10 +277,21 @@ const extract_item_image_by_name = name => {
   return image_from_spritesheet;
 };
 
+
+const extract_image_by_item_object = item => {
+
+  const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
+  const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+
+  return image_from_spritesheet;
+};
+
+
 module.exports = {
   get_item_by_name,
   get_item_by_id,
   get_random_items,
   extract_item_image_by_name,
+  extract_image_by_item_object,
 };
 

@@ -116,10 +116,6 @@ Key:
 - create items rarity functions
 - create items database schema and save states
 
-## player inventory (high)
-- Move item from inventory to player inventory
-- Move items into slots
-
 ## Effects (low)
 - create fire effects
 - create blood effects
@@ -137,6 +133,9 @@ Key:
 - NPC buy/sell etc
 - Manage player inventory
 - user info box
+
+## Errors and alerts: (medium)
+- Make basic alert boxes
 
 ## ART: (outsource)
 - Spine format replacement for spritesheet
@@ -173,6 +172,8 @@ Key:
 DONE PILE:
 
 - Add player inventory DONE
+- Move items into slots DONE
+- Move item from inventory to player inventory DONE
 - Add condition management (thirst etc.) DONE
 - create rain effects DONE
 - error messages for user exists DONE

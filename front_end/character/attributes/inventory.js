@@ -2,7 +2,6 @@
 
 const PIXI = require('pixi.js');
 const { viewport } = require('../../engine/viewport');
-const { populate_free_slot } = require('../../engine/inventory_manager');
 
 const {
   find_item_by_id,
@@ -112,8 +111,8 @@ class Inventory {
     this.hide();
   }
 
-
-  populate_slot(item_details, slot) {
+  //TODO: find a way to remove the player binding
+  populate_slot(item_details, slot, player) {
 
     const item = PIXI.Sprite.fromFrame(item_details.image_name);
     item.height = box_size+30;
@@ -124,12 +123,10 @@ class Inventory {
     item.buttonMode = true;
     item.click = () => {
       item.destroy();
-      populate_free_slot(item_details.image_name);
-      // todo needs to be bound
-      //viewport.getChildByName('player').inventory.add_item(item_details);
+      player.populate_free_slot(item_details.name);
     };
 
-    //todo fix this madness
+    //TODO fix this madness
     this.inventory[`item_slot_${slot}`].addChild(item);
   }
 
@@ -173,11 +170,11 @@ class Inventory {
     this.inventory.slots = [];
   }
 
-  populate_random_inventory() {
+  populate_random_inventory(player) {
     this.inventory.slots  = get_random_items();
 
     this.inventory.slots.forEach((item, i) => {
-      this.populate_slot(item, i);
+      this.populate_slot(item, i, player);
     });
   }
 

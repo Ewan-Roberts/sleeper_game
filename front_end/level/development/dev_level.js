@@ -33,8 +33,11 @@ class DevelopmentLevel {
     this.test_note();
 
     const inventory_test = new Inventory();
-    inventory_test.populate_random_inventory();
+
+    //TODO This is a hack I need some way to bind to the player model while testing
+    inventory_test.populate_random_inventory(player);
     inventory_test.set_inventory_position({ x: 1000, y: 1000 });
+
     //const enemy = new Enemy();
     //console.log(enemy);
     //enemy.sprite.position.set(1550,1000);
