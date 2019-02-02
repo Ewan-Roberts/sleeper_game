@@ -12,7 +12,7 @@ function get_user(user_details) {
 }
 
 function save_user(user_details) {
-  socket.emit('save_user', user_details);
+  socket.emit('update_user', user_details);
 }
 
 socket.on('user_register_success', response => {
@@ -31,6 +31,9 @@ socket.on('find_user_success', response => {
   console.log(response);
 });
 
+socket.on('update_user_success', response => {
+  console.log(response);
+});
 
 //socket.on('server_player_pool', player_pool => {
 

@@ -19,10 +19,25 @@ async function create_user(user_info) {
   const user = await new User(user_info).save();
 
   return {
-    password  : user.password,
-    inventory : user.inventory,
-    user_name : user.user_name,
+    password:  user.password,
+    inventory: user.inventory,
+    user_name: user.user_name,
   };
+}
+
+async function update_user(user_info) {
+  return User.findOne(
+    {user_name: user_info.user_name},
+    (err, user) => {
+      user.position  = user_info.position;
+      user.user_name = user_info.user_name;
+      user.inventory = user_info.inventory;
+      user.vitals    = user_info.vitals;
+
+      user.save();
+      return user;
+    }
+  );
 }
 
 async function get_user_by_password(password) {
@@ -37,8 +52,16 @@ async function delete_user_by_id(user_id) {
   return result;
 }
 
+async function test_run() {
+  const test_account = await create_user({ user_name: 'ewan'});
+
+  console.log(test_account);
+}
+
+test_run();
 module.exports = {
   create_user,
   get_user_by_password,
   delete_user_by_id,
+  update_user,
 };

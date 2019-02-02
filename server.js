@@ -9,6 +9,7 @@ const io         = require('socket.io')(web_server, {});
 const {
   create_user,
   get_user_by_password,
+  update_user,
 }= require('./back_end/register');
 
 require('./database/local_database');
@@ -40,8 +41,10 @@ io.on('connection', client => {
     client.emit('find_user_success', created_user);
   });
 
-  client.on('save_user', async function(user_details) {
-    console.log(user_details);
+  client.on('update_user', async function(user_details) {
+    const updated_user = await update_user(user_details);
+
+    client.emit('update_user_success', updated_user);
   });
 
   client.on('client_player_location', player_data => {
