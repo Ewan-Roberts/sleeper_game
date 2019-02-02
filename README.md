@@ -3,10 +3,17 @@
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
 
-
 Currently in the process of building the game engine.
 
 Work in progess, updates below:
+
+## Update 02.02.19:
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_10.png)
+
+- Add better inventory management system (still a long way to go)
+- Add item for each player section
+- Add item extraction
+
 
 ## Update 26.01.19:
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_9.png)
@@ -51,16 +58,11 @@ May not looks very pretty but an important landmark for the engine
 
 ## Update 05.01.19:
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_5.png)
-
 - basic prey inventory
 - basic item management
 - basic death management
 
-
 ## Update 01.01.19:
-
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_4.png)
 
 - basic predator/prey pathfinding logic
 - basic multiplayer server side location
@@ -68,7 +70,6 @@ May not looks very pretty but an important landmark for the engine
 - replacing tween management system
 - creating testing functions for ease of development
 - major refactor (on-going)
-
 
 ## Update 16.12.18:
 
@@ -82,8 +83,6 @@ May not looks very pretty but an important landmark for the engine
 
 ## Update 09.12.18:
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_2.png)
-
 - large refactor and performance increase
 - dialog for characters
 - container UI
@@ -92,10 +91,7 @@ May not looks very pretty but an important landmark for the engine
 - OOP and models for most elements
 - basic inventory management
 
-
 ## Update 12.11.18:
-
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
 
 - pathfinding
 - raycasting
