@@ -2,8 +2,6 @@
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
 
-Currently in the process of building the game engine.
-
 Work in progess, updates below:
 
 ## Update 02.02.19:
@@ -27,7 +25,6 @@ Work in progess, updates below:
   - bring the player into the mixin structure
 
 ## Update 13.01.19:
-
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_8.png)
 May not looks very pretty but an important landmark for the engine
 - :tada: Full predator/prey system that can freely scale
@@ -133,7 +130,7 @@ Key:
 - create cutscene management engine (stop keyboard inputs etc)
 - create player best friend
 
-## Sound; (low)
+## Sound: (low)
 `later`
 
 ## GUI: (high)

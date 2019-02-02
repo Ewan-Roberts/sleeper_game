@@ -18,6 +18,7 @@ const { Level     } = require('../level_utils');
 const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
 const { Rat             } = require('../../character/types/rat');
+const { Inventory       } = require('../../character/attributes/inventory');
 
 class DevelopmentLevel {
   constructor() {
@@ -31,6 +32,9 @@ class DevelopmentLevel {
 
     this.test_note();
 
+    const inventory_test = new Inventory();
+    inventory_test.populate_random_inventory();
+    inventory_test.set_inventory_position({ x: 1000, y: 1000 });
     //const enemy = new Enemy();
     //console.log(enemy);
     //enemy.sprite.position.set(1550,1000);

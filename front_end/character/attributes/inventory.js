@@ -2,6 +2,7 @@
 
 const PIXI = require('pixi.js');
 const { viewport } = require('../../engine/viewport');
+const { populate_free_slot } = require('../../engine/inventory_manager');
 
 const {
   find_item_by_id,
@@ -26,7 +27,7 @@ class Inventory {
   }
 
   hide() {
-    this.inventory.sprite.visible = false;
+    this.inventory.sprite.visible       = false;
     this.inventory.item_slot_0.visible  = false;
     this.inventory.item_slot_1.visible  = false;
     this.inventory.item_slot_2.visible  = false;
@@ -35,7 +36,7 @@ class Inventory {
   }
 
   show() {
-    this.inventory.sprite.visible = true;
+    this.inventory.sprite.visible       = true;
     this.inventory.item_slot_0.visible  = true;
     this.inventory.item_slot_1.visible  = true;
     this.inventory.item_slot_2.visible  = true;
@@ -123,8 +124,9 @@ class Inventory {
     item.buttonMode = true;
     item.click = () => {
       item.destroy();
+      populate_free_slot(item_details.image_name);
       // todo needs to be bound
-      viewport.getChildByName('player').inventory.add_item(item_details);
+      //viewport.getChildByName('player').inventory.add_item(item_details);
     };
 
     //todo fix this madness

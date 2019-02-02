@@ -79,6 +79,7 @@ class PlayerVisualModel {
     insert_all_div_with_image('.inventory_slot', item_name);
   }
 
+
   inventory_slot(item_name, slot_number) {
 
     const selected_divs = global.document.querySelectorAll('.inventory_slot');
@@ -100,6 +101,25 @@ class PlayerVisualModel {
 
 }
 
+function populate_free_slot(item_name) {
+  const inventory_slots = global.document.querySelectorAll('.inventory_slot');
+  const first_free_slot = Array.from(inventory_slots).find(slot => slot.childElementCount === 0);
+
+  //TODO: handle this error and give a nice error to the user
+  if(!first_free_slot) {
+    throw new Error('there are no free slots!');
+  }
+
+  const style = global.window.getComputedStyle(first_free_slot, null);
+
+  const image = extract_item_image_by_name(item_name);
+  image.height = style.getPropertyValue('height').replace('px', '');
+  image.width  = style.getPropertyValue('width').replace('px', '');
+
+  first_free_slot.appendChild(image);
+}
+
 module.exports = {
   PlayerVisualModel,
+  populate_free_slot,
 };

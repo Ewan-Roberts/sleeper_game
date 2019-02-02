@@ -3,6 +3,7 @@
 
 const PIXI = require('pixi.js');
 const { viewport } = require('../../engine/viewport');
+const { populate_free_slot } = require('../../engine/inventory_manager');
 
 const {
   find_item_by_id,
@@ -27,7 +28,7 @@ class Inventory {
   }
 
   hide() {
-    this.inventory.sprite.visible = false;
+    this.inventory.sprite.visible       = false;
     this.inventory.item_slot_0.visible  = false;
     this.inventory.item_slot_1.visible  = false;
     this.inventory.item_slot_2.visible  = false;
@@ -36,7 +37,7 @@ class Inventory {
   }
 
   show() {
-    this.inventory.sprite.visible = true;
+    this.inventory.sprite.visible       = true;
     this.inventory.item_slot_0.visible  = true;
     this.inventory.item_slot_1.visible  = true;
     this.inventory.item_slot_2.visible  = true;
@@ -124,8 +125,9 @@ class Inventory {
     item.buttonMode = true;
     item.click = () => {
       item.destroy();
+      populate_free_slot(item_details.image_name);
       // todo needs to be bound
-      viewport.getChildByName('player').inventory.add_item(item_details);
+      //viewport.getChildByName('player').inventory.add_item(item_details);
     };
 
     //todo fix this madness
@@ -196,7 +198,7 @@ module.exports = {
 };
 
 
-},{"../../engine/viewport":31,"../../items/item_data":37,"pixi.js":210}],2:[function(require,module,exports){
+},{"../../engine/inventory_manager":23,"../../engine/viewport":31,"../../items/item_data":37,"pixi.js":210}],2:[function(require,module,exports){
 'use strict';
 
 class Cutscene {
@@ -224,7 +226,7 @@ module.exports = {
 
 },{}],3:[function(require,module,exports){
 arguments[4][1][0].apply(exports,arguments)
-},{"../../engine/viewport":31,"../../items/item_data":37,"dup":1,"pixi.js":210}],4:[function(require,module,exports){
+},{"../../engine/inventory_manager":23,"../../engine/viewport":31,"../../items/item_data":37,"dup":1,"pixi.js":210}],4:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -1706,6 +1708,7 @@ class PlayerVisualModel {
     insert_all_div_with_image('.inventory_slot', item_name);
   }
 
+
   inventory_slot(item_name, slot_number) {
 
     const selected_divs = global.document.querySelectorAll('.inventory_slot');
@@ -1727,8 +1730,27 @@ class PlayerVisualModel {
 
 }
 
+function populate_free_slot(item_name) {
+  const inventory_slots = global.document.querySelectorAll('.inventory_slot');
+  const first_free_slot = Array.from(inventory_slots).find(slot => slot.childElementCount === 0);
+
+  //TODO: handle this error and give a nice error to the user
+  if(!first_free_slot) {
+    throw new Error('there are no free slots!');
+  }
+
+  const style = global.window.getComputedStyle(first_free_slot, null);
+
+  const image = extract_item_image_by_name(item_name);
+  image.height = style.getPropertyValue('height').replace('px', '');
+  image.width  = style.getPropertyValue('width').replace('px', '');
+
+  first_free_slot.appendChild(image);
+}
+
 module.exports = {
   PlayerVisualModel,
+  populate_free_slot,
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -8771,6 +8793,7 @@ const { Level     } = require('../level_utils');
 const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
 const { Rat             } = require('../../character/types/rat');
+const { Inventory       } = require('../../character/attributes/inventory');
 
 class DevelopmentLevel {
   constructor() {
@@ -8784,6 +8807,9 @@ class DevelopmentLevel {
 
     this.test_note();
 
+    const inventory_test = new Inventory();
+    inventory_test.populate_random_inventory();
+    inventory_test.set_inventory_position({ x: 1000, y: 1000 });
     //const enemy = new Enemy();
     //console.log(enemy);
     //enemy.sprite.position.set(1550,1000);
@@ -8905,7 +8931,7 @@ module.exports = {
 
 
 
-},{"../../character/types/enemy":11,"../../character/types/player.js":13,"../../character/types/rat":14,"../../cutscene/intro.js":17,"../../engine/viewport":31,"../../items/Note":33,"../../items/back_pack":34,"../../items/chest":35,"../../items/fire_place":36,"../debug/playground/map2_output.json":42,"../debug/playground/map2_tiles.json":43,"../level_utils":46,"pixi.js":210}],45:[function(require,module,exports){
+},{"../../character/attributes/inventory":3,"../../character/types/enemy":11,"../../character/types/player.js":13,"../../character/types/rat":14,"../../cutscene/intro.js":17,"../../engine/viewport":31,"../../items/Note":33,"../../items/back_pack":34,"../../items/chest":35,"../../items/fire_place":36,"../debug/playground/map2_output.json":42,"../debug/playground/map2_tiles.json":43,"../level_utils":46,"pixi.js":210}],45:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');
