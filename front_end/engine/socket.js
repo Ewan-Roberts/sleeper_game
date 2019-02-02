@@ -11,6 +11,10 @@ function get_user(user_details) {
   socket.emit('get_user', user_details);
 }
 
+function save_user(user_details) {
+  socket.emit('save_user', user_details);
+}
+
 socket.on('user_register_success', response => {
   if(response.error) {
     throw new Error(response.error);
@@ -50,5 +54,6 @@ socket.on('find_user_success', response => {
 module.exports = {
   register_user,
   get_user,
+  save_user,
   socket,
 };

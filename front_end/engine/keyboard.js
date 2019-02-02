@@ -1,9 +1,11 @@
 'use strict';
 
-const { viewport } = require('../engine/viewport');
+const { viewport } = require('./viewport');
+const { Game     } = require('./save_manager');
 
 const keymap = {
   w: 'up',
+  n: 'n',
   a: 'left',
   s: 'down',
   d: 'right',
@@ -29,35 +31,28 @@ class Keyboard {
     this.shift_pressed = false;
   }
 
-  key_down(e) {
-    if (!this.moveable) return;
-    if(!e) return;
-    const key = keymap[e.key];
-    if(!key) return;
+
+  save_game() {
+    Game.save(this);
+    console.log('saved');
+    console.log(this);
+  }
+
+  key_down({ key }) {
+    const button = keymap[key];
+    if (!this.moveable || !button ) return;
+
     this.loop = true;
 
-    switch(key) {
-      case 'up':
-        this.keyboard_up();
-        break;
-      case 'left':
-        this.left();
-        break;
-      case 'down':
-        this.keyboard_down();
-        break;
-      case 'right':
-        this.right();
-        break;
-      case 'i':
-        this.toggle_player_inventory();
-        break;
-      case 'o':
-        this.start_intro();
-        break;
-      case 'Shift':
-        this.shift();
-        break;
+    switch(button) {
+      case 'up':    this.keyboard_up();             return;
+      case 'left':  this.left();                    return;
+      case 'down':  this.keyboard_down();           return;
+      case 'right': this.right();                   return;
+      case 'i':     this.toggle_player_inventory(); return;
+      case 'n':     this.save_game();               return;
+      case 'o':     this.start_intro();             return;
+      case 'Shift': this.shift();                   return;
     }
   }
 
@@ -70,6 +65,7 @@ class Keyboard {
 
     this.animation_switch('bow', 'idle');
   }
+
 
   keyboard_up() {
     this.animation_switch('bow', 'walk');

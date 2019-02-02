@@ -40,6 +40,10 @@ io.on('connection', client => {
     client.emit('find_user_success', created_user);
   });
 
+  client.on('save_user', async function(user_details) {
+    console.log(user_details);
+  });
+
   client.on('client_player_location', player_data => {
 
     const { id } = client;
