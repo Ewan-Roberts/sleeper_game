@@ -1,6 +1,5 @@
 # sleeper_game
 
-
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
 
 Currently in the process of building the game engine.
@@ -9,15 +8,12 @@ Work in progess, updates below:
 
 ## Update 02.02.19:
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_10.png)
-
 - Add better inventory management system (still a long way to go)
 - Add item for each player section
 - Add item extraction
 
-
 ## Update 26.01.19:
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_9.png)
-
 - Add basic user create
 - Add basic user find by password
 - Add database ability to do the above
@@ -33,9 +29,7 @@ Work in progess, updates below:
 ## Update 13.01.19:
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_8.png)
-
 May not looks very pretty but an important landmark for the engine
-
 - :tada: Full predator/prey system that can freely scale
 - created more detailed inventory system
 - complete refactor of how characters are constructed to make them very flaxable
@@ -43,27 +37,20 @@ May not looks very pretty but an important landmark for the engine
 - added useful timer functions
 
 ## Update 06.01.19(2):
-
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_7.png)
-
 - multi-prey pathfinding (lines show paths run)
 - sprite direction and waiting states
 
 ## Update 06.01.19:
-
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_6.png)
-
 - created prey inventory management
 - created a consolidated maths function
 
 ## Update 05.01.19:
-
 - basic prey inventory
 - basic item management
 - basic death management
 
 ## Update 01.01.19:
-
 - basic predator/prey pathfinding logic
 - basic multiplayer server side location
 - basic state management for hunger/thirst/sleep...
@@ -72,9 +59,7 @@ May not looks very pretty but an important landmark for the engine
 - major refactor (on-going)
 
 ## Update 16.12.18:
-
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_3.png)
-
 - auto-generating captions
 - server-side inventory management (basic)
 - cutscene npc models 
@@ -82,7 +67,6 @@ May not looks very pretty but an important landmark for the engine
 - cutscene sprite movement abstracted
 
 ## Update 09.12.18:
-
 - large refactor and performance increase
 - dialog for characters
 - container UI
@@ -92,7 +76,6 @@ May not looks very pretty but an important landmark for the engine
 - basic inventory management
 
 ## Update 12.11.18:
-
 - pathfinding
 - raycasting
 - basic mask lights
@@ -105,9 +88,6 @@ Key:
 
 ## back-end: (high)
 - Full server-side character state management
-- Re-add multiplayer NOT ADDING
-- Add register user DONE
-- Add login user DONE
 
 ## items (medium)
 #### junk
@@ -135,20 +115,15 @@ Key:
 
 #### items
 - create items schema
-- create items search function
 - create items randomiser functions
 - create items rarity functions
 - create items database schema and save states
 
 ## player inventory (high)
-- player visual model
-- inventory slots
-- primary weapon
-- secondary weapon
 - Move item from inventory to player inventory
+- Move items into slots
 
 ## Effects (low)
-- create rain effects DONE
 - create fire effects
 - create blood effects
 - create arrow effects
@@ -162,8 +137,6 @@ Key:
 `later`
 
 ## GUI: (high)
-- Start screen DONE
-- error messages for user exists DONE
 - NPC buy/sell etc
 - Manage player inventory
 - user info box
@@ -174,8 +147,6 @@ Key:
 - Loaders
 
 ## mechanics: (low)
-- Add player inventory DONE
-- Add condition management (thirst etc.) DONE
 - Add scavenging
 - Add starting fires
 - create architype system
@@ -186,10 +157,6 @@ Key:
 - Create EC2 server (again)
 
 # Needed for ALPHA
-- register users DONE
-- basic predetor/prey DONE
-- login with user details DONE
-- title screen DONE
 - save game states
 - prod server
 - basic item/inventory management
@@ -201,4 +168,30 @@ Key:
 - Server-side rendered images
 - CD
 - Add email user
+
+# Small things I have to do:
+- Get the merc from the spritesheet
+- and the note
+
+DONE PILE:
+
+- Add player inventory DONE
+- Add condition management (thirst etc.) DONE
+- create rain effects DONE
+- error messages for user exists DONE
+- Start screen DONE
+- register users DONE
+- basic predetor/prey DONE
+- login with user details DONE
+- title screen DONE
+- inventory slots DONE
+- primary weapon DONE
+- secondary weapon DONE
+- player visual model DONE
+- Add register user DONE
+- Add login user DONE
+- Re-add multiplayer NOT ADDING
+- create items search function DONE
+
+
 
