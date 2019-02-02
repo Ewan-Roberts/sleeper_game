@@ -9,7 +9,6 @@ describe('thing', function() {
     it('thing3', function() {
       const inventory = get_player_inventory_on_id();
 
-      console.log(inventory);
       expect(true).to.be.true;
     });
 

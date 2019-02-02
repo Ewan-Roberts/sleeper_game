@@ -52,8 +52,6 @@ io.on('connection', client => {
     const is_player_in_pool = current_players.some(player => player.id === player_server_data.id);
 
     if(is_player_in_pool) {
-      //console.log('this player is in the pool');
-
       for(let i = 0; i < current_players.length; i++) {
 
         if(current_players[i].id === player_server_data.id) {

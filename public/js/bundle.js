@@ -967,7 +967,6 @@ class Player extends construct(Character, Keyboard, Mouse, PlayerVisualModel, Vi
     this.inventory_slot('rat_femur', 1);
     this.inventory_slot('meat', 2);
     this.inventory_slot('skull_cap_bone', 3);
-    console.log(this)
     viewport.addChild(this.sprite);
   }
 
@@ -1696,10 +1695,10 @@ class PlayerVisualModel {
 
     const image = extract_item_image_by_name(image_name);
 
-    const style = global.window.getComputedStyle(slot_div, null);
+    const { height, width } = this.get_node_dimensions(slot_div);
 
-    image.height = style.getPropertyValue('height').replace('px', '');
-    image.width  = style.getPropertyValue('width').replace('px', '');
+    image.height = height;
+    image.width  = width;
 
     if(slot_div.firstChild) {
       slot_div.removeChild(slot_div.firstChild);
@@ -1740,6 +1739,11 @@ class PlayerVisualModel {
     if(!item) {
       throw new Error('item doesnt exist ' + image_name);
     }
+
+    if(item.image_name === 'bunny') {
+      throw new Error('bunny, replace me');
+    }
+
 
     const { height, width } = this.get_node_dimensions(first_free_slot);
 
@@ -3309,8 +3313,8 @@ const extract_item_image_by_name = name => {
 
 
 const extract_image_by_item_object = item => {
-
   const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
+
   const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
 
   return image_from_spritesheet;

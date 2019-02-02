@@ -279,8 +279,8 @@ const extract_item_image_by_name = name => {
 
 
 const extract_image_by_item_object = item => {
-
   const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
+
   const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
 
   return image_from_spritesheet;
