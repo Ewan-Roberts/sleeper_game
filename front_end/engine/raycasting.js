@@ -30,8 +30,8 @@ function get_intersection(ray, segment){
 
   // Return the POINT OF INTERSECTION
   return {
-    x: r_px+r_dx*T1,
-    y: r_py+r_dy*T1,
+    x:     r_px+r_dx*T1,
+    y:     r_py+r_dy*T1,
     param: T1,
   };
 }

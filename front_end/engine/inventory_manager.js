@@ -3,17 +3,27 @@
 const {
   extract_item_image_by_name,
   get_item_by_name,
-  extract_image_by_item_object,
 } = require('../items/item_data');
+
+const dom_hud = global.document.querySelector('.characterInventory');
+
+function get_node_dimensions(div) {
+  const style = global.window.getComputedStyle(div, null);
+
+  return {
+    height: style.getPropertyValue('height').replace('px', ''),
+    width:  style.getPropertyValue('width').replace('px', ''),
+  };
+}
 
 function insert_div_with_image(class_name, image_name) {
   const image = extract_item_image_by_name(image_name);
 
   const selected_div = global.document.querySelector(class_name);
-  const style = global.window.getComputedStyle(selected_div, null);
+  const { height, width } = get_node_dimensions(selected_div);
 
-  image.height = style.getPropertyValue('height').replace('px', '');
-  image.width  = style.getPropertyValue('width').replace('px', '');
+  image.height = height;
+  image.width  = width;
 
   if(selected_div.firstChild) {
     selected_div.removeChild(selected_div.firstChild);
@@ -49,6 +59,28 @@ class PlayerVisualModel {
       item_slots:       [],
     };
   }
+
+  toggle_player_inventory() {
+
+    if(dom_hud.style.display === 'block') {
+      dom_hud.style.opacity = 0;
+      dom_hud.style.display = 'none';
+
+      return;
+    }
+
+    dom_hud.style.opacity = 1;
+    dom_hud.style.display = 'block';
+  }
+
+  show_player_inventory() {
+    dom_hud.style.display = 'block';
+  }
+
+  hide_player_inventory() {
+    dom_hud.style.display = 'none';
+  }
+
 
   primary_weapon(image_name) {
     insert_div_with_image('.primary_weapon', image_name);
@@ -112,7 +144,7 @@ class PlayerVisualModel {
 
     const image = extract_item_image_by_name(image_name);
 
-    const { height, width } = this.get_node_dimensions(slot_div);
+    const { height, width } = get_node_dimensions(slot_div);
 
     image.height = height;
     image.width  = width;
@@ -130,17 +162,8 @@ class PlayerVisualModel {
     }
 
     this.inventory.item_slots.push(item);
-
   }
 
-  get_node_dimensions(div) {
-    const style = global.window.getComputedStyle(div, null);
-
-    return {
-      height: style.getPropertyValue('height').replace('px', ''),
-      width:  style.getPropertyValue('width').replace('px', ''),
-    };
-  }
 
   populate_free_slot(image_name) {
     const item = get_item_by_name(image_name);
@@ -161,8 +184,7 @@ class PlayerVisualModel {
       throw new Error('bunny, replace me');
     }
 
-
-    const { height, width } = this.get_node_dimensions(first_free_slot);
+    const { height, width } = get_node_dimensions(first_free_slot);
 
     const image  = extract_item_image_by_name(item.image_name);
     image.height = height;
@@ -171,9 +193,7 @@ class PlayerVisualModel {
     first_free_slot.appendChild(image);
     this.add_item_to_inventory_slot(item);
   }
-
 }
-
 
 module.exports = {
   PlayerVisualModel,

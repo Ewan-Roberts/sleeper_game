@@ -27,7 +27,7 @@ class DevelopmentLevel {
     player.follow_sprite_with_camera();
     player.with_light();
     player.add_controls();
-    this.test_load_test_level();
+    this.load_flat_level();
     //player.add_raycasting(this.level.segments);
 
     this.test_note();
@@ -64,10 +64,24 @@ class DevelopmentLevel {
 
   }
 
-  test_load_test_level() {
+  load_flat_level() {
+    const bedroom_data  = require('../bedroom/bedroom_map_output.json');
+    const bedroom_tiles = require('../bedroom/bedroom_map_tiled.json');
+    const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
+    bedroom_image.alpha = 0.5;
 
-    const debug_room_tiled_data = require('../debug/playground/map2_output.json');
-    const debug_room_tiled_tiles = require('../debug/playground/map2_tiles.json');
+    const bedroom = new Level(bedroom_tiles, bedroom_data);
+    bedroom.set_background_image(bedroom_image, bedroom_tiles);
+    console.log(bedroom_data);
+    bedroom.render_walls(bedroom_data.layers[0].layers[1]);
+    bedroom.create_grid(bedroom_tiles);
+    this.level = bedroom;
+  }
+
+  load_test_level() {
+
+    const debug_room_tiled_data = require('../debug/debug_map_output.json');
+    const debug_room_tiled_tiles = require('../debug/debug_map_tiles.json');
     const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
     debug_room_image.alpha= 0.5;
 

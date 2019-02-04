@@ -1,10 +1,11 @@
 'use strict';
 
-const dom_hud = global.document.querySelector('.characterInventory');
 
 class Vitals {
   constructor() {
     this.vitals = {
+      movement_speed:  15,
+      power:    1000,
       health:   100,
       food:     40,
       water:    20,
@@ -19,28 +20,6 @@ class Vitals {
         sleep:  5,
       },
     };
-  }
-
-  toggle_player_inventory() {
-
-    if(dom_hud.style.display === 'block') {
-      dom_hud.style.opacity = 0;
-      dom_hud.style.display = 'none';
-      return;
-
-    }
-
-    dom_hud.style.opacity = 1;
-    dom_hud.style.display = 'block';
-
-  }
-
-  show_player_inventory() {
-    dom_hud.style.display = 'block';
-  }
-
-  hide_player_inventory() {
-    dom_hud.style.display = 'none';
   }
 
   kill() {

@@ -26,9 +26,7 @@ class Scavenger_Insane_Dying {
     this.inventory.slots = [
       { name: 'rags' },
     ];
-
   }
-
 }
 
 
@@ -60,12 +58,8 @@ class Fayetality {
       { name: 'book'         },
       { name: 'watch'        },
     ];
-
   }
-
 }
-
-
 
 module.exports = {
   Scavenger_Insane_Dying,

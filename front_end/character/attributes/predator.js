@@ -4,12 +4,12 @@ const { timer } = require('../../engine/ticker');
 
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
+const min_pathfind_distance = 10;
+const max_pathfind_distance = 700;
 
 class Predator {
   constructor() {
     this.type = 'predator';
-    this.min_pathfind_distance = 10;
-    this.max_pathfind_distance = 700;
   }
 
   is_predator_to(prey) {
@@ -46,8 +46,8 @@ class Predator {
 
 
       if(
-        distance_to_act < this.min_pathfind_distance ||
-        distance_to_act > this.max_pathfind_distance ||
+        distance_to_act < min_pathfind_distance ||
+        distance_to_act > max_pathfind_distance ||
         !this.alive
       ) {
         return;

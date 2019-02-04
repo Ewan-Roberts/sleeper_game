@@ -26,16 +26,13 @@ login_mode.addEventListener('click', function() {
   this.innerHTML = 'Login';
   login_display.style.display = 'block';
   login_register.style.display = 'none';
-
 });
 
 login_register_button.addEventListener('click', () => {
   const login_details = {
-    user_name : login_menu[0].value,
-    email     : login_menu[1].value,
+    user_name: login_menu[0].value,
+    email:     login_menu[1].value,
   };
-
-
 
   register_user(login_details);
 });
@@ -43,13 +40,8 @@ login_register_button.addEventListener('click', () => {
 
 login_start_button.addEventListener('click', () => {
   const login_details = {
-    passcode : login_passcode.value,
+    passcode: login_passcode.value,
   };
 
   get_user(login_details);
 });
-
-
-
-
-

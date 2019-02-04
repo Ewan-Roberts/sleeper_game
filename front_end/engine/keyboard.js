@@ -22,27 +22,20 @@ const keymap = {
   Shift: 'Shift',
 };
 
+
+const buffer = 50;
+
 class Keyboard {
   constructor() {
-    this.inventory_open = false;
-    this.moveable = true;
-    this.movement_speed = 15;
-    this.buffer = 50;
-    this.shift_pressed = false;
   }
-
 
   save_game() {
     Game.save(this);
-    console.log('saved');
-    console.log(this);
   }
 
   key_down({ key }) {
     const button = keymap[key];
-    if (!this.moveable || !button ) return;
-
-    this.loop = true;
+    if (!button) return;
 
     switch(button) {
       case 'up':    this.keyboard_up();             return;
@@ -56,13 +49,7 @@ class Keyboard {
     }
   }
 
-  stop_input() {
-    this.moveable = false;
-  }
-
   key_up() {
-    this.shift_pressed = false;
-
     this.animation_switch('bow', 'idle');
   }
 
@@ -70,26 +57,27 @@ class Keyboard {
   keyboard_up() {
     this.animation_switch('bow', 'walk');
     this.sprite.rotation = -2;
+    console.log(this);
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
       const player_position = this.sprite.getGlobalPosition();
 
-      player_position.y -= this.buffer;
+      player_position.y -= buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.sprite.gotoAndStop(1);
         if(collision_objects.children[i].moveable) {
-          this.sprite.y -= this.movement_speed / 4;
-          collision_objects.children[i].y -= this.movement_speed / 4;
+          this.sprite.y -= this.vitals.movement_speed / 4;
+          collision_objects.children[i].y -= this.vitals.movement_speed / 4;
         }
 
         return;
       }
     }
 
-    this.sprite.y -= this.movement_speed;
+    this.sprite.y -= this.vitals.movement_speed;
   }
 
   keyboard_down() {
@@ -101,21 +89,21 @@ class Keyboard {
     for(let i = 0; i < collision_objects.children.length; i++){
       const player_position = this.sprite.getGlobalPosition();
 
-      player_position.y += this.buffer;
+      player_position.y += buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.sprite.gotoAndStop(1);
 
         if(collision_objects.children[i].moveable) {
-          this.sprite.y += this.movement_speed / 4;
-          collision_objects.children[i].y += this.movement_speed / 4;
+          this.sprite.y += this.vitals.movement_speed / 4;
+          collision_objects.children[i].y += this.vitals.movement_speed / 4;
         }
 
         return;
       }
     }
 
-    this.sprite.y += this.movement_speed;
+    this.sprite.y += this.vitals.movement_speed;
   }
 
   left() {
@@ -127,21 +115,21 @@ class Keyboard {
     for(let i = 0; i < collision_objects.children.length; i++){
       const player_position = this.sprite.getGlobalPosition();
 
-      player_position.x -= this.buffer;
+      player_position.x -= buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.sprite.gotoAndStop(1);
 
         if(collision_objects.children[i].moveable) {
-          this.sprite.x -= this.movement_speed / 4;
-          collision_objects.children[i].x -= this.movement_speed / 4;
+          this.sprite.x -= this.vitals.movement_speed / 4;
+          collision_objects.children[i].x -= this.vitals.movement_speed / 4;
         }
 
         return;
       }
     }
 
-    this.sprite.x -= this.movement_speed;
+    this.sprite.x -= this.vitals.movement_speed;
   }
 
   right() {
@@ -153,36 +141,26 @@ class Keyboard {
     for(let i = 0; i < collision_objects.children.length; i++){
       const player_position = this.sprite.getGlobalPosition();
 
-      player_position.x += this.buffer;
+      player_position.x += buffer;
 
       if(collision_objects.children[i].containsPoint(player_position)){
         this.sprite.gotoAndStop(1);
 
 
         if(collision_objects.children[i].moveable) {
-          this.sprite.x += this.movement_speed / 4;
-          collision_objects.children[i].x += this.movement_speed / 4;
+          this.sprite.x += this.vitals.movement_speed / 4;
+          collision_objects.children[i].x += this.vitals.movement_speed / 4;
         }
 
         return;
       }
     }
 
-    this.sprite.x += this.movement_speed;
-  }
-
-  inventory() {
-    if ( this.inventory_open === false ) {
-      this.show_player_inventory();
-      this.inventory_open = true;
-    } else {
-      this.hide_player_inventory();
-      this.inventory_open = false;
-    }
+    this.sprite.x += this.vitals.movement_speed;
   }
 
   shift() {
-    this.shift_pressed = true;
+    // console.log('shift_pressed');
   }
 }
 

@@ -35,6 +35,7 @@ class Player extends construct(Character, Keyboard, Mouse, PlayerVisualModel, Vi
     this.inventory_slot('rat_femur', 1);
     this.inventory_slot('meat', 2);
     this.inventory_slot('skull_cap_bone', 3);
+
     viewport.addChild(this.sprite);
   }
 

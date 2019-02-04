@@ -5,8 +5,8 @@ const dialog_caption_holder = global.document.querySelector('.dialog_caption_hol
 class Caption_Dialog {
 
   play_audio_track(track) {
-    const track_to_play = new Audio('audio/'+track)
-    //track_to_play.play();
+    const track_to_play = new global.Audio('audio/'+track);
+    track_to_play.play();
   }
 
   show() {
@@ -54,7 +54,6 @@ class Caption_Dialog {
 
     this.create_text_timeout(sentence_array);
   }
-
 
   clear_text() {
     dialog_caption_holder.children.innerHTML = '';

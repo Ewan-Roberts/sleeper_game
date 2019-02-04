@@ -5,10 +5,10 @@ function construct(BaseClass, ...Mixins) {
 
     const all_property_names = Object.getOwnPropertyNames(source).concat(Object.getOwnPropertySymbols(source));
 
-    all_property_names.forEach((propertyName) => {
-      if (propertyName.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
+    all_property_names.forEach((property_name) => {
+      if (property_name.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
         return;
-      Object.defineProperty(target, propertyName, Object.getOwnPropertyDescriptor(source, propertyName));
+      Object.defineProperty(target, property_name, Object.getOwnPropertyDescriptor(source, property_name));
     });
   }
 
@@ -23,7 +23,7 @@ function construct(BaseClass, ...Mixins) {
     }
   }
 
-  Mixins.forEach((Mixin) => {
+  Mixins.forEach(Mixin => {
     copy_properties(Base.prototype, Mixin.prototype);
   });
 

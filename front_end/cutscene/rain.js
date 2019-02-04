@@ -16,7 +16,7 @@ module.exports.start_rain = (x1, x2, y1, y2) => {
     rainFrames.push(PIXI.Texture.fromFrame(`raindrop_${val}`));
   }
 
-  const rainNoise = new Audio('audio/light_rain.wav');
+  const rainNoise = new global.Audio('audio/light_rain.wav');
 
   for (let i = 0; i < 150; i += 1) {
     const animatedDrop = new PIXI.extras.AnimatedSprite(rainFrames);

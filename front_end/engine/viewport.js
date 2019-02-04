@@ -17,10 +17,6 @@ viewport.updateLayersOrder = function () {
   });
 };
 
-// always focus the window on load
-// this helps with testing
-global.window.focus();
-
 module.exports = {
   viewport,
 };

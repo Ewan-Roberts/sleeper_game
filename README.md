@@ -153,11 +153,16 @@ Key:
 - Create EC2 server (again)
 
 # Needed for ALPHA
-- save game states
+- get a bigger map
+- put 2 prey on the map
+- put one enemy on the map
 - prod server
-- basic item/inventory management
 - basic arrow management
 - basic different graphics
+
+# To deploy
+- Set up mongo on ec2
+- end to end a user
 
 # Needed for BETA
 - secure register user
@@ -169,27 +174,30 @@ Key:
 - Get the merc from the spritesheet
 - and the note
 
+
 DONE PILE:
 
-- Add player inventory DONE
-- Move items into slots DONE
-- Move item from inventory to player inventory DONE
-- Add condition management (thirst etc.) DONE
-- create rain effects DONE
-- error messages for user exists DONE
-- Start screen DONE
-- register users DONE
-- basic predetor/prey DONE
-- login with user details DONE
-- title screen DONE
-- inventory slots DONE
-- primary weapon DONE
-- secondary weapon DONE
-- player visual model DONE
-- Add register user DONE
-- Add login user DONE
-- Re-add multiplayer NOT ADDING
-- create items search function DONE
+- basic item/inventory management done
+- save game states done
+- add player inventory done
+- move items into slots done
+- move item from inventory to player inventory done
+- add condition management (thirst etc.) done
+- create rain effects done
+- error messages for user exists done
+- start screen done
+- register users done
+- basic predetor/prey done
+- login with user details done
+- title screen done
+- inventory slots done
+- primary weapon done
+- secondary weapon done
+- player visual model done
+- add register user done
+- add login user done
+- re-add multiplayer not adding
+- create items search function done
 
 
 

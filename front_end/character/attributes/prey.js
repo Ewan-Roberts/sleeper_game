@@ -8,12 +8,12 @@ const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points } = require('../../engine/math');
 
 const critter_container = viewport.getChildByName('critter_container');
+const min_pathfind_distance = 50;
+const max_pathfind_distance = 400;
 
 class Prey {
   constructor() {
     this.type = 'prey';
-    this.min_pathfind_distance = 50;
-    this.max_pathfind_distance = 400;
   }
 
   is_prey_to({ 'sprite': predator_sprite }) {
@@ -29,8 +29,8 @@ class Prey {
       const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
 
       if(
-        distance_to_act < this.min_pathfind_distance ||
-        distance_to_act > this.max_pathfind_distance ||
+        distance_to_act < min_pathfind_distance ||
+        distance_to_act > max_pathfind_distance ||
         !this.alive
       ) {
         return;

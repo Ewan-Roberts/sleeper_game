@@ -20,6 +20,7 @@ class visual_effects {
     ticker.add(count_down);
   }
 
+
   static fade_in_sprite(sprite, speed, limit){
     const count_up = () => {
       if (sprite.alpha < limit) {
@@ -44,7 +45,6 @@ class visual_effects {
     this.fade_out_sprite(image_to_fade);
     cutscene_container.addChild(image_to_fade);
   }
-
 }
 
 

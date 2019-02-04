@@ -11,7 +11,6 @@ const { lorium_text     } = require('./speech_data');
 const { move_sprite_to_point } = require('../engine/pathfind');
 
 class intro_cutscene {
-
   static start() {
     const dialog_dom = new Caption_Dialog();
     const dialog_canvas = new Dialog();
@@ -40,7 +39,6 @@ class intro_cutscene {
     dialog_dom.hide();
     dialog_dom.render_text(lorium_text);
   }
-
 }
 
 module.exports = {
