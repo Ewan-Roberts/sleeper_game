@@ -26,31 +26,38 @@ class DevelopmentLevel {
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
-    player.add_controls();
-    this.load_flat_level();
+    player.inventory_manager.add_head('old_bandana');
+    player.inventory_manager.add_hat('old_helmet');
+    player.inventory_manager.add_chest('old_clothes');
+    player.inventory_manager.add_shoes('old_boots');
+    player.inventory_manager.add_background('merc_portrait');
+    player.inventory_manager.add_primary_weapon('wrench_blade');
+    player.inventory_manager.add_secondary_weapon('rusty_knife');
+    player.inventory_manager.inventory_slot('rat_leg_bone', 0);
+    player.inventory_manager.inventory_slot('rat_femur', 1);
+    player.inventory_manager.inventory_slot('meat', 2);
+    player.inventory_manager.inventory_slot('skull_cap_bone', 3);
     //player.add_raycasting(this.level.segments);
 
+    this.load_test_level();
     this.test_note();
 
     const inventory_test = new Inventory();
-
-    //TODO This is a hack I need some way to bind to the player model while testing
     inventory_test.populate_random_inventory(player);
     inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
-    //const enemy = new Enemy();
-    //console.log(enemy);
-    //enemy.sprite.position.set(1550,1000);
-    //enemy.with_light();
+    const enemy = new Enemy();
+    enemy.sprite.position.set(1550,1000);
+    enemy.with_light();
 
-    //const rat = new Rat();
-    //rat.set_position({x: 900, y: 1200});
-    //rat.lootable_on_death();
+    const rat = new Rat();
+    rat.set_position({x: 900, y: 1200});
+    rat.lootable_on_death();
 
-    //rat.is_prey_to(enemy);
-    //rat.is_prey_to(player);
+    rat.prey_controller.is_prey_to(enemy);
+    rat.prey_controller.is_prey_to(player);
 
-    //enemy.is_predator_to(rat);
+    enemy.predator_controller.is_predator_to(rat);
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 

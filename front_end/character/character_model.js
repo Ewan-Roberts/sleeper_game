@@ -18,6 +18,10 @@ class Character {
     this.sprite.play();
   }
 
+  addComponent(component) {
+    this[component.name] = component;
+  }
+
   // REFACTOR for example bow, idle or nothing, idle
   animation_switch(type, action) {
     if(action) {

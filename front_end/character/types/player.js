@@ -1,18 +1,19 @@
 'use strict';
 
 const { viewport  } = require('../../engine/viewport.js');
-const { construct } = require('../../engine/constructor');
-const { Keyboard  } = require('../../engine/keyboard');
-const { Mouse     } = require('../../engine/mouse');
 const { PlayerVisualModel } = require('../../engine/inventory_manager');
 
 const character_animations = require('./animations/character');
 
 const { Character } = require('../character_model');
-const { Vitals    } = require('../attributes/vitals');
-const { Predator  } = require('../attributes/predator');
 
-class Player extends construct(Character, Keyboard, Mouse, PlayerVisualModel, Vitals, Predator) {
+const { Keyboard      } = require('../attributes/keyboard');
+const { Mouse         } = require('../attributes/mouse');
+const { Vitals        } = require('../attributes/vitals');
+const { Predator      } = require('../attributes/predator');
+const { Status_Meter  } = require('../attributes/status_bar');
+
+class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
@@ -24,28 +25,14 @@ class Player extends construct(Character, Keyboard, Mouse, PlayerVisualModel, Vi
     this.sprite.height /= 2;
     this.sprite.width /= 2;
 
-    this.head('old_bandana');
-    this.hat('old_helmet');
-    this.chest('old_clothes');
-    this.shoes('old_boots');
-    this.background('merc_portrait');
-    this.primary_weapon('wrench_blade');
-    this.secondary_weapon('rusty_knife');
-    this.inventory_slot('rat_leg_bone', 0);
-    this.inventory_slot('rat_femur', 1);
-    this.inventory_slot('meat', 2);
-    this.inventory_slot('skull_cap_bone', 3);
+    this.addComponent(new Predator(this));
+    this.addComponent(new Mouse(this));
+    this.addComponent(new Keyboard(this));
+    this.addComponent(new PlayerVisualModel(this));
+    this.addComponent(new Vitals());
+    this.addComponent(new Status_Meter());
 
     viewport.addChild(this.sprite);
-  }
-
-  add_controls() {
-    viewport.on('mouseup', event => this.mouse_up(event));
-    viewport.on('mousemove', event => this.mouse_move(event));
-    viewport.on('mousedown', event => this.mouse_down(event));
-
-    global.window.addEventListener('keydown', event => this.key_down(event));
-    global.window.addEventListener('keyup', () => this.key_up());
   }
 }
 

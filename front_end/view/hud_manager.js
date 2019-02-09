@@ -43,34 +43,20 @@ function insert_all_div_with_image(class_name, image_name) {
 }
 
 
-class PlayerVisualModel {
+class HUD {
   constructor() {
-    this.inventory = {
-      background:       {},
-      primary_weapon:   {},
-      secondary_weapon: {},
-      small_weapon:     {},
-      head:             {},
-      chest:            {},
-      shoes:            {},
-      hat:              {},
-      slot_one:         {},
-      slot_two:         {},
-      item_slots:       [],
-    };
-  }
-
-  toggle_player_inventory() {
-
-    if(dom_hud.style.display === 'block') {
-      dom_hud.style.opacity = 0;
-      dom_hud.style.display = 'none';
-
-      return;
-    }
-
-    dom_hud.style.opacity = 1;
-    dom_hud.style.display = 'block';
+    this.name = 'inventory_manager';
+    this.background       = {};
+    this.primary_weapon   = {};
+    this.secondary_weapon = {};
+    this.small_weapon     = {};
+    this.head             = {};
+    this.chest            = {};
+    this.shoes            = {};
+    this.hat              = {};
+    this.slot_one         = {};
+    this.slot_two         = {};
+    this.item_slots       = [];
   }
 
   show_player_inventory() {
@@ -82,54 +68,54 @@ class PlayerVisualModel {
   }
 
 
-  primary_weapon(image_name) {
+  add_primary_weapon(image_name) {
     insert_div_with_image('.primary_weapon', image_name);
-    this.inventory.primary_weapon = get_item_by_name(image_name);
+    this.primary_weapon = get_item_by_name(image_name);
   }
 
-  secondary_weapon(image_name) {
+  add_secondary_weapon(image_name) {
     insert_div_with_image('.secondary_weapon', image_name);
-    this.inventory.secondary_weapon = get_item_by_name(image_name);
+    this.secondary_weapon = get_item_by_name(image_name);
   }
 
-  small_weapon(image_name) {
+  add_small_weapon(image_name) {
     insert_div_with_image('.small_weapon', image_name);
-    this.inventory.small_weapon = get_item_by_name(image_name);
+    this.small_weapon = get_item_by_name(image_name);
   }
 
-  head(image_name) {
+  add_head(image_name) {
     insert_div_with_image('.model_head', image_name);
-    this.inventory.head = get_item_by_name(image_name);
+    this.head = get_item_by_name(image_name);
   }
 
-  chest(image_name) {
+  add_chest(image_name) {
     insert_div_with_image('.model_chest', image_name);
-    this.inventory.chest = get_item_by_name(image_name);
+    this.chest = get_item_by_name(image_name);
   }
 
-  shoes(image_name) {
+  add_shoes(image_name) {
     insert_div_with_image('.model_feet', image_name);
-    this.inventory.shoes = get_item_by_name(image_name);
+    this.shoes = get_item_by_name(image_name);
   }
 
-  hat(image_name) {
+  add_hat(image_name) {
     insert_div_with_image('.model_hat', image_name);
-    this.inventory.hat = get_item_by_name(image_name);
+    this.hat = get_item_by_name(image_name);
   }
 
-  slot_one(image_name) {
+  add_slot_one(image_name) {
     insert_div_with_image('.model_slot_1', image_name);
-    this.inventory.slot_one = get_item_by_name(image_name);
+    this.slot_one = get_item_by_name(image_name);
   }
 
-  slot_two(image_name) {
+  add_slot_two(image_name) {
     insert_div_with_image('.model_slot_2', image_name);
-    this.inventory.slot_two = get_item_by_name(image_name);
+    this.slot_two = get_item_by_name(image_name);
   }
 
-  background(image_name) {
+  add_background(image_name) {
     insert_div_with_image('.model_background', image_name);
-    this.inventory.background = get_item_by_name(image_name);
+    this.background = get_item_by_name(image_name);
   }
 
   //for testing
@@ -157,13 +143,12 @@ class PlayerVisualModel {
   }
 
   add_item_to_inventory_slot(item) {
-    if(this.inventory.item_slots.length > 10) {
+    if(this.item_slots.length > 10) {
       throw new Error('not enough space');
     }
 
-    this.inventory.item_slots.push(item);
+    this.item_slots.push(item);
   }
-
 
   populate_free_slot(image_name) {
     const item = get_item_by_name(image_name);
@@ -196,5 +181,5 @@ class PlayerVisualModel {
 }
 
 module.exports = {
-  PlayerVisualModel,
+  HUD,
 };

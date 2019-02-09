@@ -12,12 +12,14 @@ const min_pathfind_distance = 50;
 const max_pathfind_distance = 400;
 
 class Prey {
-  constructor() {
-    this.type = 'prey';
+  constructor(entity) {
+    this.entity = entity;
+    this.type   = 'prey';
+    this.name   = 'prey_controller';
   }
 
   is_prey_to({ 'sprite': predator_sprite }) {
-    const { 'sprite': prey_sprite } = this;
+    const { 'sprite': prey_sprite } = this.entity;
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
     point_to_run_for.name = 'dot';
@@ -31,7 +33,7 @@ class Prey {
       if(
         distance_to_act < min_pathfind_distance ||
         distance_to_act > max_pathfind_distance ||
-        !this.alive
+        !this.entity.vitals.alive
       ) {
         return;
       }

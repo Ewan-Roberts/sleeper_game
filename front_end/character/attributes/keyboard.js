@@ -1,7 +1,9 @@
 'use strict';
 
-const { viewport } = require('./viewport');
-const { Game     } = require('./save_manager');
+const { viewport } = require('../../engine/viewport');
+const { Game     } = require('../../engine/save_manager');
+
+const dom_hud = global.document.querySelector('.characterInventory');
 
 const keymap = {
   w: 'up',
@@ -22,15 +24,19 @@ const keymap = {
   Shift: 'Shift',
 };
 
-
 const buffer = 50;
 
 class Keyboard {
-  constructor() {
+  constructor(entity) {
+    this.name = 'keyboard_manager';
+    this.entity = entity;
+    this.sprite = entity.sprite;
+    global.window.addEventListener('keydown', event => this.key_down(event));
+    global.window.addEventListener('keyup', () => this.key_up());
   }
 
   save_game() {
-    Game.save(this);
+    Game.save(this.entity);
   }
 
   key_down({ key }) {
@@ -49,114 +55,102 @@ class Keyboard {
     }
   }
 
-  key_up() {
-    this.animation_switch('bow', 'idle');
+  toggle_player_inventory() {
+
+    if(dom_hud.style.display === 'block') {
+      dom_hud.style.opacity = 0;
+      dom_hud.style.display = 'none';
+
+      return;
+    }
+
+    dom_hud.style.opacity = 1;
+    dom_hud.style.display = 'block';
   }
 
+  key_up() {
+    //TODO Remove lie to player model
+    this.entity.animation_switch('bow', 'idle');
+  }
 
   keyboard_up() {
-    this.animation_switch('bow', 'walk');
+    this.entity.animation_switch('bow', 'walk');
     this.sprite.rotation = -2;
-    console.log(this);
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.sprite.getGlobalPosition();
+      const position = this.sprite.getGlobalPosition();
+      position.y -= buffer;
 
-      player_position.y -= buffer;
-
-      if(collision_objects.children[i].containsPoint(player_position)){
+      if(collision_objects.children[i].containsPoint(position)){
         this.sprite.gotoAndStop(1);
-        if(collision_objects.children[i].moveable) {
-          this.sprite.y -= this.vitals.movement_speed / 4;
-          collision_objects.children[i].y -= this.vitals.movement_speed / 4;
-        }
 
         return;
       }
     }
 
-    this.sprite.y -= this.vitals.movement_speed;
+    this.sprite.y -= this.entity.vitals.movement_speed;
   }
 
   keyboard_down() {
-    this.animation_switch('bow', 'walk');
+    this.entity.animation_switch('bow', 'walk');
     this.sprite.rotation = 2;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.sprite.getGlobalPosition();
+      const position = this.sprite.getGlobalPosition();
+      position.y += buffer;
 
-      player_position.y += buffer;
-
-      if(collision_objects.children[i].containsPoint(player_position)){
+      if(collision_objects.children[i].containsPoint(position)){
         this.sprite.gotoAndStop(1);
-
-        if(collision_objects.children[i].moveable) {
-          this.sprite.y += this.vitals.movement_speed / 4;
-          collision_objects.children[i].y += this.vitals.movement_speed / 4;
-        }
 
         return;
       }
     }
 
-    this.sprite.y += this.vitals.movement_speed;
+    this.sprite.y += this.entity.vitals.movement_speed;
   }
 
   left() {
-    this.animation_switch('bow', 'walk');
+    this.entity.animation_switch('bow', 'walk');
     this.sprite.rotation = -3;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.sprite.getGlobalPosition();
+      const position = this.sprite.getGlobalPosition();
+      position.x -= buffer;
 
-      player_position.x -= buffer;
-
-      if(collision_objects.children[i].containsPoint(player_position)){
+      if(collision_objects.children[i].containsPoint(position)){
         this.sprite.gotoAndStop(1);
-
-        if(collision_objects.children[i].moveable) {
-          this.sprite.x -= this.vitals.movement_speed / 4;
-          collision_objects.children[i].x -= this.vitals.movement_speed / 4;
-        }
 
         return;
       }
     }
 
-    this.sprite.x -= this.vitals.movement_speed;
+    this.sprite.x -= this.entity.vitals.movement_speed;
   }
 
   right() {
-    this.animation_switch('bow', 'walk');
+    this.entity.animation_switch('bow', 'walk');
     this.sprite.rotation = 0;
 
     const collision_objects = viewport.getChildByName('collision_items');
 
     for(let i = 0; i < collision_objects.children.length; i++){
-      const player_position = this.sprite.getGlobalPosition();
+      const position = this.sprite.getGlobalPosition();
+      position.x += buffer;
 
-      player_position.x += buffer;
-
-      if(collision_objects.children[i].containsPoint(player_position)){
+      if(collision_objects.children[i].containsPoint(position)){
         this.sprite.gotoAndStop(1);
-
-
-        if(collision_objects.children[i].moveable) {
-          this.sprite.x += this.vitals.movement_speed / 4;
-          collision_objects.children[i].x += this.vitals.movement_speed / 4;
-        }
 
         return;
       }
     }
 
-    this.sprite.x += this.vitals.movement_speed;
+    this.sprite.x += this.entity.vitals.movement_speed;
   }
 
   shift() {

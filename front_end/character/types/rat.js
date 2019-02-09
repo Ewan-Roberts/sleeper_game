@@ -12,17 +12,23 @@ const { Prey      } = require('../attributes/prey');
 const critter_container = viewport.getChildByName('critter_container');
 const rat_animations = require('./animations/rat');
 
-class Rat extends construct(Character, Vitals, Prey, Inventory) {
+class Rat extends construct(Character) {
   constructor() {
     super();
     this.name = 'rat';
+
     this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
     this.sprite.animations = rat_animations;
     this.sprite.anchor.set(0.5);
     this.sprite.name = 'rat';
     this.sprite.height *= 2;
     this.sprite.width *= 2;
-    this.populate_random_inventory();
+
+    this.addComponent(new Vitals());
+    this.addComponent(new Prey(this));
+    this.addComponent(new Inventory());
+
+    this.inventory.populate_random_inventory();
 
     critter_container.addChild(this.sprite);
   }

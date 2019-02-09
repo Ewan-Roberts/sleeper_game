@@ -167,23 +167,23 @@ class Bedroom extends Level {
 }
 
 function load_debug_map_image() {
-  const debug_room_tiled_data = require('./debug/playground/map2_output.json');
-  const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
-  const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
+  // const debug_room_tiled_data = require('./debug/playground/map2_output.json');
+  // const debug_room_tiled_tiles = require('./debug/playground/map2_tiles.json');
+  // const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
 
-  const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
+  // const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
 
-  const options = {
-    wall_offset: {
-      x: 0,
-      y: 0,
-    },
-  };
+  // const options = {
+  //   wall_offset: {
+  //     x: 0,
+  //     y: 0,
+  //   },
+  // };
 
-  debug_room.set_background_image(debug_room_image);
-  debug_room.render_walls(options);
-  debug_room.create_grid();
-  // debug_room.create_enemies();
+  // debug_room.set_background_image(debug_room_image);
+  // debug_room.render_walls(options);
+  // debug_room.create_grid();
+  // // debug_room.create_enemies();
 }
 
 function format_path_data(path_data){
@@ -202,77 +202,77 @@ function format_path_data(path_data){
 }
 
 function load_bedroom_map() {
-  const level_data = require('./bedroom/level_data/bedroom_level_data.json');
-  const tiles_data = require('./bedroom/level_data/flat_floor_data.json');
-  const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
-  const friend_script = [{
-    type:'Text',
-    id:'7a69da96-639e-4292-a26f-59a47b934884',
-    actor:'trader',
-    name:'Welcome to a dialog option, want to \ngo to the next line?\n \n Well here we go, welcome to the end \n of the world',
-    next:'274625c9-0d31-49a3-87dc-129a721ee698',
-  },{
-    type:'Branch',id:'274625c9-0d31-49a3-87dc-129a721ee698',
-    variable:'first choice ',
-    branches: {
-      yes:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
-      no:'4f2717a2-11de-4f42-a358-907e8e3eb656',
-    },
-  },{
-    type:'Text',
-    id:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
-    actor:'trader',
-    name:'final node after the yes choice ',
-    next:null,
-  },{
-    type:'Text',
-    id:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
-    actor:'trader',
-    name:'this is the first yes choice',
-    next:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
-  },{
-    type:'Text',
-    id:'4f2717a2-11de-4f42-a358-907e8e3eb656',
-    actor:'trader',
-    name:'this is the first no choice',
-    next:null,
-  }];
+  // const level_data = require('./bedroom/level_data/bedroom_level_data.json');
+  // const tiles_data = require('./bedroom/level_data/flat_floor_data.json');
+  // const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
+  // const friend_script = [{
+  //   type:'Text',
+  //   id:'7a69da96-639e-4292-a26f-59a47b934884',
+  //   actor:'trader',
+  //   name:'Welcome to a dialog option, want to \ngo to the next line?\n \n Well here we go, welcome to the end \n of the world',
+  //   next:'274625c9-0d31-49a3-87dc-129a721ee698',
+  // },{
+  //   type:'Branch',id:'274625c9-0d31-49a3-87dc-129a721ee698',
+  //   variable:'first choice ',
+  //   branches: {
+  //     yes:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
+  //     no:'4f2717a2-11de-4f42-a358-907e8e3eb656',
+  //   },
+  // },{
+  //   type:'Text',
+  //   id:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
+  //   actor:'trader',
+  //   name:'final node after the yes choice ',
+  //   next:null,
+  // },{
+  //   type:'Text',
+  //   id:'e2e31f77-0614-43b4-9e4e-b996379ea43d',
+  //   actor:'trader',
+  //   name:'this is the first yes choice',
+  //   next:'ee68a265-ba7e-4284-856d-43d2b1c3594d',
+  // },{
+  //   type:'Text',
+  //   id:'4f2717a2-11de-4f42-a358-907e8e3eb656',
+  //   actor:'trader',
+  //   name:'this is the first no choice',
+  //   next:null,
+  // }];
 
-  const bedroom_schema = {
-    player_data: {
-      position: {
-        x: 1000,
-        y: 1000,
-      },
-    },
-    enemy_data: {
-      position: {
-        x: 1800,
-        y: 1000,
-      },
-      path_data: level_data.layers[0].layers[2],
-    },
-    friend_data: {
-      position: {
-        x: 600,
-        y: 1300,
-      },
-      script: friend_script,
-    },
-    rat_data: {
-      position: {
-        x: 2300,
-        y: 1800,
-      },
-      path_data: level_data.layers[0].layers[3],
-    },
-    wall_data: level_data.layers[0].layers[1],
-    door_data: level_data.layers[0].layers[4],
-    item_data: level_data.layers[0].layers[5],
-    grid_data: tiles_data,
-  };
+  // const bedroom_schema = {
+  //   player_data: {
+  //     position: {
+  //       x: 1000,
+  //       y: 1000,
+  //     },
+  //   },
+  //   enemy_data: {
+  //     position: {
+  //       x: 1800,
+  //       y: 1000,
+  //     },
+  //     path_data: level_data.layers[0].layers[2],
+  //   },
+  //   friend_data: {
+  //     position: {
+  //       x: 600,
+  //       y: 1300,
+  //     },
+  //     script: friend_script,
+  //   },
+  //   rat_data: {
+  //     position: {
+  //       x: 2300,
+  //       y: 1800,
+  //     },
+  //     path_data: level_data.layers[0].layers[3],
+  //   },
+  //   wall_data: level_data.layers[0].layers[1],
+  //   door_data: level_data.layers[0].layers[4],
+  //   item_data: level_data.layers[0].layers[5],
+  //   grid_data: tiles_data,
+  // };
 
-  new Bedroom(bedroom_schema, bedroom_image);
+  // new Bedroom(bedroom_schema, bedroom_image);
 }
 
 module.exports = {

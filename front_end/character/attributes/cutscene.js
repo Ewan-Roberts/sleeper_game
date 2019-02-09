@@ -1,6 +1,11 @@
 'use strict';
 
 class Cutscene {
+  constructor(sprite) {
+    this.name = 'cutscene_manager';
+    this.sprite = sprite;
+  }
+
   facing(direction) {
     switch(direction) {
       case 'up':

@@ -13,86 +13,87 @@ const box_size = 100;
 
 class Inventory {
   constructor() {
-    this.inventory = {};
-    this.inventory.slots = [];
-    this.inventory.equipped = undefined;
-    this.inventory.sprite = PIXI.Sprite.fromFrame('black_dot');
-    this.inventory.sprite.height = 100;
-    this.inventory.sprite.width = 402;
-    this.inventory.sprite.anchor.set(0.5);
-    this.inventory.sprite.visible = false;
-    gui_container.addChild(this.inventory.sprite);
+    this.name = 'inventory';
+
+    this.slots = [];
+    this.equipped = undefined;
+    this.sprite = PIXI.Sprite.fromFrame('black_dot');
+    this.sprite.height = 100;
+    this.sprite.width = 402;
+    this.sprite.anchor.set(0.5);
+    this.sprite.visible = false;
+    gui_container.addChild(this.sprite);
     this.add_item_tiles();
   }
 
   hide() {
-    this.inventory.sprite.visible       = false;
-    this.inventory.item_slot_0.visible  = false;
-    this.inventory.item_slot_1.visible  = false;
-    this.inventory.item_slot_2.visible  = false;
-    this.inventory.item_slot_3.visible  = false;
-    this.inventory.close_button.visible = false;
+    this.sprite.visible       = false;
+    this.item_slot_0.visible  = false;
+    this.item_slot_1.visible  = false;
+    this.item_slot_2.visible  = false;
+    this.item_slot_3.visible  = false;
+    this.close_button.visible = false;
   }
 
   show() {
-    this.inventory.sprite.visible       = true;
-    this.inventory.item_slot_0.visible  = true;
-    this.inventory.item_slot_1.visible  = true;
-    this.inventory.item_slot_2.visible  = true;
-    this.inventory.item_slot_3.visible  = true;
-    this.inventory.close_button.visible = true;
+    this.sprite.visible       = true;
+    this.item_slot_0.visible  = true;
+    this.item_slot_1.visible  = true;
+    this.item_slot_2.visible  = true;
+    this.item_slot_3.visible  = true;
+    this.close_button.visible = true;
   }
 
   set_inventory_position(point) {
     this.show();
-    this.inventory.sprite.position.set(point.x + 250, point.y -20);
-    this.inventory.item_slot_0.position.x = this.inventory.sprite.x-this.inventory.sprite.width/2;
-    this.inventory.item_slot_0.position.y = this.inventory.sprite.y;
-    this.inventory.item_slot_1.position.x = this.inventory.sprite.x-this.inventory.sprite.width/4;
-    this.inventory.item_slot_1.position.y = this.inventory.sprite.y;
-    this.inventory.item_slot_2.position.x = this.inventory.sprite.x;
-    this.inventory.item_slot_2.position.y = this.inventory.sprite.y;
-    this.inventory.item_slot_3.position.x = this.inventory.sprite.x +this.inventory.sprite.width/4;
-    this.inventory.item_slot_3.position.y = this.inventory.sprite.y;
-    this.inventory.close_button.position.x = this.inventory.sprite.x +this.inventory.sprite.width/2 - 30;
-    this.inventory.close_button.position.y = this.inventory.sprite.y -35;
+    this.sprite.position.set(point.x + 250, point.y -20);
+    this.item_slot_0.position.x = this.sprite.x-this.sprite.width/2;
+    this.item_slot_0.position.y = this.sprite.y;
+    this.item_slot_1.position.x = this.sprite.x-this.sprite.width/4;
+    this.item_slot_1.position.y = this.sprite.y;
+    this.item_slot_2.position.x = this.sprite.x;
+    this.item_slot_2.position.y = this.sprite.y;
+    this.item_slot_3.position.x = this.sprite.x +this.sprite.width/4;
+    this.item_slot_3.position.y = this.sprite.y;
+    this.close_button.position.x = this.sprite.x +this.sprite.width/2 - 30;
+    this.close_button.position.y = this.sprite.y -35;
   }
 
   add_item_tiles() {
-    this.inventory.item_slot_0 = PIXI.Sprite.fromFrame('item_slot');
-    this.inventory.item_slot_0.name = 'item_slot_0';
-    this.inventory.item_slot_0.width = box_size;
-    this.inventory.item_slot_0.height = box_size;
-    this.inventory.item_slot_0.anchor.y = 0.5;
+    this.item_slot_0 = PIXI.Sprite.fromFrame('item_slot');
+    this.item_slot_0.name = 'item_slot_0';
+    this.item_slot_0.width = box_size;
+    this.item_slot_0.height = box_size;
+    this.item_slot_0.anchor.y = 0.5;
 
-    this.inventory.item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
-    this.inventory.item_slot_1.name = 'item_slot_1';
-    this.inventory.item_slot_1.width = box_size;
-    this.inventory.item_slot_1.height = box_size;
-    this.inventory.item_slot_1.anchor.y = 0.5;
+    this.item_slot_1 = PIXI.Sprite.fromFrame('item_slot');
+    this.item_slot_1.name = 'item_slot_1';
+    this.item_slot_1.width = box_size;
+    this.item_slot_1.height = box_size;
+    this.item_slot_1.anchor.y = 0.5;
 
-    this.inventory.item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
-    this.inventory.item_slot_2.name = 'item_slot_2';
-    this.inventory.item_slot_2.width = box_size;
-    this.inventory.item_slot_2.height = box_size;
-    this.inventory.item_slot_2.anchor.y = 0.5;
+    this.item_slot_2 = PIXI.Sprite.fromFrame('item_slot');
+    this.item_slot_2.name = 'item_slot_2';
+    this.item_slot_2.width = box_size;
+    this.item_slot_2.height = box_size;
+    this.item_slot_2.anchor.y = 0.5;
 
-    this.inventory.item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
-    this.inventory.item_slot_3.name = 'item_slot_3';
-    this.inventory.item_slot_3.width = box_size;
-    this.inventory.item_slot_3.height = box_size;
-    this.inventory.item_slot_3.anchor.y = 0.5;
+    this.item_slot_3 = PIXI.Sprite.fromFrame('item_slot');
+    this.item_slot_3.name = 'item_slot_3';
+    this.item_slot_3.width = box_size;
+    this.item_slot_3.height = box_size;
+    this.item_slot_3.anchor.y = 0.5;
 
-    this.inventory.close_button = PIXI.Sprite.fromFrame('cancel_button');
-    this.inventory.close_button.name = 'close_button';
-    this.inventory.close_button.width = 30;
-    this.inventory.close_button.height = 30;
-    this.inventory.close_button.anchor.y = 0.5;
-    this.inventory.close_button.interactive = true;
-    this.inventory.close_button.buttonMode = true;
-    this.inventory.close_button.click = () => {
+    this.close_button = PIXI.Sprite.fromFrame('cancel_button');
+    this.close_button.name = 'close_button';
+    this.close_button.width = 30;
+    this.close_button.height = 30;
+    this.close_button.anchor.y = 0.5;
+    this.close_button.interactive = true;
+    this.close_button.buttonMode = true;
+    this.close_button.click = () => {
 
-      if(this.inventory.sprite.visible){
+      if(this.sprite.visible){
         this.hide();
         return;
       }
@@ -101,11 +102,11 @@ class Inventory {
     };
     //todo move to under this container
     gui_container.addChild(
-      this.inventory.item_slot_0,
-      this.inventory.item_slot_1,
-      this.inventory.item_slot_2,
-      this.inventory.item_slot_3,
-      this.inventory.close_button
+      this.item_slot_0,
+      this.item_slot_1,
+      this.item_slot_2,
+      this.item_slot_3,
+      this.close_button
     );
 
     this.hide();
@@ -123,57 +124,57 @@ class Inventory {
     item.buttonMode = true;
     item.click = () => {
       item.destroy();
-      player.populate_free_slot(item_details.name);
+      player.inventory_manager.populate_free_slot(item_details.name);
     };
 
     //TODO fix this madness
-    this.inventory[`item_slot_${slot}`].addChild(item);
+    this[`item_slot_${slot}`].addChild(item);
   }
 
   empty_slots() {
-    this.inventory.slots = [];
+    this.slots = [];
   }
 
   add_item(item) {
-    this.inventory.slots.push(item);
+    this.slots.push(item);
   }
 
   equip_item(item) {
-    this.inventory.equipped = item;
+    this.equipped = item;
   }
 
   get equiped_weapon() {
-    if(!this.inventory.equipped) {
+    if(!this.equipped) {
       throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equipped;
+    return this.equipped;
   }
 
   get weapon_speed() {
-    if(!this.inventory.equipped) {
+    if(!this.equipped) {
       throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equipped.speed;
+    return this.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.inventory.equipped) {
+    if(!this.equipped) {
       throw new Error('this character has no weapon equipped');
     }
 
-    return this.inventory.equipped.damage;
+    return this.equipped.damage;
   }
 
   randomise_slots() {
-    this.inventory.slots = [];
+    this.slots = [];
   }
 
   populate_random_inventory(player) {
-    this.inventory.slots  = get_random_items();
+    this.slots  = get_random_items();
 
-    this.inventory.slots.forEach((item, i) => {
+    this.slots.forEach((item, i) => {
       this.populate_slot(item, i, player);
     });
   }
@@ -181,8 +182,8 @@ class Inventory {
   spike_populate_inventory() {
     const rat_meat = find_item_by_id(1);
     const rat_hide = find_item_by_id(2);
-    this.inventory.slots.push(rat_meat, rat_hide);
-    this.inventory.slots.forEach((item, i) => {
+    this.slots.push(rat_meat, rat_hide);
+    this.slots.forEach((item, i) => {
       this.populate_slot(item, i);
     });
   }

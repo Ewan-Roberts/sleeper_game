@@ -1,23 +1,32 @@
 'use strict';
 
 const PIXI                  = require('pixi.js');
-const { viewport          } = require('./viewport');
-const { ticker            } = require('./ticker');
-const { radian            } = require('./math');
-const { arrow_management  } = require('./bow.js');
+const { viewport          } = require('../../engine/viewport');
+const { ticker            } = require('../../engine/ticker');
+const { radian            } = require('../../engine/math');
+//const { arrow_management  } = require('./bow.js');
 
 class Mouse {
+  constructor(entity) {
+    this.entity = entity;
+    this.sprite = entity.sprite;
+    this.name = 'mouse_manager';
+    viewport.on('mouseup', event => this.mouse_up(event));
+    viewport.on('mousemove', event => this.mouse_move(event));
+    viewport.on('mousedown', event => this.mouse_down(event));
 
-  mouse_up(event) {
+  }
+
+  mouse_up() {
     this.sprite.play();
-    this.animation_switch('bow', 'idle');
+    //this.animation_switch('bow', 'idle');
 
     ticker.remove(this.count_down);
-    if (this.vitals.power > 200) {
-      const mouse_position_player = event.data.getLocalPosition(viewport);
+    //if (this.vitals.power > 200) {
+    //const mouse_position_player = event.data.getLocalPosition(viewport);
 
-      arrow_management(this.vitals.power, this.sprite, mouse_position_player);
-    }
+    //arrow_management(this.vitals.power, this.sprite, mouse_position_player);
+    //}
   }
 
   mouse_down(event) {
@@ -28,8 +37,8 @@ class Mouse {
     //TODO presuposes vitals REMOVE
     //this.vitals.power = 900;
 
-    this.animation_switch('bow', 'ready');
-    this.sprite.loop = false;
+    //this.animation_switch('bow', 'ready');
+    //this.sprite.loop = false;
     //this.count_down = () => {
     //  if (!this.sprite.shift_pressed){
     //    ticker.remove(this.count_down);
@@ -79,7 +88,6 @@ class Mouse {
 
   mouse_move(event) {
     const mouse_position_player = event.data.getLocalPosition(viewport);
-    //TODO : Remove
     if(this.aiming_cone) {
       this.aiming_cone.rotation = radian(this.sprite, mouse_position_player);
     }
