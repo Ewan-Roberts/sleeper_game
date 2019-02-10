@@ -294,7 +294,6 @@ class Predator {
   is_predator_to(prey) {
     const predator          = this.entity;
     const { speed, damage } = predator.inventory.equipped_weapon;
-    const distance = distance_between_points(predator.sprite, prey.sprite);
 
     const attack_timer  = timer.createTimer(speed);
     attack_timer.repeat = 10;
@@ -310,6 +309,9 @@ class Predator {
     const movement_timer  = timer.createTimer(1000);
     movement_timer.repeat = 5;
     movement_timer.on('repeat', () => {
+      const distance =
+        distance_between_points(predator.sprite, prey.sprite);
+
       if(distance < 200) {
         predator.animation.attack();
 
