@@ -108,7 +108,6 @@ const frames = {
   },
 };
 
-
 class Human {
   constructor(sprite) {
     this.name   = 'animation';
@@ -121,9 +120,7 @@ class Human {
   }
 
   switch(weapon, action) {
-    if (this.state === action) {
-      return;
-    }
+    if (this.state === action) return;
 
     this.sprite.textures = frames[weapon][action];
     this.sprite.loop = true;

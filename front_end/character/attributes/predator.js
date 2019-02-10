@@ -2,7 +2,7 @@
 
 const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../engine/math');
+const { distance_between_points       } = require('../../utils/math');
 
 class Predator {
   constructor(entity) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const { viewport         } = require('../../engine/viewport');
-const { radian           } = require('../../engine/math');
+const { radian           } = require('../../utils/math');
 const { shoot_arrow      } = require('../../engine/bow');
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
 

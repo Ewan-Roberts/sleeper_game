@@ -5,7 +5,7 @@ const app  = require('../engine/app');
 
 const {
   generate_number_between_min_and_max,
-} = require('../engine/math');
+} = require('../utils/math');
 
 //https://www.uihere.com/free-graphics/search?q=knife
 const items = [
@@ -258,6 +258,16 @@ function get_random_items(max) {
   return item_array;
 }
 
+const get_item = name => {
+  let found_item = items.find(item => item.name === name);
+
+  if(!found_item) {
+    found_item = items.find(item => item.item_name === name);
+  }
+
+  return found_item;
+};
+
 const get_item_by_name = name => {
   const found_item = items.find(item => item.name === name);
 
@@ -294,6 +304,7 @@ const extract_image_by_item_object = item => {
 
 
 module.exports = {
+  get_item,
   get_item_by_name,
   get_item_by_id,
   get_random_items,

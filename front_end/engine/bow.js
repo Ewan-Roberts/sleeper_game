@@ -1,7 +1,7 @@
 'use strict';
 const PIXI         = require('pixi.js');
 
-const { radian } = require('./math');
+const { radian } = require('../utils/math');
 const { Dialog } = require('../cutscene/dialog_util');
 const {
   collision_container,

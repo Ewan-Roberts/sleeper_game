@@ -7,7 +7,7 @@ const {
   distance_between_points,
   generate_number_between_min_and_max,
   radian_positive,
-} = require('./math');
+} = require('../utils/math');
 
 const grid_container = viewport.getChildByName('grid_container');
 

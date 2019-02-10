@@ -44,7 +44,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_data":40}],2:[function(require,module,exports){
+},{"../../items/item_data":37}],2:[function(require,module,exports){
 'use strict';
 
 class Cutscene {
@@ -69,7 +69,7 @@ module.exports = {
 
 },{}],3:[function(require,module,exports){
 arguments[4][1][0].apply(exports,arguments)
-},{"../../items/item_data":40,"dup":1}],4:[function(require,module,exports){
+},{"../../items/item_data":37,"dup":1}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -211,11 +211,11 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":29,"../../engine/save_manager":31,"../../view/view_player_inventory":52}],5:[function(require,module,exports){
+},{"../../engine/pixi_containers":27,"../../engine/save_manager":29,"../../view/view_player_inventory":52}],5:[function(require,module,exports){
 'use strict';
 
 const { viewport         } = require('../../engine/viewport');
-const { radian           } = require('../../engine/math');
+const { radian           } = require('../../utils/math');
 const { shoot_arrow      } = require('../../engine/bow');
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
 
@@ -277,12 +277,12 @@ module.exports = {
   Mouse,
 };
 
-},{"../../engine/bow":24,"../../engine/math":27,"../../engine/viewport":34,"../../view/view_aiming_cone":50}],6:[function(require,module,exports){
+},{"../../engine/bow":24,"../../engine/viewport":31,"../../utils/math":48,"../../view/view_aiming_cone":50}],6:[function(require,module,exports){
 'use strict';
 
 const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../engine/math');
+const { distance_between_points       } = require('../../utils/math');
 
 class Predator {
   constructor(entity) {
@@ -333,14 +333,14 @@ module.exports = {
   Predator,
 };
 
-},{"../../engine/math":27,"../../engine/pathfind.js":28,"../../engine/ticker":33}],7:[function(require,module,exports){
+},{"../../engine/pathfind.js":26,"../../engine/ticker":30,"../../utils/math":48}],7:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
 
 const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../engine/math');
+const { distance_between_points       } = require('../../utils/math');
 const { critter_container             } = require('../../engine/pixi_containers');
 
 const min = 50;
@@ -363,7 +363,7 @@ class Prey {
     const movement_timer  = timer.createTimer(500);
     movement_timer.repeat = 20;
     movement_timer.on('repeat', () => {
-      if(distance < min||distance > max||!prey.vitals.alive) return;
+      if(distance < min || distance > max || !prey.vitals.alive) return;
 
       point_to_run_for.position.set(
         prey.sprite.x + (prey.sprite.x - predator.sprite.x),
@@ -381,7 +381,7 @@ module.exports = {
   Prey,
 };
 
-},{"../../engine/math":27,"../../engine/pathfind.js":28,"../../engine/pixi_containers":29,"../../engine/ticker":33,"pixi.js":246}],8:[function(require,module,exports){
+},{"../../engine/pathfind.js":26,"../../engine/pixi_containers":27,"../../engine/ticker":30,"../../utils/math":48,"pixi.js":246}],8:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -416,7 +416,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":33,"../../view/view_player_status_meter":53}],9:[function(require,module,exports){
+},{"../../engine/ticker":30,"../../view/view_player_status_meter":53}],9:[function(require,module,exports){
 'use strict';
 
 class Vitals {
@@ -611,7 +611,7 @@ module.exports = {
 
 
 
-},{"../engine/pathfind":28,"../engine/raycasting":30,"../engine/ticker":33,"../engine/viewport":34,"pixi.js":246}],11:[function(require,module,exports){
+},{"../engine/pathfind":26,"../engine/raycasting":28,"../engine/ticker":30,"../engine/viewport":31,"pixi.js":246}],11:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -722,7 +722,6 @@ const frames = {
   },
 };
 
-
 class Human {
   constructor(sprite) {
     this.name   = 'animation';
@@ -735,9 +734,7 @@ class Human {
   }
 
   switch(weapon, action) {
-    if (this.state === action) {
-      return;
-    }
+    if (this.state === action) return;
 
     this.sprite.textures = frames[weapon][action];
     this.sprite.loop = true;
@@ -914,7 +911,7 @@ module.exports = {
 'use strict';
 
 const { viewport  } = require('../../engine/viewport');
-const { construct } = require('../../engine/constructor');
+const { construct } = require('../../utils/constructor');
 
 const { Character } = require('../character_model');
 const { Cutscene  } = require('../attributes/cutscene');
@@ -935,7 +932,7 @@ module.exports = {
   Cutscene_Character,
 };
 
-},{"../../engine/constructor":25,"../../engine/viewport":34,"../attributes/cutscene":2,"../character_model":10}],14:[function(require,module,exports){
+},{"../../engine/viewport":31,"../../utils/constructor":47,"../attributes/cutscene":2,"../character_model":10}],14:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
@@ -965,11 +962,11 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":29,"../attributes/Inventory":1,"../attributes/predator":6,"../attributes/vitals":9,"../character_model":10,"./animations/character":11}],15:[function(require,module,exports){
+},{"../../engine/pixi_containers":27,"../attributes/Inventory":1,"../attributes/predator":6,"../attributes/vitals":9,"../character_model":10,"./animations/character":11}],15:[function(require,module,exports){
 'use strict';
 
 const { viewport  } = require('../../engine/viewport');
-const { construct } = require('../../engine/constructor');
+const { construct } = require('../../utils/constructor');
 
 const { Character } = require('../character_model');
 const { Dialog    } = require('../../cutscene/dialog_util');
@@ -1015,7 +1012,7 @@ module.exports = {
   Friend,
 };
 
-},{"../../cutscene/dialog_util":19,"../../engine/constructor":25,"../../engine/viewport":34,"../character_model":10}],16:[function(require,module,exports){
+},{"../../cutscene/dialog_util":19,"../../engine/viewport":31,"../../utils/constructor":47,"../character_model":10}],16:[function(require,module,exports){
 'use strict';
 
 const { viewport  } = require('../../engine/viewport.js');
@@ -1051,7 +1048,7 @@ module.exports = {
   Player,
 };
 
-},{"../../engine/viewport.js":34,"../attributes/inventory":3,"../attributes/keyboard":4,"../attributes/mouse":5,"../attributes/predator":6,"../attributes/status_bar":8,"../attributes/vitals":9,"../character_model":10,"./animations/character":11}],17:[function(require,module,exports){
+},{"../../engine/viewport.js":31,"../attributes/inventory":3,"../attributes/keyboard":4,"../attributes/mouse":5,"../attributes/predator":6,"../attributes/status_bar":8,"../attributes/vitals":9,"../character_model":10,"./animations/character":11}],17:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1108,7 +1105,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/pixi_containers":29,"../attributes/inventory":3,"../attributes/prey":7,"../attributes/vitals":9,"../character_model":10,"./animations/rat":12,"pixi.js":246}],18:[function(require,module,exports){
+},{"../../engine/pixi_containers":27,"../attributes/inventory":3,"../attributes/prey":7,"../attributes/vitals":9,"../character_model":10,"./animations/rat":12,"pixi.js":246}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1359,7 +1356,7 @@ module.exports = {
   Dialog,
 };
 
-},{"../engine/viewport":34,"pixi.js":246}],20:[function(require,module,exports){
+},{"../engine/viewport":31,"pixi.js":246}],20:[function(require,module,exports){
 'use strict';
 
 const { Cutscene_Character } = require('../character/types/cutscene_npc');
@@ -1407,7 +1404,7 @@ module.exports = {
   intro_cutscene,
 };
 
-},{"../character/types/cutscene_npc":13,"../engine/pathfind":28,"../engine/viewport.js":34,"./caption":18,"./dialog_util":19,"./speech_data":21,"./visual_effects":22}],21:[function(require,module,exports){
+},{"../character/types/cutscene_npc":13,"../engine/pathfind":26,"../engine/viewport.js":31,"./caption":18,"./dialog_util":19,"./speech_data":21,"./visual_effects":22}],21:[function(require,module,exports){
 'use strict';
 
 const lorium_text = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,';
@@ -1476,7 +1473,7 @@ module.exports = {
 
 
 
-},{"../engine/ticker":33,"../engine/viewport.js":34,"pixi.js":246}],23:[function(require,module,exports){
+},{"../engine/ticker":30,"../engine/viewport.js":31,"pixi.js":246}],23:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1499,11 +1496,11 @@ global.document.body.appendChild(app.view);
 module.exports = app;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./viewport":34,"pixi.js":246}],24:[function(require,module,exports){
+},{"./viewport":31,"pixi.js":246}],24:[function(require,module,exports){
 'use strict';
 const PIXI         = require('pixi.js');
 
-const { radian } = require('./math');
+const { radian } = require('../utils/math');
 const { Dialog } = require('../cutscene/dialog_util');
 const {
   collision_container,
@@ -1609,44 +1606,7 @@ module.exports = {
 };
 
 
-},{"../cutscene/dialog_util":19,"./math":27,"./pixi_containers":29,"pixi.js":246}],25:[function(require,module,exports){
-'use strict';
-
-function construct(BaseClass, ...Mixins) {
-  function copy_properties(target, source) {
-
-    const all_property_names = Object.getOwnPropertyNames(source).concat(Object.getOwnPropertySymbols(source));
-
-    all_property_names.forEach((property_name) => {
-      if (property_name.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
-        return;
-      Object.defineProperty(target, property_name, Object.getOwnPropertyDescriptor(source, property_name));
-    });
-  }
-
-  class Base extends BaseClass
-  {
-    constructor (...args) {
-      super(...args);
-
-      Mixins.forEach((Mixin) => {
-        copy_properties(this, new Mixin(...args));
-      });
-    }
-  }
-
-  Mixins.forEach(Mixin => {
-    copy_properties(Base.prototype, Mixin.prototype);
-  });
-
-  return Base;
-}
-
-module.exports = {
-  construct,
-};
-
-},{}],26:[function(require,module,exports){
+},{"../cutscene/dialog_util":19,"../utils/math":48,"./pixi_containers":27,"pixi.js":246}],25:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1835,51 +1795,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_data":40}],27:[function(require,module,exports){
-'use strict';
-
-function distance_between_points(point_1, point_2) {
-  const dx = point_2.x - point_1.x;
-  const dy = point_2.y - point_1.y;
-
-  return Math.sqrt((dx * dx) + (dy * dy));
-}
-
-function generate_number_between_min_and_max(min, max) {
-  return Math.floor(Math.random() * max) + min;
-}
-
-// -1.57 to 1.57
-function radian(anchor, point){
-  return Math.atan2(anchor.y - point.y, anchor.x - point.x);
-}
-
-// 0 - 3.14 always positive
-function radian_positive(anchor, point){
-  return Math.atan2(anchor.y - point.y, anchor.x - point.x) + 1.57;
-}
-
-// angle in degrees from -180 to 180
-function angle(anchor, point) {
-  return Math.atan2(point.y - anchor.y, point.x - anchor.x) * 180 / Math.PI;
-}
-
-// angle in degrees from 0 to 360
-function angle_360(anchor, point) {
-  return Math.atan2(anchor.y - point.y, anchor.x - point.x) * 180 / Math.PI + 180;
-}
-
-
-module.exports = {
-  angle,
-  radian_positive,
-  radian,
-  angle_360,
-  generate_number_between_min_and_max,
-  distance_between_points,
-};
-
-},{}],28:[function(require,module,exports){
+},{"../items/item_data":37}],26:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1890,7 +1806,7 @@ const {
   distance_between_points,
   generate_number_between_min_and_max,
   radian_positive,
-} = require('./math');
+} = require('../utils/math');
 
 const grid_container = viewport.getChildByName('grid_container');
 
@@ -2365,7 +2281,7 @@ setInterval(()=>{
 //}
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./math":27,"./viewport":34,"@createjs/tweenjs":54,"easystarjs":65,"pixi.js":246}],29:[function(require,module,exports){
+},{"../utils/math":48,"./viewport":31,"@createjs/tweenjs":54,"easystarjs":65,"pixi.js":246}],27:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2466,7 +2382,7 @@ module.exports = {
 
 
 
-},{"./viewport":34,"pixi.js":246}],30:[function(require,module,exports){
+},{"./viewport":31,"pixi.js":246}],28:[function(require,module,exports){
 'use strict';
 
 function get_intersection(ray, segment){
@@ -2509,10 +2425,10 @@ module.exports = {
   get_intersection,
 };
 
-},{}],31:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
-const { save_user } = require('./socket');
+const { save_user } = require('../utils/socket');
 
 class Game {
   constructor(player_data) {
@@ -2537,55 +2453,7 @@ module.exports = {
   Game,
 };
 
-},{"./socket":32}],32:[function(require,module,exports){
-(function (global){
-'use strict';
-
-const io     = require('socket.io-client');
-const socket = io.connect();
-
-function register_user(user_details) {
-  socket.emit('register', user_details);
-}
-
-function get_user(user_details) {
-  socket.emit('get_user', user_details);
-}
-
-function save_user(user_details) {
-  socket.emit('update_user', user_details);
-}
-
-socket.on('user_register_success', response => {
-  if(response.error) {
-    throw new Error(response.error);
-  }
-
-  const overlay = global.document.querySelector('.response_overlay');
-  overlay.style.display = 'block';
-
-  const response_overlay_tags = global.document.querySelectorAll('.response_overlay p');
-  response_overlay_tags[0].innerHTML = response.user_name;
-  response_overlay_tags[1].innerHTML = response.password;
-});
-
-socket.on('find_user_success', response => {
-  console.log(response);
-});
-
-socket.on('update_user_success', response => {
-  console.log(response);
-});
-
-module.exports = {
-  register_user,
-  get_user,
-  save_user,
-  socket,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"socket.io-client":288}],33:[function(require,module,exports){
+},{"../utils/socket":49}],30:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2612,7 +2480,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":23,"pixi-timer":115,"pixi-tween":116,"pixi.js":246}],34:[function(require,module,exports){
+},{"./app":23,"pixi-timer":115,"pixi-tween":116,"pixi.js":246}],31:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2639,7 +2507,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi-viewport":129}],35:[function(require,module,exports){
+},{"pixi-viewport":129}],32:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2663,7 +2531,7 @@ loader.load(async function() {
   require('./engine/inventory_manager');
 });
 
-},{"./engine/app":23,"./engine/inventory_manager":26,"./engine/pixi_containers":29,"./engine/ticker":33,"./level/development/dev_level.js":47,"pixi-packer-parser":114,"pixi.js":246}],36:[function(require,module,exports){
+},{"./engine/app":23,"./engine/inventory_manager":25,"./engine/pixi_containers":27,"./engine/ticker":30,"./level/development/dev_level.js":44,"pixi-packer-parser":114,"pixi.js":246}],33:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2715,7 +2583,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./item_model":41,"pixi.js":246}],37:[function(require,module,exports){
+},{"./item_model":38,"pixi.js":246}],34:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2744,7 +2612,7 @@ module.exports = {
   Backpack,
 };
 
-},{"./item_model":41,"pixi.js":246}],38:[function(require,module,exports){
+},{"./item_model":38,"pixi.js":246}],35:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2818,7 +2686,7 @@ module.exports = {
   Chest,
 };
 
-},{"../character/attributes/inventory":3,"./item_model":41,"pixi.js":246}],39:[function(require,module,exports){
+},{"../character/attributes/inventory":3,"./item_model":38,"pixi.js":246}],36:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2887,7 +2755,7 @@ module.exports = {
   Campfire,
 };
 
-},{"./item_model":41,"pixi.js":246}],40:[function(require,module,exports){
+},{"./item_model":38,"pixi.js":246}],37:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -2895,7 +2763,7 @@ const app  = require('../engine/app');
 
 const {
   generate_number_between_min_and_max,
-} = require('../engine/math');
+} = require('../utils/math');
 
 //https://www.uihere.com/free-graphics/search?q=knife
 const items = [
@@ -3148,6 +3016,16 @@ function get_random_items(max) {
   return item_array;
 }
 
+const get_item = name => {
+  let found_item = items.find(item => item.name === name);
+
+  if(!found_item) {
+    found_item = items.find(item => item.item_name === name);
+  }
+
+  return found_item;
+};
+
 const get_item_by_name = name => {
   const found_item = items.find(item => item.name === name);
 
@@ -3184,6 +3062,7 @@ const extract_image_by_item_object = item => {
 
 
 module.exports = {
+  get_item,
   get_item_by_name,
   get_item_by_id,
   get_random_items,
@@ -3192,7 +3071,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":23,"../engine/math":27,"pixi.js":246}],41:[function(require,module,exports){
+},{"../engine/app":23,"../utils/math":48,"pixi.js":246}],38:[function(require,module,exports){
 'use strict';
 
 const { viewport } = require('../engine/viewport.js');
@@ -3234,9 +3113,9 @@ module.exports = {
   Item,
 };
 
-},{"../engine/viewport.js":34}],42:[function(require,module,exports){
-arguments[4][36][0].apply(exports,arguments)
-},{"./item_model":41,"dup":36,"pixi.js":246}],43:[function(require,module,exports){
+},{"../engine/viewport.js":31}],39:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"./item_model":38,"dup":33,"pixi.js":246}],40:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -4011,7 +3890,7 @@ module.exports={ "height":100,
  "version":1,
  "width":95
 }
-},{}],44:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 module.exports={ "columns":38,
  "image":"..\/..\/..\/..\/assets\/bedroom\/flat_floor2.jpg",
  "imageheight":5500,
@@ -8062,7 +7941,7 @@ module.exports={ "columns":38,
  "tilewidth":100,
  "type":"tileset"
 }
-},{}],45:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -8203,7 +8082,7 @@ module.exports={ "height":100,
  "version":1,
  "width":95
 }
-},{}],46:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports={ "columns":20,
  "image":"..\/..\/..\/..\/assets\/debug\/debug_room.jpg",
  "imageheight":1700,
@@ -8654,7 +8533,7 @@ module.exports={ "columns":20,
  "tilewidth":100,
  "type":"tileset"
 }
-},{}],47:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /* eslint-disable */  // --> OFF
 'use strict';
 const PIXI = require('pixi.js');
@@ -8846,7 +8725,7 @@ module.exports = {
 
 
 
-},{"../../character/attributes/inventory":3,"../../character/types/enemy":14,"../../character/types/player.js":16,"../../character/types/rat":17,"../../cutscene/intro.js":20,"../../engine/viewport":34,"../../items/Note":36,"../../items/back_pack":37,"../../items/chest":38,"../../items/fire_place":39,"../../items/item_data":40,"../../view/view_inventory":51,"../../view/view_player_inventory":52,"../bedroom/bedroom_map_output.json":43,"../bedroom/bedroom_map_tiled.json":44,"../debug/debug_map_output.json":45,"../debug/debug_map_tiles.json":46,"../level_utils":49,"pixi.js":246}],48:[function(require,module,exports){
+},{"../../character/attributes/inventory":3,"../../character/types/enemy":14,"../../character/types/player.js":16,"../../character/types/rat":17,"../../cutscene/intro.js":20,"../../engine/viewport":31,"../../items/Note":33,"../../items/back_pack":34,"../../items/chest":35,"../../items/fire_place":36,"../../items/item_data":37,"../../view/view_inventory":51,"../../view/view_player_inventory":52,"../bedroom/bedroom_map_output.json":40,"../bedroom/bedroom_map_tiled.json":41,"../debug/debug_map_output.json":42,"../debug/debug_map_tiles.json":43,"../level_utils":46,"pixi.js":246}],45:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');
@@ -8929,7 +8808,7 @@ module.exports = {
   Door,
 };
 
-},{"../engine/viewport":34,"@createjs/tweenjs":54,"pixi.js":246}],49:[function(require,module,exports){
+},{"../engine/viewport":31,"@createjs/tweenjs":54,"pixi.js":246}],46:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9216,7 +9095,136 @@ module.exports = {
 
 
 
-},{"../character/types/enemy.js":14,"../character/types/friend.js":15,"../character/types/player.js":16,"../character/types/rat":17,"../engine/pathfind.js":28,"../engine/viewport":34,"../items/chest":38,"../items/fire_place":39,"../items/note":42,"./door.js":48,"pixi.js":246}],50:[function(require,module,exports){
+},{"../character/types/enemy.js":14,"../character/types/friend.js":15,"../character/types/player.js":16,"../character/types/rat":17,"../engine/pathfind.js":26,"../engine/viewport":31,"../items/chest":35,"../items/fire_place":36,"../items/note":39,"./door.js":45,"pixi.js":246}],47:[function(require,module,exports){
+'use strict';
+
+function construct(BaseClass, ...Mixins) {
+  function copy_properties(target, source) {
+
+    const all_property_names = Object.getOwnPropertyNames(source).concat(Object.getOwnPropertySymbols(source));
+
+    all_property_names.forEach((property_name) => {
+      if (property_name.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
+        return;
+      Object.defineProperty(target, property_name, Object.getOwnPropertyDescriptor(source, property_name));
+    });
+  }
+
+  class Base extends BaseClass
+  {
+    constructor (...args) {
+      super(...args);
+
+      Mixins.forEach((Mixin) => {
+        copy_properties(this, new Mixin(...args));
+      });
+    }
+  }
+
+  Mixins.forEach(Mixin => {
+    copy_properties(Base.prototype, Mixin.prototype);
+  });
+
+  return Base;
+}
+
+module.exports = {
+  construct,
+};
+
+},{}],48:[function(require,module,exports){
+'use strict';
+
+function distance_between_points(point_1, point_2) {
+  const dx = point_2.x - point_1.x;
+  const dy = point_2.y - point_1.y;
+
+  return Math.sqrt((dx * dx) + (dy * dy));
+}
+
+function generate_number_between_min_and_max(min, max) {
+  return Math.floor(Math.random() * max) + min;
+}
+
+// -1.57 to 1.57
+function radian(anchor, point){
+  return Math.atan2(anchor.y - point.y, anchor.x - point.x);
+}
+
+// 0 - 3.14 always positive
+function radian_positive(anchor, point){
+  return Math.atan2(anchor.y - point.y, anchor.x - point.x) + 1.57;
+}
+
+// angle in degrees from -180 to 180
+function angle(anchor, point) {
+  return Math.atan2(point.y - anchor.y, point.x - anchor.x) * 180 / Math.PI;
+}
+
+// angle in degrees from 0 to 360
+function angle_360(anchor, point) {
+  return Math.atan2(anchor.y - point.y, anchor.x - point.x) * 180 / Math.PI + 180;
+}
+
+
+module.exports = {
+  angle,
+  radian_positive,
+  radian,
+  angle_360,
+  generate_number_between_min_and_max,
+  distance_between_points,
+};
+
+},{}],49:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const io     = require('socket.io-client');
+const socket = io.connect();
+
+function register_user(user_details) {
+  socket.emit('register', user_details);
+}
+
+function get_user(user_details) {
+  socket.emit('get_user', user_details);
+}
+
+function save_user(user_details) {
+  socket.emit('update_user', user_details);
+}
+
+socket.on('user_register_success', response => {
+  if(response.error) {
+    throw new Error(response.error);
+  }
+
+  const overlay = global.document.querySelector('.response_overlay');
+  overlay.style.display = 'block';
+
+  const response_overlay_tags = global.document.querySelectorAll('.response_overlay p');
+  response_overlay_tags[0].innerHTML = response.user_name;
+  response_overlay_tags[1].innerHTML = response.password;
+});
+
+socket.on('find_user_success', response => {
+  console.log(response);
+});
+
+socket.on('update_user_success', response => {
+  console.log(response);
+});
+
+module.exports = {
+  register_user,
+  get_user,
+  save_user,
+  socket,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"socket.io-client":288}],50:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9261,7 +9269,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":29,"../engine/ticker":33,"pixi.js":246}],51:[function(require,module,exports){
+},{"../engine/pixi_containers":27,"../engine/ticker":30,"pixi.js":246}],51:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9307,7 +9315,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/viewport":34,"pixi.js":246}],52:[function(require,module,exports){
+},{"../engine/viewport":31,"pixi.js":246}],52:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -9509,7 +9517,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_data":40}],53:[function(require,module,exports){
+},{"../items/item_data":37}],53:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -64327,4 +64335,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[35]);
+},{}]},{},[32]);

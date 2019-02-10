@@ -4,7 +4,7 @@ const PIXI = require('pixi.js');
 
 const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../engine/math');
+const { distance_between_points       } = require('../../utils/math');
 const { critter_container             } = require('../../engine/pixi_containers');
 
 const min = 50;
@@ -27,7 +27,7 @@ class Prey {
     const movement_timer  = timer.createTimer(500);
     movement_timer.repeat = 20;
     movement_timer.on('repeat', () => {
-      if(distance < min||distance > max||!prey.vitals.alive) return;
+      if(distance < min || distance > max || !prey.vitals.alive) return;
 
       point_to_run_for.position.set(
         prey.sprite.x + (prey.sprite.x - predator.sprite.x),

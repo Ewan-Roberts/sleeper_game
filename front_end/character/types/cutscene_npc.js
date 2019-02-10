@@ -1,7 +1,7 @@
 'use strict';
 
 const { viewport  } = require('../../engine/viewport');
-const { construct } = require('../../engine/constructor');
+const { construct } = require('../../utils/constructor');
 
 const { Character } = require('../character_model');
 const { Cutscene  } = require('../attributes/cutscene');
