@@ -62,7 +62,6 @@ May not looks very pretty but an important landmark for the engine
 - major refactor (on-going)
 
 ## Update 16.12.18:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_3.png)
 - auto-generating captions
 - server-side inventory management (basic)
 - cutscene npc models 
