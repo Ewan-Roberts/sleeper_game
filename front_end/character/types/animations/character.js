@@ -2,8 +2,6 @@
 
 const PIXI = require('pixi.js');
 
-const { viewport  } = require('../../../engine/viewport.js');
-
 function bow_idle_frames() {
   const bow_frames = [];
   for (let i = 0; i <= 21; i += 1) {
@@ -112,7 +110,7 @@ const frames = {
 
 class Human_Animations {
   constructor(sprite) {
-    this.name = 'animation';
+    this.name   = 'animation';
     this.sprite = sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.height /= 2;
@@ -134,6 +132,11 @@ class Human_Animations {
 
   face_up() {
     this.sprite.rotation = -2;
+  }
+
+  ready_weapon() {
+    this.animation_switch(this.weapon, 'ready');
+    this.sprite.loop = false;
   }
 
   face_down() {

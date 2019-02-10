@@ -38,6 +38,7 @@ class DevelopmentLevel {
     player.inventory_manager.inventory_slot('rat_femur', 1);
     player.inventory_manager.inventory_slot('meat', 2);
     player.inventory_manager.inventory_slot('skull_cap_bone', 3);
+    player.inventory.equip_weapon('bow');
     //player.add_raycasting(this.level.segments);
 
     this.load_test_level();
