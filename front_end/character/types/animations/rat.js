@@ -67,10 +67,32 @@ class rat_animations {
   }
 }
 
-module.exports = {
+const frames = {
   move: rat_animations.move_frames(),
   wait: rat_animations.wait_frames(),
   dead: rat_animations.dead_frames(),
   eat: rat_animations.eat_frames(),
 };
 
+class Rodent {
+  constructor(sprite) {
+    this.name = 'animation';
+    this.sprite = sprite;
+    this.sprite.anchor.set(0.5);
+  }
+
+  switch(action) {
+    if (this.state === action) {
+      return;
+    }
+
+    this.sprite.textures = frames[action];
+    this.sprite.loop = true;
+    this.sprite.play();
+    this.state = action;
+  }
+}
+
+module.exports = {
+  Rodent,
+};

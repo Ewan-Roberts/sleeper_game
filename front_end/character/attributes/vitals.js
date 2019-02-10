@@ -20,6 +20,7 @@ class Vitals {
   }
 
   damage(hit_point) {
+    if (!hit_point) throw new Error('No damage being recieved')
     if(( this.health - hit_point) < 0) {
       this.status = 'dead';
 

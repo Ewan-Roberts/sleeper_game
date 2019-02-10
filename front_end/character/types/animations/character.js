@@ -97,6 +97,7 @@ const frames = {
     idle:   idle_frames(),
   },
   knife: {
+    idle:   idle_frames(),
     attack: knife_attack_frames(),
     walk:   knife_walk_frames(),
   },
@@ -119,7 +120,7 @@ class Human {
     this.idle(this.weapon);
   }
 
-  animation_switch(weapon, action) {
+  switch(weapon, action) {
     if (this.state === action) {
       return;
     }
@@ -135,7 +136,7 @@ class Human {
   }
 
   ready_weapon() {
-    this.animation_switch(this.weapon, 'ready');
+    this.switch(this.weapon, 'ready');
     this.sprite.loop = false;
   }
 
@@ -155,8 +156,12 @@ class Human {
     this.weapon = weapon;
   }
 
+  attack() {
+    this.switch(this.weapon, 'attack');
+  }
+
   idle() {
-    this.animation_switch(this.weapon, 'idle');
+    this.switch(this.weapon, 'idle');
   }
 
   stop() {
@@ -180,7 +185,7 @@ class Human {
   }
 
   walk() {
-    this.animation_switch(this.weapon, 'walk');
+    this.switch(this.weapon, 'walk');
   }
 }
 
@@ -188,9 +193,5 @@ class Human {
 module.exports = {
   Human,
 };
-
-
-
-
 
 

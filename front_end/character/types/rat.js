@@ -2,7 +2,6 @@
 
 const PIXI          = require('pixi.js');
 const { viewport  } = require('../../engine/viewport');
-const { construct } = require('../../engine/constructor');
 
 const { Character } = require('../character_model');
 const { Inventory } = require('../attributes/inventory');
@@ -10,23 +9,22 @@ const { Vitals    } = require('../attributes/vitals');
 const { Prey      } = require('../attributes/prey');
 
 const critter_container = viewport.getChildByName('critter_container');
-const rat_animations = require('./animations/rat');
+const { Rodent } = require('./animations/rat');
 
-class Rat extends construct(Character) {
+class Rat extends Character {
   constructor() {
     super();
     this.name = 'rat';
 
-    this.sprite = new PIXI.extras.AnimatedSprite(rat_animations.move);
-    this.sprite.animations = rat_animations;
-    this.sprite.anchor.set(0.5);
-    this.sprite.name = 'rat';
-    this.sprite.height *= 2;
-    this.sprite.width *= 2;
+    const texture = [PIXI.Texture.fromFrame('bunny')];
 
-    this.addComponent(new Vitals());
-    this.addComponent(new Prey(this));
-    this.addComponent(new Inventory());
+    this.sprite = new PIXI.extras.AnimatedSprite(texture);
+
+    this.add_component(new Rodent(this.sprite));
+
+    this.add_component(new Vitals());
+    this.add_component(new Prey(this));
+    this.add_component(new Inventory());
 
     this.inventory.populate_random_inventory();
 

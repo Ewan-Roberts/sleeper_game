@@ -10,11 +10,13 @@ const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
 const { Note      } = require('../../items/Note');
 const { Backpack  } = require('../../items/back_pack');
+const { get_item_by_name } = require('../../items/item_data');
 const { Level     } = require('../level_utils');
 
 //const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
+
 const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
 const { Rat             } = require('../../character/types/rat');
@@ -48,18 +50,24 @@ class DevelopmentLevel {
     //inventory_test.populate_random_inventory(player);
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
-    //const enemy = new Enemy();
-    //enemy.sprite.position.set(1550,1000);
-    //enemy.with_light();
+    const enemy = new Enemy();
+    const knife = get_item_by_name('rusty_knife');
+    enemy.animation.weapon = 'knife';
+    enemy.inventory.equip_weapon(knife);
 
-    //const rat = new Rat();
-    //rat.set_position({x: 900, y: 1200});
-    //rat.lootable_on_death();
 
-    //rat.prey_controller.is_prey_to(enemy);
-    //rat.prey_controller.is_prey_to(player);
+    enemy.sprite.position.set(1550,1000);
+    enemy.with_light();
 
-    //enemy.predator_controller.is_predator_to(rat);
+    const rat = new Rat();
+    rat.set_position({x: 900, y: 1200});
+    rat.lootable_on_death();
+    rat.animation.switch('move');
+
+    rat.prey.is_prey_to(enemy);
+    rat.prey.is_prey_to(player);
+
+    enemy.predator.is_predator_to(rat);
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 

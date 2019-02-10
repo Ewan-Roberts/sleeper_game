@@ -92,6 +92,7 @@ module.exports = {
   collision_container,
   critter_container,
   gui_container,
+  enemy_container,
 };
 
 

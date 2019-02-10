@@ -14,7 +14,7 @@ class Prey {
   constructor(entity) {
     this.entity = entity;
     this.type   = 'prey';
-    this.name   = 'prey_controller';
+    this.name   = 'prey';
   }
 
   is_prey_to({ 'sprite': predator_sprite }) {
