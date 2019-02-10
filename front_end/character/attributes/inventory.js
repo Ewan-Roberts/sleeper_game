@@ -10,29 +10,25 @@ class Inventory {
   }
 
   equip_weapon(item) {
+    if(!item.name) throw new Error('No weapon name for ' + item);
+
     this.equipped = item;
   }
 
   get equipped_weapon() {
-    if(!this.equipped) {
-      throw new Error('this character has no weapon equipped');
-    }
+    if(!this.equipped) throw new Error('No weapon equipped');
 
     return this.equipped;
   }
 
   get weapon_speed() {
-    if(!this.equipped) {
-      throw new Error('this character has no weapon equipped');
-    }
+    if(!this.equipped) throw new Error('No weapon equipped');
 
     return this.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.equipped) {
-      throw new Error('this character has no weapon equipped');
-    }
+    if(!this.equipped) throw new Error('No weapon equipped');
 
     return this.equipped.damage;
   }

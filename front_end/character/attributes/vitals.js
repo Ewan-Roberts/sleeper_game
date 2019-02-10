@@ -3,7 +3,6 @@
 class Vitals {
   constructor() {
     this.name           ='vitals';
-
     this.movement_speed = 15;
     this.power          = 1000;
     this.health         = 100;
@@ -15,13 +14,12 @@ class Vitals {
   }
 
   kill() {
-    //death animation
-    //this.entity.animation_switch('knife', 'attack');
+    //this.entity.switch('dead');
   }
 
   damage(hit_point) {
-    if (!hit_point) throw new Error('No damage being recieved')
-    if(( this.health - hit_point) < 0) {
+    if (!hit_point) throw new Error('No damage being recieved');
+    if( (this.health - hit_point) < 0) {
       this.status = 'dead';
 
       throw `${this.name} doesnt have enough health`;
@@ -31,11 +29,7 @@ class Vitals {
   }
 
   get alive() {
-    if(this.status === 'alive') {
-      return true;
-    }
-
-    return false;
+    return (this.status === 'alive');
   }
 
   increase_food(number) {

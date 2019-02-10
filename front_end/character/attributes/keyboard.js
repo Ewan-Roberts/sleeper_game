@@ -3,7 +3,7 @@
 const { Game                } = require('../../engine/save_manager');
 const { collision_container } = require('../../engine/pixi_containers');
 
-const { HUD } = require('../../view/view_player_inventory');
+const { View_HUD } = require('../../view/view_player_inventory');
 
 const keymap = {
   w: 'up',
@@ -56,7 +56,7 @@ class Keyboard {
       case 'right': this.keyboard_right();         return;
       case 'n'    : this.save_game();              return;
       case 'o'    : this.start_intro();            return;
-      case 'i'    : HUD.toggle_player_inventory(); return;
+      case 'i'    : View_HUD.toggle_player_inventory(); return;
     }
   }
 

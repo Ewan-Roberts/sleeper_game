@@ -1,9 +1,15 @@
 'use strict';
-
 const PIXI         = require('pixi.js');
-const { viewport } = require('./viewport.js');
-const { radian   } = require('./math');
-const { Dialog   } = require('../cutscene/dialog_util');
+
+const { radian } = require('./math');
+const { Dialog } = require('../cutscene/dialog_util');
+const {
+  collision_container,
+  enemy_container,
+  door_container,
+  critter_container,
+  arrow_container,
+} = require('./pixi_containers');
 
 class Arrow {
   constructor() {
@@ -13,7 +19,7 @@ class Arrow {
     this.sprite.anchor.set(0.95);
     this.sprite.height *= 3;
 
-    viewport.getChildByName('arrow_container').addChild(this.sprite);
+    arrow_container.addChild(this.sprite);
   }
 }
 
@@ -42,25 +48,25 @@ function create_arrow_tween(arrow, power, arrow_path) {
   return arrow_tween;
 }
 
-function arrow_management(power, origin, target) {
+function shoot_arrow(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin,target);
+  const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
-    viewport.getChildByName('enemy_container').children.forEach(enemy => {
+    enemy_container.children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
         arrow.destroy();
-        Dialog.speak_above_sprite(enemy, 'i am hit');
+        Dialog.speak_above_sprite(enemy, 'I am hit');
         return;
       }
     });
 
-    viewport.getChildByName('collision_items').children.forEach(object => {
+    collision_container.children.forEach(object => {
       if(!object.hitable_with_arrow) return;
 
       if(object.containsPoint(arrow_point)){
@@ -70,7 +76,7 @@ function arrow_management(power, origin, target) {
       }
     });
 
-    viewport.getChildByName('door_container').children.forEach(door => {
+    door_container.children.forEach(door => {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
@@ -85,7 +91,7 @@ function arrow_management(power, origin, target) {
       }
     });
 
-    viewport.getChildByName('critter_container').children.forEach(critter => {
+    critter_container.children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
         arrow.rotation = radian(target, origin);
@@ -97,6 +103,6 @@ function arrow_management(power, origin, target) {
 }
 
 module.exports = {
-  arrow_management,
+  shoot_arrow,
 };
 

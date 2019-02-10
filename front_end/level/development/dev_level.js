@@ -1,27 +1,26 @@
 /* eslint-disable */  // --> OFF
-
 'use strict';
 const PIXI = require('pixi.js');
 
 const { viewport  } = require('../../engine/viewport');
-
 const { Player    } = require('../../character/types/player.js');
 const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
 const { Note      } = require('../../items/Note');
 const { Backpack  } = require('../../items/back_pack');
-const { get_item_by_name } = require('../../items/item_data');
-const { Level     } = require('../level_utils');
 
+const { get_item_by_name } = require('../../items/item_data');
 //const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
 
+const { Level           } = require('../level_utils');
 const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
 const { Rat             } = require('../../character/types/rat');
 const { Inventory       } = require('../../character/attributes/inventory');
 const { View_Inventory  } = require('../../view/view_inventory');
+const { View_HUD        } = require('../../view/view_player_inventory');
 
 class DevelopmentLevel {
   constructor() {
@@ -29,18 +28,20 @@ class DevelopmentLevel {
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
-    player.hud.add_head('old_bandana');
-    player.hud.add_hat('old_helmet');
-    player.hud.add_chest('old_clothes');
-    player.hud.add_shoes('old_boots');
-    player.hud.add_background('merc_portrait');
-    player.hud.add_primary_weapon('wrench_blade');
-    player.hud.add_secondary_weapon('rusty_knife');
-    player.hud.inventory_slot('rat_leg_bone', 0);
-    player.hud.inventory_slot('rat_femur', 1);
-    player.hud.inventory_slot('meat', 2);
-    player.hud.inventory_slot('skull_cap_bone', 3);
-    player.inventory.equip_weapon('bow');
+    const bow = get_item_by_name('old_bow');
+    player.inventory.equip_weapon(bow);
+
+    View_HUD.add_head('old_bandana');
+    View_HUD.add_hat('old_helmet');
+    View_HUD.add_chest('old_clothes');
+    View_HUD.add_shoes('old_boots');
+    //View_HUD.add_background('merc_portrait');
+    View_HUD.add_primary_weapon('wrench_blade');
+    View_HUD.add_secondary_weapon('rusty_knife');
+    View_HUD.inventory_slot('rat_leg_bone', 0);
+    View_HUD.inventory_slot('rat_femur', 1);
+    View_HUD.inventory_slot('meat', 2);
+    View_HUD.inventory_slot('skull_cap_bone', 3);
     //player.add_raycasting(this.level.segments);
 
     this.load_test_level();

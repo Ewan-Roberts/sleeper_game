@@ -2,8 +2,8 @@
 
 const { viewport         } = require('../../engine/viewport');
 const { radian           } = require('../../engine/math');
-const { arrow_management } = require('../../engine/bow');
-const { Aiming_Cone      } = require('../../view/view_aiming_cone');
+const { shoot_arrow      } = require('../../engine/bow');
+const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
 
 class Mouse {
   constructor(entity) {
@@ -23,26 +23,27 @@ class Mouse {
     const origin = this.entity.sprite;
 
     const { equipped_weapon } = this.entity.inventory;
-    const { power          } = this.entity.vitals;
+    const { power           } = this.entity.vitals;
 
+    //TODO: consider weapon management system
     switch(equipped_weapon) {
-      case 'bow': arrow_management(power, origin, target); return;
+      case 'bow': shoot_arrow(power, origin, target); return;
     }
   }
 
   mouse_down(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
-    const direction = radian(mouse_position, this.entity.sprite);
+    const direction      = radian(mouse_position, this.entity.sprite);
 
     this.entity.animation.ready_weapon();
-
     this.entity.sprite.rotation = direction;
 
     const { cone_timer, cone } =
-      Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
+      View_Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
 
+    //TODO remove cone manageemnt out of here
     this.cone_timer = cone_timer;
-    this.cone = cone;
+    this.cone       = cone;
     this.cone_timer.start();
   }
 
@@ -51,6 +52,7 @@ class Mouse {
 
     this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
 
+    //TODO remove -1.57
     if(this.cone) {
       this.cone.rotation = this.entity.sprite.rotation - 1.57;
     }

@@ -1,7 +1,6 @@
 'use strict';
 
 const { viewport  } = require('../../engine/viewport.js');
-const { HUD       } = require('../../view/view_player_inventory');
 
 const { Character } = require('../character_model');
 const { Human     } = require('./animations/character');
@@ -17,9 +16,6 @@ class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
-
-    //player specific
-    this.add_component(new HUD());
 
     this.add_component(new Human(this.sprite));
     this.add_component(new Keyboard(this));

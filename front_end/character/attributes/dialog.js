@@ -2,7 +2,7 @@
 
 class Dialog {
   constructor() {
-    this.name = 'dialog_controller';
+    this.name = 'dialog';
   }
 }
 

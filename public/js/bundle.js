@@ -11,29 +11,25 @@ class Inventory {
   }
 
   equip_weapon(item) {
+    if(!item.name) throw new Error('No weapon name for ' + item);
+
     this.equipped = item;
   }
 
   get equipped_weapon() {
-    if(!this.equipped) {
-      throw new Error('this character has no weapon equipped');
-    }
+    if(!this.equipped) throw new Error('No weapon equipped');
 
     return this.equipped;
   }
 
   get weapon_speed() {
-    if(!this.equipped) {
-      throw new Error('this character has no weapon equipped');
-    }
+    if(!this.equipped) throw new Error('No weapon equipped');
 
     return this.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.equipped) {
-      throw new Error('this character has no weapon equipped');
-    }
+    if(!this.equipped) throw new Error('No weapon equipped');
 
     return this.equipped.damage;
   }
@@ -53,24 +49,16 @@ module.exports = {
 
 class Cutscene {
   constructor(sprite) {
-    this.name = 'cutscene_manager';
+    this.name   = 'cutscene';
     this.sprite = sprite;
   }
 
   facing(direction) {
     switch(direction) {
-      case 'up':
-        this.sprite.rotation = 4.17;
-        return;
-      case 'right':
-        this.sprite.rotation = 0;
-        return;
-      case 'down':
-        this.sprite.rotation = 1.57;
-        return;
-      case 'left':
-        this.sprite.rotation = 3.14;
-        return;
+      case 'up':    this.sprite.rotation = 4.17; return;
+      case 'right': this.sprite.rotation = 0;    return;
+      case 'down':  this.sprite.rotation = 1.57; return;
+      case 'left':  this.sprite.rotation = 3.14; return;
     }
   }
 }
@@ -88,7 +76,7 @@ arguments[4][1][0].apply(exports,arguments)
 const { Game                } = require('../../engine/save_manager');
 const { collision_container } = require('../../engine/pixi_containers');
 
-const { HUD } = require('../../view/view_player_inventory');
+const { View_HUD } = require('../../view/view_player_inventory');
 
 const keymap = {
   w: 'up',
@@ -141,7 +129,7 @@ class Keyboard {
       case 'right': this.keyboard_right();         return;
       case 'n'    : this.save_game();              return;
       case 'o'    : this.start_intro();            return;
-      case 'i'    : HUD.toggle_player_inventory(); return;
+      case 'i'    : View_HUD.toggle_player_inventory(); return;
     }
   }
 
@@ -228,8 +216,8 @@ module.exports = {
 
 const { viewport         } = require('../../engine/viewport');
 const { radian           } = require('../../engine/math');
-const { arrow_management } = require('../../engine/bow');
-const { Aiming_Cone      } = require('../../view/view_aiming_cone');
+const { shoot_arrow      } = require('../../engine/bow');
+const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
 
 class Mouse {
   constructor(entity) {
@@ -249,26 +237,27 @@ class Mouse {
     const origin = this.entity.sprite;
 
     const { equipped_weapon } = this.entity.inventory;
-    const { power          } = this.entity.vitals;
+    const { power           } = this.entity.vitals;
 
+    //TODO: consider weapon management system
     switch(equipped_weapon) {
-      case 'bow': arrow_management(power, origin, target); return;
+      case 'bow': shoot_arrow(power, origin, target); return;
     }
   }
 
   mouse_down(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
-    const direction = radian(mouse_position, this.entity.sprite);
+    const direction      = radian(mouse_position, this.entity.sprite);
 
     this.entity.animation.ready_weapon();
-
     this.entity.sprite.rotation = direction;
 
     const { cone_timer, cone } =
-      Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
+      View_Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
 
+    //TODO remove cone manageemnt out of here
     this.cone_timer = cone_timer;
-    this.cone = cone;
+    this.cone       = cone;
     this.cone_timer.start();
   }
 
@@ -277,6 +266,7 @@ class Mouse {
 
     this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
 
+    //TODO remove -1.57
     if(this.cone) {
       this.cone.rotation = this.entity.sprite.rotation - 1.57;
     }
@@ -302,46 +292,39 @@ class Predator {
   }
 
   is_predator_to(prey) {
-    const min_distance = 10;
-    const max_distance = 700;
-    const { 'sprite': prey_sprite     } = prey;
-    const { 'sprite': predator_sprite } = this.entity;
-    const { speed, damage             } = this.entity.inventory.equipped_weapon;
+    const predator          = this.entity;
+    const { speed, damage } = predator.inventory.equipped_weapon;
+    const distance = distance_between_points(predator.sprite, prey.sprite);
 
     const attack_timer  = timer.createTimer(speed);
     attack_timer.repeat = 10;
     attack_timer.on('repeat', () => {
-      prey.vitals.damage(damage);
-
       if(!prey.vitals.alive){
         prey.animation.switch('dead');
-        this.entity.sprite.stop();
+        predator.sprite.stop();
       }
+
+      prey.vitals.damage(damage);
     }).start();
 
     const movement_timer  = timer.createTimer(1000);
     movement_timer.repeat = 5;
     movement_timer.on('repeat', () => {
-      const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
-
-      if(distance_to_act < 200) {
-        this.entity.animation.attack();
+      if(distance < 200) {
+        predator.animation.attack();
 
         attack_timer.start();
       } else {
+        predator.animation.walk();
+
         attack_timer.stop();
-        this.entity.animation.walk();
       }
 
-      if(
-        distance_to_act < min_distance ||
-        distance_to_act > max_distance ||
-        !this.entity.vitals.alive
-      ) {
-        return;
-      }
+      const min = 10;
+      const max = 700;
+      if(distance < min||distance > max||!predator.vitals.alive) return;
 
-      move_sprite_to_sprite_on_grid(predator_sprite, prey_sprite);
+      move_sprite_to_sprite_on_grid(predator.sprite, prey.sprite);
     }).start();
   }
 }
@@ -360,8 +343,8 @@ const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points       } = require('../../engine/math');
 const { critter_container             } = require('../../engine/pixi_containers');
 
-const min_pathfind_distance = 50;
-const max_pathfind_distance = 400;
+const min = 50;
+const max = 400;
 
 class Prey {
   constructor(entity) {
@@ -370,38 +353,29 @@ class Prey {
     this.name   = 'prey';
   }
 
-  is_prey_to({ 'sprite': predator_sprite }) {
-    const { 'sprite': prey_sprite } = this.entity;
+  is_prey_to(predator) {
+    const prey = this.entity;
+    const distance = distance_between_points(predator.sprite, prey.sprite);
 
     const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
-    point_to_run_for.name = 'dot';
+    point_to_run_for.name  = 'dot';
 
-    const movement_timer = timer.createTimer(500);
+    const movement_timer  = timer.createTimer(500);
     movement_timer.repeat = 20;
-
     movement_timer.on('repeat', () => {
-      const distance_to_act = distance_between_points(predator_sprite, prey_sprite);
-
-      if(
-        distance_to_act < min_pathfind_distance ||
-        distance_to_act > max_pathfind_distance ||
-        !this.entity.vitals.alive
-      ) {
-        return;
-      }
+      if(distance < min||distance > max||!prey.vitals.alive) return;
 
       point_to_run_for.position.set(
-        prey_sprite.x + (prey_sprite.x - predator_sprite.x),
-        prey_sprite.y + (prey_sprite.y - predator_sprite.y)
+        prey.sprite.x + (prey.sprite.x - predator.sprite.x),
+        prey.sprite.y + (prey.sprite.y - predator.sprite.y)
       );
 
-      move_sprite_to_sprite_on_grid(prey_sprite, point_to_run_for);
+      move_sprite_to_sprite_on_grid(prey.sprite, point_to_run_for);
     }).start();
 
     critter_container.addChild(point_to_run_for);
   }
 }
-
 
 module.exports = {
   Prey,
@@ -448,7 +422,6 @@ module.exports = {
 class Vitals {
   constructor() {
     this.name           ='vitals';
-
     this.movement_speed = 15;
     this.power          = 1000;
     this.health         = 100;
@@ -460,13 +433,12 @@ class Vitals {
   }
 
   kill() {
-    //death animation
-    //this.entity.animation_switch('knife', 'attack');
+    //this.entity.switch('dead');
   }
 
   damage(hit_point) {
-    if (!hit_point) throw new Error('No damage being recieved')
-    if(( this.health - hit_point) < 0) {
+    if (!hit_point) throw new Error('No damage being recieved');
+    if( (this.health - hit_point) < 0) {
       this.status = 'dead';
 
       throw `${this.name} doesnt have enough health`;
@@ -476,11 +448,7 @@ class Vitals {
   }
 
   get alive() {
-    if(this.status === 'alive') {
-      return true;
-    }
-
-    return false;
+    return (this.status === 'alive');
   }
 
   increase_food(number) {
@@ -1051,7 +1019,6 @@ module.exports = {
 'use strict';
 
 const { viewport  } = require('../../engine/viewport.js');
-const { HUD       } = require('../../view/view_player_inventory');
 
 const { Character } = require('../character_model');
 const { Human     } = require('./animations/character');
@@ -1067,9 +1034,6 @@ class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
-
-    //player specific
-    this.add_component(new HUD());
 
     this.add_component(new Human(this.sprite));
     this.add_component(new Keyboard(this));
@@ -1087,35 +1051,30 @@ module.exports = {
   Player,
 };
 
-},{"../../engine/viewport.js":34,"../../view/view_player_inventory":52,"../attributes/inventory":3,"../attributes/keyboard":4,"../attributes/mouse":5,"../attributes/predator":6,"../attributes/status_bar":8,"../attributes/vitals":9,"../character_model":10,"./animations/character":11}],17:[function(require,module,exports){
+},{"../../engine/viewport.js":34,"../attributes/inventory":3,"../attributes/keyboard":4,"../attributes/mouse":5,"../attributes/predator":6,"../attributes/status_bar":8,"../attributes/vitals":9,"../character_model":10,"./animations/character":11}],17:[function(require,module,exports){
 'use strict';
 
-const PIXI          = require('pixi.js');
-const { viewport  } = require('../../engine/viewport');
+const PIXI = require('pixi.js');
+
+const { critter_container } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
+const { Rodent    } = require('./animations/rat');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Prey      } = require('../attributes/prey');
-
-const critter_container = viewport.getChildByName('critter_container');
-const { Rodent } = require('./animations/rat');
 
 class Rat extends Character {
   constructor() {
     super();
     this.name = 'rat';
-
     const texture = [PIXI.Texture.fromFrame('bunny')];
-
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
 
     this.add_component(new Rodent(this.sprite));
-
     this.add_component(new Vitals());
     this.add_component(new Prey(this));
     this.add_component(new Inventory());
-
     this.inventory.populate_random_inventory();
 
     critter_container.addChild(this.sprite);
@@ -1123,7 +1082,6 @@ class Rat extends Character {
 
   lootable_on_death() {
     this.sprite.kill = () => {
-
       this.sprite.stop();
       this.sprite.interactive = true;
       this.sprite.buttonMode = true;
@@ -1150,7 +1108,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/viewport":34,"../attributes/inventory":3,"../attributes/prey":7,"../attributes/vitals":9,"../character_model":10,"./animations/rat":12,"pixi.js":246}],18:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../attributes/inventory":3,"../attributes/prey":7,"../attributes/vitals":9,"../character_model":10,"./animations/rat":12,"pixi.js":246}],18:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1525,11 +1483,11 @@ module.exports = {
 const PIXI = require('pixi.js');
 
 const app = new PIXI.Application({
-  width: global.window.innerWidth,
-  height: global.window.innerHeight,
-  antialias: false,
-  autoResize: true,
-  backgroundColor: 0x2F4F4F, //0xC1C1C1
+  width          : global.window.innerWidth,
+  height         : global.window.innerHeight,
+  antialias      : false,
+  autoResize     : true,
+  backgroundColor: 0x2F4F4F,
 });
 
 const { viewport } = require('./viewport');
@@ -1543,11 +1501,17 @@ module.exports = app;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./viewport":34,"pixi.js":246}],24:[function(require,module,exports){
 'use strict';
-
 const PIXI         = require('pixi.js');
-const { viewport } = require('./viewport.js');
-const { radian   } = require('./math');
-const { Dialog   } = require('../cutscene/dialog_util');
+
+const { radian } = require('./math');
+const { Dialog } = require('../cutscene/dialog_util');
+const {
+  collision_container,
+  enemy_container,
+  door_container,
+  critter_container,
+  arrow_container,
+} = require('./pixi_containers');
 
 class Arrow {
   constructor() {
@@ -1557,7 +1521,7 @@ class Arrow {
     this.sprite.anchor.set(0.95);
     this.sprite.height *= 3;
 
-    viewport.getChildByName('arrow_container').addChild(this.sprite);
+    arrow_container.addChild(this.sprite);
   }
 }
 
@@ -1586,25 +1550,25 @@ function create_arrow_tween(arrow, power, arrow_path) {
   return arrow_tween;
 }
 
-function arrow_management(power, origin, target) {
+function shoot_arrow(power, origin, target) {
   const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin,target);
+  const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
-    viewport.getChildByName('enemy_container').children.forEach(enemy => {
+    enemy_container.children.forEach(enemy => {
       if(enemy.containsPoint(arrow_point)){
         arrow_tween.stop();
 
         arrow.destroy();
-        Dialog.speak_above_sprite(enemy, 'i am hit');
+        Dialog.speak_above_sprite(enemy, 'I am hit');
         return;
       }
     });
 
-    viewport.getChildByName('collision_items').children.forEach(object => {
+    collision_container.children.forEach(object => {
       if(!object.hitable_with_arrow) return;
 
       if(object.containsPoint(arrow_point)){
@@ -1614,7 +1578,7 @@ function arrow_management(power, origin, target) {
       }
     });
 
-    viewport.getChildByName('door_container').children.forEach(door => {
+    door_container.children.forEach(door => {
       if(door.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
@@ -1629,7 +1593,7 @@ function arrow_management(power, origin, target) {
       }
     });
 
-    viewport.getChildByName('critter_container').children.forEach(critter => {
+    critter_container.children.forEach(critter => {
       if(critter.containsPoint(arrow_point)) {
         arrow_tween.stop();
         arrow.rotation = radian(target, origin);
@@ -1641,11 +1605,11 @@ function arrow_management(power, origin, target) {
 }
 
 module.exports = {
-  arrow_management,
+  shoot_arrow,
 };
 
 
-},{"../cutscene/dialog_util":19,"./math":27,"./viewport.js":34,"pixi.js":246}],25:[function(require,module,exports){
+},{"../cutscene/dialog_util":19,"./math":27,"./pixi_containers":29,"pixi.js":246}],25:[function(require,module,exports){
 'use strict';
 
 function construct(BaseClass, ...Mixins) {
@@ -2497,6 +2461,7 @@ module.exports = {
   critter_container,
   gui_container,
   enemy_container,
+  door_container,
 };
 
 
@@ -2924,9 +2889,9 @@ module.exports = {
 
 },{"./item_model":41,"pixi.js":246}],40:[function(require,module,exports){
 'use strict';
+const PIXI = require('pixi.js');
 
 const app  = require('../engine/app');
-const PIXI = require('pixi.js');
 
 const {
   generate_number_between_min_and_max,
@@ -3183,7 +3148,13 @@ function get_random_items(max) {
   return item_array;
 }
 
-const get_item_by_name = name => items.find(item => item.name === name);
+const get_item_by_name = name => {
+  const found_item = items.find(item => item.name === name);
+
+  if(!found_item) throw new Error('no item found based on name ' + name);
+
+  return found_item;
+};
 
 const get_item_by_id = id => items.find(item => item.id === id);
 
@@ -8685,29 +8656,28 @@ module.exports={ "columns":20,
 }
 },{}],47:[function(require,module,exports){
 /* eslint-disable */  // --> OFF
-
 'use strict';
 const PIXI = require('pixi.js');
 
 const { viewport  } = require('../../engine/viewport');
-
 const { Player    } = require('../../character/types/player.js');
 const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
 const { Note      } = require('../../items/Note');
 const { Backpack  } = require('../../items/back_pack');
-const { get_item_by_name } = require('../../items/item_data');
-const { Level     } = require('../level_utils');
 
+const { get_item_by_name } = require('../../items/item_data');
 //const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
 
+const { Level           } = require('../level_utils');
 const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
 const { Rat             } = require('../../character/types/rat');
 const { Inventory       } = require('../../character/attributes/inventory');
 const { View_Inventory  } = require('../../view/view_inventory');
+const { View_HUD        } = require('../../view/view_player_inventory');
 
 class DevelopmentLevel {
   constructor() {
@@ -8715,18 +8685,20 @@ class DevelopmentLevel {
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
-    player.hud.add_head('old_bandana');
-    player.hud.add_hat('old_helmet');
-    player.hud.add_chest('old_clothes');
-    player.hud.add_shoes('old_boots');
-    player.hud.add_background('merc_portrait');
-    player.hud.add_primary_weapon('wrench_blade');
-    player.hud.add_secondary_weapon('rusty_knife');
-    player.hud.inventory_slot('rat_leg_bone', 0);
-    player.hud.inventory_slot('rat_femur', 1);
-    player.hud.inventory_slot('meat', 2);
-    player.hud.inventory_slot('skull_cap_bone', 3);
-    player.inventory.equip_weapon('bow');
+    const bow = get_item_by_name('old_bow');
+    player.inventory.equip_weapon(bow);
+
+    View_HUD.add_head('old_bandana');
+    View_HUD.add_hat('old_helmet');
+    View_HUD.add_chest('old_clothes');
+    View_HUD.add_shoes('old_boots');
+    //View_HUD.add_background('merc_portrait');
+    View_HUD.add_primary_weapon('wrench_blade');
+    View_HUD.add_secondary_weapon('rusty_knife');
+    View_HUD.inventory_slot('rat_leg_bone', 0);
+    View_HUD.inventory_slot('rat_femur', 1);
+    View_HUD.inventory_slot('meat', 2);
+    View_HUD.inventory_slot('skull_cap_bone', 3);
     //player.add_raycasting(this.level.segments);
 
     this.load_test_level();
@@ -8874,7 +8846,7 @@ module.exports = {
 
 
 
-},{"../../character/attributes/inventory":3,"../../character/types/enemy":14,"../../character/types/player.js":16,"../../character/types/rat":17,"../../cutscene/intro.js":20,"../../engine/viewport":34,"../../items/Note":36,"../../items/back_pack":37,"../../items/chest":38,"../../items/fire_place":39,"../../items/item_data":40,"../../view/view_inventory":51,"../bedroom/bedroom_map_output.json":43,"../bedroom/bedroom_map_tiled.json":44,"../debug/debug_map_output.json":45,"../debug/debug_map_tiles.json":46,"../level_utils":49,"pixi.js":246}],48:[function(require,module,exports){
+},{"../../character/attributes/inventory":3,"../../character/types/enemy":14,"../../character/types/player.js":16,"../../character/types/rat":17,"../../cutscene/intro.js":20,"../../engine/viewport":34,"../../items/Note":36,"../../items/back_pack":37,"../../items/chest":38,"../../items/fire_place":39,"../../items/item_data":40,"../../view/view_inventory":51,"../../view/view_player_inventory":52,"../bedroom/bedroom_map_output.json":43,"../bedroom/bedroom_map_tiled.json":44,"../debug/debug_map_output.json":45,"../debug/debug_map_tiles.json":46,"../level_utils":49,"pixi.js":246}],48:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');
@@ -9382,7 +9354,7 @@ function insert_all_div_with_image(class_name, image_name) {
 }
 
 
-class HUD {
+class View_HUD {
   constructor() {
     this.name             = 'hud';
     this.background       = {};
@@ -9411,61 +9383,61 @@ class HUD {
     dom_hud.style.display = 'block';
   }
 
-  show_player_inventory() {
+  static show_player_inventory() {
     dom_hud.style.display = 'block';
   }
 
-  hide_player_inventory() {
+  static hide_player_inventory() {
     dom_hud.style.display = 'none';
   }
 
 
-  add_primary_weapon(image_name) {
+  static add_primary_weapon(image_name) {
     insert_div_with_image('.primary_weapon', image_name);
     this.primary_weapon = get_item_by_name(image_name);
   }
 
-  add_secondary_weapon(image_name) {
+  static add_secondary_weapon(image_name) {
     insert_div_with_image('.secondary_weapon', image_name);
     this.secondary_weapon = get_item_by_name(image_name);
   }
 
-  add_small_weapon(image_name) {
+  static add_small_weapon(image_name) {
     insert_div_with_image('.small_weapon', image_name);
     this.small_weapon = get_item_by_name(image_name);
   }
 
-  add_head(image_name) {
+  static add_head(image_name) {
     insert_div_with_image('.model_head', image_name);
     this.head = get_item_by_name(image_name);
   }
 
-  add_chest(image_name) {
+  static add_chest(image_name) {
     insert_div_with_image('.model_chest', image_name);
     this.chest = get_item_by_name(image_name);
   }
 
-  add_shoes(image_name) {
+  static add_shoes(image_name) {
     insert_div_with_image('.model_feet', image_name);
     this.shoes = get_item_by_name(image_name);
   }
 
-  add_hat(image_name) {
+  static add_hat(image_name) {
     insert_div_with_image('.model_hat', image_name);
     this.hat = get_item_by_name(image_name);
   }
 
-  add_slot_one(image_name) {
+  static add_slot_one(image_name) {
     insert_div_with_image('.model_slot_1', image_name);
     this.slot_one = get_item_by_name(image_name);
   }
 
-  add_slot_two(image_name) {
+  static add_slot_two(image_name) {
     insert_div_with_image('.model_slot_2', image_name);
     this.slot_two = get_item_by_name(image_name);
   }
 
-  add_background(image_name) {
+  static add_background(image_name) {
     insert_div_with_image('.model_background', image_name);
     this.background = get_item_by_name(image_name);
   }
@@ -9476,7 +9448,7 @@ class HUD {
   }
 
 
-  inventory_slot(image_name, slot_number) {
+  static inventory_slot(image_name, slot_number) {
     const selected_divs = global.document.querySelectorAll('.inventory_slot');
     const slot_div = selected_divs[slot_number];
 
@@ -9494,7 +9466,7 @@ class HUD {
     slot_div.appendChild(image);
   }
 
-  add_item_to_inventory_slot(item) {
+  static add_item_to_inventory_slot(item) {
     if(this.item_slots.length > 10) {
       throw new Error('not enough space');
     }
@@ -9502,7 +9474,7 @@ class HUD {
     this.item_slots.push(item);
   }
 
-  populate_free_slot(image_name) {
+  static populate_free_slot(image_name) {
     const item = get_item_by_name(image_name);
     const inventory_slots = global.document.querySelectorAll('.inventory_slot');
     const first_free_slot = Array.from(inventory_slots)
@@ -9533,7 +9505,7 @@ class HUD {
 }
 
 module.exports = {
-  HUD,
+  View_HUD,
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
