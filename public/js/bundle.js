@@ -6,36 +6,36 @@ const { get_random_items } = require('../../items/item_data');
 class Inventory {
   constructor() {
     this.name     = 'inventory';
-    this.equiped = null;
+    this.equipped = null;
     this.slots    = [];
   }
 
   equip_weapon(item) {
-    this.equiped = item;
+    this.equipped = item;
   }
 
-  get equiped_weapon() {
-    if(!this.equiped) {
-      throw new Error('this character has no weapon equiped');
+  get equipped_weapon() {
+    if(!this.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.equiped;
+    return this.equipped;
   }
 
   get weapon_speed() {
-    if(!this.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.equiped.speed;
+    return this.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.equiped.damage;
+    return this.equipped.damage;
   }
 
   populate_random_inventory(max) {
@@ -248,10 +248,10 @@ class Mouse {
     const target = event.data.getLocalPosition(viewport);
     const origin = this.entity.sprite;
 
-    const { equiped_weapon } = this.entity.inventory;
+    const { equipped_weapon } = this.entity.inventory;
     const { power          } = this.entity.vitals;
 
-    switch(equiped_weapon) {
+    switch(equipped_weapon) {
       case 'bow': arrow_management(power, origin, target); return;
     }
   }
@@ -306,7 +306,7 @@ class Predator {
     const max_distance = 700;
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this.entity;
-    const { speed, damage             } = this.entity.inventory.equiped_weapon;
+    const { speed, damage             } = this.entity.inventory.equipped_weapon;
 
     const attack_timer  = timer.createTimer(speed);
     attack_timer.repeat = 10;
@@ -1071,10 +1071,10 @@ class Player extends Character {
     //player specific
     this.add_component(new HUD());
 
-    this.add_component(new Vitals());
     this.add_component(new Human(this.sprite));
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
+    this.add_component(new Vitals());
     this.add_component(new Predator(this));
     this.add_component(new Status());
     this.add_component(new Inventory());
@@ -8736,14 +8736,12 @@ class DevelopmentLevel {
     //inventory_test.populate_random_inventory(player);
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
-    const enemy = new Enemy();
     const knife = get_item_by_name('rusty_knife');
-    enemy.animation.weapon = 'knife';
-    enemy.inventory.equip_weapon(knife);
-
-
+    const enemy = new Enemy();
     enemy.sprite.position.set(1550,1000);
     enemy.with_light();
+    enemy.animation.weapon = 'knife';
+    enemy.inventory.equip_weapon(knife);
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1200});

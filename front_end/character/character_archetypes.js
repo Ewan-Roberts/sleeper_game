@@ -21,7 +21,7 @@ class Scavenger_Insane_Dying {
       },
     };
 
-    this.equiped = 'rusty_knife';
+    this.equipped = 'rusty_knife';
 
     this.inventory.slots = [
       { name: 'rags' },
@@ -49,7 +49,7 @@ class Fayetality {
       },
     };
 
-    this.equiped = 'samurai_sword';
+    this.equipped = 'samurai_sword';
 
     this.inventory.slots = [
       { name: 'tin_of_beans' },

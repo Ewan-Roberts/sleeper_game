@@ -16,7 +16,7 @@ class Predator {
     const max_distance = 700;
     const { 'sprite': prey_sprite     } = prey;
     const { 'sprite': predator_sprite } = this.entity;
-    const { speed, damage             } = this.entity.inventory.equiped_weapon;
+    const { speed, damage             } = this.entity.inventory.equipped_weapon;
 
     const attack_timer  = timer.createTimer(speed);
     attack_timer.repeat = 10;

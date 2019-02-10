@@ -50,14 +50,12 @@ class DevelopmentLevel {
     //inventory_test.populate_random_inventory(player);
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
-    const enemy = new Enemy();
     const knife = get_item_by_name('rusty_knife');
-    enemy.animation.weapon = 'knife';
-    enemy.inventory.equip_weapon(knife);
-
-
+    const enemy = new Enemy();
     enemy.sprite.position.set(1550,1000);
     enemy.with_light();
+    enemy.animation.weapon = 'knife';
+    enemy.inventory.equip_weapon(knife);
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1200});

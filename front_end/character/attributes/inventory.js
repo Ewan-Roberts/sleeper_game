@@ -5,36 +5,36 @@ const { get_random_items } = require('../../items/item_data');
 class Inventory {
   constructor() {
     this.name     = 'inventory';
-    this.equiped = null;
+    this.equipped = null;
     this.slots    = [];
   }
 
   equip_weapon(item) {
-    this.equiped = item;
+    this.equipped = item;
   }
 
-  get equiped_weapon() {
-    if(!this.equiped) {
-      throw new Error('this character has no weapon equiped');
+  get equipped_weapon() {
+    if(!this.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.equiped;
+    return this.equipped;
   }
 
   get weapon_speed() {
-    if(!this.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.equiped.speed;
+    return this.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.equiped) {
-      throw new Error('this character has no weapon equiped');
+    if(!this.equipped) {
+      throw new Error('this character has no weapon equipped');
     }
 
-    return this.equiped.damage;
+    return this.equipped.damage;
   }
 
   populate_random_inventory(max) {

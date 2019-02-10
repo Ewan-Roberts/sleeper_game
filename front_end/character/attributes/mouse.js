@@ -22,10 +22,10 @@ class Mouse {
     const target = event.data.getLocalPosition(viewport);
     const origin = this.entity.sprite;
 
-    const { equiped_weapon } = this.entity.inventory;
+    const { equipped_weapon } = this.entity.inventory;
     const { power          } = this.entity.vitals;
 
-    switch(equiped_weapon) {
+    switch(equipped_weapon) {
       case 'bow': arrow_management(power, origin, target); return;
     }
   }
