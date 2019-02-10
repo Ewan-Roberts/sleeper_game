@@ -108,7 +108,7 @@ const frames = {
 };
 
 
-class Human_Animations {
+class Human {
   constructor(sprite) {
     this.name   = 'animation';
     this.sprite = sprite;
@@ -186,7 +186,7 @@ class Human_Animations {
 
 
 module.exports = {
-  Human_Animations,
+  Human,
 };
 
 

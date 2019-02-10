@@ -3,7 +3,7 @@
 const { status_meter } = require('../../view/view_player_status_meter');
 const { timer        } = require('../../engine/ticker');
 
-class Status_Meter{
+class Status {
   constructor() {
     this.name = 'status_meter';
   }
@@ -29,5 +29,5 @@ class Status_Meter{
 }
 
 module.exports = {
-  Status_Meter,
+  Status,
 };
