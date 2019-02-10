@@ -4,6 +4,12 @@
 
 Work in progess, updates below:
 
+## Update 09/10.02.19:
+- Large refactor :rocket:
+- Added aiming line visuals on readying an arrow
+- Removed constructs for creating entities
+- Added view and utils layer
+
 ## Update 02.02.19:
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_10.png)
 - Add better inventory management system (still a long way to go)
@@ -112,7 +118,6 @@ Key:
 
 #### items
 - create items schema
-- create items randomiser functions
 - create items rarity functions
 - create items database schema and save states
 
@@ -177,6 +182,7 @@ Key:
 
 DONE PILE:
 
+- create items randomiser functions DONE
 - basic item/inventory management done
 - save game states done
 - add player inventory done
