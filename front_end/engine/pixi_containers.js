@@ -88,3 +88,9 @@ viewport.addChild(
 
 viewport.updateLayersOrder();
 
+module.exports = {
+  collision_container,
+  critter_container,
+};
+
+

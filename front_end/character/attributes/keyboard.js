@@ -1,9 +1,9 @@
 'use strict';
 
-const { viewport } = require('../../engine/viewport');
-const { Game     } = require('../../engine/save_manager');
+const { Game                } = require('../../engine/save_manager');
+const { collision_container } = require('../../engine/pixi_containers');
 
-const dom_hud = global.document.querySelector('.characterInventory');
+const { HUD } = require('../../view/view_player_inventory');
 
 const keymap = {
   w: 'up',
@@ -26,135 +26,110 @@ const keymap = {
 
 const buffer = 50;
 
+function point_collides(position) {
+  const { children } = collision_container;
+
+  return children.find(child => child.containsPoint(position));
+}
+
 class Keyboard {
   constructor(entity) {
-    this.name = 'keyboard_manager';
+    this.name   = 'keyboard_manager';
     this.entity = entity;
-    this.sprite = entity.sprite;
-    global.window.addEventListener('keydown', event => this.key_down(event));
-    global.window.addEventListener('keyup', () => this.key_up());
+
+    global.window.addEventListener('keydown', event => this.key_down(event.key));
+    global.window.addEventListener('keyup',   ()    => this.key_up());
   }
 
   save_game() {
     Game.save(this.entity);
   }
 
-  key_down({ key }) {
-    const button = keymap[key];
-    if (!button) return;
+  key_down(key) {
+    const translated_key = keymap[key];
+    if (!translated_key) return;
 
-    switch(button) {
-      case 'up':    this.keyboard_up();             return;
-      case 'left':  this.left();                    return;
-      case 'down':  this.keyboard_down();           return;
-      case 'right': this.right();                   return;
-      case 'i':     this.toggle_player_inventory(); return;
-      case 'n':     this.save_game();               return;
-      case 'o':     this.start_intro();             return;
-      case 'Shift': this.shift();                   return;
+    switch(translated_key) {
+      case 'up'   : this.keyboard_up();            return;
+      case 'left' : this.keyboard_left();          return;
+      case 'down' : this.keyboard_down();          return;
+      case 'right': this.keyboard_right();         return;
+      case 'i'    : HUD.toggle_player_inventory(); return;
+      case 'n'    : this.save_game();              return;
+      case 'o'    : this.start_intro();            return;
     }
-  }
-
-  toggle_player_inventory() {
-
-    if(dom_hud.style.display === 'block') {
-      dom_hud.style.opacity = 0;
-      dom_hud.style.display = 'none';
-
-      return;
-    }
-
-    dom_hud.style.opacity = 1;
-    dom_hud.style.display = 'block';
   }
 
   key_up() {
-    //TODO Remove lie to player model
-    this.entity.animation_switch('bow', 'idle');
+    this.entity.animation.idle();
   }
 
   keyboard_up() {
-    this.entity.animation_switch('bow', 'walk');
-    this.sprite.rotation = -2;
+    this.entity.animation.walk();
+    this.entity.animation.face_up();
 
-    const collision_objects = viewport.getChildByName('collision_items');
+    const point = this.entity.sprite.getGlobalPosition();
+    point.y -= buffer;
 
-    for(let i = 0; i < collision_objects.children.length; i++){
-      const position = this.sprite.getGlobalPosition();
-      position.y -= buffer;
-
-      if(collision_objects.children[i].containsPoint(position)){
-        this.sprite.gotoAndStop(1);
-
-        return;
-      }
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
     }
 
-    this.sprite.y -= this.entity.vitals.movement_speed;
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_up_by(movement_speed);
   }
 
   keyboard_down() {
-    this.entity.animation_switch('bow', 'walk');
-    this.sprite.rotation = 2;
+    this.entity.animation.walk();
+    this.entity.animation.face_down();
 
-    const collision_objects = viewport.getChildByName('collision_items');
+    const point = this.entity.sprite.getGlobalPosition();
+    point.y += buffer;
 
-    for(let i = 0; i < collision_objects.children.length; i++){
-      const position = this.sprite.getGlobalPosition();
-      position.y += buffer;
-
-      if(collision_objects.children[i].containsPoint(position)){
-        this.sprite.gotoAndStop(1);
-
-        return;
-      }
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
     }
 
-    this.sprite.y += this.entity.vitals.movement_speed;
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_down_by(movement_speed);
   }
 
-  left() {
-    this.entity.animation_switch('bow', 'walk');
-    this.sprite.rotation = -3;
+  keyboard_left() {
+    this.entity.animation.walk();
+    this.entity.animation.face_left();
 
-    const collision_objects = viewport.getChildByName('collision_items');
+    const point = this.entity.sprite.getGlobalPosition();
+    point.x -= buffer;
 
-    for(let i = 0; i < collision_objects.children.length; i++){
-      const position = this.sprite.getGlobalPosition();
-      position.x -= buffer;
-
-      if(collision_objects.children[i].containsPoint(position)){
-        this.sprite.gotoAndStop(1);
-
-        return;
-      }
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
     }
 
-    this.sprite.x -= this.entity.vitals.movement_speed;
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_left_by(movement_speed);
   }
 
-  right() {
-    this.entity.animation_switch('bow', 'walk');
-    this.sprite.rotation = 0;
+  keyboard_right() {
+    this.entity.animation.walk();
+    this.entity.animation.face_right();
 
-    const collision_objects = viewport.getChildByName('collision_items');
+    const point = this.entity.sprite.getGlobalPosition();
+    point.x += buffer;
 
-    for(let i = 0; i < collision_objects.children.length; i++){
-      const position = this.sprite.getGlobalPosition();
-      position.x += buffer;
-
-      if(collision_objects.children[i].containsPoint(position)){
-        this.sprite.gotoAndStop(1);
-
-        return;
-      }
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
     }
 
-    this.sprite.x += this.entity.vitals.movement_speed;
-  }
-
-  shift() {
-    // console.log('shift_pressed');
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_right_by(movement_speed);
   }
 }
 

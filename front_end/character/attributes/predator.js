@@ -1,9 +1,8 @@
 'use strict';
 
-const { timer } = require('../../engine/ticker');
-
+const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points } = require('../../engine/math');
+const { distance_between_points       } = require('../../engine/math');
 
 const min_pathfind_distance = 10;
 const max_pathfind_distance = 700;
@@ -13,7 +12,6 @@ class Predator {
     this.name   = 'predator_controller';
     this.type   = 'predator';
     this.entity = entity;
-    this.sprite = entity.sprite;
   }
 
   is_predator_to(prey) {
@@ -22,11 +20,11 @@ class Predator {
     const { speed, damage             } = this.entity.inventory.equiped_weapon;
 
     const attack_timer = timer.createTimer(speed);// based on the weapon speed
-    attack_timer.loop = true;
+    attack_timer.loop  = true;
     attack_timer.on('repeat', function() {
       if(!prey.vitals.alive){
         prey.animation_switch('dead');
-        this.sprite.stop();
+        this.entity.sprite.stop();
         return;
       }
 

@@ -1,13 +1,12 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport  } = require('../../engine/viewport');
-const { timer     } = require('../../engine/ticker');
 
+const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points } = require('../../engine/math');
+const { distance_between_points       } = require('../../engine/math');
+const { critter_container             } = require('../../engine/pixi_containers');
 
-const critter_container = viewport.getChildByName('critter_container');
 const min_pathfind_distance = 50;
 const max_pathfind_distance = 400;
 

@@ -246,8 +246,8 @@ const items = [
 
 ];
 
-function get_random_items() {
-  const number_of_items_to_return = generate_number_between_min_and_max(1,3);
+function get_random_items(max) {
+  const number_of_items_to_return = generate_number_between_min_and_max(1, max|0);
 
   const item_array = [];
 

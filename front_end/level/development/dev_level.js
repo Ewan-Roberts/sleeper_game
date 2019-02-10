@@ -19,6 +19,7 @@ const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
 const { Rat             } = require('../../character/types/rat');
 const { Inventory       } = require('../../character/attributes/inventory');
+const { View_Inventory  } = require('../../view/view_inventory');
 
 class DevelopmentLevel {
   constructor() {
@@ -42,22 +43,22 @@ class DevelopmentLevel {
     this.load_test_level();
     this.test_note();
 
-    const inventory_test = new Inventory();
-    inventory_test.populate_random_inventory(player);
-    inventory_test.set_inventory_position({ x: 1000, y: 1000 });
+    View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
+    //inventory_test.populate_random_inventory(player);
+    //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
-    const enemy = new Enemy();
-    enemy.sprite.position.set(1550,1000);
-    enemy.with_light();
+    //const enemy = new Enemy();
+    //enemy.sprite.position.set(1550,1000);
+    //enemy.with_light();
 
-    const rat = new Rat();
-    rat.set_position({x: 900, y: 1200});
-    rat.lootable_on_death();
+    //const rat = new Rat();
+    //rat.set_position({x: 900, y: 1200});
+    //rat.lootable_on_death();
 
-    rat.prey_controller.is_prey_to(enemy);
-    rat.prey_controller.is_prey_to(player);
+    //rat.prey_controller.is_prey_to(enemy);
+    //rat.prey_controller.is_prey_to(player);
 
-    enemy.predator_controller.is_predator_to(rat);
+    //enemy.predator_controller.is_predator_to(rat);
 
     //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
 

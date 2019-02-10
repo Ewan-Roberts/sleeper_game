@@ -7,36 +7,15 @@ const { ticker               } = require('../engine/ticker');
 const { get_intersection     } = require('../engine/raycasting');
 const { move_sprite_to_point } = require('../engine/pathfind');
 
-const character_animations = require('./types/animations/character');
-
 class Character {
   constructor() {
-    this.sprite = new PIXI.extras.AnimatedSprite(character_animations.knife.walk);
-    this.sprite.animations = character_animations;
-    this.sprite.anchor.set(0.5);
-    this.sprite.animationSpeed = 0.4;
-    this.sprite.play();
+    const texture = [PIXI.Texture.fromFrame('bunny')];
+
+    this.sprite = new PIXI.extras.AnimatedSprite(texture);
   }
 
   addComponent(component) {
     this[component.name] = component;
-  }
-
-  // REFACTOR for example bow, idle or nothing, idle
-  animation_switch(type, action) {
-    if(action) {
-      if(this.sprite.textures !== this.sprite.animations[type][action]) {
-        this.sprite.textures = this.sprite.animations[type][action];
-        this.sprite.loop = true;
-        this.sprite.play();
-      }
-    } else {
-      if(this.sprite.textures !== this.sprite.animations[type]) {
-        this.sprite.textures = this.sprite.animations[type];
-        this.sprite.loop = true;
-        this.sprite.play();
-      }
-    }
   }
 
   set_position(point) {

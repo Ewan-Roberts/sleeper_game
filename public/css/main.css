@@ -218,7 +218,7 @@ div {
   position: fixed;
   float: left;
   color: white;
-  display: block;
+  display: none;
   opacity: 0;
 }
 

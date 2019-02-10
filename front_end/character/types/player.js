@@ -1,11 +1,10 @@
 'use strict';
 
 const { viewport  } = require('../../engine/viewport.js');
-const { PlayerVisualModel } = require('../../engine/inventory_manager');
+const { HUD       } = require('../../view/view_player_inventory');
 
-const character_animations = require('./animations/character');
-
-const { Character } = require('../character_model');
+const { Human_Animations } = require('./animations/character');
+const { Character        } = require('../character_model');
 
 const { Keyboard      } = require('../attributes/keyboard');
 const { Mouse         } = require('../attributes/mouse');
@@ -18,17 +17,13 @@ class Player extends Character {
     super();
     this.name = 'player';
 
-    this.sprite = character_animations.animated.knife.walk;
-    this.sprite.animations = character_animations;
-    this.sprite.anchor.set(0.5);
-    this.sprite.play();
-    this.sprite.height /= 2;
-    this.sprite.width /= 2;
+    //player specific
+    this.addComponent(new HUD());
 
+    this.addComponent(new Human_Animations(this.sprite));
     this.addComponent(new Predator(this));
     this.addComponent(new Mouse(this));
     this.addComponent(new Keyboard(this));
-    this.addComponent(new PlayerVisualModel(this));
     this.addComponent(new Vitals());
     this.addComponent(new Status_Meter());
 

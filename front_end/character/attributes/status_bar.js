@@ -1,6 +1,7 @@
 'use strict';
 
-const { status_meter } = require('../../view/status_meter');
+const { status_meter } = require('../../view/view_player_status_meter');
+const { timer        } = require('../../engine/ticker');
 
 class Status_Meter{
   constructor() {
@@ -12,14 +13,18 @@ class Status_Meter{
   }
 
   set_vitals_ticker() {
-    setInterval(()=> {
+    const vitals_timer = timer.createTimer(5000);
+    vitals_timer.repeat = 4;
+
+    vitals_timer.on('repeat', function() {
       this.vitals.health -= this.vitals.ticker_values.health;
-      this.vitals.food -= this.vitals.ticker_values.food;
-      this.vitals.water -= this.vitals.ticker_values.water;
-      this.vitals.heat -= this.vitals.ticker_values.heat;
-      this.vitals.sleep -= this.vitals.ticker_values.sleep;
+      this.vitals.food   -= this.vitals.ticker_values.food;
+      this.vitals.water  -= this.vitals.ticker_values.water;
+      this.vitals.heat   -= this.vitals.ticker_values.heat;
+      this.vitals.sleep  -= this.vitals.ticker_values.sleep;
+
       this.update_vitals(this.vitals);
-    }, 5000);
+    });
   }
 }
 
