@@ -118,9 +118,11 @@ function point_collides(position) {
 }
 
 class Keyboard {
-  constructor(entity) {
-    this.name   = 'keyboard_manager';
-    this.entity = entity;
+  constructor({ vitals, sprite, animation}) {
+    this.name      = 'keyboard';
+    this.vitals    = vitals;
+    this.sprite    = sprite;
+    this.animation = animation;
 
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
@@ -139,82 +141,82 @@ class Keyboard {
       case 'left' : this.keyboard_left();          return;
       case 'down' : this.keyboard_down();          return;
       case 'right': this.keyboard_right();         return;
-      case 'i'    : HUD.toggle_player_inventory(); return;
       case 'n'    : this.save_game();              return;
       case 'o'    : this.start_intro();            return;
+      case 'i'    : HUD.toggle_player_inventory(); return;
     }
   }
 
   key_up() {
-    this.entity.animation.idle();
+    this.animation.idle();
   }
 
   keyboard_up() {
-    this.entity.animation.walk();
-    this.entity.animation.face_up();
+    this.animation.walk();
+    this.animation.face_up();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.y -= buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_up_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_up_by(movement_speed);
   }
 
   keyboard_down() {
-    this.entity.animation.walk();
-    this.entity.animation.face_down();
+    this.animation.walk();
+    this.animation.face_down();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.y += buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_down_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_down_by(movement_speed);
   }
 
   keyboard_left() {
-    this.entity.animation.walk();
-    this.entity.animation.face_left();
+    this.animation.walk();
+    this.animation.face_left();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.x -= buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_left_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_left_by(movement_speed);
   }
 
   keyboard_right() {
-    this.entity.animation.walk();
-    this.entity.animation.face_right();
+    this.animation.walk();
+    this.animation.face_right();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.x += buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_right_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_right_by(movement_speed);
   }
 }
 
@@ -232,9 +234,11 @@ const { arrow_management } = require('../../engine/bow');
 const { Aiming_Cone      } = require('../../view/view_aiming_cone');
 
 class Mouse {
-  constructor(entity) {
-    this.name   = 'mouse_manager';
-    this.entity = entity;
+  constructor({ vitals, sprite, animation }) {
+    this.name   = 'mouse';
+    this.vitals    = vitals;
+    this.sprite    = sprite;
+    this.animation = animation;
 
     viewport.on('mouseup',   event => this.mouse_up(event));
     viewport.on('mousemove', event => this.mouse_move(event));
@@ -242,32 +246,31 @@ class Mouse {
   }
 
   mouse_up(event) {
-    this.entity.animation.idle();
+    this.animation.idle();
     this.cone_timer.stop();
 
     const target = event.data.getLocalPosition(viewport);
-    const origin = this.entity.sprite;
+    const origin = this.sprite;
 
-    const { equiped_weapon } = this.entity.inventory;
-    const { power          } = this.entity.vitals;
-    if(equiped_weapon === 'bow') {
-      arrow_management(power, origin, target);
+    const { equiped_weapon } = this.inventory;
+    const { power          } = this.vitals;
+
+    switch(equiped_weapon) {
+      case 'bow': arrow_management(power, origin, target); return;
     }
-
-    //switch(equiped_weapon) {
-    //  case 'bow' : arrow_management(power, origin, target); return;
-    //}
   }
 
   mouse_down(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
-    const direction = radian(mouse_position, this.entity.sprite);
+    const direction = radian(mouse_position, this.sprite);
 
-    this.entity.animation.ready_weapon();
+    this.animation.ready_weapon();
 
-    this.entity.sprite.rotation = direction;
+    this.sprite.rotation = direction;
 
-    const { cone_timer, cone }= Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
+    const { cone_timer, cone } =
+      Aiming_Cone.start_at(this.sprite, direction - 1.57);
+
     this.cone_timer = cone_timer;
     this.cone = cone;
     this.cone_timer.start();
@@ -276,8 +279,11 @@ class Mouse {
   mouse_move(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
 
-    this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
-    this.cone.rotation = this.entity.sprite.rotation - 1.57;
+    this.sprite.rotation = radian(mouse_position, this.sprite);
+
+    if(this.cone) {
+      this.cone.rotation = this.sprite.rotation - 1.57;
+    }
   }
 }
 
@@ -297,7 +303,7 @@ const max_pathfind_distance = 700;
 
 class Predator {
   constructor(entity) {
-    this.name   = 'predator_controller';
+    this.name   = 'predator';
     this.type   = 'predator';
     this.entity = entity;
   }
@@ -513,7 +519,7 @@ class Character {
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
   }
 
-  addComponent(component) {
+  add_component(component) {
     this[component.name] = component;
   }
 
@@ -1044,8 +1050,8 @@ module.exports = {
 const { viewport  } = require('../../engine/viewport.js');
 const { HUD       } = require('../../view/view_player_inventory');
 
-const { Human     } = require('./animations/character');
 const { Character } = require('../character_model');
+const { Human     } = require('./animations/character');
 
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');
@@ -1060,15 +1066,15 @@ class Player extends Character {
     this.name = 'player';
 
     //player specific
-    this.addComponent(new HUD());
+    this.add_component(new HUD());
 
-    this.addComponent(new Human(this.sprite));
-    this.addComponent(new Inventory());
-    this.addComponent(new Predator(this));
-    this.addComponent(new Mouse(this));
-    this.addComponent(new Keyboard(this));
-    this.addComponent(new Vitals());
-    this.addComponent(new Status());
+    this.add_component(new Human(this.sprite));
+    this.add_component(new Keyboard(this));
+    this.add_component(new Mouse(this));
+    this.add_component(new Vitals());
+    this.add_component(new Predator(this));
+    this.add_component(new Status());
+    this.add_component(new Inventory());
 
     viewport.addChild(this.sprite);
   }
@@ -8705,17 +8711,17 @@ class DevelopmentLevel {
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
-    player.inventory_manager.add_head('old_bandana');
-    player.inventory_manager.add_hat('old_helmet');
-    player.inventory_manager.add_chest('old_clothes');
-    player.inventory_manager.add_shoes('old_boots');
-    player.inventory_manager.add_background('merc_portrait');
-    player.inventory_manager.add_primary_weapon('wrench_blade');
-    player.inventory_manager.add_secondary_weapon('rusty_knife');
-    player.inventory_manager.inventory_slot('rat_leg_bone', 0);
-    player.inventory_manager.inventory_slot('rat_femur', 1);
-    player.inventory_manager.inventory_slot('meat', 2);
-    player.inventory_manager.inventory_slot('skull_cap_bone', 3);
+    player.hud.add_head('old_bandana');
+    player.hud.add_hat('old_helmet');
+    player.hud.add_chest('old_clothes');
+    player.hud.add_shoes('old_boots');
+    player.hud.add_background('merc_portrait');
+    player.hud.add_primary_weapon('wrench_blade');
+    player.hud.add_secondary_weapon('rusty_knife');
+    player.hud.inventory_slot('rat_leg_bone', 0);
+    player.hud.inventory_slot('rat_femur', 1);
+    player.hud.inventory_slot('meat', 2);
+    player.hud.inventory_slot('skull_cap_bone', 3);
     player.inventory.equip_weapon('bow');
     //player.add_raycasting(this.level.segments);
 
@@ -9370,7 +9376,7 @@ function insert_all_div_with_image(class_name, image_name) {
 
 class HUD {
   constructor() {
-    this.name = 'inventory_manager';
+    this.name             = 'hud';
     this.background       = {};
     this.primary_weapon   = {};
     this.secondary_weapon = {};

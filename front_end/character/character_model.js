@@ -14,7 +14,7 @@ class Character {
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
   }
 
-  addComponent(component) {
+  add_component(component) {
     this[component.name] = component;
   }
 

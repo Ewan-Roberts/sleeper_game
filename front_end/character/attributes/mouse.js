@@ -6,9 +6,11 @@ const { arrow_management } = require('../../engine/bow');
 const { Aiming_Cone      } = require('../../view/view_aiming_cone');
 
 class Mouse {
-  constructor(entity) {
-    this.name   = 'mouse_manager';
-    this.entity = entity;
+  constructor({ vitals, sprite, animation }) {
+    this.name   = 'mouse';
+    this.vitals    = vitals;
+    this.sprite    = sprite;
+    this.animation = animation;
 
     viewport.on('mouseup',   event => this.mouse_up(event));
     viewport.on('mousemove', event => this.mouse_move(event));
@@ -16,32 +18,31 @@ class Mouse {
   }
 
   mouse_up(event) {
-    this.entity.animation.idle();
+    this.animation.idle();
     this.cone_timer.stop();
 
     const target = event.data.getLocalPosition(viewport);
-    const origin = this.entity.sprite;
+    const origin = this.sprite;
 
-    const { equiped_weapon } = this.entity.inventory;
-    const { power          } = this.entity.vitals;
-    if(equiped_weapon === 'bow') {
-      arrow_management(power, origin, target);
+    const { equiped_weapon } = this.inventory;
+    const { power          } = this.vitals;
+
+    switch(equiped_weapon) {
+      case 'bow': arrow_management(power, origin, target); return;
     }
-
-    //switch(equiped_weapon) {
-    //  case 'bow' : arrow_management(power, origin, target); return;
-    //}
   }
 
   mouse_down(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
-    const direction = radian(mouse_position, this.entity.sprite);
+    const direction = radian(mouse_position, this.sprite);
 
-    this.entity.animation.ready_weapon();
+    this.animation.ready_weapon();
 
-    this.entity.sprite.rotation = direction;
+    this.sprite.rotation = direction;
 
-    const { cone_timer, cone }= Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
+    const { cone_timer, cone } =
+      Aiming_Cone.start_at(this.sprite, direction - 1.57);
+
     this.cone_timer = cone_timer;
     this.cone = cone;
     this.cone_timer.start();
@@ -50,8 +51,11 @@ class Mouse {
   mouse_move(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
 
-    this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
-    this.cone.rotation = this.entity.sprite.rotation - 1.57;
+    this.sprite.rotation = radian(mouse_position, this.sprite);
+
+    if(this.cone) {
+      this.cone.rotation = this.sprite.rotation - 1.57;
+    }
   }
 }
 

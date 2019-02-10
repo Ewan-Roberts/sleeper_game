@@ -27,17 +27,17 @@ class DevelopmentLevel {
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
-    player.inventory_manager.add_head('old_bandana');
-    player.inventory_manager.add_hat('old_helmet');
-    player.inventory_manager.add_chest('old_clothes');
-    player.inventory_manager.add_shoes('old_boots');
-    player.inventory_manager.add_background('merc_portrait');
-    player.inventory_manager.add_primary_weapon('wrench_blade');
-    player.inventory_manager.add_secondary_weapon('rusty_knife');
-    player.inventory_manager.inventory_slot('rat_leg_bone', 0);
-    player.inventory_manager.inventory_slot('rat_femur', 1);
-    player.inventory_manager.inventory_slot('meat', 2);
-    player.inventory_manager.inventory_slot('skull_cap_bone', 3);
+    player.hud.add_head('old_bandana');
+    player.hud.add_hat('old_helmet');
+    player.hud.add_chest('old_clothes');
+    player.hud.add_shoes('old_boots');
+    player.hud.add_background('merc_portrait');
+    player.hud.add_primary_weapon('wrench_blade');
+    player.hud.add_secondary_weapon('rusty_knife');
+    player.hud.inventory_slot('rat_leg_bone', 0);
+    player.hud.inventory_slot('rat_femur', 1);
+    player.hud.inventory_slot('meat', 2);
+    player.hud.inventory_slot('skull_cap_bone', 3);
     player.inventory.equip_weapon('bow');
     //player.add_raycasting(this.level.segments);
 

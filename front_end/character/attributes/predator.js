@@ -9,7 +9,7 @@ const max_pathfind_distance = 700;
 
 class Predator {
   constructor(entity) {
-    this.name   = 'predator_controller';
+    this.name   = 'predator';
     this.type   = 'predator';
     this.entity = entity;
   }

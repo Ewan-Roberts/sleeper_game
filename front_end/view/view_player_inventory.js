@@ -45,7 +45,7 @@ function insert_all_div_with_image(class_name, image_name) {
 
 class HUD {
   constructor() {
-    this.name = 'inventory_manager';
+    this.name             = 'hud';
     this.background       = {};
     this.primary_weapon   = {};
     this.secondary_weapon = {};

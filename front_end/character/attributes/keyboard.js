@@ -33,9 +33,11 @@ function point_collides(position) {
 }
 
 class Keyboard {
-  constructor(entity) {
-    this.name   = 'keyboard_manager';
-    this.entity = entity;
+  constructor({ vitals, sprite, animation}) {
+    this.name      = 'keyboard';
+    this.vitals    = vitals;
+    this.sprite    = sprite;
+    this.animation = animation;
 
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
@@ -54,82 +56,82 @@ class Keyboard {
       case 'left' : this.keyboard_left();          return;
       case 'down' : this.keyboard_down();          return;
       case 'right': this.keyboard_right();         return;
-      case 'i'    : HUD.toggle_player_inventory(); return;
       case 'n'    : this.save_game();              return;
       case 'o'    : this.start_intro();            return;
+      case 'i'    : HUD.toggle_player_inventory(); return;
     }
   }
 
   key_up() {
-    this.entity.animation.idle();
+    this.animation.idle();
   }
 
   keyboard_up() {
-    this.entity.animation.walk();
-    this.entity.animation.face_up();
+    this.animation.walk();
+    this.animation.face_up();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.y -= buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_up_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_up_by(movement_speed);
   }
 
   keyboard_down() {
-    this.entity.animation.walk();
-    this.entity.animation.face_down();
+    this.animation.walk();
+    this.animation.face_down();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.y += buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_down_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_down_by(movement_speed);
   }
 
   keyboard_left() {
-    this.entity.animation.walk();
-    this.entity.animation.face_left();
+    this.animation.walk();
+    this.animation.face_left();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.x -= buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_left_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_left_by(movement_speed);
   }
 
   keyboard_right() {
-    this.entity.animation.walk();
-    this.entity.animation.face_right();
+    this.animation.walk();
+    this.animation.face_right();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.x += buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.entity.sprite.gotoAndStop(1);
+      this.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_right_by(movement_speed);
+    const { movement_speed } = this.vitals;
+    this.animation.move_right_by(movement_speed);
   }
 }
 

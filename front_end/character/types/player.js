@@ -3,8 +3,8 @@
 const { viewport  } = require('../../engine/viewport.js');
 const { HUD       } = require('../../view/view_player_inventory');
 
-const { Human     } = require('./animations/character');
 const { Character } = require('../character_model');
+const { Human     } = require('./animations/character');
 
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');
@@ -19,15 +19,15 @@ class Player extends Character {
     this.name = 'player';
 
     //player specific
-    this.addComponent(new HUD());
+    this.add_component(new HUD());
 
-    this.addComponent(new Human(this.sprite));
-    this.addComponent(new Inventory());
-    this.addComponent(new Predator(this));
-    this.addComponent(new Mouse(this));
-    this.addComponent(new Keyboard(this));
-    this.addComponent(new Vitals());
-    this.addComponent(new Status());
+    this.add_component(new Human(this.sprite));
+    this.add_component(new Keyboard(this));
+    this.add_component(new Mouse(this));
+    this.add_component(new Vitals());
+    this.add_component(new Predator(this));
+    this.add_component(new Status());
+    this.add_component(new Inventory());
 
     viewport.addChild(this.sprite);
   }
