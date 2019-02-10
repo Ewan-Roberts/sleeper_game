@@ -118,11 +118,9 @@ function point_collides(position) {
 }
 
 class Keyboard {
-  constructor({ vitals, sprite, animation}) {
-    this.name      = 'keyboard';
-    this.vitals    = vitals;
-    this.sprite    = sprite;
-    this.animation = animation;
+  constructor(entity) {
+    this.name   = 'keyboard';
+    this.entity = entity;
 
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
@@ -148,75 +146,75 @@ class Keyboard {
   }
 
   key_up() {
-    this.animation.idle();
+    this.entity.animation.idle();
   }
 
   keyboard_up() {
-    this.animation.walk();
-    this.animation.face_up();
+    this.entity.animation.walk();
+    this.entity.animation.face_up();
 
-    const point = this.sprite.getGlobalPosition();
+    const point = this.entity.sprite.getGlobalPosition();
     point.y -= buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.sprite.gotoAndStop(1);
+      this.entity.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.vitals;
-    this.animation.move_up_by(movement_speed);
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_up_by(movement_speed);
   }
 
   keyboard_down() {
-    this.animation.walk();
-    this.animation.face_down();
+    this.entity.animation.walk();
+    this.entity.animation.face_down();
 
-    const point = this.sprite.getGlobalPosition();
+    const point = this.entity.sprite.getGlobalPosition();
     point.y += buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.sprite.gotoAndStop(1);
+      this.entity.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.vitals;
-    this.animation.move_down_by(movement_speed);
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_down_by(movement_speed);
   }
 
   keyboard_left() {
-    this.animation.walk();
-    this.animation.face_left();
+    this.entity.animation.walk();
+    this.entity.animation.face_left();
 
-    const point = this.sprite.getGlobalPosition();
+    const point = this.entity.sprite.getGlobalPosition();
     point.x -= buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.sprite.gotoAndStop(1);
+      this.entity.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.vitals;
-    this.animation.move_left_by(movement_speed);
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_left_by(movement_speed);
   }
 
   keyboard_right() {
-    this.animation.walk();
-    this.animation.face_right();
+    this.entity.animation.walk();
+    this.entity.animation.face_right();
 
-    const point = this.sprite.getGlobalPosition();
+    const point = this.entity.sprite.getGlobalPosition();
     point.x += buffer;
 
     const collision = point_collides(point);
     if(collision){
-      this.sprite.gotoAndStop(1);
+      this.entity.sprite.gotoAndStop(1);
       return;
     }
 
-    const { movement_speed } = this.vitals;
-    this.animation.move_right_by(movement_speed);
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_right_by(movement_speed);
   }
 }
 
@@ -234,11 +232,9 @@ const { arrow_management } = require('../../engine/bow');
 const { Aiming_Cone      } = require('../../view/view_aiming_cone');
 
 class Mouse {
-  constructor({ vitals, sprite, animation }) {
+  constructor(entity) {
     this.name   = 'mouse';
-    this.vitals    = vitals;
-    this.sprite    = sprite;
-    this.animation = animation;
+    this.entity = entity;
 
     viewport.on('mouseup',   event => this.mouse_up(event));
     viewport.on('mousemove', event => this.mouse_move(event));
@@ -246,14 +242,14 @@ class Mouse {
   }
 
   mouse_up(event) {
-    this.animation.idle();
+    this.entity.animation.idle();
     this.cone_timer.stop();
 
     const target = event.data.getLocalPosition(viewport);
-    const origin = this.sprite;
+    const origin = this.entity.sprite;
 
-    const { equiped_weapon } = this.inventory;
-    const { power          } = this.vitals;
+    const { equiped_weapon } = this.entity.inventory;
+    const { power          } = this.entity.vitals;
 
     switch(equiped_weapon) {
       case 'bow': arrow_management(power, origin, target); return;
@@ -262,14 +258,14 @@ class Mouse {
 
   mouse_down(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
-    const direction = radian(mouse_position, this.sprite);
+    const direction = radian(mouse_position, this.entity.sprite);
 
-    this.animation.ready_weapon();
+    this.entity.animation.ready_weapon();
 
-    this.sprite.rotation = direction;
+    this.entity.sprite.rotation = direction;
 
     const { cone_timer, cone } =
-      Aiming_Cone.start_at(this.sprite, direction - 1.57);
+      Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
 
     this.cone_timer = cone_timer;
     this.cone = cone;
@@ -279,10 +275,10 @@ class Mouse {
   mouse_move(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
 
-    this.sprite.rotation = radian(mouse_position, this.sprite);
+    this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
 
     if(this.cone) {
-      this.cone.rotation = this.sprite.rotation - 1.57;
+      this.cone.rotation = this.entity.sprite.rotation - 1.57;
     }
   }
 }
@@ -1068,10 +1064,10 @@ class Player extends Character {
     //player specific
     this.add_component(new HUD());
 
+    this.add_component(new Vitals());
     this.add_component(new Human(this.sprite));
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
-    this.add_component(new Vitals());
     this.add_component(new Predator(this));
     this.add_component(new Status());
     this.add_component(new Inventory());
