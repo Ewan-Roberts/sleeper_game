@@ -18,5 +18,5 @@ loader.load(async function() {
 
   new DevelopmentLevel();
 
-  require('./engine/inventory_manager');
+  require('./view/view_inventory');
 });

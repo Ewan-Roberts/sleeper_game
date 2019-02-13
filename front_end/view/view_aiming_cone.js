@@ -5,7 +5,7 @@ const PIXI = require('pixi.js');
 const { gui_container } = require('../engine/pixi_containers');
 const { timer         } = require('../engine/ticker');
 
-class Aiming_Cone {
+class View_Aiming_Cone {
   static start_at(point, rotation) {
     const cone        = this.add_at(point, rotation);
     const cone_timer  = timer.createTimer(50);
@@ -39,5 +39,5 @@ class Aiming_Cone {
 }
 
 module.exports = {
-  Aiming_Cone,
+  View_Aiming_Cone,
 };

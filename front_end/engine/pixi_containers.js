@@ -94,6 +94,7 @@ module.exports = {
   gui_container,
   enemy_container,
   door_container,
+  arrow_container,
 };
 
 

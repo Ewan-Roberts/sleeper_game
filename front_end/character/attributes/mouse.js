@@ -22,12 +22,12 @@ class Mouse {
     const target = event.data.getLocalPosition(viewport);
     const origin = this.entity.sprite;
 
-    const { equipped_weapon } = this.entity.inventory;
-    const { power           } = this.entity.vitals;
+    const { ammo_type } = this.entity.inventory;
+    const { power     } = this.entity.vitals;
 
     //TODO: consider weapon management system
-    switch(equipped_weapon) {
-      case 'bow': shoot_arrow(power, origin, target); return;
+    switch(ammo_type) {
+      case 'arrow': shoot_arrow(power, origin, target); return;
     }
   }
 

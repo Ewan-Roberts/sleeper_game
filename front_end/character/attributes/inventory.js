@@ -21,6 +21,19 @@ class Inventory {
     return this.equipped;
   }
 
+  get ammo_type() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+    if(!this.equipped.ammo) throw new Error('Weapon does not have an ammo type: ' + this.equipped);
+
+    return this.equipped.ammo;
+  }
+
+  get equipped_weapon_name() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+
+    return this.equipped.name;
+  }
+
   get weapon_speed() {
     if(!this.equipped) throw new Error('No weapon equipped');
 
