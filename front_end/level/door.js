@@ -2,7 +2,6 @@
 
 const PIXI         = require('pixi.js');
 const { viewport } = require('../engine/viewport');
-const { createjs } = require('@createjs/tweenjs');
 
 const collision_items = viewport.getChildByName('collision_items');
 
@@ -50,29 +49,29 @@ class Door {
   }
 
   open()  {
-    const tween = createjs.Tween.get(this.sprite);
+    //const tween = createjs.Tween.get(this.sprite);
 
-    tween.to({
-      rotation: this.sprite.rotation,
-    }).to({
-      rotation: this.sprite.rotation +2,
-    }, 1000).call(()=>{
-      this.state = 'open';
-    });
-    return this;
+    //tween.to({
+    //  rotation: this.sprite.rotation,
+    //}).to({
+    //  rotation: this.sprite.rotation +2,
+    //}, 1000).call(()=>{
+    //  this.state = 'open';
+    //});
+    //return this;
   }
 
   close() {
-    const tween = createjs.Tween.get(this.sprite);
+    //const tween = createjs.Tween.get(this.sprite);
 
-    tween.to({
-      rotation: this.sprite.rotation,
-    }).to({
-      rotation: this.sprite.rotation -2,
-    }, 1000).call(()=>{
-      this.state = 'closed';
-    });
-    return this;
+    //tween.to({
+    //  rotation: this.sprite.rotation,
+    //}).to({
+    //  rotation: this.sprite.rotation -2,
+    //}, 1000).call(()=>{
+    //  this.state = 'closed';
+    //});
+    //return this;
   }
 }
 

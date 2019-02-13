@@ -99,6 +99,7 @@ const frames = {
   knife: {
     idle:   idle_frames(),
     attack: knife_attack_frames(),
+    reeady: knife_attack_frames(),
     walk:   knife_walk_frames(),
   },
   animated: {

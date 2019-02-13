@@ -62,7 +62,6 @@ const visual_effects_container = new PIXI.Container();
 visual_effects_container.name = 'visual_effects_container';
 visual_effects_container.zIndex = medium;
 
-
 const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = close;
@@ -108,6 +107,7 @@ module.exports = {
   arrow_container,
   raycasting_container,
   visual_effects_container,
+  grid_container,
 };
 
 

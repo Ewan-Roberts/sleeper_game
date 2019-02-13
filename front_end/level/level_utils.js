@@ -4,8 +4,7 @@ const PIXI = require('pixi.js');
 const { viewport } = require('../engine/viewport');
 
 const {
-  create_level_grid,
-  move_sprite_on_route_straight,
+  PathFind,
 } = require('../engine/pathfind.js');
 
 const { Enemy } = require('../character/types/enemy.js');
@@ -25,7 +24,7 @@ class Level {
   }
 
   create_grid(level_tiles) {
-    this.grid = create_level_grid(level_tiles);
+    this.grid = PathFind.create_level_grid(level_tiles);
   }
 
   add_to_segments(item) {
@@ -53,7 +52,8 @@ class Level {
     wall_array.objects.forEach((wall_data) => {
       const wall = PIXI.Sprite.fromFrame('black_dot');
 
-      wall.position.set(wall_data.x + wall_array.offsetx, wall_data.y + wall_array.offsety- 100);
+      //wall.position.set(wall_data.x + wall_array.offsetx, wall_data.y + wall_array.offsety- 100);
+      wall.position.set(wall_data.x, wall_data.y);
       wall.width = wall_data.width;
       wall.height = wall_data.height;
       wall.anchor.set(0);
@@ -134,7 +134,7 @@ class Level {
 
     const formatted_path_data = format_path_data(path);
     rat.create_patrol_path(formatted_path_data);
-    move_sprite_on_route_straight(rat.sprite);
+    PathFind.move_sprite_on_route_straight(rat.sprite);
   }
 }
 

@@ -16,7 +16,6 @@
   "author": "Ewan",
   "license": "ISC",
   "dependencies": {
-    "@createjs/tweenjs": "2.0.0-beta.1",
     "chai": "^4.2.0",
     "easystarjs": "^0.4.3",
     "express": "^4.16.3",
