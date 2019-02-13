@@ -53,15 +53,11 @@ function shoot_arrow(origin, target, power = 2000) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
-  //console.log('here')
-  //console.log(arrow);
-  console.log(origin);
-
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
     const player = viewport.getChildByName('player');
-    //console.log(origin.name);
+
     //TODO decouple ths shit
     if(origin.name !== 'player') {
       if(player.containsPoint(arrow_point)) {
@@ -116,7 +112,6 @@ function shoot_arrow(origin, target, power = 2000) {
         return;
       }
     });
-
   });
 }
 

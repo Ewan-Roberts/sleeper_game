@@ -32,7 +32,6 @@ class View_Aiming_Cone {
     aiming_cone.width    = 600;
     aiming_cone.anchor.x = 0.5;
     aiming_cone.alpha    = 0;
-    //aiming_cone.filters = [new PIXI.filters.BlurFilter()];
     aiming_cone.name = 'aiming_cone';
     aiming_cone.position.set(point.x, point.y);
 

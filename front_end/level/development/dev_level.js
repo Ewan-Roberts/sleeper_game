@@ -10,7 +10,6 @@ const { Note      } = require('../../items/Note');
 const { Backpack  } = require('../../items/back_pack');
 
 const { get_item_by_name } = require('../../items/item_data');
-//const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
 
@@ -61,15 +60,6 @@ class DevelopmentLevel {
     console.log(viewport);
     archer.raycasting.add(this.level.segments);
     archer.logic_start();
-    // setInterval(() => {
-    //   console.log('hi');
-
-    //   const point = archer.raycasting.contains_point(player.sprite);
-    //   console.log(point)
-    //   View_Aiming_Line.add_between_sprites(player.sprite, archer.sprite);
-
-    // }, 2000);
-
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();
@@ -85,7 +75,6 @@ class DevelopmentLevel {
 
     //rat.prey.is_prey_to(enemy);
     //rat.prey.is_prey_to(player);
-
   }
 
   load_flat_level() {
@@ -117,18 +106,6 @@ class DevelopmentLevel {
     this.level = debug_room;
   }
 
-  test_rat() {
-    const rat = new Rat();
-    rat.set_position({x: 1100, y: 1000});
-    //rat.move_to_point({x: 1400, y: 1400});
-    rat.add_influence_box();
-    rat.distance_to_player();
-    rat.add_direction_line();
-    //pathfind_from_enemy_to_player(rat.sprite, );
-
-    //highlight_grid_cell_from_point(grid_sprite);
-
-  }
 
   test_intro() {
     intro_cutscene.start();
@@ -149,10 +126,6 @@ class DevelopmentLevel {
     network_player.set_position({ x: 900, y: 900 });
     network_player.network_update();
 
-  }
-
-  test_rain() {
-    //start_rain(400, 1200, 400, 1200);
   }
 
   test_note() {

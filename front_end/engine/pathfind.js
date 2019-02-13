@@ -182,20 +182,10 @@ function move_sprite_on_path(sprite, path_array) {
   tween.time = path_array.length * 300;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-  //sprite.textures = sprite.animations.move;
-  //sprite.loop = true;
-  //sprite.play();
 
   tween.on('update', () => {
     sprite.rotation = radian_positive(sprite, tween.path._tmpPoint);
   });
-
-  //tween.on('end', () => {
-  //  sprite.textures = sprite.animations.eat;
-  //  sprite.animationSpeed = 0.2;
-  //  sprite.loop = false;
-  //  sprite.play();
-  //});
 
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(2, 0xffffff, 0.1);
@@ -368,15 +358,6 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   }
 
   //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-  //console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
-  // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
-  //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
-
-  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y+1][to_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y-1][to_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x+1].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x-1].alpha += 0.1;
 
   const path_data = await create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
 
@@ -404,8 +385,6 @@ module.exports = {
 };
 
 
-
-
 //testing
 async function run_pathfinding_test() {
   const grid = grid_container.children;
@@ -417,15 +396,6 @@ async function run_pathfinding_test() {
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
 
   //sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
-
-  // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
-  //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
-
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y+1][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y-1][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x+1].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x-1].alpha += 0.1;
 
   const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
 
@@ -440,11 +410,11 @@ async function run_pathfinding_test() {
 }
 
 
-setInterval(()=>{
-  // highlight_start_grid()
+//setInterval(()=>{
+//  // highlight_start_grid()
 
-  //run_pathfinding_test();
-},2000);
+//  //run_pathfinding_test();
+//},2000);
 
 
 //function run_pathfinding_test() {

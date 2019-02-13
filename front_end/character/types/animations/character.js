@@ -135,7 +135,6 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
-    //this.sprite.loop = false;
   }
 
   face_down() {

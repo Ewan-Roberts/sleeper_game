@@ -156,7 +156,6 @@ Key:
 # Infra:
 - Create EC2 server (again)
 
-
 # Needed for ALPHA
 - get a bigger map
 - put 2 prey on the map

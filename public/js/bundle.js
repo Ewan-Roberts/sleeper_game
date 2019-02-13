@@ -1,23 +1,22 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
-//using this this to roughly scope out some unique enemy types
 const { Enemy       } = require('./types/enemy');
 const { shoot_arrow } = require('../engine/bow');
 const { timer       } = require('../engine/ticker');
 const { View_Aiming_Line } = require('../view/view_aiming_line');
 const { radian           } = require('../utils/math');
 
-// This is the highest level class and presumes
-// components;
-// (Human Inventory Predator Vitals Raycasting)
+/* This is the highest level class and presumes
+ *  Components;
+ *  (Human Inventory Predator Vitals Raycasting)
+ */
 
 class Archer extends Enemy {
   constructor(enemy) {
     super();
-    this.name = 'enemy';
+    this.name  = 'enemy';
     this.enemy = enemy;
-    this.enemy.name = 'player';
     this.logic = timer.createTimer(1000);
     this.logic.repeat = 5;
     this.logic.expire = true;
@@ -52,69 +51,8 @@ class Archer extends Enemy {
 }
 
 
-class Scavenger_Insane_Dying {
-  constructor() {
-    this.description = 'this guy is on his last legs, he is insane';
-    this.vitals = {
-      health:   10,
-      food:     4,
-      water:    16,
-      heat:     20,
-      sleep:    10,
-      status:   'alive',
-      ticker_values: {
-        health: 1,
-        food:   1,
-        water:  2,
-        heat:   1,
-        sleep:  2,
-      },
-    };
-
-    this.equipped = 'rusty_knife';
-
-    this.inventory.slots = [
-      { name: 'rags' },
-    ];
-  }
-}
-
-
-class Fayetality {
-  constructor() {
-    this.description = 'unable to have people talk around her, unable to hear other players';
-    this.vitals = {
-      health:   80,
-      food:     20,
-      water:    70,
-      heat:     90,
-      sleep:    20,
-      status:   'alive',
-      ticker_values: {
-        health: 1,
-        food:   1,
-        water:  2,
-        heat:   1,
-        sleep:  2,
-      },
-    };
-
-    this.equipped = 'samurai_sword';
-
-    this.inventory.slots = [
-      { name: 'tin_of_beans' },
-      { name: 'back_pack'    },
-      { name: 'sleeping_bag' },
-      { name: 'book'         },
-      { name: 'watch'        },
-    ];
-  }
-}
-
 module.exports = {
   Archer,
-  Scavenger_Insane_Dying,
-  Fayetality,
 };
 
 },{"../engine/bow":26,"../engine/ticker":31,"../utils/math":49,"../view/view_aiming_line":52,"./types/enemy":16}],2:[function(require,module,exports){
@@ -545,14 +483,10 @@ const { timer                } = require('../../engine/ticker');
 const { get_intersection     } = require('../../engine/raycasting');
 const { raycasting_container } = require('../../engine/pixi_containers');
 
-
 const raycast_timer = timer.createTimer(1000);
 raycast_timer.repeat = 10;
 raycast_timer.expire = true;
 
-raycast_timer.on('end', () => {
-  console.log('end end');
-});
 /*
  * @param {Object} PIXI.Sprite
  **/
@@ -568,9 +502,11 @@ class Raycasting {
     const points = [];
     level_segments.forEach(seg => points.push(seg.a,seg.b));
 
-    //const light = this.sprite.getChildByName('light');
-    //light.mask = raycast;
-    // light._filters = [new PIXI.filters.BlurFilter(10)]; // test a filter
+    const light = this.sprite.getChildByName('light');
+    if (light) {
+      light.mask = this.raycast;
+      //light._filters = [new PIXI.filters.BlurFilter(10)];
+    }
 
     raycast_timer.on('repeat', () => {
       const unique_angles = [];
@@ -615,17 +551,6 @@ class Raycasting {
       for (let i = 0; i < intersects.length; i++) {
         this.raycast.lineTo(intersects[i].x, intersects[i].y);
       }
-
-      //const player_sprite = viewport.getChildByName('player');
-      //const player_position = player_sprite.getGlobalPosition();
-
-      //if(this.sprite.getChildByName('sight_line').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      //  this.action_on_seeing_player(player_sprite);
-      //}
-
-      //if(this.sprite.getChildByName('influence_box').containsPoint(player_position) && raycast.containsPoint(player_position)){
-      //  this.action_on_hearing_player(player_sprite);
-      //}
     });
 
     raycast_timer.start();
@@ -942,7 +867,6 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
-    //this.sprite.loop = false;
   }
 
   face_down() {
@@ -1750,15 +1674,11 @@ function shoot_arrow(origin, target, power = 2000) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
-  //console.log('here')
-  //console.log(arrow);
-  console.log(origin);
-
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
     const player = viewport.getChildByName('player');
-    //console.log(origin.name);
+
     //TODO decouple ths shit
     if(origin.name !== 'player') {
       if(player.containsPoint(arrow_point)) {
@@ -1813,7 +1733,6 @@ function shoot_arrow(origin, target, power = 2000) {
         return;
       }
     });
-
   });
 }
 
@@ -2008,20 +1927,10 @@ function move_sprite_on_path(sprite, path_array) {
   tween.time = path_array.length * 300;
   //tween.easing = PIXI.tween.Easing.inOutSine();
   tween.start();
-  //sprite.textures = sprite.animations.move;
-  //sprite.loop = true;
-  //sprite.play();
 
   tween.on('update', () => {
     sprite.rotation = radian_positive(sprite, tween.path._tmpPoint);
   });
-
-  //tween.on('end', () => {
-  //  sprite.textures = sprite.animations.eat;
-  //  sprite.animationSpeed = 0.2;
-  //  sprite.loop = false;
-  //  sprite.play();
-  //});
 
   const graphical_path = new PIXI.Graphics();
   graphical_path.lineStyle(2, 0xffffff, 0.1);
@@ -2194,15 +2103,6 @@ async function move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
   }
 
   //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-  //console.log(sprite_grid[to_point.cell_position.y][to_point.cell_position.x]);
-  // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
-  //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
-
-  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y+1][to_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y-1][to_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x+1].alpha += 0.1;
-  //sprite_grid[to_point.cell_position.y][to_point.cell_position.x-1].alpha += 0.1;
 
   const path_data = await create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
 
@@ -2230,8 +2130,6 @@ module.exports = {
 };
 
 
-
-
 //testing
 async function run_pathfinding_test() {
   const grid = grid_container.children;
@@ -2243,15 +2141,6 @@ async function run_pathfinding_test() {
   const rat_point = get_sprite_position_on_grid(rat_direction, grid);
 
   //sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
-
-  // ... so you send out a line thats like 200pxs out from the rat then do a search arond the grid for a tile you can move to
-  //console.log(sprite_grid[player_point.cell_position.y][player_point.cell_position.x])
-
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y+1][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y-1][player_point.cell_position.x].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x+1].alpha += 0.1;
-  //sprite_grid[player_point.cell_position.y][player_point.cell_position.x-1].alpha += 0.1;
 
   const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
 
@@ -2266,11 +2155,11 @@ async function run_pathfinding_test() {
 }
 
 
-setInterval(()=>{
-  // highlight_start_grid()
+//setInterval(()=>{
+//  // highlight_start_grid()
 
-  //run_pathfinding_test();
-},2000);
+//  //run_pathfinding_test();
+//},2000);
 
 
 //function run_pathfinding_test() {
@@ -2557,7 +2446,6 @@ const pixi_packer_parser = require('pixi-packer-parser');
 //require('./engine/login.js');
 //engine set up
 require('./engine/app');
-//require('./engine/ticker');
 require('./engine/pixi_containers');
 
 const loader = new PIXI.loaders.Loader();
@@ -8589,7 +8477,6 @@ const { Note      } = require('../../items/Note');
 const { Backpack  } = require('../../items/back_pack');
 
 const { get_item_by_name } = require('../../items/item_data');
-//const { NetworkCharacter } = require('../../character/network/network_player.js');
 
 //const { start_rain } = require('../../weather/rain');
 
@@ -8640,15 +8527,6 @@ class DevelopmentLevel {
     console.log(viewport);
     archer.raycasting.add(this.level.segments);
     archer.logic_start();
-    // setInterval(() => {
-    //   console.log('hi');
-
-    //   const point = archer.raycasting.contains_point(player.sprite);
-    //   console.log(point)
-    //   View_Aiming_Line.add_between_sprites(player.sprite, archer.sprite);
-
-    // }, 2000);
-
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();
@@ -8664,7 +8542,6 @@ class DevelopmentLevel {
 
     //rat.prey.is_prey_to(enemy);
     //rat.prey.is_prey_to(player);
-
   }
 
   load_flat_level() {
@@ -8696,18 +8573,6 @@ class DevelopmentLevel {
     this.level = debug_room;
   }
 
-  test_rat() {
-    const rat = new Rat();
-    rat.set_position({x: 1100, y: 1000});
-    //rat.move_to_point({x: 1400, y: 1400});
-    rat.add_influence_box();
-    rat.distance_to_player();
-    rat.add_direction_line();
-    //pathfind_from_enemy_to_player(rat.sprite, );
-
-    //highlight_grid_cell_from_point(grid_sprite);
-
-  }
 
   test_intro() {
     intro_cutscene.start();
@@ -8728,10 +8593,6 @@ class DevelopmentLevel {
     network_player.set_position({ x: 900, y: 900 });
     network_player.network_update();
 
-  }
-
-  test_rain() {
-    //start_rain(400, 1200, 400, 1200);
   }
 
   test_note() {
@@ -9310,7 +9171,6 @@ class View_Aiming_Cone {
     aiming_cone.width    = 600;
     aiming_cone.anchor.x = 0.5;
     aiming_cone.alpha    = 0;
-    //aiming_cone.filters = [new PIXI.filters.BlurFilter()];
     aiming_cone.name = 'aiming_cone';
     aiming_cone.position.set(point.x, point.y);
 

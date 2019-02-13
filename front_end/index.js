@@ -6,7 +6,6 @@ const pixi_packer_parser = require('pixi-packer-parser');
 //require('./engine/login.js');
 //engine set up
 require('./engine/app');
-//require('./engine/ticker');
 require('./engine/pixi_containers');
 
 const loader = new PIXI.loaders.Loader();
