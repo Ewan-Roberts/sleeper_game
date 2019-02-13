@@ -58,6 +58,11 @@ const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
 enemy_container.zIndex = medium;
 
+const visual_effects_container = new PIXI.Container();
+visual_effects_container.name = 'visual_effects_container';
+visual_effects_container.zIndex = medium;
+
+
 const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = close;
@@ -69,6 +74,10 @@ gui_container.zIndex = very_close;
 const dialog_container = new PIXI.Container();
 dialog_container.name = 'dialog_container';
 dialog_container.zIndex = close;
+
+const raycasting_container = new PIXI.Container();
+raycasting_container.name = 'raycasting_container';
+raycasting_container.zIndex = close;
 
 viewport.addChild(
   background_container,
@@ -83,7 +92,9 @@ viewport.addChild(
   enemy_container,
   cutscene_container,
   gui_container,
-  dialog_container
+  dialog_container,
+  raycasting_container,
+  visual_effects_container
 );
 
 viewport.updateLayersOrder();
@@ -95,6 +106,8 @@ module.exports = {
   enemy_container,
   door_container,
   arrow_container,
+  raycasting_container,
+  visual_effects_container,
 };
 
 

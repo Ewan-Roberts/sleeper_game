@@ -1,6 +1,7 @@
 'use strict';
 const PIXI         = require('pixi.js');
 
+const { viewport  } = require('./viewport');
 const { radian } = require('../utils/math');
 const { Dialog } = require('../cutscene/dialog_util');
 const {
@@ -48,27 +49,43 @@ function create_arrow_tween(arrow, power, arrow_path) {
   return arrow_tween;
 }
 
-function shoot_arrow(power, origin, target) {
+function shoot_arrow(origin, target, power = 2000) {
   const arrow       = create_rotated_arrow(origin, target);
   const arrow_path  = create_arrow_path(origin, target);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
+  //console.log('here')
+  //console.log(arrow);
+  console.log(origin);
+
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
-
-    enemy_container.children.forEach(enemy => {
-      if(enemy.containsPoint(arrow_point)){
+    const player = viewport.getChildByName('player');
+    //console.log(origin.name);
+    //TODO decouple ths shit
+    if(origin.name !== 'player') {
+      if(player.containsPoint(arrow_point)) {
         arrow_tween.stop();
 
         arrow.destroy();
-        Dialog.speak_above_sprite(enemy, 'I am hit');
+        Dialog.speak_above_sprite(player, 'I am hit');
         return;
       }
-    });
+    }
+
+    if(origin.name !== 'enemy') {
+      enemy_container.children.forEach(enemy => {
+        if(enemy.containsPoint(arrow_point)){
+          arrow_tween.stop();
+
+          arrow.destroy();
+          Dialog.speak_above_sprite(enemy, 'I am hit');
+          return;
+        }
+      });
+    }
 
     collision_container.children.forEach(object => {
-      if(!object.hitable_with_arrow) return;
-
       if(object.containsPoint(arrow_point)){
         arrow_tween.stop();
 
@@ -99,6 +116,7 @@ function shoot_arrow(power, origin, target) {
         return;
       }
     });
+
   });
 }
 

@@ -116,6 +116,7 @@ class Human {
     this.sprite.height /= 2;
     this.sprite.width /= 2;
     this.weapon = 'bow';
+    this.sprite.animationSpeed = 0.5;
     this.idle(this.weapon);
   }
 
@@ -134,7 +135,7 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
-    this.sprite.loop = false;
+    //this.sprite.loop = false;
   }
 
   face_down() {

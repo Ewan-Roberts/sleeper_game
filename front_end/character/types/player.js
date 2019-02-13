@@ -25,6 +25,7 @@ class Player extends Character {
     this.add_component(new Status());
     this.add_component(new Inventory());
 
+    this.sprite.name = 'player';
     viewport.addChild(this.sprite);
   }
 }

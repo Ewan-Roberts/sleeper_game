@@ -11,12 +11,15 @@ class View_Aiming_Cone {
     const cone_timer  = timer.createTimer(50);
     cone_timer.repeat = 55;
     cone_timer.on('repeat', () => {
-      cone.width  -= 8;
+      cone.width  -= 12;
       cone.height += 6;
-      cone.alpha  += 0.01;
+      cone.alpha  += 0.005;
     });
 
-    cone_timer.on('stop', () => gui_container.removeChild(cone));
+    cone_timer.on('stop', function() {
+      gui_container.removeChild(cone);
+      this.remove();
+    });
 
     return { cone_timer, cone };
   }
@@ -26,7 +29,7 @@ class View_Aiming_Cone {
 
     aiming_cone.rotation = rotation;
     aiming_cone.height   = 800;
-    aiming_cone.width    = 400;
+    aiming_cone.width    = 600;
     aiming_cone.anchor.x = 0.5;
     aiming_cone.alpha    = 0;
     //aiming_cone.filters = [new PIXI.filters.BlurFilter()];

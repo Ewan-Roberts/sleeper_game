@@ -4,7 +4,7 @@ class Vitals {
   constructor() {
     this.name           ='vitals';
     this.movement_speed = 15;
-    this.power          = 1000;
+    this.power          = 5000;
     this.health         = 100;
     this.food           = 40;
     this.water          = 20;

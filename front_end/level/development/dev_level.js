@@ -21,6 +21,9 @@ const { Rat             } = require('../../character/types/rat');
 const { Inventory       } = require('../../character/attributes/inventory');
 const { View_Inventory  } = require('../../view/view_inventory');
 const { View_HUD        } = require('../../view/view_player_inventory');
+const { View_Aiming_Line } = require('../../view/view_aiming_line');
+
+const { Archer } = require('../../character/archetypes');
 
 class DevelopmentLevel {
   constructor() {
@@ -47,36 +50,41 @@ class DevelopmentLevel {
     this.load_test_level();
     this.test_note();
 
-    View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
+    //View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
     //inventory_test.populate_random_inventory(player);
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
+    const archer = new Archer(player);
+    archer.sprite.position.set(1550,1000);
+    archer.shoot(player);
 
-    const knife = get_item_by_name('rusty_knife');
-    const enemy = new Enemy();
-    enemy.sprite.position.set(1550,1000);
-    enemy.with_light();
-    enemy.animation.weapon = 'knife';
-    enemy.inventory.equip_weapon(knife);
+    console.log('wreghbwigbwo2i');
+    console.log(viewport);
+    archer.raycasting.add(this.level.segments);
+    archer.logic_start();
+    // setInterval(() => {
+    //   console.log('hi');
 
-    const rat = new Rat();
-    rat.set_position({x: 900, y: 1200});
-    rat.lootable_on_death();
-    rat.animation.switch('move');
+    //   const point = archer.raycasting.contains_point(player.sprite);
+    //   console.log(point)
+    //   View_Aiming_Line.add_between_sprites(player.sprite, archer.sprite);
 
-    rat.prey.is_prey_to(enemy);
-    rat.prey.is_prey_to(player);
+    // }, 2000);
 
-    enemy.predator.is_predator_to(rat);
 
-    //pathfind_from_enemy_to_player(rat.sprite, player.sprite);
+    //const knife = get_item_by_name('rusty_knife');
+    //const enemy = new Enemy();
+    //enemy.sprite.position.set(1550,1000);
+    //enemy.with_light();
+    //enemy.animation.weapon = 'knife';
+    //enemy.inventory.equip_weapon(knife);
 
-    //this.test_backpack();
-    //this.test_intro();
-    //this.test_food();
-    //this.test_chest();
-    //this.test_campfire();
-    //this.test_rain();
-    //this.test_network_player();
+    //const rat = new Rat();
+    //rat.set_position({x: 900, y: 1200});
+    //rat.lootable_on_death();
+    //rat.animation.switch('move');
+
+    //rat.prey.is_prey_to(enemy);
+    //rat.prey.is_prey_to(player);
 
   }
 

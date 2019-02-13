@@ -1,9 +1,29 @@
 'use strict';
 
 const { viewport         } = require('../../engine/viewport');
+const { timer            } = require('../../engine/ticker');
 const { radian           } = require('../../utils/math');
 const { shoot_arrow      } = require('../../engine/bow');
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
+
+let arrow_speed = 5000;
+
+//TODO move this out of here
+const power_timer = timer.createTimer(500);
+power_timer.loop = true;
+power_timer.expire = true;
+power_timer.on('repeat', elapsed => {
+  if(arrow_speed < 1000) {
+    arrow_speed = 300;
+    return;
+  }
+
+  arrow_speed -= elapsed;
+});
+
+power_timer.on('stop', function() {
+  this.remove();
+});
 
 class Mouse {
   constructor(entity) {
@@ -16,22 +36,24 @@ class Mouse {
   }
 
   mouse_up(event) {
-    this.entity.animation.idle();
+    power_timer.stop();
     this.cone_timer.stop();
+    this.entity.animation.idle();
 
     const target = event.data.getLocalPosition(viewport);
     const origin = this.entity.sprite;
 
     const { ammo_type } = this.entity.inventory;
-    const { power     } = this.entity.vitals;
-
+    //const { power     } = this.entity.vitals;
     //TODO: consider weapon management system
     switch(ammo_type) {
-      case 'arrow': shoot_arrow(power, origin, target); return;
+      case 'arrow': shoot_arrow(origin, target,arrow_speed); return;
     }
   }
 
   mouse_down(event) {
+    arrow_speed = 3000;
+    power_timer.start();
     const mouse_position = event.data.getLocalPosition(viewport);
     const direction      = radian(mouse_position, this.entity.sprite);
 
