@@ -374,13 +374,12 @@ module.exports = {
 },{"../engine/entity_container.js":32,"../engine/pathfind.js":35,"../engine/ticker":40,"../utils/math":59,"./attributes/lootable":9,"./attributes/melee":10,"./attributes/ranged":14,"./types/enemy":20,"pixi.js":257}],4:[function(require,module,exports){
 'use strict';
 
-const { get_random_items, get_item } = require('../../items/item_data');
+const { get_item } = require('../../items/item_data');
 
 class Inventory {
   constructor() {
     this.name     = 'inventory';
     this.equipped = null;
-    this.slots    = [];
   }
 
   equip_weapon_by_name(name) {
@@ -428,9 +427,6 @@ class Inventory {
     return this.equipped.damage;
   }
 
-  populate_random_inventory(max) {
-    this.slots = get_random_items(max);
-  }
 }
 
 module.exports = {
@@ -650,6 +646,7 @@ class Lootable {
       this.looted = true;
 
       icon.remove();
+
       console.log('looting corpse');
     });
   }
@@ -690,32 +687,15 @@ module.exports = {
 },{"../../engine/melee":34}],11:[function(require,module,exports){
 'use strict';
 
+const { gui_container } = require('../../engine/pixi_containers');
 const { viewport         } = require('../../engine/viewport');
-const { timer            } = require('../../engine/ticker');
 const { radian           } = require('../../utils/math');
 const {
   shoot_arrow_with_collision,
 } = require('../../engine/ranged');
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
 
-let arrow_speed = 5000;
-
-//TODO move this out of here
-const power_timer = timer.createTimer(500);
-power_timer.loop = true;
-power_timer.expire = true;
-power_timer.on('repeat', elapsed => {
-  if(arrow_speed < 1000) {
-    arrow_speed = 300;
-    return;
-  }
-
-  arrow_speed -= elapsed;
-});
-
-power_timer.on('stop', function() {
-  this.remove();
-});
+const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
 
 class Mouse {
   constructor(entity) {
@@ -728,48 +708,38 @@ class Mouse {
   }
 
   mouse_up(event) {
-    power_timer.stop();
     this.cone_timer.stop();
     this.entity.animation.idle();
 
-    const target = event.data.getLocalPosition(viewport);
-
+    const mouse_position = event.data.getLocalPosition(viewport);
     const { ammo_type, weapon_speed } = this.entity.inventory;
 
     switch(ammo_type) {
       case 'arrow':
-        shoot_arrow_with_collision(this.entity, target, weapon_speed);
+        shoot_arrow_with_collision(this.entity, mouse_position, weapon_speed);
         return;
     }
   }
 
   mouse_down(event) {
-    arrow_speed = 3000;
-    power_timer.start();
     const mouse_position = event.data.getLocalPosition(viewport);
     const direction      = radian(mouse_position, this.entity.sprite);
 
     this.entity.animation.ready_weapon();
     this.entity.sprite.rotation = direction;
 
-    const { cone_timer, cone } =
-      View_Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
+    this.cone_timer = View_Aiming_Cone.start_at(this.entity.sprite);
 
-    //TODO remove cone manageemnt out of here
-    this.cone_timer = cone_timer;
-    this.cone       = cone;
     this.cone_timer.start();
   }
 
   mouse_move(event) {
     const mouse_position = event.data.getLocalPosition(viewport);
+    const rotation = radian(mouse_position, this.entity.sprite);
 
-    this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
+    this.entity.sprite.rotation = rotation;
 
-    //TODO remove -1.57
-    if(this.cone) {
-      this.cone.rotation = this.entity.sprite.rotation - 1.57;
-    }
+    cone.rotation = rotation - 1.57;
   }
 }
 
@@ -777,7 +747,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../engine/ranged":37,"../../engine/ticker":40,"../../engine/viewport":41,"../../utils/math":59,"../../view/view_aiming_cone":61}],12:[function(require,module,exports){
+},{"../../engine/pixi_containers":36,"../../engine/ranged":37,"../../engine/viewport":41,"../../utils/math":59,"../../view/view_aiming_cone":61}],12:[function(require,module,exports){
 'use strict';
 
 const { timer                         } = require('../../engine/ticker');
@@ -1223,7 +1193,6 @@ const { Character  } = require('../character_model');
 const { Human      } = require('../animations/character');
 
 const { Vitals     } = require('../attributes/vitals');
-const { Inventory  } = require('../attributes/Inventory');
 const { Predator   } = require('../attributes/predator');
 const { Raycasting } = require('../attributes/raycasting');
 
@@ -1234,7 +1203,6 @@ class Enemy extends Character {
     this.sprite.name = 'enemy';
 
     this.add_component(new Human(this.sprite));
-    this.add_component(new Inventory());
     this.add_component(new Predator(this));
     this.add_component(new Vitals(this));
     this.add_component(new Raycasting(this.sprite));
@@ -1247,7 +1215,7 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":36,"../animations/character":1,"../attributes/Inventory":4,"../attributes/predator":12,"../attributes/raycasting":15,"../attributes/vitals":17,"../character_model":18}],21:[function(require,module,exports){
+},{"../../engine/pixi_containers":36,"../animations/character":1,"../attributes/predator":12,"../attributes/raycasting":15,"../attributes/vitals":17,"../character_model":18}],21:[function(require,module,exports){
 'use strict';
 
 
@@ -9247,11 +9215,21 @@ const PIXI = require('pixi.js');
 const { gui_container } = require('../engine/pixi_containers');
 const { timer         } = require('../engine/ticker');
 
+const cone = PIXI.Sprite.fromFrame('yellow_triangle');
+cone.anchor.x = 0.5;
+cone.name = 'aiming_cone';
+gui_container.addChild(cone);
+
 class View_Aiming_Cone {
-  static start_at(point, rotation) {
-    const cone        = this.add_at(point, rotation);
+  static start_at(point) {
+    cone.position.set(point.x, point.y);
+    cone.height   = 800;
+    cone.width    = 600;
+    cone.alpha    = 0;
+
     const cone_timer  = timer.createTimer(50);
     cone_timer.repeat = 55;
+
     cone_timer.on('repeat', () => {
       cone.width  -= 12;
       cone.height += 6;
@@ -9259,26 +9237,15 @@ class View_Aiming_Cone {
     });
 
     cone_timer.on('stop', function() {
-      gui_container.removeChild(cone);
+      this.remove();
+      cone.alpha = 0;
+    });
+
+    cone_timer.on('end', function() {
       this.remove();
     });
 
-    return { cone_timer, cone };
-  }
-
-  static add_at(point, rotation) {
-    const aiming_cone = PIXI.Sprite.fromFrame('yellow_triangle');
-
-    aiming_cone.rotation = rotation;
-    aiming_cone.height   = 800;
-    aiming_cone.width    = 600;
-    aiming_cone.anchor.x = 0.5;
-    aiming_cone.alpha    = 0;
-    aiming_cone.name = 'aiming_cone';
-    aiming_cone.position.set(point.x, point.y);
-
-    gui_container.addChild(aiming_cone);
-    return aiming_cone;
+    return cone_timer;
   }
 }
 

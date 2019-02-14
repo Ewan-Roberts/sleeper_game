@@ -1,12 +1,11 @@
 'use strict';
 
-const { get_random_items, get_item } = require('../../items/item_data');
+const { get_item } = require('../../items/item_data');
 
 class Inventory {
   constructor() {
     this.name     = 'inventory';
     this.equipped = null;
-    this.slots    = [];
   }
 
   equip_weapon_by_name(name) {
@@ -54,9 +53,6 @@ class Inventory {
     return this.equipped.damage;
   }
 
-  populate_random_inventory(max) {
-    this.slots = get_random_items(max);
-  }
 }
 
 module.exports = {

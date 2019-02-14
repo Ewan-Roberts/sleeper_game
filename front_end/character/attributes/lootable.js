@@ -29,6 +29,7 @@ class Lootable {
       this.looted = true;
 
       icon.remove();
+
       console.log('looting corpse');
     });
   }
