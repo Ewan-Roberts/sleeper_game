@@ -2,7 +2,6 @@
 
 const { shoot_arrow      } = require('../../engine/ranged');
 const { View_Aiming_Line } = require('../../view/view_aiming_line');
-
 const { radian } = require('../../utils/math');
 
 class Range {

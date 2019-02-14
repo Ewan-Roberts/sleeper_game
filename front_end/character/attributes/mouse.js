@@ -3,7 +3,9 @@
 const { viewport         } = require('../../engine/viewport');
 const { timer            } = require('../../engine/ticker');
 const { radian           } = require('../../utils/math');
-const { shoot_arrow      } = require('../../engine/bow');
+const {
+  shoot_arrow_with_collision,
+} = require('../../engine/ranged');
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
 
 let arrow_speed = 5000;
@@ -41,13 +43,14 @@ class Mouse {
     this.entity.animation.idle();
 
     const target = event.data.getLocalPosition(viewport);
-    const origin = this.entity.sprite;
 
     const { ammo_type } = this.entity.inventory;
     //const { power     } = this.entity.vitals;
     //TODO: consider weapon management system
     switch(ammo_type) {
-      case 'arrow': shoot_arrow(origin, target,arrow_speed); return;
+      case 'arrow':
+        shoot_arrow_with_collision(this.entity, target, arrow_speed);
+        return;
     }
   }
 
