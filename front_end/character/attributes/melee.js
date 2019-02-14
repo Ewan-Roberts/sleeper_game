@@ -11,7 +11,9 @@ class Melee {
 
   attack_from_to(attacker, target) {
     attacker.inventory.equip_weapon_by_name(this.weapon);
-    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
+    attacker.animation.weapon =
+      attacker.inventory.equipped_weapon.animation_name;
+
     attacker.animation.attack();
 
     melee_attack(attacker, target);

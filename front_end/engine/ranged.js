@@ -1,6 +1,5 @@
 'use strict';
 const PIXI                 = require('pixi.js');
-const tweenManager         = require('pixi-tween');
 
 const { radian           } = require('../utils/math');
 const { Dialog           } = require('../cutscene/dialog_util');

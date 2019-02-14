@@ -10,11 +10,11 @@ const raycast_timer  = timer.createTimer(80);
 raycast_timer.repeat = 80;
 raycast_timer.expire = true;
 
-/*
- * @param {Object} PIXI.Sprite
- **/
 
 class Raycasting {
+  /*
+   * @param {Object} PIXI.Sprite
+   **/
   constructor(sprite) {
     this.raycast = new PIXI.Graphics();
     this.name    = 'raycasting';
