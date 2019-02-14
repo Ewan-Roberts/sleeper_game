@@ -2,6 +2,7 @@ ITEM README
 
 To be an item model you must have:
 
+```
 name:           'rusty_knife',// for searching
 animation_name: 'knife',      // when a character switches it needs a general aniamtion state
 id:             1001,
@@ -16,4 +17,4 @@ condition:      100,
 visual_name: 'rusty knife',   // for rending in the DOM
 description: 'The rusty knife someone sharpened on what looks like a rock',
 image_name:  'rusty_knife',   // for pulling from the spritesheet
-
+```
