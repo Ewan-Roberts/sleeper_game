@@ -24,7 +24,7 @@ class View_Inventory {
     if(!point) throw new Error('needs a point: ' + point);
 
     this.slot_container = new PIXI.Container();
-    this.slot_container.position.set(point.x+200, point.y);
+    this.slot_container.position.set(point.x + 200, point.y);
 
     for(let i = 0; i <= slots; i++) {
       const sprite  = PIXI.Sprite.fromFrame('item_slot');

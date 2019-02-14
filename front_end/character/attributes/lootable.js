@@ -2,6 +2,7 @@
 
 const { get_random_items } = require('../../items/item_data');
 const { View_Inventory   } = require('../../view/view_inventory');
+const { icon             } = require('../../cutscene/icons');
 
 class Lootable {
   constructor(entity) {
@@ -15,7 +16,10 @@ class Lootable {
   show() {
     if(!this.looted) {
       this.loot = get_random_items();
+
+      icon.add_image_at('bunny', this.entity.sprite);
     }
+
 
     this.entity.sprite.buttonMode = true;
     this.entity.sprite.on('click', () => {
@@ -24,6 +28,7 @@ class Lootable {
       this.entity.sprite.buttonMode = false;
       this.looted = true;
 
+      icon.remove();
       console.log('looting corpse');
     });
   }
