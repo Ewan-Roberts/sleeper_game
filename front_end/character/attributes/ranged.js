@@ -21,7 +21,7 @@ class Range {
 
     View_Aiming_Line.add_between_sprites(target.sprite, attacker.sprite);
 
-    setTimeout(() => shoot_arrow(attacker, target),1000);
+    shoot_arrow(attacker, target);
   }
 }
 

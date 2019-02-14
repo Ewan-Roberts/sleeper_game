@@ -883,7 +883,7 @@ class Range {
 
     View_Aiming_Line.add_between_sprites(target.sprite, attacker.sprite);
 
-    setTimeout(() => shoot_arrow(attacker, target),1000);
+    shoot_arrow(attacker, target);
   }
 }
 
@@ -1044,21 +1044,12 @@ class Vitals {
 
   kill() {
     this.status = 'dead';
+    if(this.entity.name === 'player') Game.over();
 
-    if('loot' in this.entity) {
-      this.entity.loot.show();
-    }
+    if('loot'  in this.entity) this.entity.loot.show();
+    if('logic' in this.entity) this.entity.logic.stop();
 
     this.entity.animation.kill();
-
-    //move this into the player model
-    if(this.entity.name === 'player') {
-      this.entity.remove_component('keyboard');
-      this.entity.remove_component('mouse');
-      this.entity.remove_component('animation');
-
-      Game.over();
-    }
   }
 
   damage(damage) {
@@ -9230,7 +9221,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"socket.io-client":299}],61:[function(require,module,exports){
+},{"socket.io-client":304}],61:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -10324,7 +10315,7 @@ function earcut(data, holeIndices, dim) {
         outerNode = linkedList(data, 0, outerLen, dim, true),
         triangles = [];
 
-    if (!outerNode) return triangles;
+    if (!outerNode || outerNode.next === outerNode.prev) return triangles;
 
     var minX, minY, maxX, maxY, x, y, invSize;
 
@@ -10419,7 +10410,7 @@ function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {
 
             removeNode(ear);
 
-            // skipping the next vertice leads to less sliver triangles
+            // skipping the next vertex leads to less sliver triangles
             ear = next.next;
             stop = next.next;
 
@@ -10761,7 +10752,7 @@ function getLeftmost(start) {
     var p = start,
         leftmost = start;
     do {
-        if (p.x < leftmost.x) leftmost = p;
+        if (p.x < leftmost.x || (p.x === leftmost.x && p.y < leftmost.y)) leftmost = p;
         p = p.next;
     } while (p !== start);
 
@@ -10883,14 +10874,14 @@ function removeNode(p) {
 }
 
 function Node(i, x, y) {
-    // vertice index in coordinates array
+    // vertex index in coordinates array
     this.i = i;
 
     // vertex coordinates
     this.x = x;
     this.y = y;
 
-    // previous and next vertice nodes in a polygon ring
+    // previous and next vertex nodes in a polygon ring
     this.prev = null;
     this.next = null;
 
@@ -13430,7 +13421,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":81,"component-inherit":74,"debug":88,"engine.io-parser":90,"parseqs":105,"xmlhttprequest-ssl":87,"yeast":313}],86:[function(require,module,exports){
+},{"../transport":81,"component-inherit":74,"debug":88,"engine.io-parser":90,"parseqs":105,"xmlhttprequest-ssl":87,"yeast":318}],86:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -13720,7 +13711,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":81,"component-inherit":74,"debug":88,"engine.io-parser":90,"parseqs":105,"ws":315,"yeast":313}],87:[function(require,module,exports){
+},{"../transport":81,"component-inherit":74,"debug":88,"engine.io-parser":90,"parseqs":105,"ws":320,"yeast":318}],87:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -13960,7 +13951,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":89,"_process":319}],89:[function(require,module,exports){
+},{"./debug":89,"_process":324}],89:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -15458,7 +15449,7 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":316,"isarray":95}],95:[function(require,module,exports){
+},{"buffer":321,"isarray":95}],95:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
@@ -15876,144 +15867,7 @@ module.exports = function(arr, obj){
   return -1;
 };
 },{}],100:[function(require,module,exports){
-/**
- * isMobile.js v0.4.1
- *
- * A simple library to detect Apple phones and tablets,
- * Android phones and tablets, other mobile devices (like blackberry, mini-opera and windows phone),
- * and any kind of seven inch device, via user agent sniffing.
- *
- * @author: Kai Mallea (kmallea@gmail.com)
- *
- * @license: http://creativecommons.org/publicdomain/zero/1.0/
- */
-(function (global) {
-
-    var apple_phone         = /iPhone/i,
-        apple_ipod          = /iPod/i,
-        apple_tablet        = /iPad/i,
-        android_phone       = /(?=.*\bAndroid\b)(?=.*\bMobile\b)/i, // Match 'Android' AND 'Mobile'
-        android_tablet      = /Android/i,
-        amazon_phone        = /(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i,
-        amazon_tablet       = /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i,
-        windows_phone       = /Windows Phone/i,
-        windows_tablet      = /(?=.*\bWindows\b)(?=.*\bARM\b)/i, // Match 'Windows' AND 'ARM'
-        other_blackberry    = /BlackBerry/i,
-        other_blackberry_10 = /BB10/i,
-        other_opera         = /Opera Mini/i,
-        other_chrome        = /(CriOS|Chrome)(?=.*\bMobile\b)/i,
-        other_firefox       = /(?=.*\bFirefox\b)(?=.*\bMobile\b)/i, // Match 'Firefox' AND 'Mobile'
-        seven_inch = new RegExp(
-            '(?:' +         // Non-capturing group
-
-            'Nexus 7' +     // Nexus 7
-
-            '|' +           // OR
-
-            'BNTV250' +     // B&N Nook Tablet 7 inch
-
-            '|' +           // OR
-
-            'Kindle Fire' + // Kindle Fire
-
-            '|' +           // OR
-
-            'Silk' +        // Kindle Fire, Silk Accelerated
-
-            '|' +           // OR
-
-            'GT-P1000' +    // Galaxy Tab 7 inch
-
-            ')',            // End non-capturing group
-
-            'i');           // Case-insensitive matching
-
-    var match = function(regex, userAgent) {
-        return regex.test(userAgent);
-    };
-
-    var IsMobileClass = function(userAgent) {
-        var ua = userAgent || navigator.userAgent;
-
-        // Facebook mobile app's integrated browser adds a bunch of strings that
-        // match everything. Strip it out if it exists.
-        var tmp = ua.split('[FBAN');
-        if (typeof tmp[1] !== 'undefined') {
-            ua = tmp[0];
-        }
-
-        // Twitter mobile app's integrated browser on iPad adds a "Twitter for
-        // iPhone" string. Same probable happens on other tablet platforms.
-        // This will confuse detection so strip it out if it exists.
-        tmp = ua.split('Twitter');
-        if (typeof tmp[1] !== 'undefined') {
-            ua = tmp[0];
-        }
-
-        this.apple = {
-            phone:  match(apple_phone, ua),
-            ipod:   match(apple_ipod, ua),
-            tablet: !match(apple_phone, ua) && match(apple_tablet, ua),
-            device: match(apple_phone, ua) || match(apple_ipod, ua) || match(apple_tablet, ua)
-        };
-        this.amazon = {
-            phone:  match(amazon_phone, ua),
-            tablet: !match(amazon_phone, ua) && match(amazon_tablet, ua),
-            device: match(amazon_phone, ua) || match(amazon_tablet, ua)
-        };
-        this.android = {
-            phone:  match(amazon_phone, ua) || match(android_phone, ua),
-            tablet: !match(amazon_phone, ua) && !match(android_phone, ua) && (match(amazon_tablet, ua) || match(android_tablet, ua)),
-            device: match(amazon_phone, ua) || match(amazon_tablet, ua) || match(android_phone, ua) || match(android_tablet, ua)
-        };
-        this.windows = {
-            phone:  match(windows_phone, ua),
-            tablet: match(windows_tablet, ua),
-            device: match(windows_phone, ua) || match(windows_tablet, ua)
-        };
-        this.other = {
-            blackberry:   match(other_blackberry, ua),
-            blackberry10: match(other_blackberry_10, ua),
-            opera:        match(other_opera, ua),
-            firefox:      match(other_firefox, ua),
-            chrome:       match(other_chrome, ua),
-            device:       match(other_blackberry, ua) || match(other_blackberry_10, ua) || match(other_opera, ua) || match(other_firefox, ua) || match(other_chrome, ua)
-        };
-        this.seven_inch = match(seven_inch, ua);
-        this.any = this.apple.device || this.android.device || this.windows.device || this.other.device || this.seven_inch;
-
-        // excludes 'other' devices and ipods, targeting touchscreen phones
-        this.phone = this.apple.phone || this.android.phone || this.windows.phone;
-
-        // excludes 7 inch devices, classifying as phone or tablet is left to the user
-        this.tablet = this.apple.tablet || this.android.tablet || this.windows.tablet;
-
-        if (typeof window === 'undefined') {
-            return this;
-        }
-    };
-
-    var instantiate = function() {
-        var IM = new IsMobileClass();
-        IM.Class = IsMobileClass;
-        return IM;
-    };
-
-    if (typeof module !== 'undefined' && module.exports && typeof window === 'undefined') {
-        //node
-        module.exports = IsMobileClass;
-    } else if (typeof module !== 'undefined' && module.exports && typeof window !== 'undefined') {
-        //browserify
-        module.exports = instantiate();
-    } else if (typeof define === 'function' && define.amd) {
-        //AMD
-        define('isMobile', [], global.isMobile = instantiate());
-    } else {
-        global.isMobile = instantiate();
-    }
-
-})(this);
-
+!function(e){var n=/iPhone/i,t=/iPod/i,r=/iPad/i,a=/\bAndroid(?:.+)Mobile\b/i,p=/Android/i,l=/\bAndroid(?:.+)SD4930UR\b/i,b=/\bAndroid(?:.+)(?:KF[A-Z]{2,4})\b/i,f=/Windows Phone/i,u=/\bWindows(?:.+)ARM\b/i,c=/BlackBerry/i,s=/BB10/i,v=/Opera Mini/i,h=/\b(CriOS|Chrome)(?:.+)Mobile/i,w=/\Mobile(?:.+)Firefox\b/i;function m(e,i){return e.test(i)}function i(e){var i=e||("undefined"!=typeof navigator?navigator.userAgent:""),o=i.split("[FBAN");void 0!==o[1]&&(i=o[0]),void 0!==(o=i.split("Twitter"))[1]&&(i=o[0]);var d={apple:{phone:m(n,i)&&!m(f,i),ipod:m(t,i),tablet:!m(n,i)&&m(r,i)&&!m(f,i),device:(m(n,i)||m(t,i)||m(r,i))&&!m(f,i)},amazon:{phone:m(l,i),tablet:!m(l,i)&&m(b,i),device:m(l,i)||m(b,i)},android:{phone:!m(f,i)&&m(l,i)||!m(f,i)&&m(a,i),tablet:!m(f,i)&&!m(l,i)&&!m(a,i)&&(m(b,i)||m(p,i)),device:!m(f,i)&&(m(l,i)||m(b,i)||m(a,i)||m(p,i))},windows:{phone:m(f,i),tablet:m(u,i),device:m(f,i)||m(u,i)},other:{blackberry:m(c,i),blackberry10:m(s,i),opera:m(v,i),firefox:m(w,i),chrome:m(h,i),device:m(c,i)||m(s,i)||m(v,i)||m(w,i)||m(h,i)}};return d.any=d.apple.device||d.android.device||d.windows.device||d.other.device,d.phone=d.apple.phone||d.android.phone||d.windows.phone,d.tablet=d.apple.tablet||d.android.tablet||d.windows.tablet,d}"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=i:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=i():"function"==typeof define&&define.amd?define([],e.isMobile=i()):e.isMobile=i()}(this);
 },{}],101:[function(require,module,exports){
 'use strict';
 
@@ -18570,7 +18424,7 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":297}],126:[function(require,module,exports){
+},{"resource-loader":303}],126:[function(require,module,exports){
 !function(e){function t(r){if(i[r])return i[r].exports;var n=i[r]={exports:{},id:r,loaded:!1};return e[r].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t,i){e.exports=i(4)},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function s(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}var o=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var u=i(2),l=r(u),h=function(e){function t(){var e=arguments.length<=0||void 0===arguments[0]?1:arguments[0],i=arguments[1];n(this,t);var r=a(this,Object.getPrototypeOf(t).call(this));return r.time=e,i&&r.addTo(i),r.active=!1,r.isEnded=!1,r.isStarted=!1,r.expire=!1,r.delay=0,r.repeat=0,r.loop=!1,r._delayTime=0,r._elapsedTime=0,r._repeat=0,r}return s(t,e),o(t,[{key:"addTo",value:function(e){return this.manager=e,this.manager.addTimer(this),this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTimer(this),this):void 0}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop",this._elapsedTime),this}},{key:"reset",value:function(){return this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this}},{key:"update",value:function(e,t){if(this.active){if(this.delay>this._delayTime)return void(this._delayTime+=t);if(this.isStarted||(this.isStarted=!0,this.emit("start",this._elapsedTime)),this.time>this._elapsedTime){var i=this._elapsedTime+t,r=i>=this.time;if(this._elapsedTime=r?this.time:i,this.emit("update",this._elapsedTime,e),r){if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._elapsedTime,this._repeat),void(this._elapsedTime=0);this.isEnded=!0,this.active=!1,this.emit("end",this._elapsedTime)}}}}}]),t}(l["default"].utils.EventEmitter);t["default"]=h},function(e,t){e.exports=PIXI},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var a=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var s=i(1),o=r(s),u=function(){function e(){n(this,e),this.timers=[],this._timersToDelete=[],this._last=0}return a(e,[{key:"update",value:function(e){var t=void 0;e||0===e?t=1e3*e:(t=this._getDeltaMS(),e=t/1e3);for(var i=0;i<this.timers.length;i++){var r=this.timers[i];r.active&&(r.update(e,t),r.isEnded&&r.expire&&r.remove())}if(this._timersToDelete.length){for(var i=0;i<this._timersToDelete.length;i++)this._remove(this._timersToDelete[i]);this._timersToDelete.length=0}}},{key:"removeTimer",value:function(e){this._timersToDelete.push(e)}},{key:"addTimer",value:function(e){e.manager=this,this.timers.push(e)}},{key:"createTimer",value:function(e){return new o["default"](e,this)}},{key:"_remove",value:function(e){var t=this.timers.indexOf(e);t>0&&this.timers.splice(t,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var e=Date.now(),t=e-this._last;return this._last=e,t}}]),e}();t["default"]=u},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var n=i(2),a=r(n),s=i(3),o=r(s),u=i(1),l=r(u),h={TimerManager:o["default"],Timer:l["default"]};a["default"].timerManager||(a["default"].timerManager=new o["default"],a["default"].timer=h),t["default"]=h}]);
 
 },{}],127:[function(require,module,exports){
@@ -22833,7 +22687,7 @@ exports.__esModule = true;
  * @name VERSION
  * @type {string}
  */
-var VERSION = exports.VERSION = '4.8.2';
+var VERSION = exports.VERSION = '4.8.5';
 
 /**
  * Two Pi.
@@ -25286,8 +25140,10 @@ var TransformStatic = function (_TransformBase) {
         },
         set: function set(value) // eslint-disable-line require-jsdoc
         {
-            this._rotation = value;
-            this.updateSkew();
+            if (this._rotation !== value) {
+                this._rotation = value;
+                this.updateSkew();
+            }
         }
     }]);
 
@@ -28202,11 +28058,11 @@ function buildRoundedRectangle(graphicsData, webGLData, webGLDataNativeLines) {
 
     var recPoints = [];
 
-    recPoints.push(x, y + radius);
-    quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height, recPoints);
-    quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius, recPoints);
-    quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y, recPoints);
-    quadraticBezierCurve(x + radius, y, x, y, x, y + radius + 0.0000000001, recPoints);
+    recPoints.push(x + radius, y);
+    quadraticBezierCurve(x + width - radius, y, x + width, y, x + width, y + radius, recPoints);
+    quadraticBezierCurve(x + width, y + height - radius, x + width, y + height, x + width - radius, y + height, recPoints);
+    quadraticBezierCurve(x + radius, y + height, x, y + height, x, y + height - radius, recPoints);
+    quadraticBezierCurve(x, y + radius, x, y, x + radius + 0.0000000001, y, recPoints);
 
     // this tiny number deals with the issue that occurs when points overlap and earcut fails to triangulate the item.
     // TODO - fix this properly, this is not very elegant.. but it works for now.
@@ -33610,7 +33466,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":172,"../../../../textures/TextureMatrix":218,"../Filter":188,"path":318}],192:[function(require,module,exports){
+},{"../../../../math":172,"../../../../textures/TextureMatrix":218,"../Filter":188,"path":323}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37410,7 +37266,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":146,"path":318}],210:[function(require,module,exports){
+},{"../../Shader":146,"path":323}],210:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39633,8 +39489,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * and rotation of the given Display Objects is ignored. For example:
  *
  * ```js
- * let renderer = PIXI.autoDetectRenderer(1024, 1024, { view: canvas, ratio: 1 });
- * let baseRenderTexture = new PIXI.BaseRenderTexture(renderer, 800, 600);
+ * let renderer = PIXI.autoDetectRenderer(1024, 1024);
+ * let baseRenderTexture = new PIXI.BaseRenderTexture(800, 600);
+ * let renderTexture = new PIXI.RenderTexture(baseRenderTexture);
  * let sprite = PIXI.Sprite.fromImage("spinObj_01.png");
  *
  * sprite.position.x = 800/2;
@@ -39642,7 +39499,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * sprite.anchor.x = 0.5;
  * sprite.anchor.y = 0.5;
  *
- * baseRenderTexture.render(sprite);
+ * renderer.render(sprite, renderTexture);
  * ```
  *
  * The Sprite in this case will be rendered using its local transform. To render this sprite at 0,0
@@ -40640,7 +40497,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * A RenderTexture takes a snapshot of any Display Object given to its render method. For example:
  *
  * ```js
- * let renderer = PIXI.autoDetectRenderer(1024, 1024, { view: canvas, ratio: 1 });
+ * let renderer = PIXI.autoDetectRenderer(1024, 1024);
  * let renderTexture = PIXI.RenderTexture.create(800, 600);
  * let sprite = PIXI.Sprite.fromImage("spinObj_01.png");
  *
@@ -41393,7 +41250,7 @@ var Texture = function (_EventEmitter) {
 
 
     Texture.prototype.clone = function clone() {
-        return new Texture(this.baseTexture, this.frame, this.orig, this.trim, this.rotate);
+        return new Texture(this.baseTexture, this.frame, this.orig, this.trim, this.rotate, this.defaultAnchor);
     };
 
     /**
@@ -41478,16 +41335,18 @@ var Texture = function (_EventEmitter) {
      * @static
      * @param {HTMLVideoElement|string} video - The URL or actual element of the video
      * @param {number} [scaleMode=PIXI.settings.SCALE_MODE] - See {@link PIXI.SCALE_MODES} for possible values
+     * @param {boolean} [crossorigin=(auto)] - Should use anonymous CORS? Defaults to true if the URL is not a data-URI.
+     * @param {boolean} [autoPlay=true] - Start playing video as soon as it is loaded
      * @return {PIXI.Texture} The newly created texture
      */
 
 
-    Texture.fromVideo = function fromVideo(video, scaleMode) {
+    Texture.fromVideo = function fromVideo(video, scaleMode, crossorigin, autoPlay) {
         if (typeof video === 'string') {
-            return Texture.fromVideoUrl(video, scaleMode);
+            return Texture.fromVideoUrl(video, scaleMode, crossorigin, autoPlay);
         }
 
-        return new Texture(_VideoBaseTexture2.default.fromVideo(video, scaleMode));
+        return new Texture(_VideoBaseTexture2.default.fromVideo(video, scaleMode, autoPlay));
     };
 
     /**
@@ -41496,12 +41355,14 @@ var Texture = function (_EventEmitter) {
      * @static
      * @param {string} videoUrl - URL of the video
      * @param {number} [scaleMode=PIXI.settings.SCALE_MODE] - See {@link PIXI.SCALE_MODES} for possible values
+     * @param {boolean} [crossorigin=(auto)] - Should use anonymous CORS? Defaults to true if the URL is not a data-URI.
+     * @param {boolean} [autoPlay=true] - Start playing video as soon as it is loaded
      * @return {PIXI.Texture} The newly created texture
      */
 
 
-    Texture.fromVideoUrl = function fromVideoUrl(videoUrl, scaleMode) {
-        return new Texture(_VideoBaseTexture2.default.fromUrl(videoUrl, scaleMode));
+    Texture.fromVideoUrl = function fromVideoUrl(videoUrl, scaleMode, crossorigin, autoPlay) {
+        return new Texture(_VideoBaseTexture2.default.fromUrl(videoUrl, scaleMode, crossorigin, autoPlay));
     };
 
     /**
@@ -42052,10 +41913,10 @@ var TextureUvs = function () {
             this.y3 = (frame.y + frame.height) / th;
         }
 
-        this.uvsUint32[0] = (this.y0 * 65535 & 0xFFFF) << 16 | this.x0 * 65535 & 0xFFFF;
-        this.uvsUint32[1] = (this.y1 * 65535 & 0xFFFF) << 16 | this.x1 * 65535 & 0xFFFF;
-        this.uvsUint32[2] = (this.y2 * 65535 & 0xFFFF) << 16 | this.x2 * 65535 & 0xFFFF;
-        this.uvsUint32[3] = (this.y3 * 65535 & 0xFFFF) << 16 | this.x3 * 65535 & 0xFFFF;
+        this.uvsUint32[0] = (Math.round(this.y0 * 65535) & 0xFFFF) << 16 | Math.round(this.x0 * 65535) & 0xFFFF;
+        this.uvsUint32[1] = (Math.round(this.y1 * 65535) & 0xFFFF) << 16 | Math.round(this.x1 * 65535) & 0xFFFF;
+        this.uvsUint32[2] = (Math.round(this.y2 * 65535) & 0xFFFF) << 16 | Math.round(this.x2 * 65535) & 0xFFFF;
+        this.uvsUint32[3] = (Math.round(this.y3 * 65535) & 0xFFFF) << 16 | Math.round(this.x3 * 65535) & 0xFFFF;
     };
 
     return TextureUvs;
@@ -42124,8 +41985,11 @@ var VideoBaseTexture = function (_BaseTexture) {
     /**
      * @param {HTMLVideoElement} source - Video source
      * @param {number} [scaleMode=PIXI.settings.SCALE_MODE] - See {@link PIXI.SCALE_MODES} for possible values
+     * @param {boolean} [autoPlay=true] - Start playing video as soon as it is loaded
      */
     function VideoBaseTexture(source, scaleMode) {
+        var autoPlay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
         _classCallCheck(this, VideoBaseTexture);
 
         if (!source) {
@@ -42154,7 +42018,7 @@ var VideoBaseTexture = function (_BaseTexture) {
          * @member {boolean}
          * @default true
          */
-        _this.autoPlay = true;
+        _this.autoPlay = autoPlay;
 
         _this.update = _this.update.bind(_this);
         _this._onCanPlay = _this._onCanPlay.bind(_this);
@@ -42292,11 +42156,12 @@ var VideoBaseTexture = function (_BaseTexture) {
      * @static
      * @param {HTMLVideoElement} video - Video to create texture from
      * @param {number} [scaleMode=PIXI.settings.SCALE_MODE] - See {@link PIXI.SCALE_MODES} for possible values
+     * @param {boolean} [autoPlay=true] - Start playing video as soon as it is loaded
      * @return {PIXI.VideoBaseTexture} Newly created VideoBaseTexture
      */
 
 
-    VideoBaseTexture.fromVideo = function fromVideo(video, scaleMode) {
+    VideoBaseTexture.fromVideo = function fromVideo(video, scaleMode, autoPlay) {
         if (!video._pixiId) {
             video._pixiId = 'video_' + (0, _utils.uid)();
         }
@@ -42304,7 +42169,7 @@ var VideoBaseTexture = function (_BaseTexture) {
         var baseTexture = _utils.BaseTextureCache[video._pixiId];
 
         if (!baseTexture) {
-            baseTexture = new VideoBaseTexture(video, scaleMode);
+            baseTexture = new VideoBaseTexture(video, scaleMode, autoPlay);
             _BaseTexture3.default.addToCache(baseTexture, video._pixiId);
         }
 
@@ -42322,11 +42187,12 @@ var VideoBaseTexture = function (_BaseTexture) {
      *  the url's extension will be used as the second part of the mime type.
      * @param {number} scaleMode - See {@link PIXI.SCALE_MODES} for possible values
      * @param {boolean} [crossorigin=(auto)] - Should use anonymous CORS? Defaults to true if the URL is not a data-URI.
+     * @param {boolean} [autoPlay=true] - Start playing video as soon as it is loaded
      * @return {PIXI.VideoBaseTexture} Newly created VideoBaseTexture
      */
 
 
-    VideoBaseTexture.fromUrl = function fromUrl(videoSrc, scaleMode, crossorigin) {
+    VideoBaseTexture.fromUrl = function fromUrl(videoSrc, scaleMode, crossorigin, autoPlay) {
         var video = document.createElement('video');
 
         video.setAttribute('webkit-playsinline', '');
@@ -42353,7 +42219,7 @@ var VideoBaseTexture = function (_BaseTexture) {
 
         video.load();
 
-        return VideoBaseTexture.fromVideo(video, scaleMode);
+        return VideoBaseTexture.fromVideo(video, scaleMode, autoPlay);
     };
 
     /**
@@ -42394,8 +42260,9 @@ VideoBaseTexture.fromUrls = VideoBaseTexture.fromUrl;
 
 function createSource(path, type) {
     if (!type) {
-        path = path.split('?').shift().toLowerCase();
-        type = 'video/' + path.substr(path.lastIndexOf('.') + 1);
+        var purePath = path.split('?').shift().toLowerCase();
+
+        type = 'video/' + purePath.substr(purePath.lastIndexOf('.') + 1);
     }
 
     var source = document.createElement('source');
@@ -43237,7 +43104,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":324}],227:[function(require,module,exports){
+},{"url":329}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43720,7 +43587,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":148,"../settings":203,"./mapPremultipliedBlendModes":228,"./mixin":230,"./pluginTarget":231,"earcut":75,"eventemitter3":93,"ismobilejs":100,"remove-array-items":292}],228:[function(require,module,exports){
+},{"../const":148,"../settings":203,"./mapPremultipliedBlendModes":228,"./mixin":230,"./pluginTarget":231,"earcut":75,"eventemitter3":93,"ismobilejs":100,"remove-array-items":298}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46823,24 +46690,42 @@ var TilingSprite = function (_core$Sprite) {
         var context = renderer.context;
         var transform = this.worldTransform;
         var resolution = renderer.resolution;
+        var isTextureRotated = texture.rotate === 2;
         var baseTexture = texture.baseTexture;
         var baseTextureResolution = baseTexture.resolution;
-        var modX = this.tilePosition.x / this.tileScale.x % texture._frame.width * baseTextureResolution;
-        var modY = this.tilePosition.y / this.tileScale.y % texture._frame.height * baseTextureResolution;
+        var modX = this.tilePosition.x / this.tileScale.x % texture.orig.width * baseTextureResolution;
+        var modY = this.tilePosition.y / this.tileScale.y % texture.orig.height * baseTextureResolution;
 
         // create a nice shiny pattern!
         if (this._textureID !== this._texture._updateID || this.cachedTint !== this.tint) {
             this._textureID = this._texture._updateID;
             // cut an object from a spritesheet..
-            var tempCanvas = new core.CanvasRenderTarget(texture._frame.width, texture._frame.height, baseTextureResolution);
+            var tempCanvas = new core.CanvasRenderTarget(texture.orig.width, texture.orig.height, baseTextureResolution);
 
             // Tint the tiling sprite
             if (this.tint !== 0xFFFFFF) {
                 this.tintedTexture = _CanvasTinter2.default.getTintedTexture(this, this.tint);
                 tempCanvas.context.drawImage(this.tintedTexture, 0, 0);
             } else {
-                tempCanvas.context.drawImage(baseTexture.source, -texture._frame.x * baseTextureResolution, -texture._frame.y * baseTextureResolution);
+                var sx = texture._frame.x * baseTextureResolution;
+                var sy = texture._frame.y * baseTextureResolution;
+                var sWidth = texture._frame.width * baseTextureResolution;
+                var sHeight = texture._frame.height * baseTextureResolution;
+                var dWidth = (texture.trim ? texture.trim.width : texture.orig.width) * baseTextureResolution;
+                var dHeight = (texture.trim ? texture.trim.height : texture.orig.height) * baseTextureResolution;
+                var dx = (texture.trim ? texture.trim.x : 0) * baseTextureResolution;
+                var dy = (texture.trim ? texture.trim.y : 0) * baseTextureResolution;
+
+                if (isTextureRotated) {
+                    // Apply rotation and transform
+                    tempCanvas.context.rotate(-Math.PI / 2);
+                    tempCanvas.context.translate(-dHeight, 0);
+                    tempCanvas.context.drawImage(baseTexture.source, sx, sy, sWidth, sHeight, -dy, dx, dHeight, dWidth);
+                } else {
+                    tempCanvas.context.drawImage(baseTexture.source, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+                }
             }
+
             this.cachedTint = this.tint;
             this._canvasPattern = tempCanvas.context.createPattern(tempCanvas.canvas, 'repeat');
         }
@@ -46857,8 +46742,8 @@ var TilingSprite = function (_core$Sprite) {
         // TODO - this should be rolled into the setTransform above..
         context.scale(this.tileScale.x / baseTextureResolution, this.tileScale.y / baseTextureResolution);
 
-        var anchorX = this.anchor.x * -this._width;
-        var anchorY = this.anchor.y * -this._height;
+        var anchorX = this.anchor.x * -this._width * baseTextureResolution;
+        var anchorY = this.anchor.y * -this._height * baseTextureResolution;
 
         if (this.uvRespectAnchor) {
             context.translate(modX, modY);
@@ -47248,7 +47133,7 @@ DisplayObject.prototype._renderCachedWebGL = function _renderCachedWebGL(rendere
 
     this._initCachedDisplayObject(renderer);
 
-    this._cacheData.sprite._transformID = -1;
+    this._cacheData.sprite.transform._worldID = this.transform._worldID;
     this._cacheData.sprite.worldAlpha = this.worldAlpha;
     this._cacheData.sprite._renderWebGL(renderer);
 };
@@ -47281,11 +47166,13 @@ DisplayObject.prototype._initCachedDisplayObject = function _initCachedDisplayOb
     var bounds = this.getLocalBounds().clone();
 
     // add some padding!
-    if (this._filters) {
+    if (this._filters && this._filters.length) {
         var padding = this._filters[0].padding;
 
         bounds.pad(padding);
     }
+
+    bounds.ceil(core.settings.RESOLUTION);
 
     // for now we cache the current renderTarget that the webGL renderer is currently using.
     // this could be more elegent..
@@ -47295,7 +47182,7 @@ DisplayObject.prototype._initCachedDisplayObject = function _initCachedDisplayOb
 
     // this renderTexture will be used to store the cached DisplayObject
 
-    var renderTexture = core.RenderTexture.create(bounds.width | 0, bounds.height | 0);
+    var renderTexture = core.RenderTexture.create(bounds.width, bounds.height);
 
     var textureCacheId = 'cacheAsBitmap_' + (0, _utils.uid)();
 
@@ -47373,8 +47260,7 @@ DisplayObject.prototype._renderCachedCanvas = function _renderCachedCanvas(rende
     this._initCachedDisplayObjectCanvas(renderer);
 
     this._cacheData.sprite.worldAlpha = this.worldAlpha;
-
-    this._cacheData.sprite.renderCanvas(renderer);
+    this._cacheData.sprite._renderCanvas(renderer);
 };
 
 // TODO this can be the same as the webGL verison.. will need to do a little tweaking first though..
@@ -47399,7 +47285,9 @@ DisplayObject.prototype._initCachedDisplayObjectCanvas = function _initCachedDis
 
     var cachedRenderTarget = renderer.context;
 
-    var renderTexture = core.RenderTexture.create(bounds.width | 0, bounds.height | 0);
+    bounds.ceil(core.settings.RESOLUTION);
+
+    var renderTexture = core.RenderTexture.create(bounds.width, bounds.height);
 
     var textureCacheId = 'cacheAsBitmap_' + (0, _utils.uid)();
 
@@ -47428,7 +47316,7 @@ DisplayObject.prototype._initCachedDisplayObjectCanvas = function _initCachedDis
     renderer.context = cachedRenderTarget;
 
     this.renderCanvas = this._renderCachedCanvas;
-    this._calculateBounds = this._calculateCachedBounds;
+    this.calculateBounds = this._calculateCachedBounds;
 
     this._mask = null;
     this.filterArea = null;
@@ -47463,7 +47351,10 @@ DisplayObject.prototype._initCachedDisplayObjectCanvas = function _initCachedDis
  * @private
  */
 DisplayObject.prototype._calculateCachedBounds = function _calculateCachedBounds() {
+    this._bounds.clear();
+    this._cacheData.sprite.transform._worldID = this.transform._worldID;
     this._cacheData.sprite._calculateBounds();
+    this._lastBoundsID = this._boundsID;
 };
 
 /**
@@ -47787,7 +47678,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":167,"../../core/const":148,"path":318}],245:[function(require,module,exports){
+},{"../../core":167,"../../core/const":148,"path":323}],245:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47871,7 +47762,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":167,"path":318}],246:[function(require,module,exports){
+},{"../../core":167,"path":323}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49034,7 +48925,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":167,"path":318}],253:[function(require,module,exports){
+},{"../../core":167,"path":323}],253:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49142,7 +49033,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":167,"path":318}],254:[function(require,module,exports){
+},{"../../core":167,"path":323}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49196,7 +49087,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":167,"path":318}],255:[function(require,module,exports){
+},{"../../core":167,"path":323}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49372,7 +49263,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":167,"path":318}],257:[function(require,module,exports){
+},{"../../core":167,"path":323}],257:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -51487,8 +51378,8 @@ var InteractionManager = function (_EventEmitter) {
                 if (typeof touch.pointerType === 'undefined') touch.pointerType = 'touch';
                 if (typeof touch.pointerId === 'undefined') touch.pointerId = touch.identifier || 0;
                 if (typeof touch.pressure === 'undefined') touch.pressure = touch.force || 0.5;
-                touch.twist = 0;
-                touch.tangentialPressure = 0;
+                if (typeof touch.twist === 'undefined') touch.twist = 0;
+                if (typeof touch.tangentialPressure === 'undefined') touch.tangentialPressure = 0;
                 // TODO: Remove these, as layerX/Y is not a standard, is deprecated, has uneven
                 // support, and the fill ins are not quite the same
                 // offsetX/Y might be okay, but is not the same as clientX/Y when the canvas's top
@@ -51512,8 +51403,8 @@ var InteractionManager = function (_EventEmitter) {
                 if (typeof event.pointerType === 'undefined') event.pointerType = 'mouse';
                 if (typeof event.pointerId === 'undefined') event.pointerId = MOUSE_POINTER_ID;
                 if (typeof event.pressure === 'undefined') event.pressure = 0.5;
-                event.twist = 0;
-                event.tangentialPressure = 0;
+                if (typeof event.twist === 'undefined') event.twist = 0;
+                if (typeof event.tangentialPressure === 'undefined') event.tangentialPressure = 0;
 
                 // mark the mouse event as normalized, just so that we know we did it
                 event.isNormalized = true;
@@ -52039,7 +51930,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":243,"path":318,"resource-loader":297}],265:[function(require,module,exports){
+},{"../extras":243,"path":323,"resource-loader":296}],265:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52167,7 +52058,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":145,"./bitmapFontParser":264,"./loader":266,"./spritesheetParser":267,"./textureParser":268,"resource-loader":297}],266:[function(require,module,exports){
+},{"../core/Application":145,"./bitmapFontParser":264,"./loader":266,"./spritesheetParser":267,"./textureParser":268,"resource-loader":296}],266:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52338,7 +52229,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":264,"./spritesheetParser":267,"./textureParser":268,"eventemitter3":93,"resource-loader":297,"resource-loader/lib/middlewares/parsing/blob":298}],267:[function(require,module,exports){
+},{"./bitmapFontParser":264,"./spritesheetParser":267,"./textureParser":268,"eventemitter3":93,"resource-loader":296,"resource-loader/lib/middlewares/parsing/blob":297}],267:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52402,7 +52293,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":167,"resource-loader":297,"url":324}],268:[function(require,module,exports){
+},{"../core":167,"resource-loader":296,"url":329}],268:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52425,7 +52316,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":217,"resource-loader":297}],269:[function(require,module,exports){
+},{"../core/textures/Texture":217,"resource-loader":296}],269:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54128,7 +54019,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":167,"../Mesh":269,"path":318,"pixi-gl-core":114}],276:[function(require,module,exports){
+},{"../../core":167,"../Mesh":269,"path":323,"pixi-gl-core":114}],276:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56364,6 +56255,2410 @@ function findGraphics(item, queue) {
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
 },{"../../core":167,"../BasePrepare":286}],292:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.Loader = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _miniSignals = require('mini-signals');
+
+var _miniSignals2 = _interopRequireDefault(_miniSignals);
+
+var _parseUri = require('parse-uri');
+
+var _parseUri2 = _interopRequireDefault(_parseUri);
+
+var _async = require('./async');
+
+var async = _interopRequireWildcard(_async);
+
+var _Resource = require('./Resource');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// some constants
+var MAX_PROGRESS = 100;
+var rgxExtractUrlHash = /(#[\w-]+)?$/;
+
+/**
+ * Manages the state and loading of multiple resources to load.
+ *
+ * @class
+ */
+
+var Loader = exports.Loader = function () {
+    /**
+     * @param {string} [baseUrl=''] - The base url for all resources loaded by this loader.
+     * @param {number} [concurrency=10] - The number of resources to load concurrently.
+     */
+    function Loader() {
+        var _this = this;
+
+        var baseUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+        var concurrency = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+
+        _classCallCheck(this, Loader);
+
+        /**
+         * The base url for all resources loaded by this loader.
+         *
+         * @member {string}
+         */
+        this.baseUrl = baseUrl;
+
+        /**
+         * The progress percent of the loader going through the queue.
+         *
+         * @member {number}
+         */
+        this.progress = 0;
+
+        /**
+         * Loading state of the loader, true if it is currently loading resources.
+         *
+         * @member {boolean}
+         */
+        this.loading = false;
+
+        /**
+         * A querystring to append to every URL added to the loader.
+         *
+         * This should be a valid query string *without* the question-mark (`?`). The loader will
+         * also *not* escape values for you. Make sure to escape your parameters with
+         * [`encodeURIComponent`](https://mdn.io/encodeURIComponent) before assigning this property.
+         *
+         * @example
+         * const loader = new Loader();
+         *
+         * loader.defaultQueryString = 'user=me&password=secret';
+         *
+         * // This will request 'image.png?user=me&password=secret'
+         * loader.add('image.png').load();
+         *
+         * loader.reset();
+         *
+         * // This will request 'image.png?v=1&user=me&password=secret'
+         * loader.add('iamge.png?v=1').load();
+         *
+         * @member {string}
+         */
+        this.defaultQueryString = '';
+
+        /**
+         * The middleware to run before loading each resource.
+         *
+         * @private
+         * @member {function[]}
+         */
+        this._beforeMiddleware = [];
+
+        /**
+         * The middleware to run after loading each resource.
+         *
+         * @private
+         * @member {function[]}
+         */
+        this._afterMiddleware = [];
+
+        /**
+         * The tracks the resources we are currently completing parsing for.
+         *
+         * @private
+         * @member {Resource[]}
+         */
+        this._resourcesParsing = [];
+
+        /**
+         * The `_loadResource` function bound with this object context.
+         *
+         * @private
+         * @member {function}
+         * @param {Resource} r - The resource to load
+         * @param {Function} d - The dequeue function
+         * @return {undefined}
+         */
+        this._boundLoadResource = function (r, d) {
+            return _this._loadResource(r, d);
+        };
+
+        /**
+         * The resources waiting to be loaded.
+         *
+         * @private
+         * @member {Resource[]}
+         */
+        this._queue = async.queue(this._boundLoadResource, concurrency);
+
+        this._queue.pause();
+
+        /**
+         * All the resources for this loader keyed by name.
+         *
+         * @member {object<string, Resource>}
+         */
+        this.resources = {};
+
+        /**
+         * Dispatched once per loaded or errored resource.
+         *
+         * The callback looks like {@link Loader.OnProgressSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onProgress = new _miniSignals2.default();
+
+        /**
+         * Dispatched once per errored resource.
+         *
+         * The callback looks like {@link Loader.OnErrorSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onError = new _miniSignals2.default();
+
+        /**
+         * Dispatched once per loaded resource.
+         *
+         * The callback looks like {@link Loader.OnLoadSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onLoad = new _miniSignals2.default();
+
+        /**
+         * Dispatched when the loader begins to process the queue.
+         *
+         * The callback looks like {@link Loader.OnStartSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onStart = new _miniSignals2.default();
+
+        /**
+         * Dispatched when the queued resources all load.
+         *
+         * The callback looks like {@link Loader.OnCompleteSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onComplete = new _miniSignals2.default();
+
+        // Add default before middleware
+        for (var i = 0; i < Loader._defaultBeforeMiddleware.length; ++i) {
+            this.pre(Loader._defaultBeforeMiddleware[i]);
+        }
+
+        // Add default after middleware
+        for (var _i = 0; _i < Loader._defaultAfterMiddleware.length; ++_i) {
+            this.use(Loader._defaultAfterMiddleware[_i]);
+        }
+    }
+
+    /**
+     * When the progress changes the loader and resource are disaptched.
+     *
+     * @memberof Loader
+     * @callback OnProgressSignal
+     * @param {Loader} loader - The loader the progress is advancing on.
+     * @param {Resource} resource - The resource that has completed or failed to cause the progress to advance.
+     */
+
+    /**
+     * When an error occurrs the loader and resource are disaptched.
+     *
+     * @memberof Loader
+     * @callback OnErrorSignal
+     * @param {Loader} loader - The loader the error happened in.
+     * @param {Resource} resource - The resource that caused the error.
+     */
+
+    /**
+     * When a load completes the loader and resource are disaptched.
+     *
+     * @memberof Loader
+     * @callback OnLoadSignal
+     * @param {Loader} loader - The loader that laoded the resource.
+     * @param {Resource} resource - The resource that has completed loading.
+     */
+
+    /**
+     * When the loader starts loading resources it dispatches this callback.
+     *
+     * @memberof Loader
+     * @callback OnStartSignal
+     * @param {Loader} loader - The loader that has started loading resources.
+     */
+
+    /**
+     * When the loader completes loading resources it dispatches this callback.
+     *
+     * @memberof Loader
+     * @callback OnCompleteSignal
+     * @param {Loader} loader - The loader that has finished loading resources.
+     */
+
+    /**
+     * Options for a call to `.add()`.
+     *
+     * @see Loader#add
+     *
+     * @typedef {object} IAddOptions
+     * @property {string} [name] - The name of the resource to load, if not passed the url is used.
+     * @property {string} [key] - Alias for `name`.
+     * @property {string} [url] - The url for this resource, relative to the baseUrl of this loader.
+     * @property {string|boolean} [crossOrigin] - Is this request cross-origin? Default is to
+     *      determine automatically.
+     * @property {number} [timeout=0] - A timeout in milliseconds for the load. If the load takes
+     *      longer than this time it is cancelled and the load is considered a failure. If this value is
+     *      set to `0` then there is no explicit timeout.
+     * @property {Resource.LOAD_TYPE} [loadType=Resource.LOAD_TYPE.XHR] - How should this resource
+     *      be loaded?
+     * @property {Resource.XHR_RESPONSE_TYPE} [xhrType=Resource.XHR_RESPONSE_TYPE.DEFAULT] - How
+     *      should the data being loaded be interpreted when using XHR?
+     * @property {Loader.OnCompleteSignal} [onComplete] - Callback to add an an onComplete signal istener.
+     * @property {Loader.OnCompleteSignal} [callback] - Alias for `onComplete`.
+     * @property {Resource.IMetadata} [metadata] - Extra configuration for middleware and the Resource object.
+     */
+
+    /**
+     * Adds a resource (or multiple resources) to the loader queue.
+     *
+     * This function can take a wide variety of different parameters. The only thing that is always
+     * required the url to load. All the following will work:
+     *
+     * ```js
+     * loader
+     *     // normal param syntax
+     *     .add('key', 'http://...', function () {})
+     *     .add('http://...', function () {})
+     *     .add('http://...')
+     *
+     *     // object syntax
+     *     .add({
+     *         name: 'key2',
+     *         url: 'http://...'
+     *     }, function () {})
+     *     .add({
+     *         url: 'http://...'
+     *     }, function () {})
+     *     .add({
+     *         name: 'key3',
+     *         url: 'http://...'
+     *         onComplete: function () {}
+     *     })
+     *     .add({
+     *         url: 'https://...',
+     *         onComplete: function () {},
+     *         crossOrigin: true
+     *     })
+     *
+     *     // you can also pass an array of objects or urls or both
+     *     .add([
+     *         { name: 'key4', url: 'http://...', onComplete: function () {} },
+     *         { url: 'http://...', onComplete: function () {} },
+     *         'http://...'
+     *     ])
+     *
+     *     // and you can use both params and options
+     *     .add('key', 'http://...', { crossOrigin: true }, function () {})
+     *     .add('http://...', { crossOrigin: true }, function () {});
+     * ```
+     *
+     * @param {string|IAddOptions} [name] - The name of the resource to load, if not passed the url is used.
+     * @param {string} [url] - The url for this resource, relative to the baseUrl of this loader.
+     * @param {IAddOptions} [options] - The options for the load.
+     * @param {Loader.OnCompleteSignal} [cb] - Function to call when this specific resource completes loading.
+     * @return {this} Returns itself.
+     */
+
+
+    Loader.prototype.add = function add(name, url, options, cb) {
+        // special case of an array of objects or urls
+        if (Array.isArray(name)) {
+            for (var i = 0; i < name.length; ++i) {
+                this.add(name[i]);
+            }
+
+            return this;
+        }
+
+        // if an object is passed instead of params
+        if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) === 'object') {
+            cb = url || name.callback || name.onComplete;
+            options = name;
+            url = name.url;
+            name = name.name || name.key || name.url;
+        }
+
+        // case where no name is passed shift all args over by one.
+        if (typeof url !== 'string') {
+            cb = options;
+            options = url;
+            url = name;
+        }
+
+        // now that we shifted make sure we have a proper url.
+        if (typeof url !== 'string') {
+            throw new Error('No url passed to add resource to loader.');
+        }
+
+        // options are optional so people might pass a function and no options
+        if (typeof options === 'function') {
+            cb = options;
+            options = null;
+        }
+
+        // if loading already you can only add resources that have a parent.
+        if (this.loading && (!options || !options.parentResource)) {
+            throw new Error('Cannot add resources while the loader is running.');
+        }
+
+        // check if resource already exists.
+        if (this.resources[name]) {
+            throw new Error('Resource named "' + name + '" already exists.');
+        }
+
+        // add base url if this isn't an absolute url
+        url = this._prepareUrl(url);
+
+        // create the store the resource
+        this.resources[name] = new _Resource.Resource(name, url, options);
+
+        if (typeof cb === 'function') {
+            this.resources[name].onAfterMiddleware.once(cb);
+        }
+
+        // if actively loading, make sure to adjust progress chunks for that parent and its children
+        if (this.loading) {
+            var parent = options.parentResource;
+            var incompleteChildren = [];
+
+            for (var _i2 = 0; _i2 < parent.children.length; ++_i2) {
+                if (!parent.children[_i2].isComplete) {
+                    incompleteChildren.push(parent.children[_i2]);
+                }
+            }
+
+            var fullChunk = parent.progressChunk * (incompleteChildren.length + 1); // +1 for parent
+            var eachChunk = fullChunk / (incompleteChildren.length + 2); // +2 for parent & new child
+
+            parent.children.push(this.resources[name]);
+            parent.progressChunk = eachChunk;
+
+            for (var _i3 = 0; _i3 < incompleteChildren.length; ++_i3) {
+                incompleteChildren[_i3].progressChunk = eachChunk;
+            }
+
+            this.resources[name].progressChunk = eachChunk;
+        }
+
+        // add the resource to the queue
+        this._queue.push(this.resources[name]);
+
+        return this;
+    };
+
+    /**
+     * Sets up a middleware function that will run *before* the
+     * resource is loaded.
+     *
+     * @param {function} fn - The middleware function to register.
+     * @return {this} Returns itself.
+     */
+
+
+    Loader.prototype.pre = function pre(fn) {
+        this._beforeMiddleware.push(fn);
+
+        return this;
+    };
+
+    /**
+     * Sets up a middleware function that will run *after* the
+     * resource is loaded.
+     *
+     * @param {function} fn - The middleware function to register.
+     * @return {this} Returns itself.
+     */
+
+
+    Loader.prototype.use = function use(fn) {
+        this._afterMiddleware.push(fn);
+
+        return this;
+    };
+
+    /**
+     * Resets the queue of the loader to prepare for a new load.
+     *
+     * @return {this} Returns itself.
+     */
+
+
+    Loader.prototype.reset = function reset() {
+        this.progress = 0;
+        this.loading = false;
+
+        this._queue.kill();
+        this._queue.pause();
+
+        // abort all resource loads
+        for (var k in this.resources) {
+            var res = this.resources[k];
+
+            if (res._onLoadBinding) {
+                res._onLoadBinding.detach();
+            }
+
+            if (res.isLoading) {
+                res.abort();
+            }
+        }
+
+        this.resources = {};
+
+        return this;
+    };
+
+    /**
+     * Starts loading the queued resources.
+     *
+     * @param {function} [cb] - Optional callback that will be bound to the `complete` event.
+     * @return {this} Returns itself.
+     */
+
+
+    Loader.prototype.load = function load(cb) {
+        // register complete callback if they pass one
+        if (typeof cb === 'function') {
+            this.onComplete.once(cb);
+        }
+
+        // if the queue has already started we are done here
+        if (this.loading) {
+            return this;
+        }
+
+        if (this._queue.idle()) {
+            this._onStart();
+            this._onComplete();
+        } else {
+            // distribute progress chunks
+            var numTasks = this._queue._tasks.length;
+            var chunk = MAX_PROGRESS / numTasks;
+
+            for (var i = 0; i < this._queue._tasks.length; ++i) {
+                this._queue._tasks[i].data.progressChunk = chunk;
+            }
+
+            // notify we are starting
+            this._onStart();
+
+            // start loading
+            this._queue.resume();
+        }
+
+        return this;
+    };
+
+    /**
+     * The number of resources to load concurrently.
+     *
+     * @member {number}
+     * @default 10
+     */
+
+
+    /**
+     * Prepares a url for usage based on the configuration of this object
+     *
+     * @private
+     * @param {string} url - The url to prepare.
+     * @return {string} The prepared url.
+     */
+    Loader.prototype._prepareUrl = function _prepareUrl(url) {
+        var parsedUrl = (0, _parseUri2.default)(url, { strictMode: true });
+        var result = void 0;
+
+        // absolute url, just use it as is.
+        if (parsedUrl.protocol || !parsedUrl.path || url.indexOf('//') === 0) {
+            result = url;
+        }
+        // if baseUrl doesn't end in slash and url doesn't start with slash, then add a slash inbetween
+        else if (this.baseUrl.length && this.baseUrl.lastIndexOf('/') !== this.baseUrl.length - 1 && url.charAt(0) !== '/') {
+                result = this.baseUrl + '/' + url;
+            } else {
+                result = this.baseUrl + url;
+            }
+
+        // if we need to add a default querystring, there is a bit more work
+        if (this.defaultQueryString) {
+            var hash = rgxExtractUrlHash.exec(result)[0];
+
+            result = result.substr(0, result.length - hash.length);
+
+            if (result.indexOf('?') !== -1) {
+                result += '&' + this.defaultQueryString;
+            } else {
+                result += '?' + this.defaultQueryString;
+            }
+
+            result += hash;
+        }
+
+        return result;
+    };
+
+    /**
+     * Loads a single resource.
+     *
+     * @private
+     * @param {Resource} resource - The resource to load.
+     * @param {function} dequeue - The function to call when we need to dequeue this item.
+     */
+
+
+    Loader.prototype._loadResource = function _loadResource(resource, dequeue) {
+        var _this2 = this;
+
+        resource._dequeue = dequeue;
+
+        // run before middleware
+        async.eachSeries(this._beforeMiddleware, function (fn, next) {
+            fn.call(_this2, resource, function () {
+                // if the before middleware marks the resource as complete,
+                // break and don't process any more before middleware
+                next(resource.isComplete ? {} : null);
+            });
+        }, function () {
+            if (resource.isComplete) {
+                _this2._onLoad(resource);
+            } else {
+                resource._onLoadBinding = resource.onComplete.once(_this2._onLoad, _this2);
+                resource.load();
+            }
+        }, true);
+    };
+
+    /**
+     * Called once loading has started.
+     *
+     * @private
+     */
+
+
+    Loader.prototype._onStart = function _onStart() {
+        this.progress = 0;
+        this.loading = true;
+        this.onStart.dispatch(this);
+    };
+
+    /**
+     * Called once each resource has loaded.
+     *
+     * @private
+     */
+
+
+    Loader.prototype._onComplete = function _onComplete() {
+        this.progress = MAX_PROGRESS;
+        this.loading = false;
+        this.onComplete.dispatch(this, this.resources);
+    };
+
+    /**
+     * Called each time a resources is loaded.
+     *
+     * @private
+     * @param {Resource} resource - The resource that was loaded
+     */
+
+
+    Loader.prototype._onLoad = function _onLoad(resource) {
+        var _this3 = this;
+
+        resource._onLoadBinding = null;
+
+        // remove this resource from the async queue, and add it to our list of resources that are being parsed
+        this._resourcesParsing.push(resource);
+        resource._dequeue();
+
+        // run all the after middleware for this resource
+        async.eachSeries(this._afterMiddleware, function (fn, next) {
+            fn.call(_this3, resource, next);
+        }, function () {
+            resource.onAfterMiddleware.dispatch(resource);
+
+            _this3.progress = Math.min(MAX_PROGRESS, _this3.progress + resource.progressChunk);
+            _this3.onProgress.dispatch(_this3, resource);
+
+            if (resource.error) {
+                _this3.onError.dispatch(resource.error, _this3, resource);
+            } else {
+                _this3.onLoad.dispatch(_this3, resource);
+            }
+
+            _this3._resourcesParsing.splice(_this3._resourcesParsing.indexOf(resource), 1);
+
+            // do completion check
+            if (_this3._queue.idle() && _this3._resourcesParsing.length === 0) {
+                _this3._onComplete();
+            }
+        }, true);
+    };
+
+    _createClass(Loader, [{
+        key: 'concurrency',
+        get: function get() {
+            return this._queue.concurrency;
+        }
+        // eslint-disable-next-line require-jsdoc
+        ,
+        set: function set(concurrency) {
+            this._queue.concurrency = concurrency;
+        }
+    }]);
+
+    return Loader;
+}();
+
+/**
+ * A default array of middleware to run before loading each resource.
+ * Each of these middlewares are added to any new Loader instances when they are created.
+ *
+ * @private
+ * @member {function[]}
+ */
+
+
+Loader._defaultBeforeMiddleware = [];
+
+/**
+ * A default array of middleware to run after loading each resource.
+ * Each of these middlewares are added to any new Loader instances when they are created.
+ *
+ * @private
+ * @member {function[]}
+ */
+Loader._defaultAfterMiddleware = [];
+
+/**
+ * Sets up a middleware function that will run *before* the
+ * resource is loaded.
+ *
+ * @static
+ * @param {function} fn - The middleware function to register.
+ * @return {Loader} Returns itself.
+ */
+Loader.pre = function LoaderPreStatic(fn) {
+    Loader._defaultBeforeMiddleware.push(fn);
+
+    return Loader;
+};
+
+/**
+ * Sets up a middleware function that will run *after* the
+ * resource is loaded.
+ *
+ * @static
+ * @param {function} fn - The middleware function to register.
+ * @return {Loader} Returns itself.
+ */
+Loader.use = function LoaderUseStatic(fn) {
+    Loader._defaultAfterMiddleware.push(fn);
+
+    return Loader;
+};
+
+},{"./Resource":293,"./async":294,"mini-signals":101,"parse-uri":104}],293:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.Resource = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _parseUri = require('parse-uri');
+
+var _parseUri2 = _interopRequireDefault(_parseUri);
+
+var _miniSignals = require('mini-signals');
+
+var _miniSignals2 = _interopRequireDefault(_miniSignals);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// tests if CORS is supported in XHR, if not we need to use XDR
+var useXdr = !!(window.XDomainRequest && !('withCredentials' in new XMLHttpRequest()));
+var tempAnchor = null;
+
+// some status constants
+var STATUS_NONE = 0;
+var STATUS_OK = 200;
+var STATUS_EMPTY = 204;
+var STATUS_IE_BUG_EMPTY = 1223;
+var STATUS_TYPE_OK = 2;
+
+// noop
+function _noop() {} /* empty */
+
+/**
+ * Manages the state and loading of a resource and all child resources.
+ *
+ * @class
+ */
+
+var Resource = exports.Resource = function () {
+    /**
+     * Sets the load type to be used for a specific extension.
+     *
+     * @static
+     * @param {string} extname - The extension to set the type for, e.g. "png" or "fnt"
+     * @param {Resource.LOAD_TYPE} loadType - The load type to set it to.
+     */
+    Resource.setExtensionLoadType = function setExtensionLoadType(extname, loadType) {
+        setExtMap(Resource._loadTypeMap, extname, loadType);
+    };
+
+    /**
+     * Sets the load type to be used for a specific extension.
+     *
+     * @static
+     * @param {string} extname - The extension to set the type for, e.g. "png" or "fnt"
+     * @param {Resource.XHR_RESPONSE_TYPE} xhrType - The xhr type to set it to.
+     */
+
+
+    Resource.setExtensionXhrType = function setExtensionXhrType(extname, xhrType) {
+        setExtMap(Resource._xhrTypeMap, extname, xhrType);
+    };
+
+    /**
+     * @param {string} name - The name of the resource to load.
+     * @param {string|string[]} url - The url for this resource, for audio/video loads you can pass
+     *      an array of sources.
+     * @param {object} [options] - The options for the load.
+     * @param {string|boolean} [options.crossOrigin] - Is this request cross-origin? Default is to
+     *      determine automatically.
+     * @param {number} [options.timeout=0] - A timeout in milliseconds for the load. If the load takes
+     *      longer than this time it is cancelled and the load is considered a failure. If this value is
+     *      set to `0` then there is no explicit timeout.
+     * @param {Resource.LOAD_TYPE} [options.loadType=Resource.LOAD_TYPE.XHR] - How should this resource
+     *      be loaded?
+     * @param {Resource.XHR_RESPONSE_TYPE} [options.xhrType=Resource.XHR_RESPONSE_TYPE.DEFAULT] - How
+     *      should the data being loaded be interpreted when using XHR?
+     * @param {Resource.IMetadata} [options.metadata] - Extra configuration for middleware and the Resource object.
+     */
+
+
+    function Resource(name, url, options) {
+        _classCallCheck(this, Resource);
+
+        if (typeof name !== 'string' || typeof url !== 'string') {
+            throw new Error('Both name and url are required for constructing a resource.');
+        }
+
+        options = options || {};
+
+        /**
+         * The state flags of this resource.
+         *
+         * @private
+         * @member {number}
+         */
+        this._flags = 0;
+
+        // set data url flag, needs to be set early for some _determineX checks to work.
+        this._setFlag(Resource.STATUS_FLAGS.DATA_URL, url.indexOf('data:') === 0);
+
+        /**
+         * The name of this resource.
+         *
+         * @readonly
+         * @member {string}
+         */
+        this.name = name;
+
+        /**
+         * The url used to load this resource.
+         *
+         * @readonly
+         * @member {string}
+         */
+        this.url = url;
+
+        /**
+         * The extension used to load this resource.
+         *
+         * @readonly
+         * @member {string}
+         */
+        this.extension = this._getExtension();
+
+        /**
+         * The data that was loaded by the resource.
+         *
+         * @member {any}
+         */
+        this.data = null;
+
+        /**
+         * Is this request cross-origin? If unset, determined automatically.
+         *
+         * @member {string}
+         */
+        this.crossOrigin = options.crossOrigin === true ? 'anonymous' : options.crossOrigin;
+
+        /**
+         * A timeout in milliseconds for the load. If the load takes longer than this time
+         * it is cancelled and the load is considered a failure. If this value is set to `0`
+         * then there is no explicit timeout.
+         *
+         * @member {number}
+         */
+        this.timeout = options.timeout || 0;
+
+        /**
+         * The method of loading to use for this resource.
+         *
+         * @member {Resource.LOAD_TYPE}
+         */
+        this.loadType = options.loadType || this._determineLoadType();
+
+        /**
+         * The type used to load the resource via XHR. If unset, determined automatically.
+         *
+         * @member {string}
+         */
+        this.xhrType = options.xhrType;
+
+        /**
+         * Extra info for middleware, and controlling specifics about how the resource loads.
+         *
+         * Note that if you pass in a `loadElement`, the Resource class takes ownership of it.
+         * Meaning it will modify it as it sees fit.
+         *
+         * @member {Resource.IMetadata}
+         */
+        this.metadata = options.metadata || {};
+
+        /**
+         * The error that occurred while loading (if any).
+         *
+         * @readonly
+         * @member {Error}
+         */
+        this.error = null;
+
+        /**
+         * The XHR object that was used to load this resource. This is only set
+         * when `loadType` is `Resource.LOAD_TYPE.XHR`.
+         *
+         * @readonly
+         * @member {XMLHttpRequest}
+         */
+        this.xhr = null;
+
+        /**
+         * The child resources this resource owns.
+         *
+         * @readonly
+         * @member {Resource[]}
+         */
+        this.children = [];
+
+        /**
+         * The resource type.
+         *
+         * @readonly
+         * @member {Resource.TYPE}
+         */
+        this.type = Resource.TYPE.UNKNOWN;
+
+        /**
+         * The progress chunk owned by this resource.
+         *
+         * @readonly
+         * @member {number}
+         */
+        this.progressChunk = 0;
+
+        /**
+         * The `dequeue` method that will be used a storage place for the async queue dequeue method
+         * used privately by the loader.
+         *
+         * @private
+         * @member {function}
+         */
+        this._dequeue = _noop;
+
+        /**
+         * Used a storage place for the on load binding used privately by the loader.
+         *
+         * @private
+         * @member {function}
+         */
+        this._onLoadBinding = null;
+
+        /**
+         * The timer for element loads to check if they timeout.
+         *
+         * @private
+         * @member {number}
+         */
+        this._elementTimer = 0;
+
+        /**
+         * The `complete` function bound to this resource's context.
+         *
+         * @private
+         * @member {function}
+         */
+        this._boundComplete = this.complete.bind(this);
+
+        /**
+         * The `_onError` function bound to this resource's context.
+         *
+         * @private
+         * @member {function}
+         */
+        this._boundOnError = this._onError.bind(this);
+
+        /**
+         * The `_onProgress` function bound to this resource's context.
+         *
+         * @private
+         * @member {function}
+         */
+        this._boundOnProgress = this._onProgress.bind(this);
+
+        /**
+         * The `_onTimeout` function bound to this resource's context.
+         *
+         * @private
+         * @member {function}
+         */
+        this._boundOnTimeout = this._onTimeout.bind(this);
+
+        // xhr callbacks
+        this._boundXhrOnError = this._xhrOnError.bind(this);
+        this._boundXhrOnTimeout = this._xhrOnTimeout.bind(this);
+        this._boundXhrOnAbort = this._xhrOnAbort.bind(this);
+        this._boundXhrOnLoad = this._xhrOnLoad.bind(this);
+
+        /**
+         * Dispatched when the resource beings to load.
+         *
+         * The callback looks like {@link Resource.OnStartSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onStart = new _miniSignals2.default();
+
+        /**
+         * Dispatched each time progress of this resource load updates.
+         * Not all resources types and loader systems can support this event
+         * so sometimes it may not be available. If the resource
+         * is being loaded on a modern browser, using XHR, and the remote server
+         * properly sets Content-Length headers, then this will be available.
+         *
+         * The callback looks like {@link Resource.OnProgressSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onProgress = new _miniSignals2.default();
+
+        /**
+         * Dispatched once this resource has loaded, if there was an error it will
+         * be in the `error` property.
+         *
+         * The callback looks like {@link Resource.OnCompleteSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onComplete = new _miniSignals2.default();
+
+        /**
+         * Dispatched after this resource has had all the *after* middleware run on it.
+         *
+         * The callback looks like {@link Resource.OnCompleteSignal}.
+         *
+         * @member {Signal}
+         */
+        this.onAfterMiddleware = new _miniSignals2.default();
+    }
+
+    /**
+     * When the resource starts to load.
+     *
+     * @memberof Resource
+     * @callback OnStartSignal
+     * @param {Resource} resource - The resource that the event happened on.
+     */
+
+    /**
+     * When the resource reports loading progress.
+     *
+     * @memberof Resource
+     * @callback OnProgressSignal
+     * @param {Resource} resource - The resource that the event happened on.
+     * @param {number} percentage - The progress of the load in the range [0, 1].
+     */
+
+    /**
+     * When the resource finishes loading.
+     *
+     * @memberof Resource
+     * @callback OnCompleteSignal
+     * @param {Resource} resource - The resource that the event happened on.
+     */
+
+    /**
+     * @memberof Resource
+     * @typedef {object} IMetadata
+     * @property {HTMLImageElement|HTMLAudioElement|HTMLVideoElement} [loadElement=null] - The
+     *      element to use for loading, instead of creating one.
+     * @property {boolean} [skipSource=false] - Skips adding source(s) to the load element. This
+     *      is useful if you want to pass in a `loadElement` that you already added load sources to.
+     * @property {string|string[]} [mimeType] - The mime type to use for the source element
+     *      of a video/audio elment. If the urls are an array, you can pass this as an array as well
+     *      where each index is the mime type to use for the corresponding url index.
+     */
+
+    /**
+     * Stores whether or not this url is a data url.
+     *
+     * @readonly
+     * @member {boolean}
+     */
+
+
+    /**
+     * Marks the resource as complete.
+     *
+     */
+    Resource.prototype.complete = function complete() {
+        this._clearEvents();
+        this._finish();
+    };
+
+    /**
+     * Aborts the loading of this resource, with an optional message.
+     *
+     * @param {string} message - The message to use for the error
+     */
+
+
+    Resource.prototype.abort = function abort(message) {
+        // abort can be called multiple times, ignore subsequent calls.
+        if (this.error) {
+            return;
+        }
+
+        // store error
+        this.error = new Error(message);
+
+        // clear events before calling aborts
+        this._clearEvents();
+
+        // abort the actual loading
+        if (this.xhr) {
+            this.xhr.abort();
+        } else if (this.xdr) {
+            this.xdr.abort();
+        } else if (this.data) {
+            // single source
+            if (this.data.src) {
+                this.data.src = Resource.EMPTY_GIF;
+            }
+            // multi-source
+            else {
+                    while (this.data.firstChild) {
+                        this.data.removeChild(this.data.firstChild);
+                    }
+                }
+        }
+
+        // done now.
+        this._finish();
+    };
+
+    /**
+     * Kicks off loading of this resource. This method is asynchronous.
+     *
+     * @param {Resource.OnCompleteSignal} [cb] - Optional callback to call once the resource is loaded.
+     */
+
+
+    Resource.prototype.load = function load(cb) {
+        var _this = this;
+
+        if (this.isLoading) {
+            return;
+        }
+
+        if (this.isComplete) {
+            if (cb) {
+                setTimeout(function () {
+                    return cb(_this);
+                }, 1);
+            }
+
+            return;
+        } else if (cb) {
+            this.onComplete.once(cb);
+        }
+
+        this._setFlag(Resource.STATUS_FLAGS.LOADING, true);
+
+        this.onStart.dispatch(this);
+
+        // if unset, determine the value
+        if (this.crossOrigin === false || typeof this.crossOrigin !== 'string') {
+            this.crossOrigin = this._determineCrossOrigin(this.url);
+        }
+
+        switch (this.loadType) {
+            case Resource.LOAD_TYPE.IMAGE:
+                this.type = Resource.TYPE.IMAGE;
+                this._loadElement('image');
+                break;
+
+            case Resource.LOAD_TYPE.AUDIO:
+                this.type = Resource.TYPE.AUDIO;
+                this._loadSourceElement('audio');
+                break;
+
+            case Resource.LOAD_TYPE.VIDEO:
+                this.type = Resource.TYPE.VIDEO;
+                this._loadSourceElement('video');
+                break;
+
+            case Resource.LOAD_TYPE.XHR:
+            /* falls through */
+            default:
+                if (useXdr && this.crossOrigin) {
+                    this._loadXdr();
+                } else {
+                    this._loadXhr();
+                }
+                break;
+        }
+    };
+
+    /**
+     * Checks if the flag is set.
+     *
+     * @private
+     * @param {number} flag - The flag to check.
+     * @return {boolean} True if the flag is set.
+     */
+
+
+    Resource.prototype._hasFlag = function _hasFlag(flag) {
+        return (this._flags & flag) !== 0;
+    };
+
+    /**
+     * (Un)Sets the flag.
+     *
+     * @private
+     * @param {number} flag - The flag to (un)set.
+     * @param {boolean} value - Whether to set or (un)set the flag.
+     */
+
+
+    Resource.prototype._setFlag = function _setFlag(flag, value) {
+        this._flags = value ? this._flags | flag : this._flags & ~flag;
+    };
+
+    /**
+     * Clears all the events from the underlying loading source.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._clearEvents = function _clearEvents() {
+        clearTimeout(this._elementTimer);
+
+        if (this.data && this.data.removeEventListener) {
+            this.data.removeEventListener('error', this._boundOnError, false);
+            this.data.removeEventListener('load', this._boundComplete, false);
+            this.data.removeEventListener('progress', this._boundOnProgress, false);
+            this.data.removeEventListener('canplaythrough', this._boundComplete, false);
+        }
+
+        if (this.xhr) {
+            if (this.xhr.removeEventListener) {
+                this.xhr.removeEventListener('error', this._boundXhrOnError, false);
+                this.xhr.removeEventListener('timeout', this._boundXhrOnTimeout, false);
+                this.xhr.removeEventListener('abort', this._boundXhrOnAbort, false);
+                this.xhr.removeEventListener('progress', this._boundOnProgress, false);
+                this.xhr.removeEventListener('load', this._boundXhrOnLoad, false);
+            } else {
+                this.xhr.onerror = null;
+                this.xhr.ontimeout = null;
+                this.xhr.onprogress = null;
+                this.xhr.onload = null;
+            }
+        }
+    };
+
+    /**
+     * Finalizes the load.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._finish = function _finish() {
+        if (this.isComplete) {
+            throw new Error('Complete called again for an already completed resource.');
+        }
+
+        this._setFlag(Resource.STATUS_FLAGS.COMPLETE, true);
+        this._setFlag(Resource.STATUS_FLAGS.LOADING, false);
+
+        this.onComplete.dispatch(this);
+    };
+
+    /**
+     * Loads this resources using an element that has a single source,
+     * like an HTMLImageElement.
+     *
+     * @private
+     * @param {string} type - The type of element to use.
+     */
+
+
+    Resource.prototype._loadElement = function _loadElement(type) {
+        if (this.metadata.loadElement) {
+            this.data = this.metadata.loadElement;
+        } else if (type === 'image' && typeof window.Image !== 'undefined') {
+            this.data = new Image();
+        } else {
+            this.data = document.createElement(type);
+        }
+
+        if (this.crossOrigin) {
+            this.data.crossOrigin = this.crossOrigin;
+        }
+
+        if (!this.metadata.skipSource) {
+            this.data.src = this.url;
+        }
+
+        this.data.addEventListener('error', this._boundOnError, false);
+        this.data.addEventListener('load', this._boundComplete, false);
+        this.data.addEventListener('progress', this._boundOnProgress, false);
+
+        if (this.timeout) {
+            this._elementTimer = setTimeout(this._boundOnTimeout, this.timeout);
+        }
+    };
+
+    /**
+     * Loads this resources using an element that has multiple sources,
+     * like an HTMLAudioElement or HTMLVideoElement.
+     *
+     * @private
+     * @param {string} type - The type of element to use.
+     */
+
+
+    Resource.prototype._loadSourceElement = function _loadSourceElement(type) {
+        if (this.metadata.loadElement) {
+            this.data = this.metadata.loadElement;
+        } else if (type === 'audio' && typeof window.Audio !== 'undefined') {
+            this.data = new Audio();
+        } else {
+            this.data = document.createElement(type);
+        }
+
+        if (this.data === null) {
+            this.abort('Unsupported element: ' + type);
+
+            return;
+        }
+
+        if (this.crossOrigin) {
+            this.data.crossOrigin = this.crossOrigin;
+        }
+
+        if (!this.metadata.skipSource) {
+            // support for CocoonJS Canvas+ runtime, lacks document.createElement('source')
+            if (navigator.isCocoonJS) {
+                this.data.src = Array.isArray(this.url) ? this.url[0] : this.url;
+            } else if (Array.isArray(this.url)) {
+                var mimeTypes = this.metadata.mimeType;
+
+                for (var i = 0; i < this.url.length; ++i) {
+                    this.data.appendChild(this._createSource(type, this.url[i], Array.isArray(mimeTypes) ? mimeTypes[i] : mimeTypes));
+                }
+            } else {
+                var _mimeTypes = this.metadata.mimeType;
+
+                this.data.appendChild(this._createSource(type, this.url, Array.isArray(_mimeTypes) ? _mimeTypes[0] : _mimeTypes));
+            }
+        }
+
+        this.data.addEventListener('error', this._boundOnError, false);
+        this.data.addEventListener('load', this._boundComplete, false);
+        this.data.addEventListener('progress', this._boundOnProgress, false);
+        this.data.addEventListener('canplaythrough', this._boundComplete, false);
+
+        this.data.load();
+
+        if (this.timeout) {
+            this._elementTimer = setTimeout(this._boundOnTimeout, this.timeout);
+        }
+    };
+
+    /**
+     * Loads this resources using an XMLHttpRequest.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._loadXhr = function _loadXhr() {
+        // if unset, determine the value
+        if (typeof this.xhrType !== 'string') {
+            this.xhrType = this._determineXhrType();
+        }
+
+        var xhr = this.xhr = new XMLHttpRequest();
+
+        // set the request type and url
+        xhr.open('GET', this.url, true);
+
+        xhr.timeout = this.timeout;
+
+        // load json as text and parse it ourselves. We do this because some browsers
+        // *cough* safari *cough* can't deal with it.
+        if (this.xhrType === Resource.XHR_RESPONSE_TYPE.JSON || this.xhrType === Resource.XHR_RESPONSE_TYPE.DOCUMENT) {
+            xhr.responseType = Resource.XHR_RESPONSE_TYPE.TEXT;
+        } else {
+            xhr.responseType = this.xhrType;
+        }
+
+        xhr.addEventListener('error', this._boundXhrOnError, false);
+        xhr.addEventListener('timeout', this._boundXhrOnTimeout, false);
+        xhr.addEventListener('abort', this._boundXhrOnAbort, false);
+        xhr.addEventListener('progress', this._boundOnProgress, false);
+        xhr.addEventListener('load', this._boundXhrOnLoad, false);
+
+        xhr.send();
+    };
+
+    /**
+     * Loads this resources using an XDomainRequest. This is here because we need to support IE9 (gross).
+     *
+     * @private
+     */
+
+
+    Resource.prototype._loadXdr = function _loadXdr() {
+        // if unset, determine the value
+        if (typeof this.xhrType !== 'string') {
+            this.xhrType = this._determineXhrType();
+        }
+
+        var xdr = this.xhr = new XDomainRequest(); // eslint-disable-line no-undef
+
+        // XDomainRequest has a few quirks. Occasionally it will abort requests
+        // A way to avoid this is to make sure ALL callbacks are set even if not used
+        // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
+        xdr.timeout = this.timeout || 5000; // XDR needs a timeout value or it breaks in IE9
+
+        xdr.onerror = this._boundXhrOnError;
+        xdr.ontimeout = this._boundXhrOnTimeout;
+        xdr.onprogress = this._boundOnProgress;
+        xdr.onload = this._boundXhrOnLoad;
+
+        xdr.open('GET', this.url, true);
+
+        // Note: The xdr.send() call is wrapped in a timeout to prevent an
+        // issue with the interface where some requests are lost if multiple
+        // XDomainRequests are being sent at the same time.
+        // Some info here: https://github.com/photonstorm/phaser/issues/1248
+        setTimeout(function () {
+            return xdr.send();
+        }, 1);
+    };
+
+    /**
+     * Creates a source used in loading via an element.
+     *
+     * @private
+     * @param {string} type - The element type (video or audio).
+     * @param {string} url - The source URL to load from.
+     * @param {string} [mime] - The mime type of the video
+     * @return {HTMLSourceElement} The source element.
+     */
+
+
+    Resource.prototype._createSource = function _createSource(type, url, mime) {
+        if (!mime) {
+            mime = type + '/' + this._getExtension(url);
+        }
+
+        var source = document.createElement('source');
+
+        source.src = url;
+        source.type = mime;
+
+        return source;
+    };
+
+    /**
+     * Called if a load errors out.
+     *
+     * @param {Event} event - The error event from the element that emits it.
+     * @private
+     */
+
+
+    Resource.prototype._onError = function _onError(event) {
+        this.abort('Failed to load element using: ' + event.target.nodeName);
+    };
+
+    /**
+     * Called if a load progress event fires for an element or xhr/xdr.
+     *
+     * @private
+     * @param {XMLHttpRequestProgressEvent|Event} event - Progress event.
+     */
+
+
+    Resource.prototype._onProgress = function _onProgress(event) {
+        if (event && event.lengthComputable) {
+            this.onProgress.dispatch(this, event.loaded / event.total);
+        }
+    };
+
+    /**
+     * Called if a timeout event fires for an element.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._onTimeout = function _onTimeout() {
+        this.abort('Load timed out.');
+    };
+
+    /**
+     * Called if an error event fires for xhr/xdr.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._xhrOnError = function _xhrOnError() {
+        var xhr = this.xhr;
+
+        this.abort(reqType(xhr) + ' Request failed. Status: ' + xhr.status + ', text: "' + xhr.statusText + '"');
+    };
+
+    /**
+     * Called if an error event fires for xhr/xdr.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._xhrOnTimeout = function _xhrOnTimeout() {
+        var xhr = this.xhr;
+
+        this.abort(reqType(xhr) + ' Request timed out.');
+    };
+
+    /**
+     * Called if an abort event fires for xhr/xdr.
+     *
+     * @private
+     */
+
+
+    Resource.prototype._xhrOnAbort = function _xhrOnAbort() {
+        var xhr = this.xhr;
+
+        this.abort(reqType(xhr) + ' Request was aborted by the user.');
+    };
+
+    /**
+     * Called when data successfully loads from an xhr/xdr request.
+     *
+     * @private
+     * @param {XMLHttpRequestLoadEvent|Event} event - Load event
+     */
+
+
+    Resource.prototype._xhrOnLoad = function _xhrOnLoad() {
+        var xhr = this.xhr;
+        var text = '';
+        var status = typeof xhr.status === 'undefined' ? STATUS_OK : xhr.status; // XDR has no `.status`, assume 200.
+
+        // responseText is accessible only if responseType is '' or 'text' and on older browsers
+        if (xhr.responseType === '' || xhr.responseType === 'text' || typeof xhr.responseType === 'undefined') {
+            text = xhr.responseText;
+        }
+
+        // status can be 0 when using the `file://` protocol so we also check if a response is set.
+        // If it has a response, we assume 200; otherwise a 0 status code with no contents is an aborted request.
+        if (status === STATUS_NONE && (text.length > 0 || xhr.responseType === Resource.XHR_RESPONSE_TYPE.BUFFER)) {
+            status = STATUS_OK;
+        }
+        // handle IE9 bug: http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
+        else if (status === STATUS_IE_BUG_EMPTY) {
+                status = STATUS_EMPTY;
+            }
+
+        var statusType = status / 100 | 0;
+
+        if (statusType === STATUS_TYPE_OK) {
+            // if text, just return it
+            if (this.xhrType === Resource.XHR_RESPONSE_TYPE.TEXT) {
+                this.data = text;
+                this.type = Resource.TYPE.TEXT;
+            }
+            // if json, parse into json object
+            else if (this.xhrType === Resource.XHR_RESPONSE_TYPE.JSON) {
+                    try {
+                        this.data = JSON.parse(text);
+                        this.type = Resource.TYPE.JSON;
+                    } catch (e) {
+                        this.abort('Error trying to parse loaded json: ' + e);
+
+                        return;
+                    }
+                }
+                // if xml, parse into an xml document or div element
+                else if (this.xhrType === Resource.XHR_RESPONSE_TYPE.DOCUMENT) {
+                        try {
+                            if (window.DOMParser) {
+                                var domparser = new DOMParser();
+
+                                this.data = domparser.parseFromString(text, 'text/xml');
+                            } else {
+                                var div = document.createElement('div');
+
+                                div.innerHTML = text;
+
+                                this.data = div;
+                            }
+
+                            this.type = Resource.TYPE.XML;
+                        } catch (e) {
+                            this.abort('Error trying to parse loaded xml: ' + e);
+
+                            return;
+                        }
+                    }
+                    // other types just return the response
+                    else {
+                            this.data = xhr.response || text;
+                        }
+        } else {
+            this.abort('[' + xhr.status + '] ' + xhr.statusText + ': ' + xhr.responseURL);
+
+            return;
+        }
+
+        this.complete();
+    };
+
+    /**
+     * Sets the `crossOrigin` property for this resource based on if the url
+     * for this resource is cross-origin. If crossOrigin was manually set, this
+     * function does nothing.
+     *
+     * @private
+     * @param {string} url - The url to test.
+     * @param {object} [loc=window.location] - The location object to test against.
+     * @return {string} The crossOrigin value to use (or empty string for none).
+     */
+
+
+    Resource.prototype._determineCrossOrigin = function _determineCrossOrigin(url, loc) {
+        // data: and javascript: urls are considered same-origin
+        if (url.indexOf('data:') === 0) {
+            return '';
+        }
+
+        // A sandboxed iframe without the 'allow-same-origin' attribute will have a special
+        // origin designed not to match window.location.origin, and will always require
+        // crossOrigin requests regardless of whether the location matches.
+        if (window.origin !== window.location.origin) {
+            return 'anonymous';
+        }
+
+        // default is window.location
+        loc = loc || window.location;
+
+        if (!tempAnchor) {
+            tempAnchor = document.createElement('a');
+        }
+
+        // let the browser determine the full href for the url of this resource and then
+        // parse with the node url lib, we can't use the properties of the anchor element
+        // because they don't work in IE9 :(
+        tempAnchor.href = url;
+        url = (0, _parseUri2.default)(tempAnchor.href, { strictMode: true });
+
+        var samePort = !url.port && loc.port === '' || url.port === loc.port;
+        var protocol = url.protocol ? url.protocol + ':' : '';
+
+        // if cross origin
+        if (url.host !== loc.hostname || !samePort || protocol !== loc.protocol) {
+            return 'anonymous';
+        }
+
+        return '';
+    };
+
+    /**
+     * Determines the responseType of an XHR request based on the extension of the
+     * resource being loaded.
+     *
+     * @private
+     * @return {Resource.XHR_RESPONSE_TYPE} The responseType to use.
+     */
+
+
+    Resource.prototype._determineXhrType = function _determineXhrType() {
+        return Resource._xhrTypeMap[this.extension] || Resource.XHR_RESPONSE_TYPE.TEXT;
+    };
+
+    /**
+     * Determines the loadType of a resource based on the extension of the
+     * resource being loaded.
+     *
+     * @private
+     * @return {Resource.LOAD_TYPE} The loadType to use.
+     */
+
+
+    Resource.prototype._determineLoadType = function _determineLoadType() {
+        return Resource._loadTypeMap[this.extension] || Resource.LOAD_TYPE.XHR;
+    };
+
+    /**
+     * Extracts the extension (sans '.') of the file being loaded by the resource.
+     *
+     * @private
+     * @return {string} The extension.
+     */
+
+
+    Resource.prototype._getExtension = function _getExtension() {
+        var url = this.url;
+        var ext = '';
+
+        if (this.isDataUrl) {
+            var slashIndex = url.indexOf('/');
+
+            ext = url.substring(slashIndex + 1, url.indexOf(';', slashIndex));
+        } else {
+            var queryStart = url.indexOf('?');
+            var hashStart = url.indexOf('#');
+            var index = Math.min(queryStart > -1 ? queryStart : url.length, hashStart > -1 ? hashStart : url.length);
+
+            url = url.substring(0, index);
+            ext = url.substring(url.lastIndexOf('.') + 1);
+        }
+
+        return ext.toLowerCase();
+    };
+
+    /**
+     * Determines the mime type of an XHR request based on the responseType of
+     * resource being loaded.
+     *
+     * @private
+     * @param {Resource.XHR_RESPONSE_TYPE} type - The type to get a mime type for.
+     * @return {string} The mime type to use.
+     */
+
+
+    Resource.prototype._getMimeFromXhrType = function _getMimeFromXhrType(type) {
+        switch (type) {
+            case Resource.XHR_RESPONSE_TYPE.BUFFER:
+                return 'application/octet-binary';
+
+            case Resource.XHR_RESPONSE_TYPE.BLOB:
+                return 'application/blob';
+
+            case Resource.XHR_RESPONSE_TYPE.DOCUMENT:
+                return 'application/xml';
+
+            case Resource.XHR_RESPONSE_TYPE.JSON:
+                return 'application/json';
+
+            case Resource.XHR_RESPONSE_TYPE.DEFAULT:
+            case Resource.XHR_RESPONSE_TYPE.TEXT:
+            /* falls through */
+            default:
+                return 'text/plain';
+        }
+    };
+
+    _createClass(Resource, [{
+        key: 'isDataUrl',
+        get: function get() {
+            return this._hasFlag(Resource.STATUS_FLAGS.DATA_URL);
+        }
+
+        /**
+         * Describes if this resource has finished loading. Is true when the resource has completely
+         * loaded.
+         *
+         * @readonly
+         * @member {boolean}
+         */
+
+    }, {
+        key: 'isComplete',
+        get: function get() {
+            return this._hasFlag(Resource.STATUS_FLAGS.COMPLETE);
+        }
+
+        /**
+         * Describes if this resource is currently loading. Is true when the resource starts loading,
+         * and is false again when complete.
+         *
+         * @readonly
+         * @member {boolean}
+         */
+
+    }, {
+        key: 'isLoading',
+        get: function get() {
+            return this._hasFlag(Resource.STATUS_FLAGS.LOADING);
+        }
+    }]);
+
+    return Resource;
+}();
+
+/**
+ * The types of resources a resource could represent.
+ *
+ * @static
+ * @readonly
+ * @enum {number}
+ */
+
+
+Resource.STATUS_FLAGS = {
+    NONE: 0,
+    DATA_URL: 1 << 0,
+    COMPLETE: 1 << 1,
+    LOADING: 1 << 2
+};
+
+/**
+ * The types of resources a resource could represent.
+ *
+ * @static
+ * @readonly
+ * @enum {number}
+ */
+Resource.TYPE = {
+    UNKNOWN: 0,
+    JSON: 1,
+    XML: 2,
+    IMAGE: 3,
+    AUDIO: 4,
+    VIDEO: 5,
+    TEXT: 6
+};
+
+/**
+ * The types of loading a resource can use.
+ *
+ * @static
+ * @readonly
+ * @enum {number}
+ */
+Resource.LOAD_TYPE = {
+    /** Uses XMLHttpRequest to load the resource. */
+    XHR: 1,
+    /** Uses an `Image` object to load the resource. */
+    IMAGE: 2,
+    /** Uses an `Audio` object to load the resource. */
+    AUDIO: 3,
+    /** Uses a `Video` object to load the resource. */
+    VIDEO: 4
+};
+
+/**
+ * The XHR ready states, used internally.
+ *
+ * @static
+ * @readonly
+ * @enum {string}
+ */
+Resource.XHR_RESPONSE_TYPE = {
+    /** string */
+    DEFAULT: 'text',
+    /** ArrayBuffer */
+    BUFFER: 'arraybuffer',
+    /** Blob */
+    BLOB: 'blob',
+    /** Document */
+    DOCUMENT: 'document',
+    /** Object */
+    JSON: 'json',
+    /** String */
+    TEXT: 'text'
+};
+
+Resource._loadTypeMap = {
+    // images
+    gif: Resource.LOAD_TYPE.IMAGE,
+    png: Resource.LOAD_TYPE.IMAGE,
+    bmp: Resource.LOAD_TYPE.IMAGE,
+    jpg: Resource.LOAD_TYPE.IMAGE,
+    jpeg: Resource.LOAD_TYPE.IMAGE,
+    tif: Resource.LOAD_TYPE.IMAGE,
+    tiff: Resource.LOAD_TYPE.IMAGE,
+    webp: Resource.LOAD_TYPE.IMAGE,
+    tga: Resource.LOAD_TYPE.IMAGE,
+    svg: Resource.LOAD_TYPE.IMAGE,
+    'svg+xml': Resource.LOAD_TYPE.IMAGE, // for SVG data urls
+
+    // audio
+    mp3: Resource.LOAD_TYPE.AUDIO,
+    ogg: Resource.LOAD_TYPE.AUDIO,
+    wav: Resource.LOAD_TYPE.AUDIO,
+
+    // videos
+    mp4: Resource.LOAD_TYPE.VIDEO,
+    webm: Resource.LOAD_TYPE.VIDEO
+};
+
+Resource._xhrTypeMap = {
+    // xml
+    xhtml: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+    html: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+    htm: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+    xml: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+    tmx: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+    svg: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+
+    // This was added to handle Tiled Tileset XML, but .tsx is also a TypeScript React Component.
+    // Since it is way less likely for people to be loading TypeScript files instead of Tiled files,
+    // this should probably be fine.
+    tsx: Resource.XHR_RESPONSE_TYPE.DOCUMENT,
+
+    // images
+    gif: Resource.XHR_RESPONSE_TYPE.BLOB,
+    png: Resource.XHR_RESPONSE_TYPE.BLOB,
+    bmp: Resource.XHR_RESPONSE_TYPE.BLOB,
+    jpg: Resource.XHR_RESPONSE_TYPE.BLOB,
+    jpeg: Resource.XHR_RESPONSE_TYPE.BLOB,
+    tif: Resource.XHR_RESPONSE_TYPE.BLOB,
+    tiff: Resource.XHR_RESPONSE_TYPE.BLOB,
+    webp: Resource.XHR_RESPONSE_TYPE.BLOB,
+    tga: Resource.XHR_RESPONSE_TYPE.BLOB,
+
+    // json
+    json: Resource.XHR_RESPONSE_TYPE.JSON,
+
+    // text
+    text: Resource.XHR_RESPONSE_TYPE.TEXT,
+    txt: Resource.XHR_RESPONSE_TYPE.TEXT,
+
+    // fonts
+    ttf: Resource.XHR_RESPONSE_TYPE.BUFFER,
+    otf: Resource.XHR_RESPONSE_TYPE.BUFFER
+};
+
+// We can't set the `src` attribute to empty string, so on abort we set it to this 1px transparent gif
+Resource.EMPTY_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+/**
+ * Quick helper to set a value on one of the extension maps. Ensures there is no
+ * dot at the start of the extension.
+ *
+ * @ignore
+ * @param {object} map - The map to set on.
+ * @param {string} extname - The extension (or key) to set.
+ * @param {number} val - The value to set.
+ */
+function setExtMap(map, extname, val) {
+    if (extname && extname.indexOf('.') === 0) {
+        extname = extname.substring(1);
+    }
+
+    if (!extname) {
+        return;
+    }
+
+    map[extname] = val;
+}
+
+/**
+ * Quick helper to get string xhr type.
+ *
+ * @ignore
+ * @param {XMLHttpRequest|XDomainRequest} xhr - The request to check.
+ * @return {string} The type.
+ */
+function reqType(xhr) {
+    return xhr.toString().replace('object ', '');
+}
+
+// Backwards compat
+if (typeof module !== 'undefined') {
+    module.exports.default = Resource; // eslint-disable-line no-undef
+}
+
+},{"mini-signals":101,"parse-uri":104}],294:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.eachSeries = eachSeries;
+exports.queue = queue;
+/**
+ * Smaller version of the async library constructs.
+ *
+ * @namespace async
+ */
+
+/**
+ * Noop function
+ *
+ * @ignore
+ * @function
+ * @memberof async
+ */
+function _noop() {} /* empty */
+
+/**
+ * Iterates an array in series.
+ *
+ * @memberof async
+ * @param {Array.<*>} array - Array to iterate.
+ * @param {function} iterator - Function to call for each element.
+ * @param {function} callback - Function to call when done, or on error.
+ * @param {boolean} [deferNext=false] - Break synchronous each loop by calling next with a setTimeout of 1.
+ */
+function eachSeries(array, iterator, callback, deferNext) {
+    var i = 0;
+    var len = array.length;
+
+    (function next(err) {
+        if (err || i === len) {
+            if (callback) {
+                callback(err);
+            }
+
+            return;
+        }
+
+        if (deferNext) {
+            setTimeout(function () {
+                iterator(array[i++], next);
+            }, 1);
+        } else {
+            iterator(array[i++], next);
+        }
+    })();
+}
+
+/**
+ * Ensures a function is only called once.
+ *
+ * @ignore
+ * @memberof async
+ * @param {function} fn - The function to wrap.
+ * @return {function} The wrapping function.
+ */
+function onlyOnce(fn) {
+    return function onceWrapper() {
+        if (fn === null) {
+            throw new Error('Callback was already called.');
+        }
+
+        var callFn = fn;
+
+        fn = null;
+        callFn.apply(this, arguments);
+    };
+}
+
+/**
+ * Async queue implementation,
+ *
+ * @memberof async
+ * @param {function} worker - The worker function to call for each task.
+ * @param {number} concurrency - How many workers to run in parrallel.
+ * @return {*} The async queue object.
+ */
+function queue(worker, concurrency) {
+    if (concurrency == null) {
+        // eslint-disable-line no-eq-null,eqeqeq
+        concurrency = 1;
+    } else if (concurrency === 0) {
+        throw new Error('Concurrency must not be zero');
+    }
+
+    var workers = 0;
+    var q = {
+        _tasks: [],
+        concurrency: concurrency,
+        saturated: _noop,
+        unsaturated: _noop,
+        buffer: concurrency / 4,
+        empty: _noop,
+        drain: _noop,
+        error: _noop,
+        started: false,
+        paused: false,
+        push: function push(data, callback) {
+            _insert(data, false, callback);
+        },
+        kill: function kill() {
+            workers = 0;
+            q.drain = _noop;
+            q.started = false;
+            q._tasks = [];
+        },
+        unshift: function unshift(data, callback) {
+            _insert(data, true, callback);
+        },
+        process: function process() {
+            while (!q.paused && workers < q.concurrency && q._tasks.length) {
+                var task = q._tasks.shift();
+
+                if (q._tasks.length === 0) {
+                    q.empty();
+                }
+
+                workers += 1;
+
+                if (workers === q.concurrency) {
+                    q.saturated();
+                }
+
+                worker(task.data, onlyOnce(_next(task)));
+            }
+        },
+        length: function length() {
+            return q._tasks.length;
+        },
+        running: function running() {
+            return workers;
+        },
+        idle: function idle() {
+            return q._tasks.length + workers === 0;
+        },
+        pause: function pause() {
+            if (q.paused === true) {
+                return;
+            }
+
+            q.paused = true;
+        },
+        resume: function resume() {
+            if (q.paused === false) {
+                return;
+            }
+
+            q.paused = false;
+
+            // Need to call q.process once per concurrent
+            // worker to preserve full concurrency after pause
+            for (var w = 1; w <= q.concurrency; w++) {
+                q.process();
+            }
+        }
+    };
+
+    function _insert(data, insertAtFront, callback) {
+        if (callback != null && typeof callback !== 'function') {
+            // eslint-disable-line no-eq-null,eqeqeq
+            throw new Error('task callback must be a function');
+        }
+
+        q.started = true;
+
+        if (data == null && q.idle()) {
+            // eslint-disable-line no-eq-null,eqeqeq
+            // call drain immediately if there are no tasks
+            setTimeout(function () {
+                return q.drain();
+            }, 1);
+
+            return;
+        }
+
+        var item = {
+            data: data,
+            callback: typeof callback === 'function' ? callback : _noop
+        };
+
+        if (insertAtFront) {
+            q._tasks.unshift(item);
+        } else {
+            q._tasks.push(item);
+        }
+
+        setTimeout(function () {
+            return q.process();
+        }, 1);
+    }
+
+    function _next(task) {
+        return function next() {
+            workers -= 1;
+
+            task.callback.apply(task, arguments);
+
+            if (arguments[0] != null) {
+                // eslint-disable-line no-eq-null,eqeqeq
+                q.error(arguments[0], task.data);
+            }
+
+            if (workers <= q.concurrency - q.buffer) {
+                q.unsaturated();
+            }
+
+            if (q.idle()) {
+                q.drain();
+            }
+
+            q.process();
+        };
+    }
+
+    return q;
+}
+
+},{}],295:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.encodeBinary = encodeBinary;
+var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+/**
+ * Encodes binary into base64.
+ *
+ * @param {string} input The input data to encode.
+ * @returns {string} The encoded base64 string
+ */
+function encodeBinary(input) {
+    var output = '';
+    var inx = 0;
+
+    while (inx < input.length) {
+        // Fill byte buffer array
+        var bytebuffer = [0, 0, 0];
+        var encodedCharIndexes = [0, 0, 0, 0];
+
+        for (var jnx = 0; jnx < bytebuffer.length; ++jnx) {
+            if (inx < input.length) {
+                // throw away high-order byte, as documented at:
+                // https://developer.mozilla.org/En/Using_XMLHttpRequest#Handling_binary_data
+                bytebuffer[jnx] = input.charCodeAt(inx++) & 0xff;
+            } else {
+                bytebuffer[jnx] = 0;
+            }
+        }
+
+        // Get each encoded character, 6 bits at a time
+        // index 1: first 6 bits
+        encodedCharIndexes[0] = bytebuffer[0] >> 2;
+
+        // index 2: second 6 bits (2 least significant bits from input byte 1 + 4 most significant bits from byte 2)
+        encodedCharIndexes[1] = (bytebuffer[0] & 0x3) << 4 | bytebuffer[1] >> 4;
+
+        // index 3: third 6 bits (4 least significant bits from input byte 2 + 2 most significant bits from byte 3)
+        encodedCharIndexes[2] = (bytebuffer[1] & 0x0f) << 2 | bytebuffer[2] >> 6;
+
+        // index 3: forth 6 bits (6 least significant bits from input byte 3)
+        encodedCharIndexes[3] = bytebuffer[2] & 0x3f;
+
+        // Determine whether padding happened, and adjust accordingly
+        var paddingBytes = inx - (input.length - 1);
+
+        switch (paddingBytes) {
+            case 2:
+                // Set last 2 characters to padding char
+                encodedCharIndexes[3] = 64;
+                encodedCharIndexes[2] = 64;
+                break;
+
+            case 1:
+                // Set last character to padding char
+                encodedCharIndexes[3] = 64;
+                break;
+
+            default:
+                break; // No padding - proceed
+        }
+
+        // Now we will grab each appropriate character out of our keystring
+        // based on our index array and append it to the output string
+        for (var _jnx = 0; _jnx < encodedCharIndexes.length; ++_jnx) {
+            output += _keyStr.charAt(encodedCharIndexes[_jnx]);
+        }
+    }
+
+    return output;
+}
+
+// Backwards compat
+if (typeof module !== 'undefined') {
+    module.exports.default = encodeBinary; // eslint-disable-line no-undef
+}
+
+},{}],296:[function(require,module,exports){
+'use strict';
+
+// import Loader from './Loader';
+// import Resource from './Resource';
+// import * as async from './async';
+// import * as b64 from './b64';
+
+/* eslint-disable no-undef */
+
+var Loader = require('./Loader').Loader;
+var Resource = require('./Resource').Resource;
+var async = require('./async');
+var b64 = require('./b64');
+
+/**
+ *
+ * @static
+ * @memberof Loader
+ * @member {Class<Resource>}
+ */
+Loader.Resource = Resource;
+
+/**
+ *
+ * @static
+ * @memberof Loader
+ * @member {Class<async>}
+ */
+Loader.async = async;
+
+/**
+ *
+ * @static
+ * @memberof Loader
+ * @member {Class<encodeBinary>}
+ */
+Loader.encodeBinary = b64;
+
+/**
+ *
+ * @deprecated
+ * @see Loader.encodeBinary
+ *
+ * @static
+ * @memberof Loader
+ * @member {Class<encodeBinary>}
+ */
+Loader.base64 = b64;
+
+// export manually, and also as default
+module.exports = Loader;
+
+// default & named export
+module.exports.Loader = Loader;
+module.exports.default = Loader;
+
+},{"./Loader":292,"./Resource":293,"./async":294,"./b64":295}],297:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.blobMiddlewareFactory = blobMiddlewareFactory;
+
+var _Resource = require('../../Resource');
+
+var _b = require('../../b64');
+
+var Url = window.URL || window.webkitURL;
+
+// a middleware for transforming XHR loaded Blobs into more useful objects
+function blobMiddlewareFactory() {
+    return function blobMiddleware(resource, next) {
+        if (!resource.data) {
+            next();
+
+            return;
+        }
+
+        // if this was an XHR load of a blob
+        if (resource.xhr && resource.xhrType === _Resource.Resource.XHR_RESPONSE_TYPE.BLOB) {
+            // if there is no blob support we probably got a binary string back
+            if (!window.Blob || typeof resource.data === 'string') {
+                var type = resource.xhr.getResponseHeader('content-type');
+
+                // this is an image, convert the binary string into a data url
+                if (type && type.indexOf('image') === 0) {
+                    resource.data = new Image();
+                    resource.data.src = 'data:' + type + ';base64,' + (0, _b.encodeBinary)(resource.xhr.responseText);
+
+                    resource.type = _Resource.Resource.TYPE.IMAGE;
+
+                    // wait until the image loads and then callback
+                    resource.data.onload = function () {
+                        resource.data.onload = null;
+
+                        next();
+                    };
+
+                    // next will be called on load
+                    return;
+                }
+            }
+            // if content type says this is an image, then we should transform the blob into an Image object
+            else if (resource.data.type.indexOf('image') === 0) {
+                    var src = Url.createObjectURL(resource.data);
+
+                    resource.blob = resource.data;
+                    resource.data = new Image();
+                    resource.data.src = src;
+
+                    resource.type = _Resource.Resource.TYPE.IMAGE;
+
+                    // cleanup the no longer used blob after the image loads
+                    // TODO: Is this correct? Will the image be invalid after revoking?
+                    resource.data.onload = function () {
+                        Url.revokeObjectURL(src);
+                        resource.data.onload = null;
+
+                        next();
+                    };
+
+                    // next will be called on load.
+                    return;
+                }
+        }
+
+        next();
+    };
+}
+
+},{"../../Resource":293,"../../b64":295}],298:[function(require,module,exports){
 'use strict'
 
 /**
@@ -56374,8 +58669,7 @@ core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
  * @param {number} startIdx The index to begin removing from (inclusive)
  * @param {number} removeCount How many items to remove
  */
-module.exports = function removeItems(arr, startIdx, removeCount)
-{
+module.exports = function removeItems (arr, startIdx, removeCount) {
   var i, length = arr.length
 
   if (startIdx >= length || removeCount === 0) {
@@ -56393,7 +58687,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
   arr.length = len
 }
 
-},{}],293:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57046,7 +59340,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":294,"./async":295,"mini-signals":101,"parse-uri":104}],294:[function(require,module,exports){
+},{"./Resource":300,"./async":301,"mini-signals":101,"parse-uri":104}],300:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58202,7 +60496,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":101,"parse-uri":104}],295:[function(require,module,exports){
+},{"mini-signals":101,"parse-uri":104}],301:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58411,7 +60705,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],296:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58479,7 +60773,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],297:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -58503,95 +60797,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":293,"./Resource":294,"./async":295,"./b64":296}],298:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.blobMiddlewareFactory = blobMiddlewareFactory;
-
-var _Resource = require('../../Resource');
-
-var _Resource2 = _interopRequireDefault(_Resource);
-
-var _b = require('../../b64');
-
-var _b2 = _interopRequireDefault(_b);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Url = window.URL || window.webkitURL;
-
-// a middleware for transforming XHR loaded Blobs into more useful objects
-function blobMiddlewareFactory() {
-    return function blobMiddleware(resource, next) {
-        if (!resource.data) {
-            next();
-
-            return;
-        }
-
-        // if this was an XHR load of a blob
-        if (resource.xhr && resource.xhrType === _Resource2.default.XHR_RESPONSE_TYPE.BLOB) {
-            // if there is no blob support we probably got a binary string back
-            if (!window.Blob || typeof resource.data === 'string') {
-                var type = resource.xhr.getResponseHeader('content-type');
-
-                // this is an image, convert the binary string into a data url
-                if (type && type.indexOf('image') === 0) {
-                    resource.data = new Image();
-                    resource.data.src = 'data:' + type + ';base64,' + _b2.default.encodeBinary(resource.xhr.responseText);
-
-                    resource.type = _Resource2.default.TYPE.IMAGE;
-
-                    // wait until the image loads and then callback
-                    resource.data.onload = function () {
-                        resource.data.onload = null;
-
-                        next();
-                    };
-
-                    // next will be called on load
-                    return;
-                }
-            }
-            // if content type says this is an image, then we should transform the blob into an Image object
-            else if (resource.data.type.indexOf('image') === 0) {
-                    var _ret = function () {
-                        var src = Url.createObjectURL(resource.data);
-
-                        resource.blob = resource.data;
-                        resource.data = new Image();
-                        resource.data.src = src;
-
-                        resource.type = _Resource2.default.TYPE.IMAGE;
-
-                        // cleanup the no longer used blob after the image loads
-                        // TODO: Is this correct? Will the image be invalid after revoking?
-                        resource.data.onload = function () {
-                            Url.revokeObjectURL(src);
-                            resource.data.onload = null;
-
-                            next();
-                        };
-
-                        // next will be called on load.
-                        return {
-                            v: void 0
-                        };
-                    }();
-
-                    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-                }
-        }
-
-        next();
-    };
-}
-
-},{"../../Resource":294,"../../b64":296}],299:[function(require,module,exports){
+},{"./Loader":299,"./Resource":300,"./async":301,"./b64":302}],304:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -58687,7 +60893,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":300,"./socket":302,"./url":303,"debug":304,"socket.io-parser":307}],300:[function(require,module,exports){
+},{"./manager":305,"./socket":307,"./url":308,"debug":309,"socket.io-parser":312}],305:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -59262,7 +61468,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":301,"./socket":302,"backo2":68,"component-bind":72,"component-emitter":73,"debug":304,"engine.io-client":79,"indexof":99,"socket.io-parser":307}],301:[function(require,module,exports){
+},{"./on":306,"./socket":307,"backo2":68,"component-bind":72,"component-emitter":73,"debug":309,"engine.io-client":79,"indexof":99,"socket.io-parser":312}],306:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -59288,7 +61494,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],302:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -59728,7 +61934,7 @@ Socket.prototype.binary = function (binary) {
   return this;
 };
 
-},{"./on":301,"component-bind":72,"component-emitter":73,"debug":304,"has-binary2":94,"parseqs":105,"socket.io-parser":307,"to-array":312}],303:[function(require,module,exports){
+},{"./on":306,"component-bind":72,"component-emitter":73,"debug":309,"has-binary2":94,"parseqs":105,"socket.io-parser":312,"to-array":317}],308:[function(require,module,exports){
 (function (global){
 
 /**
@@ -59807,11 +62013,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":304,"parseuri":106}],304:[function(require,module,exports){
+},{"debug":309,"parseuri":106}],309:[function(require,module,exports){
 arguments[4][88][0].apply(exports,arguments)
-},{"./debug":305,"_process":319,"dup":88}],305:[function(require,module,exports){
+},{"./debug":310,"_process":324,"dup":88}],310:[function(require,module,exports){
 arguments[4][89][0].apply(exports,arguments)
-},{"dup":89,"ms":102}],306:[function(require,module,exports){
+},{"dup":89,"ms":102}],311:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -59956,7 +62162,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":308,"isarray":311}],307:[function(require,module,exports){
+},{"./is-buffer":313,"isarray":316}],312:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -60375,7 +62581,7 @@ function error(msg) {
   };
 }
 
-},{"./binary":306,"./is-buffer":308,"component-emitter":73,"debug":309,"isarray":311}],308:[function(require,module,exports){
+},{"./binary":311,"./is-buffer":313,"component-emitter":73,"debug":314,"isarray":316}],313:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -60403,13 +62609,13 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],309:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 arguments[4][88][0].apply(exports,arguments)
-},{"./debug":310,"_process":319,"dup":88}],310:[function(require,module,exports){
+},{"./debug":315,"_process":324,"dup":88}],315:[function(require,module,exports){
 arguments[4][89][0].apply(exports,arguments)
-},{"dup":89,"ms":102}],311:[function(require,module,exports){
+},{"dup":89,"ms":102}],316:[function(require,module,exports){
 arguments[4][95][0].apply(exports,arguments)
-},{"dup":95}],312:[function(require,module,exports){
+},{"dup":95}],317:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -60424,7 +62630,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],313:[function(require,module,exports){
+},{}],318:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -60494,7 +62700,7 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],314:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -60647,9 +62853,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],315:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 
-},{}],316:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -62428,7 +64634,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":314,"ieee754":317}],317:[function(require,module,exports){
+},{"base64-js":319,"ieee754":322}],322:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -62514,7 +64720,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],318:[function(require,module,exports){
+},{}],323:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -62820,7 +65026,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":319}],319:[function(require,module,exports){
+},{"_process":324}],324:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -63006,7 +65212,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],320:[function(require,module,exports){
+},{}],325:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -63543,7 +65749,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],321:[function(require,module,exports){
+},{}],326:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63629,7 +65835,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],322:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63716,13 +65922,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],323:[function(require,module,exports){
+},{}],328:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":321,"./encode":322}],324:[function(require,module,exports){
+},{"./decode":326,"./encode":327}],329:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64456,7 +66662,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":325,"punycode":320,"querystring":323}],325:[function(require,module,exports){
+},{"./util":330,"punycode":325,"querystring":328}],330:[function(require,module,exports){
 'use strict';
 
 module.exports = {
