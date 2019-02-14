@@ -1,14 +1,30 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport } = require('../engine/viewport');
-
-const gui_container = viewport.getChildByName('gui_container');
+const { gui_container } = require('../engine/pixi_containers');
 
 class View_Inventory {
-  static create_inventory_slots_at(point, slots) {
+
+  static populate(image_name, slot) {
+    const item  = PIXI.Sprite.fromFrame(image_name);
+    item.height = 100;
+    item.width  = 100;
+    item.anchor.set(0.5);
+
+    item.interactive = true;
+    item.buttonMode  = true;
+    item.click = () => {
+      item.destroy();
+    };
+
+    this.slot_container.getChildAt(slot).addChild(item);
+  }
+
+  static create_inventory_slots_at(point, slots = 3) {
+    if(!point) throw new Error('needs a point: ' + point);
+
     this.slot_container = new PIXI.Container();
-    this.slot_container.position.set(1000, 1000);
+    this.slot_container.position.set(point.x+200, point.y);
 
     for(let i = 0; i <= slots; i++) {
       const sprite  = PIXI.Sprite.fromFrame('item_slot');
@@ -23,20 +39,13 @@ class View_Inventory {
     gui_container.addChild(this.slot_container);
   }
 
-  populate(image_name, slot) {
-    const item  = PIXI.Sprite.fromFrame(image_name);
-    item.height = 100;
-    item.width  = 100;
-    item.anchor.set(0.5);
+  static create_populated_slots(point, loot) {
+    this.create_inventory_slots_at(point, loot.length);
 
-    item.interactive = true;
-    item.buttonMode  = true;
-    item.click = () => {
-      item.destroy();
-    };
-
-    this.slot_container.getChildAt(slot).addChild(item);
+    loot.forEach((item, i) => this.populate(item.image_name, i));
   }
+
+
 }
 
 module.exports = {

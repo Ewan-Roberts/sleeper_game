@@ -6,9 +6,10 @@ const { timer    } = require('../engine/ticker');
 const { PathFind } = require('../engine/pathfind.js');
 const { Entity_Container } = require('../engine/entity_container.js');
 
-const { Enemy } = require('./types/enemy');
-const { Melee } = require('./attributes/melee');
-const { Range } = require('./attributes/ranged');
+const { Enemy    } = require('./types/enemy');
+const { Melee    } = require('./attributes/melee');
+const { Range    } = require('./attributes/ranged');
+const { Lootable } = require('./attributes/lootable');
 const { distance_between_points } = require('../utils/math');
 
 /* This is the highest level class and presumes
@@ -22,6 +23,7 @@ class Archer extends Enemy {
 
     this.add_component(new Melee('rusty_knife'));
     this.add_component(new Range('old_bow'));
+    this.add_component(new Lootable(this));
     this.enemy = enemy;
     this.logic = timer.createTimer(800);
     this.logic.repeat = 20;

@@ -165,8 +165,8 @@ class Human {
 
   kill() {
     this.switch(this.weapon, 'dead');
-    this.sprite.height = 200;
-    this.sprite.width = 200;
+    this.sprite.height = 120;
+    this.sprite.width = 80;
   }
 
   stop() { this.sprite.gotToAndStop(1); }

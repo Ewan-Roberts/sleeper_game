@@ -67,14 +67,12 @@ function shoot_arrow_with_collision(origin, point, power = 2000) {
 
         enemy.vitals.damage(weapon_damage);
 
-        Dialog.speak_above_sprite(enemy.sprite, 'I am hit');
+        //Dialog.speak_above_sprite(enemy.sprite, 'I am hit');
         return;
       }
     });
   });
 }
-
-
 
 /*
  * @params {Character} - origin model

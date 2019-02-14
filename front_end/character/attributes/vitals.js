@@ -24,15 +24,21 @@ class Vitals {
   kill() {
     this.status = 'dead';
 
+    if('loot' in this.entity) {
+      console.log('lootable!');
+      this.entity.loot.show();
+    }
+
     this.entity.animation.kill();
   }
 
   damage(damage) {
     if (!damage) throw new Error('No damage being recieved');
-
     if(this.status === 'dead') return;
 
-    if(this.dead(damage)) {
+    const is_dead = this.dead(damage);
+
+    if(is_dead) {
       blood.add_at_point(this.entity.sprite);
 
       this.kill();

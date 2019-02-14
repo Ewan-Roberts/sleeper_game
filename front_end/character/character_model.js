@@ -10,6 +10,8 @@ class Character {
     const texture = [PIXI.Texture.fromFrame('bunny')];
 
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
+    this.sprite.interactive = true;
+    //this.sprite.buttonMode = true;
   }
 
   add_component(component) {
