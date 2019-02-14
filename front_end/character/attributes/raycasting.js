@@ -1,12 +1,13 @@
 'use strict';
 
 const PIXI = require('pixi.js');
+
 const { timer                } = require('../../engine/ticker');
 const { get_intersection     } = require('../../engine/raycasting');
 const { raycasting_container } = require('../../engine/pixi_containers');
 
-const raycast_timer = timer.createTimer(1000);
-raycast_timer.repeat = 10;
+const raycast_timer  = timer.createTimer(80);
+raycast_timer.repeat = 80;
 raycast_timer.expire = true;
 
 /*
@@ -16,8 +17,8 @@ raycast_timer.expire = true;
 class Raycasting {
   constructor(sprite) {
     this.raycast = new PIXI.Graphics();
-    this.name = 'raycasting';
-    this.sprite = sprite;
+    this.name    = 'raycasting';
+    this.sprite  = sprite;
   }
 
   add(level_segments) {
@@ -43,45 +44,43 @@ class Raycasting {
         unique_angles.push(angle - 0.00001, angle + 0.00001);
       });
 
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy},
+      unique_angles.forEach(angle => {
+        const dx    = Math.cos(angle);
+        const dy    = Math.sin(angle);
+        const ray   = {
+          a: {x: this.sprite.x,      y: this.sprite.y     },
+          b: {x: this.sprite.x + dx, y: this.sprite.y + dy},
         };
 
         let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
+        level_segments.forEach(segment => {
+          const intersect = get_intersection(ray, segment);
+          if(!intersect) return;
+          if(!closest_intersect || intersect.param < closest_intersect.param){
             closest_intersect = intersect;
           }
-        }
-        if(!closest_intersect) continue;
+        });
+
+        if(!closest_intersect) return;
 
         closest_intersect.angle = angle;
         intersects.push(closest_intersect);
-      }
+      });
 
       intersects = intersects.sort((a,b) => a.angle - b.angle);
 
-      this.raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        this.raycast.lineTo(intersects[i].x, intersects[i].y);
-      }
+      this.raycast.moveTo(intersects[0].x, intersects[0].y)
+        .lineStyle(0.5, 0xffd900, 5);
+      intersects.forEach(itersect => this.raycast.lineTo(itersect.x, itersect.y));
     });
 
     raycast_timer.start();
-
     raycasting_container.addChild(this.raycast);
   }
 
   contains_point(sprite) {
     const point = sprite.getGlobalPosition();
+
     return this.raycast.containsPoint(point);
   }
 }

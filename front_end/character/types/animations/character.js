@@ -89,12 +89,12 @@ function walk_frames() {
 
 const frames = {
   bow: {
-    idle:   bow_idle_frames(),
-    walk:   bow_walk_frames(),
-    ready:  bow_ready_frames(),
+    idle:  bow_idle_frames(),
+    walk:  bow_walk_frames(),
+    ready: bow_ready_frames(),
   },
   nothing: {
-    idle:   idle_frames(),
+    idle: idle_frames(),
   },
   knife: {
     idle:   idle_frames(),
@@ -130,61 +130,35 @@ class Human {
     this.state = action;
   }
 
-  face_up() {
-    this.sprite.rotation = -2;
-  }
+  face_up() { this.sprite.rotation = -2; }
 
-  ready_weapon() {
-    this.switch(this.weapon, 'ready');
-  }
+  ready_weapon() { this.switch(this.weapon, 'ready'); }
 
-  face_down() {
-    this.sprite.rotation = 2;
-  }
+  face_down() { this.sprite.rotation = 2; }
 
-  face_left() {
-    this.sprite.rotation = -3;
-  }
+  face_left() { this.sprite.rotation = -3; }
 
-  face_right() {
-    this.sprite.rotation = 0;
-  }
+  face_right() { this.sprite.rotation = 0; }
 
-  set current_weapon(weapon) {
-    this.weapon = weapon;
-  }
+  set current_weapon(weapon) { this.weapon = weapon; }
 
-  attack() {
-    this.switch(this.weapon, 'attack');
-  }
+  get current_weapon() { return this.weapon; }
 
-  idle() {
-    this.switch(this.weapon, 'idle');
-  }
+  attack() { this.switch(this.weapon, 'attack'); }
 
-  stop() {
-    this.sprite.gotToAndStop(1);
-  }
+  idle() { this.switch(this.weapon, 'idle'); }
 
-  move_up_by(amount) {
-    this.sprite.y -= amount;
-  }
+  stop() { this.sprite.gotToAndStop(1); }
 
-  move_down_by(amount) {
-    this.sprite.y += amount;
-  }
+  move_up_by(amount) { this.sprite.y -= amount; }
 
-  move_left_by(amount) {
-    this.sprite.x -= amount;
-  }
+  move_down_by(amount) { this.sprite.y += amount; }
 
-  move_right_by(amount) {
-    this.sprite.x += amount;
-  }
+  move_left_by(amount) { this.sprite.x -= amount; }
 
-  walk() {
-    this.switch(this.weapon, 'walk');
-  }
+  move_right_by(amount) { this.sprite.x += amount; }
+
+  walk() { this.switch(this.weapon, 'walk'); }
 }
 
 

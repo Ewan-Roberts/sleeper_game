@@ -1,16 +1,14 @@
 'use strict';
+
 const PIXI = require('pixi.js');
 
-const { Enemy            } = require('./types/enemy');
-const { shoot_arrow      } = require('../engine/bow');
-const { timer            } = require('../engine/ticker');
-const { View_Aiming_Line } = require('../view/view_aiming_line');
-const {
-  radian,
-  distance_between_points,
-} = require('../utils/math');
+const { shoot_arrow } = require('../engine/bow');
+const { timer       } = require('../engine/ticker');
+const { PathFind    } = require('../engine/pathfind.js');
 
-const { PathFind } = require('../engine/pathfind.js');
+const { Enemy            } = require('./types/enemy');
+const { View_Aiming_Line } = require('../view/view_aiming_line');
+const { radian, distance_between_points } = require('../utils/math');
 
 /* This is the highest level class and presumes
  *  Components;
@@ -21,7 +19,7 @@ class Archer extends Enemy {
     super();
     this.name  = 'enemy';
     this.enemy = enemy;
-    this.logic = timer.createTimer(1000);
+    this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
     this.logic.expire = true;
   }
@@ -29,25 +27,23 @@ class Archer extends Enemy {
   shoot() {
     this.animation.weapon = 'bow';
     this.animation.ready_weapon();
+    this.sprite.rotation = radian(this.enemy.sprite, this.sprite);
 
     View_Aiming_Line.add_between_sprites(this.enemy.sprite, this.sprite);
 
-    this.sprite.rotation = radian(this.enemy.sprite, this.sprite);
-
-    shoot_arrow(this.sprite, this.enemy.sprite);
+    setTimeout(() => shoot_arrow(this.sprite, this.enemy.sprite),1000);
   }
 
   melee() {
     this.animation.weapon = 'knife';
+
     this.animation.attack();
   }
 
-
   stop_moving() {
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-    tweens.forEach(tween => {
-      PIXI.tweenManager.removeTween(tween);
-    });
+
+    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
   }
 
   walk_to_enemy() {
@@ -64,25 +60,20 @@ class Archer extends Enemy {
       const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
 
       if(can_see_enemy){
-        const target_at_range =
-          distance_between_points(this.enemy.sprite, this.sprite) > 500;
         this.stop_moving();
 
-        if(target_at_range) {
-          this.shoot();
-          return;
-        }
+        const target_at_range =
+          distance_between_points(this.enemy.sprite, this.sprite) > 200;
 
-        this.melee();
-        return;
+        if(target_at_range) return this.shoot();
+
+        return this.melee();
       }
 
-      this.walk_to_enemy();
+      return this.walk_to_enemy();
     });
 
-    this.logic.on('end', () => {
-      this.animation.idle();
-    });
+    this.logic.on('end', () => this.animation.idle());
   }
 
   logic_stop() {

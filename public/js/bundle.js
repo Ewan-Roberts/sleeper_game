@@ -1,17 +1,15 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
+
 const PIXI = require('pixi.js');
 
-const { Enemy            } = require('./types/enemy');
-const { shoot_arrow      } = require('../engine/bow');
-const { timer            } = require('../engine/ticker');
-const { View_Aiming_Line } = require('../view/view_aiming_line');
-const {
-  radian,
-  distance_between_points,
-} = require('../utils/math');
+const { shoot_arrow } = require('../engine/bow');
+const { timer       } = require('../engine/ticker');
+const { PathFind    } = require('../engine/pathfind.js');
 
-const { PathFind } = require('../engine/pathfind.js');
+const { Enemy            } = require('./types/enemy');
+const { View_Aiming_Line } = require('../view/view_aiming_line');
+const { radian, distance_between_points } = require('../utils/math');
 
 /* This is the highest level class and presumes
  *  Components;
@@ -22,7 +20,7 @@ class Archer extends Enemy {
     super();
     this.name  = 'enemy';
     this.enemy = enemy;
-    this.logic = timer.createTimer(1000);
+    this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
     this.logic.expire = true;
   }
@@ -30,25 +28,23 @@ class Archer extends Enemy {
   shoot() {
     this.animation.weapon = 'bow';
     this.animation.ready_weapon();
+    this.sprite.rotation = radian(this.enemy.sprite, this.sprite);
 
     View_Aiming_Line.add_between_sprites(this.enemy.sprite, this.sprite);
 
-    this.sprite.rotation = radian(this.enemy.sprite, this.sprite);
-
-    shoot_arrow(this.sprite, this.enemy.sprite);
+    setTimeout(() => shoot_arrow(this.sprite, this.enemy.sprite),1000);
   }
 
   melee() {
     this.animation.weapon = 'knife';
+
     this.animation.attack();
   }
 
-
   stop_moving() {
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-    tweens.forEach(tween => {
-      PIXI.tweenManager.removeTween(tween);
-    });
+
+    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
   }
 
   walk_to_enemy() {
@@ -65,25 +61,20 @@ class Archer extends Enemy {
       const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
 
       if(can_see_enemy){
-        const target_at_range =
-          distance_between_points(this.enemy.sprite, this.sprite) > 500;
         this.stop_moving();
 
-        if(target_at_range) {
-          this.shoot();
-          return;
-        }
+        const target_at_range =
+          distance_between_points(this.enemy.sprite, this.sprite) > 200;
 
-        this.melee();
-        return;
+        if(target_at_range) return this.shoot();
+
+        return this.melee();
       }
 
-      this.walk_to_enemy();
+      return this.walk_to_enemy();
     });
 
-    this.logic.on('end', () => {
-      this.animation.idle();
-    });
+    this.logic.on('end', () => this.animation.idle());
   }
 
   logic_stop() {
@@ -520,12 +511,13 @@ module.exports = {
 'use strict';
 
 const PIXI = require('pixi.js');
+
 const { timer                } = require('../../engine/ticker');
 const { get_intersection     } = require('../../engine/raycasting');
 const { raycasting_container } = require('../../engine/pixi_containers');
 
-const raycast_timer = timer.createTimer(1000);
-raycast_timer.repeat = 10;
+const raycast_timer  = timer.createTimer(80);
+raycast_timer.repeat = 80;
 raycast_timer.expire = true;
 
 /*
@@ -535,8 +527,8 @@ raycast_timer.expire = true;
 class Raycasting {
   constructor(sprite) {
     this.raycast = new PIXI.Graphics();
-    this.name = 'raycasting';
-    this.sprite = sprite;
+    this.name    = 'raycasting';
+    this.sprite  = sprite;
   }
 
   add(level_segments) {
@@ -562,45 +554,43 @@ class Raycasting {
         unique_angles.push(angle - 0.00001, angle + 0.00001);
       });
 
-      for(let k=0; k < unique_angles.length; k++){
-        const angle = unique_angles[k];
-        const dx = Math.cos(angle);
-        const dy = Math.sin(angle);
-        const ray = {
-          a: {x: this.sprite.x,       y: this.sprite.y},
-          b: {x: this.sprite.x + dx,  y: this.sprite.y + dy},
+      unique_angles.forEach(angle => {
+        const dx    = Math.cos(angle);
+        const dy    = Math.sin(angle);
+        const ray   = {
+          a: {x: this.sprite.x,      y: this.sprite.y     },
+          b: {x: this.sprite.x + dx, y: this.sprite.y + dy},
         };
 
         let closest_intersect = null;
-        for(let i=0; i < level_segments.length; i++){
-          const intersect = get_intersection(ray, level_segments[i]);
-          if(!intersect) continue;
-          if(!closest_intersect || intersect.param<closest_intersect.param){
+        level_segments.forEach(segment => {
+          const intersect = get_intersection(ray, segment);
+          if(!intersect) return;
+          if(!closest_intersect || intersect.param < closest_intersect.param){
             closest_intersect = intersect;
           }
-        }
-        if(!closest_intersect) continue;
+        });
+
+        if(!closest_intersect) return;
 
         closest_intersect.angle = angle;
         intersects.push(closest_intersect);
-      }
+      });
 
       intersects = intersects.sort((a,b) => a.angle - b.angle);
 
-      this.raycast.moveTo(intersects[0].x, intersects[0].y).lineStyle(0.5, 0xffd900, 5);
-
-      for (let i = 0; i < intersects.length; i++) {
-        this.raycast.lineTo(intersects[i].x, intersects[i].y);
-      }
+      this.raycast.moveTo(intersects[0].x, intersects[0].y)
+        .lineStyle(0.5, 0xffd900, 5);
+      intersects.forEach(itersect => this.raycast.lineTo(itersect.x, itersect.y));
     });
 
     raycast_timer.start();
-
     raycasting_container.addChild(this.raycast);
   }
 
   contains_point(sprite) {
     const point = sprite.getGlobalPosition();
+
     return this.raycast.containsPoint(point);
   }
 }
@@ -862,12 +852,12 @@ function walk_frames() {
 
 const frames = {
   bow: {
-    idle:   bow_idle_frames(),
-    walk:   bow_walk_frames(),
-    ready:  bow_ready_frames(),
+    idle:  bow_idle_frames(),
+    walk:  bow_walk_frames(),
+    ready: bow_ready_frames(),
   },
   nothing: {
-    idle:   idle_frames(),
+    idle: idle_frames(),
   },
   knife: {
     idle:   idle_frames(),
@@ -903,61 +893,35 @@ class Human {
     this.state = action;
   }
 
-  face_up() {
-    this.sprite.rotation = -2;
-  }
+  face_up() { this.sprite.rotation = -2; }
 
-  ready_weapon() {
-    this.switch(this.weapon, 'ready');
-  }
+  ready_weapon() { this.switch(this.weapon, 'ready'); }
 
-  face_down() {
-    this.sprite.rotation = 2;
-  }
+  face_down() { this.sprite.rotation = 2; }
 
-  face_left() {
-    this.sprite.rotation = -3;
-  }
+  face_left() { this.sprite.rotation = -3; }
 
-  face_right() {
-    this.sprite.rotation = 0;
-  }
+  face_right() { this.sprite.rotation = 0; }
 
-  set current_weapon(weapon) {
-    this.weapon = weapon;
-  }
+  set current_weapon(weapon) { this.weapon = weapon; }
 
-  attack() {
-    this.switch(this.weapon, 'attack');
-  }
+  get current_weapon() { return this.weapon; }
 
-  idle() {
-    this.switch(this.weapon, 'idle');
-  }
+  attack() { this.switch(this.weapon, 'attack'); }
 
-  stop() {
-    this.sprite.gotToAndStop(1);
-  }
+  idle() { this.switch(this.weapon, 'idle'); }
 
-  move_up_by(amount) {
-    this.sprite.y -= amount;
-  }
+  stop() { this.sprite.gotToAndStop(1); }
 
-  move_down_by(amount) {
-    this.sprite.y += amount;
-  }
+  move_up_by(amount) { this.sprite.y -= amount; }
 
-  move_left_by(amount) {
-    this.sprite.x -= amount;
-  }
+  move_down_by(amount) { this.sprite.y += amount; }
 
-  move_right_by(amount) {
-    this.sprite.x += amount;
-  }
+  move_left_by(amount) { this.sprite.x -= amount; }
 
-  walk() {
-    this.switch(this.weapon, 'walk');
-  }
+  move_right_by(amount) { this.sprite.x += amount; }
+
+  walk() { this.switch(this.weapon, 'walk'); }
 }
 
 
