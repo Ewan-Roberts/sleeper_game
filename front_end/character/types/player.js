@@ -3,7 +3,7 @@
 const { viewport  } = require('../../engine/viewport.js');
 
 const { Character } = require('../character_model');
-const { Human     } = require('./animations/character');
+const { Human     } = require('../animations/character');
 
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');

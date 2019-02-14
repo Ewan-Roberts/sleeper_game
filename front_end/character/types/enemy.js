@@ -3,7 +3,7 @@
 const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Character  } = require('../character_model');
-const { Human      } = require('./animations/character');
+const { Human      } = require('../animations/character');
 
 const { Vitals     } = require('../attributes/vitals');
 const { Inventory  } = require('../attributes/Inventory');

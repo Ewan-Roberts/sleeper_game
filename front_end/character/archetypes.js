@@ -18,12 +18,14 @@ class Archer extends Enemy {
   constructor(enemy) {
     super();
     this.name  = 'enemy';
+
+    this.add_component(new Melee('rusty_knife'));
+    this.add_component(new Range('old_bow'));
+
     this.enemy = enemy;
     this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
     this.logic.expire = true;
-    this.add_component(new Melee('knife'));
-    this.add_component(new Range('bow'));
   }
 
   stop_moving() {

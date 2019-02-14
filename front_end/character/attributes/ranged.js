@@ -8,12 +8,13 @@ const { radian } = require('../../utils/math');
 class Range {
   constructor(weapon) {
     this.name   = 'range';
+
     this.weapon = weapon;
   }
 
   attack_from_to(attacker, target) {
+    attacker.inventory.equip_weapon_by_name(this.weapon);
 
-    attacker.inventory.equip_weapon_by_name('old_bow');
     attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
     attacker.animation.ready_weapon();
 

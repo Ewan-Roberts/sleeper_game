@@ -3,823 +3,6 @@
 
 const PIXI = require('pixi.js');
 
-const { timer    } = require('../engine/ticker');
-const { PathFind } = require('../engine/pathfind.js');
-
-const { Enemy } = require('./types/enemy');
-const { Melee } = require('./attributes/melee');
-const { Range } = require('./attributes/ranged');
-const { distance_between_points } = require('../utils/math');
-
-/* This is the highest level class and presumes
- *  Components;
- *  (Human Inventory Predator Vitals Raycasting)
- */
-class Archer extends Enemy {
-  constructor(enemy) {
-    super();
-    this.name  = 'enemy';
-    this.enemy = enemy;
-    this.logic = timer.createTimer(800);
-    this.logic.repeat = 20;
-    this.logic.expire = true;
-    this.add_component(new Melee('knife'));
-    this.add_component(new Range('bow'));
-  }
-
-  stop_moving() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-
-    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
-  }
-
-  walk_to_enemy() {
-    this.animation.walk();
-
-    PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
-  }
-
-  logic_start() {
-    this.logic.start();
-    this.animation.ready_weapon();
-
-    this.logic.on('repeat', () => {
-      const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
-
-      if(can_see_enemy){
-        this.stop_moving();
-
-        const target_at_range =
-          distance_between_points(this.enemy.sprite, this.sprite) > 200;
-
-        if(target_at_range) return this.range.attack_from_to(this, this.enemy);
-
-        return this.melee.attack_from_to(this, this.enemy);
-      }
-
-      return this.walk_to_enemy();
-    });
-
-    this.logic.on('end', () => this.animation.idle());
-  }
-
-  logic_stop() {
-    this.logic.stop();
-  }
-}
-
-
-module.exports = {
-  Archer,
-};
-
-},{"../engine/pathfind.js":31,"../engine/ticker":36,"../utils/math":55,"./attributes/melee":6,"./attributes/ranged":10,"./types/enemy":18,"pixi.js":253}],2:[function(require,module,exports){
-'use strict';
-
-const { get_random_items, get_item } = require('../../items/item_data');
-
-class Inventory {
-  constructor() {
-    this.name     = 'inventory';
-    this.equipped = null;
-    this.slots    = [];
-  }
-
-  equip_weapon_by_name(name) {
-    const weapon = get_item(name);
-
-    this.equip_weapon(weapon);
-  }
-
-  equip_weapon(item) {
-    if(!item.name) throw new Error('No weapon name for ' + item);
-
-    this.equipped = item;
-  }
-
-  get equipped_weapon() {
-    if(!this.equipped) throw new Error('No weapon equipped');
-    if(!this.equipped.animation_name) throw new Error('No weapon animation for ' + this.equipped.name);
-
-    return this.equipped;
-  }
-
-  get ammo_type() {
-    if(!this.equipped) throw new Error('No weapon equipped');
-
-    if(!this.equipped.ammo) throw new Error('Weapon does not have an ammo type: ' + this.equipped);
-
-    return this.equipped.ammo;
-  }
-
-  get equipped_weapon_name() {
-    if(!this.equipped) throw new Error('No weapon equipped');
-
-    return this.equipped.name;
-  }
-
-  get weapon_speed() {
-    if(!this.equipped) throw new Error('No weapon equipped');
-
-    return this.equipped.speed;
-  }
-
-  get weapon_damage() {
-    if(!this.equipped) throw new Error('No weapon equipped');
-
-    return this.equipped.damage;
-  }
-
-  populate_random_inventory(max) {
-    this.slots = get_random_items(max);
-  }
-}
-
-module.exports = {
-  Inventory,
-};
-
-
-},{"../../items/item_data":43}],3:[function(require,module,exports){
-'use strict';
-
-class Cutscene {
-  constructor(sprite) {
-    this.name   = 'cutscene';
-    this.sprite = sprite;
-  }
-
-  facing(direction) {
-    switch(direction) {
-      case 'up':    this.sprite.rotation = 4.17; return;
-      case 'right': this.sprite.rotation = 0;    return;
-      case 'down':  this.sprite.rotation = 1.57; return;
-      case 'left':  this.sprite.rotation = 3.14; return;
-    }
-  }
-}
-
-module.exports = {
-  Cutscene,
-};
-
-},{}],4:[function(require,module,exports){
-arguments[4][2][0].apply(exports,arguments)
-},{"../../items/item_data":43,"dup":2}],5:[function(require,module,exports){
-(function (global){
-'use strict';
-
-const { Game                } = require('../../engine/save_manager');
-const { collision_container } = require('../../engine/pixi_containers');
-
-const { View_HUD } = require('../../view/view_player_inventory');
-
-const keymap = {
-  w: 'up',
-  n: 'n',
-  a: 'left',
-  s: 'down',
-  d: 'right',
-  j: 'down',
-  k: 'up',
-  h: 'left',
-  l: 'right',
-  ArrowUp: 'up',
-  ArrowLeft: 'left',
-  ArrowDown: 'down',
-  ArrowRight: 'right',
-  i: 'i',
-  o: 'o',
-  Shift: 'Shift',
-};
-
-const buffer = 50;
-
-function point_collides(position) {
-  const { children } = collision_container;
-
-  return children.find(child => child.containsPoint(position));
-}
-
-class Keyboard {
-  constructor(entity) {
-    this.name   = 'keyboard';
-    this.entity = entity;
-
-    global.window.addEventListener('keydown', event => this.key_down(event.key));
-    global.window.addEventListener('keyup',   ()    => this.key_up());
-  }
-
-  save_game() {
-    Game.save(this.entity);
-  }
-
-  key_down(key) {
-    const translated_key = keymap[key];
-    if (!translated_key) return;
-
-    switch(translated_key) {
-      case 'up'   : this.keyboard_up();            return;
-      case 'left' : this.keyboard_left();          return;
-      case 'down' : this.keyboard_down();          return;
-      case 'right': this.keyboard_right();         return;
-      case 'n'    : this.save_game();              return;
-      case 'o'    : this.start_intro();            return;
-      case 'i'    : View_HUD.toggle_player_inventory(); return;
-    }
-  }
-
-  key_up() {
-    this.entity.animation.idle();
-  }
-
-  keyboard_up() {
-    this.entity.animation.walk();
-    this.entity.animation.face_up();
-
-    const point = this.entity.sprite.getGlobalPosition();
-    point.y -= buffer;
-
-    const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
-
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_up_by(movement_speed);
-  }
-
-  keyboard_down() {
-    this.entity.animation.walk();
-    this.entity.animation.face_down();
-
-    const point = this.entity.sprite.getGlobalPosition();
-    point.y += buffer;
-
-    const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
-
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_down_by(movement_speed);
-  }
-
-  keyboard_left() {
-    this.entity.animation.walk();
-    this.entity.animation.face_left();
-
-    const point = this.entity.sprite.getGlobalPosition();
-    point.x -= buffer;
-
-    const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
-
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_left_by(movement_speed);
-  }
-
-  keyboard_right() {
-    this.entity.animation.walk();
-    this.entity.animation.face_right();
-
-    const point = this.entity.sprite.getGlobalPosition();
-    point.x += buffer;
-
-    const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
-
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_right_by(movement_speed);
-  }
-}
-
-module.exports = {
-  Keyboard,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":32,"../../engine/save_manager":35,"../../view/view_player_inventory":60}],6:[function(require,module,exports){
-'use strict';
-
-const { melee_attack } = require('../../engine/melee');
-
-class Melee {
-  constructor(weapon) {
-    this.name = 'melee';
-    this.weapon = weapon;
-  }
-
-  attack_from_to(attacker, target) {
-    attacker.inventory.equip_weapon_by_name('rusty_knife');
-    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
-    attacker.animation.attack();
-
-    melee_attack(attacker, target);
-  }
-}
-
-module.exports = {
-  Melee,
-};
-
-},{"../../engine/melee":30}],7:[function(require,module,exports){
-'use strict';
-
-const { viewport         } = require('../../engine/viewport');
-const { timer            } = require('../../engine/ticker');
-const { radian           } = require('../../utils/math');
-const { shoot_arrow      } = require('../../engine/bow');
-const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
-
-let arrow_speed = 5000;
-
-//TODO move this out of here
-const power_timer = timer.createTimer(500);
-power_timer.loop = true;
-power_timer.expire = true;
-power_timer.on('repeat', elapsed => {
-  if(arrow_speed < 1000) {
-    arrow_speed = 300;
-    return;
-  }
-
-  arrow_speed -= elapsed;
-});
-
-power_timer.on('stop', function() {
-  this.remove();
-});
-
-class Mouse {
-  constructor(entity) {
-    this.name   = 'mouse';
-    this.entity = entity;
-
-    viewport.on('mouseup',   event => this.mouse_up(event));
-    viewport.on('mousemove', event => this.mouse_move(event));
-    viewport.on('mousedown', event => this.mouse_down(event));
-  }
-
-  mouse_up(event) {
-    power_timer.stop();
-    this.cone_timer.stop();
-    this.entity.animation.idle();
-
-    const target = event.data.getLocalPosition(viewport);
-    const origin = this.entity.sprite;
-
-    const { ammo_type } = this.entity.inventory;
-    //const { power     } = this.entity.vitals;
-    //TODO: consider weapon management system
-    switch(ammo_type) {
-      case 'arrow': shoot_arrow(origin, target,arrow_speed); return;
-    }
-  }
-
-  mouse_down(event) {
-    arrow_speed = 3000;
-    power_timer.start();
-    const mouse_position = event.data.getLocalPosition(viewport);
-    const direction      = radian(mouse_position, this.entity.sprite);
-
-    this.entity.animation.ready_weapon();
-    this.entity.sprite.rotation = direction;
-
-    const { cone_timer, cone } =
-      View_Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
-
-    //TODO remove cone manageemnt out of here
-    this.cone_timer = cone_timer;
-    this.cone       = cone;
-    this.cone_timer.start();
-  }
-
-  mouse_move(event) {
-    const mouse_position = event.data.getLocalPosition(viewport);
-
-    this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
-
-    //TODO remove -1.57
-    if(this.cone) {
-      this.cone.rotation = this.entity.sprite.rotation - 1.57;
-    }
-  }
-}
-
-module.exports = {
-  Mouse,
-};
-
-},{"../../engine/bow":28,"../../engine/ticker":36,"../../engine/viewport":37,"../../utils/math":55,"../../view/view_aiming_cone":57}],8:[function(require,module,exports){
-'use strict';
-
-const { timer                         } = require('../../engine/ticker');
-const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../utils/math');
-
-class Predator {
-  constructor(entity) {
-    this.name   = 'predator';
-    this.type   = 'predator';
-    this.entity = entity;
-  }
-
-  is_predator_to(prey) {
-    const predator          = this.entity;
-    const { speed, damage } = predator.inventory.equipped_weapon;
-
-    const attack_timer  = timer.createTimer(speed);
-    attack_timer.repeat = 10;
-    attack_timer.on('repeat', () => {
-      if(!prey.vitals.alive){
-        prey.animation.switch('dead');
-        predator.sprite.stop();
-      }
-
-      prey.vitals.damage(damage);
-    }).start();
-
-    const movement_timer  = timer.createTimer(1000);
-    movement_timer.repeat = 5;
-    movement_timer.on('repeat', () => {
-      const distance =
-        distance_between_points(predator.sprite, prey.sprite);
-
-      if(distance < 200) {
-        predator.animation.attack();
-
-        attack_timer.start();
-      } else {
-        predator.animation.walk();
-
-        attack_timer.stop();
-      }
-
-      const min = 10;
-      const max = 700;
-      if(distance < min||distance > max||!predator.vitals.alive) return;
-
-      move_sprite_to_sprite_on_grid(predator.sprite, prey.sprite);
-    }).start();
-  }
-}
-
-module.exports = {
-  Predator,
-};
-
-},{"../../engine/pathfind.js":31,"../../engine/ticker":36,"../../utils/math":55}],9:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-
-const { timer                         } = require('../../engine/ticker');
-const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../utils/math');
-const { critter_container             } = require('../../engine/pixi_containers');
-
-const min = 50;
-const max = 400;
-
-class Prey {
-  constructor(entity) {
-    this.entity = entity;
-    this.type   = 'prey';
-    this.name   = 'prey';
-  }
-
-  is_prey_to(predator) {
-    const prey = this.entity;
-    const distance = distance_between_points(predator.sprite, prey.sprite);
-
-    const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
-    point_to_run_for.name  = 'dot';
-
-    const movement_timer  = timer.createTimer(500);
-    movement_timer.repeat = 20;
-    movement_timer.on('repeat', () => {
-      if(distance < min || distance > max || !prey.vitals.alive) return;
-
-      point_to_run_for.position.set(
-        prey.sprite.x + (prey.sprite.x - predator.sprite.x),
-        prey.sprite.y + (prey.sprite.y - predator.sprite.y)
-      );
-
-      move_sprite_to_sprite_on_grid(prey.sprite, point_to_run_for);
-    }).start();
-
-    critter_container.addChild(point_to_run_for);
-  }
-}
-
-module.exports = {
-  Prey,
-};
-
-},{"../../engine/pathfind.js":31,"../../engine/pixi_containers":32,"../../engine/ticker":36,"../../utils/math":55,"pixi.js":253}],10:[function(require,module,exports){
-'use strict';
-
-const { shoot_arrow      } = require('../../engine/ranged');
-const { View_Aiming_Line } = require('../../view/view_aiming_line');
-
-const { radian } = require('../../utils/math');
-
-class Range {
-  constructor(weapon) {
-    this.name   = 'range';
-    this.weapon = weapon;
-  }
-
-  attack_from_to(attacker, target) {
-
-    attacker.inventory.equip_weapon_by_name('old_bow');
-    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
-    attacker.animation.ready_weapon();
-
-    attacker.sprite.rotation = radian(target.sprite, attacker.sprite);
-
-    View_Aiming_Line.add_between_sprites(target.sprite, attacker.sprite);
-
-    setTimeout(() => shoot_arrow(attacker, target),1000);
-  }
-}
-
-module.exports = {
-  Range,
-};
-
-},{"../../engine/ranged":33,"../../utils/math":55,"../../view/view_aiming_line":58}],11:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-
-const { timer                } = require('../../engine/ticker');
-const { get_intersection     } = require('../../engine/raycasting');
-const { raycasting_container } = require('../../engine/pixi_containers');
-
-const raycast_timer  = timer.createTimer(80);
-raycast_timer.repeat = 80;
-raycast_timer.expire = true;
-
-/*
- * @param {Object} PIXI.Sprite
- **/
-
-class Raycasting {
-  constructor(sprite) {
-    this.raycast = new PIXI.Graphics();
-    this.name    = 'raycasting';
-    this.sprite  = sprite;
-  }
-
-  add(level_segments) {
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    const light = this.sprite.getChildByName('light');
-    if (light) {
-      light.mask = this.raycast;
-      //light._filters = [new PIXI.filters.BlurFilter(10)];
-    }
-
-    raycast_timer.on('repeat', () => {
-      const unique_angles = [];
-      let intersects = [];
-
-      this.raycast.clear();
-      this.raycast.beginFill(0xfffffff, 0.05);
-
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      });
-
-      unique_angles.forEach(angle => {
-        const dx    = Math.cos(angle);
-        const dy    = Math.sin(angle);
-        const ray   = {
-          a: {x: this.sprite.x,      y: this.sprite.y     },
-          b: {x: this.sprite.x + dx, y: this.sprite.y + dy},
-        };
-
-        let closest_intersect = null;
-        level_segments.forEach(segment => {
-          const intersect = get_intersection(ray, segment);
-          if(!intersect) return;
-          if(!closest_intersect || intersect.param < closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        });
-
-        if(!closest_intersect) return;
-
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      });
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-
-      this.raycast.moveTo(intersects[0].x, intersects[0].y)
-        .lineStyle(0.5, 0xffd900, 5);
-      intersects.forEach(itersect => this.raycast.lineTo(itersect.x, itersect.y));
-    });
-
-    raycast_timer.start();
-    raycasting_container.addChild(this.raycast);
-  }
-
-  contains_point(sprite) {
-    const point = sprite.getGlobalPosition();
-
-    return this.raycast.containsPoint(point);
-  }
-}
-
-module.exports = {
-  Raycasting,
-};
-
-},{"../../engine/pixi_containers":32,"../../engine/raycasting":34,"../../engine/ticker":36,"pixi.js":253}],12:[function(require,module,exports){
-'use strict';
-
-const { status_meter } = require('../../view/view_player_status_meter');
-const { timer        } = require('../../engine/ticker');
-
-class Status {
-  constructor() {
-    this.name = 'status_meter';
-  }
-
-  static update_vitals(vital_data) {
-    status_meter.update(vital_data);
-  }
-
-  set_vitals_ticker() {
-    const vitals_timer = timer.createTimer(5000);
-    vitals_timer.repeat = 4;
-
-    vitals_timer.on('repeat', function() {
-      this.vitals.health -= this.vitals.ticker_values.health;
-      this.vitals.food   -= this.vitals.ticker_values.food;
-      this.vitals.water  -= this.vitals.ticker_values.water;
-      this.vitals.heat   -= this.vitals.ticker_values.heat;
-      this.vitals.sleep  -= this.vitals.ticker_values.sleep;
-
-      this.update_vitals(this.vitals);
-    });
-  }
-}
-
-module.exports = {
-  Status,
-};
-
-},{"../../engine/ticker":36,"../../view/view_player_status_meter":61}],13:[function(require,module,exports){
-'use strict';
-
-class Vitals {
-  constructor() {
-    this.name           ='vitals';
-    this.movement_speed = 15;
-    this.power          = 5000;
-    this.health         = 100;
-    this.food           = 40;
-    this.water          = 20;
-    this.heat           = 90;
-    this.sleep          = 100;
-    this.status         = 'alive';
-  }
-
-  kill() {
-    //this.entity.switch('dead');
-  }
-
-  dead(damage) {
-    return this.health - damage < 0;
-  }
-
-  damage(damage) {
-    if (!damage) throw new Error('No damage being recieved');
-
-    if(this.dead(damage)) {
-      this.status = 'dead';
-
-      throw new Error(`${this.name} doesnt have enough health`);
-    }
-
-    this.health -= damage;
-  }
-
-  get alive() {
-    return (this.status === 'alive');
-  }
-
-  increase_food(number) {
-    if(this.food + number < 100 ) {
-      this.food += number;
-    }
-  }
-}
-
-module.exports = {
-  Vitals,
-};
-
-
-},{}],14:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-
-const { viewport             } = require('../engine/viewport');
-const { move_sprite_to_point } = require('../engine/pathfind');
-
-class Character {
-  constructor() {
-    const texture = [PIXI.Texture.fromFrame('bunny')];
-
-    this.sprite = new PIXI.extras.AnimatedSprite(texture);
-  }
-
-  add_component(component) {
-    this[component.name] = component;
-  }
-
-  set_position(point) {
-    this.sprite.position.set(point.x, point.y);
-  }
-
-  move_to_point(x,y) {
-    move_sprite_to_point(this, {
-      middle: {
-        x,
-        y,
-      },
-    });
-  }
-
-  follow_sprite_with_camera() {
-    viewport.follow(this.sprite);
-  }
-
-  add_sight_line() {
-    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
-
-    sight_line_box.name = 'sight_line';
-    sight_line_box.width = 3000;
-    sight_line_box.height = 600;
-    sight_line_box.anchor.y = 0.5;
-    sight_line_box.alpha = 0.2;
-
-    this.sprite.addChild(sight_line_box);
-  }
-
-  add_influence_box() {
-    const influence_box = PIXI.Sprite.fromFrame('black_dot');
-
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
-    influence_box.height = 2000;
-    influence_box.alpha = 0.4;
-    influence_box.anchor.set(0.5);
-
-    this.sprite.addChild(influence_box);
-  }
-
-  with_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.name = 'light';
-
-    light.anchor.set(0.5);
-    light.width   = 2000;
-    light.height  = 2000;
-    light.alpha   = 0.1;
-
-    this.sprite.addChild(light);
-  }
-}
-
-module.exports = {
-  Character,
-};
-
-
-
-},{"../engine/pathfind":31,"../engine/viewport":37,"pixi.js":253}],15:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-
 function bow_idle_frames() {
   const bow_frames = [];
   for (let i = 0; i <= 21; i += 1) {
@@ -989,7 +172,7 @@ module.exports = {
 
 
 
-},{"pixi.js":253}],16:[function(require,module,exports){
+},{"pixi.js":253}],2:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1089,7 +272,828 @@ module.exports = {
   Rodent,
 };
 
-},{"pixi.js":253}],17:[function(require,module,exports){
+},{"pixi.js":253}],3:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+
+const { timer    } = require('../engine/ticker');
+const { PathFind } = require('../engine/pathfind.js');
+
+const { Enemy } = require('./types/enemy');
+const { Melee } = require('./attributes/melee');
+const { Range } = require('./attributes/ranged');
+const { distance_between_points } = require('../utils/math');
+
+/* This is the highest level class and presumes
+ *  Components;
+ *  (Human Inventory Predator Vitals Raycasting)
+ */
+class Archer extends Enemy {
+  constructor(enemy) {
+    super();
+    this.name  = 'enemy';
+
+    this.add_component(new Melee('rusty_knife'));
+    this.add_component(new Range('old_bow'));
+
+    this.enemy = enemy;
+    this.logic = timer.createTimer(800);
+    this.logic.repeat = 20;
+    this.logic.expire = true;
+  }
+
+  stop_moving() {
+    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
+
+    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
+  }
+
+  walk_to_enemy() {
+    this.animation.walk();
+
+    PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
+  }
+
+  logic_start() {
+    this.logic.start();
+    this.animation.ready_weapon();
+
+    this.logic.on('repeat', () => {
+      const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+
+      if(can_see_enemy){
+        this.stop_moving();
+
+        const target_at_range =
+          distance_between_points(this.enemy.sprite, this.sprite) > 200;
+
+        if(target_at_range) return this.range.attack_from_to(this, this.enemy);
+
+        return this.melee.attack_from_to(this, this.enemy);
+      }
+
+      return this.walk_to_enemy();
+    });
+
+    this.logic.on('end', () => this.animation.idle());
+  }
+
+  logic_stop() {
+    this.logic.stop();
+  }
+}
+
+
+module.exports = {
+  Archer,
+};
+
+},{"../engine/pathfind.js":31,"../engine/ticker":36,"../utils/math":55,"./attributes/melee":8,"./attributes/ranged":12,"./types/enemy":18,"pixi.js":253}],4:[function(require,module,exports){
+'use strict';
+
+const { get_random_items, get_item } = require('../../items/item_data');
+
+class Inventory {
+  constructor() {
+    this.name     = 'inventory';
+    this.equipped = null;
+    this.slots    = [];
+  }
+
+  equip_weapon_by_name(name) {
+    const weapon = get_item(name);
+
+    this.equip_weapon(weapon);
+  }
+
+  equip_weapon(item) {
+    if(!item.name) throw new Error('No weapon name for ' + item);
+
+    this.equipped = item;
+  }
+
+  get equipped_weapon() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+    if(!this.equipped.animation_name) throw new Error('No weapon animation for ' + this.equipped.name);
+
+    return this.equipped;
+  }
+
+  get ammo_type() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+
+    if(!this.equipped.ammo) throw new Error('Weapon does not have an ammo type: ' + this.equipped);
+
+    return this.equipped.ammo;
+  }
+
+  get equipped_weapon_name() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+
+    return this.equipped.name;
+  }
+
+  get weapon_speed() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+
+    return this.equipped.speed;
+  }
+
+  get weapon_damage() {
+    if(!this.equipped) throw new Error('No weapon equipped');
+
+    return this.equipped.damage;
+  }
+
+  populate_random_inventory(max) {
+    this.slots = get_random_items(max);
+  }
+}
+
+module.exports = {
+  Inventory,
+};
+
+
+},{"../../items/item_data":43}],5:[function(require,module,exports){
+'use strict';
+
+class Cutscene {
+  constructor(sprite) {
+    this.name   = 'cutscene';
+    this.sprite = sprite;
+  }
+
+  facing(direction) {
+    switch(direction) {
+      case 'up':    this.sprite.rotation = 4.17; return;
+      case 'right': this.sprite.rotation = 0;    return;
+      case 'down':  this.sprite.rotation = 1.57; return;
+      case 'left':  this.sprite.rotation = 3.14; return;
+    }
+  }
+}
+
+module.exports = {
+  Cutscene,
+};
+
+},{}],6:[function(require,module,exports){
+arguments[4][4][0].apply(exports,arguments)
+},{"../../items/item_data":43,"dup":4}],7:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const { Game                } = require('../../engine/save_manager');
+const { collision_container } = require('../../engine/pixi_containers');
+
+const { View_HUD } = require('../../view/view_player_inventory');
+
+const keymap = {
+  w: 'up',
+  n: 'n',
+  a: 'left',
+  s: 'down',
+  d: 'right',
+  j: 'down',
+  k: 'up',
+  h: 'left',
+  l: 'right',
+  ArrowUp: 'up',
+  ArrowLeft: 'left',
+  ArrowDown: 'down',
+  ArrowRight: 'right',
+  i: 'i',
+  o: 'o',
+  Shift: 'Shift',
+};
+
+const buffer = 50;
+
+function point_collides(position) {
+  const { children } = collision_container;
+
+  return children.find(child => child.containsPoint(position));
+}
+
+class Keyboard {
+  constructor(entity) {
+    this.name   = 'keyboard';
+    this.entity = entity;
+
+    global.window.addEventListener('keydown', event => this.key_down(event.key));
+    global.window.addEventListener('keyup',   ()    => this.key_up());
+  }
+
+  save_game() {
+    Game.save(this.entity);
+  }
+
+  key_down(key) {
+    const translated_key = keymap[key];
+    if (!translated_key) return;
+
+    switch(translated_key) {
+      case 'up'   : this.keyboard_up();            return;
+      case 'left' : this.keyboard_left();          return;
+      case 'down' : this.keyboard_down();          return;
+      case 'right': this.keyboard_right();         return;
+      case 'n'    : this.save_game();              return;
+      case 'o'    : this.start_intro();            return;
+      case 'i'    : View_HUD.toggle_player_inventory(); return;
+    }
+  }
+
+  key_up() {
+    this.entity.animation.idle();
+  }
+
+  keyboard_up() {
+    this.entity.animation.walk();
+    this.entity.animation.face_up();
+
+    const point = this.entity.sprite.getGlobalPosition();
+    point.y -= buffer;
+
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
+    }
+
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_up_by(movement_speed);
+  }
+
+  keyboard_down() {
+    this.entity.animation.walk();
+    this.entity.animation.face_down();
+
+    const point = this.entity.sprite.getGlobalPosition();
+    point.y += buffer;
+
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
+    }
+
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_down_by(movement_speed);
+  }
+
+  keyboard_left() {
+    this.entity.animation.walk();
+    this.entity.animation.face_left();
+
+    const point = this.entity.sprite.getGlobalPosition();
+    point.x -= buffer;
+
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
+    }
+
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_left_by(movement_speed);
+  }
+
+  keyboard_right() {
+    this.entity.animation.walk();
+    this.entity.animation.face_right();
+
+    const point = this.entity.sprite.getGlobalPosition();
+    point.x += buffer;
+
+    const collision = point_collides(point);
+    if(collision){
+      this.entity.sprite.gotoAndStop(1);
+      return;
+    }
+
+    const { movement_speed } = this.entity.vitals;
+    this.entity.animation.move_right_by(movement_speed);
+  }
+}
+
+module.exports = {
+  Keyboard,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../engine/pixi_containers":32,"../../engine/save_manager":35,"../../view/view_player_inventory":60}],8:[function(require,module,exports){
+'use strict';
+
+const { melee_attack } = require('../../engine/melee');
+
+class Melee {
+  constructor(weapon) {
+    this.name = 'melee';
+
+    this.weapon = weapon;
+  }
+
+  attack_from_to(attacker, target) {
+    attacker.inventory.equip_weapon_by_name(this.weapon);
+    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
+    attacker.animation.attack();
+
+    melee_attack(attacker, target);
+  }
+}
+
+module.exports = {
+  Melee,
+};
+
+},{"../../engine/melee":30}],9:[function(require,module,exports){
+'use strict';
+
+const { viewport         } = require('../../engine/viewport');
+const { timer            } = require('../../engine/ticker');
+const { radian           } = require('../../utils/math');
+const { shoot_arrow      } = require('../../engine/bow');
+const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
+
+let arrow_speed = 5000;
+
+//TODO move this out of here
+const power_timer = timer.createTimer(500);
+power_timer.loop = true;
+power_timer.expire = true;
+power_timer.on('repeat', elapsed => {
+  if(arrow_speed < 1000) {
+    arrow_speed = 300;
+    return;
+  }
+
+  arrow_speed -= elapsed;
+});
+
+power_timer.on('stop', function() {
+  this.remove();
+});
+
+class Mouse {
+  constructor(entity) {
+    this.name   = 'mouse';
+    this.entity = entity;
+
+    viewport.on('mouseup',   event => this.mouse_up(event));
+    viewport.on('mousemove', event => this.mouse_move(event));
+    viewport.on('mousedown', event => this.mouse_down(event));
+  }
+
+  mouse_up(event) {
+    power_timer.stop();
+    this.cone_timer.stop();
+    this.entity.animation.idle();
+
+    const target = event.data.getLocalPosition(viewport);
+    const origin = this.entity.sprite;
+
+    const { ammo_type } = this.entity.inventory;
+    //const { power     } = this.entity.vitals;
+    //TODO: consider weapon management system
+    switch(ammo_type) {
+      case 'arrow': shoot_arrow(origin, target,arrow_speed); return;
+    }
+  }
+
+  mouse_down(event) {
+    arrow_speed = 3000;
+    power_timer.start();
+    const mouse_position = event.data.getLocalPosition(viewport);
+    const direction      = radian(mouse_position, this.entity.sprite);
+
+    this.entity.animation.ready_weapon();
+    this.entity.sprite.rotation = direction;
+
+    const { cone_timer, cone } =
+      View_Aiming_Cone.start_at(this.entity.sprite, direction - 1.57);
+
+    //TODO remove cone manageemnt out of here
+    this.cone_timer = cone_timer;
+    this.cone       = cone;
+    this.cone_timer.start();
+  }
+
+  mouse_move(event) {
+    const mouse_position = event.data.getLocalPosition(viewport);
+
+    this.entity.sprite.rotation = radian(mouse_position, this.entity.sprite);
+
+    //TODO remove -1.57
+    if(this.cone) {
+      this.cone.rotation = this.entity.sprite.rotation - 1.57;
+    }
+  }
+}
+
+module.exports = {
+  Mouse,
+};
+
+},{"../../engine/bow":28,"../../engine/ticker":36,"../../engine/viewport":37,"../../utils/math":55,"../../view/view_aiming_cone":57}],10:[function(require,module,exports){
+'use strict';
+
+const { timer                         } = require('../../engine/ticker');
+const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
+const { distance_between_points       } = require('../../utils/math');
+
+class Predator {
+  constructor(entity) {
+    this.name   = 'predator';
+    this.type   = 'predator';
+    this.entity = entity;
+  }
+
+  is_predator_to(prey) {
+    const predator          = this.entity;
+    const { speed, damage } = predator.inventory.equipped_weapon;
+
+    const attack_timer  = timer.createTimer(speed);
+    attack_timer.repeat = 10;
+    attack_timer.on('repeat', () => {
+      if(!prey.vitals.alive){
+        prey.animation.switch('dead');
+        predator.sprite.stop();
+      }
+
+      prey.vitals.damage(damage);
+    }).start();
+
+    const movement_timer  = timer.createTimer(1000);
+    movement_timer.repeat = 5;
+    movement_timer.on('repeat', () => {
+      const distance =
+        distance_between_points(predator.sprite, prey.sprite);
+
+      if(distance < 200) {
+        predator.animation.attack();
+
+        attack_timer.start();
+      } else {
+        predator.animation.walk();
+
+        attack_timer.stop();
+      }
+
+      const min = 10;
+      const max = 700;
+      if(distance < min||distance > max||!predator.vitals.alive) return;
+
+      move_sprite_to_sprite_on_grid(predator.sprite, prey.sprite);
+    }).start();
+  }
+}
+
+module.exports = {
+  Predator,
+};
+
+},{"../../engine/pathfind.js":31,"../../engine/ticker":36,"../../utils/math":55}],11:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+
+const { timer                         } = require('../../engine/ticker');
+const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
+const { distance_between_points       } = require('../../utils/math');
+const { critter_container             } = require('../../engine/pixi_containers');
+
+const min = 50;
+const max = 400;
+
+class Prey {
+  constructor(entity) {
+    this.entity = entity;
+    this.type   = 'prey';
+    this.name   = 'prey';
+  }
+
+  is_prey_to(predator) {
+    const prey = this.entity;
+    const distance = distance_between_points(predator.sprite, prey.sprite);
+
+    const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
+    point_to_run_for.name  = 'dot';
+
+    const movement_timer  = timer.createTimer(500);
+    movement_timer.repeat = 20;
+    movement_timer.on('repeat', () => {
+      if(distance < min || distance > max || !prey.vitals.alive) return;
+
+      point_to_run_for.position.set(
+        prey.sprite.x + (prey.sprite.x - predator.sprite.x),
+        prey.sprite.y + (prey.sprite.y - predator.sprite.y)
+      );
+
+      move_sprite_to_sprite_on_grid(prey.sprite, point_to_run_for);
+    }).start();
+
+    critter_container.addChild(point_to_run_for);
+  }
+}
+
+module.exports = {
+  Prey,
+};
+
+},{"../../engine/pathfind.js":31,"../../engine/pixi_containers":32,"../../engine/ticker":36,"../../utils/math":55,"pixi.js":253}],12:[function(require,module,exports){
+'use strict';
+
+const { shoot_arrow      } = require('../../engine/ranged');
+const { View_Aiming_Line } = require('../../view/view_aiming_line');
+
+const { radian } = require('../../utils/math');
+
+class Range {
+  constructor(weapon) {
+    this.name   = 'range';
+
+    this.weapon = weapon;
+  }
+
+  attack_from_to(attacker, target) {
+    attacker.inventory.equip_weapon_by_name(this.weapon);
+
+    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
+    attacker.animation.ready_weapon();
+
+    attacker.sprite.rotation = radian(target.sprite, attacker.sprite);
+
+    View_Aiming_Line.add_between_sprites(target.sprite, attacker.sprite);
+
+    setTimeout(() => shoot_arrow(attacker, target),1000);
+  }
+}
+
+module.exports = {
+  Range,
+};
+
+},{"../../engine/ranged":33,"../../utils/math":55,"../../view/view_aiming_line":58}],13:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+
+const { timer                } = require('../../engine/ticker');
+const { get_intersection     } = require('../../engine/raycasting');
+const { raycasting_container } = require('../../engine/pixi_containers');
+
+const raycast_timer  = timer.createTimer(80);
+raycast_timer.repeat = 80;
+raycast_timer.expire = true;
+
+/*
+ * @param {Object} PIXI.Sprite
+ **/
+
+class Raycasting {
+  constructor(sprite) {
+    this.raycast = new PIXI.Graphics();
+    this.name    = 'raycasting';
+    this.sprite  = sprite;
+  }
+
+  add(level_segments) {
+    const points = [];
+    level_segments.forEach(seg => points.push(seg.a,seg.b));
+
+    const light = this.sprite.getChildByName('light');
+    if (light) {
+      light.mask = this.raycast;
+      //light._filters = [new PIXI.filters.BlurFilter(10)];
+    }
+
+    raycast_timer.on('repeat', () => {
+      const unique_angles = [];
+      let intersects = [];
+
+      this.raycast.clear();
+      this.raycast.beginFill(0xfffffff, 0.05);
+
+      points.forEach(elem => {
+        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
+        elem.angle = angle;
+        unique_angles.push(angle - 0.00001, angle + 0.00001);
+      });
+
+      unique_angles.forEach(angle => {
+        const dx    = Math.cos(angle);
+        const dy    = Math.sin(angle);
+        const ray   = {
+          a: {x: this.sprite.x,      y: this.sprite.y     },
+          b: {x: this.sprite.x + dx, y: this.sprite.y + dy},
+        };
+
+        let closest_intersect = null;
+        level_segments.forEach(segment => {
+          const intersect = get_intersection(ray, segment);
+          if(!intersect) return;
+          if(!closest_intersect || intersect.param < closest_intersect.param){
+            closest_intersect = intersect;
+          }
+        });
+
+        if(!closest_intersect) return;
+
+        closest_intersect.angle = angle;
+        intersects.push(closest_intersect);
+      });
+
+      intersects = intersects.sort((a,b) => a.angle - b.angle);
+
+      this.raycast.moveTo(intersects[0].x, intersects[0].y)
+        .lineStyle(0.5, 0xffd900, 5);
+      intersects.forEach(itersect => this.raycast.lineTo(itersect.x, itersect.y));
+    });
+
+    raycast_timer.start();
+    raycasting_container.addChild(this.raycast);
+  }
+
+  contains_point(sprite) {
+    const point = sprite.getGlobalPosition();
+
+    return this.raycast.containsPoint(point);
+  }
+}
+
+module.exports = {
+  Raycasting,
+};
+
+},{"../../engine/pixi_containers":32,"../../engine/raycasting":34,"../../engine/ticker":36,"pixi.js":253}],14:[function(require,module,exports){
+'use strict';
+
+const { status_meter } = require('../../view/view_player_status_meter');
+const { timer        } = require('../../engine/ticker');
+
+class Status {
+  constructor() {
+    this.name = 'status_meter';
+  }
+
+  static update_vitals(vital_data) {
+    status_meter.update(vital_data);
+  }
+
+  set_vitals_ticker() {
+    const vitals_timer = timer.createTimer(5000);
+    vitals_timer.repeat = 4;
+
+    vitals_timer.on('repeat', function() {
+      this.vitals.health -= this.vitals.ticker_values.health;
+      this.vitals.food   -= this.vitals.ticker_values.food;
+      this.vitals.water  -= this.vitals.ticker_values.water;
+      this.vitals.heat   -= this.vitals.ticker_values.heat;
+      this.vitals.sleep  -= this.vitals.ticker_values.sleep;
+
+      this.update_vitals(this.vitals);
+    });
+  }
+}
+
+module.exports = {
+  Status,
+};
+
+},{"../../engine/ticker":36,"../../view/view_player_status_meter":61}],15:[function(require,module,exports){
+'use strict';
+
+class Vitals {
+  constructor() {
+    this.name           ='vitals';
+    this.movement_speed = 15;
+    this.power          = 5000;
+    this.health         = 100;
+    this.food           = 40;
+    this.water          = 20;
+    this.heat           = 90;
+    this.sleep          = 100;
+    this.status         = 'alive';
+  }
+
+  kill() {
+    //this.entity.switch('dead');
+  }
+
+  dead(damage) {
+    return this.health - damage < 0;
+  }
+
+  damage(damage) {
+    if (!damage) throw new Error('No damage being recieved');
+
+    if(this.dead(damage)) {
+      this.status = 'dead';
+
+      throw new Error(`${this.name} doesnt have enough health`);
+    }
+
+    this.health -= damage;
+  }
+
+  get alive() {
+    return (this.status === 'alive');
+  }
+
+  increase_food(number) {
+    if(this.food + number < 100 ) {
+      this.food += number;
+    }
+  }
+}
+
+module.exports = {
+  Vitals,
+};
+
+
+},{}],16:[function(require,module,exports){
+'use strict';
+
+const PIXI = require('pixi.js');
+
+const { viewport             } = require('../engine/viewport');
+const { move_sprite_to_point } = require('../engine/pathfind');
+
+class Character {
+  constructor() {
+    const texture = [PIXI.Texture.fromFrame('bunny')];
+
+    this.sprite = new PIXI.extras.AnimatedSprite(texture);
+  }
+
+  add_component(component) {
+    this[component.name] = component;
+  }
+
+  set_position(point) {
+    this.sprite.position.set(point.x, point.y);
+  }
+
+  move_to_point(x,y) {
+    move_sprite_to_point(this, {
+      middle: {
+        x,
+        y,
+      },
+    });
+  }
+
+  follow_sprite_with_camera() {
+    viewport.follow(this.sprite);
+  }
+
+  add_sight_line() {
+    const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
+
+    sight_line_box.name = 'sight_line';
+    sight_line_box.width = 3000;
+    sight_line_box.height = 600;
+    sight_line_box.anchor.y = 0.5;
+    sight_line_box.alpha = 0.2;
+
+    this.sprite.addChild(sight_line_box);
+  }
+
+  add_influence_box() {
+    const influence_box = PIXI.Sprite.fromFrame('black_dot');
+
+    influence_box.name = 'influence_box';
+    influence_box.width = 2000;
+    influence_box.height = 2000;
+    influence_box.alpha = 0.4;
+    influence_box.anchor.set(0.5);
+
+    this.sprite.addChild(influence_box);
+  }
+
+  with_light() {
+    const light = PIXI.Sprite.fromFrame('light_gradient');
+    light.name = 'light';
+
+    light.anchor.set(0.5);
+    light.width   = 2000;
+    light.height  = 2000;
+    light.alpha   = 0.1;
+
+    this.sprite.addChild(light);
+  }
+}
+
+module.exports = {
+  Character,
+};
+
+
+
+},{"../engine/pathfind":31,"../engine/viewport":37,"pixi.js":253}],17:[function(require,module,exports){
 'use strict';
 
 const { viewport  } = require('../../engine/viewport');
@@ -1114,13 +1118,13 @@ module.exports = {
   Cutscene_Character,
 };
 
-},{"../../engine/viewport":37,"../../utils/constructor":53,"../attributes/cutscene":3,"../character_model":14}],18:[function(require,module,exports){
+},{"../../engine/viewport":37,"../../utils/constructor":53,"../attributes/cutscene":5,"../character_model":16}],18:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Character  } = require('../character_model');
-const { Human      } = require('./animations/character');
+const { Human      } = require('../animations/character');
 
 const { Vitals     } = require('../attributes/vitals');
 const { Inventory  } = require('../attributes/Inventory');
@@ -1147,7 +1151,7 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":32,"../attributes/Inventory":2,"../attributes/predator":8,"../attributes/raycasting":11,"../attributes/vitals":13,"../character_model":14,"./animations/character":15}],19:[function(require,module,exports){
+},{"../../engine/pixi_containers":32,"../animations/character":1,"../attributes/Inventory":4,"../attributes/predator":10,"../attributes/raycasting":13,"../attributes/vitals":15,"../character_model":16}],19:[function(require,module,exports){
 'use strict';
 
 const { viewport  } = require('../../engine/viewport');
@@ -1197,13 +1201,13 @@ module.exports = {
   Friend,
 };
 
-},{"../../cutscene/dialog_util":23,"../../engine/viewport":37,"../../utils/constructor":53,"../character_model":14}],20:[function(require,module,exports){
+},{"../../cutscene/dialog_util":23,"../../engine/viewport":37,"../../utils/constructor":53,"../character_model":16}],20:[function(require,module,exports){
 'use strict';
 
 const { viewport  } = require('../../engine/viewport.js');
 
 const { Character } = require('../character_model');
-const { Human     } = require('./animations/character');
+const { Human     } = require('../animations/character');
 
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');
@@ -1234,7 +1238,7 @@ module.exports = {
   Player,
 };
 
-},{"../../engine/viewport.js":37,"../attributes/inventory":4,"../attributes/keyboard":5,"../attributes/mouse":7,"../attributes/predator":8,"../attributes/status_bar":12,"../attributes/vitals":13,"../character_model":14,"./animations/character":15}],21:[function(require,module,exports){
+},{"../../engine/viewport.js":37,"../animations/character":1,"../attributes/inventory":6,"../attributes/keyboard":7,"../attributes/mouse":9,"../attributes/predator":10,"../attributes/status_bar":14,"../attributes/vitals":15,"../character_model":16}],21:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1242,7 +1246,7 @@ const PIXI = require('pixi.js');
 const { critter_container } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
-const { Rodent    } = require('./animations/rat');
+const { Rodent    } = require('../animations/rat');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Prey      } = require('../attributes/prey');
@@ -1291,7 +1295,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/pixi_containers":32,"../attributes/inventory":4,"../attributes/prey":9,"../attributes/vitals":13,"../character_model":14,"./animations/rat":16,"pixi.js":253}],22:[function(require,module,exports){
+},{"../../engine/pixi_containers":32,"../animations/rat":2,"../attributes/inventory":6,"../attributes/prey":11,"../attributes/vitals":15,"../character_model":16,"pixi.js":253}],22:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2468,7 +2472,7 @@ module.exports = {
   Chest,
 };
 
-},{"../character/attributes/inventory":4,"./item_model":44,"pixi.js":253}],42:[function(require,module,exports){
+},{"../character/attributes/inventory":6,"./item_model":44,"pixi.js":253}],42:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -8493,7 +8497,7 @@ module.exports = {
 
 
 
-},{"../../character/archetypes":1,"../../character/attributes/inventory":4,"../../character/types/enemy":18,"../../character/types/player.js":20,"../../character/types/rat":21,"../../cutscene/intro.js":24,"../../engine/viewport":37,"../../items/Note":39,"../../items/back_pack":40,"../../items/chest":41,"../../items/fire_place":42,"../../items/item_data":43,"../../view/view_aiming_line":58,"../../view/view_inventory":59,"../../view/view_player_inventory":60,"../bedroom/bedroom_map_output.json":46,"../bedroom/bedroom_map_tiled.json":47,"../debug/debug_map_output.json":48,"../debug/debug_map_tiles.json":49,"../level_utils":52,"pixi.js":253}],51:[function(require,module,exports){
+},{"../../character/archetypes":3,"../../character/attributes/inventory":6,"../../character/types/enemy":18,"../../character/types/player.js":20,"../../character/types/rat":21,"../../cutscene/intro.js":24,"../../engine/viewport":37,"../../items/Note":39,"../../items/back_pack":40,"../../items/chest":41,"../../items/fire_place":42,"../../items/item_data":43,"../../view/view_aiming_line":58,"../../view/view_inventory":59,"../../view/view_player_inventory":60,"../bedroom/bedroom_map_output.json":46,"../bedroom/bedroom_map_tiled.json":47,"../debug/debug_map_output.json":48,"../debug/debug_map_tiles.json":49,"../level_utils":52,"pixi.js":253}],51:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');
