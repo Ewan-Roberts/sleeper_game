@@ -1,6 +1,5 @@
 
-DONE PILE:
-
+## DONE PILE:
 - create items randomiser functions DONE
 - basic item/inventory management done
 - save game states done

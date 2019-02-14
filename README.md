@@ -2,12 +2,11 @@
 
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_1.png)
 
-Work in progess, updates below:
-
+- [UPCOMING](../documentation/TODO.md)
+- [COMPLETE](../documentation/DONE.md)
 - [ROADMAP](../documentation/ROADMAP.md)
-- [TODO](../documentation/TODO.md)
-- [DONE](../documentation/DONE.md)
 
+Work in progess, updates below:
 
 # Updates
 
