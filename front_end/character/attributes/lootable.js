@@ -20,6 +20,7 @@ class Lootable {
       icon.add_image_at('bunny', this.entity.sprite);
     }
 
+    this.entity.sprite.interactive = true;
     this.entity.sprite.buttonMode = true;
     this.entity.sprite.on('click', () => {
       View_Inventory.create_populated_slots(this.entity.sprite, this.loot);
@@ -30,7 +31,6 @@ class Lootable {
       icon.remove();
     });
   }
-
 }
 
 module.exports = {

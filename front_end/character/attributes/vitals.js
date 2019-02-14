@@ -22,13 +22,13 @@ class Vitals {
   }
 
   kill() {
-    this.status = 'dead';
     if(this.entity.name === 'player') Game.over();
 
     if('loot'  in this.entity) this.entity.loot.show();
     if('logic' in this.entity) this.entity.logic.stop();
 
     this.entity.animation.kill();
+    this.status = 'dead';
   }
 
   damage(damage) {

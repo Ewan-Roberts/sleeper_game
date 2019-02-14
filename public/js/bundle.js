@@ -306,9 +306,15 @@ const { Inventory } = require('./attributes/inventory');
 const { Lootable } = require('./attributes/lootable');
 const { distance_between_points } = require('../utils/math');
 
-/* This is the highest level class and presumes
- *  Components;
- *  (Human Inventory Predator Vitals Raycasting)
+/**
+ * @class
+ * @extends Enemy
+ * @memberof Human
+ * @memberof Inventory
+ * @memberof Lootable
+ * @memberof Predator
+ * @memberof Vitals
+ * @memberof Raycasting
  */
 class Archer extends Enemy {
   constructor(enemy) {
@@ -641,6 +647,7 @@ class Lootable {
       icon.add_image_at('bunny', this.entity.sprite);
     }
 
+    this.entity.sprite.interactive = true;
     this.entity.sprite.buttonMode = true;
     this.entity.sprite.on('click', () => {
       View_Inventory.create_populated_slots(this.entity.sprite, this.loot);
@@ -651,7 +658,6 @@ class Lootable {
       icon.remove();
     });
   }
-
 }
 
 module.exports = {
@@ -1043,13 +1049,13 @@ class Vitals {
   }
 
   kill() {
-    this.status = 'dead';
     if(this.entity.name === 'player') Game.over();
 
     if('loot'  in this.entity) this.entity.loot.show();
     if('logic' in this.entity) this.entity.logic.stop();
 
     this.entity.animation.kill();
+    this.status = 'dead';
   }
 
   damage(damage) {
@@ -1128,11 +1134,11 @@ class Character {
   add_sight_line() {
     const sight_line_box = PIXI.Sprite.fromFrame('black_dot');
 
-    sight_line_box.name = 'sight_line';
-    sight_line_box.width = 3000;
-    sight_line_box.height = 600;
+    sight_line_box.name     = 'sight_line';
+    sight_line_box.width    = 3000;
+    sight_line_box.height   = 600;
     sight_line_box.anchor.y = 0.5;
-    sight_line_box.alpha = 0.2;
+    sight_line_box.alpha    = 0.2;
 
     this.sprite.addChild(sight_line_box);
   }
@@ -1140,23 +1146,24 @@ class Character {
   add_influence_box() {
     const influence_box = PIXI.Sprite.fromFrame('black_dot');
 
-    influence_box.name = 'influence_box';
-    influence_box.width = 2000;
+    influence_box.name   = 'influence_box';
+    influence_box.width  = 2000;
     influence_box.height = 2000;
-    influence_box.alpha = 0.4;
+    influence_box.alpha  = 0.4;
     influence_box.anchor.set(0.5);
 
     this.sprite.addChild(influence_box);
   }
 
   with_light() {
-    const light = PIXI.Sprite.fromFrame('light_gradient');
-    light.name = 'light';
+    console.log('Be aware this may overlay and not allow touch events');
 
+    const light  = PIXI.Sprite.fromFrame('light_gradient');
+    light.name   = 'light';
+    light.width  = 2000;
+    light.height = 2000;
+    light.alpha  = 0.1;
     light.anchor.set(0.5);
-    light.width   = 2000;
-    light.height  = 2000;
-    light.alpha   = 0.1;
 
     this.sprite.addChild(light);
   }
@@ -1376,8 +1383,8 @@ module.exports = {
 
 },{"../../engine/pixi_containers":36,"../animations/rat":2,"../attributes/inventory":7,"../attributes/prey":13,"../attributes/vitals":17,"../character_model":18,"pixi.js":257}],24:[function(require,module,exports){
 'use strict';
-
 const PIXI = require('pixi.js');
+
 const { visual_effects_container } = require('../engine/pixi_containers');
 
 class blood {
@@ -1389,7 +1396,6 @@ class blood {
 
     visual_effects_container.addChild(blood_splatter);
   }
-
 }
 
 module.exports = {
@@ -1664,6 +1670,8 @@ class icon {
     this.icon.height = 20;
     this.icon.width  = 20;
     this.icon.position.set(point.x +20, point.y-20);
+    this.icon.interactive = true;
+    this.icon.buttonMode = true;
 
     visual_effects_container.addChild(this.icon);
   }
@@ -2723,7 +2731,6 @@ class Campfire extends Item {
       console.log('open menu');
     };
   }
-
 }
 
 module.exports = {
@@ -8566,7 +8573,7 @@ class DevelopmentLevel {
     const player = new Player();
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
-    player.with_light();
+    //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.equip_weapon_by_name('dev_bow');
 

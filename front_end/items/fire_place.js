@@ -59,7 +59,6 @@ class Campfire extends Item {
       console.log('open menu');
     };
   }
-
 }
 
 module.exports = {

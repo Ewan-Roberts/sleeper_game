@@ -12,6 +12,8 @@ class icon {
     this.icon.height = 20;
     this.icon.width  = 20;
     this.icon.position.set(point.x +20, point.y-20);
+    this.icon.interactive = true;
+    this.icon.buttonMode = true;
 
     visual_effects_container.addChild(this.icon);
   }

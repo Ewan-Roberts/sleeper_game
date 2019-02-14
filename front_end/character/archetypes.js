@@ -13,9 +13,15 @@ const { Inventory } = require('./attributes/inventory');
 const { Lootable } = require('./attributes/lootable');
 const { distance_between_points } = require('../utils/math');
 
-/* This is the highest level class and presumes
- *  Components;
- *  (Human Inventory Predator Vitals Raycasting)
+/**
+ * @class
+ * @extends Enemy
+ * @memberof Human
+ * @memberof Inventory
+ * @memberof Lootable
+ * @memberof Predator
+ * @memberof Vitals
+ * @memberof Raycasting
  */
 class Archer extends Enemy {
   constructor(enemy) {

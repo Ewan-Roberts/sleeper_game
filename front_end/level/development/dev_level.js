@@ -29,7 +29,7 @@ class DevelopmentLevel {
     const player = new Player();
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
-    player.with_light();
+    //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.equip_weapon_by_name('dev_bow');
 
