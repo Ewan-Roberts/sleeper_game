@@ -19,13 +19,14 @@ class Vitals {
 
   damage(hit_point) {
     if (!hit_point) throw new Error('No damage being recieved');
-    if( (this.health - hit_point) < 0) {
+    const is_dead = this.health - hit_point < 0;
+    if(is_dead) {
       this.status = 'dead';
 
-      throw `${this.name} doesnt have enough health`;
-    } else {
-      this.health -= hit_point;
+      throw new Error(`${this.name} doesnt have enough health`);
     }
+
+    this.health -= hit_point;
   }
 
   get alive() {

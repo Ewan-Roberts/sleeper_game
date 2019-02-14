@@ -23,6 +23,8 @@ class Archer extends Enemy {
     this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
     this.logic.expire = true;
+
+    this.inventory.equip_weapon_by_name('old_bow');
   }
 
   shoot() {
@@ -90,13 +92,19 @@ module.exports = {
 },{"../engine/bow":26,"../engine/pathfind.js":28,"../engine/ticker":32,"../utils/math":51,"../view/view_aiming_line":54,"./types/enemy":16,"pixi.js":249}],2:[function(require,module,exports){
 'use strict';
 
-const { get_random_items } = require('../../items/item_data');
+const { get_random_items, get_item } = require('../../items/item_data');
 
 class Inventory {
   constructor() {
     this.name     = 'inventory';
     this.equipped = null;
     this.slots    = [];
+  }
+
+  equip_weapon_by_name(name) {
+    const weapon = get_item(name);
+
+    this.equip_weapon(weapon);
   }
 
   equip_weapon(item) {
@@ -656,13 +664,14 @@ class Vitals {
 
   damage(hit_point) {
     if (!hit_point) throw new Error('No damage being recieved');
-    if( (this.health - hit_point) < 0) {
+    const is_dead = this.health - hit_point < 0;
+    if(is_dead) {
       this.status = 'dead';
 
-      throw `${this.name} doesnt have enough health`;
-    } else {
-      this.health -= hit_point;
+      throw new Error(`${this.name} doesnt have enough health`);
     }
+
+    this.health -= hit_point;
   }
 
   get alive() {
@@ -1630,15 +1639,9 @@ module.exports = app;
 'use strict';
 const PIXI         = require('pixi.js');
 
-const { viewport  } = require('./viewport');
-const { radian } = require('../utils/math');
-const { Dialog } = require('../cutscene/dialog_util');
-const {
-  collision_container,
-  enemy_container,
-  critter_container,
-  arrow_container,
-} = require('./pixi_containers');
+const { radian          } = require('../utils/math');
+const { Dialog          } = require('../cutscene/dialog_util');
+const { arrow_container } = require('./pixi_containers');
 
 class Arrow {
   constructor() {
@@ -1687,14 +1690,17 @@ function shoot_arrow(origin, target, power = 2000) {
   const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
   const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
+  const { weapon_damage } = origin.inventory;
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
 
     if(target.sprite.containsPoint(arrow_point)) {
       arrow_tween.stop();
-
       arrow.destroy();
+
+      target.vitals.damage(weapon_damage);
+
       Dialog.speak_above_sprite(target.sprite, 'I am hit');
       return;
     }
@@ -1706,7 +1712,7 @@ module.exports = {
 };
 
 
-},{"../cutscene/dialog_util":21,"../utils/math":51,"./pixi_containers":29,"./viewport":33,"pixi.js":249}],27:[function(require,module,exports){
+},{"../cutscene/dialog_util":21,"../utils/math":51,"./pixi_containers":29,"pixi.js":249}],27:[function(require,module,exports){
 (function (global){
 'use strict';
 

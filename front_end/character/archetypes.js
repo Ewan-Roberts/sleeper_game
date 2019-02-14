@@ -22,6 +22,8 @@ class Archer extends Enemy {
     this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
     this.logic.expire = true;
+
+    this.inventory.equip_weapon_by_name('old_bow');
   }
 
   shoot() {

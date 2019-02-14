@@ -1,12 +1,18 @@
 'use strict';
 
-const { get_random_items } = require('../../items/item_data');
+const { get_random_items, get_item } = require('../../items/item_data');
 
 class Inventory {
   constructor() {
     this.name     = 'inventory';
     this.equipped = null;
     this.slots    = [];
+  }
+
+  equip_weapon_by_name(name) {
+    const weapon = get_item(name);
+
+    this.equip_weapon(weapon);
   }
 
   equip_weapon(item) {
