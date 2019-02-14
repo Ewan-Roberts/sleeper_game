@@ -44,12 +44,11 @@ class Mouse {
 
     const target = event.data.getLocalPosition(viewport);
 
-    const { ammo_type } = this.entity.inventory;
-    //const { power     } = this.entity.vitals;
-    //TODO: consider weapon management system
+    const { ammo_type, weapon_speed } = this.entity.inventory;
+
     switch(ammo_type) {
       case 'arrow':
-        shoot_arrow_with_collision(this.entity, target, arrow_speed);
+        shoot_arrow_with_collision(this.entity, target, weapon_speed);
         return;
     }
   }

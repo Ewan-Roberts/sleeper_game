@@ -87,20 +87,31 @@ function walk_frames() {
 }
 
 
+function dead_frames() {
+  const dead_frame = PIXI.Texture.fromFrame('dead_man');
+
+  return [dead_frame];
+}
+
+
+
 const frames = {
   bow: {
-    idle:  bow_idle_frames(),
-    walk:  bow_walk_frames(),
-    ready: bow_ready_frames(),
+    idle:   bow_idle_frames(),
+    walk:   bow_walk_frames(),
+    ready:  bow_ready_frames(),
+    dead:   dead_frames(),
   },
   nothing: {
-    idle: idle_frames(),
+    idle:   idle_frames(),
+    dead:   dead_frames(),
   },
   knife: {
     idle:   idle_frames(),
     attack: knife_attack_frames(),
-    reeady: knife_attack_frames(),
+    ready: knife_attack_frames(),
     walk:   knife_walk_frames(),
+    dead:   dead_frames(),
   },
   animated: {
     knife: {
@@ -119,6 +130,7 @@ class Human {
     this.weapon = 'bow';
     this.sprite.animationSpeed = 0.5;
     this.idle(this.weapon);
+    this.state = undefined;
   }
 
   switch(weapon, action) {
@@ -150,6 +162,12 @@ class Human {
   attack() { this.switch(this.weapon, 'attack'); }
 
   idle() { this.switch(this.weapon, 'idle'); }
+
+  kill() {
+    this.switch(this.weapon, 'dead');
+    this.sprite.height = 200;
+    this.sprite.width = 200;
+  }
 
   stop() { this.sprite.gotToAndStop(1); }
 

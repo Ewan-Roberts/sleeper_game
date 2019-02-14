@@ -19,7 +19,7 @@ class Enemy extends Character {
     this.add_component(new Human(this.sprite));
     this.add_component(new Inventory());
     this.add_component(new Predator(this));
-    this.add_component(new Vitals());
+    this.add_component(new Vitals(this));
     this.add_component(new Raycasting(this.sprite));
 
     enemy_container.addChild(this.sprite);

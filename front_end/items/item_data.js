@@ -45,6 +45,26 @@ const items = [
     image_name: 'bunny',
   },
   {
+    name:           'dev_bow',
+    animation_name: 'bow',
+    id:             1003,
+    rank:           99,
+    cost:           999,
+    category:       'primary',
+    type:           'projectile',
+    ammo:           'arrow',
+    range:          999,
+    damage:         999,
+    speed:          100,
+    condition:      999,
+
+    visual_name:    'old bow',
+    description:    'this is my dev bow, there are many like it but thus one kills',
+    image_name:     'bunny',
+  },
+
+
+  {
     name:       'wrench_blade',
     id:         1002,
     rank:       1,

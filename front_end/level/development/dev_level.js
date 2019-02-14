@@ -23,15 +23,15 @@ const { View_HUD        } = require('../../view/view_player_inventory');
 const { View_Aiming_Line } = require('../../view/view_aiming_line');
 
 const { Archer } = require('../../character/archetypes');
-
+// THIS IS ALL FOR TESTING
 class DevelopmentLevel {
   constructor() {
     const player = new Player();
     player.set_position({ x: 1000, y: 1000 });
     player.follow_sprite_with_camera();
     player.with_light();
-    const bow = get_item_by_name('old_bow');
-    player.inventory.equip_weapon(bow);
+    // dev bow for testing one hit kill
+    player.inventory.equip_weapon_by_name('dev_bow');
 
     View_HUD.add_head('old_bandana');
     View_HUD.add_hat('old_helmet');
@@ -55,10 +55,10 @@ class DevelopmentLevel {
     const archer = new Archer(player);
     archer.sprite.position.set(1550,1000);
 
-    console.log('wreghbwigbwo2i');
     console.log(viewport);
-    archer.raycasting.add(this.level.segments);
-    archer.logic_start();
+    //archer.raycasting.add(this.level.segments);
+
+    //archer.logic_start();
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();

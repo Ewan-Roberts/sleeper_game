@@ -1,7 +1,11 @@
 'use strict';
 
+
+const { blood } = require('../../cutscene/blood');
+
 class Vitals {
-  constructor() {
+  constructor(entity) {
+    this.entity         = entity;
     this.name           ='vitals';
     this.movement_speed = 15;
     this.power          = 5000;
@@ -17,13 +21,21 @@ class Vitals {
     return this.health - damage < 0;
   }
 
+  kill() {
+    this.status = 'dead';
+
+    this.entity.animation.kill();
+  }
+
   damage(damage) {
     if (!damage) throw new Error('No damage being recieved');
 
-    if(this.dead(damage)) {
-      this.status = 'dead';
+    if(this.status === 'dead') return;
 
-      throw new Error(`${this.name} doesnt have enough health`);
+    if(this.dead(damage)) {
+      blood.add_at_point(this.entity.sprite);
+
+      this.kill();
     }
 
     this.health -= damage;
