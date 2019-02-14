@@ -8,6 +8,13 @@
 
 # Updates
 
+## 13/14.02.19:
+- Add arcetype Archer with full logic :tada:
+- Add Melee and Range components
+- Add many heplers and removed large amounts of cruft
+- Restructure to folder structure into layers
+- A number of performance increases reducing the load on tickers
+
 ## 09/10.02.19:
 - Large refactor :rocket:
 - Added aiming line visuals on readying an arrow
