@@ -1,20 +1,31 @@
 'use strict';
 
-const { viewport  } = require('../../engine/viewport');
-const { construct } = require('../../utils/constructor');
 
-const { Character } = require('../character_model');
-const { Dialog    } = require('../../cutscene/dialog_util');
+const { viewport } = require('../../engine/viewport');
+const { friend_container } = require('../../engine/pixi_containers');
 
-const friend_container = viewport.getChildByName('friend_container');
+const { Character  } = require('../character_model');
+const { Human      } = require('../animations/character');
 
-class Friend extends construct(Character, Dialog) {
+const { Vitals     } = require('../attributes/vitals');
+const { Inventory  } = require('../attributes/Inventory');
+const { Dialog     } = require('../attributes/dialog');
+const { Raycasting } = require('../attributes/raycasting');
+
+class Friend extends Character {
   constructor() {
     super();
     this.name = 'friend';
-    this.animation_switch('knife', 'idle');
+    this.sprite.name = 'friend';
+
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
+    this.add_component(new Human(this.sprite));
+    this.add_component(new Inventory());
+    this.add_component(new Vitals());
+    this.add_component(new Raycasting(this.sprite));
+    //TODO: Talk Component
+    this.add_component(new Dialog());
 
     friend_container.addChild(this.sprite);
   }
@@ -24,11 +35,6 @@ class Friend extends construct(Character, Dialog) {
       script: script,
       current_step: 0,
     };
-  }
-
-  add_dialog_handling() {
-    this.dialog = new Dialog();
-    this.dialog_open = false;
   }
 
   add_state_handling() {

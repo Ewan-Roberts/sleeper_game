@@ -1,15 +1,11 @@
 'use strict';
-const PIXI         = require('pixi.js');
+const PIXI                 = require('pixi.js');
+const tweenManager         = require('pixi-tween');
 
-const { radian          } = require('../utils/math');
-const { Dialog          } = require('../cutscene/dialog_util');
-const {
-  arrow_container,
-  enemy_container,
-} = require('./pixi_containers');
-
+const { radian           } = require('../utils/math');
+const { Dialog           } = require('../cutscene/dialog_util');
+const { arrow_container  } = require('./pixi_containers');
 const { Entity_Container } = require('./entity_container.js');
-
 
 class Arrow {
   constructor() {

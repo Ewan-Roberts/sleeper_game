@@ -13,10 +13,6 @@ class Vitals {
     this.status         = 'alive';
   }
 
-  kill() {
-    //this.entity.switch('dead');
-  }
-
   dead(damage) {
     return this.health - damage < 0;
   }
