@@ -23,12 +23,14 @@ class Inventory {
 
   get equipped_weapon() {
     if(!this.equipped) throw new Error('No weapon equipped');
+    if(!this.equipped.animation_name) throw new Error('No weapon aniamtion for ' + this.eqipped.name);
 
     return this.equipped;
   }
 
   get ammo_type() {
     if(!this.equipped) throw new Error('No weapon equipped');
+
     if(!this.equipped.ammo) throw new Error('Weapon does not have an ammo type: ' + this.equipped);
 
     return this.equipped.ammo;

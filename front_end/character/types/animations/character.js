@@ -124,6 +124,9 @@ class Human {
   switch(weapon, action) {
     if (this.state === action) return;
 
+    if(!weapon) throw new Error('No weapon provided');
+    if(!action) throw new Error('No action provided');
+
     this.sprite.textures = frames[weapon][action];
     this.sprite.loop = true;
     this.sprite.play();

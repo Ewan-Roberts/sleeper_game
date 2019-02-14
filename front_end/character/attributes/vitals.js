@@ -17,16 +17,20 @@ class Vitals {
     //this.entity.switch('dead');
   }
 
-  damage(hit_point) {
-    if (!hit_point) throw new Error('No damage being recieved');
-    const is_dead = this.health - hit_point < 0;
-    if(is_dead) {
+  dead(damage) {
+    return this.health - damage < 0;
+  }
+
+  damage(damage) {
+    if (!damage) throw new Error('No damage being recieved');
+
+    if(this.dead(damage)) {
       this.status = 'dead';
 
       throw new Error(`${this.name} doesnt have enough health`);
     }
 
-    this.health -= hit_point;
+    this.health -= damage;
   }
 
   get alive() {
