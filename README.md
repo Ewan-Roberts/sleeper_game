@@ -1,6 +1,6 @@
 # sleeper_game
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_1.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_1.png)
 
 Work in progess, updates below:
 
@@ -11,13 +11,13 @@ Work in progess, updates below:
 - Added view and utils layer
 
 ## Update 02.02.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_10.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_10.png)
 - Add better inventory management system (still a long way to go)
 - Add item for each player section
 - Add item extraction
 
 ## Update 26.01.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_9.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_9.png)
 - Add basic user create
 - Add basic user find by password
 - Add database ability to do the above
@@ -31,7 +31,7 @@ Work in progess, updates below:
   - bring the player into the mixin structure
 
 ## Update 13.01.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_8.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_8.png)
 May not looks very pretty but an important landmark for the engine
 - :tada: Full predator/prey system that can freely scale
 - created more detailed inventory system
@@ -40,7 +40,7 @@ May not looks very pretty but an important landmark for the engine
 - added useful timer functions
 
 ## Update 06.01.19(2):
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/update_information/update_7.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_7.png)
 - multi-prey pathfinding (lines show paths run)
 - sprite direction and waiting states
 

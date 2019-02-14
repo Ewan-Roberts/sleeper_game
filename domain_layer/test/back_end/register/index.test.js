@@ -7,7 +7,7 @@ const {
   create_user,
   get_user_by_id,
   delete_user_by_id,
-} = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/register/index');
+} = require('/Users/ewan/Dropbox/game/sleeper_browserfy/domain_layer/register/index');
 
 const valid_schema = {
   user_name: 'Taka',
@@ -20,7 +20,7 @@ const valid_schema = {
 };
 
 
-describe('back_end/register/index', function() {
+describe('domain_layer/register/index', function() {
   let test_user;
 
   before(async function() {

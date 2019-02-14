@@ -2,10 +2,10 @@
 
 const { expect } = require('chai');
 const { get_player_vitals_by_id }
-  = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/player/meters');
+  = require('/Users/ewan/Dropbox/game/sleeper_browserfy/domain_layer/player/meters');
 
 const { create_user }
-  = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/register/index');
+  = require('/Users/ewan/Dropbox/game/sleeper_browserfy/domain_layer/register/index');
 
 const uuid = require('uuid/v4');
 
@@ -23,7 +23,7 @@ const valid_schema = {
   },
 };
 
-describe('/back_end/player/vitals', function() {
+describe('/domain_layer/player/vitals', function() {
   let test_player;
 
   before(async function() {

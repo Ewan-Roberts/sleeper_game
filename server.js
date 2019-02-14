@@ -10,9 +10,9 @@ const {
   create_user,
   get_user_by_password,
   update_user,
-}= require('./back_end/register');
+} = require('./domain_layer/register');
 
-require('./database/local_database');
+require('./data_access_layer/local_database');
 
 web_server.listen(website_port, () =>
   console.log(` ... Server listening on port: ${website_port}`)); // eslint-disable-line

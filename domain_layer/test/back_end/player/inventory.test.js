@@ -1,7 +1,7 @@
 'use strict';
 
 const { expect } = require('chai');
-const { get_player_inventory_on_id } = require('/Users/ewan/Dropbox/game/sleeper_browserfy/back_end/player/inventory');
+const { get_player_inventory_on_id } = require('/Users/ewan/Dropbox/game/sleeper_browserfy/domain_layer/player/inventory');
 
 describe('thing', function() {
 

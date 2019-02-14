@@ -1,6 +1,6 @@
 'use strict';
 
-const User              = require('../../database/models/User');
+const User              = require('../../data_access_layer/models/User');
 const uuid              = require('uuid/v4');
 const generate_password = require('password-generator');
 

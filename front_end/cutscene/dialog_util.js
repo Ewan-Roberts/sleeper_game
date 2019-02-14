@@ -94,6 +94,8 @@ class Dialog {
   }
 
   static speak_above_sprite(sprite, text) {
+    if(sprite.pluginName !== 'sprite') throw new Error('Needs to be a Sprite');
+
     const render_text = new PIXI.Text(text);
     render_text.x = sprite.x - 100;
     render_text.y = sprite.y - 80;

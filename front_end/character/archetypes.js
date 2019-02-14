@@ -31,7 +31,7 @@ class Archer extends Enemy {
 
     View_Aiming_Line.add_between_sprites(this.enemy.sprite, this.sprite);
 
-    setTimeout(() => shoot_arrow(this.sprite, this.enemy.sprite),1000);
+    setTimeout(() => shoot_arrow(this, this.enemy),1000);
   }
 
   melee() {

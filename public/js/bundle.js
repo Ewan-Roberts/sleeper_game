@@ -32,7 +32,7 @@ class Archer extends Enemy {
 
     View_Aiming_Line.add_between_sprites(this.enemy.sprite, this.sprite);
 
-    setTimeout(() => shoot_arrow(this.sprite, this.enemy.sprite),1000);
+    setTimeout(() => shoot_arrow(this, this.enemy),1000);
   }
 
   melee() {
@@ -1399,6 +1399,8 @@ class Dialog {
   }
 
   static speak_above_sprite(sprite, text) {
+    if(sprite.pluginName !== 'sprite') throw new Error('Needs to be a Sprite');
+
     const render_text = new PIXI.Text(text);
     render_text.x = sprite.x - 100;
     render_text.y = sprite.y - 80;
@@ -1634,7 +1636,6 @@ const { Dialog } = require('../cutscene/dialog_util');
 const {
   collision_container,
   enemy_container,
-  door_container,
   critter_container,
   arrow_container,
 } = require('./pixi_containers');
@@ -1676,69 +1677,27 @@ function create_arrow_tween(arrow, power, arrow_path) {
   return arrow_tween;
 }
 
+/*
+ * @params {Character} - origin model
+ * @params {Character} - target model
+ * @params {number}    - power
+ */
+
 function shoot_arrow(origin, target, power = 2000) {
-  const arrow       = create_rotated_arrow(origin, target);
-  const arrow_path  = create_arrow_path(origin, target);
+  const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
+  const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
   const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
-    const player = viewport.getChildByName('player');
 
-    //TODO decouple ths shit
-    if(origin.name !== 'player') {
-      if(player.containsPoint(arrow_point)) {
-        arrow_tween.stop();
+    if(target.sprite.containsPoint(arrow_point)) {
+      arrow_tween.stop();
 
-        arrow.destroy();
-        Dialog.speak_above_sprite(player, 'I am hit');
-        return;
-      }
+      arrow.destroy();
+      Dialog.speak_above_sprite(target.sprite, 'I am hit');
+      return;
     }
-
-    if(origin.name !== 'enemy') {
-      enemy_container.children.forEach(enemy => {
-        if(enemy.containsPoint(arrow_point)){
-          arrow_tween.stop();
-
-          arrow.destroy();
-          Dialog.speak_above_sprite(enemy, 'I am hit');
-          return;
-        }
-      });
-    }
-
-    collision_container.children.forEach(object => {
-      if(object.containsPoint(arrow_point)){
-        arrow_tween.stop();
-
-        return;
-      }
-    });
-
-    door_container.children.forEach(door => {
-      if(door.containsPoint(arrow_point)) {
-        arrow_tween.stop();
-
-        arrow.rotation = radian(target, origin);
-        arrow.width = 600;
-
-        door.rotation += 0.05;
-        door.toLocal(new PIXI.Point(0,0), arrow, arrow.position);
-        door.addChild(arrow);
-
-        return;
-      }
-    });
-
-    critter_container.children.forEach(critter => {
-      if(critter.containsPoint(arrow_point)) {
-        arrow_tween.stop();
-        arrow.rotation = radian(target, origin);
-        critter.kill();
-        return;
-      }
-    });
   });
 }
 
