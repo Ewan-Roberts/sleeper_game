@@ -6,8 +6,6 @@
 - [COMPLETE](../documentation/DONE.md)
 - [ROADMAP](../documentation/ROADMAP.md)
 
-Work in progess, updates below:
-
 # Updates
 
 ## 09/10.02.19:
