@@ -25,7 +25,6 @@ class Archer extends Enemy {
     this.logic.repeat = 20;
     this.logic.expire = true;
     this.add_component(new Melee('knife'));
-
   }
 
   shoot() {
