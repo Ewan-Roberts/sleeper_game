@@ -2,14 +2,13 @@
 
 const PIXI = require('pixi.js');
 
-const { shoot_arrow  } = require('../engine/ranged');
-const { timer        } = require('../engine/ticker');
-const { PathFind     } = require('../engine/pathfind.js');
+const { timer    } = require('../engine/ticker');
+const { PathFind } = require('../engine/pathfind.js');
 
-const { Enemy            } = require('./types/enemy');
-const { Melee            } = require('./attributes/melee');
-const { View_Aiming_Line } = require('../view/view_aiming_line');
-const { radian, distance_between_points } = require('../utils/math');
+const { Enemy } = require('./types/enemy');
+const { Melee } = require('./attributes/melee');
+const { Range } = require('./attributes/ranged');
+const { distance_between_points } = require('../utils/math');
 
 /* This is the highest level class and presumes
  *  Components;
@@ -24,18 +23,7 @@ class Archer extends Enemy {
     this.logic.repeat = 20;
     this.logic.expire = true;
     this.add_component(new Melee('knife'));
-  }
-
-  shoot() {
-    this.inventory.equip_weapon_by_name('old_bow');
-    this.animation.weapon = 'bow';
-    this.animation.ready_weapon();
-
-    this.sprite.rotation = radian(this.enemy.sprite, this.sprite);
-
-    View_Aiming_Line.add_between_sprites(this.enemy.sprite, this.sprite);
-
-    setTimeout(() => shoot_arrow(this, this.enemy),1000);
+    this.add_component(new Range('bow'));
   }
 
   stop_moving() {
@@ -63,7 +51,7 @@ class Archer extends Enemy {
         const target_at_range =
           distance_between_points(this.enemy.sprite, this.sprite) > 200;
 
-        if(target_at_range) return this.shoot();
+        if(target_at_range) return this.range.attack_from_to(this, this.enemy);
 
         return this.melee.attack_from_to(this, this.enemy);
       }

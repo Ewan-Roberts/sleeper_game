@@ -54,7 +54,6 @@ class DevelopmentLevel {
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
     const archer = new Archer(player);
     archer.sprite.position.set(1550,1000);
-    archer.shoot(player);
 
     console.log('wreghbwigbwo2i');
     console.log(viewport);

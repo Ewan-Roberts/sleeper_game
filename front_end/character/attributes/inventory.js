@@ -23,7 +23,7 @@ class Inventory {
 
   get equipped_weapon() {
     if(!this.equipped) throw new Error('No weapon equipped');
-    if(!this.equipped.animation_name) throw new Error('No weapon aniamtion for ' + this.eqipped.name);
+    if(!this.equipped.animation_name) throw new Error('No weapon animation for ' + this.equipped.name);
 
     return this.equipped;
   }
