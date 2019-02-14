@@ -9,6 +9,7 @@ const { Entity_Container } = require('../engine/entity_container.js');
 const { Enemy    } = require('./types/enemy');
 const { Melee    } = require('./attributes/melee');
 const { Range    } = require('./attributes/ranged');
+const { Inventory } = require('./attributes/inventory');
 const { Lootable } = require('./attributes/lootable');
 const { distance_between_points } = require('../utils/math');
 
@@ -20,10 +21,10 @@ class Archer extends Enemy {
   constructor(enemy) {
     super();
     this.name  = 'enemy';
-
     this.add_component(new Melee('rusty_knife'));
     this.add_component(new Range('old_bow'));
     this.add_component(new Lootable(this));
+    this.add_component(new Inventory());
     this.enemy = enemy;
     this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
@@ -49,20 +50,20 @@ class Archer extends Enemy {
     this.animation.ready_weapon();
 
     this.logic.on('repeat', () => {
-      const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+      // shoot thorugh walls
+      //const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+      //if(can_see_enemy){
+      this.stop_moving();
 
-      if(can_see_enemy){
-        this.stop_moving();
+      const target_at_range =
+        distance_between_points(this.enemy.sprite, this.sprite) > 200;
 
-        const target_at_range =
-          distance_between_points(this.enemy.sprite, this.sprite) > 200;
+      if(target_at_range) return this.range.attack_from_to(this, this.enemy);
 
-        if(target_at_range) return this.range.attack_from_to(this, this.enemy);
+      return this.melee.attack_from_to(this, this.enemy);
+      //}
 
-        return this.melee.attack_from_to(this, this.enemy);
-      }
-
-      return this.walk_to_enemy();
+      //return this.walk_to_enemy();
     });
 
     this.logic.on('end', () => this.animation.idle());

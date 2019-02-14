@@ -19,6 +19,10 @@ class Game {
 
     save_user(save_data);
   }
+
+  static over() {
+    throw 'GAME OVER';
+  }
 }
 
 module.exports = {

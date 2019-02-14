@@ -302,6 +302,7 @@ const { Entity_Container } = require('../engine/entity_container.js');
 const { Enemy    } = require('./types/enemy');
 const { Melee    } = require('./attributes/melee');
 const { Range    } = require('./attributes/ranged');
+const { Inventory } = require('./attributes/inventory');
 const { Lootable } = require('./attributes/lootable');
 const { distance_between_points } = require('../utils/math');
 
@@ -313,10 +314,10 @@ class Archer extends Enemy {
   constructor(enemy) {
     super();
     this.name  = 'enemy';
-
     this.add_component(new Melee('rusty_knife'));
     this.add_component(new Range('old_bow'));
     this.add_component(new Lootable(this));
+    this.add_component(new Inventory());
     this.enemy = enemy;
     this.logic = timer.createTimer(800);
     this.logic.repeat = 20;
@@ -342,20 +343,20 @@ class Archer extends Enemy {
     this.animation.ready_weapon();
 
     this.logic.on('repeat', () => {
-      const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+      // shoot thorugh walls
+      //const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+      //if(can_see_enemy){
+      this.stop_moving();
 
-      if(can_see_enemy){
-        this.stop_moving();
+      const target_at_range =
+        distance_between_points(this.enemy.sprite, this.sprite) > 200;
 
-        const target_at_range =
-          distance_between_points(this.enemy.sprite, this.sprite) > 200;
+      if(target_at_range) return this.range.attack_from_to(this, this.enemy);
 
-        if(target_at_range) return this.range.attack_from_to(this, this.enemy);
+      return this.melee.attack_from_to(this, this.enemy);
+      //}
 
-        return this.melee.attack_from_to(this, this.enemy);
-      }
-
-      return this.walk_to_enemy();
+      //return this.walk_to_enemy();
     });
 
     this.logic.on('end', () => this.animation.idle());
@@ -371,7 +372,7 @@ module.exports = {
   Archer,
 };
 
-},{"../engine/entity_container.js":32,"../engine/pathfind.js":35,"../engine/ticker":40,"../utils/math":59,"./attributes/lootable":9,"./attributes/melee":10,"./attributes/ranged":14,"./types/enemy":20,"pixi.js":257}],4:[function(require,module,exports){
+},{"../engine/entity_container.js":32,"../engine/pathfind.js":35,"../engine/ticker":40,"../utils/math":59,"./attributes/inventory":7,"./attributes/lootable":9,"./attributes/melee":10,"./attributes/ranged":14,"./types/enemy":20,"pixi.js":257}],4:[function(require,module,exports){
 'use strict';
 
 const { get_item } = require('../../items/item_data');
@@ -522,21 +523,24 @@ class Keyboard {
   }
 
   key_down(key) {
+    if(!this.entity.keyboard) return;
     const translated_key = keymap[key];
     if (!translated_key) return;
 
     switch(translated_key) {
-      case 'up'   : this.keyboard_up();            return;
-      case 'left' : this.keyboard_left();          return;
-      case 'down' : this.keyboard_down();          return;
-      case 'right': this.keyboard_right();         return;
-      case 'n'    : this.save_game();              return;
-      case 'o'    : this.start_intro();            return;
-      case 'i'    : View_HUD.toggle_player_inventory(); return;
+      case 'up'   : this.keyboard_up();          return;
+      case 'left' : this.keyboard_left();        return;
+      case 'down' : this.keyboard_down();        return;
+      case 'right': this.keyboard_right();       return;
+      case 'n'    : this.save_game();            return;
+      case 'o'    : this.start_intro();          return;
+      case 'i'    : View_HUD.toggle_inventory(); return;
     }
   }
 
   key_up() {
+    if(!this.entity.keyboard) return;
+
     this.entity.animation.idle();
   }
 
@@ -637,7 +641,6 @@ class Lootable {
       icon.add_image_at('bunny', this.entity.sprite);
     }
 
-
     this.entity.sprite.buttonMode = true;
     this.entity.sprite.on('click', () => {
       View_Inventory.create_populated_slots(this.entity.sprite, this.loot);
@@ -646,8 +649,6 @@ class Lootable {
       this.looted = true;
 
       icon.remove();
-
-      console.log('looting corpse');
     });
   }
 
@@ -687,13 +688,12 @@ module.exports = {
 },{"../../engine/melee":34}],11:[function(require,module,exports){
 'use strict';
 
-const { gui_container } = require('../../engine/pixi_containers');
-const { viewport         } = require('../../engine/viewport');
-const { radian           } = require('../../utils/math');
-const {
-  shoot_arrow_with_collision,
-} = require('../../engine/ranged');
+const { gui_container              } = require('../../engine/pixi_containers');
+const { viewport                   } = require('../../engine/viewport');
+const { shoot_arrow_with_collision } = require('../../engine/ranged');
+
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
+const { radian           } = require('../../utils/math');
 
 const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
 
@@ -708,6 +708,8 @@ class Mouse {
   }
 
   mouse_up(event) {
+    if(!this.entity.mouse) return;
+
     this.cone_timer.stop();
     this.entity.animation.idle();
 
@@ -722,6 +724,8 @@ class Mouse {
   }
 
   mouse_down(event) {
+    if(!this.entity.mouse) return;
+
     const mouse_position = event.data.getLocalPosition(viewport);
     const direction      = radian(mouse_position, this.entity.sprite);
 
@@ -734,6 +738,8 @@ class Mouse {
   }
 
   mouse_move(event) {
+    if(!this.entity.mouse) return;
+
     const mouse_position = event.data.getLocalPosition(viewport);
     const rotation = radian(mouse_position, this.entity.sprite);
 
@@ -1015,8 +1021,8 @@ module.exports = {
 },{"../../engine/ticker":40,"../../view/view_player_status_meter":65}],17:[function(require,module,exports){
 'use strict';
 
-
 const { blood } = require('../../cutscene/blood');
+const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
   constructor(entity) {
@@ -1040,11 +1046,19 @@ class Vitals {
     this.status = 'dead';
 
     if('loot' in this.entity) {
-      console.log('lootable!');
       this.entity.loot.show();
     }
 
     this.entity.animation.kill();
+
+    //move this into the player model
+    if(this.entity.name === 'player') {
+      this.entity.remove_component('keyboard');
+      this.entity.remove_component('mouse');
+      this.entity.remove_component('animation');
+
+      Game.over();
+    }
   }
 
   damage(damage) {
@@ -1078,7 +1092,7 @@ module.exports = {
 };
 
 
-},{"../../cutscene/blood":24}],18:[function(require,module,exports){
+},{"../../cutscene/blood":24,"../../engine/save_manager":39}],18:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1097,6 +1111,10 @@ class Character {
 
   add_component(component) {
     this[component.name] = component;
+  }
+
+  remove_component(name) {
+    delete this[name];
   }
 
   set_position(point) {
@@ -1290,16 +1308,16 @@ class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
+    this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
-    this.add_component(new Vitals());
+    this.add_component(new Vitals(this));
     this.add_component(new Predator(this));
     this.add_component(new Status());
     this.add_component(new Inventory());
 
-    this.sprite.name = 'player';
     viewport.addChild(this.sprite);
   }
 }
@@ -2333,7 +2351,7 @@ function shoot_arrow(origin, target, power = 2000) {
 
       target.vitals.damage(weapon_damage);
 
-      Dialog.speak_above_sprite(target.sprite, 'I am hit');
+      // Dialog.speak_above_sprite(target.sprite, 'I am hit');
       return;
     }
   });
@@ -2409,6 +2427,10 @@ class Game {
     const save_data = new Game(player_data);
 
     save_user(save_data);
+  }
+
+  static over() {
+    throw 'GAME OVER';
   }
 }
 
@@ -2756,7 +2778,7 @@ const items = [
     type:           'projectile',
     ammo:           'arrow',
     range:          200,
-    damage:         10,
+    damage:         40,
     speed:          400,
     condition:      100,
 
@@ -8580,9 +8602,10 @@ class DevelopmentLevel {
     archer.sprite.position.set(1550,1000);
 
     console.log(viewport);
-    //archer.raycasting.add(this.level.segments);
+    archer.inventory.equip_weapon_by_name('old_bow');
+    // archer.raycasting.add(this.level.segments);
 
-    //archer.logic_start();
+    archer.logic_start();
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();
@@ -9288,18 +9311,14 @@ const PIXI = require('pixi.js');
 const { gui_container } = require('../engine/pixi_containers');
 
 class View_Inventory {
-
   static populate(image_name, slot) {
     const item  = PIXI.Sprite.fromFrame(image_name);
     item.height = 100;
     item.width  = 100;
     item.anchor.set(0.5);
-
     item.interactive = true;
     item.buttonMode  = true;
-    item.click = () => {
-      item.destroy();
-    };
+    item.click = () => item.destroy();
 
     this.slot_container.getChildAt(slot).addChild(item);
   }
@@ -9328,8 +9347,6 @@ class View_Inventory {
 
     loot.forEach((item, i) => this.populate(item.image_name, i));
   }
-
-
 }
 
 module.exports = {
@@ -9382,7 +9399,6 @@ function insert_all_div_with_image(class_name, image_name) {
   });
 }
 
-
 class View_HUD {
   constructor() {
     this.name             = 'hud';
@@ -9399,7 +9415,7 @@ class View_HUD {
     this.item_slots       = [];
   }
 
-  static toggle_player_inventory() {
+  static toggle_inventory() {
 
     if(dom_hud.style.display === 'block') {
       dom_hud.style.opacity = 0;

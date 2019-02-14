@@ -46,21 +46,24 @@ class Keyboard {
   }
 
   key_down(key) {
+    if(!this.entity.keyboard) return;
     const translated_key = keymap[key];
     if (!translated_key) return;
 
     switch(translated_key) {
-      case 'up'   : this.keyboard_up();            return;
-      case 'left' : this.keyboard_left();          return;
-      case 'down' : this.keyboard_down();          return;
-      case 'right': this.keyboard_right();         return;
-      case 'n'    : this.save_game();              return;
-      case 'o'    : this.start_intro();            return;
-      case 'i'    : View_HUD.toggle_player_inventory(); return;
+      case 'up'   : this.keyboard_up();          return;
+      case 'left' : this.keyboard_left();        return;
+      case 'down' : this.keyboard_down();        return;
+      case 'right': this.keyboard_right();       return;
+      case 'n'    : this.save_game();            return;
+      case 'o'    : this.start_intro();          return;
+      case 'i'    : View_HUD.toggle_inventory(); return;
     }
   }
 
   key_up() {
+    if(!this.entity.keyboard) return;
+
     this.entity.animation.idle();
   }
 

@@ -56,9 +56,10 @@ class DevelopmentLevel {
     archer.sprite.position.set(1550,1000);
 
     console.log(viewport);
-    //archer.raycasting.add(this.level.segments);
+    archer.inventory.equip_weapon_by_name('old_bow');
+    // archer.raycasting.add(this.level.segments);
 
-    //archer.logic_start();
+    archer.logic_start();
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();

@@ -36,7 +36,7 @@ const items = [
     type:           'projectile',
     ammo:           'arrow',
     range:          200,
-    damage:         10,
+    damage:         40,
     speed:          400,
     condition:      100,
 

@@ -18,6 +18,10 @@ class Character {
     this[component.name] = component;
   }
 
+  remove_component(name) {
+    delete this[name];
+  }
+
   set_position(point) {
     this.sprite.position.set(point.x, point.y);
   }

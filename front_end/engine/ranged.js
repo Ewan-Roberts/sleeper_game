@@ -95,7 +95,7 @@ function shoot_arrow(origin, target, power = 2000) {
 
       target.vitals.damage(weapon_damage);
 
-      Dialog.speak_above_sprite(target.sprite, 'I am hit');
+      // Dialog.speak_above_sprite(target.sprite, 'I am hit');
       return;
     }
   });

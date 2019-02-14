@@ -1,7 +1,7 @@
 'use strict';
 
-
 const { blood } = require('../../cutscene/blood');
+const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
   constructor(entity) {
@@ -25,11 +25,19 @@ class Vitals {
     this.status = 'dead';
 
     if('loot' in this.entity) {
-      console.log('lootable!');
       this.entity.loot.show();
     }
 
     this.entity.animation.kill();
+
+    //move this into the player model
+    if(this.entity.name === 'player') {
+      this.entity.remove_component('keyboard');
+      this.entity.remove_component('mouse');
+      this.entity.remove_component('animation');
+
+      Game.over();
+    }
   }
 
   damage(damage) {

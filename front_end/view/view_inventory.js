@@ -4,18 +4,14 @@ const PIXI = require('pixi.js');
 const { gui_container } = require('../engine/pixi_containers');
 
 class View_Inventory {
-
   static populate(image_name, slot) {
     const item  = PIXI.Sprite.fromFrame(image_name);
     item.height = 100;
     item.width  = 100;
     item.anchor.set(0.5);
-
     item.interactive = true;
     item.buttonMode  = true;
-    item.click = () => {
-      item.destroy();
-    };
+    item.click = () => item.destroy();
 
     this.slot_container.getChildAt(slot).addChild(item);
   }
@@ -44,8 +40,6 @@ class View_Inventory {
 
     loot.forEach((item, i) => this.populate(item.image_name, i));
   }
-
-
 }
 
 module.exports = {

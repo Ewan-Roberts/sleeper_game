@@ -42,7 +42,6 @@ function insert_all_div_with_image(class_name, image_name) {
   });
 }
 
-
 class View_HUD {
   constructor() {
     this.name             = 'hud';
@@ -59,7 +58,7 @@ class View_HUD {
     this.item_slots       = [];
   }
 
-  static toggle_player_inventory() {
+  static toggle_inventory() {
 
     if(dom_hud.style.display === 'block') {
       dom_hud.style.opacity = 0;

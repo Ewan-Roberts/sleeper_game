@@ -16,16 +16,16 @@ class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
+    this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
-    this.add_component(new Vitals());
+    this.add_component(new Vitals(this));
     this.add_component(new Predator(this));
     this.add_component(new Status());
     this.add_component(new Inventory());
 
-    this.sprite.name = 'player';
     viewport.addChild(this.sprite);
   }
 }

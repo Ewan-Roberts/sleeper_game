@@ -1,12 +1,11 @@
 'use strict';
 
-const { gui_container } = require('../../engine/pixi_containers');
-const { viewport         } = require('../../engine/viewport');
-const { radian           } = require('../../utils/math');
-const {
-  shoot_arrow_with_collision,
-} = require('../../engine/ranged');
+const { gui_container              } = require('../../engine/pixi_containers');
+const { viewport                   } = require('../../engine/viewport');
+const { shoot_arrow_with_collision } = require('../../engine/ranged');
+
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
+const { radian           } = require('../../utils/math');
 
 const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
 
@@ -21,6 +20,8 @@ class Mouse {
   }
 
   mouse_up(event) {
+    if(!this.entity.mouse) return;
+
     this.cone_timer.stop();
     this.entity.animation.idle();
 
@@ -35,6 +36,8 @@ class Mouse {
   }
 
   mouse_down(event) {
+    if(!this.entity.mouse) return;
+
     const mouse_position = event.data.getLocalPosition(viewport);
     const direction      = radian(mouse_position, this.entity.sprite);
 
@@ -47,6 +50,8 @@ class Mouse {
   }
 
   mouse_move(event) {
+    if(!this.entity.mouse) return;
+
     const mouse_position = event.data.getLocalPosition(viewport);
     const rotation = radian(mouse_position, this.entity.sprite);
 
