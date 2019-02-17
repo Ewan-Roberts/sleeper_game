@@ -2,35 +2,29 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-// const { viewport  } = require('../../engine/viewport');
-const { world } = require('../../engine/shadows');
-const { Player    } = require('../../character/types/player.js');
-const { Campfire  } = require('../../items/fire_place');
-const { Chest     } = require('../../items/chest');
-const { Note      } = require('../../items/Note');
-const { Backpack  } = require('../../items/back_pack');
+const { world    } = require('../../engine/shadows');
+const { Campfire } = require('../../items/fire_place');
+const { Chest    } = require('../../items/chest');
+const { Note     } = require('../../items/Note');
+const { Backpack } = require('../../items/back_pack');
 
-const { get_item_by_name } = require('../../items/item_data');
+const { Level          } = require('../level_utils');
+const { intro_cutscene } = require('../../cutscene/intro.js');
+const { Enemy          } = require('../../character/types/enemy');
+const { Inventory      } = require('../../character/attributes/inventory');
+const { View_Inventory } = require('../../view/view_inventory');
+const { View_HUD       } = require('../../view/view_player_inventory');
 
-//const { start_rain } = require('../../weather/rain');
-
-const { Level           } = require('../level_utils');
-const { intro_cutscene  } = require('../../cutscene/intro.js');
-const { Enemy           } = require('../../character/types/enemy');
-const { Rat             } = require('../../character/archetypes/rat');
-const { Inventory       } = require('../../character/attributes/inventory');
-const { View_Inventory  } = require('../../view/view_inventory');
-const { View_HUD        } = require('../../view/view_player_inventory');
-const { View_Aiming_Line } = require('../../view/view_aiming_line');
-
+const { Player } = require('../../character/types/player.js');
 const { Archer } = require('../../character/archetypes/archer');
+const { Rat    } = require('../../character/archetypes/rat');
+
 // THIS IS ALL FOR TESTING
 class DevelopmentLevel {
   constructor() {
     const player = new Player();
     player.set_position({ x: 1000, y: 400});
 
-    //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.add_ranged_weapon_by_name('dev_bow');
     player.inventory.add_melee_weapon_by_name('rusty_knife');
@@ -47,14 +41,9 @@ class DevelopmentLevel {
     View_HUD.inventory_slot('rat_femur', 1);
     View_HUD.inventory_slot('meat', 2);
     View_HUD.inventory_slot('skull_cap_bone', 3);
-    //player.add_raycasting(this.level.segments);
 
     this.load_test_level();
     this.test_note();
-
-    //View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
-    //inventory_test.populate_random_inventory(player);
-    //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1100});
@@ -64,11 +53,6 @@ class DevelopmentLevel {
     const archer = new Archer(rat);
     archer.sprite.position.set(1550,1000);
     archer.logic_start();
-
-    // archer.raycasting.add(this.level.segments);
-    // rat.prey.is_prey_to(archer);
-
-    //rat.prey.is_prey_to(player);
   }
 
   load_flat_level() {
@@ -79,7 +63,6 @@ class DevelopmentLevel {
 
     const bedroom = new Level(bedroom_tiles, bedroom_data);
     bedroom.set_background_image(bedroom_image, bedroom_tiles);
-    console.log(bedroom_data);
     bedroom.render_walls(bedroom_data.layers[0].layers[1]);
     bedroom.create_grid(bedroom_tiles);
     this.level = bedroom;
@@ -93,7 +76,6 @@ class DevelopmentLevel {
     debug_room_image.alpha= 0.5;
 
     const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
-
     debug_room.set_background_image(debug_room_image, debug_room_tiled_tiles);
     debug_room.render_walls(debug_room_tiled_data.layers[1]);
     debug_room.create_grid(debug_room_tiled_tiles);

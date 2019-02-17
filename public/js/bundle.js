@@ -287,8 +287,8 @@ module.exports = {
 
 const PIXI = require('pixi.js');
 
-const { timer    } = require('../../engine/ticker');
-const { PathFind } = require('../../engine/pathfind.js');
+const { timer            } = require('../../engine/ticker');
+const { PathFind         } = require('../../engine/pathfind.js');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
 const { Enemy     } = require('../types/enemy');
@@ -2296,7 +2296,7 @@ class Arrow {
     //const arrow_embedded = PIXI.Sprite.fromFrame('arrow_embedded');
     this.sprite.name = 'arrow';
     this.sprite.anchor.set(0.95);
-    this.sprite.height *= 3;
+    this.sprite.height *= 2;
 
     arrow_container.addChild(this.sprite);
   }
@@ -2332,29 +2332,22 @@ function create_arrow_tween(arrow, power, arrow_path) {
  * @params {Point}     - point (x,y)
  * @params {number}    - power
  */
-
 function shoot_arrow_with_collision(origin, point) {
-  const { weapon_speed  } = origin.inventory;
-  const arrow             = create_rotated_arrow(origin.sprite, point);
-  const arrow_path        = create_arrow_path(origin.sprite, point);
-  const arrow_tween       = create_arrow_tween(arrow, weapon_speed, arrow_path);
-  const { weapon_damage } = origin.inventory;
+  const { weapon_speed, weapon_damage } = origin.inventory;
+  const arrow       = create_rotated_arrow(origin.sprite, point);
+  const arrow_path  = create_arrow_path(origin.sprite, point);
+  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
 
+  const entities = Entity_Container.get();
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
-    const entities = Entity_Container.get();
-
-    entities.forEach(enemy => {
-      if(enemy.sprite.containsPoint(arrow_point)) {
-        arrow_tween.stop();
-        // arrow.destroy();
-
-        enemy.vitals.damage(weapon_damage);
-
-        //Dialog.speak_above_sprite(enemy.sprite, 'I am hit');
-        return;
-      }
-    });
+    const enemy = entities.find(entity => entity.sprite.containsPoint(arrow_point));
+    if(enemy) {
+      arrow_tween.stop();
+      enemy.vitals.damage(weapon_damage);
+      arrow.destroy();
+      return;
+    }
   });
 }
 
@@ -2363,13 +2356,11 @@ function shoot_arrow_with_collision(origin, point) {
  * @params {Character} - target model
  * @params {number}    - power
  */
-
 function shoot_arrow(origin, target) {
-  const { weapon_speed }  = origin.inventory;
-  const arrow             = create_rotated_arrow(origin.sprite, target.sprite);
-  const arrow_path        = create_arrow_path(origin.sprite, target.sprite);
-  const arrow_tween       = create_arrow_tween(arrow, weapon_speed, arrow_path);
-  const { weapon_damage } = origin.inventory;
+  const { weapon_speed, weapon_damage} = origin.inventory;
+  const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
+  const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
+  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
@@ -2377,10 +2368,7 @@ function shoot_arrow(origin, target) {
     if(target.sprite.containsPoint(arrow_point)) {
       arrow_tween.stop();
       arrow.destroy();
-
       target.vitals.damage(weapon_damage);
-
-      // Dialog.speak_above_sprite(target.sprite, 'I am hit');
       return;
     }
   });
@@ -2470,7 +2458,6 @@ module.exports = {
 },{"../utils/socket":61}],40:[function(require,module,exports){
 
 'use strict';
-
 const PIXI = require('pixi.js');
 
 require('pixi-layers');
@@ -2478,18 +2465,7 @@ require('pixi-shadows');
 
 const app = require('./app');
 
-const shadow = new PIXI.shadows.Shadow(900, 1);
-shadow.pointCount = 1;
-shadow.overlayLightLength = 200;
-shadow.intensity = 1;
-shadow.ambientLight = 1;
-shadow.position.set(450, 150);
-
 const world = PIXI.shadows.init(app);
-
-//FOR TESTING make 0.5 for lighting
-PIXI.shadows.filter.ambientLight = 1;
-
 world.interactive = true;
 world.updateLayersOrder = function () {
   world.children.sort(function(a,b) {
@@ -2498,6 +2474,16 @@ world.updateLayersOrder = function () {
     return b.zIndex - a.zIndex;
   });
 };
+
+const shadow = new PIXI.shadows.Shadow(900, 1);
+shadow.pointCount = 1;
+shadow.overlayLightLength = 200;
+shadow.intensity = 1;
+shadow.ambientLight = 1;
+shadow.position.set(450, 150);
+
+//FOR TESTING make 0.5 for lighting
+PIXI.shadows.filter.ambientLight = 1;
 
 world.addChild(shadow);
 
@@ -2534,7 +2520,6 @@ app.ticker.add(() => {
 });
 
 module.exports = {
-  ticker: app.ticker,
   timer,
 };
 
@@ -8640,35 +8625,29 @@ module.exports={ "columns":20,
 'use strict';
 const PIXI = require('pixi.js');
 
-// const { viewport  } = require('../../engine/viewport');
-const { world } = require('../../engine/shadows');
-const { Player    } = require('../../character/types/player.js');
-const { Campfire  } = require('../../items/fire_place');
-const { Chest     } = require('../../items/chest');
-const { Note      } = require('../../items/Note');
-const { Backpack  } = require('../../items/back_pack');
+const { world    } = require('../../engine/shadows');
+const { Campfire } = require('../../items/fire_place');
+const { Chest    } = require('../../items/chest');
+const { Note     } = require('../../items/Note');
+const { Backpack } = require('../../items/back_pack');
 
-const { get_item_by_name } = require('../../items/item_data');
+const { Level          } = require('../level_utils');
+const { intro_cutscene } = require('../../cutscene/intro.js');
+const { Enemy          } = require('../../character/types/enemy');
+const { Inventory      } = require('../../character/attributes/inventory');
+const { View_Inventory } = require('../../view/view_inventory');
+const { View_HUD       } = require('../../view/view_player_inventory');
 
-//const { start_rain } = require('../../weather/rain');
-
-const { Level           } = require('../level_utils');
-const { intro_cutscene  } = require('../../cutscene/intro.js');
-const { Enemy           } = require('../../character/types/enemy');
-const { Rat             } = require('../../character/archetypes/rat');
-const { Inventory       } = require('../../character/attributes/inventory');
-const { View_Inventory  } = require('../../view/view_inventory');
-const { View_HUD        } = require('../../view/view_player_inventory');
-const { View_Aiming_Line } = require('../../view/view_aiming_line');
-
+const { Player } = require('../../character/types/player.js');
 const { Archer } = require('../../character/archetypes/archer');
+const { Rat    } = require('../../character/archetypes/rat');
+
 // THIS IS ALL FOR TESTING
 class DevelopmentLevel {
   constructor() {
     const player = new Player();
     player.set_position({ x: 1000, y: 400});
 
-    //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.add_ranged_weapon_by_name('dev_bow');
     player.inventory.add_melee_weapon_by_name('rusty_knife');
@@ -8685,14 +8664,9 @@ class DevelopmentLevel {
     View_HUD.inventory_slot('rat_femur', 1);
     View_HUD.inventory_slot('meat', 2);
     View_HUD.inventory_slot('skull_cap_bone', 3);
-    //player.add_raycasting(this.level.segments);
 
     this.load_test_level();
     this.test_note();
-
-    //View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
-    //inventory_test.populate_random_inventory(player);
-    //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1100});
@@ -8702,11 +8676,6 @@ class DevelopmentLevel {
     const archer = new Archer(rat);
     archer.sprite.position.set(1550,1000);
     archer.logic_start();
-
-    // archer.raycasting.add(this.level.segments);
-    // rat.prey.is_prey_to(archer);
-
-    //rat.prey.is_prey_to(player);
   }
 
   load_flat_level() {
@@ -8717,7 +8686,6 @@ class DevelopmentLevel {
 
     const bedroom = new Level(bedroom_tiles, bedroom_data);
     bedroom.set_background_image(bedroom_image, bedroom_tiles);
-    console.log(bedroom_data);
     bedroom.render_walls(bedroom_data.layers[0].layers[1]);
     bedroom.create_grid(bedroom_tiles);
     this.level = bedroom;
@@ -8731,7 +8699,6 @@ class DevelopmentLevel {
     debug_room_image.alpha= 0.5;
 
     const debug_room = new Level(debug_room_tiled_data, debug_room_tiled_tiles);
-
     debug_room.set_background_image(debug_room_image, debug_room_tiled_tiles);
     debug_room.render_walls(debug_room_tiled_data.layers[1]);
     debug_room.create_grid(debug_room_tiled_tiles);
@@ -8802,7 +8769,7 @@ module.exports = {
 
 
 
-},{"../../character/archetypes/archer":3,"../../character/archetypes/rat":4,"../../character/attributes/inventory":8,"../../character/types/enemy":21,"../../character/types/player.js":23,"../../cutscene/intro.js":28,"../../engine/shadows":40,"../../items/Note":44,"../../items/back_pack":45,"../../items/chest":46,"../../items/fire_place":47,"../../items/item_data":48,"../../view/view_aiming_line":63,"../../view/view_inventory":65,"../../view/view_player_inventory":66,"../bedroom/bedroom_map_output.json":51,"../bedroom/bedroom_map_tiled.json":52,"../debug/debug_map_output.json":53,"../debug/debug_map_tiles.json":54,"../level_utils":57,"pixi.js":261}],56:[function(require,module,exports){
+},{"../../character/archetypes/archer":3,"../../character/archetypes/rat":4,"../../character/attributes/inventory":8,"../../character/types/enemy":21,"../../character/types/player.js":23,"../../cutscene/intro.js":28,"../../engine/shadows":40,"../../items/Note":44,"../../items/back_pack":45,"../../items/chest":46,"../../items/fire_place":47,"../../view/view_inventory":65,"../../view/view_player_inventory":66,"../bedroom/bedroom_map_output.json":51,"../bedroom/bedroom_map_tiled.json":52,"../debug/debug_map_output.json":53,"../debug/debug_map_tiles.json":54,"../level_utils":57,"pixi.js":261}],56:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');

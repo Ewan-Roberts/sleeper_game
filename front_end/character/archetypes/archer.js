@@ -2,8 +2,8 @@
 
 const PIXI = require('pixi.js');
 
-const { timer    } = require('../../engine/ticker');
-const { PathFind } = require('../../engine/pathfind.js');
+const { timer            } = require('../../engine/ticker');
+const { PathFind         } = require('../../engine/pathfind.js');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
 const { Enemy     } = require('../types/enemy');

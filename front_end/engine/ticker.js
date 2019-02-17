@@ -18,6 +18,5 @@ app.ticker.add(() => {
 });
 
 module.exports = {
-  ticker: app.ticker,
   timer,
 };
