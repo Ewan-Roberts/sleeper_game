@@ -24,8 +24,8 @@ class Vitals {
   kill() {
     if(this.entity.name === 'player') Game.over();
 
-    if('loot'  in this.entity) this.entity.loot.show();
-    if('logic' in this.entity) this.entity.logic.stop();
+    if('loot'  in this.entity) this.entity.loot.populate();
+    //if('logic' in this.entity) this.entity.logic.stop();
 
     this.entity.animation.kill();
     this.status = 'dead';

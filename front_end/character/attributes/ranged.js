@@ -2,26 +2,25 @@
 
 const { shoot_arrow      } = require('../../engine/ranged');
 const { View_Aiming_Line } = require('../../view/view_aiming_line');
-const { radian } = require('../../utils/math');
+const { radian           } = require('../../utils/math');
 
 class Range {
-  constructor(weapon) {
+  constructor(entity) {
     this.name   = 'range';
-
-    this.weapon = weapon;
+    this.entity = entity;
+    this.ranged_weapon = entity.inventory.ranged;
   }
 
-  attack_from_to(attacker, target) {
-    attacker.inventory.equip_weapon_by_name(this.weapon);
+  attack(target) {
+    this.entity.inventory.equip_weapon_by_name(this.ranged_weapon.name);
 
-    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
-    attacker.animation.ready_weapon();
+    this.entity.animation.ready_weapon();
 
-    attacker.sprite.rotation = radian(target.sprite, attacker.sprite);
+    this.entity.sprite.rotation = radian(target.sprite, this.entity.sprite);
 
-    View_Aiming_Line.add_between_sprites(target.sprite, attacker.sprite);
+    View_Aiming_Line.add_between_sprites(target.sprite, this.entity.sprite);
 
-    shoot_arrow(attacker, target);
+    shoot_arrow(this.entity, target);
   }
 }
 

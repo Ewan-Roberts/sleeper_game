@@ -2,7 +2,10 @@
 
 const PIXI = require('pixi.js');
 const { world    } = require('../engine/shadows');
-const { collision_container } = require('../engine/pixi_containers');
+const {
+  collision_container,
+  background_container,
+} = require('../engine/pixi_containers');
 
 const {
   PathFind,
@@ -43,10 +46,12 @@ class Level {
     this.background_image.width = tile_data.imagewidth;
     this.background_image.height = tile_data.imageheight;
     this.background_image.opacity = 0.1;
+    this.background_image.zIndex = 100;
 
+    world.updateLayersOrder();
     this.add_to_segments(this.background_image);
 
-    world.addChild(this.background_image);
+    background_container.addChild(this.background_image);
   }
 
   render_walls(wall_array) {
@@ -65,7 +70,7 @@ class Level {
       wall.anchor.set(0);
       this.add_to_segments(wall);
 
-      world.addChild(wall);
+      collision_container.addChild(wall);
       //TODO remove duplicate
       const wall1 = new PIXI.Sprite(wall_texture);
       wall1.position.set(wall_data.x, wall_data.y);
@@ -73,8 +78,7 @@ class Level {
       wall1.height = wall_data.height;
       wall1.anchor.set(0);
 
-      world.addChild(wall1);
-
+      collision_container.addChild(wall1);
 
       collision_container.addChild(wall);
     });

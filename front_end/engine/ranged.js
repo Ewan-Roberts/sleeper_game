@@ -80,10 +80,12 @@ function shoot_arrow_with_collision(origin, point, power = 2000) {
  * @params {number}    - power
  */
 
-function shoot_arrow(origin, target, power = 2000) {
+function shoot_arrow(origin, target) {
+  const { weapon_speed } = origin.inventory;
+
   const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
   const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
-  const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
   const { weapon_damage } = origin.inventory;
 
   arrow_tween.on('update', () => {

@@ -91,6 +91,11 @@ class Rodent {
     this.sprite.play();
     this.state = action;
   }
+
+  kill() {
+    this.switch('dead');
+  }
+
 }
 
 module.exports = {

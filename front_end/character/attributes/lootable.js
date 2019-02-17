@@ -9,29 +9,32 @@ class Lootable {
     this.name     = 'loot';
     this.entity   = entity;
     this.equipped = null;
-    this.slots    = [];
     this.looted   = false;
+    this.items    = [];
   }
 
-  show() {
-    if(!this.looted) {
-      this.loot = get_random_items();
+  populate() {
+    this.items = get_random_items();
+  }
 
-      icon.add_image_at('bunny', this.entity.sprite);
-    }
-
-    this.entity.sprite.interactive = true;
-    this.entity.sprite.buttonMode = true;
-    this.entity.sprite.on('click', () => {
-      console.log('cickl lcik ')
-      View_Inventory.create_populated_slots(this.entity.sprite, this.loot);
-
+  create_icon() {
+    const icon1 = new icon('bunny', this.entity.sprite);
+    icon1.icon.on('click', () => {
       this.entity.sprite.buttonMode = false;
       this.looted = true;
 
-      icon.remove();
+      icon1.remove();
     });
   }
+
+  show() {
+    View_Inventory.create_populated_slots(this.entity.sprite, this.items);
+  }
+
+  get() {
+    return this.items;
+  }
+
 }
 
 module.exports = {

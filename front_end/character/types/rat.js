@@ -9,6 +9,7 @@ const { Rodent    } = require('../animations/rat');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Prey      } = require('../attributes/prey');
+const { Lootable  } = require('../attributes/lootable');
 
 class Rat extends Character {
   constructor() {
@@ -18,10 +19,10 @@ class Rat extends Character {
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
 
     this.add_component(new Rodent(this.sprite));
-    this.add_component(new Vitals());
+    this.add_component(new Vitals(this));
     this.add_component(new Prey(this));
     this.add_component(new Inventory());
-    this.inventory.populate_random_inventory();
+    this.add_component(new Lootable(this));
 
     critter_container.addChild(this.sprite);
   }

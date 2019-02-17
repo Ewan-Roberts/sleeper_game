@@ -8,25 +8,10 @@ require('pixi-shadows');
 
 const app = require('./app');
 
-function createShadowSprite(texture, shadowTexture) {
-  const container = new PIXI.Container(); // This represents your final 'sprite'
-
-  // Things that create shadows
-  if (shadowTexture) {
-    const shadowCastingSprite = new PIXI.Sprite(shadowTexture);
-    shadowCastingSprite.parentGroup = PIXI.shadows.casterGroup;
-    container.addChild(shadowCastingSprite);
-  }
-
-  // The things themselves (their texture)
-  const sprite = new PIXI.Sprite(texture);
-  container.addChild(sprite);
-
-  return container;
-}
-
-
 const world = PIXI.shadows.init(app);
+//FOR TESTING
+PIXI.shadows.filter.ambientLight = 1;
+
 // Create a light that casts shadows
 // const shadow = new PIXI.shadows.Shadow(700, 1);
 // shadow.position.set(450, 150);
@@ -47,7 +32,9 @@ const shadow = new PIXI.shadows.Shadow(900, 1);
 shadow.pointCount = 1;
 shadow.overlayLightLength = 1000;
 shadow.intensity = 3;
-// shadow.position.set(450, 150);
+shadow.ambientLight= 1;
+shadow.position.set(450, 150);
+
 world.addChild(shadow);
 
 

@@ -101,8 +101,6 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_down_by(movement_speed);
-    // this.entity.sprite.children[0].position.x = this.entity.sprite.position.x
-    // this.entity.sprite.children[0].position.y = this.entity.sprite.position.y
 
     shadow.position.copy(this.entity.sprite);
     world.y -= movement_speed;

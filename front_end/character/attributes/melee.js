@@ -1,22 +1,23 @@
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
+const { radian       } = require('../../utils/math');
 
 class Melee {
-  constructor(weapon) {
+  constructor(entity) {
     this.name = 'melee';
-
-    this.weapon = weapon;
+    this.entity = entity;
+    this.melee_weapon = entity.inventory.melee;
   }
 
-  attack_from_to(attacker, target) {
-    attacker.inventory.equip_weapon_by_name(this.weapon);
-    attacker.animation.weapon =
-      attacker.inventory.equipped_weapon.animation_name;
+  attack(target) {
+    this.entity.inventory.equip_weapon_by_name(this.melee_weapon.name);
 
-    attacker.animation.attack();
+    this.entity.sprite.rotation = radian(target.sprite, this.entity.sprite);
 
-    melee_attack(attacker, target);
+    this.entity.animation.attack();
+
+    melee_attack(this.entity, target);
   }
 }
 

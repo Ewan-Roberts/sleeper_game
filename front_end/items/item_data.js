@@ -271,7 +271,7 @@ const items = [
 ];
 
 function get_random_items(max) {
-  const number_of_items_to_return = generate_number_between_min_and_max(1, max|0);
+  const number_of_items_to_return = generate_number_between_min_and_max(1, max|2);
 
   const item_array = [];
 
@@ -284,12 +284,14 @@ function get_random_items(max) {
 
 const get_item = name => {
   let found_item = items.find(item => item.name === name);
+  console.log(name)
+  console.log(found_item)
 
   if(!found_item) {
     found_item = items.find(item => item.item_name === name);
   }
 
-  if(!found_item) throw new Error('No item found for ' + name);
+  if(!found_item) throw new Error('No item found for ' + JSON.stringify( name ));
 
   return found_item;
 };

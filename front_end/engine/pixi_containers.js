@@ -68,9 +68,7 @@ cutscene_container.zIndex = close;
 
 const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
-
 gui_container.zIndex = very_close;
-
 
 const dialog_container = new PIXI.Container();
 dialog_container.name = 'dialog_container';
@@ -101,6 +99,7 @@ world.addChild(
 world.updateLayersOrder();
 
 module.exports = {
+  background_container,
   collision_container,
   critter_container,
   gui_container,

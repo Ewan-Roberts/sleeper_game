@@ -292,6 +292,11 @@ class Rodent {
     this.sprite.play();
     this.state = action;
   }
+
+  kill() {
+    this.switch('dead');
+  }
+
 }
 
 module.exports = {
@@ -328,44 +333,66 @@ class Archer extends Enemy {
   constructor(enemy) {
     super();
     this.name = 'enemy';
-    this.add_component(new Melee('rusty_knife'));
-    this.add_component(new Range('old_bow'));
-    this.add_component(new Lootable(this));
+    //this is dependancy for ranged and melee
     this.add_component(new Inventory());
+    this.inventory.add_ranged_weapon_by_name('dev_bow');
+    this.inventory.add_melee_weapon_by_name('rusty_knife');
+    this.add_component(new Melee(this));
+    this.add_component(new Range(this));
+    //----- only hard dependancy
+
+    this.add_component(new Lootable(this));
     this.enemy = enemy;
-    this.logic = timer.createTimer(800);
-    this.logic.repeat = 20;
-    this.logic.expire = true;
+    this._logic = timer.createTimer(800);
+    this._logic.repeat = 20;
+    this._logic.expire = true;
 
     Entity_Container.add(this);
   }
 
-  stop_moving() {
+  _stop_moving() {
+    this.animation.kill();
+
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
 
     tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
   }
 
-  walk_to_enemy() {
+  _walk_to_enemy() {
     this.animation.walk();
 
     PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
   }
 
+
   logic_start() {
-    this.logic.start();
+    this._logic.start();
     this.animation.ready_weapon();
 
-    this.logic.on('repeat', () => {
+    this._logic.on('repeat', () => {
+
+      if(!this.vitals.alive) return this._stop_moving();
+
+      const distance = distance_between_points(this.enemy.sprite, this.sprite);
+
+      if(distance < 220) {
+        if(!this.enemy.loot) return;
+
+        this.animation.idle();
+        this.enemy.loot.populate();
+        this.enemy.loot.show();
+        this.enemy.loot.items.forEach(item => this.loot.items.push(item));
+        this.enemy.remove_component('loot');
+      }
+
+      if(!this.enemy.vitals.alive) return this._walk_to_enemy();
+
       // shoot thorugh walls
       //const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
       //if(can_see_enemy){
-      this.stop_moving();
+      // this.stop_moving();
 
-      const target_at_range =
-        distance_between_points(this.enemy.sprite, this.sprite) > 200;
-
-      if(target_at_range) return this.range.attack_from_to(this, this.enemy);
+      if(distance > 200) return this.range.attack(this.enemy);
 
       return this.melee.attack_from_to(this, this.enemy);
       //}
@@ -373,11 +400,17 @@ class Archer extends Enemy {
       //return this.walk_to_enemy();
     });
 
-    this.logic.on('end', () => this.animation.idle());
+    this._logic.on('stop', () => {
+      console.log('i have been stopped');
+    });
+
+    this._logic.on('end', () => {
+      console.log('i end');
+    });
   }
 
   logic_stop() {
-    this.logic.stop();
+    this._logic.stop();
   }
 }
 
@@ -393,14 +426,28 @@ const { get_item } = require('../../items/item_data');
 
 class Inventory {
   constructor() {
-    this.name     = 'inventory';
-    this.equipped = null;
+    this.name          = 'inventory';
+    this.equipped      = null;
+    this.ranged_weapon = null;
+    this.melee_weapon  = null;
   }
 
   equip_weapon_by_name(name) {
     const weapon = get_item(name);
 
     this.equip_weapon(weapon);
+  }
+
+  add_ranged_weapon_by_name(name) {
+    const weapon = get_item(name);
+
+    this.ranged_weapon = weapon;
+  }
+
+  add_melee_weapon_by_name(name) {
+    const weapon = get_item(name);
+
+    this.melee_weapon = weapon;
   }
 
   equip_weapon(item) {
@@ -592,8 +639,6 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_down_by(movement_speed);
-    // this.entity.sprite.children[0].position.x = this.entity.sprite.position.x
-    // this.entity.sprite.children[0].position.y = this.entity.sprite.position.y
 
     shadow.position.copy(this.entity.sprite);
     world.y -= movement_speed;
@@ -657,29 +702,32 @@ class Lootable {
     this.name     = 'loot';
     this.entity   = entity;
     this.equipped = null;
-    this.slots    = [];
     this.looted   = false;
+    this.items    = [];
   }
 
-  show() {
-    if(!this.looted) {
-      this.loot = get_random_items();
+  populate() {
+    this.items = get_random_items();
+  }
 
-      icon.add_image_at('bunny', this.entity.sprite);
-    }
-
-    this.entity.sprite.interactive = true;
-    this.entity.sprite.buttonMode = true;
-    this.entity.sprite.on('click', () => {
-      console.log('cickl lcik ')
-      View_Inventory.create_populated_slots(this.entity.sprite, this.loot);
-
+  create_icon() {
+    const icon1 = new icon('bunny', this.entity.sprite);
+    icon1.icon.on('click', () => {
       this.entity.sprite.buttonMode = false;
       this.looted = true;
 
-      icon.remove();
+      icon1.remove();
     });
   }
+
+  show() {
+    View_Inventory.create_populated_slots(this.entity.sprite, this.items);
+  }
+
+  get() {
+    return this.items;
+  }
+
 }
 
 module.exports = {
@@ -690,22 +738,23 @@ module.exports = {
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
+const { radian       } = require('../../utils/math');
 
 class Melee {
-  constructor(weapon) {
+  constructor(entity) {
     this.name = 'melee';
-
-    this.weapon = weapon;
+    this.entity = entity;
+    this.melee_weapon = entity.inventory.melee;
   }
 
-  attack_from_to(attacker, target) {
-    attacker.inventory.equip_weapon_by_name(this.weapon);
-    attacker.animation.weapon =
-      attacker.inventory.equipped_weapon.animation_name;
+  attack(target) {
+    this.entity.inventory.equip_weapon_by_name(this.melee_weapon.name);
 
-    attacker.animation.attack();
+    this.entity.sprite.rotation = radian(target.sprite, this.entity.sprite);
 
-    melee_attack(attacker, target);
+    this.entity.animation.attack();
+
+    melee_attack(this.entity, target);
   }
 }
 
@@ -713,7 +762,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":34}],11:[function(require,module,exports){
+},{"../../engine/melee":34,"../../utils/math":60}],11:[function(require,module,exports){
 'use strict';
 
 const { gui_container              } = require('../../engine/pixi_containers');
@@ -892,26 +941,25 @@ module.exports = {
 
 const { shoot_arrow      } = require('../../engine/ranged');
 const { View_Aiming_Line } = require('../../view/view_aiming_line');
-const { radian } = require('../../utils/math');
+const { radian           } = require('../../utils/math');
 
 class Range {
-  constructor(weapon) {
+  constructor(entity) {
     this.name   = 'range';
-
-    this.weapon = weapon;
+    this.entity = entity;
+    this.ranged_weapon = entity.inventory.ranged;
   }
 
-  attack_from_to(attacker, target) {
-    attacker.inventory.equip_weapon_by_name(this.weapon);
+  attack(target) {
+    this.entity.inventory.equip_weapon_by_name(this.ranged_weapon.name);
 
-    attacker.animation.weapon = attacker.inventory.equipped_weapon.animation_name;
-    attacker.animation.ready_weapon();
+    this.entity.animation.ready_weapon();
 
-    attacker.sprite.rotation = radian(target.sprite, attacker.sprite);
+    this.entity.sprite.rotation = radian(target.sprite, this.entity.sprite);
 
-    View_Aiming_Line.add_between_sprites(target.sprite, attacker.sprite);
+    View_Aiming_Line.add_between_sprites(target.sprite, this.entity.sprite);
 
-    shoot_arrow(attacker, target);
+    shoot_arrow(this.entity, target);
   }
 }
 
@@ -1073,8 +1121,8 @@ class Vitals {
   kill() {
     if(this.entity.name === 'player') Game.over();
 
-    if('loot'  in this.entity) this.entity.loot.show();
-    if('logic' in this.entity) this.entity.logic.stop();
+    if('loot'  in this.entity) this.entity.loot.populate();
+    //if('logic' in this.entity) this.entity.logic.stop();
 
     this.entity.animation.kill();
     this.status = 'dead';
@@ -1351,6 +1399,7 @@ const { Rodent    } = require('../animations/rat');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Prey      } = require('../attributes/prey');
+const { Lootable  } = require('../attributes/lootable');
 
 class Rat extends Character {
   constructor() {
@@ -1360,10 +1409,10 @@ class Rat extends Character {
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
 
     this.add_component(new Rodent(this.sprite));
-    this.add_component(new Vitals());
+    this.add_component(new Vitals(this));
     this.add_component(new Prey(this));
     this.add_component(new Inventory());
-    this.inventory.populate_random_inventory();
+    this.add_component(new Lootable(this));
 
     critter_container.addChild(this.sprite);
   }
@@ -1396,7 +1445,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/pixi_containers":36,"../animations/rat":2,"../attributes/inventory":7,"../attributes/prey":13,"../attributes/vitals":17,"../character_model":18,"pixi.js":260}],24:[function(require,module,exports){
+},{"../../engine/pixi_containers":36,"../animations/rat":2,"../attributes/inventory":7,"../attributes/lootable":9,"../attributes/prey":13,"../attributes/vitals":17,"../character_model":18,"pixi.js":260}],24:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -1679,7 +1728,7 @@ const { visual_effects_container } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 
 class icon {
-  static add_image_at(image, point) {
+  constructor(image, point) {
     this.icon = PIXI.Sprite.fromFrame(image);
     this.icon.anchor.set(0.5);
     this.icon.alpha  = 1;
@@ -1689,15 +1738,14 @@ class icon {
     this.icon.interactive = true;
     this.icon.buttonMode = true;
     this.icon.zIndex = -9;
-
-    visual_effects_container.addChild(this.icon);
-    world.updateLayersOrder();
     this.icon.on('click', ()=> {
       console.log('click');
     });
+
+    visual_effects_container.addChild(this.icon);
   }
 
-  static remove() {
+  remove() {
     visual_effects_container.removeChild(this.icon);
   }
 
@@ -2231,9 +2279,7 @@ cutscene_container.zIndex = close;
 
 const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
-
 gui_container.zIndex = very_close;
-
 
 const dialog_container = new PIXI.Container();
 dialog_container.name = 'dialog_container';
@@ -2264,6 +2310,7 @@ world.addChild(
 world.updateLayersOrder();
 
 module.exports = {
+  background_container,
   collision_container,
   critter_container,
   gui_container,
@@ -2361,10 +2408,12 @@ function shoot_arrow_with_collision(origin, point, power = 2000) {
  * @params {number}    - power
  */
 
-function shoot_arrow(origin, target, power = 2000) {
+function shoot_arrow(origin, target) {
+  const { weapon_speed } = origin.inventory;
+
   const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
   const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
-  const arrow_tween = create_arrow_tween(arrow, power, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
   const { weapon_damage } = origin.inventory;
 
   arrow_tween.on('update', () => {
@@ -2474,25 +2523,10 @@ require('pixi-shadows');
 
 const app = require('./app');
 
-function createShadowSprite(texture, shadowTexture) {
-  const container = new PIXI.Container(); // This represents your final 'sprite'
-
-  // Things that create shadows
-  if (shadowTexture) {
-    const shadowCastingSprite = new PIXI.Sprite(shadowTexture);
-    shadowCastingSprite.parentGroup = PIXI.shadows.casterGroup;
-    container.addChild(shadowCastingSprite);
-  }
-
-  // The things themselves (their texture)
-  const sprite = new PIXI.Sprite(texture);
-  container.addChild(sprite);
-
-  return container;
-}
-
-
 const world = PIXI.shadows.init(app);
+//FOR TESTING
+PIXI.shadows.filter.ambientLight = 1;
+
 // Create a light that casts shadows
 // const shadow = new PIXI.shadows.Shadow(700, 1);
 // shadow.position.set(450, 150);
@@ -2513,7 +2547,9 @@ const shadow = new PIXI.shadows.Shadow(900, 1);
 shadow.pointCount = 1;
 shadow.overlayLightLength = 1000;
 shadow.intensity = 3;
-// shadow.position.set(450, 150);
+shadow.ambientLight= 1;
+shadow.position.set(450, 150);
+
 world.addChild(shadow);
 
 
@@ -3136,7 +3172,7 @@ const items = [
 ];
 
 function get_random_items(max) {
-  const number_of_items_to_return = generate_number_between_min_and_max(1, max|0);
+  const number_of_items_to_return = generate_number_between_min_and_max(1, max|2);
 
   const item_array = [];
 
@@ -3149,12 +3185,14 @@ function get_random_items(max) {
 
 const get_item = name => {
   let found_item = items.find(item => item.name === name);
+  console.log(name)
+  console.log(found_item)
 
   if(!found_item) {
     found_item = items.find(item => item.item_name === name);
   }
 
-  if(!found_item) throw new Error('No item found for ' + name);
+  if(!found_item) throw new Error('No item found for ' + JSON.stringify( name ));
 
   return found_item;
 };
@@ -8672,6 +8710,7 @@ module.exports={ "columns":20,
 const PIXI = require('pixi.js');
 
 // const { viewport  } = require('../../engine/viewport');
+const { world } = require('../../engine/viewport');
 const { Player    } = require('../../character/types/player.js');
 const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
@@ -8697,6 +8736,7 @@ class DevelopmentLevel {
   constructor() {
     const player = new Player();
     player.set_position({ x: 1000, y: 400});
+
     //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.equip_weapon_by_name('dev_bow');
@@ -8720,13 +8760,19 @@ class DevelopmentLevel {
     //View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
     //inventory_test.populate_random_inventory(player);
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
-    const archer = new Archer(player);
-    archer.sprite.position.set(1550,1000);
 
-    archer.inventory.equip_weapon_by_name('old_bow');
+    const rat = new Rat();
+    rat.set_position({x: 900, y: 1200});
+    rat.lootable_on_death();
+    rat.animation.switch('move');
+
+    const archer = new Archer(rat);
+    archer.sprite.position.set(1550,1000);
+    console.log(archer.inventory);
+
     // archer.raycasting.add(this.level.segments);
 
-    //archer.logic_start();
+    archer.logic_start();
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();
@@ -8735,12 +8781,8 @@ class DevelopmentLevel {
     //enemy.animation.weapon = 'knife';
     //enemy.inventory.equip_weapon(knife);
 
-    //const rat = new Rat();
-    //rat.set_position({x: 900, y: 1200});
-    //rat.lootable_on_death();
-    //rat.animation.switch('move');
 
-    //rat.prey.is_prey_to(enemy);
+    rat.prey.is_prey_to(archer);
     //rat.prey.is_prey_to(player);
   }
 
@@ -8837,7 +8879,7 @@ module.exports = {
 
 
 
-},{"../../character/archetypes":3,"../../character/attributes/inventory":7,"../../character/types/enemy":20,"../../character/types/player.js":22,"../../character/types/rat":23,"../../cutscene/intro.js":28,"../../items/Note":44,"../../items/back_pack":45,"../../items/chest":46,"../../items/fire_place":47,"../../items/item_data":48,"../../view/view_aiming_line":63,"../../view/view_inventory":64,"../../view/view_player_inventory":65,"../bedroom/bedroom_map_output.json":51,"../bedroom/bedroom_map_tiled.json":52,"../debug/debug_map_output.json":53,"../debug/debug_map_tiles.json":54,"../level_utils":57,"pixi.js":260}],56:[function(require,module,exports){
+},{"../../character/archetypes":3,"../../character/attributes/inventory":7,"../../character/types/enemy":20,"../../character/types/player.js":22,"../../character/types/rat":23,"../../cutscene/intro.js":28,"../../engine/viewport":42,"../../items/Note":44,"../../items/back_pack":45,"../../items/chest":46,"../../items/fire_place":47,"../../items/item_data":48,"../../view/view_aiming_line":63,"../../view/view_inventory":64,"../../view/view_player_inventory":65,"../bedroom/bedroom_map_output.json":51,"../bedroom/bedroom_map_tiled.json":52,"../debug/debug_map_output.json":53,"../debug/debug_map_tiles.json":54,"../level_utils":57,"pixi.js":260}],56:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');
@@ -8924,7 +8966,10 @@ module.exports = {
 
 const PIXI = require('pixi.js');
 const { world    } = require('../engine/shadows');
-const { collision_container } = require('../engine/pixi_containers');
+const {
+  collision_container,
+  background_container,
+} = require('../engine/pixi_containers');
 
 const {
   PathFind,
@@ -8965,10 +9010,12 @@ class Level {
     this.background_image.width = tile_data.imagewidth;
     this.background_image.height = tile_data.imageheight;
     this.background_image.opacity = 0.1;
+    this.background_image.zIndex = 100;
 
+    world.updateLayersOrder();
     this.add_to_segments(this.background_image);
 
-    world.addChild(this.background_image);
+    background_container.addChild(this.background_image);
   }
 
   render_walls(wall_array) {
@@ -8987,7 +9034,7 @@ class Level {
       wall.anchor.set(0);
       this.add_to_segments(wall);
 
-      world.addChild(wall);
+      collision_container.addChild(wall);
       //TODO remove duplicate
       const wall1 = new PIXI.Sprite(wall_texture);
       wall1.position.set(wall_data.x, wall_data.y);
@@ -8995,8 +9042,7 @@ class Level {
       wall1.height = wall_data.height;
       wall1.anchor.set(0);
 
-      world.addChild(wall1);
-
+      collision_container.addChild(wall1);
 
       collision_container.addChild(wall);
     });
@@ -9446,7 +9492,7 @@ module.exports = {
 'use strict';
 
 const PIXI = require('pixi.js');
-const { gui_container } = require('../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 
 class View_Inventory {
   static populate(image_name, slot) {
@@ -9465,13 +9511,11 @@ class View_Inventory {
     if(!point) throw new Error('needs a point: ' + point);
 
     this.slot_container = new PIXI.Container();
-    this.slot_container.position.set(point.x + 200, point.y);
+    this.slot_container.position.set(point.x - 200, point.y);
 
     for(let i = 0; i <= slots; i++) {
 
-      const texture = PIXI.Texture.fromFrame('item_slot');
-      texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-      const sprite  = PIXI.Sprite.fromFrame(texture);
+      const sprite  = PIXI.Sprite.fromFrame('item_slot');
       sprite.width  = 100;
       sprite.height = 100;
       sprite.x      = i * 100;
@@ -9480,7 +9524,7 @@ class View_Inventory {
       this.slot_container.addChild(sprite);
     }
 
-    gui_container.addChild(this.slot_container);
+    visual_effects_container.addChild(this.slot_container);
   }
 
   static create_populated_slots(point, loot) {

@@ -27,44 +27,66 @@ class Archer extends Enemy {
   constructor(enemy) {
     super();
     this.name = 'enemy';
-    this.add_component(new Melee('rusty_knife'));
-    this.add_component(new Range('old_bow'));
-    this.add_component(new Lootable(this));
+    //this is dependancy for ranged and melee
     this.add_component(new Inventory());
+    this.inventory.add_ranged_weapon_by_name('dev_bow');
+    this.inventory.add_melee_weapon_by_name('rusty_knife');
+    this.add_component(new Melee(this));
+    this.add_component(new Range(this));
+    //----- only hard dependancy
+
+    this.add_component(new Lootable(this));
     this.enemy = enemy;
-    this.logic = timer.createTimer(800);
-    this.logic.repeat = 20;
-    this.logic.expire = true;
+    this._logic = timer.createTimer(800);
+    this._logic.repeat = 20;
+    this._logic.expire = true;
 
     Entity_Container.add(this);
   }
 
-  stop_moving() {
+  _stop_moving() {
+    this.animation.kill();
+
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
 
     tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
   }
 
-  walk_to_enemy() {
+  _walk_to_enemy() {
     this.animation.walk();
 
     PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
   }
 
+
   logic_start() {
-    this.logic.start();
+    this._logic.start();
     this.animation.ready_weapon();
 
-    this.logic.on('repeat', () => {
+    this._logic.on('repeat', () => {
+
+      if(!this.vitals.alive) return this._stop_moving();
+
+      const distance = distance_between_points(this.enemy.sprite, this.sprite);
+
+      if(distance < 220) {
+        if(!this.enemy.loot) return;
+
+        this.animation.idle();
+        this.enemy.loot.populate();
+        this.enemy.loot.show();
+        this.enemy.loot.items.forEach(item => this.loot.items.push(item));
+        this.enemy.remove_component('loot');
+      }
+
+      if(!this.enemy.vitals.alive) return this._walk_to_enemy();
+
       // shoot thorugh walls
       //const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
       //if(can_see_enemy){
-      this.stop_moving();
+      // this.stop_moving();
 
-      const target_at_range =
-        distance_between_points(this.enemy.sprite, this.sprite) > 200;
-
-      if(target_at_range) return this.range.attack_from_to(this, this.enemy);
+      if(distance > 200) return this.range.attack(this.enemy);
 
       return this.melee.attack_from_to(this, this.enemy);
       //}
@@ -72,11 +94,17 @@ class Archer extends Enemy {
       //return this.walk_to_enemy();
     });
 
-    this.logic.on('end', () => this.animation.idle());
+    this._logic.on('stop', () => {
+      console.log('i have been stopped');
+    });
+
+    this._logic.on('end', () => {
+      console.log('i end');
+    });
   }
 
   logic_stop() {
-    this.logic.stop();
+    this._logic.stop();
   }
 }
 

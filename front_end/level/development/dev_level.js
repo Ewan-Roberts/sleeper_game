@@ -3,6 +3,7 @@
 const PIXI = require('pixi.js');
 
 // const { viewport  } = require('../../engine/viewport');
+const { world } = require('../../engine/viewport');
 const { Player    } = require('../../character/types/player.js');
 const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
@@ -28,6 +29,7 @@ class DevelopmentLevel {
   constructor() {
     const player = new Player();
     player.set_position({ x: 1000, y: 400});
+
     //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.equip_weapon_by_name('dev_bow');
@@ -51,13 +53,19 @@ class DevelopmentLevel {
     //View_Inventory.create_inventory_slots_at({x: 1000, y: 1000}, 3);
     //inventory_test.populate_random_inventory(player);
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
-    const archer = new Archer(player);
-    archer.sprite.position.set(1550,1000);
 
-    archer.inventory.equip_weapon_by_name('old_bow');
+    const rat = new Rat();
+    rat.set_position({x: 900, y: 1200});
+    rat.lootable_on_death();
+    rat.animation.switch('move');
+
+    const archer = new Archer(rat);
+    archer.sprite.position.set(1550,1000);
+    console.log(archer.inventory);
+
     // archer.raycasting.add(this.level.segments);
 
-    //archer.logic_start();
+    archer.logic_start();
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();
@@ -66,12 +74,8 @@ class DevelopmentLevel {
     //enemy.animation.weapon = 'knife';
     //enemy.inventory.equip_weapon(knife);
 
-    //const rat = new Rat();
-    //rat.set_position({x: 900, y: 1200});
-    //rat.lootable_on_death();
-    //rat.animation.switch('move');
 
-    //rat.prey.is_prey_to(enemy);
+    rat.prey.is_prey_to(archer);
     //rat.prey.is_prey_to(player);
   }
 
