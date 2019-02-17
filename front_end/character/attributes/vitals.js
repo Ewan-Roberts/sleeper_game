@@ -9,7 +9,7 @@ class Vitals {
     this.name           ='vitals';
     this.movement_speed = 15;
     this.power          = 5000;
-    this.health         = 100;
+    this.health         = 140;
     this.food           = 40;
     this.water          = 20;
     this.heat           = 90;
@@ -18,13 +18,14 @@ class Vitals {
   }
 
   _dead(damage) {
-    return this.health -= damage < 0;
+    this.health -= damage;
+    return this.health < 0;
   }
 
   kill() {
     if(this.entity.name === 'player') Game.over();
 
-    if('loot'  in this.entity) this.entity.loot.populate();
+    // if('loot'  in this.entity) this.entity.loot.populate();
     //if('logic' in this.entity) this.entity.logic.stop();
 
     this.entity.animation.kill();
@@ -34,7 +35,6 @@ class Vitals {
   damage(damage) {
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
-
     const is_dead = this._dead(damage);
 
     if(is_dead) {

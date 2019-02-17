@@ -3,7 +3,7 @@
 const PIXI = require('pixi.js');
 
 // const { viewport  } = require('../../engine/viewport');
-const { world } = require('../../engine/viewport');
+const { world } = require('../../engine/shadows');
 const { Player    } = require('../../character/types/player.js');
 const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
@@ -17,13 +17,13 @@ const { get_item_by_name } = require('../../items/item_data');
 const { Level           } = require('../level_utils');
 const { intro_cutscene  } = require('../../cutscene/intro.js');
 const { Enemy           } = require('../../character/types/enemy');
-const { Rat             } = require('../../character/types/rat');
+const { Rat             } = require('../../character/archetypes/rat');
 const { Inventory       } = require('../../character/attributes/inventory');
 const { View_Inventory  } = require('../../view/view_inventory');
 const { View_HUD        } = require('../../view/view_player_inventory');
 const { View_Aiming_Line } = require('../../view/view_aiming_line');
 
-const { Archer } = require('../../character/archetypes');
+const { Archer } = require('../../character/archetypes/archer');
 // THIS IS ALL FOR TESTING
 class DevelopmentLevel {
   constructor() {
@@ -57,16 +57,17 @@ class DevelopmentLevel {
     //inventory_test.set_inventory_position({ x: 1000, y: 1000 });
 
     const rat = new Rat();
-    rat.set_position({x: 900, y: 1200});
+    rat.set_position({x: 900, y: 1100});
     rat.animation.switch('move');
 
+    // TODO: remove from the input of a class to enemy_of
     const archer = new Archer(rat);
     archer.sprite.position.set(1550,1000);
-    // archer.raycasting.add(this.level.segments);
-
-    rat.prey.is_prey_to(archer);
-
     archer.logic_start();
+
+    // archer.raycasting.add(this.level.segments);
+    // rat.prey.is_prey_to(archer);
+
     //rat.prey.is_prey_to(player);
   }
 

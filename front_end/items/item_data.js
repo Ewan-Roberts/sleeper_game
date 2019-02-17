@@ -63,13 +63,28 @@ const items = [
     image_name:     'bunny',
   },
 
+  {
+    name:        'rat_teeth',
+    id:          1004,
+    rank:        1,
+    cost:        80,
+    category:    'primary',
+    range:       20,
+    damage:      20,
+    speed:       10,
+    condition:   100,
+
+    visual_name: 'rat teeth',
+    description: 'the gnashing teeth of a diseased rat',
+    image_name:  'bunny',
+  },
 
   {
     name:       'wrench_blade',
     id:         1002,
     rank:       1,
     cost:       80,
-    category:       'primary',
+    category:   'primary',
     range:      20,
     damage:     2,
     speed:      1,

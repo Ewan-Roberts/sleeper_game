@@ -22,7 +22,7 @@ class Lootable {
     button.element.on('click', () => {
       this.entity.sprite.buttonMode = false;
       this.looted = true;
-
+      this.show();
       button.remove();
     });
   }
