@@ -27,28 +27,6 @@ class Rat extends Character {
     critter_container.addChild(this.sprite);
   }
 
-  lootable_on_death() {
-    this.sprite.kill = () => {
-      this.sprite.stop();
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.texture = this.sprite.animations.dead;
-      this.vitals.status = 'dead';
-
-      const get_tween = PIXI.tweenManager.getTweensForTarget(this.sprite);
-      if(get_tween[0]) {
-        get_tween[0].stop();
-      }
-
-      this.lootable();
-    };
-  }
-
-  lootable() {
-    this.sprite.click = () => {
-      this.set_inventory_position(this.sprite);
-    };
-  }
 }
 
 module.exports = {

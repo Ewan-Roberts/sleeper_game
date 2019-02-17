@@ -32,6 +32,8 @@ class DevelopmentLevel {
 
     //player.with_light();
     // dev bow for testing one hit kill
+    player.inventory.add_ranged_weapon_by_name('dev_bow');
+    player.inventory.add_melee_weapon_by_name('rusty_knife');
     player.inventory.equip_weapon_by_name('dev_bow');
 
     View_HUD.add_head('old_bandana');
@@ -56,26 +58,15 @@ class DevelopmentLevel {
 
     const rat = new Rat();
     rat.set_position({x: 900, y: 1200});
-    rat.lootable_on_death();
     rat.animation.switch('move');
 
     const archer = new Archer(rat);
     archer.sprite.position.set(1550,1000);
-    console.log(archer.inventory);
-
     // archer.raycasting.add(this.level.segments);
 
-    archer.logic_start();
-
-    //const knife = get_item_by_name('rusty_knife');
-    //const enemy = new Enemy();
-    //enemy.sprite.position.set(1550,1000);
-    //enemy.with_light();
-    //enemy.animation.weapon = 'knife';
-    //enemy.inventory.equip_weapon(knife);
-
-
     rat.prey.is_prey_to(archer);
+
+    archer.logic_start();
     //rat.prey.is_prey_to(player);
   }
 

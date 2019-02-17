@@ -123,16 +123,6 @@ class Level {
     friend.add_state_handling();
   }
 
-  create_network_player() {
-    const player_details = {
-      name: 'Nino',
-      x: 800,
-      y: 800,
-    };
-
-    //const network_player = new NetworkCharacter(player_details);
-    //network_player.network_update();
-  }
 
 
   create_enemy(location, path) {
@@ -140,8 +130,6 @@ class Level {
 
     enemy.set_position({ x: location.x, y: location.y });
     enemy.create_direction_line();
-    enemy.add_sight_line();
-    enemy.add_influence_box();
     enemy.with_light();
     enemy.add_raycasting(this.segments);
 

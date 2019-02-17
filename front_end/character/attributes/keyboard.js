@@ -82,6 +82,7 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_up_by(movement_speed);
+    //TODO remove this bind
     shadow.position.copy(this.entity.sprite);
     world.y += movement_speed;
   }

@@ -7,7 +7,7 @@ class Melee {
   constructor(entity) {
     this.name = 'melee';
     this.entity = entity;
-    this.melee_weapon = entity.inventory.melee;
+    this.melee_weapon = entity.inventory.melee_weapon;
   }
 
   attack(target) {

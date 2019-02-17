@@ -65,7 +65,11 @@ class Archer extends Enemy {
 
     this._logic.on('repeat', () => {
 
-      if(!this.vitals.alive) return this._stop_moving();
+      if(!this.vitals.alive) {
+        this.loot.create_icon();
+        this._logic.stop();
+        return this._stop_moving();
+      }
 
       const distance = distance_between_points(this.enemy.sprite, this.sprite);
 

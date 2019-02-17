@@ -25,7 +25,7 @@ class Player extends Character {
     this.add_component(new Predator(this));
     this.add_component(new Status());
     this.add_component(new Inventory());
-    // this.sprite.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
     world.addChild(this.sprite);
   }
 }

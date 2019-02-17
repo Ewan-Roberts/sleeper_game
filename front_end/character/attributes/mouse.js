@@ -14,19 +14,19 @@ class Mouse {
     this.name   = 'mouse';
     this.entity = entity;
 
-    world.on('pointerup',   event => this.mouse_up(event));
-    world.on('pointermove', event => this.mouse_move(event));
-    world.on('pointerdown', event => this.mouse_down(event));
+    world.on('pointerup',   event => this._mouse_up(event));
+    world.on('pointermove', event => this._mouse_move(event));
+    world.on('pointerdown', event => this._mouse_down(event));
   }
 
-  mouse_up(event) {
+  _mouse_up(event) {
     if(!this.entity.mouse) return;
-
-    this.cone_timer.stop();
-    this.entity.animation.idle();
 
     const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type, weapon_speed } = this.entity.inventory;
+
+    this.cone_timer.stop();
+    this.entity.animation.idle();
 
     switch(ammo_type) {
       case 'arrow':
@@ -35,28 +35,26 @@ class Mouse {
     }
   }
 
-  mouse_down(event) {
+  _mouse_down(event) {
     if(!this.entity.mouse) return;
 
     const mouse_position = event.data.getLocalPosition(world);
-    const direction      = radian(mouse_position, this.entity.sprite);
+    const rotation       = radian(mouse_position, this.entity.sprite);
 
     this.entity.animation.ready_weapon();
-    this.entity.sprite.rotation = direction;
+    this.entity.sprite.rotation = rotation;
 
     this.cone_timer = View_Aiming_Cone.start_at(this.entity.sprite);
-
     this.cone_timer.start();
   }
 
-  mouse_move(event) {
+  _mouse_move(event) {
     if(!this.entity.mouse) return;
-    const mouse_position = event.data.getLocalPosition(world);
 
-    const rotation = radian(mouse_position, this.entity.sprite);
+    const mouse_position = event.data.getLocalPosition(world);
+    const rotation       = radian(mouse_position, this.entity.sprite);
 
     this.entity.sprite.rotation = rotation;
-
     cone.rotation = rotation - 1.57;
   }
 }

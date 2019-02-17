@@ -17,8 +17,8 @@ class Vitals {
     this.status         = 'alive';
   }
 
-  dead(damage) {
-    return this.health - damage < 0;
+  _dead(damage) {
+    return this.health -= damage < 0;
   }
 
   kill() {
@@ -35,25 +35,17 @@ class Vitals {
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
 
-    const is_dead = this.dead(damage);
+    const is_dead = this._dead(damage);
 
     if(is_dead) {
       blood.add_at_point(this.entity.sprite);
 
       this.kill();
     }
-
-    this.health -= damage;
   }
 
   get alive() {
     return (this.status === 'alive');
-  }
-
-  increase_food(number) {
-    if(this.food + number < 100 ) {
-      this.food += number;
-    }
   }
 }
 

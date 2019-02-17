@@ -8,7 +8,7 @@ class Range {
   constructor(entity) {
     this.name   = 'range';
     this.entity = entity;
-    this.ranged_weapon = entity.inventory.ranged;
+    this.ranged_weapon = entity.inventory.ranged_weapon;
   }
 
   attack(target) {

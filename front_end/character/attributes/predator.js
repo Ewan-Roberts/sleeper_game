@@ -12,10 +12,10 @@ class Predator {
   }
 
   is_predator_to(prey) {
-    const predator          = this.entity;
-    const { speed, damage } = predator.inventory.equipped_weapon;
+    const predator = this.entity;
+    const { weapon_speed, weapon_damage } = predator.inventory.equipped_weapon;
 
-    const attack_timer  = timer.createTimer(speed);
+    const attack_timer  = timer.createTimer(weapon_speed);
     attack_timer.repeat = 10;
     attack_timer.on('repeat', () => {
       if(!prey.vitals.alive){
@@ -23,7 +23,7 @@ class Predator {
         predator.sprite.stop();
       }
 
-      prey.vitals.damage(damage);
+      prey.vitals.damage(weapon_damage);
     }).start();
 
     const movement_timer  = timer.createTimer(1000);
