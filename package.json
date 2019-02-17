@@ -30,7 +30,6 @@
     "pixi-shadows": "0.0.7",
     "pixi-timer": "^1.0.1",
     "pixi-tween": "^0.2.0",
-    "pixi-viewport": "^3.7.0",
     "pixi.js": "^4.8.5",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",

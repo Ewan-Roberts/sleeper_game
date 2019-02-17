@@ -53,7 +53,7 @@ class Grid {
 
       if(tiles_object.tileproperties.hasOwnProperty(i)){
         // is a wall
-        grid_cell.alpha = 0.5;
+        grid_cell.alpha = 0.1;
         grid_cell.type = 'wall';
         binary_line.push(1);
       } else {

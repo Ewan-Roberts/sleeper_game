@@ -1692,9 +1692,8 @@ module.exports = {
 
 const PIXI          = require('pixi.js');
 const { ticker    } = require('../engine/ticker');
-const { viewport  } = require('../engine/viewport.js');
-
-const cutscene_container = viewport.getChildByName('cutscene_container');
+const { world } = require('../engine/shadows');
+const { cutscene_container } = require('../engine/pixi_containers');
 
 class visual_effects {
 
@@ -1726,11 +1725,11 @@ class visual_effects {
   static fade_screen_to_black_at_point(point) {
     const image_to_fade = PIXI.Sprite.fromFrame('black_dot');
 
-    image_to_fade.width = viewport.screenWidth;
-    image_to_fade.height = viewport.screenHeight;
+    image_to_fade.width = world.screenWidth;
+    image_to_fade.height = world.screenHeight;
     image_to_fade.anchor.set(0.5);
     image_to_fade.position.set(point.x, point.y);
-    image_to_fade.zIndex = viewport.zIndex_layer.very_close;
+    image_to_fade.zIndex = world.zIndex_layer.very_close;
 
     this.fade_out_sprite(image_to_fade);
     cutscene_container.addChild(image_to_fade);
@@ -1746,7 +1745,7 @@ module.exports = {
 
 
 
-},{"../engine/ticker":40,"../engine/viewport.js":41,"pixi.js":260}],30:[function(require,module,exports){
+},{"../engine/pixi_containers":35,"../engine/shadows":39,"../engine/ticker":40,"pixi.js":260}],30:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1852,7 +1851,7 @@ class Grid {
 
       if(tiles_object.tileproperties.hasOwnProperty(i)){
         // is a wall
-        grid_cell.alpha = 0.5;
+        grid_cell.alpha = 0.1;
         grid_cell.type = 'wall';
         binary_line.push(1);
       } else {
@@ -2397,16 +2396,19 @@ require('pixi-shadows');
 
 const app = require('./app');
 
+const shadow = new PIXI.shadows.Shadow(900, 1);
+shadow.pointCount = 1;
+shadow.overlayLightLength = 200;
+shadow.intensity = 1;
+shadow.ambientLight = 1;
+shadow.position.set(450, 150);
+
 const world = PIXI.shadows.init(app);
-//FOR TESTING
+
+//FOR TESTING make 0.5 for lighting
 PIXI.shadows.filter.ambientLight = 1;
 
-// Create a light that casts shadows
-// const shadow = new PIXI.shadows.Shadow(700, 1);
-// shadow.position.set(450, 150);
-// world.addChild(shadow);
-
-
+world.interactive = true;
 world.updateLayersOrder = function () {
   world.children.sort(function(a,b) {
     a.zIndex = a.zIndex || 0;
@@ -2415,49 +2417,7 @@ world.updateLayersOrder = function () {
   });
 };
 
-world.interactive = true;
-
-const shadow = new PIXI.shadows.Shadow(900, 1);
-shadow.pointCount = 1;
-shadow.overlayLightLength = 1000;
-shadow.intensity = 3;
-shadow.ambientLight= 1;
-shadow.position.set(450, 150);
-
 world.addChild(shadow);
-
-
-// Create some shadow casting demons
-// const demonTexture = PIXI.Texture.fromImage('bunny');
-// demonTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST; //For pixelated scaling
-
-// const demon1 = createShadowSprite(demonTexture, demonTexture);
-// demon1.position.set(100, 100);
-// demon1.scale.set(3);
-// world.addChild(demon1);
-
-// const demon2 = createShadowSprite(demonTexture, demonTexture);
-// demon2.position.set(500, 100);
-// demon2.scale.set(3);
-// world.addChild(demon2);
-
-// const demon3 = createShadowSprite(demonTexture, demonTexture);
-// demon3.position.set(300, 200);
-// demon3.scale.set(3);
-// world.addChild(demon3);
-
-// // Make the light track your mouse
-// world.interactive = true;
-// world.on("mousemove", function(event) {
-//   shadow.position.copy(event.data.global);
-// });
-
-// // Create a light point on click
-// world.on("pointerdown", function(event) {
-//   var shadow = new PIXI.shadows.Shadow(700, 0.7);
-//   shadow.position.copy(event.data.global);
-//   world.addChild(shadow);
-// });
 
 module.exports = {
   world,
@@ -2518,9 +2478,9 @@ viewport.updateLayersOrder = function () {
   });
 };
 
-module.exports = {
-  viewport,
-};
+// module.exports = {
+//   viewport,
+// };
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -8748,9 +8708,7 @@ module.exports = {
 'use strict';
 
 const PIXI         = require('pixi.js');
-const { viewport } = require('../engine/viewport');
-
-const collision_items = viewport.getChildByName('collision_items');
+const { collision_container } = require('../engine/pixi_containers');
 
 class Door {
   constructor(door_data) {
@@ -8762,7 +8720,7 @@ class Door {
     this.sprite.buttonMode = true;
     this.sprite.name = 'door';
     this.state = 'closed';
-    collision_items.addChild(this.sprite);
+    collision_container.addChild(this.sprite);
 
   }
 
@@ -8826,7 +8784,7 @@ module.exports = {
   Door,
 };
 
-},{"../engine/viewport":41,"pixi.js":260}],56:[function(require,module,exports){
+},{"../engine/pixi_containers":35,"pixi.js":260}],56:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -8874,7 +8832,7 @@ class Level {
     this.background_image.position.set(0, 0);
     this.background_image.width = tile_data.imagewidth;
     this.background_image.height = tile_data.imageheight;
-    this.background_image.opacity = 0.1;
+    this.background_image.opacity = 0;
     this.background_image.zIndex = 100;
 
     world.updateLayersOrder();
@@ -8952,6 +8910,16 @@ class Level {
     friend.add_state_handling();
   }
 
+  create_network_player() {
+    const player_details = {
+      name: 'Nino',
+      x: 800,
+      y: 800,
+    };
+
+    //const network_player = new NetworkCharacter(player_details);
+    //network_player.network_update();
+  }
 
 
   create_enemy(location, path) {
@@ -9352,7 +9320,7 @@ class icon {
   constructor(image, point) {
     this.element = PIXI.Sprite.fromFrame(image);
     this.element.anchor.set(0.5);
-    this.element.alpha  = 1;
+    this.element.alpha  = 0;
     this.element.height = 50;
     this.element.width  = 50;
     this.element.position.set(point.x +20, point.y-20);

@@ -8,6 +8,13 @@
 
 # Updates
 
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_11.png)
+## 17.02.19:
+- Add new lighting engine :tada:
+- Add Melee and Range weapon management
+- Removed large amounts of unused code :rocket:
+
+
 ## 13/14.02.19:
 - Add arcetype Archer with full logic :tada:
 - Add Melee and Range components

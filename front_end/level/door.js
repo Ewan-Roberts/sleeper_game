@@ -1,9 +1,7 @@
 'use strict';
 
 const PIXI         = require('pixi.js');
-const { viewport } = require('../engine/viewport');
-
-const collision_items = viewport.getChildByName('collision_items');
+const { collision_container } = require('../engine/pixi_containers');
 
 class Door {
   constructor(door_data) {
@@ -15,7 +13,7 @@ class Door {
     this.sprite.buttonMode = true;
     this.sprite.name = 'door';
     this.state = 'closed';
-    collision_items.addChild(this.sprite);
+    collision_container.addChild(this.sprite);
 
   }
 

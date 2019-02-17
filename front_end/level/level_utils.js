@@ -45,7 +45,7 @@ class Level {
     this.background_image.position.set(0, 0);
     this.background_image.width = tile_data.imagewidth;
     this.background_image.height = tile_data.imageheight;
-    this.background_image.opacity = 0.1;
+    this.background_image.opacity = 0;
     this.background_image.zIndex = 100;
 
     world.updateLayersOrder();
@@ -123,6 +123,16 @@ class Level {
     friend.add_state_handling();
   }
 
+  create_network_player() {
+    const player_details = {
+      name: 'Nino',
+      x: 800,
+      y: 800,
+    };
+
+    //const network_player = new NetworkCharacter(player_details);
+    //network_player.network_update();
+  }
 
 
   create_enemy(location, path) {

@@ -8,15 +8,16 @@ require('pixi-shadows');
 
 const app = require('./app');
 
-//FOR TESTING
 const shadow = new PIXI.shadows.Shadow(900, 1);
 shadow.pointCount = 1;
-shadow.overlayLightLength = 1000;
-shadow.intensity = 3;
-shadow.ambientLight= 1;
+shadow.overlayLightLength = 200;
+shadow.intensity = 1;
+shadow.ambientLight = 1;
 shadow.position.set(450, 150);
 
 const world = PIXI.shadows.init(app);
+
+//FOR TESTING make 0.5 for lighting
 PIXI.shadows.filter.ambientLight = 1;
 
 world.interactive = true;
