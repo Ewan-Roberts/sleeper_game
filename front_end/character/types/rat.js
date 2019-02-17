@@ -1,7 +1,6 @@
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
-const { Entity_Container  } = require('../../engine/entity_container.js');
 
 const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');
@@ -22,8 +21,6 @@ class Animal extends Character {
     this.add_component(new Lootable(this));
 
     critter_container.addChild(this.sprite);
-
-    Entity_Container.add(this);
   }
 }
 

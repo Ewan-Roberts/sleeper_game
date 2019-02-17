@@ -15,12 +15,11 @@ const { distance_between_points } = require('../../utils/math');
 /**
  * @class
  * @extends Enemy
- * @memberof Human
+ * @memberof Rodent
  * @memberof Inventory
  * @memberof Lootable
  * @memberof Predator
  * @memberof Vitals
- * @memberof Raycasting
  */
 class Rat extends Animal {
   constructor(enemy) {
@@ -53,15 +52,12 @@ class Rat extends Animal {
 
   _walk_to_enemy() {
     this.animation.walk();
-
     PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
   }
 
   // TODO RAT LOGIC
   logic_start() {
     this._logic.start();
-    this.animation.ready_weapon();
-
     this._logic.on('repeat', () => {
 
       if(!this.vitals.alive) {
@@ -73,20 +69,9 @@ class Rat extends Animal {
 
       const distance = distance_between_points(this.enemy.sprite, this.sprite);
 
-      if(distance < 220) {
-        if(!this.enemy.loot) return;
+      if(distance > 200) return this._walk_to_enemy();
 
-        this.animation.idle();
-        this.enemy.loot.show();
-        this.enemy.loot.items.forEach(item => this.loot.items.push(item));
-        this.enemy.remove_component('loot');
-      }
-
-      if(!this.enemy.vitals.alive) return this._walk_to_enemy();
-
-      if(distance > 200) return this.range.attack(this.enemy);
-
-      return this.melee.attack_from_to(this, this.enemy);
+      if(distance < 200) return this.melee.attack(this.enemy);
     });
 
     this._logic.on('stop', () => console.log('i have been stopped'));

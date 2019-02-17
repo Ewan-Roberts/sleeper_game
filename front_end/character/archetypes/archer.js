@@ -89,16 +89,16 @@ class Archer extends Enemy {
       if(!this.enemy.vitals.alive) return this._walk_to_enemy();
 
       // shoot thorugh walls
-      //const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
-      //if(can_see_enemy){
-      // this.stop_moving();
+      const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+      if(can_see_enemy){
+        this._stop_moving();
 
-      if(distance > 200) return this.range.attack(this.enemy);
+        if(distance > 200) return this.range.attack(this.enemy);
 
-      return this.melee.attack_from_to(this, this.enemy);
-      //}
+        return this.melee.attack(this, this.enemy);
+      }
 
-      //return this.walk_to_enemy();
+      return this._walk_to_enemy();
     });
 
     this._logic.on('stop', () => console.log('i have been stopped'));
