@@ -1,9 +1,9 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport } = require('../engine/viewport');
 
-const dialog_container = viewport.getChildByName('dialog_container');
+const { dialog_container } = require('../engine/pixi_containers');
+const { world } = require('../engine/shadows');
 
 class Dialog {
   create_background() {
@@ -12,8 +12,8 @@ class Dialog {
     this.background.zIndex = -10;
     this.background.alpha = 0.5;
     this.background.name = 'dialog_background';
-    this.background.width = viewport.width;
-    this.background.height = viewport.height;
+    this.background.width = world.width;
+    this.background.height = world.height;
     this.background.position.set(0,0);
 
     dialog_container.addChild(this.background);

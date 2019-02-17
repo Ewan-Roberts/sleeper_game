@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport } = require('./viewport');
+const { world } = require('./shadows');
 
 const zIndex_layer = {
   background: 12,
@@ -60,7 +60,7 @@ enemy_container.zIndex = medium;
 
 const visual_effects_container = new PIXI.Container();
 visual_effects_container.name = 'visual_effects_container';
-visual_effects_container.zIndex = medium;
+visual_effects_container.zIndex = -999;
 
 const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
@@ -68,7 +68,9 @@ cutscene_container.zIndex = close;
 
 const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
+
 gui_container.zIndex = very_close;
+
 
 const dialog_container = new PIXI.Container();
 dialog_container.name = 'dialog_container';
@@ -78,7 +80,8 @@ const raycasting_container = new PIXI.Container();
 raycasting_container.name = 'raycasting_container';
 raycasting_container.zIndex = close;
 
-viewport.addChild(
+world.addChild(
+  visual_effects_container,
   background_container,
   grid_container,
   collision_container,
@@ -92,11 +95,10 @@ viewport.addChild(
   cutscene_container,
   gui_container,
   dialog_container,
-  raycasting_container,
-  visual_effects_container
+  raycasting_container
 );
 
-viewport.updateLayersOrder();
+world.updateLayersOrder();
 
 module.exports = {
   collision_container,
@@ -108,6 +110,7 @@ module.exports = {
   raycasting_container,
   visual_effects_container,
   grid_container,
+  non_collision_container,
 };
 
 

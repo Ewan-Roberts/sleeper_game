@@ -1,6 +1,6 @@
 'use strict';
 
-const { viewport  } = require('../../engine/viewport.js');
+const { world     } = require('../../engine/shadows');
 
 const { Character } = require('../character_model');
 const { Human     } = require('../animations/character');
@@ -25,8 +25,8 @@ class Player extends Character {
     this.add_component(new Predator(this));
     this.add_component(new Status());
     this.add_component(new Inventory());
-
-    viewport.addChild(this.sprite);
+    // this.sprite.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+    world.addChild(this.sprite);
   }
 }
 

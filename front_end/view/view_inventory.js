@@ -23,7 +23,10 @@ class View_Inventory {
     this.slot_container.position.set(point.x + 200, point.y);
 
     for(let i = 0; i <= slots; i++) {
-      const sprite  = PIXI.Sprite.fromFrame('item_slot');
+
+      const texture = PIXI.Texture.fromFrame('item_slot');
+      texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+      const sprite  = PIXI.Sprite.fromFrame(texture);
       sprite.width  = 100;
       sprite.height = 100;
       sprite.x      = i * 100;

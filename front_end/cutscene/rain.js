@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport } = require('../engine/viewport');
+const { gui_container } = require('../engine/pixi_containers');
 
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
@@ -35,7 +35,7 @@ class start_rain {
       rainNoise.volume = 0.05;
       rainNoise.play();
 
-      viewport.addChild(animatedDrop);
+      gui_container.addChild(animatedDrop);
     }
   }
 }

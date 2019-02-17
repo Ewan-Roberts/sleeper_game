@@ -1,7 +1,8 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { viewport } = require('../engine/viewport');
+const { world    } = require('../engine/shadows');
+const { collision_container } = require('../engine/pixi_containers');
 
 const {
   PathFind,
@@ -45,12 +46,17 @@ class Level {
 
     this.add_to_segments(this.background_image);
 
-    viewport.getChildByName('background_image').addChild(this.background_image);
+    world.addChild(this.background_image);
   }
 
   render_walls(wall_array) {
     wall_array.objects.forEach((wall_data) => {
-      const wall = PIXI.Sprite.fromFrame('black_dot');
+
+      const wall_texture = PIXI.Texture.fromImage('black_dot');
+      wall_texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+      const wall = new PIXI.Sprite(wall_texture);
+      wall.parentGroup = PIXI.shadows.casterGroup;
 
       //wall.position.set(wall_data.x + wall_array.offsetx, wall_data.y + wall_array.offsety- 100);
       wall.position.set(wall_data.x, wall_data.y);
@@ -59,7 +65,18 @@ class Level {
       wall.anchor.set(0);
       this.add_to_segments(wall);
 
-      viewport.getChildByName('collision_items').addChild(wall);
+      world.addChild(wall);
+      //TODO remove duplicate
+      const wall1 = new PIXI.Sprite(wall_texture);
+      wall1.position.set(wall_data.x, wall_data.y);
+      wall1.width = wall_data.width;
+      wall1.height = wall_data.height;
+      wall1.anchor.set(0);
+
+      world.addChild(wall1);
+
+
+      collision_container.addChild(wall);
     });
   }
 

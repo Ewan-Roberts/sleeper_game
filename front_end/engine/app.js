@@ -7,13 +7,15 @@ const app = new PIXI.Application({
   height         : global.window.innerHeight,
   antialias      : false,
   autoResize     : true,
-  backgroundColor: 0x2F4F4F,
+  backgroundColor: 0x000000,
 });
-
-const { viewport } = require('./viewport');
-
-app.stage.addChild(viewport);
 
 global.document.body.appendChild(app.view);
 
+// For dev auto refesh
+let blurred = false;
+global.window.onblur = function() { blurred = true; };
+global.window.onfocus = function() { blurred && (global.location.reload()); };
+
 module.exports = app;
+

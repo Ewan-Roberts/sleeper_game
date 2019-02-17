@@ -1,12 +1,11 @@
 'use strict';
 
-const { viewport  } = require('../../engine/viewport');
+const { cutscene_container } = require('../../engine/pixi_containers');
 const { construct } = require('../../utils/constructor');
 
 const { Character } = require('../character_model');
 const { Cutscene  } = require('../attributes/cutscene');
 
-const cutscene_container = viewport.getChildByName('cutscene_container');
 
 class Cutscene_Character extends construct(Character, Cutscene) {
   constructor() {

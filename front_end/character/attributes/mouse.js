@@ -1,7 +1,7 @@
 'use strict';
 
 const { gui_container              } = require('../../engine/pixi_containers');
-const { viewport                   } = require('../../engine/viewport');
+const { world                      } = require('../../engine/shadows');
 const { shoot_arrow_with_collision } = require('../../engine/ranged');
 
 const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
@@ -14,9 +14,9 @@ class Mouse {
     this.name   = 'mouse';
     this.entity = entity;
 
-    viewport.on('mouseup',   event => this.mouse_up(event));
-    viewport.on('mousemove', event => this.mouse_move(event));
-    viewport.on('mousedown', event => this.mouse_down(event));
+    world.on('pointerup',   event => this.mouse_up(event));
+    world.on('pointermove', event => this.mouse_move(event));
+    world.on('pointerdown', event => this.mouse_down(event));
   }
 
   mouse_up(event) {
@@ -25,7 +25,7 @@ class Mouse {
     this.cone_timer.stop();
     this.entity.animation.idle();
 
-    const mouse_position = event.data.getLocalPosition(viewport);
+    const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type, weapon_speed } = this.entity.inventory;
 
     switch(ammo_type) {
@@ -38,7 +38,7 @@ class Mouse {
   mouse_down(event) {
     if(!this.entity.mouse) return;
 
-    const mouse_position = event.data.getLocalPosition(viewport);
+    const mouse_position = event.data.getLocalPosition(world);
     const direction      = radian(mouse_position, this.entity.sprite);
 
     this.entity.animation.ready_weapon();
@@ -51,8 +51,8 @@ class Mouse {
 
   mouse_move(event) {
     if(!this.entity.mouse) return;
+    const mouse_position = event.data.getLocalPosition(world);
 
-    const mouse_position = event.data.getLocalPosition(viewport);
     const rotation = radian(mouse_position, this.entity.sprite);
 
     this.entity.sprite.rotation = rotation;

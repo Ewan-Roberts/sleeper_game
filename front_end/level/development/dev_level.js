@@ -2,7 +2,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { viewport  } = require('../../engine/viewport');
+// const { viewport  } = require('../../engine/viewport');
 const { Player    } = require('../../character/types/player.js');
 const { Campfire  } = require('../../items/fire_place');
 const { Chest     } = require('../../items/chest');
@@ -27,8 +27,7 @@ const { Archer } = require('../../character/archetypes');
 class DevelopmentLevel {
   constructor() {
     const player = new Player();
-    player.set_position({ x: 1000, y: 1000 });
-    player.follow_sprite_with_camera();
+    player.set_position({ x: 1000, y: 400});
     //player.with_light();
     // dev bow for testing one hit kill
     player.inventory.equip_weapon_by_name('dev_bow');
@@ -55,11 +54,10 @@ class DevelopmentLevel {
     const archer = new Archer(player);
     archer.sprite.position.set(1550,1000);
 
-    console.log(viewport);
     archer.inventory.equip_weapon_by_name('old_bow');
     // archer.raycasting.add(this.level.segments);
 
-    archer.logic_start();
+    //archer.logic_start();
 
     //const knife = get_item_by_name('rusty_knife');
     //const enemy = new Enemy();

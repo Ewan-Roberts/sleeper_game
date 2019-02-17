@@ -1,8 +1,8 @@
 'use strict';
 
-const { viewport } = require('../engine/viewport.js');
-
-const non_collision_items = viewport.getChildByName('non_collision_items');
+const { non_collision_container,
+  collision_container,
+} = require('../engine/pixi_containers.js');
 
 class Item {
   set_position(point) {
@@ -10,7 +10,7 @@ class Item {
   }
 
   with_character_collision() {
-    viewport.getChildByName('collision_items').addChild(this.sprite);
+    collision_container.addChild(this.sprite);
   }
 
   with_projectile_collision() {
@@ -22,7 +22,7 @@ class Item {
   }
 
   without_character_collision() {
-    non_collision_items.addChild(this.sprite);
+    non_collision_container.addChild(this.sprite);
   }
 
   moveable() {

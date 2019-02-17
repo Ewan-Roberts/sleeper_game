@@ -26,7 +26,7 @@ const { distance_between_points } = require('../utils/math');
 class Archer extends Enemy {
   constructor(enemy) {
     super();
-    this.name  = 'enemy';
+    this.name = 'enemy';
     this.add_component(new Melee('rusty_knife'));
     this.add_component(new Range('old_bow'));
     this.add_component(new Lootable(this));

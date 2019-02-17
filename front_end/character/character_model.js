@@ -2,7 +2,6 @@
 
 const PIXI = require('pixi.js');
 
-const { viewport             } = require('../engine/viewport');
 const { move_sprite_to_point } = require('../engine/pathfind');
 
 class Character {
@@ -10,8 +9,6 @@ class Character {
     const texture = [PIXI.Texture.fromFrame('bunny')];
 
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
-    this.sprite.interactive = true;
-    //this.sprite.buttonMode = true;
   }
 
   add_component(component) {
@@ -35,9 +32,6 @@ class Character {
     });
   }
 
-  follow_sprite_with_camera() {
-    viewport.follow(this.sprite);
-  }
 
   add_sight_line() {
     const sight_line_box = PIXI.Sprite.fromFrame('black_dot');

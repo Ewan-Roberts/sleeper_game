@@ -10,7 +10,12 @@ function bow_idle_frames() {
     if (i >= 10) {
       name = `survivor-bow-idle-${i}`;
     }
-    bow_frames.push(PIXI.Texture.fromFrame(name));
+
+    const texture = PIXI.Texture.fromFrame(name);
+
+    texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+    bow_frames.push(texture);
   }
   return bow_frames;
 }
@@ -147,7 +152,10 @@ class Human {
 
   face_up() { this.sprite.rotation = -2; }
 
-  ready_weapon() { this.switch(this.weapon, 'ready'); }
+  ready_weapon() {
+    this.switch(this.weapon, 'ready');
+    this.sprite.loop = false;
+  }
 
   face_down() { this.sprite.rotation = 2; }
 

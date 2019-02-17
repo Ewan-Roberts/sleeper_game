@@ -23,6 +23,7 @@ class Lootable {
     this.entity.sprite.interactive = true;
     this.entity.sprite.buttonMode = true;
     this.entity.sprite.on('click', () => {
+      console.log('cickl lcik ')
       View_Inventory.create_populated_slots(this.entity.sprite, this.loot);
 
       this.entity.sprite.buttonMode = false;

@@ -2,6 +2,7 @@
 
 const { Game                } = require('../../engine/save_manager');
 const { collision_container } = require('../../engine/pixi_containers');
+const { world, shadow       } = require('../../engine/shadows');
 
 const { View_HUD } = require('../../view/view_player_inventory');
 
@@ -70,7 +71,6 @@ class Keyboard {
   keyboard_up() {
     this.entity.animation.walk();
     this.entity.animation.face_up();
-
     const point = this.entity.sprite.getGlobalPosition();
     point.y -= buffer;
 
@@ -82,6 +82,8 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_up_by(movement_speed);
+    shadow.position.copy(this.entity.sprite);
+    world.y += movement_speed;
   }
 
   keyboard_down() {
@@ -99,6 +101,11 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_down_by(movement_speed);
+    // this.entity.sprite.children[0].position.x = this.entity.sprite.position.x
+    // this.entity.sprite.children[0].position.y = this.entity.sprite.position.y
+
+    shadow.position.copy(this.entity.sprite);
+    world.y -= movement_speed;
   }
 
   keyboard_left() {
@@ -116,6 +123,9 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_left_by(movement_speed);
+    shadow.position.copy(this.entity.sprite);
+
+    world.x += movement_speed;
   }
 
   keyboard_right() {
@@ -133,6 +143,9 @@ class Keyboard {
 
     const { movement_speed } = this.entity.vitals;
     this.entity.animation.move_right_by(movement_speed);
+    shadow.position.copy(this.entity.sprite);
+
+    world.x -= movement_speed;
   }
 }
 
