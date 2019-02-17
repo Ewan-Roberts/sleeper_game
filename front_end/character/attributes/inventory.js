@@ -46,7 +46,6 @@ class Inventory {
 
     return this.equipped.damage;
   }
-
 }
 
 module.exports = {

@@ -5,44 +5,31 @@ const PIXI = require('pixi.js');
 
 function bow_idle_frames() {
   const bow_frames = [];
-  for (let i = 0; i <= 21; i += 1) {
-    let name = `survivor-bow-idle-0${i}`;
+  for (let i = 0; i <= 21; i++) {
+    const name = (i >= 10)?`survivor-bow-idle-${i}`:`survivor-bow-idle-0${i}`;
 
-    if (i >= 10) {
-      name = `survivor-bow-idle-${i}`;
-    }
-
-    const texture = PIXI.Texture.fromFrame(name);
-
-    texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-
-    bow_frames.push(texture);
+    bow_frames.push(PIXI.Texture.fromFrame(name));
   }
+
   return bow_frames;
 }
 
 function bow_ready_frames() {
   const ready_frames = [];
-  for (let i = 0; i <= 38; i += 1) {
-    let name = `survivor-bow-pull-0${i}`;
-
-    if (i >= 10) {
-      name = `survivor-bow-pull-${i}`;
-    }
+  for (let i = 0; i <= 38; i++) {
+    const name = (i >= 10)?`survivor-bow-pull-${i}`:`survivor-bow-pull-0${i}`;
 
     ready_frames.push(PIXI.Texture.fromFrame(name));
   }
+
   return ready_frames;
 }
 
 function bow_walk_frames() {
   const walk_frames = [];
   for (let i = 0; i <= 20; i += 1) {
-    let name = `survivor-walk_bow_0${i}`;
+    const name = (i >= 10)?`survivor-walk_bow_${i}`:`survivor-walk_bow_0${i}`;
 
-    if (i >= 10) {
-      name = `survivor-walk_bow_${i}`;
-    }
     walk_frames.push(PIXI.Texture.fromFrame(name));
   }
   return walk_frames;
@@ -71,11 +58,8 @@ function knife_attack_frames() {
 function idle_frames() {
   const idle_frames = [];
   for (let i = 0; i <= 21; i++) {
-    let name = `survivor-idle_0${i}`;
+    const name = (i >= 10)?`survivor-idle_${i}`:`survivor-idle_0${i}`;
 
-    if (i >= 10) {
-      name = `survivor-idle_${i}`;
-    }
     idle_frames.push(PIXI.Texture.fromFrame(name));
   }
   return idle_frames;
@@ -92,14 +76,9 @@ function walk_frames() {
   return walk_frames;
 }
 
-
 function dead_frames() {
-  const dead_frame = PIXI.Texture.fromFrame('dead_man');
-
-  return [dead_frame];
+  return [PIXI.Texture.fromFrame('dead_man')];
 }
-
-
 
 const frames = {
   bow: {
@@ -115,7 +94,7 @@ const frames = {
   knife: {
     idle:   idle_frames(),
     attack: knife_attack_frames(),
-    ready: knife_attack_frames(),
+    ready:  knife_attack_frames(),
     walk:   knife_walk_frames(),
     dead:   dead_frames(),
   },
@@ -130,18 +109,19 @@ class Human {
   constructor(sprite) {
     this.name   = 'animation';
     this.sprite = sprite;
+    // TODO remove
+    this.weapon = 'bow';
+    this.state  = undefined;
     this.sprite.anchor.set(0.5);
     this.sprite.height /= 2;
-    this.sprite.width /= 2;
-    this.weapon = 'bow';
+    this.sprite.width  /= 2;
     this.sprite.animationSpeed = 0.5;
+
     this.idle(this.weapon);
-    this.state = undefined;
   }
 
   switch(weapon, action) {
     if (this.state === action) return;
-
     if(!weapon) throw new Error('No weapon provided');
     if(!action) throw new Error('No action provided');
 
@@ -155,6 +135,7 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
+
     this.sprite.loop = false;
   }
 
@@ -177,8 +158,6 @@ class Human {
     this.sprite.height = 120;
     this.sprite.width = 80;
   }
-
-  stop() { this.sprite.gotToAndStop(1); }
 
   move_up_by(amount) { this.sprite.y -= amount; }
 
@@ -472,7 +451,6 @@ class Inventory {
 
     return this.equipped.damage;
   }
-
 }
 
 module.exports = {
@@ -559,7 +537,7 @@ class Keyboard {
   constructor(entity) {
     this.name   = 'keyboard';
     this.entity = entity;
-
+    this.shift_pressed = false;
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
   }
@@ -574,20 +552,28 @@ class Keyboard {
     if (!translated_key) return;
 
     switch(translated_key) {
-      case 'up'   : this.keyboard_up();          return;
-      case 'left' : this.keyboard_left();        return;
-      case 'down' : this.keyboard_down();        return;
-      case 'right': this.keyboard_right();       return;
-      case 'n'    : this.save_game();            return;
-      case 'o'    : this.start_intro();          return;
-      case 'i'    : View_HUD.toggle_inventory(); return;
+      case 'up'    : this.keyboard_up();          return;
+      case 'left'  : this.keyboard_left();        return;
+      case 'down'  : this.keyboard_down();        return;
+      case 'right' : this.keyboard_right();       return;
+      case 'n'     : this.save_game();            return;
+      case 'o'     : this.start_intro();          return;
+      case 'i'     : View_HUD.toggle_inventory(); return;
+      case 'Shift' : this.keyboard_shift();       return;
     }
   }
 
   key_up() {
     if(!this.entity.keyboard) return;
 
+    //TODO player could hold two buttons
+    this.shift_pressed = false;
+
     this.entity.animation.idle();
+  }
+
+  keyboard_shift() {
+    this.shift_pressed = true;
   }
 
   keyboard_up() {
@@ -766,6 +752,8 @@ class Mouse {
 
   _mouse_up(event) {
     if(!this.entity.mouse) return;
+    // TODO: implies dependancy
+    if(!this.entity.keyboard.shift_pressed) return;
 
     const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type, weapon_speed } = this.entity.inventory;
@@ -773,15 +761,20 @@ class Mouse {
     this.cone_timer.stop();
     this.entity.animation.idle();
 
-    switch(ammo_type) {
-      case 'arrow':
-        shoot_arrow_with_collision(this.entity, mouse_position, weapon_speed);
-        return;
+    //TODO ammo management engine
+    if(this.entity.keyboard.shift_pressed) {
+      switch(ammo_type) {
+        case 'arrow':
+          shoot_arrow_with_collision(this.entity, mouse_position, weapon_speed);
+          return;
+      }
     }
   }
 
   _mouse_down(event) {
     if(!this.entity.mouse) return;
+    // TODO: implies dependancy
+    if(!this.entity.keyboard.shift_pressed) return;
 
     const mouse_position = event.data.getLocalPosition(world);
     const rotation       = radian(mouse_position, this.entity.sprite);
@@ -1134,8 +1127,6 @@ module.exports = {
 
 const PIXI = require('pixi.js');
 
-const { move_sprite_to_point } = require('../engine/pathfind');
-
 class Character {
   constructor() {
     const texture = [PIXI.Texture.fromFrame('bunny')];
@@ -1154,15 +1145,6 @@ class Character {
   set_position(point) {
     this.sprite.position.set(point.x, point.y);
   }
-
-  move_to_point(x,y) {
-    move_sprite_to_point(this, {
-      middle: {
-        x,
-        y,
-      },
-    });
-  }
 }
 
 module.exports = {
@@ -1171,7 +1153,7 @@ module.exports = {
 
 
 
-},{"../engine/pathfind":34,"pixi.js":260}],19:[function(require,module,exports){
+},{"pixi.js":260}],19:[function(require,module,exports){
 'use strict';
 
 const { cutscene_container } = require('../../engine/pixi_containers');
@@ -1322,8 +1304,6 @@ module.exports = {
 },{"../../engine/shadows":39,"../animations/character":1,"../attributes/inventory":7,"../attributes/keyboard":8,"../attributes/mouse":11,"../attributes/predator":12,"../attributes/status_bar":16,"../attributes/vitals":17,"../character_model":18}],23:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-
 const { critter_container } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
@@ -1337,8 +1317,6 @@ class Rat extends Character {
   constructor() {
     super();
     this.name = 'rat';
-    const texture = [PIXI.Texture.fromFrame('bunny')];
-    this.sprite = new PIXI.extras.AnimatedSprite(texture);
 
     this.add_component(new Rodent(this.sprite));
     this.add_component(new Vitals(this));
@@ -1348,14 +1326,13 @@ class Rat extends Character {
 
     critter_container.addChild(this.sprite);
   }
-
 }
 
 module.exports = {
   Rat,
 };
 
-},{"../../engine/pixi_containers":35,"../animations/rat":2,"../attributes/inventory":7,"../attributes/lootable":9,"../attributes/prey":13,"../attributes/vitals":17,"../character_model":18,"pixi.js":260}],24:[function(require,module,exports){
+},{"../../engine/pixi_containers":35,"../animations/rat":2,"../attributes/inventory":7,"../attributes/lootable":9,"../attributes/prey":13,"../attributes/vitals":17,"../character_model":18}],24:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -2203,7 +2180,6 @@ module.exports = {
 const PIXI                 = require('pixi.js');
 
 const { radian           } = require('../utils/math');
-const { Dialog           } = require('../cutscene/dialog_util');
 const { arrow_container  } = require('./pixi_containers');
 const { Entity_Container } = require('./entity_container.js');
 
@@ -2310,7 +2286,7 @@ module.exports = {
 };
 
 
-},{"../cutscene/dialog_util":26,"../utils/math":59,"./entity_container.js":31,"./pixi_containers":35,"pixi.js":260}],37:[function(require,module,exports){
+},{"../utils/math":59,"./entity_container.js":31,"./pixi_containers":35,"pixi.js":260}],37:[function(require,module,exports){
 'use strict';
 
 function get_intersection(ray, segment){
@@ -9320,7 +9296,7 @@ class icon {
   constructor(image, point) {
     this.element = PIXI.Sprite.fromFrame(image);
     this.element.anchor.set(0.5);
-    this.element.alpha  = 0;
+    this.element.alpha  = 1;
     this.element.height = 50;
     this.element.width  = 50;
     this.element.position.set(point.x +20, point.y-20);

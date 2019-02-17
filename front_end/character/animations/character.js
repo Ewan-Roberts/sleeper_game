@@ -4,44 +4,31 @@ const PIXI = require('pixi.js');
 
 function bow_idle_frames() {
   const bow_frames = [];
-  for (let i = 0; i <= 21; i += 1) {
-    let name = `survivor-bow-idle-0${i}`;
+  for (let i = 0; i <= 21; i++) {
+    const name = (i >= 10)?`survivor-bow-idle-${i}`:`survivor-bow-idle-0${i}`;
 
-    if (i >= 10) {
-      name = `survivor-bow-idle-${i}`;
-    }
-
-    const texture = PIXI.Texture.fromFrame(name);
-
-    texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-
-    bow_frames.push(texture);
+    bow_frames.push(PIXI.Texture.fromFrame(name));
   }
+
   return bow_frames;
 }
 
 function bow_ready_frames() {
   const ready_frames = [];
-  for (let i = 0; i <= 38; i += 1) {
-    let name = `survivor-bow-pull-0${i}`;
-
-    if (i >= 10) {
-      name = `survivor-bow-pull-${i}`;
-    }
+  for (let i = 0; i <= 38; i++) {
+    const name = (i >= 10)?`survivor-bow-pull-${i}`:`survivor-bow-pull-0${i}`;
 
     ready_frames.push(PIXI.Texture.fromFrame(name));
   }
+
   return ready_frames;
 }
 
 function bow_walk_frames() {
   const walk_frames = [];
   for (let i = 0; i <= 20; i += 1) {
-    let name = `survivor-walk_bow_0${i}`;
+    const name = (i >= 10)?`survivor-walk_bow_${i}`:`survivor-walk_bow_0${i}`;
 
-    if (i >= 10) {
-      name = `survivor-walk_bow_${i}`;
-    }
     walk_frames.push(PIXI.Texture.fromFrame(name));
   }
   return walk_frames;
@@ -70,11 +57,8 @@ function knife_attack_frames() {
 function idle_frames() {
   const idle_frames = [];
   for (let i = 0; i <= 21; i++) {
-    let name = `survivor-idle_0${i}`;
+    const name = (i >= 10)?`survivor-idle_${i}`:`survivor-idle_0${i}`;
 
-    if (i >= 10) {
-      name = `survivor-idle_${i}`;
-    }
     idle_frames.push(PIXI.Texture.fromFrame(name));
   }
   return idle_frames;
@@ -91,14 +75,9 @@ function walk_frames() {
   return walk_frames;
 }
 
-
 function dead_frames() {
-  const dead_frame = PIXI.Texture.fromFrame('dead_man');
-
-  return [dead_frame];
+  return [PIXI.Texture.fromFrame('dead_man')];
 }
-
-
 
 const frames = {
   bow: {
@@ -114,7 +93,7 @@ const frames = {
   knife: {
     idle:   idle_frames(),
     attack: knife_attack_frames(),
-    ready: knife_attack_frames(),
+    ready:  knife_attack_frames(),
     walk:   knife_walk_frames(),
     dead:   dead_frames(),
   },
@@ -129,18 +108,19 @@ class Human {
   constructor(sprite) {
     this.name   = 'animation';
     this.sprite = sprite;
+    // TODO remove
+    this.weapon = 'bow';
+    this.state  = undefined;
     this.sprite.anchor.set(0.5);
     this.sprite.height /= 2;
-    this.sprite.width /= 2;
-    this.weapon = 'bow';
+    this.sprite.width  /= 2;
     this.sprite.animationSpeed = 0.5;
+
     this.idle(this.weapon);
-    this.state = undefined;
   }
 
   switch(weapon, action) {
     if (this.state === action) return;
-
     if(!weapon) throw new Error('No weapon provided');
     if(!action) throw new Error('No action provided');
 
@@ -154,6 +134,7 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
+
     this.sprite.loop = false;
   }
 
@@ -176,8 +157,6 @@ class Human {
     this.sprite.height = 120;
     this.sprite.width = 80;
   }
-
-  stop() { this.sprite.gotToAndStop(1); }
 
   move_up_by(amount) { this.sprite.y -= amount; }
 

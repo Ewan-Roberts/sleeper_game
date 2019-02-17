@@ -37,7 +37,7 @@ class Keyboard {
   constructor(entity) {
     this.name   = 'keyboard';
     this.entity = entity;
-
+    this.shift_pressed = false;
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
   }
@@ -52,20 +52,28 @@ class Keyboard {
     if (!translated_key) return;
 
     switch(translated_key) {
-      case 'up'   : this.keyboard_up();          return;
-      case 'left' : this.keyboard_left();        return;
-      case 'down' : this.keyboard_down();        return;
-      case 'right': this.keyboard_right();       return;
-      case 'n'    : this.save_game();            return;
-      case 'o'    : this.start_intro();          return;
-      case 'i'    : View_HUD.toggle_inventory(); return;
+      case 'up'    : this.keyboard_up();          return;
+      case 'left'  : this.keyboard_left();        return;
+      case 'down'  : this.keyboard_down();        return;
+      case 'right' : this.keyboard_right();       return;
+      case 'n'     : this.save_game();            return;
+      case 'o'     : this.start_intro();          return;
+      case 'i'     : View_HUD.toggle_inventory(); return;
+      case 'Shift' : this.keyboard_shift();       return;
     }
   }
 
   key_up() {
     if(!this.entity.keyboard) return;
 
+    //TODO player could hold two buttons
+    this.shift_pressed = false;
+
     this.entity.animation.idle();
+  }
+
+  keyboard_shift() {
+    this.shift_pressed = true;
   }
 
   keyboard_up() {

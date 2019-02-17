@@ -21,6 +21,8 @@ class Mouse {
 
   _mouse_up(event) {
     if(!this.entity.mouse) return;
+    // TODO: implies dependancy
+    if(!this.entity.keyboard.shift_pressed) return;
 
     const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type, weapon_speed } = this.entity.inventory;
@@ -28,15 +30,20 @@ class Mouse {
     this.cone_timer.stop();
     this.entity.animation.idle();
 
-    switch(ammo_type) {
-      case 'arrow':
-        shoot_arrow_with_collision(this.entity, mouse_position, weapon_speed);
-        return;
+    //TODO ammo management engine
+    if(this.entity.keyboard.shift_pressed) {
+      switch(ammo_type) {
+        case 'arrow':
+          shoot_arrow_with_collision(this.entity, mouse_position, weapon_speed);
+          return;
+      }
     }
   }
 
   _mouse_down(event) {
     if(!this.entity.mouse) return;
+    // TODO: implies dependancy
+    if(!this.entity.keyboard.shift_pressed) return;
 
     const mouse_position = event.data.getLocalPosition(world);
     const rotation       = radian(mouse_position, this.entity.sprite);
