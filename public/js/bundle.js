@@ -3,6 +3,7 @@
 
 const PIXI = require('pixi.js');
 
+
 function bow_idle_frames() {
   const bow_frames = [];
   for (let i = 0; i <= 21; i++) {
@@ -108,26 +109,26 @@ const frames = {
 class Human {
   constructor(sprite) {
     this.name   = 'animation';
-    this.sprite = sprite;
-    // TODO remove
-    this.weapon = 'bow';
-    this.state  = undefined;
-    this.sprite.anchor.set(0.5);
-    this.sprite.height /= 2;
-    this.sprite.width  /= 2;
-    this.sprite.animationSpeed = 0.5;
 
-    this.idle(this.weapon);
+    this.state  = undefined;
+    this.sprite = sprite;
+    this.sprite.anchor.set(0.5);
+    this.sprite.height /= 1.5;
+    this.sprite.width  /= 1.5;
+    this.sprite.animationSpeed = 0.5;
+    this.sprite.rotation_offset = 0;
   }
 
   switch(weapon, action) {
-    if (this.state === action) return;
+    if(this.state === action) return;
     if(!weapon) throw new Error('No weapon provided');
     if(!action) throw new Error('No action provided');
+    if(!frames[weapon][action]) throw new Error(`no action for frames ${weapon} & ${action}`);
 
     this.sprite.textures = frames[weapon][action];
     this.sprite.loop = true;
     this.sprite.play();
+
     this.state = action;
   }
 
@@ -135,8 +136,6 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
-
-    this.sprite.loop = false;
   }
 
   face_down() { this.sprite.rotation = 2; }
@@ -154,7 +153,10 @@ class Human {
   idle() { this.switch(this.weapon, 'idle'); }
 
   kill() {
-    this.switch(this.weapon, 'dead');
+    this.sprite.textures = frames.bow.dead;
+
+    this.sprite.loop = false;
+    this.sprite.stop();
     this.sprite.height = 120;
     this.sprite.width = 80;
   }
@@ -259,6 +261,7 @@ class Rodent {
     this.name   = 'animation';
     this.sprite = sprite;
     this.sprite.anchor.set(0.5);
+    this.sprite.rotation_offset = 1.57;
   }
 
   switch(action) {
@@ -321,9 +324,10 @@ class Archer extends Enemy {
 
     //----- only hard dependancy
     this.add_component(new Inventory());
-    this.inventory.add_ranged_weapon_by_name('old_bow');
-    this.inventory.add_melee_weapon_by_name('rusty_knife');
-    this.inventory.equip_weapon_by_name('old_bow');
+    this.inventory.add_ranged_weapon_by_name('dev_bow');
+    this.animation.weapon = 'bow';
+    this.inventory.add_melee_weapon_by_name('dev_knife');
+    this.inventory.equip_weapon_by_name('dev_bow');
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
     //----- only hard dependancy
@@ -338,8 +342,6 @@ class Archer extends Enemy {
   }
 
   _stop_moving() {
-    this.animation.kill();
-
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
 
     tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
@@ -351,53 +353,57 @@ class Archer extends Enemy {
     PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
   }
 
+  kill() {
+    if(!this.loot.items) this.loot.populate();
+    // this.loot.populate();
+    this.loot.create_icon();
+    this.animation.kill();
+
+    this._stop_moving();
+    this._logic.remove();
+  }
+
+  _loot_enemy() {
+    this.melee.equip_weapon();
+    this.animation.idle();
+
+    this._stop_moving();
+
+    this.enemy.loot.items.forEach(item => this.loot.items.push(item));
+    this.enemy.loot.empty();
+
+    this.face_sprite(this.enemy.sprite);
+
+    this._logic.remove()
+  }
 
   logic_start() {
     this._logic.start();
     this.animation.ready_weapon();
 
     this._logic.on('repeat', () => {
-
-      if(!this.vitals.alive) {
-
-        this.loot.populate();
-        this.loot.create_icon();
-        this._logic.stop();
-        return this._stop_moving();
-      }
-
       const distance = distance_between_points(this.enemy.sprite, this.sprite);
 
       if(distance < 220) {
         if(!this.enemy.loot) return;
-
-        this.animation.idle();
-        this.enemy.loot.show();
-        this.enemy.loot.items.forEach(item => this.loot.items.push(item));
-        this.enemy.remove_component('loot');
+        this._loot_enemy();
       }
 
       if(!this.enemy.vitals.alive) return this._walk_to_enemy();
 
-      // shoot thorugh walls
-      const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
-      if(can_see_enemy){
-        this._stop_moving();
+      // shoot through walls
+      // const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+      // if(can_see_enemy){
+      this._stop_moving();
 
-        if(distance > 200) return this.range.attack(this.enemy);
+      if(distance > 200) return this.range.attack(this.enemy);
 
-        return this.melee.attack(this, this.enemy);
-      }
-
-      return this._walk_to_enemy();
+      return this.melee.attack(this.enemy);
+      // }
     });
 
     this._logic.on('stop', () => console.log('i have been stopped'));
     this._logic.on('end', () => console.log('i end'));
-  }
-
-  logic_stop() {
-    this._logic.stop();
   }
 }
 
@@ -452,15 +458,23 @@ class Rat extends Animal {
   }
 
   _stop_moving() {
-    this.animation.kill();
-
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
 
-    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
+    tweens.forEach(tween => tween.stop());
+  }
+
+  kill() {
+    this.loot.populate();
+    this.loot.create_icon();
+    this.animation.kill();
+
+    this._stop_moving();
+    this._logic.remove();
   }
 
   _walk_to_enemy() {
     this.animation.walk();
+
     PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
   }
 
@@ -469,12 +483,7 @@ class Rat extends Animal {
     this._logic.start();
     this._logic.on('repeat', () => {
 
-      if(!this.vitals.alive) {
-        this.loot.populate();
-        this.loot.create_icon();
-        this._logic.stop();
-        return this._stop_moving();
-      }
+      if(!this.vitals.alive) this.kill();
 
       const distance = distance_between_points(this.enemy.sprite, this.sprite);
 
@@ -485,10 +494,6 @@ class Rat extends Animal {
 
     this._logic.on('stop', () => console.log('i have been stopped'));
     this._logic.on('end', () => console.log('i end'));
-  }
-
-  logic_stop() {
-    this._logic.stop();
   }
 }
 
@@ -789,6 +794,10 @@ class Lootable {
   show() {
     View_Inventory.create_populated_slots(this.entity.sprite, this.items);
   }
+
+  empty() {
+    this.items = [];
+  }
 }
 
 module.exports = {
@@ -799,21 +808,26 @@ module.exports = {
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
-const { radian       } = require('../../utils/math');
 
 class Melee {
   constructor(entity) {
-    this.name = 'melee';
+    this.name   = 'melee';
     this.entity = entity;
+
     this.melee_weapon = entity.inventory.melee_weapon;
   }
 
-  attack(target) {
+  equip_weapon() {
     this.entity.inventory.equip_weapon_by_name(this.melee_weapon.name);
 
-    this.entity.sprite.rotation = radian(target.sprite, this.entity.sprite);
+    this.entity.animation.weapon = this.melee_weapon.animation_name;
+  }
 
+  attack(target) {
+    this.equip_weapon();
     this.entity.animation.attack();
+
+    this.entity.face_sprite(target.sprite);
 
     melee_attack(this.entity, target);
   }
@@ -823,7 +837,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":34,"../../utils/math":60}],12:[function(require,module,exports){
+},{"../../engine/melee":34}],12:[function(require,module,exports){
 'use strict';
 
 const { gui_container              } = require('../../engine/pixi_containers');
@@ -1007,21 +1021,26 @@ module.exports = {
 
 const { shoot_arrow      } = require('../../engine/ranged');
 const { View_Aiming_Line } = require('../../view/view_aiming_line');
-const { radian           } = require('../../utils/math');
 
 class Range {
   constructor(entity) {
     this.name   = 'range';
     this.entity = entity;
+
     this.ranged_weapon = entity.inventory.ranged_weapon;
   }
 
-  attack(target) {
+  equip_weapon() {
     this.entity.inventory.equip_weapon_by_name(this.ranged_weapon.name);
 
+    this.entity.animation.weapon = this.ranged_weapon.animation_name;
+  }
+
+  attack(target) {
+    this.equip_weapon();
     this.entity.animation.ready_weapon();
 
-    this.entity.sprite.rotation = radian(target.sprite, this.entity.sprite);
+    this.entity.face_sprite(target.sprite);
 
     View_Aiming_Line.add_between_sprites(target.sprite, this.entity.sprite);
 
@@ -1033,7 +1052,7 @@ module.exports = {
   Range,
 };
 
-},{"../../engine/ranged":37,"../../utils/math":60,"../../view/view_aiming_line":63}],16:[function(require,module,exports){
+},{"../../engine/ranged":37,"../../view/view_aiming_line":63}],16:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1163,6 +1182,8 @@ module.exports = {
 },{"../../engine/ticker":41,"../../view/view_player_status_meter":67}],18:[function(require,module,exports){
 'use strict';
 
+const PIXI = require('pixi.js');
+
 const { blood } = require('../../cutscene/blood');
 const { Game  } = require('../../engine/save_manager');
 
@@ -1190,6 +1211,11 @@ class Vitals {
 
     // if('loot'  in this.entity) this.entity.loot.populate();
     //if('logic' in this.entity) this.entity.logic.stop();
+    this.entity.kill();
+
+    const tweens = PIXI.tweenManager.getTweensForTarget(this.entity.sprite);
+
+    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
 
     this.entity.animation.kill();
     this.status = 'dead';
@@ -1217,10 +1243,12 @@ module.exports = {
 };
 
 
-},{"../../cutscene/blood":25,"../../engine/save_manager":39}],19:[function(require,module,exports){
+},{"../../cutscene/blood":25,"../../engine/save_manager":39,"pixi.js":261}],19:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
+
+const { radian } = require('../utils/math');
 
 class Character {
   constructor() {
@@ -1237,6 +1265,11 @@ class Character {
     delete this[name];
   }
 
+  //TODO This function should not live here
+  face_sprite(sprite) {
+    this.sprite.rotation = radian(this.sprite, sprite)+ this.sprite.rotation_offset;
+  }
+
   set_position(point) {
     this.sprite.position.set(point.x, point.y);
   }
@@ -1248,7 +1281,7 @@ module.exports = {
 
 
 
-},{"pixi.js":261}],20:[function(require,module,exports){
+},{"../utils/math":60,"pixi.js":261}],20:[function(require,module,exports){
 'use strict';
 
 const { cutscene_container } = require('../../engine/pixi_containers');
@@ -1381,6 +1414,7 @@ class Player extends Character {
     this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
+    this.animation.weapon = 'bow';
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
     this.add_component(new Vitals(this));
@@ -1834,9 +1868,9 @@ const app = new PIXI.Application({
 global.document.body.appendChild(app.view);
 
 // For dev auto refesh
-let blurred = false;
-global.window.onblur = function() { blurred = true; };
-global.window.onfocus = function() { blurred && (global.location.reload()); };
+// let blurred = false;
+// global.window.onblur = function() { blurred = true; };
+// global.window.onfocus = function() { blurred && (global.location.reload()); };
 
 module.exports = app;
 
@@ -2056,7 +2090,7 @@ class PathFind {
     tween.start();
 
     tween.on('update', () =>
-      sprite.rotation = radian(sprite, tween.path._tmpPoint)+1.57);
+      sprite.rotation = radian(sprite, tween.path._tmpPoint) + sprite.rotation_offset);
 
     const graphical_path = new PIXI.Graphics();
     graphical_path.lineStyle(5, 0xffffff, 0.1);
@@ -2332,6 +2366,7 @@ function shoot_arrow_with_collision(origin, point) {
     if(enemy) {
       arrow_tween.stop();
       enemy.vitals.damage(weapon_damage);
+
       arrow.destroy();
       return;
     }
@@ -2816,6 +2851,22 @@ const items = [
     image_name:  'rusty_knife',
   },
   {
+    name:           'dev_knife',
+    animation_name: 'knife',
+    id:             1009,
+    rank:           99,
+    cost:           999,
+    category:       'primary',
+    range:          20,
+    damage:         999,
+    speed:          100,
+    condition:      999,
+
+    visual_name:    'rusty knife',
+    description:    'You call that a knife???',
+    image_name:     'rusty_knife',
+  },
+  {
     name:           'old_bow',
     animation_name: 'bow',
     id:             1002,
@@ -2829,9 +2880,9 @@ const items = [
     speed:          400,
     condition:      100,
 
-    visual_name: 'old bow',
-    description:  'An old bow still working but not for long...',
-    image_name: 'bunny',
+    visual_name:    'old bow',
+    description:    'An old bow still working but not for long...',
+    image_name:     'bunny',
   },
   {
     name:           'dev_bow',
@@ -2848,7 +2899,7 @@ const items = [
     condition:      999,
 
     visual_name:    'old bow',
-    description:    'this is my dev bow, there are many like it but thus one kills',
+    description:    'this is my dev bow, there are many like it but this one kills',
     image_name:     'bunny',
   },
 
@@ -8655,8 +8706,6 @@ class DevelopmentLevel {
     this.load_test_level();
     this.test_note();
 
-
-
     const rat = new Rat(player);
     rat.set_position({x: 900, y: 1100});
     rat.animation.switch('move');
@@ -8666,7 +8715,7 @@ class DevelopmentLevel {
     const archer = new Archer(rat);
     archer.sprite.position.set(1550,1000);
     archer.logic_start();
-    archer.raycasting.add(this.level.segments);
+    // archer.raycasting.add(this.level.segments);
 
   }
 

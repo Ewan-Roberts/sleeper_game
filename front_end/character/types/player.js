@@ -19,6 +19,7 @@ class Player extends Character {
     this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
+    this.animation.weapon = 'bow';
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
     this.add_component(new Vitals(this));

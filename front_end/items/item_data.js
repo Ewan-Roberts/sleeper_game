@@ -27,6 +27,22 @@ const items = [
     image_name:  'rusty_knife',
   },
   {
+    name:           'dev_knife',
+    animation_name: 'knife',
+    id:             1009,
+    rank:           99,
+    cost:           999,
+    category:       'primary',
+    range:          20,
+    damage:         999,
+    speed:          100,
+    condition:      999,
+
+    visual_name:    'rusty knife',
+    description:    'You call that a knife???',
+    image_name:     'rusty_knife',
+  },
+  {
     name:           'old_bow',
     animation_name: 'bow',
     id:             1002,
@@ -40,9 +56,9 @@ const items = [
     speed:          400,
     condition:      100,
 
-    visual_name: 'old bow',
-    description:  'An old bow still working but not for long...',
-    image_name: 'bunny',
+    visual_name:    'old bow',
+    description:    'An old bow still working but not for long...',
+    image_name:     'bunny',
   },
   {
     name:           'dev_bow',
@@ -59,7 +75,7 @@ const items = [
     condition:      999,
 
     visual_name:    'old bow',
-    description:    'this is my dev bow, there are many like it but thus one kills',
+    description:    'this is my dev bow, there are many like it but this one kills',
     image_name:     'bunny',
   },
 

@@ -45,8 +45,6 @@ class DevelopmentLevel {
     this.load_test_level();
     this.test_note();
 
-
-
     const rat = new Rat(player);
     rat.set_position({x: 900, y: 1100});
     rat.animation.switch('move');
@@ -56,7 +54,7 @@ class DevelopmentLevel {
     const archer = new Archer(rat);
     archer.sprite.position.set(1550,1000);
     archer.logic_start();
-    archer.raycasting.add(this.level.segments);
+    // archer.raycasting.add(this.level.segments);
 
   }
 

@@ -1,5 +1,7 @@
 'use strict';
 
+const PIXI = require('pixi.js');
+
 const { blood } = require('../../cutscene/blood');
 const { Game  } = require('../../engine/save_manager');
 
@@ -27,6 +29,11 @@ class Vitals {
 
     // if('loot'  in this.entity) this.entity.loot.populate();
     //if('logic' in this.entity) this.entity.logic.stop();
+    this.entity.kill();
+
+    const tweens = PIXI.tweenManager.getTweensForTarget(this.entity.sprite);
+
+    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
 
     this.entity.animation.kill();
     this.status = 'dead';

@@ -79,6 +79,7 @@ class Rodent {
     this.name   = 'animation';
     this.sprite = sprite;
     this.sprite.anchor.set(0.5);
+    this.sprite.rotation_offset = 1.57;
   }
 
   switch(action) {

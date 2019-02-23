@@ -43,15 +43,23 @@ class Rat extends Animal {
   }
 
   _stop_moving() {
-    this.animation.kill();
-
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
 
-    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
+    tweens.forEach(tween => tween.stop());
+  }
+
+  kill() {
+    this.loot.populate();
+    this.loot.create_icon();
+    this.animation.kill();
+
+    this._stop_moving();
+    this._logic.remove();
   }
 
   _walk_to_enemy() {
     this.animation.walk();
+
     PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
   }
 
@@ -60,12 +68,7 @@ class Rat extends Animal {
     this._logic.start();
     this._logic.on('repeat', () => {
 
-      if(!this.vitals.alive) {
-        this.loot.populate();
-        this.loot.create_icon();
-        this._logic.stop();
-        return this._stop_moving();
-      }
+      if(!this.vitals.alive) this.kill();
 
       const distance = distance_between_points(this.enemy.sprite, this.sprite);
 
@@ -76,10 +79,6 @@ class Rat extends Animal {
 
     this._logic.on('stop', () => console.log('i have been stopped'));
     this._logic.on('end', () => console.log('i end'));
-  }
-
-  logic_stop() {
-    this._logic.stop();
   }
 }
 

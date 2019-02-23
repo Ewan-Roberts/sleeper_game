@@ -30,6 +30,10 @@ class Lootable {
   show() {
     View_Inventory.create_populated_slots(this.entity.sprite, this.items);
   }
+
+  empty() {
+    this.items = [];
+  }
 }
 
 module.exports = {

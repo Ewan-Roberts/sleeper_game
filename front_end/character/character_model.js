@@ -2,6 +2,8 @@
 
 const PIXI = require('pixi.js');
 
+const { radian } = require('../utils/math');
+
 class Character {
   constructor() {
     const texture = [PIXI.Texture.fromFrame('bunny')];
@@ -15,6 +17,11 @@ class Character {
 
   remove_component(name) {
     delete this[name];
+  }
+
+  //TODO This function should not live here
+  face_sprite(sprite) {
+    this.sprite.rotation = radian(this.sprite, sprite)+ this.sprite.rotation_offset;
   }
 
   set_position(point) {

@@ -13,9 +13,9 @@ const app = new PIXI.Application({
 global.document.body.appendChild(app.view);
 
 // For dev auto refesh
-let blurred = false;
-global.window.onblur = function() { blurred = true; };
-global.window.onfocus = function() { blurred && (global.location.reload()); };
+// let blurred = false;
+// global.window.onblur = function() { blurred = true; };
+// global.window.onfocus = function() { blurred && (global.location.reload()); };
 
 module.exports = app;
 

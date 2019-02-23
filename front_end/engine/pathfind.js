@@ -81,7 +81,7 @@ class PathFind {
     tween.start();
 
     tween.on('update', () =>
-      sprite.rotation = radian(sprite, tween.path._tmpPoint)+1.57);
+      sprite.rotation = radian(sprite, tween.path._tmpPoint) + sprite.rotation_offset);
 
     const graphical_path = new PIXI.Graphics();
     graphical_path.lineStyle(5, 0xffffff, 0.1);

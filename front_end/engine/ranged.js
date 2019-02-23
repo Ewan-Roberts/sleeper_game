@@ -60,6 +60,7 @@ function shoot_arrow_with_collision(origin, point) {
     if(enemy) {
       arrow_tween.stop();
       enemy.vitals.damage(weapon_damage);
+
       arrow.destroy();
       return;
     }

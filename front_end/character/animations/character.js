@@ -2,6 +2,7 @@
 
 const PIXI = require('pixi.js');
 
+
 function bow_idle_frames() {
   const bow_frames = [];
   for (let i = 0; i <= 21; i++) {
@@ -107,26 +108,26 @@ const frames = {
 class Human {
   constructor(sprite) {
     this.name   = 'animation';
-    this.sprite = sprite;
-    // TODO remove
-    this.weapon = 'bow';
-    this.state  = undefined;
-    this.sprite.anchor.set(0.5);
-    this.sprite.height /= 2;
-    this.sprite.width  /= 2;
-    this.sprite.animationSpeed = 0.5;
 
-    this.idle(this.weapon);
+    this.state  = undefined;
+    this.sprite = sprite;
+    this.sprite.anchor.set(0.5);
+    this.sprite.height /= 1.5;
+    this.sprite.width  /= 1.5;
+    this.sprite.animationSpeed = 0.5;
+    this.sprite.rotation_offset = 0;
   }
 
   switch(weapon, action) {
-    if (this.state === action) return;
+    if(this.state === action) return;
     if(!weapon) throw new Error('No weapon provided');
     if(!action) throw new Error('No action provided');
+    if(!frames[weapon][action]) throw new Error(`no action for frames ${weapon} & ${action}`);
 
     this.sprite.textures = frames[weapon][action];
     this.sprite.loop = true;
     this.sprite.play();
+
     this.state = action;
   }
 
@@ -134,8 +135,6 @@ class Human {
 
   ready_weapon() {
     this.switch(this.weapon, 'ready');
-
-    this.sprite.loop = false;
   }
 
   face_down() { this.sprite.rotation = 2; }
@@ -153,7 +152,10 @@ class Human {
   idle() { this.switch(this.weapon, 'idle'); }
 
   kill() {
-    this.switch(this.weapon, 'dead');
+    this.sprite.textures = frames.bow.dead;
+
+    this.sprite.loop = false;
+    this.sprite.stop();
     this.sprite.height = 120;
     this.sprite.width = 80;
   }
