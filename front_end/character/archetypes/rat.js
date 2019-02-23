@@ -3,16 +3,14 @@
 const { timer            } = require('../../engine/ticker');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
-const { Animal    } = require('../types/rat');
-const { Melee     } = require('../attributes/melee');
-const { Inventory } = require('../attributes/inventory');
+const { Animal } = require('../types/rat');
+const { Melee  } = require('../attributes/melee');
 
 class Rat extends Animal {
   constructor() {
     super();
     this.name = 'rat';
 
-    this.add_component(new Inventory());
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
@@ -20,8 +18,16 @@ class Rat extends Animal {
     Entity_Container.add(this);
   }
 
-  enemy(character) {
-    this.enemy = character;
+  _walk_to_enemy() {
+    this.animation.walk();
+
+    this.pathfind.go_to_sprite(this.enemy.sprite);
+  }
+
+  get _target_far_away() {
+    const distance = this.distance_to(this.enemy.sprite);
+
+    return distance > 200;
   }
 
   kill() {
@@ -35,16 +41,8 @@ class Rat extends Animal {
     this._logic.remove();
   }
 
-  _walk_to_enemy() {
-    this.animation.walk();
-
-    this.pathfind.go_to_sprite(this.enemy.sprite);
-  }
-
-  _target_far_away() {
-    const distance = this.distance_to(this.enemy.sprite);
-
-    return distance > 200;
+  enemy(character) {
+    this.enemy = character;
   }
 
   logic_start() {

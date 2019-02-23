@@ -3,9 +3,9 @@
 const { timer            } = require('../../engine/ticker');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
-const { Enemy     } = require('../types/enemy');
-const { Melee     } = require('../attributes/melee');
-const { Range     } = require('../attributes/ranged');
+const { Enemy } = require('../types/enemy');
+const { Melee } = require('../attributes/melee');
+const { Range } = require('../attributes/ranged');
 
 class Archer extends Enemy {
   constructor() {
@@ -24,24 +24,10 @@ class Archer extends Enemy {
     Entity_Container.add(this);
   }
 
-  enemy(character) {
-    this.enemy = character;
-  }
-
   _walk_to_enemy() {
     this.animation.walk();
 
     this.pathfind.go_to_sprite(this.enemy.sprite);
-  }
-
-  kill() {
-    if(!this.loot.items) this.loot.populate();
-    this.loot.create_icon();
-
-    this.animation.kill();
-
-    this.pathfind.stop();
-    this._logic.remove();
   }
 
   _loot_enemy() {
@@ -60,6 +46,21 @@ class Archer extends Enemy {
     const distance = this.distance_to(this.enemy.sprite);
 
     return distance > 200;
+  }
+
+  enemy(character) {
+    this.enemy = character;
+  }
+
+  kill() {
+    if(!this.loot.items) this.loot.populate();
+    this.loot.create_icon();
+
+    this.animation.kill();
+
+    this.pathfind.stop();
+    this._logic.stop();
+    this._logic.remove();
   }
 
   logic_start() {
