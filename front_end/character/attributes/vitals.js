@@ -27,7 +27,6 @@ class Vitals {
 
   _kill() {
     if(this.entity.name === 'player') Game.over();
-    if(this.entity.pathfind) this.entity.pathfind.stop();
 
     this.status = 'dead';
     this.entity.kill();

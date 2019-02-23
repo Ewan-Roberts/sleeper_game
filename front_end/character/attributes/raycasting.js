@@ -6,11 +6,6 @@ const { timer                } = require('../../engine/ticker');
 const { get_intersection     } = require('../../engine/raycasting');
 const { raycasting_container } = require('../../engine/pixi_containers');
 
-const raycast_timer  = timer.createTimer(80);
-raycast_timer.repeat = 80;
-raycast_timer.expire = true;
-
-
 class Raycasting {
   constructor(sprite) {
     this.raycast = new PIXI.Graphics();
@@ -19,14 +14,15 @@ class Raycasting {
   }
 
   add(level_segments) {
+    const raycast_timer  = timer.createTimer(80);
+    raycast_timer.repeat = 80;
+    raycast_timer.expire = true;
+
     const points = [];
     level_segments.forEach(seg => points.push(seg.a,seg.b));
 
     const light = this.sprite.getChildByName('light');
-    if (light) {
-      light.mask = this.raycast;
-      //light._filters = [new PIXI.filters.BlurFilter(10)];
-    }
+    if (light) light.mask = this.raycast;
 
     raycast_timer.on('repeat', () => {
       const unique_angles = [];

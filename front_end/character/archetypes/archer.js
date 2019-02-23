@@ -48,11 +48,12 @@ class Archer extends Enemy {
   _loot_enemy() {
     this.melee.equip();
     this.animation.idle();
-    this.pathfind.stop();
 
     this.loot.take_items(this.enemy.loot.items);
     this.enemy.loot.empty();
 
+    this.pathfind.stop();
+    this._logic.stop();
     this._logic.remove();
   }
 
@@ -65,6 +66,8 @@ class Archer extends Enemy {
     this.animation.ready_weapon();
 
     this._logic.on('repeat', () => {
+      if(!this.vitals.alive) this.kill();
+
       const distance = this.distance_to(this.enemy.sprite);
 
       if(distance < 220) {

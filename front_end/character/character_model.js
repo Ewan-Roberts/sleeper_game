@@ -11,26 +11,19 @@ class Character {
     this.sprite = new PIXI.extras.AnimatedSprite(texture);
   }
 
-  add_component(component) {
-    this[component.name] = component;
-  }
+  add_component(component) { this[component.name] = component; }
 
-  remove_component(name) {
-    delete this[name];
-  }
+  remove_component(name) { delete this[name]; }
+
+  set_position({x, y}) { this.sprite.position.set(x, y); }
 
   //TODO This function should not live here
   face_sprite(sprite) {
-    this.sprite.rotation = radian(sprite, this.sprite)+ this.sprite.rotation_offset;
+    this.sprite.rotation = radian(sprite, this.sprite) + this.sprite.rotation_offset;
   }
 
-  distance_to(sprite) {
-    return distance_between_points(sprite, this.sprite);
-  }
+  distance_to(sprite) { return distance_between_points(sprite, this.sprite); }
 
-  set_position(point) {
-    this.sprite.position.set(point.x, point.y);
-  }
 }
 
 module.exports = {
