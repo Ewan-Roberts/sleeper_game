@@ -16,6 +16,18 @@ class Inventory {
     this.equipped = weapon;
   }
 
+  equip_ranged_weapon() {
+    if(!this.ranged_weapon) throw new Error('No ranged weapon equipped');
+
+    this.equiped = this.ranged_weapon;
+  }
+
+  equip_melee_weapon() {
+    if(!this.melee_weapon) throw new Error('No melee weapon equipped');
+
+    this.equiped = this.melee_weapon;
+  }
+
   add_ranged_weapon_by_name(name) {
     const weapon = get_item(name);
 

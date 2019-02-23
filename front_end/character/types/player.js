@@ -19,6 +19,8 @@ class Player extends Character {
     this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
+    //TODO this is good to not couple this to inventory
+    //looks weird think about it
     this.animation.weapon = 'bow';
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));

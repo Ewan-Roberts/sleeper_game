@@ -21,7 +21,7 @@ class Character {
 
   //TODO This function should not live here
   face_sprite(sprite) {
-    this.sprite.rotation = radian(this.sprite, sprite)+ this.sprite.rotation_offset;
+    this.sprite.rotation = radian(sprite, this.sprite)+ this.sprite.rotation_offset;
   }
 
   set_position(point) {

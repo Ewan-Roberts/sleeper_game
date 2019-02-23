@@ -29,7 +29,8 @@ class Rat extends Animal {
     //---- hard dependancy
     this.add_component(new Inventory());
     this.inventory.add_melee_weapon_by_name('rat_teeth');
-    this.inventory.equip_weapon_by_name('rat_teeth');
+    //TODO maybe remove, handy but implies ranged weapon
+    this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
     //----- hard dependancy
 

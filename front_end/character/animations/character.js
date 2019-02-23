@@ -115,6 +115,7 @@ class Human {
     this.sprite.height /= 1.5;
     this.sprite.width  /= 1.5;
     this.sprite.animationSpeed = 0.5;
+    //TODO think of a better way to manage images saved at different roations
     this.sprite.rotation_offset = 0;
   }
 
@@ -154,8 +155,8 @@ class Human {
   kill() {
     this.sprite.textures = frames.bow.dead;
 
-    this.sprite.loop = false;
     this.sprite.stop();
+    //TODO remove magic number
     this.sprite.height = 120;
     this.sprite.width = 80;
   }

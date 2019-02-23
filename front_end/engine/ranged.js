@@ -48,10 +48,10 @@ function create_arrow_tween(arrow, power, arrow_path) {
  * @params {number}    - power
  */
 function shoot_arrow_with_collision(origin, point) {
-  const { weapon_speed, weapon_damage } = origin.inventory;
+  const { speed, damage } = origin.inventory.ranged_weapon;
   const arrow       = create_rotated_arrow(origin.sprite, point);
   const arrow_path  = create_arrow_path(origin.sprite, point);
-  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, speed, arrow_path);
 
   const entities = Entity_Container.get();
   arrow_tween.on('update', () => {
@@ -59,7 +59,7 @@ function shoot_arrow_with_collision(origin, point) {
     const enemy = entities.find(entity => entity.sprite.containsPoint(arrow_point));
     if(enemy) {
       arrow_tween.stop();
-      enemy.vitals.damage(weapon_damage);
+      enemy.vitals.damage(damage);
 
       arrow.destroy();
       return;
@@ -73,10 +73,10 @@ function shoot_arrow_with_collision(origin, point) {
  * @params {number}    - power
  */
 function shoot_arrow(origin, target) {
-  const { weapon_speed, weapon_damage} = origin.inventory;
+  const { speed, damage } = origin.inventory.ranged_weapon;
   const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
   const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
-  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, speed, arrow_path);
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
@@ -84,7 +84,7 @@ function shoot_arrow(origin, target) {
     if(target.sprite.containsPoint(arrow_point)) {
       arrow_tween.stop();
       arrow.destroy();
-      target.vitals.damage(weapon_damage);
+      target.vitals.damage(damage);
       return;
     }
   });

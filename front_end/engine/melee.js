@@ -6,9 +6,10 @@
  */
 
 function melee_attack(attacker, target) {
-  const attacker_damage = attacker.inventory.weapon_damage;
+  console.log(attacker)
+  const { damage } = attacker.inventory.melee_weapon;
 
-  target.vitals.damage(attacker_damage);
+  target.vitals.damage(damage);
 }
 
 module.exports = {

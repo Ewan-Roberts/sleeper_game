@@ -30,10 +30,11 @@ class Archer extends Enemy {
 
     //----- only hard dependancy
     this.add_component(new Inventory());
-    this.inventory.add_ranged_weapon_by_name('dev_bow');
+    this.inventory.add_ranged_weapon_by_name('old_bow');
     this.animation.weapon = 'bow';
     this.inventory.add_melee_weapon_by_name('dev_knife');
-    this.inventory.equip_weapon_by_name('dev_bow');
+    //TODO maybe remove, handy but implies ranged weapon
+    this.inventory.equip_ranged_weapon();
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
     //----- only hard dependancy
@@ -49,8 +50,8 @@ class Archer extends Enemy {
 
   _stop_moving() {
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-
-    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
+    //TODO check if working
+    tweens.forEach(tween =>tween.stop());
   }
 
   _walk_to_enemy() {
@@ -61,26 +62,26 @@ class Archer extends Enemy {
 
   kill() {
     if(!this.loot.items) this.loot.populate();
-    // this.loot.populate();
     this.loot.create_icon();
-    this.animation.kill();
 
+    this.animation.kill();
     this._stop_moving();
+
     this._logic.remove();
   }
 
   _loot_enemy() {
-    this.melee.equip_weapon();
+    this.melee.equip();
     this.animation.idle();
 
     this._stop_moving();
-
+    //TODO abstract this should be in loot component
     this.enemy.loot.items.forEach(item => this.loot.items.push(item));
     this.enemy.loot.empty();
 
     this.face_sprite(this.enemy.sprite);
 
-    this._logic.remove()
+    this._logic.remove();
   }
 
   logic_start() {

@@ -116,6 +116,7 @@ class Human {
     this.sprite.height /= 1.5;
     this.sprite.width  /= 1.5;
     this.sprite.animationSpeed = 0.5;
+    //TODO think of a better way to manage images saved at different roations
     this.sprite.rotation_offset = 0;
   }
 
@@ -155,8 +156,8 @@ class Human {
   kill() {
     this.sprite.textures = frames.bow.dead;
 
-    this.sprite.loop = false;
     this.sprite.stop();
+    //TODO remove magic number
     this.sprite.height = 120;
     this.sprite.width = 80;
   }
@@ -324,10 +325,11 @@ class Archer extends Enemy {
 
     //----- only hard dependancy
     this.add_component(new Inventory());
-    this.inventory.add_ranged_weapon_by_name('dev_bow');
+    this.inventory.add_ranged_weapon_by_name('old_bow');
     this.animation.weapon = 'bow';
     this.inventory.add_melee_weapon_by_name('dev_knife');
-    this.inventory.equip_weapon_by_name('dev_bow');
+    //TODO maybe remove, handy but implies ranged weapon
+    this.inventory.equip_ranged_weapon();
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
     //----- only hard dependancy
@@ -343,8 +345,8 @@ class Archer extends Enemy {
 
   _stop_moving() {
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-
-    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
+    //TODO check if working
+    tweens.forEach(tween =>tween.stop());
   }
 
   _walk_to_enemy() {
@@ -355,26 +357,26 @@ class Archer extends Enemy {
 
   kill() {
     if(!this.loot.items) this.loot.populate();
-    // this.loot.populate();
     this.loot.create_icon();
-    this.animation.kill();
 
+    this.animation.kill();
     this._stop_moving();
+
     this._logic.remove();
   }
 
   _loot_enemy() {
-    this.melee.equip_weapon();
+    this.melee.equip();
     this.animation.idle();
 
     this._stop_moving();
-
+    //TODO abstract this should be in loot component
     this.enemy.loot.items.forEach(item => this.loot.items.push(item));
     this.enemy.loot.empty();
 
     this.face_sprite(this.enemy.sprite);
 
-    this._logic.remove()
+    this._logic.remove();
   }
 
   logic_start() {
@@ -444,7 +446,8 @@ class Rat extends Animal {
     //---- hard dependancy
     this.add_component(new Inventory());
     this.inventory.add_melee_weapon_by_name('rat_teeth');
-    this.inventory.equip_weapon_by_name('rat_teeth');
+    //TODO maybe remove, handy but implies ranged weapon
+    this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
     //----- hard dependancy
 
@@ -519,6 +522,18 @@ class Inventory {
     const weapon = get_item(name);
 
     this.equipped = weapon;
+  }
+
+  equip_ranged_weapon() {
+    if(!this.ranged_weapon) throw new Error('No ranged weapon equipped');
+
+    this.equiped = this.ranged_weapon;
+  }
+
+  equip_melee_weapon() {
+    if(!this.melee_weapon) throw new Error('No melee weapon equipped');
+
+    this.equiped = this.melee_weapon;
   }
 
   add_ranged_weapon_by_name(name) {
@@ -817,14 +832,14 @@ class Melee {
     this.melee_weapon = entity.inventory.melee_weapon;
   }
 
-  equip_weapon() {
-    this.entity.inventory.equip_weapon_by_name(this.melee_weapon.name);
+  equip() {
+    this.entity.inventory.equip_melee_weapon();
 
     this.entity.animation.weapon = this.melee_weapon.animation_name;
   }
 
   attack(target) {
-    this.equip_weapon();
+    this.equip();
     this.entity.animation.attack();
 
     this.entity.face_sprite(target.sprite);
@@ -1030,14 +1045,15 @@ class Range {
     this.ranged_weapon = entity.inventory.ranged_weapon;
   }
 
-  equip_weapon() {
-    this.entity.inventory.equip_weapon_by_name(this.ranged_weapon.name);
+  equip() {
+    console.log(this);
+    this.entity.inventory.equip_ranged_weapon();
 
     this.entity.animation.weapon = this.ranged_weapon.animation_name;
   }
 
   attack(target) {
-    this.equip_weapon();
+    this.equip();
     this.entity.animation.ready_weapon();
 
     this.entity.face_sprite(target.sprite);
@@ -1213,6 +1229,7 @@ class Vitals {
     //if('logic' in this.entity) this.entity.logic.stop();
     this.entity.kill();
 
+    //TODO This is too low level to be here
     const tweens = PIXI.tweenManager.getTweensForTarget(this.entity.sprite);
 
     tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
@@ -1267,7 +1284,7 @@ class Character {
 
   //TODO This function should not live here
   face_sprite(sprite) {
-    this.sprite.rotation = radian(this.sprite, sprite)+ this.sprite.rotation_offset;
+    this.sprite.rotation = radian(sprite, this.sprite)+ this.sprite.rotation_offset;
   }
 
   set_position(point) {
@@ -1414,6 +1431,8 @@ class Player extends Character {
     this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
+    //TODO this is good to not couple this to inventory
+    //looks weird think about it
     this.animation.weapon = 'bow';
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
@@ -1996,9 +2015,10 @@ module.exports = {
  */
 
 function melee_attack(attacker, target) {
-  const attacker_damage = attacker.inventory.weapon_damage;
+  console.log(attacker)
+  const { damage } = attacker.inventory.melee_weapon;
 
-  target.vitals.damage(attacker_damage);
+  target.vitals.damage(damage);
 }
 
 module.exports = {
@@ -2354,10 +2374,10 @@ function create_arrow_tween(arrow, power, arrow_path) {
  * @params {number}    - power
  */
 function shoot_arrow_with_collision(origin, point) {
-  const { weapon_speed, weapon_damage } = origin.inventory;
+  const { speed, damage } = origin.inventory.ranged_weapon;
   const arrow       = create_rotated_arrow(origin.sprite, point);
   const arrow_path  = create_arrow_path(origin.sprite, point);
-  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, speed, arrow_path);
 
   const entities = Entity_Container.get();
   arrow_tween.on('update', () => {
@@ -2365,7 +2385,7 @@ function shoot_arrow_with_collision(origin, point) {
     const enemy = entities.find(entity => entity.sprite.containsPoint(arrow_point));
     if(enemy) {
       arrow_tween.stop();
-      enemy.vitals.damage(weapon_damage);
+      enemy.vitals.damage(damage);
 
       arrow.destroy();
       return;
@@ -2379,10 +2399,10 @@ function shoot_arrow_with_collision(origin, point) {
  * @params {number}    - power
  */
 function shoot_arrow(origin, target) {
-  const { weapon_speed, weapon_damage} = origin.inventory;
+  const { speed, damage } = origin.inventory.ranged_weapon;
   const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
   const arrow_path  = create_arrow_path(origin.sprite, target.sprite);
-  const arrow_tween = create_arrow_tween(arrow, weapon_speed, arrow_path);
+  const arrow_tween = create_arrow_tween(arrow, speed, arrow_path);
 
   arrow_tween.on('update', () => {
     const arrow_point = arrow.getGlobalPosition();
@@ -2390,7 +2410,7 @@ function shoot_arrow(origin, target) {
     if(target.sprite.containsPoint(arrow_point)) {
       arrow_tween.stop();
       arrow.destroy();
-      target.vitals.damage(weapon_damage);
+      target.vitals.damage(damage);
       return;
     }
   });

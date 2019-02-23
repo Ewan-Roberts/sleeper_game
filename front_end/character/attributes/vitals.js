@@ -31,6 +31,7 @@ class Vitals {
     //if('logic' in this.entity) this.entity.logic.stop();
     this.entity.kill();
 
+    //TODO This is too low level to be here
     const tweens = PIXI.tweenManager.getTweensForTarget(this.entity.sprite);
 
     tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));

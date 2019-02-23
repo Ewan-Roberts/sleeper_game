@@ -11,14 +11,15 @@ class Range {
     this.ranged_weapon = entity.inventory.ranged_weapon;
   }
 
-  equip_weapon() {
-    this.entity.inventory.equip_weapon_by_name(this.ranged_weapon.name);
+  equip() {
+    console.log(this);
+    this.entity.inventory.equip_ranged_weapon();
 
     this.entity.animation.weapon = this.ranged_weapon.animation_name;
   }
 
   attack(target) {
-    this.equip_weapon();
+    this.equip();
     this.entity.animation.ready_weapon();
 
     this.entity.face_sprite(target.sprite);
