@@ -1,15 +1,13 @@
 'use strict';
 
-const PIXI = require('pixi.js');
-
 const { timer    } = require('../../engine/ticker');
-const { PathFind } = require('../../engine/pathfind.js');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
 const { Animal    } = require('../types/rat');
 const { Melee     } = require('../attributes/melee');
 const { Inventory } = require('../attributes/inventory');
 const { Lootable  } = require('../attributes/lootable');
+const { Pathfind  } = require('../attributes/pathfind');
 const { distance_between_points } = require('../../utils/math');
 
 /**
@@ -22,7 +20,7 @@ const { distance_between_points } = require('../../utils/math');
  * @memberof Vitals
  */
 class Rat extends Animal {
-  constructor(enemy) {
+  constructor() {
     super();
     this.name = 'enemy';
 
@@ -32,10 +30,10 @@ class Rat extends Animal {
     //TODO maybe remove, handy but implies ranged weapon
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
+    this.add_component(new Pathfind(this.sprite));
     //----- hard dependancy
 
     this.add_component(new Lootable(this));
-    this.enemy = enemy;
     this._logic = timer.createTimer(800);
     this._logic.repeat = 20;
     this._logic.expire = true;
@@ -43,10 +41,8 @@ class Rat extends Animal {
     Entity_Container.add(this);
   }
 
-  _stop_moving() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-
-    tweens.forEach(tween => tween.stop());
+  enemy(character) {
+    this.enemy = character;
   }
 
   kill() {
@@ -54,24 +50,25 @@ class Rat extends Animal {
     this.loot.create_icon();
     this.animation.kill();
 
-    this._stop_moving();
+    this.pathfind.stop();
     this._logic.remove();
   }
 
   _walk_to_enemy() {
     this.animation.walk();
 
-    PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
+    this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
-  // TODO RAT LOGIC
   logic_start() {
+    if(!this.enemy) return new Error('no enemy');
+
     this._logic.start();
     this._logic.on('repeat', () => {
 
       if(!this.vitals.alive) this.kill();
 
-      const distance = distance_between_points(this.enemy.sprite, this.sprite);
+      const distance = this.distance_to(this.enemy.sprite);
 
       if(distance > 200) return this._walk_to_enemy();
 

@@ -132,21 +132,7 @@ class Human {
     this.state = action;
   }
 
-  face_up() { this.sprite.rotation = -2; }
-
-  ready_weapon() {
-    this.switch(this.weapon, 'ready');
-  }
-
-  face_down() { this.sprite.rotation = 2; }
-
-  face_left() { this.sprite.rotation = -3; }
-
-  face_right() { this.sprite.rotation = 0; }
-
-  set current_weapon(weapon) { this.weapon = weapon; }
-
-  get current_weapon() { return this.weapon; }
+  ready_weapon() { this.switch(this.weapon, 'ready'); }
 
   attack() { this.switch(this.weapon, 'attack'); }
 
@@ -158,8 +144,22 @@ class Human {
     this.sprite.stop();
     //TODO remove magic number
     this.sprite.height = 120;
-    this.sprite.width = 80;
+    this.sprite.width  = 80;
   }
+
+  walk() { this.switch(this.weapon, 'walk'); }
+
+  face_up() { this.sprite.rotation = -2; }
+
+  face_down() { this.sprite.rotation = 2; }
+
+  face_left() { this.sprite.rotation = -3; }
+
+  face_right() { this.sprite.rotation = 0; }
+
+  set current_weapon(weapon) { this.weapon = weapon; }
+
+  get current_weapon() { return this.weapon; }
 
   move_up_by(amount) { this.sprite.y -= amount; }
 
@@ -168,8 +168,6 @@ class Human {
   move_left_by(amount) { this.sprite.x -= amount; }
 
   move_right_by(amount) { this.sprite.x += amount; }
-
-  walk() { this.switch(this.weapon, 'walk'); }
 }
 
 

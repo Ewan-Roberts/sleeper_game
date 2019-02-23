@@ -27,6 +27,10 @@ class Lootable {
     });
   }
 
+  take_items(items) {
+    items.forEach(item => this.items.push(item));
+  }
+
   show() {
     View_Inventory.create_populated_slots(this.entity.sprite, this.items);
   }

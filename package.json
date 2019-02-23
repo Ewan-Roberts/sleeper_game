@@ -7,7 +7,7 @@
     "watch": "watchify front_end/index.js -o ./public/js/bundle.js",
     "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.js --compress --mangle",
     "start": "nodemon server & echo 'Here we go'",
-    "spritesheet": "pixi-packer ./scripts/images.js public/images/",
+    "spritesheet": "pixi-packer ./scripts/images.js public/images/ --clean-cache",
     "test": "mocha --recursive",
     "count": "cloc --exclude-dir=node_modules ."
   },

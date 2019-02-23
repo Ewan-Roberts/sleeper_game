@@ -133,21 +133,7 @@ class Human {
     this.state = action;
   }
 
-  face_up() { this.sprite.rotation = -2; }
-
-  ready_weapon() {
-    this.switch(this.weapon, 'ready');
-  }
-
-  face_down() { this.sprite.rotation = 2; }
-
-  face_left() { this.sprite.rotation = -3; }
-
-  face_right() { this.sprite.rotation = 0; }
-
-  set current_weapon(weapon) { this.weapon = weapon; }
-
-  get current_weapon() { return this.weapon; }
+  ready_weapon() { this.switch(this.weapon, 'ready'); }
 
   attack() { this.switch(this.weapon, 'attack'); }
 
@@ -159,8 +145,22 @@ class Human {
     this.sprite.stop();
     //TODO remove magic number
     this.sprite.height = 120;
-    this.sprite.width = 80;
+    this.sprite.width  = 80;
   }
+
+  walk() { this.switch(this.weapon, 'walk'); }
+
+  face_up() { this.sprite.rotation = -2; }
+
+  face_down() { this.sprite.rotation = 2; }
+
+  face_left() { this.sprite.rotation = -3; }
+
+  face_right() { this.sprite.rotation = 0; }
+
+  set current_weapon(weapon) { this.weapon = weapon; }
+
+  get current_weapon() { return this.weapon; }
 
   move_up_by(amount) { this.sprite.y -= amount; }
 
@@ -169,8 +169,6 @@ class Human {
   move_left_by(amount) { this.sprite.x -= amount; }
 
   move_right_by(amount) { this.sprite.x += amount; }
-
-  walk() { this.switch(this.weapon, 'walk'); }
 }
 
 
@@ -191,13 +189,11 @@ class rat_animations {
     const moving_frames = [];
 
     for (let i = 1; i < 15; i += 1) {
-      const val = i < 10 ? `0${i}` : i;
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
+      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
     }
 
     for (let i = 15; i > 0; i -= 1) {
-      const val = i < 10 ? `0${i}` : i;
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
+      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
     }
 
     moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
@@ -205,7 +201,6 @@ class rat_animations {
     moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
-
     return moving_frames;
   }
 
@@ -218,7 +213,7 @@ class rat_animations {
       PIXI.Texture.fromFrame('rat_51'),
       PIXI.Texture.fromFrame('rat_37'),
       PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_01'),
+      PIXI.Texture.fromFrame('rat_1'),
     ];
 
     return waiting_frames;
@@ -243,7 +238,7 @@ class rat_animations {
       PIXI.Texture.fromFrame('rat_38'),
       PIXI.Texture.fromFrame('rat_37'),
       PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_01'),
+      PIXI.Texture.fromFrame('rat_1'),
     ];
 
     return eating_frames;
@@ -295,64 +290,39 @@ module.exports = {
 },{"pixi.js":261}],3:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-
 const { timer            } = require('../../engine/ticker');
-const { PathFind         } = require('../../engine/pathfind.js');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
 const { Enemy     } = require('../types/enemy');
 const { Melee     } = require('../attributes/melee');
 const { Range     } = require('../attributes/ranged');
 const { Inventory } = require('../attributes/inventory');
-const { Lootable  } = require('../attributes/lootable');
-const { distance_between_points } = require('../../utils/math');
 
-/**
- * @class
- * @extends Enemy
- * @memberof Human
- * @memberof Inventory
- * @memberof Lootable
- * @memberof Predator
- * @memberof Vitals
- * @memberof Raycasting
- */
 class Archer extends Enemy {
-  constructor(enemy) {
+  constructor() {
     super();
-    this.name = 'enemy';
+    this.name = 'archer';
 
-    //----- only hard dependancy
     this.add_component(new Inventory());
     this.inventory.add_ranged_weapon_by_name('old_bow');
-    this.animation.weapon = 'bow';
     this.inventory.add_melee_weapon_by_name('dev_knife');
-    //TODO maybe remove, handy but implies ranged weapon
     this.inventory.equip_ranged_weapon();
+    this.animation.weapon = 'bow';
+    // TODO these are coupled
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
-    //----- only hard dependancy
-
-    this.add_component(new Lootable(this));
-    this.enemy = enemy;
-    this._logic = timer.createTimer(800);
-    this._logic.repeat = 20;
-    this._logic.expire = true;
 
     Entity_Container.add(this);
   }
 
-  _stop_moving() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-    //TODO check if working
-    tweens.forEach(tween =>tween.stop());
+  enemy(character) {
+    this.enemy = character;
   }
 
   _walk_to_enemy() {
     this.animation.walk();
 
-    PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
+    this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
   kill() {
@@ -360,73 +330,65 @@ class Archer extends Enemy {
     this.loot.create_icon();
 
     this.animation.kill();
-    this._stop_moving();
 
+    this.pathfind.stop();
     this._logic.remove();
   }
 
   _loot_enemy() {
     this.melee.equip();
     this.animation.idle();
+    this.pathfind.stop();
 
-    this._stop_moving();
-    //TODO abstract this should be in loot component
-    this.enemy.loot.items.forEach(item => this.loot.items.push(item));
+    this.loot.take_items(this.enemy.loot.items);
     this.enemy.loot.empty();
-
-    this.face_sprite(this.enemy.sprite);
 
     this._logic.remove();
   }
 
   logic_start() {
+    this._logic = timer.createTimer(800);
+    this._logic.repeat = 20;
+    this._logic.expire = true;
     this._logic.start();
+
     this.animation.ready_weapon();
 
     this._logic.on('repeat', () => {
-      const distance = distance_between_points(this.enemy.sprite, this.sprite);
+      const distance = this.distance_to(this.enemy.sprite);
 
       if(distance < 220) {
-        if(!this.enemy.loot) return;
-        this._loot_enemy();
+        if(!this.enemy.vitals.alive) return this._loot_enemy();
+
+        return this.melee.attack(this.enemy);
       }
 
       if(!this.enemy.vitals.alive) return this._walk_to_enemy();
 
-      // shoot through walls
-      // const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
-      // if(can_see_enemy){
-      this._stop_moving();
-
-      if(distance > 200) return this.range.attack(this.enemy);
-
-      return this.melee.attack(this.enemy);
-      // }
+      return this.range.attack(this.enemy);
     });
-
-    this._logic.on('stop', () => console.log('i have been stopped'));
-    this._logic.on('end', () => console.log('i end'));
   }
 }
 
+// const can_see_enemy = this.raycasting.contains_point(this.enemy.sprite);
+// if(can_see_enemy){
+// }
 
 module.exports = {
   Archer,
 };
 
-},{"../../engine/entity_container.js":32,"../../engine/pathfind.js":35,"../../engine/ticker":41,"../../utils/math":60,"../attributes/inventory":8,"../attributes/lootable":10,"../attributes/melee":11,"../attributes/ranged":15,"../types/enemy":21,"pixi.js":261}],4:[function(require,module,exports){
+},{"../../engine/entity_container.js":32,"../../engine/ticker":41,"../attributes/inventory":8,"../attributes/melee":11,"../attributes/ranged":15,"../types/enemy":21}],4:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-
 const { timer    } = require('../../engine/ticker');
-const { PathFind } = require('../../engine/pathfind.js');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
 const { Animal    } = require('../types/rat');
 const { Melee     } = require('../attributes/melee');
 const { Inventory } = require('../attributes/inventory');
 const { Lootable  } = require('../attributes/lootable');
+const { Pathfind  } = require('../attributes/pathfind');
 const { distance_between_points } = require('../../utils/math');
 
 /**
@@ -439,7 +401,7 @@ const { distance_between_points } = require('../../utils/math');
  * @memberof Vitals
  */
 class Rat extends Animal {
-  constructor(enemy) {
+  constructor() {
     super();
     this.name = 'enemy';
 
@@ -449,10 +411,10 @@ class Rat extends Animal {
     //TODO maybe remove, handy but implies ranged weapon
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
+    this.add_component(new Pathfind(this.sprite));
     //----- hard dependancy
 
     this.add_component(new Lootable(this));
-    this.enemy = enemy;
     this._logic = timer.createTimer(800);
     this._logic.repeat = 20;
     this._logic.expire = true;
@@ -460,10 +422,8 @@ class Rat extends Animal {
     Entity_Container.add(this);
   }
 
-  _stop_moving() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
-
-    tweens.forEach(tween => tween.stop());
+  enemy(character) {
+    this.enemy = character;
   }
 
   kill() {
@@ -471,24 +431,25 @@ class Rat extends Animal {
     this.loot.create_icon();
     this.animation.kill();
 
-    this._stop_moving();
+    this.pathfind.stop();
     this._logic.remove();
   }
 
   _walk_to_enemy() {
     this.animation.walk();
 
-    PathFind.move_sprite_to_sprite_on_grid(this.sprite, this.enemy.sprite);
+    this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
-  // TODO RAT LOGIC
   logic_start() {
+    if(!this.enemy) return new Error('no enemy');
+
     this._logic.start();
     this._logic.on('repeat', () => {
 
       if(!this.vitals.alive) this.kill();
 
-      const distance = distance_between_points(this.enemy.sprite, this.sprite);
+      const distance = this.distance_to(this.enemy.sprite);
 
       if(distance > 200) return this._walk_to_enemy();
 
@@ -505,7 +466,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/entity_container.js":32,"../../engine/pathfind.js":35,"../../engine/ticker":41,"../../utils/math":60,"../attributes/inventory":8,"../attributes/lootable":10,"../attributes/melee":11,"../types/rat":24,"pixi.js":261}],5:[function(require,module,exports){
+},{"../../engine/entity_container.js":32,"../../engine/ticker":41,"../../utils/math":60,"../attributes/inventory":8,"../attributes/lootable":10,"../attributes/melee":11,"../attributes/pathfind":13,"../types/rat":24}],5:[function(require,module,exports){
 'use strict';
 
 const { get_item } = require('../../items/item_data');
@@ -806,6 +767,10 @@ class Lootable {
     });
   }
 
+  take_items(items) {
+    items.forEach(item => this.items.push(item));
+  }
+
   show() {
     View_Inventory.create_populated_slots(this.entity.sprite, this.items);
   }
@@ -826,6 +791,8 @@ const { melee_attack } = require('../../engine/melee');
 
 class Melee {
   constructor(entity) {
+    //TODO this is a coupling
+    if(!entity.inventory) throw new Error('This component needs an inventory');
     this.name   = 'melee';
     this.entity = entity;
 
@@ -928,6 +895,35 @@ module.exports = {
 },{"../../engine/pixi_containers":36,"../../engine/ranged":37,"../../engine/shadows":40,"../../utils/math":60,"../../view/view_aiming_cone":62}],13:[function(require,module,exports){
 'use strict';
 
+const PIXI = require('pixi.js');
+
+const { pathfind_sprite } = require('../../engine/pathfind.js');
+
+class Pathfind {
+  constructor(sprite) {
+    this.name = 'pathfind';
+
+    this.sprite = sprite;
+  }
+
+  go_to_sprite(sprite) {
+    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, sprite);
+  }
+
+  stop() {
+    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
+
+    tweens.forEach(tween => tween.stop());
+  }
+}
+
+module.exports = {
+  Pathfind,
+};
+
+},{"../../engine/pathfind.js":35,"pixi.js":261}],14:[function(require,module,exports){
+'use strict';
+
 const { timer                         } = require('../../engine/ticker');
 const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
 const { distance_between_points       } = require('../../utils/math');
@@ -983,55 +979,7 @@ module.exports = {
   Predator,
 };
 
-},{"../../engine/pathfind.js":35,"../../engine/ticker":41,"../../utils/math":60}],14:[function(require,module,exports){
-'use strict';
-
-const PIXI = require('pixi.js');
-
-const { timer                         } = require('../../engine/ticker');
-const { move_sprite_to_sprite_on_grid } = require('../../engine/pathfind.js');
-const { distance_between_points       } = require('../../utils/math');
-const { critter_container             } = require('../../engine/pixi_containers');
-
-const min = 50;
-const max = 400;
-
-class Prey {
-  constructor(entity) {
-    this.entity = entity;
-    this.type   = 'prey';
-    this.name   = 'prey';
-  }
-
-  is_prey_to(predator) {
-    const prey = this.entity;
-    const distance = distance_between_points(predator.sprite, prey.sprite);
-
-    const point_to_run_for = new PIXI.Sprite.fromFrame('bunny');
-    point_to_run_for.name  = 'dot';
-
-    const movement_timer  = timer.createTimer(500);
-    movement_timer.repeat = 20;
-    movement_timer.on('repeat', () => {
-      if(distance < min || distance > max || !prey.vitals.alive) return;
-
-      point_to_run_for.position.set(
-        prey.sprite.x + (prey.sprite.x - predator.sprite.x),
-        prey.sprite.y + (prey.sprite.y - predator.sprite.y)
-      );
-
-      move_sprite_to_sprite_on_grid(prey.sprite, point_to_run_for);
-    }).start();
-
-    critter_container.addChild(point_to_run_for);
-  }
-}
-
-module.exports = {
-  Prey,
-};
-
-},{"../../engine/pathfind.js":35,"../../engine/pixi_containers":36,"../../engine/ticker":41,"../../utils/math":60,"pixi.js":261}],15:[function(require,module,exports){
+},{"../../engine/pathfind.js":35,"../../engine/ticker":41,"../../utils/math":60}],15:[function(require,module,exports){
 'use strict';
 
 const { shoot_arrow      } = require('../../engine/ranged');
@@ -1046,7 +994,6 @@ class Range {
   }
 
   equip() {
-    console.log(this);
     this.entity.inventory.equip_ranged_weapon();
 
     this.entity.animation.weapon = this.ranged_weapon.animation_name;
@@ -1265,7 +1212,7 @@ module.exports = {
 
 const PIXI = require('pixi.js');
 
-const { radian } = require('../utils/math');
+const { radian, distance_between_points } = require('../utils/math');
 
 class Character {
   constructor() {
@@ -1285,6 +1232,10 @@ class Character {
   //TODO This function should not live here
   face_sprite(sprite) {
     this.sprite.rotation = radian(sprite, this.sprite)+ this.sprite.rotation_offset;
+  }
+
+  distance_to(sprite) {
+    return distance_between_points(sprite, this.sprite);
   }
 
   set_position(point) {
@@ -1331,8 +1282,9 @@ const { Character  } = require('../character_model');
 const { Human      } = require('../animations/character');
 
 const { Vitals     } = require('../attributes/vitals');
-const { Predator   } = require('../attributes/predator');
+const { Lootable   } = require('../attributes/lootable');
 const { Raycasting } = require('../attributes/raycasting');
+const { Pathfind   } = require('../attributes/pathfind');
 
 class Enemy extends Character {
   constructor() {
@@ -1341,9 +1293,10 @@ class Enemy extends Character {
     this.sprite.name = 'enemy';
 
     this.add_component(new Human(this.sprite));
-    this.add_component(new Predator(this));
+    this.add_component(new Lootable(this));
     this.add_component(new Vitals(this));
     this.add_component(new Raycasting(this.sprite));
+    this.add_component(new Pathfind(this.sprite));
 
     enemy_container.addChild(this.sprite);
   }
@@ -1353,7 +1306,7 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":36,"../animations/character":1,"../attributes/predator":13,"../attributes/raycasting":16,"../attributes/vitals":18,"../character_model":19}],22:[function(require,module,exports){
+},{"../../engine/pixi_containers":36,"../animations/character":1,"../attributes/lootable":10,"../attributes/pathfind":13,"../attributes/raycasting":16,"../attributes/vitals":18,"../character_model":19}],22:[function(require,module,exports){
 'use strict';
 
 
@@ -1449,7 +1402,7 @@ module.exports = {
   Player,
 };
 
-},{"../../engine/shadows":40,"../animations/character":1,"../attributes/inventory":8,"../attributes/keyboard":9,"../attributes/mouse":12,"../attributes/predator":13,"../attributes/status_bar":17,"../attributes/vitals":18,"../character_model":19}],24:[function(require,module,exports){
+},{"../../engine/shadows":40,"../animations/character":1,"../attributes/inventory":8,"../attributes/keyboard":9,"../attributes/mouse":12,"../attributes/predator":14,"../attributes/status_bar":17,"../attributes/vitals":18,"../character_model":19}],24:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -1458,8 +1411,8 @@ const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
-const { Prey      } = require('../attributes/prey');
 const { Lootable  } = require('../attributes/lootable');
+const { Pathfind  } = require('../attributes/pathfind');
 
 class Animal extends Character {
   constructor() {
@@ -1468,9 +1421,9 @@ class Animal extends Character {
 
     this.add_component(new Rodent(this.sprite));
     this.add_component(new Vitals(this));
-    this.add_component(new Prey(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
+    this.add_component(new Pathfind(this.sprite));
 
     critter_container.addChild(this.sprite);
   }
@@ -1480,7 +1433,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":36,"../animations/rat":2,"../attributes/inventory":8,"../attributes/lootable":10,"../attributes/prey":14,"../attributes/vitals":18,"../character_model":19}],25:[function(require,module,exports){
+},{"../../engine/pixi_containers":36,"../animations/rat":2,"../attributes/inventory":8,"../attributes/lootable":10,"../attributes/pathfind":13,"../attributes/vitals":18,"../character_model":19}],25:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -2043,7 +1996,7 @@ const {
   radian,
 } = require('../utils/math');
 
-class PathFind {
+class pathfind_sprite {
   constructor() {
     this.boolean_time = true;
     this.sprite_grid = [];
@@ -2177,7 +2130,7 @@ class PathFind {
 }
 
 module.exports = {
-  PathFind,
+  pathfind_sprite,
 };
 
 
@@ -8726,13 +8679,15 @@ class DevelopmentLevel {
     this.load_test_level();
     this.test_note();
 
-    const rat = new Rat(player);
+    const rat = new Rat();
+    rat.enemy(player);
     rat.set_position({x: 900, y: 1100});
     rat.animation.switch('move');
     rat.logic_start();
 
     // TODO: remove from the input of a class to enemy_of
-    const archer = new Archer(rat);
+    const archer = new Archer();
+    archer.enemy(rat);
     archer.sprite.position.set(1550,1000);
     archer.logic_start();
     // archer.raycasting.add(this.level.segments);
@@ -8914,25 +8869,23 @@ module.exports = {
 'use strict';
 
 const PIXI = require('pixi.js');
-const { world    } = require('../engine/shadows');
+const { world } = require('../engine/shadows');
 const {
   collision_container,
   background_container,
 } = require('../engine/pixi_containers');
 
-const {
-  PathFind,
-} = require('../engine/pathfind.js');
+const { pathfind_sprite } = require('../engine/pathfind.js');
 
-const { Enemy } = require('../character/types/enemy.js');
+const { Enemy  } = require('../character/types/enemy.js');
 const { Friend } = require('../character/types/friend.js');
-const { Rat } = require('../character/types/rat');
+const { Rat    } = require('../character/types/rat');
 const { Player } = require('../character/types/player.js');
 //const { NetworkCharacter } = require('../character/network/network_player.js');
 
-const { Door } = require('./door.js');
-const { Note } = require('../items/note');
-const { Chest } = require('../items/chest');
+const { Door     } = require('./door.js');
+const { Note     } = require('../items/note');
+const { Chest    } = require('../items/chest');
 const { Campfire } = require('../items/fire_place');
 
 class Level {
@@ -8941,7 +8894,7 @@ class Level {
   }
 
   create_grid(level_tiles) {
-    this.grid = PathFind.create_level_grid(level_tiles);
+    this.grid = pathfind_sprite.create_level_grid(level_tiles);
   }
 
   add_to_segments(item) {

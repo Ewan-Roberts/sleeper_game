@@ -12,7 +12,6 @@ class Range {
   }
 
   equip() {
-    console.log(this);
     this.entity.inventory.equip_ranged_weapon();
 
     this.entity.animation.weapon = this.ranged_weapon.animation_name;

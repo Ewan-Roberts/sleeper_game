@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 
-const { radian } = require('../utils/math');
+const { radian, distance_between_points } = require('../utils/math');
 
 class Character {
   constructor() {
@@ -22,6 +22,10 @@ class Character {
   //TODO This function should not live here
   face_sprite(sprite) {
     this.sprite.rotation = radian(sprite, this.sprite)+ this.sprite.rotation_offset;
+  }
+
+  distance_to(sprite) {
+    return distance_between_points(sprite, this.sprite);
   }
 
   set_position(point) {

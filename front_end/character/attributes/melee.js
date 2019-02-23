@@ -4,6 +4,8 @@ const { melee_attack } = require('../../engine/melee');
 
 class Melee {
   constructor(entity) {
+    //TODO this is a coupling
+    if(!entity.inventory) throw new Error('This component needs an inventory');
     this.name   = 'melee';
     this.entity = entity;
 

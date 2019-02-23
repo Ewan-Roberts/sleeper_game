@@ -8,13 +8,11 @@ class rat_animations {
     const moving_frames = [];
 
     for (let i = 1; i < 15; i += 1) {
-      const val = i < 10 ? `0${i}` : i;
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
+      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
     }
 
     for (let i = 15; i > 0; i -= 1) {
-      const val = i < 10 ? `0${i}` : i;
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${val}`));
+      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
     }
 
     moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
@@ -22,7 +20,6 @@ class rat_animations {
     moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
     moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
-
     return moving_frames;
   }
 
@@ -35,7 +32,7 @@ class rat_animations {
       PIXI.Texture.fromFrame('rat_51'),
       PIXI.Texture.fromFrame('rat_37'),
       PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_01'),
+      PIXI.Texture.fromFrame('rat_1'),
     ];
 
     return waiting_frames;
@@ -60,7 +57,7 @@ class rat_animations {
       PIXI.Texture.fromFrame('rat_38'),
       PIXI.Texture.fromFrame('rat_37'),
       PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_01'),
+      PIXI.Texture.fromFrame('rat_1'),
     ];
 
     return eating_frames;

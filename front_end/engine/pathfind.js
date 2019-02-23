@@ -14,7 +14,7 @@ const {
   radian,
 } = require('../utils/math');
 
-class PathFind {
+class pathfind_sprite {
   constructor() {
     this.boolean_time = true;
     this.sprite_grid = [];
@@ -148,7 +148,7 @@ class PathFind {
 }
 
 module.exports = {
-  PathFind,
+  pathfind_sprite,
 };
 
 

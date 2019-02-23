@@ -45,13 +45,15 @@ class DevelopmentLevel {
     this.load_test_level();
     this.test_note();
 
-    const rat = new Rat(player);
+    const rat = new Rat();
+    rat.enemy(player);
     rat.set_position({x: 900, y: 1100});
     rat.animation.switch('move');
     rat.logic_start();
 
     // TODO: remove from the input of a class to enemy_of
-    const archer = new Archer(rat);
+    const archer = new Archer();
+    archer.enemy(rat);
     archer.sprite.position.set(1550,1000);
     archer.logic_start();
     // archer.raycasting.add(this.level.segments);

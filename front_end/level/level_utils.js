@@ -1,25 +1,23 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { world    } = require('../engine/shadows');
+const { world } = require('../engine/shadows');
 const {
   collision_container,
   background_container,
 } = require('../engine/pixi_containers');
 
-const {
-  PathFind,
-} = require('../engine/pathfind.js');
+const { pathfind_sprite } = require('../engine/pathfind.js');
 
-const { Enemy } = require('../character/types/enemy.js');
+const { Enemy  } = require('../character/types/enemy.js');
 const { Friend } = require('../character/types/friend.js');
-const { Rat } = require('../character/types/rat');
+const { Rat    } = require('../character/types/rat');
 const { Player } = require('../character/types/player.js');
 //const { NetworkCharacter } = require('../character/network/network_player.js');
 
-const { Door } = require('./door.js');
-const { Note } = require('../items/note');
-const { Chest } = require('../items/chest');
+const { Door     } = require('./door.js');
+const { Note     } = require('../items/note');
+const { Chest    } = require('../items/chest');
 const { Campfire } = require('../items/fire_place');
 
 class Level {
@@ -28,7 +26,7 @@ class Level {
   }
 
   create_grid(level_tiles) {
-    this.grid = PathFind.create_level_grid(level_tiles);
+    this.grid = pathfind_sprite.create_level_grid(level_tiles);
   }
 
   add_to_segments(item) {
