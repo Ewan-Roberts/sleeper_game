@@ -1,7 +1,5 @@
 'use strict';
 
-const PIXI = require('pixi.js');
-
 const { blood } = require('../../cutscene/blood');
 const { Game  } = require('../../engine/save_manager');
 
@@ -19,25 +17,20 @@ class Vitals {
     this.status         = 'alive';
   }
 
+  get alive() { return (this.status === 'alive'); }
+
   _dead(damage) {
     this.health -= damage;
+
     return this.health < 0;
   }
 
-  kill() {
+  _kill() {
     if(this.entity.name === 'player') Game.over();
+    if(this.entity.pathfind) this.entity.pathfind.stop();
 
-    // if('loot'  in this.entity) this.entity.loot.populate();
-    //if('logic' in this.entity) this.entity.logic.stop();
-    this.entity.kill();
-
-    //TODO This is too low level to be here
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.entity.sprite);
-
-    tweens.forEach(tween => PIXI.tweenManager.removeTween(tween));
-
-    this.entity.animation.kill();
     this.status = 'dead';
+    this.entity.kill();
   }
 
   damage(damage) {
@@ -47,13 +40,8 @@ class Vitals {
 
     if(is_dead) {
       blood.add_at_point(this.entity.sprite);
-
-      this.kill();
+      this._kill();
     }
-  }
-
-  get alive() {
-    return (this.status === 'alive');
   }
 }
 

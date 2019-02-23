@@ -12,9 +12,6 @@ raycast_timer.expire = true;
 
 
 class Raycasting {
-  /*
-   * @param {Object} PIXI.Sprite
-   **/
   constructor(sprite) {
     this.raycast = new PIXI.Graphics();
     this.name    = 'raycasting';
