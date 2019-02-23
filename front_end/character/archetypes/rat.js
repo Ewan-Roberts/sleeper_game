@@ -41,6 +41,12 @@ class Rat extends Animal {
     this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
+  _target_far_away() {
+    const distance = this.distance_to(this.enemy.sprite);
+
+    return distance > 200;
+  }
+
   logic_start() {
     if(!this.enemy) return new Error('no enemy');
 
@@ -52,8 +58,7 @@ class Rat extends Animal {
     this._logic.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
 
-      const distance = this.distance_to(this.enemy.sprite);
-      if(distance > 200) return this._walk_to_enemy();
+      if(this._target_far_away) return this._walk_to_enemy();
 
       return this.melee.attack(this.enemy);
     });

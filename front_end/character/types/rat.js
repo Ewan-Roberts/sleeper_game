@@ -4,6 +4,7 @@ const { critter_container } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');
+
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Lootable  } = require('../attributes/lootable');

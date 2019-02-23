@@ -6,18 +6,17 @@ const { Entity_Container } = require('../../engine/entity_container.js');
 const { Enemy     } = require('../types/enemy');
 const { Melee     } = require('../attributes/melee');
 const { Range     } = require('../attributes/ranged');
-const { Inventory } = require('../attributes/inventory');
 
 class Archer extends Enemy {
   constructor() {
     super();
     this.name = 'archer';
 
-    this.add_component(new Inventory());
     this.inventory.add_ranged_weapon_by_name('old_bow');
     this.inventory.add_melee_weapon_by_name('dev_knife');
     this.inventory.equip_ranged_weapon();
     this.animation.weapon = 'bow';
+
     // TODO these are coupled
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
@@ -57,6 +56,12 @@ class Archer extends Enemy {
     this._logic.remove();
   }
 
+  get _target_far_away() {
+    const distance = this.distance_to(this.enemy.sprite);
+
+    return distance > 200;
+  }
+
   logic_start() {
     this._logic = timer.createTimer(800);
     this._logic.repeat = 20;
@@ -68,17 +73,16 @@ class Archer extends Enemy {
     this._logic.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
 
-      const distance = this.distance_to(this.enemy.sprite);
+      if(this._target_far_away) {
 
-      if(distance < 220) {
-        if(!this.enemy.vitals.alive) return this._loot_enemy();
+        if(!this.enemy.vitals.alive) return this._walk_to_enemy();
 
-        return this.melee.attack(this.enemy);
+        return this.range.attack(this.enemy);
       }
 
-      if(!this.enemy.vitals.alive) return this._walk_to_enemy();
+      if(!this.enemy.vitals.alive) return this._loot_enemy();
 
-      return this.range.attack(this.enemy);
+      return this.melee.attack(this.enemy);
     });
   }
 }
