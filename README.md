@@ -1,6 +1,6 @@
 # sleeper_game
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_1.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_1.png)
 
 - [UPCOMING](../documentation/TODO.md)
 - [COMPLETE](../documentation/DONE.md)
@@ -17,7 +17,7 @@
 - Adopted _ for private functions
 
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_11.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_11.png)
 ## 17.02.19:
 - Add new lighting engine :tada:
 - Add Melee and Range weapon management
@@ -38,13 +38,13 @@
 - Added view and utils layer
 
 ## 02.02.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_10.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_10.png)
 - Add better inventory management system (still a long way to go)
 - Add item for each player section
 - Add item extraction
 
 ## 26.01.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_9.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_9.png)
 - Add basic user create
 - Add basic user find by password
 - Add database ability to do the above
@@ -58,7 +58,7 @@
   - bring the player into the mixin structure
 
 ## 13.01.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_8.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_8.png)
 May not looks very pretty but an important landmark for the engine
 - :tada: Full predator/prey system that can freely scale
 - created more detailed inventory system
@@ -67,7 +67,7 @@ May not looks very pretty but an important landmark for the engine
 - added useful timer functions
 
 ## 06.01.19(2):
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_7.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_7.png)
 - multi-prey pathfinding (lines show paths run)
 - sprite direction and waiting states
 
