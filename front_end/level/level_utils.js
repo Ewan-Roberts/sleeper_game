@@ -10,7 +10,6 @@ const {
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
 const { Enemy  } = require('../character/types/enemy.js');
-const { Friend } = require('../character/types/friend.js');
 const { Rat    } = require('../character/types/rat');
 const { Player } = require('../character/types/player.js');
 //const { NetworkCharacter } = require('../character/network/network_player.js');
@@ -113,13 +112,6 @@ class Level {
     //character.add_raycasting(this.segments)
   }
 
-  create_friend(location, script) {
-    const friend = new Friend();
-    friend.set_position({ x: location.x, y: location.y });
-    friend.add_dialog_handling();
-    friend.add_script(script);
-    friend.add_state_handling();
-  }
 
   create_network_player() {
     const player_details = {

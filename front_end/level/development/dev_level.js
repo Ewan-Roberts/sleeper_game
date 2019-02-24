@@ -61,18 +61,18 @@ class DevelopmentLevel {
 
   }
 
-  load_flat_level() {
-    const bedroom_data  = require('../bedroom/bedroom_map_output.json');
-    const bedroom_tiles = require('../bedroom/bedroom_map_tiled.json');
-    const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
-    bedroom_image.alpha = 0.5;
+  // load_flat_level() {
+  //   const bedroom_data  = require('../bedroom/bedroom_map_output.json');
+  //   const bedroom_tiles = require('../bedroom/bedroom_map_tiled.json');
+  //   const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
+  //   bedroom_image.alpha = 0.5;
 
-    const bedroom = new Level(bedroom_tiles, bedroom_data);
-    bedroom.set_background_image(bedroom_image, bedroom_tiles);
-    bedroom.render_walls(bedroom_data.layers[0].layers[1]);
-    bedroom.create_grid(bedroom_tiles);
-    this.level = bedroom;
-  }
+  //   const bedroom = new Level(bedroom_tiles, bedroom_data);
+  //   bedroom.set_background_image(bedroom_image, bedroom_tiles);
+  //   bedroom.render_walls(bedroom_data.layers[0].layers[1]);
+  //   bedroom.create_grid(bedroom_tiles);
+  //   this.level = bedroom;
+  // }
 
   load_test_level() {
     const debug_room_tiled_data = require('../debug/debug_map_output.json');

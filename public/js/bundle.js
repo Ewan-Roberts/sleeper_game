@@ -178,7 +178,7 @@ module.exports = {
 
 
 
-},{"pixi.js":241}],2:[function(require,module,exports){
+},{"pixi.js":237}],2:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -284,7 +284,7 @@ module.exports = {
   Rodent,
 };
 
-},{"pixi.js":241}],3:[function(require,module,exports){
+},{"pixi.js":237}],3:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -384,7 +384,7 @@ module.exports = {
   Archer,
 };
 
-},{"../../engine/entity_container.js":27,"../../engine/ticker":37,"../attributes/melee":9,"../attributes/ranged":12,"../types/enemy":18}],4:[function(require,module,exports){
+},{"../../engine/entity_container.js":25,"../../engine/ticker":35,"../attributes/melee":8,"../attributes/ranged":11,"../types/enemy":17}],4:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -454,7 +454,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/entity_container.js":27,"../../engine/ticker":37,"../attributes/melee":9,"../types/rat":21}],5:[function(require,module,exports){
+},{"../../engine/entity_container.js":25,"../../engine/ticker":35,"../attributes/melee":8,"../types/rat":19}],5:[function(require,module,exports){
 'use strict';
 
 const { get_item } = require('../../items/item_data');
@@ -522,9 +522,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_data":44}],6:[function(require,module,exports){
-arguments[4][5][0].apply(exports,arguments)
-},{"../../items/item_data":44,"dup":5}],7:[function(require,module,exports){
+},{"../../items/item_data":42}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -667,7 +665,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":31,"../../engine/save_manager":34,"../../engine/shadows":35,"../../view/view_player_inventory":61}],8:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../../engine/save_manager":32,"../../engine/shadows":33,"../../view/view_player_inventory":57}],7:[function(require,module,exports){
 'use strict';
 
 const { get_random_items } = require('../../items/item_data');
@@ -714,7 +712,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../items/item_data":44,"../../view/view_icons":59,"../../view/view_inventory":60}],9:[function(require,module,exports){
+},{"../../items/item_data":42,"../../view/view_icons":55,"../../view/view_inventory":56}],8:[function(require,module,exports){
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
@@ -748,7 +746,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":29}],10:[function(require,module,exports){
+},{"../../engine/melee":27}],9:[function(require,module,exports){
 'use strict';
 
 const { gui_container              } = require('../../engine/pixi_containers');
@@ -811,7 +809,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../engine/pixi_containers":31,"../../engine/ranged":32,"../../engine/shadows":35,"../../utils/math":55,"../../view/view_aiming_cone":57}],11:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../../engine/ranged":30,"../../engine/shadows":33,"../../utils/math":51,"../../view/view_aiming_cone":53}],10:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -840,7 +838,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":30,"pixi.js":241}],12:[function(require,module,exports){
+},{"../../engine/pathfind.js":28,"pixi.js":237}],11:[function(require,module,exports){
 'use strict';
 
 const { shoot_arrow      } = require('../../engine/ranged');
@@ -878,7 +876,7 @@ module.exports = {
   Range,
 };
 
-},{"../../engine/ranged":32,"../../view/view_aiming_line":58}],13:[function(require,module,exports){
+},{"../../engine/ranged":30,"../../view/view_aiming_line":54}],12:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -963,7 +961,7 @@ module.exports = {
   Raycasting,
 };
 
-},{"../../engine/pixi_containers":31,"../../engine/raycasting":33,"../../engine/ticker":37,"pixi.js":241}],14:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../../engine/raycasting":31,"../../engine/ticker":35,"pixi.js":237}],13:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -998,7 +996,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":37,"../../view/view_player_status_meter":62}],15:[function(require,module,exports){
+},{"../../engine/ticker":35,"../../view/view_player_status_meter":58}],14:[function(require,module,exports){
 'use strict';
 
 const { blood } = require('../../cutscene/blood');
@@ -1050,7 +1048,7 @@ module.exports = {
 };
 
 
-},{"../../cutscene/blood":22,"../../engine/save_manager":34}],16:[function(require,module,exports){
+},{"../../cutscene/blood":20,"../../engine/save_manager":32}],15:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -1085,7 +1083,7 @@ module.exports = {
 
 
 
-},{"../utils/math":55,"pixi.js":241}],17:[function(require,module,exports){
+},{"../utils/math":51,"pixi.js":237}],16:[function(require,module,exports){
 'use strict';
 
 const { cutscene_container } = require('../../engine/pixi_containers');
@@ -1109,7 +1107,7 @@ module.exports = {
   Cutscene_NPC,
 };
 
-},{"../../engine/pixi_containers":31,"../animations/character":1,"../character_model":16}],18:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../animations/character":1,"../character_model":15}],17:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
@@ -1144,61 +1142,7 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":31,"../animations/character":1,"../attributes/inventory":6,"../attributes/lootable":8,"../attributes/pathfind":11,"../attributes/raycasting":13,"../attributes/vitals":15,"../character_model":16}],19:[function(require,module,exports){
-'use strict';
-
-
-const { friend_container } = require('../../engine/pixi_containers');
-
-const { Character  } = require('../character_model');
-const { Human      } = require('../animations/character');
-
-const { Vitals     } = require('../attributes/vitals');
-const { Inventory  } = require('../attributes/Inventory');
-const { Raycasting } = require('../attributes/raycasting');
-
-class Friend extends Character {
-  constructor() {
-    super();
-    this.name = 'friend';
-    this.sprite.name = 'friend';
-
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.add_component(new Human(this.sprite));
-    this.add_component(new Inventory());
-    this.add_component(new Vitals());
-    this.add_component(new Raycasting(this.sprite));
-    //TODO: Talk Component
-    this.add_component(new Dialog());
-
-    friend_container.addChild(this.sprite);
-  }
-
-  add_script(script) {
-    this.sprite.dialog = {
-      script: script,
-      current_step: 0,
-    };
-  }
-
-  add_state_handling() {
-    this.sprite.click = () => {
-      const player = viewport.getChildByName('player');
-      this.dialog.create_background();
-      this.dialog.add_script(this.sprite.dialog.script);
-      this.dialog.add_portrait(player, 'merc_portrait');
-      this.dialog.enter_dialog_slide(player);
-    };
-  }
-}
-
-
-module.exports = {
-  Friend,
-};
-
-},{"../../engine/pixi_containers":31,"../animations/character":1,"../attributes/Inventory":5,"../attributes/raycasting":13,"../attributes/vitals":15,"../character_model":16}],20:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../animations/character":1,"../attributes/inventory":5,"../attributes/lootable":7,"../attributes/pathfind":10,"../attributes/raycasting":12,"../attributes/vitals":14,"../character_model":15}],18:[function(require,module,exports){
 'use strict';
 
 const { world     } = require('../../engine/shadows');
@@ -1235,7 +1179,7 @@ module.exports = {
   Player,
 };
 
-},{"../../engine/shadows":35,"../animations/character":1,"../attributes/inventory":6,"../attributes/keyboard":7,"../attributes/mouse":10,"../attributes/status_bar":14,"../attributes/vitals":15,"../character_model":16}],21:[function(require,module,exports){
+},{"../../engine/shadows":33,"../animations/character":1,"../attributes/inventory":5,"../attributes/keyboard":6,"../attributes/mouse":9,"../attributes/status_bar":13,"../attributes/vitals":14,"../character_model":15}],19:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -1267,7 +1211,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":31,"../animations/rat":2,"../attributes/inventory":6,"../attributes/lootable":8,"../attributes/pathfind":11,"../attributes/vitals":15,"../character_model":16}],22:[function(require,module,exports){
+},{"../../engine/pixi_containers":29,"../animations/rat":2,"../attributes/inventory":5,"../attributes/lootable":7,"../attributes/pathfind":10,"../attributes/vitals":14,"../character_model":15}],20:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -1288,7 +1232,7 @@ module.exports = {
   blood,
 };
 
-},{"../engine/pixi_containers":31,"pixi.js":241}],23:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"pixi.js":237}],21:[function(require,module,exports){
 'use strict';
 
 const { world } = require('../engine/shadows');
@@ -1307,7 +1251,7 @@ module.exports = {
   Camera,
 };
 
-},{"../engine/shadows":35}],24:[function(require,module,exports){
+},{"../engine/shadows":33}],22:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -1471,7 +1415,7 @@ module.exports = {
   intro_cutscene,
 };
 
-},{"../character/types/cutscene_npc":17,"../engine/pixi_containers":31,"../engine/shadows":35,"../engine/tween":38,"./camera":23,"./light":25,"pixi.js":241}],25:[function(require,module,exports){
+},{"../character/types/cutscene_npc":16,"../engine/pixi_containers":29,"../engine/shadows":33,"../engine/tween":36,"./camera":21,"./light":23,"pixi.js":237}],23:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
@@ -1647,7 +1591,7 @@ module.exports = {
   candle,
 };
 
-},{"../engine/pixi_containers":31,"../engine/shadows":35,"../engine/sound":36,"../engine/ticker":37,"pixi.js":241}],26:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"../engine/shadows":33,"../engine/sound":34,"../engine/ticker":35,"pixi.js":237}],24:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1672,7 +1616,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":241}],27:[function(require,module,exports){
+},{"pixi.js":237}],25:[function(require,module,exports){
 'use strict';
 
 const entities = [];
@@ -1696,7 +1640,7 @@ module.exports = {
   Entity_Container,
 };
 
-},{}],28:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1783,7 +1727,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./pixi_containers":31,"pixi.js":241}],29:[function(require,module,exports){
+},{"./pixi_containers":29,"pixi.js":237}],27:[function(require,module,exports){
 'use strict';
 
 /*
@@ -1801,7 +1745,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],30:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1982,7 +1926,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/easystar":54,"../utils/math":55,"./grid":28,"./pixi_containers":31,"pixi.js":241}],31:[function(require,module,exports){
+},{"../utils/easystar":50,"../utils/math":51,"./grid":26,"./pixi_containers":29,"pixi.js":237}],29:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2100,7 +2044,7 @@ module.exports = {
 
 
 
-},{"./shadows":35,"pixi.js":241}],32:[function(require,module,exports){
+},{"./shadows":33,"pixi.js":237}],30:[function(require,module,exports){
 'use strict';
 const PIXI                 = require('pixi.js');
 
@@ -2199,7 +2143,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":55,"./entity_container.js":27,"./pixi_containers":31,"pixi.js":241}],33:[function(require,module,exports){
+},{"../utils/math":51,"./entity_container.js":25,"./pixi_containers":29,"pixi.js":237}],31:[function(require,module,exports){
 'use strict';
 
 function get_intersection(ray, segment){
@@ -2242,7 +2186,7 @@ module.exports = {
   get_intersection,
 };
 
-},{}],34:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 'use strict';
 
 const { save_user } = require('../utils/socket');
@@ -2274,7 +2218,7 @@ module.exports = {
   Game,
 };
 
-},{"../utils/socket":56}],35:[function(require,module,exports){
+},{"../utils/socket":52}],33:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -2316,7 +2260,7 @@ module.exports = {
 
 
 
-},{"./app":26,"pixi-layers":121,"pixi-shadows":123,"pixi.js":241}],36:[function(require,module,exports){
+},{"./app":24,"pixi-layers":117,"pixi-shadows":119,"pixi.js":237}],34:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2339,7 +2283,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],37:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2365,7 +2309,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":26,"pixi-timer":124,"pixi-tween":125,"pixi.js":241}],38:[function(require,module,exports){
+},{"./app":24,"pixi-timer":120,"pixi-tween":121,"pixi.js":237}],36:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -2416,7 +2360,7 @@ module.exports = {
 
 
 
-},{"./pixi_containers":31,"pixi.js":241}],39:[function(require,module,exports){
+},{"./pixi_containers":29,"pixi.js":237}],37:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2441,7 +2385,7 @@ loader.load(async function() {
 
 });
 
-},{"./engine/pixi_containers":31,"./engine/shadows":35,"./level/development/dev_level.js":51,"./view/view_inventory":60,"pixi-packer-parser":122,"pixi.js":241}],40:[function(require,module,exports){
+},{"./engine/pixi_containers":29,"./engine/shadows":33,"./level/development/dev_level.js":47,"./view/view_inventory":56,"pixi-packer-parser":118,"pixi.js":237}],38:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2493,7 +2437,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./item_model":45,"pixi.js":241}],41:[function(require,module,exports){
+},{"./item_model":43,"pixi.js":237}],39:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2522,7 +2466,7 @@ module.exports = {
   Backpack,
 };
 
-},{"./item_model":45,"pixi.js":241}],42:[function(require,module,exports){
+},{"./item_model":43,"pixi.js":237}],40:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2596,7 +2540,7 @@ module.exports = {
   Chest,
 };
 
-},{"../character/attributes/inventory":6,"./item_model":45,"pixi.js":241}],43:[function(require,module,exports){
+},{"../character/attributes/inventory":5,"./item_model":43,"pixi.js":237}],41:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -2664,7 +2608,7 @@ module.exports = {
   Campfire,
 };
 
-},{"./item_model":45,"pixi.js":241}],44:[function(require,module,exports){
+},{"./item_model":43,"pixi.js":237}],42:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -3039,7 +2983,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":26,"../utils/math":55,"pixi.js":241}],45:[function(require,module,exports){
+},{"../engine/app":24,"../utils/math":51,"pixi.js":237}],43:[function(require,module,exports){
 'use strict';
 
 const { non_collision_container,
@@ -3081,4835 +3025,9 @@ module.exports = {
   Item,
 };
 
-},{"../engine/pixi_containers.js":31}],46:[function(require,module,exports){
-arguments[4][40][0].apply(exports,arguments)
-},{"./item_model":45,"dup":40,"pixi.js":241}],47:[function(require,module,exports){
-module.exports={ "height":100,
- "infinite":true,
- "layers":[
-        {
-         "layers":[
-                {
-                 "chunks":[
-                        {
-                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAAwAAAAQAAAAFAAAABgAAAAcAAAAIAAAACQAAAAoAAAALAAAADAAAAA0AAAAOAAAADwAAABAAAAAnAAAAKAAAACkAAAAqAAAAKwAAACwAAAAtAAAALgAAAC8AAAAwAAAAMQAAADIAAAAzAAAANAAAADUAAAA2AAAATQAAAE4AAABPAAAAUAAAAFEAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAHMAAAB0AAAAdQAAAHYAAAB3AAAAeAAAAHkAAAB6AAAAewAAAHwAAAB9AAAAfgAAAH8AAACAAAAAgQAAAIIAAACZAAAAmgAAAJsAAACcAAAAnQAAAJ4AAACfAAAAoAAAAKEAAACiAAAAowAAAKQAAAClAAAApgAAAKcAAACoAAAAvwAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAMYAAADHAAAAyAAAAMkAAADKAAAAywAAAMwAAADNAAAAzgAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA7QAAAO4AAADvAAAA8AAAAPEAAADyAAAA8wAAAPQAAAALAQAADAEAAA0BAAAOAQAADwEAABABAAARAQAAEgEAABMBAAAUAQAAFQEAABYBAAAXAQAAGAEAABkBAAAaAQAAMQEAADIBAAAzAQAANAEAADUBAAA2AQAANwEAADgBAAA5AQAAOgEAADsBAAA8AQAAPQEAAD4BAAA\/AQAAQAEAAFcBAABYAQAAWQEAAFoBAABbAQAAXAEAAF0BAABeAQAAXwEAAGABAABhAQAAYgEAAGMBAABkAQAAZQEAAGYBAAB9AQAAfgEAAH8BAACAAQAAgQEAAIIBAACDAQAAhAEAAIUBAACGAQAAhwEAAIgBAACJAQAAigEAAIsBAACMAQAAowEAAKQBAAClAQAApgEAAKcBAACoAQAAqQEAAKoBAACrAQAArAEAAK0BAACuAQAArwEAALABAACxAQAAsgEAAMkBAADKAQAAywEAAMwBAADNAQAAzgEAAM8BAADQAQAA0QEAANIBAADTAQAA1AEAANUBAADWAQAA1wEAANgBAADvAQAA8AEAAPEBAADyAQAA8wEAAPQBAAD1AQAA9gEAAPcBAAD4AQAA+QEAAPoBAAD7AQAA\/AEAAP0BAAD+AQAAFQIAABYCAAAXAgAAGAIAABkCAAAaAgAAGwIAABwCAAAdAgAAHgIAAB8CAAAgAgAAIQIAACICAAAjAgAAJAIAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGQAAABoAAAAbAAAAHAAAAB0AAAAeAAAAHwAAACAAAAA3AAAAOAAAADkAAAA6AAAAOwAAADwAAAA9AAAAPgAAAD8AAABAAAAAQQAAAEIAAABDAAAARAAAAEUAAABGAAAAXQAAAF4AAABfAAAAYAAAAGEAAABiAAAAYwAAAGQAAABlAAAAZgAAAGcAAABoAAAAaQAAAGoAAABrAAAAbAAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAIkAAACKAAAAiwAAAIwAAACNAAAAjgAAAI8AAACQAAAAkQAAAJIAAACpAAAAqgAAAKsAAACsAAAArQAAAK4AAACvAAAAsAAAALEAAACyAAAAswAAALQAAAC1AAAAtgAAALcAAAC4AAAAzwAAANAAAADRAAAA0gAAANMAAADUAAAA1QAAANYAAADXAAAA2AAAANkAAADaAAAA2wAAANwAAADdAAAA3gAAAPUAAAD2AAAA9wAAAPgAAAD5AAAA+gAAAPsAAAD8AAAA\/QAAAP4AAAD\/AAAAAAEAAAEBAAACAQAAAwEAAAQBAAAbAQAAHAEAAB0BAAAeAQAAHwEAACABAAAhAQAAIgEAACMBAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAQQEAAEIBAABDAQAARAEAAEUBAABGAQAARwEAAEgBAABJAQAASgEAAEsBAABMAQAATQEAAE4BAABPAQAAUAEAAGcBAABoAQAAaQEAAGoBAABrAQAAbAEAAG0BAABuAQAAbwEAAHABAABxAQAAcgEAAHMBAAB0AQAAdQEAAHYBAACNAQAAjgEAAI8BAACQAQAAkQEAAJIBAACTAQAAlAEAAJUBAACWAQAAlwEAAJgBAACZAQAAmgEAAJsBAACcAQAAswEAALQBAAC1AQAAtgEAALcBAAC4AQAAuQEAALoBAAC7AQAAvAEAAL0BAAC+AQAAvwEAAMABAADBAQAAwgEAANkBAADaAQAA2wEAANwBAADdAQAA3gEAAN8BAADgAQAA4QEAAOIBAADjAQAA5AEAAOUBAADmAQAA5wEAAOgBAAD\/AQAAAAIAAAECAAACAgAAAwIAAAQCAAAFAgAABgIAAAcCAAAIAgAACQIAAAoCAAALAgAADAIAAA0CAAAOAgAAJQIAACYCAAAnAgAAKAIAACkCAAAqAgAAKwIAACwCAAAtAgAALgIAAC8CAAAwAgAAMQIAADICAAAzAgAANAIAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":0
-                        }, 
-                        {
-                         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACEAAAAiAAAAIwAAACQAAAAlAAAAJgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHAAAASAAAAEkAAABKAAAASwAAAEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbQAAAG4AAABvAAAAcAAAAHEAAAByAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC5AAAAugAAALsAAAC8AAAAvQAAAL4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3wAAAOAAAADhAAAA4gAAAOMAAADkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUBAAAGAQAABwEAAAgBAAAJAQAACgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArAQAALAEAAC0BAAAuAQAALwEAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUQEAAFIBAABTAQAAVAEAAFUBAABWAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHcBAAB4AQAAeQEAAHoBAAB7AQAAfAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACdAQAAngEAAJ8BAACgAQAAoQEAAKIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwwEAAMQBAADFAQAAxgEAAMcBAADIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOkBAADqAQAA6wEAAOwBAADtAQAA7gEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAgAAEAIAABECAAASAgAAEwIAABQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANQIAADYCAAA3AgAAOAIAADkCAAA6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":0
-                        }, 
-                        {
-                         "data":"OwIAADwCAAA9AgAAPgIAAD8CAABAAgAAQQIAAEICAABDAgAARAIAAEUCAABGAgAARwIAAEgCAABJAgAASgIAAGECAABiAgAAYwIAAGQCAABlAgAAZgIAAGcCAABoAgAAaQIAAGoCAABrAgAAbAIAAG0CAABuAgAAbwIAAHACAACHAgAAiAIAAIkCAACKAgAAiwIAAIwCAACNAgAAjgIAAI8CAACQAgAAkQIAAJICAACTAgAAlAIAAJUCAACWAgAArQIAAK4CAACvAgAAsAIAALECAACyAgAAswIAALQCAAC1AgAAtgIAALcCAAC4AgAAuQIAALoCAAC7AgAAvAIAANMCAADUAgAA1QIAANYCAADXAgAA2AIAANkCAADaAgAA2wIAANwCAADdAgAA3gIAAN8CAADgAgAA4QIAAOICAAD5AgAA+gIAAPsCAAD8AgAA\/QIAAP4CAAD\/AgAAAAMAAAEDAAACAwAAAwMAAAQDAAAFAwAABgMAAAcDAAAIAwAAHwMAACADAAAhAwAAIgMAACMDAAAkAwAAJQMAACYDAAAnAwAAKAMAACkDAAAqAwAAKwMAACwDAAAtAwAALgMAAEUDAABGAwAARwMAAEgDAABJAwAASgMAAEsDAABMAwAATQMAAE4DAABPAwAAUAMAAFEDAABSAwAAUwMAAFQDAABrAwAAbAMAAG0DAABuAwAAbwMAAHADAABxAwAAcgMAAHMDAAB0AwAAdQMAAHYDAAB3AwAAeAMAAHkDAAB6AwAAkQMAAJIDAACTAwAAlAMAAJUDAACWAwAAlwMAAJgDAACZAwAAmgMAAJsDAACcAwAAnQMAAJ4DAACfAwAAoAMAALcDAAC4AwAAuQMAALoDAAC7AwAAvAMAAL0DAAC+AwAAvwMAAMADAADBAwAAwgMAAMMDAADEAwAAxQMAAMYDAADdAwAA3gMAAN8DAADgAwAA4QMAAOIDAADjAwAA5AMAAOUDAADmAwAA5wMAAOgDAADpAwAA6gMAAOsDAADsAwAAAwQAAAQEAAAFBAAABgQAAAcEAAAIBAAACQQAAAoEAAALBAAADAQAAA0EAAAOBAAADwQAABAEAAARBAAAEgQAACkEAAAqBAAAKwQAACwEAAAtBAAALgQAAC8EAAAwBAAAMQQAADIEAAAzBAAANAQAADUEAAA2BAAANwQAADgEAABPBAAAUAQAAFEEAABSBAAAUwQAAFQEAABVBAAAVgQAAFcEAABYBAAAWQQAAFoEAABbBAAAXAQAAF0EAABeBAAAdQQAAHYEAAB3BAAAeAQAAHkEAAB6BAAAewQAAHwEAAB9BAAAfgQAAH8EAACABAAAgQQAAIIEAACDBAAAhAQAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":16
-                        }, 
-                        {
-                         "data":"SwIAAEwCAABNAgAATgIAAE8CAABQAgAAUQIAAFICAABTAgAAVAIAAFUCAABWAgAAVwIAAFgCAABZAgAAWgIAAHECAAByAgAAcwIAAHQCAAB1AgAAdgIAAHcCAAB4AgAAeQIAAHoCAAB7AgAAfAIAAH0CAAB+AgAAfwIAAIACAACXAgAAmAIAAJkCAACaAgAAmwIAAJwCAACdAgAAngIAAJ8CAACgAgAAoQIAAKICAACjAgAApAIAAKUCAACmAgAAvQIAAL4CAAC\/AgAAwAIAAMECAADCAgAAwwIAAMQCAADFAgAAxgIAAMcCAADIAgAAyQIAAMoCAADLAgAAzAIAAOMCAADkAgAA5QIAAOYCAADnAgAA6AIAAOkCAADqAgAA6wIAAOwCAADtAgAA7gIAAO8CAADwAgAA8QIAAPICAAAJAwAACgMAAAsDAAAMAwAADQMAAA4DAAAPAwAAEAMAABEDAAASAwAAEwMAABQDAAAVAwAAFgMAABcDAAAYAwAALwMAADADAAAxAwAAMgMAADMDAAA0AwAANQMAADYDAAA3AwAAOAMAADkDAAA6AwAAOwMAADwDAAA9AwAAPgMAAFUDAABWAwAAVwMAAFgDAABZAwAAWgMAAFsDAABcAwAAXQMAAF4DAABfAwAAYAMAAGEDAABiAwAAYwMAAGQDAAB7AwAAfAMAAH0DAAB+AwAAfwMAAIADAACBAwAAggMAAIMDAACEAwAAhQMAAIYDAACHAwAAiAMAAIkDAACKAwAAoQMAAKIDAACjAwAApAMAAKUDAACmAwAApwMAAKgDAACpAwAAqgMAAKsDAACsAwAArQMAAK4DAACvAwAAsAMAAMcDAADIAwAAyQMAAMoDAADLAwAAzAMAAM0DAADOAwAAzwMAANADAADRAwAA0gMAANMDAADUAwAA1QMAANYDAADtAwAA7gMAAO8DAADwAwAA8QMAAPIDAADzAwAA9AMAAPUDAAD2AwAA9wMAAPgDAAD5AwAA+gMAAPsDAAD8AwAAEwQAABQEAAAVBAAAFgQAABcEAAAYBAAAGQQAABoEAAAbBAAAHAQAAB0EAAAeBAAAHwQAACAEAAAhBAAAIgQAADkEAAA6BAAAOwQAADwEAAA9BAAAPgQAAD8EAABABAAAQQQAAEIEAABDBAAARAQAAEUEAABGBAAARwQAAEgEAABfBAAAYAQAAGEEAABiBAAAYwQAAGQEAABlBAAAZgQAAGcEAABoBAAAaQQAAGoEAABrBAAAbAQAAG0EAABuBAAAhQQAAIYEAACHBAAAiAQAAIkEAACKBAAAiwQAAIwEAACNBAAAjgQAAI8EAACQBAAAkQQAAJIEAACTBAAAlAQAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":16
-                        }, 
-                        {
-                         "data":"WwIAAFwCAABdAgAAXgIAAF8CAABgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIECAACCAgAAgwIAAIQCAACFAgAAhgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACnAgAAqAIAAKkCAACqAgAAqwIAAKwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzQIAAM4CAADPAgAA0AIAANECAADSAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPMCAAD0AgAA9QIAAPYCAAD3AgAA+AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAwAAGgMAABsDAAAcAwAAHQMAAB4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwMAAEADAABBAwAAQgMAAEMDAABEAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGUDAABmAwAAZwMAAGgDAABpAwAAagMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACLAwAAjAMAAI0DAACOAwAAjwMAAJADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsQMAALIDAACzAwAAtAMAALUDAAC2AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANcDAADYAwAA2QMAANoDAADbAwAA3AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9AwAA\/gMAAP8DAAAABAAAAQQAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIwQAACQEAAAlBAAAJgQAACcEAAAoBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEkEAABKBAAASwQAAEwEAABNBAAATgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABvBAAAcAQAAHEEAAByBAAAcwQAAHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlQQAAJYEAACXBAAAmAQAAJkEAACaBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":16
-                        }, 
-                        {
-                         "data":"mwQAAJwEAACdBAAAngQAAJ8EAACgBAAAoQQAAKIEAACjBAAApAQAAKUEAACmBAAApwQAAKgEAACpBAAAqgQAAMEEAADCBAAAwwQAAMQEAADFBAAAxgQAAMcEAADIBAAAyQQAAMoEAADLBAAAzAQAAM0EAADOBAAAzwQAANAEAADnBAAA6AQAAOkEAADqBAAA6wQAAOwEAADtBAAA7gQAAO8EAADwBAAA8QQAAPIEAADzBAAA9AQAAPUEAAD2BAAADQUAAA4FAAAPBQAAEAUAABEFAAASBQAAEwUAABQFAAAVBQAAFgUAABcFAAAYBQAAGQUAABoFAAAbBQAAHAUAADMFAAA0BQAANQUAADYFAAA3BQAAOAUAADkFAAA6BQAAOwUAADwFAAA9BQAAPgUAAD8FAABABQAAQQUAAEIFAABZBQAAWgUAAFsFAABcBQAAXQUAAF4FAABfBQAAYAUAAGEFAABiBQAAYwUAAGQFAABlBQAAZgUAAGcFAABoBQAAfwUAAIAFAACBBQAAggUAAIMFAACEBQAAhQUAAIYFAACHBQAAiAUAAIkFAACKBQAAiwUAAIwFAACNBQAAjgUAAKUFAACmBQAApwUAAKgFAACpBQAAqgUAAKsFAACsBQAArQUAAK4FAACvBQAAsAUAALEFAACyBQAAswUAALQFAADLBQAAzAUAAM0FAADOBQAAzwUAANAFAADRBQAA0gUAANMFAADUBQAA1QUAANYFAADXBQAA2AUAANkFAADaBQAA8QUAAPIFAADzBQAA9AUAAPUFAAD2BQAA9wUAAPgFAAD5BQAA+gUAAPsFAAD8BQAA\/QUAAP4FAAD\/BQAAAAYAABcGAAAYBgAAGQYAABoGAAAbBgAAHAYAAB0GAAAeBgAAHwYAACAGAAAhBgAAIgYAACMGAAAkBgAAJQYAACYGAAA9BgAAPgYAAD8GAABABgAAQQYAAEIGAABDBgAARAYAAEUGAABGBgAARwYAAEgGAABJBgAASgYAAEsGAABMBgAAYwYAAGQGAABlBgAAZgYAAGcGAABoBgAAaQYAAGoGAABrBgAAbAYAAG0GAABuBgAAbwYAAHAGAABxBgAAcgYAAIkGAACKBgAAiwYAAIwGAACNBgAAjgYAAI8GAACQBgAAkQYAAJIGAACTBgAAlAYAAJUGAACWBgAAlwYAAJgGAACvBgAAsAYAALEGAACyBgAAswYAALQGAAC1BgAAtgYAALcGAAC4BgAAuQYAALoGAAC7BgAAvAYAAL0GAAC+BgAA1QYAANYGAADXBgAA2AYAANkGAADaBgAA2wYAANwGAADdBgAA3gYAAN8GAADgBgAA4QYAAOIGAADjBgAA5AYAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":32
-                        }, 
-                        {
-                         "data":"qwQAAKwEAACtBAAArgQAAK8EAACwBAAAsQQAALIEAACzBAAAtAQAALUEAAC2BAAAtwQAALgEAAC5BAAAugQAANEEAADSBAAA0wQAANQEAADVBAAA1gQAANcEAADYBAAA2QQAANoEAADbBAAA3AQAAN0EAADeBAAA3wQAAOAEAAD3BAAA+AQAAPkEAAD6BAAA+wQAAPwEAAD9BAAA\/gQAAP8EAAAABQAAAQUAAAIFAAADBQAABAUAAAUFAAAGBQAAHQUAAB4FAAAfBQAAIAUAACEFAAAiBQAAIwUAACQFAAAlBQAAJgUAACcFAAAoBQAAKQUAACoFAAArBQAALAUAAEMFAABEBQAARQUAAEYFAABHBQAASAUAAEkFAABKBQAASwUAAEwFAABNBQAATgUAAE8FAABQBQAAUQUAAFIFAABpBQAAagUAAGsFAABsBQAAbQUAAG4FAABvBQAAcAUAAHEFAAByBQAAcwUAAHQFAAB1BQAAdgUAAHcFAAB4BQAAjwUAAJAFAACRBQAAkgUAAJMFAACUBQAAlQUAAJYFAACXBQAAmAUAAJkFAACaBQAAmwUAAJwFAACdBQAAngUAALUFAAC2BQAAtwUAALgFAAC5BQAAugUAALsFAAC8BQAAvQUAAL4FAAC\/BQAAwAUAAMEFAADCBQAAwwUAAMQFAADbBQAA3AUAAN0FAADeBQAA3wUAAOAFAADhBQAA4gUAAOMFAADkBQAA5QUAAOYFAADnBQAA6AUAAOkFAADqBQAAAQYAAAIGAAADBgAABAYAAAUGAAAGBgAABwYAAAgGAAAJBgAACgYAAAsGAAAMBgAADQYAAA4GAAAPBgAAEAYAACcGAAAoBgAAKQYAACoGAAArBgAALAYAAC0GAAAuBgAALwYAADAGAAAxBgAAMgYAADMGAAA0BgAANQYAADYGAABNBgAATgYAAE8GAABQBgAAUQYAAFIGAABTBgAAVAYAAFUGAABWBgAAVwYAAFgGAABZBgAAWgYAAFsGAABcBgAAcwYAAHQGAAB1BgAAdgYAAHcGAAB4BgAAeQYAAHoGAAB7BgAAfAYAAH0GAAB+BgAAfwYAAIAGAACBBgAAggYAAJkGAACaBgAAmwYAAJwGAACdBgAAngYAAJ8GAACgBgAAoQYAAKIGAACjBgAApAYAAKUGAACmBgAApwYAAKgGAAC\/BgAAwAYAAMEGAADCBgAAwwYAAMQGAADFBgAAxgYAAMcGAADIBgAAyQYAAMoGAADLBgAAzAYAAM0GAADOBgAA5QYAAOYGAADnBgAA6AYAAOkGAADqBgAA6wYAAOwGAADtBgAA7gYAAO8GAADwBgAA8QYAAPIGAADzBgAA9AYAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":32
-                        }, 
-                        {
-                         "data":"uwQAALwEAAC9BAAAvgQAAL8EAADABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEEAADiBAAA4wQAAOQEAADlBAAA5gQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBQAACAUAAAkFAAAKBQAACwUAAAwFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALQUAAC4FAAAvBQAAMAUAADEFAAAyBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFMFAABUBQAAVQUAAFYFAABXBQAAWAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5BQAAegUAAHsFAAB8BQAAfQUAAH4FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnwUAAKAFAAChBQAAogUAAKMFAACkBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMUFAADGBQAAxwUAAMgFAADJBQAAygUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADrBQAA7AUAAO0FAADuBQAA7wUAAPAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQYAABIGAAATBgAAFAYAABUGAAAWBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcGAAA4BgAAOQYAADoGAAA7BgAAPAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABdBgAAXgYAAF8GAABgBgAAYQYAAGIGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgwYAAIQGAACFBgAAhgYAAIcGAACIBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKkGAACqBgAAqwYAAKwGAACtBgAArgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADPBgAA0AYAANEGAADSBgAA0wYAANQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9QYAAPYGAAD3BgAA+AYAAPkGAAD6BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":32
-                        }, 
-                        {
-                         "data":"+wYAAPwGAAD9BgAA\/gYAAP8GAAAABwAAAQcAAAIHAAADBwAABAcAAAUHAAAGBwAABwcAAAgHAAAJBwAACgcAACEHAAAiBwAAIwcAACQHAAAlBwAAJgcAACcHAAAoBwAAKQcAACoHAAArBwAALAcAAC0HAAAuBwAALwcAADAHAABHBwAASAcAAEkHAABKBwAASwcAAEwHAABNBwAATgcAAE8HAABQBwAAUQcAAFIHAABTBwAAVAcAAFUHAABWBwAAbQcAAG4HAABvBwAAcAcAAHEHAAByBwAAcwcAAHQHAAB1BwAAdgcAAHcHAAB4BwAAeQcAAHoHAAB7BwAAfAcAAJMHAACUBwAAlQcAAJYHAACXBwAAmAcAAJkHAACaBwAAmwcAAJwHAACdBwAAngcAAJ8HAACgBwAAoQcAAKIHAAC5BwAAugcAALsHAAC8BwAAvQcAAL4HAAC\/BwAAwAcAAMEHAADCBwAAwwcAAMQHAADFBwAAxgcAAMcHAADIBwAA3wcAAOAHAADhBwAA4gcAAOMHAADkBwAA5QcAAOYHAADnBwAA6AcAAOkHAADqBwAA6wcAAOwHAADtBwAA7gcAAAUIAAAGCAAABwgAAAgIAAAJCAAACggAAAsIAAAMCAAADQgAAA4IAAAPCAAAEAgAABEIAAASCAAAEwgAABQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":0,
-                         "y":48
-                        }, 
-                        {
-                         "data":"CwcAAAwHAAANBwAADgcAAA8HAAAQBwAAEQcAABIHAAATBwAAFAcAABUHAAAWBwAAFwcAABgHAAAZBwAAGgcAADEHAAAyBwAAMwcAADQHAAA1BwAANgcAADcHAAA4BwAAOQcAADoHAAA7BwAAPAcAAD0HAAA+BwAAPwcAAEAHAABXBwAAWAcAAFkHAABaBwAAWwcAAFwHAABdBwAAXgcAAF8HAABgBwAAYQcAAGIHAABjBwAAZAcAAGUHAABmBwAAfQcAAH4HAAB\/BwAAgAcAAIEHAACCBwAAgwcAAIQHAACFBwAAhgcAAIcHAACIBwAAiQcAAIoHAACLBwAAjAcAAKMHAACkBwAApQcAAKYHAACnBwAAqAcAAKkHAACqBwAAqwcAAKwHAACtBwAArgcAAK8HAACwBwAAsQcAALIHAADJBwAAygcAAMsHAADMBwAAzQcAAM4HAADPBwAA0AcAANEHAADSBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA7wcAAPAHAADxBwAA8gcAAPMHAAD0BwAA9QcAAPYHAAD3BwAA+AcAAPkHAAD6BwAA+wcAAPwHAAD9BwAA\/gcAABUIAAAWCAAAFwgAABgIAAAZCAAAGggAABsIAAAcCAAAHQgAAB4IAAAfCAAAIAgAACEIAAAiCAAAIwgAACQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":16,
-                         "y":48
-                        }, 
-                        {
-                         "data":"GwcAABwHAAAdBwAAHgcAAB8HAAAgBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEHAABCBwAAQwcAAEQHAABFBwAARgcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnBwAAaAcAAGkHAABqBwAAawcAAGwHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjQcAAI4HAACPBwAAkAcAAJEHAACSBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALMHAAC0BwAAtQcAALYHAAC3BwAAuAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADZBwAA2gcAANsHAADcBwAA3QcAAN4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\/wcAAAAIAAABCAAAAggAAAMIAAAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACUIAAAmCAAAJwgAACgIAAApCAAAKggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                         "height":16,
-                         "width":16,
-                         "x":32,
-                         "y":48
-                        }],
-                 "encoding":"base64",
-                 "height":64,
-                 "name":"Tile Layer 1",
-                 "opacity":1,
-                 "startx":0,
-                 "starty":0,
-                 "type":"tilelayer",
-                 "visible":true,
-                 "width":48,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 1",
-                 "objects":[
-                        {
-                         "height":4287.99483470341,
-                         "id":1,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":71.1878167115903,
-                         "x":140.908152873722,
-                         "y":352.118235782039
-                        }, 
-                        {
-                         "height":98.8078079071574,
-                         "id":2,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1745.42576355132,
-                         "x":-180.469646118797,
-                         "y":4636.83030674721
-                        }, 
-                        {
-                         "height":1295.91907334578,
-                         "id":3,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":96.9776475519793,
-                         "x":1098.40853718636,
-                         "y":3349.16300278899
-                        }, 
-                        {
-                         "height":72.8653023279652,
-                         "id":4,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":329.924150524603,
-                         "x":209.771013726274,
-                         "y":351.680298817159
-                        }, 
-                        {
-                         "height":87.0770370031721,
-                         "id":7,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":613.890964996336,
-                         "x":206.483427979566,
-                         "y":1656.8486826545
-                        }, 
-                        {
-                         "height":84.1867907925027,
-                         "id":8,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":405.990079377138,
-                         "x":1020.00417867435,
-                         "y":1657.90249518416
-                        }, 
-                        {
-                         "height":1288.04870233899,
-                         "id":9,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":96.9696999733776,
-                         "x":1098.25814385151,
-                         "y":1742.85
-                        }, 
-                        {
-                         "height":71.8526517856425,
-                         "id":10,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":668.420569717998,
-                         "x":776.061109603926,
-                         "y":354.483674843146
-                        }, 
-                        {
-                         "height":76.0016320601716,
-                         "id":11,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1702.69133624533,
-                         "x":1677.71698020668,
-                         "y":350.838425015004
-                        }, 
-                        {
-                         "height":369.592008067473,
-                         "id":12,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":73.499527744058,
-                         "x":1992.79544415995,
-                         "y":429.031944530302
-                        }, 
-                        {
-                         "height":2396.01591579894,
-                         "id":13,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":72.9392053016209,
-                         "x":1993.40136243144,
-                         "y":1045.88
-                        }, 
-                        {
-                         "height":89.202968299712,
-                         "id":14,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":310.407419479643,
-                         "x":1682.16619596542,
-                         "y":1657.79976945245
-                        }, 
-                        {
-                         "height":84.1868,
-                         "id":16,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":525.526216808456,
-                         "x":2063.86746648621,
-                         "y":2190.44075828822
-                        }, 
-                        {
-                         "height":84.1868,
-                         "id":17,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":350.223086878061,
-                         "x":2939.09314849188,
-                         "y":2187.86277427172
-                        }, 
-                        {
-                         "height":4298.56489559165,
-                         "id":18,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":90.9850881154937,
-                         "x":3289.12978128384,
-                         "y":432.568544728022
-                        }, 
-                        {
-                         "height":93.6518881154936,
-                         "id":19,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1363.88,
-                         "x":1929.29176076308,
-                         "y":4638.66000592936
-                        }, 
-                        {
-                         "height":89.203,
-                         "id":20,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":797.645979118329,
-                         "x":1198.23810866203,
-                         "y":2535.9605005156
-                        }, 
-                        {
-                         "height":89.203,
-                         "id":21,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":869.829552461975,
-                         "x":1196.94910621294,
-                         "y":3443.41087432328
-                        }],
-                 "offsetx":182.2,
-                 "offsety":377.873003506038,
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 2",
-                 "objects":[
-                        {
-                         "height":0,
-                         "id":6,
-                         "name":"",
-                         "polyline":[
-                                {
-                                 "x":0,
-                                 "y":0
-                                }, 
-                                {
-                                 "x":-1236.9109947644,
-                                 "y":19.633507853403
-                                }, 
-                                {
-                                 "x":-1217.27748691099,
-                                 "y":726.439790575916
-                                }, 
-                                {
-                                 "x":-157.068062827225,
-                                 "y":752.61780104712
-                                }, 
-                                {
-                                 "x":-176.701570680628,
-                                 "y":1341.62303664921
-                                }, 
-                                {
-                                 "x":-320.680628272251,
-                                 "y":1498.69109947644
-                                }, 
-                                {
-                                 "x":-287.958115183246,
-                                 "y":1786.64921465969
-                                }, 
-                                {
-                                 "x":-26.1780104712043,
-                                 "y":1747.38219895288
-                                }, 
-                                {
-                                 "x":150.523560209424,
-                                 "y":1361.25654450262
-                                }, 
-                                {
-                                 "x":-65.4450261780105,
-                                 "y":1191.09947643979
-                                }, 
-                                {
-                                 "x":-346.858638743455,
-                                 "y":575.916230366492
-                                }, 
-                                {
-                                 "x":-536.649214659686,
-                                 "y":510.471204188482
-                                }, 
-                                {
-                                 "x":-726.439790575916,
-                                 "y":759.162303664921
-                                }, 
-                                {
-                                 "x":-778.795811518325,
-                                 "y":1832.46073298429
-                                }, 
-                                {
-                                 "x":-1191.09947643979,
-                                 "y":2257.85340314136
-                                }, 
-                                {
-                                 "x":-1204.18848167539,
-                                 "y":2074.60732984293
-                                }, 
-                                {
-                                 "x":-1204.18848167539,
-                                 "y":1839.00523560209
-                                }, 
-                                {
-                                 "x":-1204.18848167539,
-                                 "y":1551.04712041885
-                                }, 
-                                {
-                                 "x":-1282.72251308901,
-                                 "y":1590.31413612565
-                                }, 
-                                {
-                                 "x":-1341.62303664921,
-                                 "y":2126.96335078534
-                                }, 
-                                {
-                                 "x":-1295.81151832461,
-                                 "y":2676.70157068063
-                                }, 
-                                {
-                                 "x":-1060.20942408377,
-                                 "y":3017.01570680628
-                                }, 
-                                {
-                                 "x":-647.905759162304,
-                                 "y":2565.44502617801
-                                }, 
-                                {
-                                 "x":-32.7225130890054,
-                                 "y":2303.66492146597
-                                }, 
-                                {
-                                 "x":117.801047120419,
-                                 "y":3102.0942408377
-                                }, 
-                                {
-                                 "x":78.5340314136124,
-                                 "y":3481.67539267016
-                                }, 
-                                {
-                                 "x":45.8115183246073,
-                                 "y":4149.21465968586
-                                }, 
-                                {
-                                 "x":-327.225130890052,
-                                 "y":4188.48167539267
-                                }, 
-                                {
-                                 "x":-680.628272251309,
-                                 "y":4077.22513089005
-                                }, 
-                                {
-                                 "x":-693.717277486911,
-                                 "y":4149.21465968586
-                                }, 
-                                {
-                                 "x":-615.183246073299,
-                                 "y":4240.83769633508
-                                }, 
-                                {
-                                 "x":-425.392670157068,
-                                 "y":4319.37172774869
-                                }, 
-                                {
-                                 "x":-111.256544502618,
-                                 "y":4319.37172774869
-                                }, 
-                                {
-                                 "x":111.256544502618,
-                                 "y":4260.47120418848
-                                }, 
-                                {
-                                 "x":157.068062827225,
-                                 "y":4109.94764397906
-                                }, 
-                                {
-                                 "x":209.424083769634,
-                                 "y":3527.48691099476
-                                }, 
-                                {
-                                 "x":575.916230366492,
-                                 "y":3160.99476439791
-                                }, 
-                                {
-                                 "x":1007.85340314136,
-                                 "y":2545.81151832461
-                                }, 
-                                {
-                                 "x":975.130890052356,
-                                 "y":2041.88481675393
-                                }, 
-                                {
-                                 "x":981.675392670157,
-                                 "y":1714.65968586387
-                                }, 
-                                {
-                                 "x":1034.03141361257,
-                                 "y":1295.81151832461
-                                }, 
-                                {
-                                 "x":824.607329842932,
-                                 "y":948.952879581152
-                                }, 
-                                {
-                                 "x":641.361256544503,
-                                 "y":458.115183246073
-                                }, 
-                                {
-                                 "x":680.628272251309,
-                                 "y":45.8115183246073
-                                }, 
-                                {
-                                 "x":1086.38743455497,
-                                 "y":13.0890052356019
-                                }, 
-                                {
-                                 "x":1407.06806282723,
-                                 "y":130.890052356021
-                                }, 
-                                {
-                                 "x":1439.79057591623,
-                                 "y":510.471204188482
-                                }, 
-                                {
-                                 "x":1439.79057591623,
-                                 "y":1047.12041884817
-                                }, 
-                                {
-                                 "x":1263.0890052356,
-                                 "y":1393.97905759162
-                                }, 
-                                {
-                                 "x":1125.65445026178,
-                                 "y":1583.76963350785
-                                }, 
-                                {
-                                 "x":1073.29842931937,
-                                 "y":2454.18848167539
-                                }, 
-                                {
-                                 "x":981.675392670157,
-                                 "y":3154.4502617801
-                                }, 
-                                {
-                                 "x":431.937172774869,
-                                 "y":3507.85340314136
-                                }, 
-                                {
-                                 "x":-215.968586387435,
-                                 "y":3115.1832460733
-                                }, 
-                                {
-                                 "x":-242.146596858639,
-                                 "y":2598.16753926702
-                                }, 
-                                {
-                                 "x":-719.895287958115,
-                                 "y":2329.84293193717
-                                }, 
-                                {
-                                 "x":-765.706806282722,
-                                 "y":2022.25130890052
-                                }, 
-                                {
-                                 "x":-935.86387434555,
-                                 "y":582.460732984293
-                                }, 
-                                {
-                                 "x":-647.905759162304,
-                                 "y":477.748691099476
-                                }, 
-                                {
-                                 "x":-189.79057591623,
-                                 "y":477.748691099476
-                                }, 
-                                {
-                                 "x":0,
-                                 "y":13.0890052356019
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":0,
-                         "x":1871.7277486911,
-                         "y":1099.47643979058
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 3",
-                 "objects":[
-                        {
-                         "height":0,
-                         "id":22,
-                         "name":"",
-                         "polyline":[
-                                {
-                                 "x":0,
-                                 "y":0
-                                }, 
-                                {
-                                 "x":-835.266821345708,
-                                 "y":-5.1559680329982
-                                }, 
-                                {
-                                 "x":-889.404485692189,
-                                 "y":-2.57798401649916
-                                }, 
-                                {
-                                 "x":-920.340293890178,
-                                 "y":28.3578241814901
-                                }, 
-                                {
-                                 "x":-925.496261923176,
-                                 "y":85.0734725444702
-                                }, 
-                                {
-                                 "x":-925.496261923176,
-                                 "y":1185.87264758958
-                                }, 
-                                {
-                                 "x":-915.18432585718,
-                                 "y":1198.76256767208
-                                }, 
-                                {
-                                 "x":-876.514565609693,
-                                 "y":1198.76256767208
-                                }, 
-                                {
-                                 "x":-794.019077081722,
-                                 "y":1188.45063160608
-                                }, 
-                                {
-                                 "x":-747.615364784738,
-                                 "y":1216.80845578757
-                                }, 
-                                {
-                                 "x":-770.81722093323,
-                                 "y":1252.90023201856
-                                }, 
-                                {
-                                 "x":-902.294405774684,
-                                 "y":1252.90023201856
-                                }, 
-                                {
-                                 "x":-933.230213972673,
-                                 "y":1317.34983243104
-                                }, 
-                                {
-                                 "x":-933.230213972673,
-                                 "y":1417.8912090745
-                                }, 
-                                {
-                                 "x":-922.918277906677,
-                                 "y":2549.62619231761
-                                }, 
-                                {
-                                 "x":-928.074245939675,
-                                 "y":4166.02217066254
-                                }, 
-                                {
-                                 "x":-904.872389791183,
-                                 "y":4186.64604279453
-                                }, 
-                                {
-                                 "x":-879.092549626192,
-                                 "y":4263.98556328951
-                                }, 
-                                {
-                                 "x":-884.24851765919,
-                                 "y":4431.55452436195
-                                }, 
-                                {
-                                 "x":-917.762309873679,
-                                 "y":4483.11420469193
-                                }, 
-                                {
-                                 "x":-1142.0469193091,
-                                 "y":4573.3436452694
-                                }, 
-                                {
-                                 "x":-1299.30394431555,
-                                 "y":4547.56380510441
-                                }],
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":0,
-                         "x":1371.48749677752,
-                         "y":853.312709461201
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"Object Layer 4",
-                 "objects":[
-                        {
-                         "height":22.091516827777,
-                         "id":23,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":201.307396009669,
-                         "x":1000.61414056822,
-                         "y":2096.28799025852
-                        }, 
-                        {
-                         "height":21.2004379076902,
-                         "id":24,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":254.403082771456,
-                         "x":1606.55974993989,
-                         "y":2097.14834319237
-                        }, 
-                        {
-                         "height":24.276571466864,
-                         "id":25,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":295.64288488463,
-                         "x":1372.09002099612,
-                         "y":3376.46669593124
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "layers":[
-                        {
-                         "image":"..\/..\/..\/..\/assets\/items\/chest_full.png",
-                         "name":"chest_full",
-                         "offsetx":1143.21093357441,
-                         "offsety":1065.35819304326,
-                         "opacity":1,
-                         "type":"imagelayer",
-                         "visible":true,
-                         "x":0,
-                         "y":0
-                        }],
-                 "name":"items_group",
-                 "opacity":1,
-                 "type":"group",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }],
-         "name":"Group 1",
-         "opacity":1,
-         "type":"group",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextobjectid":27,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.1.6",
- "tileheight":100,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"flat_floor_data.json"
-        }],
- "tilewidth":100,
- "type":"map",
- "version":1,
- "width":95
-}
-},{}],48:[function(require,module,exports){
-module.exports={ "columns":38,
- "image":"..\/..\/..\/..\/assets\/bedroom\/flat_floor2.jpg",
- "imageheight":5500,
- "imagewidth":3800,
- "margin":0,
- "name":"flat_floor2",
- "spacing":0,
- "tilecount":2090,
- "tileheight":100,
- "tileproperties":
-    {
-     "1001":
-        {
-         "wall":"true"
-        },
-     "1010":
-        {
-         "wall":"true"
-        },
-     "1023":
-        {
-         "wall":"true"
-        },
-     "1024":
-        {
-         "wall":"true"
-        },
-     "1025":
-        {
-         "wall":"true"
-        },
-     "1026":
-        {
-         "wall":"true"
-        },
-     "1027":
-        {
-         "wall":"true"
-        },
-     "1028":
-        {
-         "wall":"true"
-        },
-     "1029":
-        {
-         "wall":"true"
-        },
-     "1039":
-        {
-         "wall":"true"
-        },
-     "1048":
-        {
-         "wall":"true"
-        },
-     "1061":
-        {
-         "wall":"true"
-        },
-     "1062":
-        {
-         "wall":"true"
-        },
-     "1063":
-        {
-         "wall":"true"
-        },
-     "1064":
-        {
-         "wall":"true"
-        },
-     "1065":
-        {
-         "wall":"true"
-        },
-     "1066":
-        {
-         "wall":"true"
-        },
-     "1067":
-        {
-         "wall":"true"
-        },
-     "1077":
-        {
-         "wall":"true"
-        },
-     "1080":
-        {
-         "wall":"true"
-        },
-     "1081":
-        {
-         "wall":"true"
-        },
-     "1082":
-        {
-         "wall":"true"
-        },
-     "1083":
-        {
-         "wall":"true"
-        },
-     "1084":
-        {
-         "wall":"true"
-        },
-     "1085":
-        {
-         "wall":"true"
-        },
-     "1086":
-        {
-         "wall":"true"
-        },
-     "1099":
-        {
-         "wall":"true"
-        },
-     "1100":
-        {
-         "wall":"true"
-        },
-     "1101":
-        {
-         "wall":"true"
-        },
-     "1102":
-        {
-         "wall":"true"
-        },
-     "1103":
-        {
-         "wall":"true"
-        },
-     "1104":
-        {
-         "wall":"true"
-        },
-     "1105":
-        {
-         "wall":"true"
-        },
-     "1115":
-        {
-         "wall":"true"
-        },
-     "1124":
-        {
-         "wall":"true"
-        },
-     "1137":
-        {
-         "wall":"true"
-        },
-     "1138":
-        {
-         "wall":"true"
-        },
-     "1139":
-        {
-         "wall":"true"
-        },
-     "1140":
-        {
-         "wall":"true"
-        },
-     "1141":
-        {
-         "wall":"true"
-        },
-     "1142":
-        {
-         "wall":"true"
-        },
-     "1143":
-        {
-         "wall":"true"
-        },
-     "1153":
-        {
-         "wall":"true"
-        },
-     "1162":
-        {
-         "wall":"true"
-        },
-     "1175":
-        {
-         "wall":"true"
-        },
-     "1176":
-        {
-         "wall":"true"
-        },
-     "1177":
-        {
-         "wall":"true"
-        },
-     "1178":
-        {
-         "wall":"true"
-        },
-     "1179":
-        {
-         "wall":"true"
-        },
-     "1180":
-        {
-         "wall":"true"
-        },
-     "1181":
-        {
-         "wall":"true"
-        },
-     "1191":
-        {
-         "wall":"true"
-        },
-     "1200":
-        {
-         "wall":"true"
-        },
-     "1213":
-        {
-         "wall":"true"
-        },
-     "1214":
-        {
-         "wall":"true"
-        },
-     "1215":
-        {
-         "wall":"true"
-        },
-     "1216":
-        {
-         "wall":"true"
-        },
-     "1217":
-        {
-         "wall":"true"
-        },
-     "1218":
-        {
-         "wall":"true"
-        },
-     "1219":
-        {
-         "wall":"true"
-        },
-     "1229":
-        {
-         "wall":"true"
-        },
-     "1238":
-        {
-         "wall":"true"
-        },
-     "1251":
-        {
-         "wall":"true"
-        },
-     "1252":
-        {
-         "wall":"true"
-        },
-     "1253":
-        {
-         "wall":"true"
-        },
-     "1254":
-        {
-         "wall":"true"
-        },
-     "1255":
-        {
-         "wall":"true"
-        },
-     "1256":
-        {
-         "wall":"true"
-        },
-     "1257":
-        {
-         "wall":"true"
-        },
-     "1267":
-        {
-         "wall":"true"
-        },
-     "1276":
-        {
-         "wall":"true"
-        },
-     "1289":
-        {
-         "wall":"true"
-        },
-     "1290":
-        {
-         "wall":"true"
-        },
-     "1291":
-        {
-         "wall":"true"
-        },
-     "1292":
-        {
-         "wall":"true"
-        },
-     "1293":
-        {
-         "wall":"true"
-        },
-     "1294":
-        {
-         "wall":"true"
-        },
-     "1295":
-        {
-         "wall":"true"
-        },
-     "1305":
-        {
-         "wall":"true"
-        },
-     "1314":
-        {
-         "wall":"true"
-        },
-     "1327":
-        {
-         "wall":"true"
-        },
-     "1328":
-        {
-         "wall":"true"
-        },
-     "1329":
-        {
-         "wall":"true"
-        },
-     "1330":
-        {
-         "wall":"true"
-        },
-     "1331":
-        {
-         "wall":"true"
-        },
-     "1332":
-        {
-         "wall":"true"
-        },
-     "1333":
-        {
-         "wall":"true"
-        },
-     "1343":
-        {
-         "wall":"true"
-        },
-     "1352":
-        {
-         "wall":"true"
-        },
-     "1365":
-        {
-         "wall":"true"
-        },
-     "1366":
-        {
-         "wall":"true"
-        },
-     "1367":
-        {
-         "wall":"true"
-        },
-     "1368":
-        {
-         "wall":"true"
-        },
-     "1369":
-        {
-         "wall":"true"
-        },
-     "1370":
-        {
-         "wall":"true"
-        },
-     "1371":
-        {
-         "wall":"true"
-        },
-     "1381":
-        {
-         "wall":"true"
-        },
-     "1390":
-        {
-         "wall":"true"
-        },
-     "1403":
-        {
-         "wall":"true"
-        },
-     "1404":
-        {
-         "wall":"true"
-        },
-     "1405":
-        {
-         "wall":"true"
-        },
-     "1406":
-        {
-         "wall":"true"
-        },
-     "1407":
-        {
-         "wall":"true"
-        },
-     "1408":
-        {
-         "wall":"true"
-        },
-     "1409":
-        {
-         "wall":"true"
-        },
-     "1419":
-        {
-         "wall":"true"
-        },
-     "1420":
-        {
-         "wall":"true"
-        },
-     "1421":
-        {
-         "wall":"true"
-        },
-     "1422":
-        {
-         "wall":"true"
-        },
-     "1423":
-        {
-         "wall":"true"
-        },
-     "1424":
-        {
-         "wall":"true"
-        },
-     "1425":
-        {
-         "wall":"true"
-        },
-     "1426":
-        {
-         "wall":"true"
-        },
-     "1427":
-        {
-         "wall":"true"
-        },
-     "1428":
-        {
-         "wall":"true"
-        },
-     "1441":
-        {
-         "wall":"true"
-        },
-     "1442":
-        {
-         "wall":"true"
-        },
-     "1443":
-        {
-         "wall":"true"
-        },
-     "1444":
-        {
-         "wall":"true"
-        },
-     "1445":
-        {
-         "wall":"true"
-        },
-     "1446":
-        {
-         "wall":"true"
-        },
-     "1447":
-        {
-         "wall":"true"
-        },
-     "1457":
-        {
-         "wall":"true"
-        },
-     "1479":
-        {
-         "wall":"true"
-        },
-     "1480":
-        {
-         "wall":"true"
-        },
-     "1481":
-        {
-         "wall":"true"
-        },
-     "1482":
-        {
-         "wall":"true"
-        },
-     "1483":
-        {
-         "wall":"true"
-        },
-     "1484":
-        {
-         "wall":"true"
-        },
-     "1485":
-        {
-         "wall":"true"
-        },
-     "1495":
-        {
-         "wall":"true"
-        },
-     "1517":
-        {
-         "wall":"true"
-        },
-     "1518":
-        {
-         "wall":"true"
-        },
-     "1519":
-        {
-         "wall":"true"
-        },
-     "1520":
-        {
-         "wall":"true"
-        },
-     "1521":
-        {
-         "wall":"true"
-        },
-     "1522":
-        {
-         "wall":"true"
-        },
-     "1523":
-        {
-         "wall":"true"
-        },
-     "1533":
-        {
-         "wall":"true"
-        },
-     "1555":
-        {
-         "wall":"true"
-        },
-     "1556":
-        {
-         "wall":"true"
-        },
-     "1557":
-        {
-         "wall":"true"
-        },
-     "1558":
-        {
-         "wall":"true"
-        },
-     "1559":
-        {
-         "wall":"true"
-        },
-     "1560":
-        {
-         "wall":"true"
-        },
-     "1561":
-        {
-         "wall":"true"
-        },
-     "1571":
-        {
-         "wall":"true"
-        },
-     "1593":
-        {
-         "wall":"true"
-        },
-     "1594":
-        {
-         "wall":"true"
-        },
-     "1595":
-        {
-         "wall":"true"
-        },
-     "1596":
-        {
-         "wall":"true"
-        },
-     "1597":
-        {
-         "wall":"true"
-        },
-     "1598":
-        {
-         "wall":"true"
-        },
-     "1599":
-        {
-         "wall":"true"
-        },
-     "1609":
-        {
-         "wall":"true"
-        },
-     "1631":
-        {
-         "wall":"true"
-        },
-     "1632":
-        {
-         "wall":"true"
-        },
-     "1633":
-        {
-         "wall":"true"
-        },
-     "1634":
-        {
-         "wall":"true"
-        },
-     "1635":
-        {
-         "wall":"true"
-        },
-     "1636":
-        {
-         "wall":"true"
-        },
-     "1637":
-        {
-         "wall":"true"
-        },
-     "1647":
-        {
-         "wall":"true"
-        },
-     "1669":
-        {
-         "wall":"true"
-        },
-     "1670":
-        {
-         "wall":"true"
-        },
-     "1671":
-        {
-         "wall":"true"
-        },
-     "1672":
-        {
-         "wall":"true"
-        },
-     "1673":
-        {
-         "wall":"true"
-        },
-     "1674":
-        {
-         "wall":"true"
-        },
-     "1675":
-        {
-         "wall":"true"
-        },
-     "1685":
-        {
-         "wall":"true"
-        },
-     "1707":
-        {
-         "wall":"true"
-        },
-     "1708":
-        {
-         "wall":"true"
-        },
-     "1709":
-        {
-         "wall":"true"
-        },
-     "1710":
-        {
-         "wall":"true"
-        },
-     "1711":
-        {
-         "wall":"true"
-        },
-     "1712":
-        {
-         "wall":"true"
-        },
-     "1713":
-        {
-         "wall":"true"
-        },
-     "1723":
-        {
-         "wall":"true"
-        },
-     "1745":
-        {
-         "wall":"true"
-        },
-     "1746":
-        {
-         "wall":"true"
-        },
-     "1747":
-        {
-         "wall":"true"
-        },
-     "1748":
-        {
-         "wall":"true"
-        },
-     "1749":
-        {
-         "wall":"true"
-        },
-     "1750":
-        {
-         "wall":"true"
-        },
-     "1751":
-        {
-         "wall":"true"
-        },
-     "1761":
-        {
-         "wall":"true"
-        },
-     "1783":
-        {
-         "wall":"true"
-        },
-     "1784":
-        {
-         "wall":"true"
-        },
-     "1785":
-        {
-         "wall":"true"
-        },
-     "1786":
-        {
-         "wall":"true"
-        },
-     "1787":
-        {
-         "wall":"true"
-        },
-     "1788":
-        {
-         "wall":"true"
-        },
-     "1789":
-        {
-         "wall":"true"
-        },
-     "1799":
-        {
-         "wall":"true"
-        },
-     "1821":
-        {
-         "wall":"true"
-        },
-     "1822":
-        {
-         "wall":"true"
-        },
-     "1823":
-        {
-         "wall":"true"
-        },
-     "1824":
-        {
-         "wall":"true"
-        },
-     "1825":
-        {
-         "wall":"true"
-        },
-     "1826":
-        {
-         "wall":"true"
-        },
-     "1827":
-        {
-         "wall":"true"
-        },
-     "1837":
-        {
-         "wall":"true"
-        },
-     "1859":
-        {
-         "wall":"true"
-        },
-     "1860":
-        {
-         "wall":"true"
-        },
-     "1861":
-        {
-         "wall":"true"
-        },
-     "1862":
-        {
-         "wall":"true"
-        },
-     "1863":
-        {
-         "wall":"true"
-        },
-     "1864":
-        {
-         "wall":"true"
-        },
-     "1865":
-        {
-         "wall":"true"
-        },
-     "1866":
-        {
-         "wall":"true"
-        },
-     "1867":
-        {
-         "wall":"true"
-        },
-     "1868":
-        {
-         "wall":"true"
-        },
-     "1869":
-        {
-         "wall":"true"
-        },
-     "1870":
-        {
-         "wall":"true"
-        },
-     "1871":
-        {
-         "wall":"true"
-        },
-     "1872":
-        {
-         "wall":"true"
-        },
-     "1873":
-        {
-         "wall":"true"
-        },
-     "1874":
-        {
-         "wall":"true"
-        },
-     "1875":
-        {
-         "wall":"true"
-        },
-     "1876":
-        {
-         "wall":"true"
-        },
-     "1877":
-        {
-         "wall":"true"
-        },
-     "1878":
-        {
-         "wall":"true"
-        },
-     "1883":
-        {
-         "wall":"true"
-        },
-     "1884":
-        {
-         "wall":"true"
-        },
-     "1885":
-        {
-         "wall":"true"
-        },
-     "1886":
-        {
-         "wall":"true"
-        },
-     "1887":
-        {
-         "wall":"true"
-        },
-     "1888":
-        {
-         "wall":"true"
-        },
-     "1889":
-        {
-         "wall":"true"
-        },
-     "1890":
-        {
-         "wall":"true"
-        },
-     "1891":
-        {
-         "wall":"true"
-        },
-     "1892":
-        {
-         "wall":"true"
-        },
-     "1893":
-        {
-         "wall":"true"
-        },
-     "1894":
-        {
-         "wall":"true"
-        },
-     "1895":
-        {
-         "wall":"true"
-        },
-     "1896":
-        {
-         "wall":"true"
-        },
-     "1897":
-        {
-         "wall":"true"
-        },
-     "1898":
-        {
-         "wall":"true"
-        },
-     "1899":
-        {
-         "wall":"true"
-        },
-     "1900":
-        {
-         "wall":"true"
-        },
-     "1901":
-        {
-         "wall":"true"
-        },
-     "1902":
-        {
-         "wall":"true"
-        },
-     "1903":
-        {
-         "wall":"true"
-        },
-     "1937":
-        {
-         "wall":"true"
-        },
-     "1938":
-        {
-         "wall":"true"
-        },
-     "1939":
-        {
-         "wall":"true"
-        },
-     "1940":
-        {
-         "wall":"true"
-        },
-     "1941":
-        {
-         "wall":"true"
-        },
-     "1975":
-        {
-         "wall":"true"
-        },
-     "1976":
-        {
-         "wall":"true"
-        },
-     "1977":
-        {
-         "wall":"true"
-        },
-     "1978":
-        {
-         "wall":"true"
-        },
-     "1979":
-        {
-         "wall":"true"
-        },
-     "1985":
-        {
-         "wall":"true"
-        },
-     "1986":
-        {
-         "wall":"true"
-        },
-     "1987":
-        {
-         "wall":"true"
-        },
-     "2014":
-        {
-         "wall":"true"
-        },
-     "2015":
-        {
-         "wall":"true"
-        },
-     "2016":
-        {
-         "wall":"true"
-        },
-     "2017":
-        {
-         "wall":"true"
-        },
-     "2022":
-        {
-         "wall":"true"
-        },
-     "2023":
-        {
-         "wall":"true"
-        },
-     "2024":
-        {
-         "wall":"true"
-        },
-     "2025":
-        {
-         "wall":"true"
-        },
-     "2052":
-        {
-         "wall":"true"
-        },
-     "2053":
-        {
-         "wall":"true"
-        },
-     "2054":
-        {
-         "wall":"true"
-        },
-     "2055":
-        {
-         "wall":"true"
-        },
-     "2056":
-        {
-         "wall":"true"
-        },
-     "2057":
-        {
-         "wall":"true"
-        },
-     "2058":
-        {
-         "wall":"true"
-        },
-     "2059":
-        {
-         "wall":"true"
-        },
-     "2060":
-        {
-         "wall":"true"
-        },
-     "2061":
-        {
-         "wall":"true"
-        },
-     "2062":
-        {
-         "wall":"true"
-        },
-     "2063":
-        {
-         "wall":"true"
-        },
-     "2064":
-        {
-         "wall":"true"
-        },
-     "2089":
-        {
-         "wall":"true"
-        },
-     "228":
-        {
-         "wall":"true"
-        },
-     "229":
-        {
-         "wall":"true"
-        },
-     "230":
-        {
-         "wall":"true"
-        },
-     "231":
-        {
-         "wall":"true"
-        },
-     "232":
-        {
-         "wall":"true"
-        },
-     "233":
-        {
-         "wall":"true"
-        },
-     "234":
-        {
-         "wall":"true"
-        },
-     "237":
-        {
-         "wall":"true"
-        },
-     "238":
-        {
-         "wall":"true"
-        },
-     "239":
-        {
-         "wall":true
-        },
-     "240":
-        {
-         "wall":"true"
-        },
-     "241":
-        {
-         "wall":"true"
-        },
-     "242":
-        {
-         "wall":"true"
-        },
-     "243":
-        {
-         "wall":"true"
-        },
-     "244":
-        {
-         "wall":"true"
-        },
-     "245":
-        {
-         "wall":"true"
-        },
-     "246":
-        {
-         "wall":"true"
-        },
-     "247":
-        {
-         "wall":"true"
-        },
-     "248":
-        {
-         "wall":"true"
-        },
-     "249":
-        {
-         "wall":"true"
-        },
-     "250":
-        {
-         "wall":"true"
-        },
-     "251":
-        {
-         "wall":"true"
-        },
-     "252":
-        {
-         "wall":"true"
-        },
-     "253":
-        {
-         "wall":"true"
-        },
-     "254":
-        {
-         "wall":"true"
-        },
-     "255":
-        {
-         "wall":"true"
-        },
-     "256":
-        {
-         "wall":"true"
-        },
-     "257":
-        {
-         "wall":"true"
-        },
-     "258":
-        {
-         "wall":"true"
-        },
-     "259":
-        {
-         "wall":"true"
-        },
-     "260":
-        {
-         "wall":"true"
-        },
-     "261":
-        {
-         "wall":"true"
-        },
-     "262":
-        {
-         "wall":"true"
-        },
-     "263":
-        {
-         "wall":"true"
-        },
-     "264":
-        {
-         "wall":"true"
-        },
-     "265":
-        {
-         "wall":"true"
-        },
-     "266":
-        {
-         "wall":"true"
-        },
-     "267":
-        {
-         "wall":"true"
-        },
-     "268":
-        {
-         "wall":"true"
-        },
-     "269":
-        {
-         "wall":"true"
-        },
-     "287":
-        {
-         "wall":"true"
-        },
-     "288":
-        {
-         "wall":"true"
-        },
-     "301":
-        {
-         "wall":"true"
-        },
-     "302":
-        {
-         "wall":"true"
-        },
-     "303":
-        {
-         "wall":"true"
-        },
-     "304":
-        {
-         "wall":"true"
-        },
-     "305":
-        {
-         "wall":"true"
-        },
-     "306":
-        {
-         "wall":"true"
-        },
-     "307":
-        {
-         "wall":"true"
-        },
-     "325":
-        {
-         "wall":"true"
-        },
-     "326":
-        {
-         "wall":"true"
-        },
-     "339":
-        {
-         "wall":"true"
-        },
-     "340":
-        {
-         "wall":"true"
-        },
-     "341":
-        {
-         "wall":"true"
-        },
-     "342":
-        {
-         "wall":"true"
-        },
-     "343":
-        {
-         "wall":"true"
-        },
-     "344":
-        {
-         "wall":"true"
-        },
-     "345":
-        {
-         "wall":"true"
-        },
-     "363":
-        {
-         "wall":"true"
-        },
-     "364":
-        {
-         "wall":"true"
-        },
-     "377":
-        {
-         "wall":"true"
-        },
-     "378":
-        {
-         "wall":"true"
-        },
-     "379":
-        {
-         "wall":"true"
-        },
-     "380":
-        {
-         "wall":"true"
-        },
-     "381":
-        {
-         "wall":"true"
-        },
-     "382":
-        {
-         "wall":"true"
-        },
-     "383":
-        {
-         "wall":"true"
-        },
-     "401":
-        {
-         "wall":"true"
-        },
-     "402":
-        {
-         "wall":"true"
-        },
-     "415":
-        {
-         "wall":"true"
-        },
-     "416":
-        {
-         "wall":"true"
-        },
-     "417":
-        {
-         "wall":"true"
-        },
-     "418":
-        {
-         "wall":"true"
-        },
-     "419":
-        {
-         "wall":"true"
-        },
-     "420":
-        {
-         "wall":"true"
-        },
-     "421":
-        {
-         "wall":"true"
-        },
-     "453":
-        {
-         "wall":"true"
-        },
-     "454":
-        {
-         "wall":"true"
-        },
-     "455":
-        {
-         "wall":"true"
-        },
-     "456":
-        {
-         "wall":"true"
-        },
-     "457":
-        {
-         "wall":"true"
-        },
-     "458":
-        {
-         "wall":"true"
-        },
-     "459":
-        {
-         "wall":"true"
-        },
-     "491":
-        {
-         "wall":"true"
-        },
-     "492":
-        {
-         "wall":"true"
-        },
-     "493":
-        {
-         "wall":"true"
-        },
-     "494":
-        {
-         "wall":"true"
-        },
-     "495":
-        {
-         "wall":"true"
-        },
-     "496":
-        {
-         "wall":"true"
-        },
-     "497":
-        {
-         "wall":"true"
-        },
-     "515":
-        {
-         "wall":"true"
-        },
-     "516":
-        {
-         "wall":"true"
-        },
-     "529":
-        {
-         "wall":"true"
-        },
-     "530":
-        {
-         "wall":"true"
-        },
-     "531":
-        {
-         "wall":"true"
-        },
-     "532":
-        {
-         "wall":"true"
-        },
-     "533":
-        {
-         "wall":"true"
-        },
-     "534":
-        {
-         "wall":"true"
-        },
-     "535":
-        {
-         "wall":"true"
-        },
-     "553":
-        {
-         "wall":"true"
-        },
-     "554":
-        {
-         "wall":"true"
-        },
-     "567":
-        {
-         "wall":"true"
-        },
-     "568":
-        {
-         "wall":"true"
-        },
-     "569":
-        {
-         "wall":"true"
-        },
-     "570":
-        {
-         "wall":"true"
-        },
-     "571":
-        {
-         "wall":"true"
-        },
-     "572":
-        {
-         "wall":"true"
-        },
-     "573":
-        {
-         "wall":"true"
-        },
-     "591":
-        {
-         "wall":"true"
-        },
-     "592":
-        {
-         "wall":"true"
-        },
-     "605":
-        {
-         "wall":"true"
-        },
-     "606":
-        {
-         "wall":"true"
-        },
-     "607":
-        {
-         "wall":"true"
-        },
-     "608":
-        {
-         "wall":"true"
-        },
-     "609":
-        {
-         "wall":"true"
-        },
-     "610":
-        {
-         "wall":"true"
-        },
-     "611":
-        {
-         "wall":"true"
-        },
-     "629":
-        {
-         "wall":"true"
-        },
-     "630":
-        {
-         "wall":"true"
-        },
-     "643":
-        {
-         "wall":"true"
-        },
-     "644":
-        {
-         "wall":"true"
-        },
-     "645":
-        {
-         "wall":"true"
-        },
-     "646":
-        {
-         "wall":"true"
-        },
-     "647":
-        {
-         "wall":"true"
-        },
-     "648":
-        {
-         "wall":"true"
-        },
-     "649":
-        {
-         "wall":"true"
-        },
-     "667":
-        {
-         "wall":"true"
-        },
-     "668":
-        {
-         "wall":"true"
-        },
-     "681":
-        {
-         "wall":"true"
-        },
-     "682":
-        {
-         "wall":"true"
-        },
-     "683":
-        {
-         "wall":"true"
-        },
-     "684":
-        {
-         "wall":"true"
-        },
-     "685":
-        {
-         "wall":"true"
-        },
-     "686":
-        {
-         "wall":"true"
-        },
-     "687":
-        {
-         "wall":"true"
-        },
-     "705":
-        {
-         "wall":"true"
-        },
-     "706":
-        {
-         "wall":"true"
-        },
-     "719":
-        {
-         "wall":"true"
-        },
-     "720":
-        {
-         "wall":"true"
-        },
-     "721":
-        {
-         "wall":"true"
-        },
-     "722":
-        {
-         "wall":"true"
-        },
-     "723":
-        {
-         "wall":"true"
-        },
-     "724":
-        {
-         "wall":"true"
-        },
-     "725":
-        {
-         "wall":"true"
-        },
-     "726":
-        {
-         "wall":"true"
-        },
-     "727":
-        {
-         "wall":"true"
-        },
-     "728":
-        {
-         "wall":"true"
-        },
-     "729":
-        {
-         "wall":"true"
-        },
-     "730":
-        {
-         "wall":"true"
-        },
-     "731":
-        {
-         "wall":"true"
-        },
-     "734":
-        {
-         "wall":"true"
-        },
-     "735":
-        {
-         "wall":"true"
-        },
-     "736":
-        {
-         "wall":"true"
-        },
-     "737":
-        {
-         "wall":"true"
-        },
-     "741":
-        {
-         "wall":"true"
-        },
-     "742":
-        {
-         "wall":"true"
-        },
-     "743":
-        {
-         "wall":"true"
-        },
-     "744":
-        {
-         "wall":"true"
-        },
-     "757":
-        {
-         "wall":"true"
-        },
-     "758":
-        {
-         "wall":"true"
-        },
-     "759":
-        {
-         "wall":"true"
-        },
-     "760":
-        {
-         "wall":"true"
-        },
-     "761":
-        {
-         "wall":"true"
-        },
-     "762":
-        {
-         "wall":"true"
-        },
-     "763":
-        {
-         "wall":"true"
-        },
-     "773":
-        {
-         "wall":"true"
-        },
-     "782":
-        {
-         "wall":"true"
-        },
-     "795":
-        {
-         "wall":"true"
-        },
-     "796":
-        {
-         "wall":"true"
-        },
-     "797":
-        {
-         "wall":"true"
-        },
-     "798":
-        {
-         "wall":"true"
-        },
-     "799":
-        {
-         "wall":"true"
-        },
-     "800":
-        {
-         "wall":"true"
-        },
-     "801":
-        {
-         "wall":"true"
-        },
-     "811":
-        {
-         "wall":"true"
-        },
-     "820":
-        {
-         "wall":"true"
-        },
-     "833":
-        {
-         "wall":"true"
-        },
-     "834":
-        {
-         "wall":"true"
-        },
-     "835":
-        {
-         "wall":"true"
-        },
-     "836":
-        {
-         "wall":"true"
-        },
-     "837":
-        {
-         "wall":"true"
-        },
-     "838":
-        {
-         "wall":"true"
-        },
-     "839":
-        {
-         "wall":"true"
-        },
-     "849":
-        {
-         "wall":"true"
-        },
-     "858":
-        {
-         "wall":"true"
-        },
-     "871":
-        {
-         "wall":"true"
-        },
-     "872":
-        {
-         "wall":"true"
-        },
-     "873":
-        {
-         "wall":"true"
-        },
-     "874":
-        {
-         "wall":"true"
-        },
-     "875":
-        {
-         "wall":"true"
-        },
-     "876":
-        {
-         "wall":"true"
-        },
-     "877":
-        {
-         "wall":"true"
-        },
-     "887":
-        {
-         "wall":"true"
-        },
-     "896":
-        {
-         "wall":"true"
-        },
-     "909":
-        {
-         "wall":"true"
-        },
-     "910":
-        {
-         "wall":"true"
-        },
-     "911":
-        {
-         "wall":"true"
-        },
-     "912":
-        {
-         "wall":"true"
-        },
-     "913":
-        {
-         "wall":"true"
-        },
-     "914":
-        {
-         "wall":"true"
-        },
-     "915":
-        {
-         "wall":"true"
-        },
-     "925":
-        {
-         "wall":"true"
-        },
-     "934":
-        {
-         "wall":"true"
-        },
-     "947":
-        {
-         "wall":"true"
-        },
-     "948":
-        {
-         "wall":"true"
-        },
-     "949":
-        {
-         "wall":"true"
-        },
-     "950":
-        {
-         "wall":"true"
-        },
-     "951":
-        {
-         "wall":"true"
-        },
-     "952":
-        {
-         "wall":"true"
-        },
-     "953":
-        {
-         "wall":"true"
-        },
-     "963":
-        {
-         "wall":"true"
-        },
-     "972":
-        {
-         "wall":"true"
-        },
-     "973":
-        {
-         "wall":"true"
-        },
-     "974":
-        {
-         "wall":"true"
-        },
-     "975":
-        {
-         "wall":"true"
-        },
-     "982":
-        {
-         "wall":"true"
-        },
-     "983":
-        {
-         "wall":"true"
-        },
-     "984":
-        {
-         "wall":"true"
-        },
-     "985":
-        {
-         "wall":"true"
-        },
-     "986":
-        {
-         "wall":"true"
-        },
-     "987":
-        {
-         "wall":"true"
-        },
-     "988":
-        {
-         "wall":"true"
-        },
-     "989":
-        {
-         "wall":"true"
-        },
-     "990":
-        {
-         "wall":"true"
-        },
-     "991":
-        {
-         "wall":"true"
-        }
-    },
- "tilepropertytypes":
-    {
-     "1001":
-        {
-         "wall":"string"
-        },
-     "1010":
-        {
-         "wall":"string"
-        },
-     "1023":
-        {
-         "wall":"string"
-        },
-     "1024":
-        {
-         "wall":"string"
-        },
-     "1025":
-        {
-         "wall":"string"
-        },
-     "1026":
-        {
-         "wall":"string"
-        },
-     "1027":
-        {
-         "wall":"string"
-        },
-     "1028":
-        {
-         "wall":"string"
-        },
-     "1029":
-        {
-         "wall":"string"
-        },
-     "1039":
-        {
-         "wall":"string"
-        },
-     "1048":
-        {
-         "wall":"string"
-        },
-     "1061":
-        {
-         "wall":"string"
-        },
-     "1062":
-        {
-         "wall":"string"
-        },
-     "1063":
-        {
-         "wall":"string"
-        },
-     "1064":
-        {
-         "wall":"string"
-        },
-     "1065":
-        {
-         "wall":"string"
-        },
-     "1066":
-        {
-         "wall":"string"
-        },
-     "1067":
-        {
-         "wall":"string"
-        },
-     "1077":
-        {
-         "wall":"string"
-        },
-     "1080":
-        {
-         "wall":"string"
-        },
-     "1081":
-        {
-         "wall":"string"
-        },
-     "1082":
-        {
-         "wall":"string"
-        },
-     "1083":
-        {
-         "wall":"string"
-        },
-     "1084":
-        {
-         "wall":"string"
-        },
-     "1085":
-        {
-         "wall":"string"
-        },
-     "1086":
-        {
-         "wall":"string"
-        },
-     "1099":
-        {
-         "wall":"string"
-        },
-     "1100":
-        {
-         "wall":"string"
-        },
-     "1101":
-        {
-         "wall":"string"
-        },
-     "1102":
-        {
-         "wall":"string"
-        },
-     "1103":
-        {
-         "wall":"string"
-        },
-     "1104":
-        {
-         "wall":"string"
-        },
-     "1105":
-        {
-         "wall":"string"
-        },
-     "1115":
-        {
-         "wall":"string"
-        },
-     "1124":
-        {
-         "wall":"string"
-        },
-     "1137":
-        {
-         "wall":"string"
-        },
-     "1138":
-        {
-         "wall":"string"
-        },
-     "1139":
-        {
-         "wall":"string"
-        },
-     "1140":
-        {
-         "wall":"string"
-        },
-     "1141":
-        {
-         "wall":"string"
-        },
-     "1142":
-        {
-         "wall":"string"
-        },
-     "1143":
-        {
-         "wall":"string"
-        },
-     "1153":
-        {
-         "wall":"string"
-        },
-     "1162":
-        {
-         "wall":"string"
-        },
-     "1175":
-        {
-         "wall":"string"
-        },
-     "1176":
-        {
-         "wall":"string"
-        },
-     "1177":
-        {
-         "wall":"string"
-        },
-     "1178":
-        {
-         "wall":"string"
-        },
-     "1179":
-        {
-         "wall":"string"
-        },
-     "1180":
-        {
-         "wall":"string"
-        },
-     "1181":
-        {
-         "wall":"string"
-        },
-     "1191":
-        {
-         "wall":"string"
-        },
-     "1200":
-        {
-         "wall":"string"
-        },
-     "1213":
-        {
-         "wall":"string"
-        },
-     "1214":
-        {
-         "wall":"string"
-        },
-     "1215":
-        {
-         "wall":"string"
-        },
-     "1216":
-        {
-         "wall":"string"
-        },
-     "1217":
-        {
-         "wall":"string"
-        },
-     "1218":
-        {
-         "wall":"string"
-        },
-     "1219":
-        {
-         "wall":"string"
-        },
-     "1229":
-        {
-         "wall":"string"
-        },
-     "1238":
-        {
-         "wall":"string"
-        },
-     "1251":
-        {
-         "wall":"string"
-        },
-     "1252":
-        {
-         "wall":"string"
-        },
-     "1253":
-        {
-         "wall":"string"
-        },
-     "1254":
-        {
-         "wall":"string"
-        },
-     "1255":
-        {
-         "wall":"string"
-        },
-     "1256":
-        {
-         "wall":"string"
-        },
-     "1257":
-        {
-         "wall":"string"
-        },
-     "1267":
-        {
-         "wall":"string"
-        },
-     "1276":
-        {
-         "wall":"string"
-        },
-     "1289":
-        {
-         "wall":"string"
-        },
-     "1290":
-        {
-         "wall":"string"
-        },
-     "1291":
-        {
-         "wall":"string"
-        },
-     "1292":
-        {
-         "wall":"string"
-        },
-     "1293":
-        {
-         "wall":"string"
-        },
-     "1294":
-        {
-         "wall":"string"
-        },
-     "1295":
-        {
-         "wall":"string"
-        },
-     "1305":
-        {
-         "wall":"string"
-        },
-     "1314":
-        {
-         "wall":"string"
-        },
-     "1327":
-        {
-         "wall":"string"
-        },
-     "1328":
-        {
-         "wall":"string"
-        },
-     "1329":
-        {
-         "wall":"string"
-        },
-     "1330":
-        {
-         "wall":"string"
-        },
-     "1331":
-        {
-         "wall":"string"
-        },
-     "1332":
-        {
-         "wall":"string"
-        },
-     "1333":
-        {
-         "wall":"string"
-        },
-     "1343":
-        {
-         "wall":"string"
-        },
-     "1352":
-        {
-         "wall":"string"
-        },
-     "1365":
-        {
-         "wall":"string"
-        },
-     "1366":
-        {
-         "wall":"string"
-        },
-     "1367":
-        {
-         "wall":"string"
-        },
-     "1368":
-        {
-         "wall":"string"
-        },
-     "1369":
-        {
-         "wall":"string"
-        },
-     "1370":
-        {
-         "wall":"string"
-        },
-     "1371":
-        {
-         "wall":"string"
-        },
-     "1381":
-        {
-         "wall":"string"
-        },
-     "1390":
-        {
-         "wall":"string"
-        },
-     "1403":
-        {
-         "wall":"string"
-        },
-     "1404":
-        {
-         "wall":"string"
-        },
-     "1405":
-        {
-         "wall":"string"
-        },
-     "1406":
-        {
-         "wall":"string"
-        },
-     "1407":
-        {
-         "wall":"string"
-        },
-     "1408":
-        {
-         "wall":"string"
-        },
-     "1409":
-        {
-         "wall":"string"
-        },
-     "1419":
-        {
-         "wall":"string"
-        },
-     "1420":
-        {
-         "wall":"string"
-        },
-     "1421":
-        {
-         "wall":"string"
-        },
-     "1422":
-        {
-         "wall":"string"
-        },
-     "1423":
-        {
-         "wall":"string"
-        },
-     "1424":
-        {
-         "wall":"string"
-        },
-     "1425":
-        {
-         "wall":"string"
-        },
-     "1426":
-        {
-         "wall":"string"
-        },
-     "1427":
-        {
-         "wall":"string"
-        },
-     "1428":
-        {
-         "wall":"string"
-        },
-     "1441":
-        {
-         "wall":"string"
-        },
-     "1442":
-        {
-         "wall":"string"
-        },
-     "1443":
-        {
-         "wall":"string"
-        },
-     "1444":
-        {
-         "wall":"string"
-        },
-     "1445":
-        {
-         "wall":"string"
-        },
-     "1446":
-        {
-         "wall":"string"
-        },
-     "1447":
-        {
-         "wall":"string"
-        },
-     "1457":
-        {
-         "wall":"string"
-        },
-     "1479":
-        {
-         "wall":"string"
-        },
-     "1480":
-        {
-         "wall":"string"
-        },
-     "1481":
-        {
-         "wall":"string"
-        },
-     "1482":
-        {
-         "wall":"string"
-        },
-     "1483":
-        {
-         "wall":"string"
-        },
-     "1484":
-        {
-         "wall":"string"
-        },
-     "1485":
-        {
-         "wall":"string"
-        },
-     "1495":
-        {
-         "wall":"string"
-        },
-     "1517":
-        {
-         "wall":"string"
-        },
-     "1518":
-        {
-         "wall":"string"
-        },
-     "1519":
-        {
-         "wall":"string"
-        },
-     "1520":
-        {
-         "wall":"string"
-        },
-     "1521":
-        {
-         "wall":"string"
-        },
-     "1522":
-        {
-         "wall":"string"
-        },
-     "1523":
-        {
-         "wall":"string"
-        },
-     "1533":
-        {
-         "wall":"string"
-        },
-     "1555":
-        {
-         "wall":"string"
-        },
-     "1556":
-        {
-         "wall":"string"
-        },
-     "1557":
-        {
-         "wall":"string"
-        },
-     "1558":
-        {
-         "wall":"string"
-        },
-     "1559":
-        {
-         "wall":"string"
-        },
-     "1560":
-        {
-         "wall":"string"
-        },
-     "1561":
-        {
-         "wall":"string"
-        },
-     "1571":
-        {
-         "wall":"string"
-        },
-     "1593":
-        {
-         "wall":"string"
-        },
-     "1594":
-        {
-         "wall":"string"
-        },
-     "1595":
-        {
-         "wall":"string"
-        },
-     "1596":
-        {
-         "wall":"string"
-        },
-     "1597":
-        {
-         "wall":"string"
-        },
-     "1598":
-        {
-         "wall":"string"
-        },
-     "1599":
-        {
-         "wall":"string"
-        },
-     "1609":
-        {
-         "wall":"string"
-        },
-     "1631":
-        {
-         "wall":"string"
-        },
-     "1632":
-        {
-         "wall":"string"
-        },
-     "1633":
-        {
-         "wall":"string"
-        },
-     "1634":
-        {
-         "wall":"string"
-        },
-     "1635":
-        {
-         "wall":"string"
-        },
-     "1636":
-        {
-         "wall":"string"
-        },
-     "1637":
-        {
-         "wall":"string"
-        },
-     "1647":
-        {
-         "wall":"string"
-        },
-     "1669":
-        {
-         "wall":"string"
-        },
-     "1670":
-        {
-         "wall":"string"
-        },
-     "1671":
-        {
-         "wall":"string"
-        },
-     "1672":
-        {
-         "wall":"string"
-        },
-     "1673":
-        {
-         "wall":"string"
-        },
-     "1674":
-        {
-         "wall":"string"
-        },
-     "1675":
-        {
-         "wall":"string"
-        },
-     "1685":
-        {
-         "wall":"string"
-        },
-     "1707":
-        {
-         "wall":"string"
-        },
-     "1708":
-        {
-         "wall":"string"
-        },
-     "1709":
-        {
-         "wall":"string"
-        },
-     "1710":
-        {
-         "wall":"string"
-        },
-     "1711":
-        {
-         "wall":"string"
-        },
-     "1712":
-        {
-         "wall":"string"
-        },
-     "1713":
-        {
-         "wall":"string"
-        },
-     "1723":
-        {
-         "wall":"string"
-        },
-     "1745":
-        {
-         "wall":"string"
-        },
-     "1746":
-        {
-         "wall":"string"
-        },
-     "1747":
-        {
-         "wall":"string"
-        },
-     "1748":
-        {
-         "wall":"string"
-        },
-     "1749":
-        {
-         "wall":"string"
-        },
-     "1750":
-        {
-         "wall":"string"
-        },
-     "1751":
-        {
-         "wall":"string"
-        },
-     "1761":
-        {
-         "wall":"string"
-        },
-     "1783":
-        {
-         "wall":"string"
-        },
-     "1784":
-        {
-         "wall":"string"
-        },
-     "1785":
-        {
-         "wall":"string"
-        },
-     "1786":
-        {
-         "wall":"string"
-        },
-     "1787":
-        {
-         "wall":"string"
-        },
-     "1788":
-        {
-         "wall":"string"
-        },
-     "1789":
-        {
-         "wall":"string"
-        },
-     "1799":
-        {
-         "wall":"string"
-        },
-     "1821":
-        {
-         "wall":"string"
-        },
-     "1822":
-        {
-         "wall":"string"
-        },
-     "1823":
-        {
-         "wall":"string"
-        },
-     "1824":
-        {
-         "wall":"string"
-        },
-     "1825":
-        {
-         "wall":"string"
-        },
-     "1826":
-        {
-         "wall":"string"
-        },
-     "1827":
-        {
-         "wall":"string"
-        },
-     "1837":
-        {
-         "wall":"string"
-        },
-     "1859":
-        {
-         "wall":"string"
-        },
-     "1860":
-        {
-         "wall":"string"
-        },
-     "1861":
-        {
-         "wall":"string"
-        },
-     "1862":
-        {
-         "wall":"string"
-        },
-     "1863":
-        {
-         "wall":"string"
-        },
-     "1864":
-        {
-         "wall":"string"
-        },
-     "1865":
-        {
-         "wall":"string"
-        },
-     "1866":
-        {
-         "wall":"string"
-        },
-     "1867":
-        {
-         "wall":"string"
-        },
-     "1868":
-        {
-         "wall":"string"
-        },
-     "1869":
-        {
-         "wall":"string"
-        },
-     "1870":
-        {
-         "wall":"string"
-        },
-     "1871":
-        {
-         "wall":"string"
-        },
-     "1872":
-        {
-         "wall":"string"
-        },
-     "1873":
-        {
-         "wall":"string"
-        },
-     "1874":
-        {
-         "wall":"string"
-        },
-     "1875":
-        {
-         "wall":"string"
-        },
-     "1876":
-        {
-         "wall":"string"
-        },
-     "1877":
-        {
-         "wall":"string"
-        },
-     "1878":
-        {
-         "wall":"string"
-        },
-     "1883":
-        {
-         "wall":"string"
-        },
-     "1884":
-        {
-         "wall":"string"
-        },
-     "1885":
-        {
-         "wall":"string"
-        },
-     "1886":
-        {
-         "wall":"string"
-        },
-     "1887":
-        {
-         "wall":"string"
-        },
-     "1888":
-        {
-         "wall":"string"
-        },
-     "1889":
-        {
-         "wall":"string"
-        },
-     "1890":
-        {
-         "wall":"string"
-        },
-     "1891":
-        {
-         "wall":"string"
-        },
-     "1892":
-        {
-         "wall":"string"
-        },
-     "1893":
-        {
-         "wall":"string"
-        },
-     "1894":
-        {
-         "wall":"string"
-        },
-     "1895":
-        {
-         "wall":"string"
-        },
-     "1896":
-        {
-         "wall":"string"
-        },
-     "1897":
-        {
-         "wall":"string"
-        },
-     "1898":
-        {
-         "wall":"string"
-        },
-     "1899":
-        {
-         "wall":"string"
-        },
-     "1900":
-        {
-         "wall":"string"
-        },
-     "1901":
-        {
-         "wall":"string"
-        },
-     "1902":
-        {
-         "wall":"string"
-        },
-     "1903":
-        {
-         "wall":"string"
-        },
-     "1937":
-        {
-         "wall":"string"
-        },
-     "1938":
-        {
-         "wall":"string"
-        },
-     "1939":
-        {
-         "wall":"string"
-        },
-     "1940":
-        {
-         "wall":"string"
-        },
-     "1941":
-        {
-         "wall":"string"
-        },
-     "1975":
-        {
-         "wall":"string"
-        },
-     "1976":
-        {
-         "wall":"string"
-        },
-     "1977":
-        {
-         "wall":"string"
-        },
-     "1978":
-        {
-         "wall":"string"
-        },
-     "1979":
-        {
-         "wall":"string"
-        },
-     "1985":
-        {
-         "wall":"string"
-        },
-     "1986":
-        {
-         "wall":"string"
-        },
-     "1987":
-        {
-         "wall":"string"
-        },
-     "2014":
-        {
-         "wall":"string"
-        },
-     "2015":
-        {
-         "wall":"string"
-        },
-     "2016":
-        {
-         "wall":"string"
-        },
-     "2017":
-        {
-         "wall":"string"
-        },
-     "2022":
-        {
-         "wall":"string"
-        },
-     "2023":
-        {
-         "wall":"string"
-        },
-     "2024":
-        {
-         "wall":"string"
-        },
-     "2025":
-        {
-         "wall":"string"
-        },
-     "2052":
-        {
-         "wall":"string"
-        },
-     "2053":
-        {
-         "wall":"string"
-        },
-     "2054":
-        {
-         "wall":"string"
-        },
-     "2055":
-        {
-         "wall":"string"
-        },
-     "2056":
-        {
-         "wall":"string"
-        },
-     "2057":
-        {
-         "wall":"string"
-        },
-     "2058":
-        {
-         "wall":"string"
-        },
-     "2059":
-        {
-         "wall":"string"
-        },
-     "2060":
-        {
-         "wall":"string"
-        },
-     "2061":
-        {
-         "wall":"string"
-        },
-     "2062":
-        {
-         "wall":"string"
-        },
-     "2063":
-        {
-         "wall":"string"
-        },
-     "2064":
-        {
-         "wall":"string"
-        },
-     "2089":
-        {
-         "wall":"string"
-        },
-     "228":
-        {
-         "wall":"string"
-        },
-     "229":
-        {
-         "wall":"string"
-        },
-     "230":
-        {
-         "wall":"string"
-        },
-     "231":
-        {
-         "wall":"string"
-        },
-     "232":
-        {
-         "wall":"string"
-        },
-     "233":
-        {
-         "wall":"string"
-        },
-     "234":
-        {
-         "wall":"string"
-        },
-     "237":
-        {
-         "wall":"string"
-        },
-     "238":
-        {
-         "wall":"string"
-        },
-     "239":
-        {
-         "wall":"bool"
-        },
-     "240":
-        {
-         "wall":"string"
-        },
-     "241":
-        {
-         "wall":"string"
-        },
-     "242":
-        {
-         "wall":"string"
-        },
-     "243":
-        {
-         "wall":"string"
-        },
-     "244":
-        {
-         "wall":"string"
-        },
-     "245":
-        {
-         "wall":"string"
-        },
-     "246":
-        {
-         "wall":"string"
-        },
-     "247":
-        {
-         "wall":"string"
-        },
-     "248":
-        {
-         "wall":"string"
-        },
-     "249":
-        {
-         "wall":"string"
-        },
-     "250":
-        {
-         "wall":"string"
-        },
-     "251":
-        {
-         "wall":"string"
-        },
-     "252":
-        {
-         "wall":"string"
-        },
-     "253":
-        {
-         "wall":"string"
-        },
-     "254":
-        {
-         "wall":"string"
-        },
-     "255":
-        {
-         "wall":"string"
-        },
-     "256":
-        {
-         "wall":"string"
-        },
-     "257":
-        {
-         "wall":"string"
-        },
-     "258":
-        {
-         "wall":"string"
-        },
-     "259":
-        {
-         "wall":"string"
-        },
-     "260":
-        {
-         "wall":"string"
-        },
-     "261":
-        {
-         "wall":"string"
-        },
-     "262":
-        {
-         "wall":"string"
-        },
-     "263":
-        {
-         "wall":"string"
-        },
-     "264":
-        {
-         "wall":"string"
-        },
-     "265":
-        {
-         "wall":"string"
-        },
-     "266":
-        {
-         "wall":"string"
-        },
-     "267":
-        {
-         "wall":"string"
-        },
-     "268":
-        {
-         "wall":"string"
-        },
-     "269":
-        {
-         "wall":"string"
-        },
-     "287":
-        {
-         "wall":"string"
-        },
-     "288":
-        {
-         "wall":"string"
-        },
-     "301":
-        {
-         "wall":"string"
-        },
-     "302":
-        {
-         "wall":"string"
-        },
-     "303":
-        {
-         "wall":"string"
-        },
-     "304":
-        {
-         "wall":"string"
-        },
-     "305":
-        {
-         "wall":"string"
-        },
-     "306":
-        {
-         "wall":"string"
-        },
-     "307":
-        {
-         "wall":"string"
-        },
-     "325":
-        {
-         "wall":"string"
-        },
-     "326":
-        {
-         "wall":"string"
-        },
-     "339":
-        {
-         "wall":"string"
-        },
-     "340":
-        {
-         "wall":"string"
-        },
-     "341":
-        {
-         "wall":"string"
-        },
-     "342":
-        {
-         "wall":"string"
-        },
-     "343":
-        {
-         "wall":"string"
-        },
-     "344":
-        {
-         "wall":"string"
-        },
-     "345":
-        {
-         "wall":"string"
-        },
-     "363":
-        {
-         "wall":"string"
-        },
-     "364":
-        {
-         "wall":"string"
-        },
-     "377":
-        {
-         "wall":"string"
-        },
-     "378":
-        {
-         "wall":"string"
-        },
-     "379":
-        {
-         "wall":"string"
-        },
-     "380":
-        {
-         "wall":"string"
-        },
-     "381":
-        {
-         "wall":"string"
-        },
-     "382":
-        {
-         "wall":"string"
-        },
-     "383":
-        {
-         "wall":"string"
-        },
-     "401":
-        {
-         "wall":"string"
-        },
-     "402":
-        {
-         "wall":"string"
-        },
-     "415":
-        {
-         "wall":"string"
-        },
-     "416":
-        {
-         "wall":"string"
-        },
-     "417":
-        {
-         "wall":"string"
-        },
-     "418":
-        {
-         "wall":"string"
-        },
-     "419":
-        {
-         "wall":"string"
-        },
-     "420":
-        {
-         "wall":"string"
-        },
-     "421":
-        {
-         "wall":"string"
-        },
-     "453":
-        {
-         "wall":"string"
-        },
-     "454":
-        {
-         "wall":"string"
-        },
-     "455":
-        {
-         "wall":"string"
-        },
-     "456":
-        {
-         "wall":"string"
-        },
-     "457":
-        {
-         "wall":"string"
-        },
-     "458":
-        {
-         "wall":"string"
-        },
-     "459":
-        {
-         "wall":"string"
-        },
-     "491":
-        {
-         "wall":"string"
-        },
-     "492":
-        {
-         "wall":"string"
-        },
-     "493":
-        {
-         "wall":"string"
-        },
-     "494":
-        {
-         "wall":"string"
-        },
-     "495":
-        {
-         "wall":"string"
-        },
-     "496":
-        {
-         "wall":"string"
-        },
-     "497":
-        {
-         "wall":"string"
-        },
-     "515":
-        {
-         "wall":"string"
-        },
-     "516":
-        {
-         "wall":"string"
-        },
-     "529":
-        {
-         "wall":"string"
-        },
-     "530":
-        {
-         "wall":"string"
-        },
-     "531":
-        {
-         "wall":"string"
-        },
-     "532":
-        {
-         "wall":"string"
-        },
-     "533":
-        {
-         "wall":"string"
-        },
-     "534":
-        {
-         "wall":"string"
-        },
-     "535":
-        {
-         "wall":"string"
-        },
-     "553":
-        {
-         "wall":"string"
-        },
-     "554":
-        {
-         "wall":"string"
-        },
-     "567":
-        {
-         "wall":"string"
-        },
-     "568":
-        {
-         "wall":"string"
-        },
-     "569":
-        {
-         "wall":"string"
-        },
-     "570":
-        {
-         "wall":"string"
-        },
-     "571":
-        {
-         "wall":"string"
-        },
-     "572":
-        {
-         "wall":"string"
-        },
-     "573":
-        {
-         "wall":"string"
-        },
-     "591":
-        {
-         "wall":"string"
-        },
-     "592":
-        {
-         "wall":"string"
-        },
-     "605":
-        {
-         "wall":"string"
-        },
-     "606":
-        {
-         "wall":"string"
-        },
-     "607":
-        {
-         "wall":"string"
-        },
-     "608":
-        {
-         "wall":"string"
-        },
-     "609":
-        {
-         "wall":"string"
-        },
-     "610":
-        {
-         "wall":"string"
-        },
-     "611":
-        {
-         "wall":"string"
-        },
-     "629":
-        {
-         "wall":"string"
-        },
-     "630":
-        {
-         "wall":"string"
-        },
-     "643":
-        {
-         "wall":"string"
-        },
-     "644":
-        {
-         "wall":"string"
-        },
-     "645":
-        {
-         "wall":"string"
-        },
-     "646":
-        {
-         "wall":"string"
-        },
-     "647":
-        {
-         "wall":"string"
-        },
-     "648":
-        {
-         "wall":"string"
-        },
-     "649":
-        {
-         "wall":"string"
-        },
-     "667":
-        {
-         "wall":"string"
-        },
-     "668":
-        {
-         "wall":"string"
-        },
-     "681":
-        {
-         "wall":"string"
-        },
-     "682":
-        {
-         "wall":"string"
-        },
-     "683":
-        {
-         "wall":"string"
-        },
-     "684":
-        {
-         "wall":"string"
-        },
-     "685":
-        {
-         "wall":"string"
-        },
-     "686":
-        {
-         "wall":"string"
-        },
-     "687":
-        {
-         "wall":"string"
-        },
-     "705":
-        {
-         "wall":"string"
-        },
-     "706":
-        {
-         "wall":"string"
-        },
-     "719":
-        {
-         "wall":"string"
-        },
-     "720":
-        {
-         "wall":"string"
-        },
-     "721":
-        {
-         "wall":"string"
-        },
-     "722":
-        {
-         "wall":"string"
-        },
-     "723":
-        {
-         "wall":"string"
-        },
-     "724":
-        {
-         "wall":"string"
-        },
-     "725":
-        {
-         "wall":"string"
-        },
-     "726":
-        {
-         "wall":"string"
-        },
-     "727":
-        {
-         "wall":"string"
-        },
-     "728":
-        {
-         "wall":"string"
-        },
-     "729":
-        {
-         "wall":"string"
-        },
-     "730":
-        {
-         "wall":"string"
-        },
-     "731":
-        {
-         "wall":"string"
-        },
-     "734":
-        {
-         "wall":"string"
-        },
-     "735":
-        {
-         "wall":"string"
-        },
-     "736":
-        {
-         "wall":"string"
-        },
-     "737":
-        {
-         "wall":"string"
-        },
-     "741":
-        {
-         "wall":"string"
-        },
-     "742":
-        {
-         "wall":"string"
-        },
-     "743":
-        {
-         "wall":"string"
-        },
-     "744":
-        {
-         "wall":"string"
-        },
-     "757":
-        {
-         "wall":"string"
-        },
-     "758":
-        {
-         "wall":"string"
-        },
-     "759":
-        {
-         "wall":"string"
-        },
-     "760":
-        {
-         "wall":"string"
-        },
-     "761":
-        {
-         "wall":"string"
-        },
-     "762":
-        {
-         "wall":"string"
-        },
-     "763":
-        {
-         "wall":"string"
-        },
-     "773":
-        {
-         "wall":"string"
-        },
-     "782":
-        {
-         "wall":"string"
-        },
-     "795":
-        {
-         "wall":"string"
-        },
-     "796":
-        {
-         "wall":"string"
-        },
-     "797":
-        {
-         "wall":"string"
-        },
-     "798":
-        {
-         "wall":"string"
-        },
-     "799":
-        {
-         "wall":"string"
-        },
-     "800":
-        {
-         "wall":"string"
-        },
-     "801":
-        {
-         "wall":"string"
-        },
-     "811":
-        {
-         "wall":"string"
-        },
-     "820":
-        {
-         "wall":"string"
-        },
-     "833":
-        {
-         "wall":"string"
-        },
-     "834":
-        {
-         "wall":"string"
-        },
-     "835":
-        {
-         "wall":"string"
-        },
-     "836":
-        {
-         "wall":"string"
-        },
-     "837":
-        {
-         "wall":"string"
-        },
-     "838":
-        {
-         "wall":"string"
-        },
-     "839":
-        {
-         "wall":"string"
-        },
-     "849":
-        {
-         "wall":"string"
-        },
-     "858":
-        {
-         "wall":"string"
-        },
-     "871":
-        {
-         "wall":"string"
-        },
-     "872":
-        {
-         "wall":"string"
-        },
-     "873":
-        {
-         "wall":"string"
-        },
-     "874":
-        {
-         "wall":"string"
-        },
-     "875":
-        {
-         "wall":"string"
-        },
-     "876":
-        {
-         "wall":"string"
-        },
-     "877":
-        {
-         "wall":"string"
-        },
-     "887":
-        {
-         "wall":"string"
-        },
-     "896":
-        {
-         "wall":"string"
-        },
-     "909":
-        {
-         "wall":"string"
-        },
-     "910":
-        {
-         "wall":"string"
-        },
-     "911":
-        {
-         "wall":"string"
-        },
-     "912":
-        {
-         "wall":"string"
-        },
-     "913":
-        {
-         "wall":"string"
-        },
-     "914":
-        {
-         "wall":"string"
-        },
-     "915":
-        {
-         "wall":"string"
-        },
-     "925":
-        {
-         "wall":"string"
-        },
-     "934":
-        {
-         "wall":"string"
-        },
-     "947":
-        {
-         "wall":"string"
-        },
-     "948":
-        {
-         "wall":"string"
-        },
-     "949":
-        {
-         "wall":"string"
-        },
-     "950":
-        {
-         "wall":"string"
-        },
-     "951":
-        {
-         "wall":"string"
-        },
-     "952":
-        {
-         "wall":"string"
-        },
-     "953":
-        {
-         "wall":"string"
-        },
-     "963":
-        {
-         "wall":"string"
-        },
-     "972":
-        {
-         "wall":"string"
-        },
-     "973":
-        {
-         "wall":"string"
-        },
-     "974":
-        {
-         "wall":"string"
-        },
-     "975":
-        {
-         "wall":"string"
-        },
-     "982":
-        {
-         "wall":"string"
-        },
-     "983":
-        {
-         "wall":"string"
-        },
-     "984":
-        {
-         "wall":"string"
-        },
-     "985":
-        {
-         "wall":"string"
-        },
-     "986":
-        {
-         "wall":"string"
-        },
-     "987":
-        {
-         "wall":"string"
-        },
-     "988":
-        {
-         "wall":"string"
-        },
-     "989":
-        {
-         "wall":"string"
-        },
-     "990":
-        {
-         "wall":"string"
-        },
-     "991":
-        {
-         "wall":"string"
-        }
-    },
- "tilewidth":100,
- "type":"tileset"
-}
-},{}],49:[function(require,module,exports){
+},{"../engine/pixi_containers.js":29}],44:[function(require,module,exports){
+arguments[4][38][0].apply(exports,arguments)
+},{"./item_model":43,"dup":38,"pixi.js":237}],45:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -8050,7 +3168,7 @@ module.exports={ "height":100,
  "version":1,
  "width":95
 }
-},{}],50:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 module.exports={ "columns":20,
  "image":"..\/..\/..\/..\/assets\/debug\/debug_room.jpg",
  "imageheight":1700,
@@ -8501,7 +3619,7 @@ module.exports={ "columns":20,
  "tilewidth":100,
  "type":"tileset"
 }
-},{}],51:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 /* eslint-disable */  // --> OFF
 'use strict';
 const PIXI = require('pixi.js');
@@ -8565,18 +3683,18 @@ class DevelopmentLevel {
 
   }
 
-  load_flat_level() {
-    const bedroom_data  = require('../bedroom/bedroom_map_output.json');
-    const bedroom_tiles = require('../bedroom/bedroom_map_tiled.json');
-    const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
-    bedroom_image.alpha = 0.5;
+  // load_flat_level() {
+  //   const bedroom_data  = require('../bedroom/bedroom_map_output.json');
+  //   const bedroom_tiles = require('../bedroom/bedroom_map_tiled.json');
+  //   const bedroom_image = PIXI.Sprite.fromFrame('flat_floor2');
+  //   bedroom_image.alpha = 0.5;
 
-    const bedroom = new Level(bedroom_tiles, bedroom_data);
-    bedroom.set_background_image(bedroom_image, bedroom_tiles);
-    bedroom.render_walls(bedroom_data.layers[0].layers[1]);
-    bedroom.create_grid(bedroom_tiles);
-    this.level = bedroom;
-  }
+  //   const bedroom = new Level(bedroom_tiles, bedroom_data);
+  //   bedroom.set_background_image(bedroom_image, bedroom_tiles);
+  //   bedroom.render_walls(bedroom_data.layers[0].layers[1]);
+  //   bedroom.create_grid(bedroom_tiles);
+  //   this.level = bedroom;
+  // }
 
   load_test_level() {
     const debug_room_tiled_data = require('../debug/debug_map_output.json');
@@ -8655,7 +3773,7 @@ module.exports = {
 
 
 
-},{"../../character/archetypes/archer":3,"../../character/archetypes/rat":4,"../../character/attributes/inventory":6,"../../character/types/enemy":18,"../../character/types/player.js":20,"../../cutscene/intro.js":24,"../../engine/shadows":35,"../../items/Note":40,"../../items/back_pack":41,"../../items/chest":42,"../../items/fire_place":43,"../../view/view_inventory":60,"../../view/view_player_inventory":61,"../bedroom/bedroom_map_output.json":47,"../bedroom/bedroom_map_tiled.json":48,"../debug/debug_map_output.json":49,"../debug/debug_map_tiles.json":50,"../level_utils":53,"pixi.js":241}],52:[function(require,module,exports){
+},{"../../character/archetypes/archer":3,"../../character/archetypes/rat":4,"../../character/attributes/inventory":5,"../../character/types/enemy":17,"../../character/types/player.js":18,"../../cutscene/intro.js":22,"../../engine/shadows":33,"../../items/Note":38,"../../items/back_pack":39,"../../items/chest":40,"../../items/fire_place":41,"../../view/view_inventory":56,"../../view/view_player_inventory":57,"../debug/debug_map_output.json":45,"../debug/debug_map_tiles.json":46,"../level_utils":49,"pixi.js":237}],48:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');
@@ -8735,7 +3853,7 @@ module.exports = {
   Door,
 };
 
-},{"../engine/pixi_containers":31,"pixi.js":241}],53:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"pixi.js":237}],49:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -8748,7 +3866,6 @@ const {
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
 const { Enemy  } = require('../character/types/enemy.js');
-const { Friend } = require('../character/types/friend.js');
 const { Rat    } = require('../character/types/rat');
 const { Player } = require('../character/types/player.js');
 //const { NetworkCharacter } = require('../character/network/network_player.js');
@@ -8851,13 +3968,6 @@ class Level {
     //character.add_raycasting(this.segments)
   }
 
-  create_friend(location, script) {
-    const friend = new Friend();
-    friend.set_position({ x: location.x, y: location.y });
-    friend.add_dialog_handling();
-    friend.add_script(script);
-    friend.add_state_handling();
-  }
 
   create_network_player() {
     const player_details = {
@@ -9039,7 +4149,7 @@ module.exports = {
 
 
 
-},{"../character/types/enemy.js":18,"../character/types/friend.js":19,"../character/types/player.js":20,"../character/types/rat":21,"../engine/pathfind.js":30,"../engine/pixi_containers":31,"../engine/shadows":35,"../items/chest":42,"../items/fire_place":43,"../items/note":46,"./door.js":52,"pixi.js":241}],54:[function(require,module,exports){
+},{"../character/types/enemy.js":17,"../character/types/player.js":18,"../character/types/rat":19,"../engine/pathfind.js":28,"../engine/pixi_containers":29,"../engine/shadows":33,"../items/chest":40,"../items/fire_place":41,"../items/note":44,"./door.js":48,"pixi.js":237}],50:[function(require,module,exports){
 'use strict';
 
 const easystarjs = require('easystarjs');
@@ -9055,7 +4165,7 @@ module.exports = {
 };
 
 
-},{"easystarjs":73}],55:[function(require,module,exports){
+},{"easystarjs":69}],51:[function(require,module,exports){
 'use strict';
 
 function distance_between_points(point_1, point_2) {
@@ -9101,7 +4211,7 @@ module.exports = {
   distance_between_points,
 };
 
-},{}],56:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -9149,7 +4259,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"socket.io-client":288}],57:[function(require,module,exports){
+},{"socket.io-client":284}],53:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9195,7 +4305,7 @@ module.exports = {
   View_Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":31,"../engine/ticker":37,"pixi.js":241}],58:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"../engine/ticker":35,"pixi.js":237}],54:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9223,7 +4333,7 @@ module.exports = {
   View_Aiming_Line,
 };
 
-},{"../engine/pixi_containers":31,"pixi.js":241}],59:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"pixi.js":237}],55:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9258,7 +4368,7 @@ module.exports = {
   icon,
 };
 
-},{"../engine/pixi_containers":31,"pixi.js":241}],60:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"pixi.js":237}],56:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -9308,7 +4418,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/pixi_containers":31,"pixi.js":241}],61:[function(require,module,exports){
+},{"../engine/pixi_containers":29,"pixi.js":237}],57:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -9509,7 +4619,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_data":44}],62:[function(require,module,exports){
+},{"../items/item_data":42}],58:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -9543,7 +4653,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],63:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 module.exports = after
 
 function after(count, callback, err_cb) {
@@ -9573,7 +4683,7 @@ function after(count, callback, err_cb) {
 
 function noop() {}
 
-},{}],64:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 /**
  * An abstraction for slicing an arraybuffer even when
  * ArrayBuffer.prototype.slice is not supported
@@ -9604,7 +4714,7 @@ module.exports = function(arraybuffer, start, end) {
   return result.buffer;
 };
 
-},{}],65:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 
 /**
  * Expose `Backoff`.
@@ -9691,7 +4801,7 @@ Backoff.prototype.setJitter = function(jitter){
 };
 
 
-},{}],66:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 /*
  * base64-arraybuffer
  * https://github.com/niklasvh/base64-arraybuffer
@@ -9760,7 +4870,7 @@ Backoff.prototype.setJitter = function(jitter){
   };
 })();
 
-},{}],67:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -9966,7 +5076,7 @@ exports.nextCombination = function(v) {
 }
 
 
-},{}],68:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 (function (global){
 /**
  * Create a blob builder even when vendor prefixes exist
@@ -10066,7 +5176,7 @@ module.exports = (function() {
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],69:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 /**
  * Slice reference.
  */
@@ -10091,7 +5201,7 @@ module.exports = function(obj, fn){
   }
 };
 
-},{}],70:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -10256,7 +5366,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],71:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 
 module.exports = function(a, b){
   var fn = function(){};
@@ -10264,7 +5374,7 @@ module.exports = function(a, b){
   a.prototype = new fn;
   a.prototype.constructor = a;
 };
-},{}],72:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 'use strict';
 
 module.exports = earcut;
@@ -10916,7 +6026,7 @@ earcut.flatten = function (data) {
     return result;
 };
 
-},{}],73:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 /**
 *   EasyStar.js
 *   github.com/prettymuchbryce/EasyStarJS
@@ -11474,7 +6584,7 @@ EasyStar.BOTTOM_LEFT = 'BOTTOM_LEFT'
 EasyStar.LEFT = 'LEFT'
 EasyStar.TOP_LEFT = 'TOP_LEFT'
 
-},{"./instance":74,"./node":75,"heap":94}],74:[function(require,module,exports){
+},{"./instance":70,"./node":71,"heap":90}],70:[function(require,module,exports){
 /**
  * Represents a single instance of EasyStar.
  * A path that is in the queue to eventually be found.
@@ -11489,7 +6599,7 @@ module.exports = function() {
     this.nodeHash = {};
     this.openList;
 };
-},{}],75:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 /**
 * A simple Node that represents a single tile on the grid.
 * @param {Object} parent The parent node.
@@ -11512,7 +6622,7 @@ module.exports = function(parent, x, y, costSoFar, simpleDistanceToTarget) {
         return this.costSoFar + this.simpleDistanceToTarget;
     }
 };
-},{}],76:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 
 module.exports = require('./socket');
 
@@ -11524,7 +6634,7 @@ module.exports = require('./socket');
  */
 module.exports.parser = require('engine.io-parser');
 
-},{"./socket":77,"engine.io-parser":87}],77:[function(require,module,exports){
+},{"./socket":73,"engine.io-parser":83}],73:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -12271,7 +7381,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./transport":78,"./transports/index":79,"component-emitter":70,"debug":85,"engine.io-parser":87,"indexof":96,"parseqs":102,"parseuri":103}],78:[function(require,module,exports){
+},{"./transport":74,"./transports/index":75,"component-emitter":66,"debug":81,"engine.io-parser":83,"indexof":92,"parseqs":98,"parseuri":99}],74:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -12430,7 +7540,7 @@ Transport.prototype.onClose = function () {
   this.emit('close');
 };
 
-},{"component-emitter":70,"engine.io-parser":87}],79:[function(require,module,exports){
+},{"component-emitter":66,"engine.io-parser":83}],75:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies
@@ -12487,7 +7597,7 @@ function polling (opts) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling-jsonp":80,"./polling-xhr":81,"./websocket":83,"xmlhttprequest-ssl":84}],80:[function(require,module,exports){
+},{"./polling-jsonp":76,"./polling-xhr":77,"./websocket":79,"xmlhttprequest-ssl":80}],76:[function(require,module,exports){
 (function (global){
 
 /**
@@ -12722,7 +7832,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":82,"component-inherit":71}],81:[function(require,module,exports){
+},{"./polling":78,"component-inherit":67}],77:[function(require,module,exports){
 (function (global){
 /**
  * Module requirements.
@@ -13138,7 +8248,7 @@ function unloadHandler () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./polling":82,"component-emitter":70,"component-inherit":71,"debug":85,"xmlhttprequest-ssl":84}],82:[function(require,module,exports){
+},{"./polling":78,"component-emitter":66,"component-inherit":67,"debug":81,"xmlhttprequest-ssl":80}],78:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -13385,7 +8495,7 @@ Polling.prototype.uri = function () {
   return schema + '://' + (ipv6 ? '[' + this.hostname + ']' : this.hostname) + port + this.path + query;
 };
 
-},{"../transport":78,"component-inherit":71,"debug":85,"engine.io-parser":87,"parseqs":102,"xmlhttprequest-ssl":84,"yeast":302}],83:[function(require,module,exports){
+},{"../transport":74,"component-inherit":67,"debug":81,"engine.io-parser":83,"parseqs":98,"xmlhttprequest-ssl":80,"yeast":298}],79:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -13675,7 +8785,7 @@ WS.prototype.check = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../transport":78,"component-inherit":71,"debug":85,"engine.io-parser":87,"parseqs":102,"ws":304,"yeast":302}],84:[function(require,module,exports){
+},{"../transport":74,"component-inherit":67,"debug":81,"engine.io-parser":83,"parseqs":98,"ws":300,"yeast":298}],80:[function(require,module,exports){
 (function (global){
 // browser shim for xmlhttprequest module
 
@@ -13716,7 +8826,7 @@ module.exports = function (opts) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"has-cors":93}],85:[function(require,module,exports){
+},{"has-cors":89}],81:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -13915,7 +9025,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":86,"_process":308}],86:[function(require,module,exports){
+},{"./debug":82,"_process":304}],82:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -14142,7 +9252,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":99}],87:[function(require,module,exports){
+},{"ms":95}],83:[function(require,module,exports){
 (function (global){
 /**
  * Module dependencies.
@@ -14752,7 +9862,7 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./keys":88,"./utf8":89,"after":63,"arraybuffer.slice":64,"base64-arraybuffer":66,"blob":68,"has-binary2":91}],88:[function(require,module,exports){
+},{"./keys":84,"./utf8":85,"after":59,"arraybuffer.slice":60,"base64-arraybuffer":62,"blob":64,"has-binary2":87}],84:[function(require,module,exports){
 
 /**
  * Gets the keys for an object.
@@ -14773,7 +9883,7 @@ module.exports = Object.keys || function keys (obj){
   return arr;
 };
 
-},{}],89:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
@@ -15032,7 +10142,7 @@ module.exports = Object.keys || function keys (obj){
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],90:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -15345,7 +10455,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],91:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (Buffer){
 /* global Blob File */
 
@@ -15413,14 +10523,14 @@ function hasBinary (obj) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":305,"isarray":92}],92:[function(require,module,exports){
+},{"buffer":301,"isarray":88}],88:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],93:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -15439,10 +10549,10 @@ try {
   module.exports = false;
 }
 
-},{}],94:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 module.exports = require('./lib/heap');
 
-},{"./lib/heap":95}],95:[function(require,module,exports){
+},{"./lib/heap":91}],91:[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 (function() {
   var Heap, defaultCmp, floor, heapify, heappop, heappush, heappushpop, heapreplace, insort, min, nlargest, nsmallest, updateItem, _siftdown, _siftup;
@@ -15819,7 +10929,7 @@ module.exports = require('./lib/heap');
 
 }).call(this);
 
-},{}],96:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -15830,9 +10940,9 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],97:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 !function(e){var n=/iPhone/i,t=/iPod/i,r=/iPad/i,a=/\bAndroid(?:.+)Mobile\b/i,p=/Android/i,l=/\bAndroid(?:.+)SD4930UR\b/i,b=/\bAndroid(?:.+)(?:KF[A-Z]{2,4})\b/i,f=/Windows Phone/i,u=/\bWindows(?:.+)ARM\b/i,c=/BlackBerry/i,s=/BB10/i,v=/Opera Mini/i,h=/\b(CriOS|Chrome)(?:.+)Mobile/i,w=/\Mobile(?:.+)Firefox\b/i;function m(e,i){return e.test(i)}function i(e){var i=e||("undefined"!=typeof navigator?navigator.userAgent:""),o=i.split("[FBAN");void 0!==o[1]&&(i=o[0]),void 0!==(o=i.split("Twitter"))[1]&&(i=o[0]);var d={apple:{phone:m(n,i)&&!m(f,i),ipod:m(t,i),tablet:!m(n,i)&&m(r,i)&&!m(f,i),device:(m(n,i)||m(t,i)||m(r,i))&&!m(f,i)},amazon:{phone:m(l,i),tablet:!m(l,i)&&m(b,i),device:m(l,i)||m(b,i)},android:{phone:!m(f,i)&&m(l,i)||!m(f,i)&&m(a,i),tablet:!m(f,i)&&!m(l,i)&&!m(a,i)&&(m(b,i)||m(p,i)),device:!m(f,i)&&(m(l,i)||m(b,i)||m(a,i)||m(p,i))},windows:{phone:m(f,i),tablet:m(u,i),device:m(f,i)||m(u,i)},other:{blackberry:m(c,i),blackberry10:m(s,i),opera:m(v,i),firefox:m(w,i),chrome:m(h,i),device:m(c,i)||m(s,i)||m(v,i)||m(w,i)||m(h,i)}};return d.any=d.apple.device||d.android.device||d.windows.device||d.other.device,d.phone=d.apple.phone||d.android.phone||d.windows.phone,d.tablet=d.apple.tablet||d.android.tablet||d.windows.tablet,d}"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=i:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=i():"function"==typeof define&&define.amd?define([],e.isMobile=i()):e.isMobile=i()}(this);
-},{}],98:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -15999,7 +11109,7 @@ MiniSignal.MiniSignalBinding = MiniSignalBinding;
 exports['default'] = MiniSignal;
 module.exports = exports['default'];
 
-},{}],99:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -16153,7 +11263,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],100:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -16245,7 +11355,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],101:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict'
 
 module.exports = function parseURI (str, opts) {
@@ -16277,7 +11387,7 @@ module.exports = function parseURI (str, opts) {
   return uri
 }
 
-},{}],102:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 /**
  * Compiles a querystring
  * Returns string representation of the object
@@ -16316,7 +11426,7 @@ exports.decode = function(qs){
   return qry;
 };
 
-},{}],103:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 /**
  * Parses an URI
  *
@@ -16357,7 +11467,7 @@ module.exports = function parseuri(str) {
     return uri;
 };
 
-},{}],104:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 var EMPTY_ARRAY_BUFFER = new ArrayBuffer(0);
 
 /**
@@ -16478,7 +11588,7 @@ Buffer.prototype.destroy = function(){
 
 module.exports = Buffer;
 
-},{}],105:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 
 var Texture = require('./GLTexture');
 
@@ -16706,7 +11816,7 @@ Framebuffer.createFloat32 = function(gl, width, height, data)
 
 module.exports = Framebuffer;
 
-},{"./GLTexture":107}],106:[function(require,module,exports){
+},{"./GLTexture":103}],102:[function(require,module,exports){
 
 var compileProgram = require('./shader/compileProgram'),
 	extractAttributes = require('./shader/extractAttributes'),
@@ -16802,7 +11912,7 @@ Shader.prototype.destroy = function()
 
 module.exports = Shader;
 
-},{"./shader/compileProgram":112,"./shader/extractAttributes":114,"./shader/extractUniforms":115,"./shader/generateUniformAccessObject":116,"./shader/setPrecision":120}],107:[function(require,module,exports){
+},{"./shader/compileProgram":108,"./shader/extractAttributes":110,"./shader/extractUniforms":111,"./shader/generateUniformAccessObject":112,"./shader/setPrecision":116}],103:[function(require,module,exports){
 
 /**
  * Helper class to create a WebGL Texture
@@ -17137,7 +12247,7 @@ Texture.fromData = function(gl, data, width, height)
 
 module.exports = Texture;
 
-},{}],108:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 
 // state object//
 var setVertexAttribArrays = require( './setVertexAttribArrays' );
@@ -17405,7 +12515,7 @@ VertexArrayObject.prototype.getSize = function()
     return attrib.buffer.data.length / (( attrib.stride/4 ) || attrib.attribute.size);
 };
 
-},{"./setVertexAttribArrays":111}],109:[function(require,module,exports){
+},{"./setVertexAttribArrays":107}],105:[function(require,module,exports){
 
 /**
  * Helper class to create a webGL Context
@@ -17433,7 +12543,7 @@ var createContext = function(canvas, options)
 
 module.exports = createContext;
 
-},{}],110:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 var gl = {
     createContext:          require('./createContext'),
     setVertexAttribArrays:  require('./setVertexAttribArrays'),
@@ -17460,7 +12570,7 @@ if (typeof window !== 'undefined')
     window.PIXI.glCore = gl;
 }
 
-},{"./GLBuffer":104,"./GLFramebuffer":105,"./GLShader":106,"./GLTexture":107,"./VertexArrayObject":108,"./createContext":109,"./setVertexAttribArrays":111,"./shader":117}],111:[function(require,module,exports){
+},{"./GLBuffer":100,"./GLFramebuffer":101,"./GLShader":102,"./GLTexture":103,"./VertexArrayObject":104,"./createContext":105,"./setVertexAttribArrays":107,"./shader":113}],107:[function(require,module,exports){
 // var GL_MAP = {};
 
 /**
@@ -17517,7 +12627,7 @@ var setVertexAttribArrays = function (gl, attribs, state)
 
 module.exports = setVertexAttribArrays;
 
-},{}],112:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 
 /**
  * @class
@@ -17599,7 +12709,7 @@ var compileShader = function (gl, type, src)
 
 module.exports = compileProgram;
 
-},{}],113:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -17679,7 +12789,7 @@ var booleanArray = function(size)
 
 module.exports = defaultValue;
 
-},{}],114:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 
 var mapType = require('./mapType');
 var mapSize = require('./mapSize');
@@ -17722,7 +12832,7 @@ var pointer = function(type, normalized, stride, start){
 
 module.exports = extractAttributes;
 
-},{"./mapSize":118,"./mapType":119}],115:[function(require,module,exports){
+},{"./mapSize":114,"./mapType":115}],111:[function(require,module,exports){
 var mapType = require('./mapType');
 var defaultValue = require('./defaultValue');
 
@@ -17759,7 +12869,7 @@ var extractUniforms = function(gl, program)
 
 module.exports = extractUniforms;
 
-},{"./defaultValue":113,"./mapType":119}],116:[function(require,module,exports){
+},{"./defaultValue":109,"./mapType":115}],112:[function(require,module,exports){
 /**
  * Extracts the attributes
  * @class
@@ -17882,7 +12992,7 @@ function getUniformGroup(nameTokens, uniform)
 
 module.exports = generateUniformAccessObject;
 
-},{}],117:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 module.exports = {
     compileProgram: require('./compileProgram'),
     defaultValue: require('./defaultValue'),
@@ -17893,7 +13003,7 @@ module.exports = {
     mapSize: require('./mapSize'),
     mapType: require('./mapType')
 };
-},{"./compileProgram":112,"./defaultValue":113,"./extractAttributes":114,"./extractUniforms":115,"./generateUniformAccessObject":116,"./mapSize":118,"./mapType":119,"./setPrecision":120}],118:[function(require,module,exports){
+},{"./compileProgram":108,"./defaultValue":109,"./extractAttributes":110,"./extractUniforms":111,"./generateUniformAccessObject":112,"./mapSize":114,"./mapType":115,"./setPrecision":116}],114:[function(require,module,exports){
 /**
  * @class
  * @memberof PIXI.glCore.shader
@@ -17931,7 +13041,7 @@ var GLSL_TO_SIZE = {
 
 module.exports = mapSize;
 
-},{}],119:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 
 
 var mapType = function(gl, type) 
@@ -17979,7 +13089,7 @@ var GL_TO_GLSL_TYPES = {
 
 module.exports = mapType;
 
-},{}],120:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 /**
  * Sets the float precision on the shader. If the precision is already present this function will do nothing
  * @param {string} src       the shader source
@@ -17999,7 +13109,7 @@ var setPrecision = function(src, precision)
 
 module.exports = setPrecision;
 
-},{}],121:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 var pixi_display;
 (function (pixi_display) {
     Object.assign(PIXI.Container.prototype, {
@@ -18726,7 +13836,7 @@ var pixi_display;
     PIXI.display = pixi_display;
 })(pixi_display || (pixi_display = {}));
 
-},{}],122:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 "use strict";
 
 var Resource = require("resource-loader").Resource;
@@ -18847,7 +13957,7 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":287}],123:[function(require,module,exports){
+},{"resource-loader":283}],119:[function(require,module,exports){
 (function (global){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -19845,13 +14955,13 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],124:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 !function(e){function t(r){if(i[r])return i[r].exports;var n=i[r]={exports:{},id:r,loaded:!1};return e[r].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t,i){e.exports=i(4)},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function s(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}var o=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var u=i(2),l=r(u),h=function(e){function t(){var e=arguments.length<=0||void 0===arguments[0]?1:arguments[0],i=arguments[1];n(this,t);var r=a(this,Object.getPrototypeOf(t).call(this));return r.time=e,i&&r.addTo(i),r.active=!1,r.isEnded=!1,r.isStarted=!1,r.expire=!1,r.delay=0,r.repeat=0,r.loop=!1,r._delayTime=0,r._elapsedTime=0,r._repeat=0,r}return s(t,e),o(t,[{key:"addTo",value:function(e){return this.manager=e,this.manager.addTimer(this),this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTimer(this),this):void 0}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop",this._elapsedTime),this}},{key:"reset",value:function(){return this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this}},{key:"update",value:function(e,t){if(this.active){if(this.delay>this._delayTime)return void(this._delayTime+=t);if(this.isStarted||(this.isStarted=!0,this.emit("start",this._elapsedTime)),this.time>this._elapsedTime){var i=this._elapsedTime+t,r=i>=this.time;if(this._elapsedTime=r?this.time:i,this.emit("update",this._elapsedTime,e),r){if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._elapsedTime,this._repeat),void(this._elapsedTime=0);this.isEnded=!0,this.active=!1,this.emit("end",this._elapsedTime)}}}}}]),t}(l["default"].utils.EventEmitter);t["default"]=h},function(e,t){e.exports=PIXI},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var a=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var s=i(1),o=r(s),u=function(){function e(){n(this,e),this.timers=[],this._timersToDelete=[],this._last=0}return a(e,[{key:"update",value:function(e){var t=void 0;e||0===e?t=1e3*e:(t=this._getDeltaMS(),e=t/1e3);for(var i=0;i<this.timers.length;i++){var r=this.timers[i];r.active&&(r.update(e,t),r.isEnded&&r.expire&&r.remove())}if(this._timersToDelete.length){for(var i=0;i<this._timersToDelete.length;i++)this._remove(this._timersToDelete[i]);this._timersToDelete.length=0}}},{key:"removeTimer",value:function(e){this._timersToDelete.push(e)}},{key:"addTimer",value:function(e){e.manager=this,this.timers.push(e)}},{key:"createTimer",value:function(e){return new o["default"](e,this)}},{key:"_remove",value:function(e){var t=this.timers.indexOf(e);t>0&&this.timers.splice(t,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var e=Date.now(),t=e-this._last;return this._last=e,t}}]),e}();t["default"]=u},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var n=i(2),a=r(n),s=i(3),o=r(s),u=i(1),l=r(u),h={TimerManager:o["default"],Timer:l["default"]};a["default"].timerManager||(a["default"].timerManager=new o["default"],a["default"].timer=h),t["default"]=h}]);
 
-},{}],125:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],126:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20380,7 +15490,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":151,"./accessibleTarget":127,"ismobilejs":97}],127:[function(require,module,exports){
+},{"../core":147,"./accessibleTarget":123,"ismobilejs":93}],123:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -20438,7 +15548,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],128:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20463,7 +15573,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":126,"./accessibleTarget":127}],129:[function(require,module,exports){
+},{"./AccessibilityManager":122,"./accessibleTarget":123}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20695,7 +15805,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":131,"./const":132,"./display/Container":134,"./settings":187,"./ticker":207}],130:[function(require,module,exports){
+},{"./autoDetectRenderer":127,"./const":128,"./display/Container":130,"./settings":183,"./ticker":203}],126:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20762,7 +15872,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":187,"pixi-gl-core":110}],131:[function(require,module,exports){
+},{"./settings":183,"pixi-gl-core":106}],127:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20831,7 +15941,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":163,"./renderers/webgl/WebGLRenderer":170,"./utils":211}],132:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":159,"./renderers/webgl/WebGLRenderer":166,"./utils":207}],128:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21174,7 +16284,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],133:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21517,7 +16627,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":156}],134:[function(require,module,exports){
+},{"../math":152}],130:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22135,7 +17245,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":211,"./DisplayObject":135}],135:[function(require,module,exports){
+},{"../utils":207,"./DisplayObject":131}],131:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22829,7 +17939,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":132,"../math":156,"../settings":187,"./Bounds":133,"./Transform":136,"./TransformStatic":138,"eventemitter3":90}],136:[function(require,module,exports){
+},{"../const":128,"../math":152,"../settings":183,"./Bounds":129,"./Transform":132,"./TransformStatic":134,"eventemitter3":86}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23010,7 +18120,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":156,"./TransformBase":137}],137:[function(require,module,exports){
+},{"../math":152,"./TransformBase":133}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23097,7 +18207,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":156}],138:[function(require,module,exports){
+},{"../math":152}],134:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23309,7 +18419,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":156,"./TransformBase":137}],139:[function(require,module,exports){
+},{"../math":152,"./TransformBase":133}],135:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24689,7 +19799,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":132,"../display/Bounds":133,"../display/Container":134,"../math":156,"../renderers/canvas/CanvasRenderer":163,"../sprites/Sprite":188,"../textures/RenderTexture":199,"../textures/Texture":201,"../utils":211,"./GraphicsData":140,"./utils/bezierCurveTo":142}],140:[function(require,module,exports){
+},{"../const":128,"../display/Bounds":129,"../display/Container":130,"../math":152,"../renderers/canvas/CanvasRenderer":159,"../sprites/Sprite":184,"../textures/RenderTexture":195,"../textures/Texture":197,"../utils":207,"./GraphicsData":136,"./utils/bezierCurveTo":138}],136:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -24834,7 +19944,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],141:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25141,7 +20251,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":132,"../../renderers/canvas/CanvasRenderer":163}],142:[function(require,module,exports){
+},{"../../const":128,"../../renderers/canvas/CanvasRenderer":159}],138:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -25191,7 +20301,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],143:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25456,7 +20566,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":132,"../../renderers/webgl/WebGLRenderer":170,"../../renderers/webgl/utils/ObjectRenderer":180,"../../utils":211,"./WebGLGraphicsData":144,"./shaders/PrimitiveShader":145,"./utils/buildCircle":146,"./utils/buildPoly":148,"./utils/buildRectangle":149,"./utils/buildRoundedRectangle":150}],144:[function(require,module,exports){
+},{"../../const":128,"../../renderers/webgl/WebGLRenderer":166,"../../renderers/webgl/utils/ObjectRenderer":176,"../../utils":207,"./WebGLGraphicsData":140,"./shaders/PrimitiveShader":141,"./utils/buildCircle":142,"./utils/buildPoly":144,"./utils/buildRectangle":145,"./utils/buildRoundedRectangle":146}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25599,7 +20709,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":110}],145:[function(require,module,exports){
+},{"pixi-gl-core":106}],141:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25644,7 +20754,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":130}],146:[function(require,module,exports){
+},{"../../../Shader":126}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25739,7 +20849,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":132,"../../../utils":211,"./buildLine":147}],147:[function(require,module,exports){
+},{"../../../const":128,"../../../utils":207,"./buildLine":143}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26013,7 +21123,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":156,"../../../utils":211}],148:[function(require,module,exports){
+},{"../../../math":152,"../../../utils":207}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26099,7 +21209,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":211,"./buildLine":147,"earcut":72}],149:[function(require,module,exports){
+},{"../../../utils":207,"./buildLine":143,"earcut":68}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26175,7 +21285,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":211,"./buildLine":147}],150:[function(require,module,exports){
+},{"../../../utils":207,"./buildLine":143}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26331,7 +21441,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":211,"./buildLine":147,"earcut":72}],151:[function(require,module,exports){
+},{"../../../utils":207,"./buildLine":143,"earcut":68}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26717,7 +21827,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":129,"./Shader":130,"./autoDetectRenderer":131,"./const":132,"./display/Bounds":133,"./display/Container":134,"./display/DisplayObject":135,"./display/Transform":136,"./display/TransformBase":137,"./display/TransformStatic":138,"./graphics/Graphics":139,"./graphics/GraphicsData":140,"./graphics/canvas/CanvasGraphicsRenderer":141,"./graphics/webgl/GraphicsRenderer":143,"./math":156,"./renderers/canvas/CanvasRenderer":163,"./renderers/canvas/utils/CanvasRenderTarget":165,"./renderers/webgl/WebGLRenderer":170,"./renderers/webgl/filters/Filter":172,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":175,"./renderers/webgl/managers/WebGLManager":179,"./renderers/webgl/utils/ObjectRenderer":180,"./renderers/webgl/utils/Quad":181,"./renderers/webgl/utils/RenderTarget":182,"./settings":187,"./sprites/Sprite":188,"./sprites/canvas/CanvasSpriteRenderer":189,"./sprites/canvas/CanvasTinter":190,"./sprites/webgl/SpriteRenderer":192,"./text/Text":194,"./text/TextMetrics":195,"./text/TextStyle":196,"./textures/BaseRenderTexture":197,"./textures/BaseTexture":198,"./textures/RenderTexture":199,"./textures/Spritesheet":200,"./textures/Texture":201,"./textures/TextureMatrix":202,"./textures/TextureUvs":203,"./textures/VideoBaseTexture":204,"./ticker":207,"./utils":211,"pixi-gl-core":110}],152:[function(require,module,exports){
+},{"./Application":125,"./Shader":126,"./autoDetectRenderer":127,"./const":128,"./display/Bounds":129,"./display/Container":130,"./display/DisplayObject":131,"./display/Transform":132,"./display/TransformBase":133,"./display/TransformStatic":134,"./graphics/Graphics":135,"./graphics/GraphicsData":136,"./graphics/canvas/CanvasGraphicsRenderer":137,"./graphics/webgl/GraphicsRenderer":139,"./math":152,"./renderers/canvas/CanvasRenderer":159,"./renderers/canvas/utils/CanvasRenderTarget":161,"./renderers/webgl/WebGLRenderer":166,"./renderers/webgl/filters/Filter":168,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":171,"./renderers/webgl/managers/WebGLManager":175,"./renderers/webgl/utils/ObjectRenderer":176,"./renderers/webgl/utils/Quad":177,"./renderers/webgl/utils/RenderTarget":178,"./settings":183,"./sprites/Sprite":184,"./sprites/canvas/CanvasSpriteRenderer":185,"./sprites/canvas/CanvasTinter":186,"./sprites/webgl/SpriteRenderer":188,"./text/Text":190,"./text/TextMetrics":191,"./text/TextStyle":192,"./textures/BaseRenderTexture":193,"./textures/BaseTexture":194,"./textures/RenderTexture":195,"./textures/Spritesheet":196,"./textures/Texture":197,"./textures/TextureMatrix":198,"./textures/TextureUvs":199,"./textures/VideoBaseTexture":200,"./ticker":203,"./utils":207,"pixi-gl-core":106}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26910,7 +22020,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":153}],153:[function(require,module,exports){
+},{"./Matrix":149}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27432,7 +22542,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":132,"./Point":155}],154:[function(require,module,exports){
+},{"../const":128,"./Point":151}],150:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -27583,7 +22693,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],155:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -27674,7 +22784,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],156:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27762,7 +22872,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":152,"./Matrix":153,"./ObservablePoint":154,"./Point":155,"./shapes/Circle":157,"./shapes/Ellipse":158,"./shapes/Polygon":159,"./shapes/Rectangle":160,"./shapes/RoundedRectangle":161}],157:[function(require,module,exports){
+},{"./GroupD8":148,"./Matrix":149,"./ObservablePoint":150,"./Point":151,"./shapes/Circle":153,"./shapes/Ellipse":154,"./shapes/Polygon":155,"./shapes/Rectangle":156,"./shapes/RoundedRectangle":157}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27876,7 +22986,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":132,"./Rectangle":160}],158:[function(require,module,exports){
+},{"../../const":128,"./Rectangle":156}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27998,7 +23108,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":132,"./Rectangle":160}],159:[function(require,module,exports){
+},{"../../const":128,"./Rectangle":156}],155:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28129,7 +23239,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":132,"../Point":155}],160:[function(require,module,exports){
+},{"../../const":128,"../Point":151}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28414,7 +23524,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":132}],161:[function(require,module,exports){
+},{"../../const":128}],157:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28547,7 +23657,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":132}],162:[function(require,module,exports){
+},{"../../const":128}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28912,7 +24022,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":132,"../display/Container":134,"../math":156,"../settings":187,"../textures/RenderTexture":199,"../utils":211,"eventemitter3":90}],163:[function(require,module,exports){
+},{"../const":128,"../display/Container":130,"../math":152,"../settings":183,"../textures/RenderTexture":195,"../utils":207,"eventemitter3":86}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29277,7 +24387,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":132,"../../settings":187,"../../utils":211,"../SystemRenderer":162,"./utils/CanvasMaskManager":164,"./utils/CanvasRenderTarget":165,"./utils/mapCanvasBlendModesToPixi":167}],164:[function(require,module,exports){
+},{"../../const":128,"../../settings":183,"../../utils":207,"../SystemRenderer":158,"./utils/CanvasMaskManager":160,"./utils/CanvasRenderTarget":161,"./utils/mapCanvasBlendModesToPixi":163}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29477,7 +24587,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":132}],165:[function(require,module,exports){
+},{"../../../const":128}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29601,7 +24711,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":187}],166:[function(require,module,exports){
+},{"../../../settings":183}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29662,7 +24772,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],167:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29734,7 +24844,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":132,"./canUseNewCanvasBlendModes":166}],168:[function(require,module,exports){
+},{"../../../const":128,"./canUseNewCanvasBlendModes":162}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29854,7 +24964,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":132,"../../settings":187}],169:[function(require,module,exports){
+},{"../../const":128,"../../settings":183}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30120,7 +25230,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":132,"../../utils":211,"./utils/RenderTarget":182,"pixi-gl-core":110}],170:[function(require,module,exports){
+},{"../../const":128,"../../utils":207,"./utils/RenderTarget":178,"pixi-gl-core":106}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30937,7 +26047,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":132,"../../textures/BaseTexture":198,"../../utils":211,"../SystemRenderer":162,"./TextureGarbageCollector":168,"./TextureManager":169,"./WebGLState":171,"./managers/FilterManager":176,"./managers/MaskManager":177,"./managers/StencilManager":178,"./utils/ObjectRenderer":180,"./utils/RenderTarget":182,"./utils/mapWebGLDrawModesToPixi":185,"./utils/validateContext":186,"pixi-gl-core":110}],171:[function(require,module,exports){
+},{"../../const":128,"../../textures/BaseTexture":194,"../../utils":207,"../SystemRenderer":158,"./TextureGarbageCollector":164,"./TextureManager":165,"./WebGLState":167,"./managers/FilterManager":172,"./managers/MaskManager":173,"./managers/StencilManager":174,"./utils/ObjectRenderer":176,"./utils/RenderTarget":178,"./utils/mapWebGLDrawModesToPixi":181,"./utils/validateContext":182,"pixi-gl-core":106}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31217,7 +26327,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":184}],172:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":180}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31413,7 +26523,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":132,"../../../settings":187,"../../../utils":211,"./extractUniformsFromSrc":173}],173:[function(require,module,exports){
+},{"../../../const":128,"../../../settings":183,"../../../utils":207,"./extractUniformsFromSrc":169}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31475,7 +26585,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":110}],174:[function(require,module,exports){
+},{"pixi-gl-core":106}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31535,7 +26645,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":156}],175:[function(require,module,exports){
+},{"../../../math":152}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31623,7 +26733,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":156,"../../../../textures/TextureMatrix":202,"../Filter":172,"path":307}],176:[function(require,module,exports){
+},{"../../../../math":152,"../../../../textures/TextureMatrix":198,"../Filter":168,"path":303}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32277,7 +27387,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":130,"../../../math":156,"../filters/filterTransforms":174,"../utils/Quad":181,"../utils/RenderTarget":182,"./WebGLManager":179,"bit-twiddle":67}],177:[function(require,module,exports){
+},{"../../../Shader":126,"../../../math":152,"../filters/filterTransforms":170,"../utils/Quad":177,"../utils/RenderTarget":178,"./WebGLManager":175,"bit-twiddle":63}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32487,7 +27597,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":175,"./WebGLManager":179}],178:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":171,"./WebGLManager":175}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32640,7 +27750,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":179}],179:[function(require,module,exports){
+},{"./WebGLManager":175}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32695,7 +27805,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],180:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32773,7 +27883,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":179}],181:[function(require,module,exports){
+},{"../managers/WebGLManager":175}],177:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32954,7 +28064,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":209,"pixi-gl-core":110}],182:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":205,"pixi-gl-core":106}],178:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33292,7 +28402,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":132,"../../../math":156,"../../../settings":187,"pixi-gl-core":110}],183:[function(require,module,exports){
+},{"../../../const":128,"../../../math":152,"../../../settings":183,"pixi-gl-core":106}],179:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33367,7 +28477,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":110}],184:[function(require,module,exports){
+},{"pixi-gl-core":106}],180:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33416,7 +28526,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":132}],185:[function(require,module,exports){
+},{"../../../const":128}],181:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33448,7 +28558,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":132}],186:[function(require,module,exports){
+},{"../../../const":128}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33464,7 +28574,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],187:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33709,7 +28819,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":208,"./utils/maxRecommendedTextures":213}],188:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":204,"./utils/maxRecommendedTextures":209}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34350,7 +29460,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":132,"../display/Container":134,"../math":156,"../textures/Texture":201,"../utils":211}],189:[function(require,module,exports){
+},{"../const":128,"../display/Container":130,"../math":152,"../textures/Texture":197,"../utils":207}],185:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34503,7 +29613,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":132,"../../math":156,"../../renderers/canvas/CanvasRenderer":163,"./CanvasTinter":190}],190:[function(require,module,exports){
+},{"../../const":128,"../../math":152,"../../renderers/canvas/CanvasRenderer":159,"./CanvasTinter":186}],186:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34754,7 +29864,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":166,"../../utils":211}],191:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":162,"../../utils":207}],187:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -34807,7 +29917,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],192:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35360,7 +30470,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":170,"../../renderers/webgl/utils/ObjectRenderer":180,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":183,"../../settings":187,"../../utils":211,"../../utils/createIndicesForQuads":209,"./BatchBuffer":191,"./generateMultiTextureShader":193,"bit-twiddle":67,"pixi-gl-core":110}],193:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":166,"../../renderers/webgl/utils/ObjectRenderer":176,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":179,"../../settings":183,"../../utils":207,"../../utils/createIndicesForQuads":205,"./BatchBuffer":187,"./generateMultiTextureShader":189,"bit-twiddle":63,"pixi-gl-core":106}],189:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35423,7 +30533,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":130,"path":307}],194:[function(require,module,exports){
+},{"../../Shader":126,"path":303}],190:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36081,7 +31191,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":132,"../math":156,"../settings":187,"../sprites/Sprite":188,"../textures/Texture":201,"../utils":211,"../utils/trimCanvas":216,"./TextMetrics":195,"./TextStyle":196}],195:[function(require,module,exports){
+},{"../const":128,"../math":152,"../settings":183,"../sprites/Sprite":184,"../textures/Texture":197,"../utils":207,"../utils/trimCanvas":212,"./TextMetrics":191,"./TextStyle":192}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36781,7 +31891,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],196:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37615,7 +32725,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":132,"../utils":211}],197:[function(require,module,exports){
+},{"../const":128,"../utils":207}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37778,7 +32888,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":187,"./BaseTexture":198}],198:[function(require,module,exports){
+},{"../settings":183,"./BaseTexture":194}],194:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38624,7 +33734,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":187,"../utils":211,"../utils/determineCrossOrigin":210,"bit-twiddle":67,"eventemitter3":90}],199:[function(require,module,exports){
+},{"../settings":183,"../utils":207,"../utils/determineCrossOrigin":206,"bit-twiddle":63,"eventemitter3":86}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38778,7 +33888,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":197,"./Texture":201}],200:[function(require,module,exports){
+},{"./BaseRenderTexture":193,"./Texture":197}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39107,7 +34217,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":151,"../utils":211}],201:[function(require,module,exports){
+},{"../":147,"../utils":207}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39812,7 +34922,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":156,"../settings":187,"../utils":211,"./BaseTexture":198,"./TextureUvs":203,"./VideoBaseTexture":204,"eventemitter3":90}],202:[function(require,module,exports){
+},{"../math":152,"../settings":183,"../utils":207,"./BaseTexture":194,"./TextureUvs":199,"./VideoBaseTexture":200,"eventemitter3":86}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39976,7 +35086,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":153}],203:[function(require,module,exports){
+},{"../math/Matrix":149}],199:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40081,7 +35191,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":152}],204:[function(require,module,exports){
+},{"../math/GroupD8":148}],200:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40430,7 +35540,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":132,"../ticker":207,"../utils":211,"../utils/determineCrossOrigin":210,"./BaseTexture":198}],205:[function(require,module,exports){
+},{"../const":128,"../ticker":203,"../utils":207,"../utils/determineCrossOrigin":206,"./BaseTexture":194}],201:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40903,7 +36013,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":132,"../settings":187,"./TickerListener":206}],206:[function(require,module,exports){
+},{"../const":128,"../settings":183,"./TickerListener":202}],202:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41077,7 +36187,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],207:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41157,7 +36267,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":205}],208:[function(require,module,exports){
+},{"./Ticker":201}],204:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41171,7 +36281,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],209:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41205,7 +36315,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],210:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41261,7 +36371,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":313}],211:[function(require,module,exports){
+},{"url":309}],207:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41744,7 +36854,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":132,"../settings":187,"./mapPremultipliedBlendModes":212,"./mixin":214,"./pluginTarget":215,"earcut":72,"eventemitter3":90,"ismobilejs":97,"remove-array-items":282}],212:[function(require,module,exports){
+},{"../const":128,"../settings":183,"./mapPremultipliedBlendModes":208,"./mixin":210,"./pluginTarget":211,"earcut":68,"eventemitter3":86,"ismobilejs":93,"remove-array-items":278}],208:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41787,7 +36897,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":132}],213:[function(require,module,exports){
+},{"../const":128}],209:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41809,7 +36919,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":97}],214:[function(require,module,exports){
+},{"ismobilejs":93}],210:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41871,7 +36981,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],215:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41937,7 +37047,7 @@ exports.default = {
     }
 };
 
-},{}],216:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42015,7 +37125,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],217:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43171,7 +38281,7 @@ function deprecation(core) {
     }
 }
 
-},{}],218:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43351,7 +38461,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":151}],219:[function(require,module,exports){
+},{"../../core":147}],215:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43376,7 +38486,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":218,"./webgl/WebGLExtract":220}],220:[function(require,module,exports){
+},{"./canvas/CanvasExtract":214,"./webgl/WebGLExtract":216}],216:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -43611,7 +38721,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":151}],221:[function(require,module,exports){
+},{"../../core":147}],217:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44033,7 +39143,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":151}],222:[function(require,module,exports){
+},{"../core":147}],218:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44678,7 +39788,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":151,"../core/math/ObservablePoint":154,"../core/settings":187,"../core/utils":211}],223:[function(require,module,exports){
+},{"../core":147,"../core/math/ObservablePoint":150,"../core/settings":183,"../core/utils":207}],219:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45142,7 +40252,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":151,"../core/sprites/canvas/CanvasTinter":190}],224:[function(require,module,exports){
+},{"../core":147,"../core/sprites/canvas/CanvasTinter":186}],220:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -45552,7 +40662,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":151,"../core/textures/BaseTexture":198,"../core/textures/Texture":201,"../core/utils":211}],225:[function(require,module,exports){
+},{"../core":147,"../core/textures/BaseTexture":194,"../core/textures/Texture":197,"../core/utils":207}],221:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -45587,7 +40697,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":151}],226:[function(require,module,exports){
+},{"../core":147}],222:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -45621,7 +40731,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":151}],227:[function(require,module,exports){
+},{"../core":147}],223:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45673,7 +40783,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":221,"./BitmapText":222,"./TilingSprite":223,"./cacheAsBitmap":224,"./getChildByName":225,"./getGlobalPosition":226,"./webgl/TilingSpriteRenderer":228}],228:[function(require,module,exports){
+},{"./AnimatedSprite":217,"./BitmapText":218,"./TilingSprite":219,"./cacheAsBitmap":220,"./getChildByName":221,"./getGlobalPosition":222,"./webgl/TilingSpriteRenderer":224}],224:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45835,7 +40945,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":151,"../../core/const":132,"path":307}],229:[function(require,module,exports){
+},{"../../core":147,"../../core/const":128,"path":303}],225:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45919,7 +41029,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":151,"path":307}],230:[function(require,module,exports){
+},{"../../core":147,"path":303}],226:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46093,7 +41203,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":151,"./BlurXFilter":231,"./BlurYFilter":232}],231:[function(require,module,exports){
+},{"../../core":147,"./BlurXFilter":227,"./BlurYFilter":228}],227:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46259,7 +41369,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":151,"./generateBlurFragSource":233,"./generateBlurVertSource":234,"./getMaxBlurKernelSize":235}],232:[function(require,module,exports){
+},{"../../core":147,"./generateBlurFragSource":229,"./generateBlurVertSource":230,"./getMaxBlurKernelSize":231}],228:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46424,7 +41534,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":151,"./generateBlurFragSource":233,"./generateBlurVertSource":234,"./getMaxBlurKernelSize":235}],233:[function(require,module,exports){
+},{"../../core":147,"./generateBlurFragSource":229,"./generateBlurVertSource":230,"./getMaxBlurKernelSize":231}],229:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46471,7 +41581,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],234:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46515,7 +41625,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],235:[function(require,module,exports){
+},{}],231:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -46531,7 +41641,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],236:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47082,7 +42192,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":151,"path":307}],237:[function(require,module,exports){
+},{"../../core":147,"path":303}],233:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47190,7 +42300,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":151,"path":307}],238:[function(require,module,exports){
+},{"../../core":147,"path":303}],234:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47244,7 +42354,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":151,"path":307}],239:[function(require,module,exports){
+},{"../../core":147,"path":303}],235:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47323,7 +42433,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":229,"./blur/BlurFilter":230,"./blur/BlurXFilter":231,"./blur/BlurYFilter":232,"./colormatrix/ColorMatrixFilter":236,"./displacement/DisplacementFilter":237,"./fxaa/FXAAFilter":238,"./noise/NoiseFilter":240}],240:[function(require,module,exports){
+},{"./alpha/AlphaFilter":225,"./blur/BlurFilter":226,"./blur/BlurXFilter":227,"./blur/BlurYFilter":228,"./colormatrix/ColorMatrixFilter":232,"./displacement/DisplacementFilter":233,"./fxaa/FXAAFilter":234,"./noise/NoiseFilter":236}],236:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47420,7 +42530,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":151,"path":307}],241:[function(require,module,exports){
+},{"../../core":147,"path":303}],237:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -47534,7 +42644,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":128,"./core":151,"./deprecation":217,"./extract":219,"./extras":227,"./filters":239,"./interaction":246,"./loaders":249,"./mesh":258,"./particles":261,"./polyfill":268,"./prepare":272}],242:[function(require,module,exports){
+},{"./accessibility":124,"./core":147,"./deprecation":213,"./extract":215,"./extras":223,"./filters":235,"./interaction":242,"./loaders":245,"./mesh":254,"./particles":257,"./polyfill":264,"./prepare":268}],238:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47757,7 +42867,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":151}],243:[function(require,module,exports){
+},{"../core":147}],239:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -47840,7 +42950,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],244:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49622,7 +44732,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":151,"./InteractionData":242,"./InteractionEvent":243,"./InteractionTrackingData":245,"./interactiveTarget":247,"eventemitter3":90}],245:[function(require,module,exports){
+},{"../core":147,"./InteractionData":238,"./InteractionEvent":239,"./InteractionTrackingData":241,"./interactiveTarget":243,"eventemitter3":86}],241:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -49798,7 +44908,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],246:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49850,7 +44960,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":242,"./InteractionEvent":243,"./InteractionManager":244,"./InteractionTrackingData":245,"./interactiveTarget":247}],247:[function(require,module,exports){
+},{"./InteractionData":238,"./InteractionEvent":239,"./InteractionManager":240,"./InteractionTrackingData":241,"./interactiveTarget":243}],243:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -49967,7 +45077,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],248:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50087,7 +45197,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":227,"path":307,"resource-loader":280}],249:[function(require,module,exports){
+},{"../extras":223,"path":303,"resource-loader":276}],245:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50215,7 +45325,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":129,"./bitmapFontParser":248,"./loader":250,"./spritesheetParser":251,"./textureParser":252,"resource-loader":280}],250:[function(require,module,exports){
+},{"../core/Application":125,"./bitmapFontParser":244,"./loader":246,"./spritesheetParser":247,"./textureParser":248,"resource-loader":276}],246:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50386,7 +45496,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":248,"./spritesheetParser":251,"./textureParser":252,"eventemitter3":90,"resource-loader":280,"resource-loader/lib/middlewares/parsing/blob":281}],251:[function(require,module,exports){
+},{"./bitmapFontParser":244,"./spritesheetParser":247,"./textureParser":248,"eventemitter3":86,"resource-loader":276,"resource-loader/lib/middlewares/parsing/blob":277}],247:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50450,7 +45560,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":151,"resource-loader":280,"url":313}],252:[function(require,module,exports){
+},{"../core":147,"resource-loader":276,"url":309}],248:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50473,7 +45583,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":201,"resource-loader":280}],253:[function(require,module,exports){
+},{"../core/textures/Texture":197,"resource-loader":276}],249:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -50904,7 +46014,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":151,"../core/textures/Texture":201}],254:[function(require,module,exports){
+},{"../core":147,"../core/textures/Texture":197}],250:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51297,7 +46407,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":255}],255:[function(require,module,exports){
+},{"./Plane":251}],251:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51438,7 +46548,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":253}],256:[function(require,module,exports){
+},{"./Mesh":249}],252:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51674,7 +46784,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":253}],257:[function(require,module,exports){
+},{"./Mesh":249}],253:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -51960,7 +47070,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":151,"../Mesh":253}],258:[function(require,module,exports){
+},{"../../core":147,"../Mesh":249}],254:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52021,7 +47131,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":253,"./NineSlicePlane":254,"./Plane":255,"./Rope":256,"./canvas/CanvasMeshRenderer":257,"./webgl/MeshRenderer":259}],259:[function(require,module,exports){
+},{"./Mesh":249,"./NineSlicePlane":250,"./Plane":251,"./Rope":252,"./canvas/CanvasMeshRenderer":253,"./webgl/MeshRenderer":255}],255:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52176,7 +47286,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":151,"../Mesh":253,"path":307,"pixi-gl-core":110}],260:[function(require,module,exports){
+},{"../../core":147,"../Mesh":249,"path":303,"pixi-gl-core":106}],256:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52566,7 +47676,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":151,"../core/utils":211}],261:[function(require,module,exports){
+},{"../core":147,"../core/utils":207}],257:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52591,7 +47701,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":260,"./webgl/ParticleRenderer":263}],262:[function(require,module,exports){
+},{"./ParticleContainer":256,"./webgl/ParticleRenderer":259}],258:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -52840,7 +47950,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":209,"pixi-gl-core":110}],263:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":205,"pixi-gl-core":106}],259:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53321,7 +48431,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":151,"../../core/utils":211,"./ParticleBuffer":262,"./ParticleShader":264}],264:[function(require,module,exports){
+},{"../../core":147,"../../core/utils":207,"./ParticleBuffer":258,"./ParticleShader":260}],260:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -53364,7 +48474,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":130}],265:[function(require,module,exports){
+},{"../../core/Shader":126}],261:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -53382,7 +48492,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],266:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -53394,7 +48504,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],267:[function(require,module,exports){
+},{}],263:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -53409,7 +48519,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":100}],268:[function(require,module,exports){
+},{"object-assign":96}],264:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -53436,7 +48546,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":265,"./Number.isInteger":266,"./Object.assign":267,"./requestAnimationFrame":269}],269:[function(require,module,exports){
+},{"./Math.sign":261,"./Number.isInteger":262,"./Object.assign":263,"./requestAnimationFrame":265}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53513,7 +48623,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],270:[function(require,module,exports){
+},{}],266:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54001,7 +49111,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":151,"./limiters/CountLimiter":273}],271:[function(require,module,exports){
+},{"../core":147,"./limiters/CountLimiter":269}],267:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54121,7 +49231,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":151,"../BasePrepare":270}],272:[function(require,module,exports){
+},{"../../core":147,"../BasePrepare":266}],268:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54173,7 +49283,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":270,"./canvas/CanvasPrepare":271,"./limiters/CountLimiter":273,"./limiters/TimeLimiter":274,"./webgl/WebGLPrepare":275}],273:[function(require,module,exports){
+},{"./BasePrepare":266,"./canvas/CanvasPrepare":267,"./limiters/CountLimiter":269,"./limiters/TimeLimiter":270,"./webgl/WebGLPrepare":271}],269:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -54231,7 +49341,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],274:[function(require,module,exports){
+},{}],270:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -54289,7 +49399,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],275:[function(require,module,exports){
+},{}],271:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -54411,7 +49521,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":151,"../BasePrepare":270}],276:[function(require,module,exports){
+},{"../../core":147,"../BasePrepare":266}],272:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -55135,7 +50245,7 @@ Loader.use = function LoaderUseStatic(fn) {
     return Loader;
 };
 
-},{"./Resource":277,"./async":278,"mini-signals":98,"parse-uri":101}],277:[function(require,module,exports){
+},{"./Resource":273,"./async":274,"mini-signals":94,"parse-uri":97}],273:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56384,7 +51494,7 @@ if (typeof module !== 'undefined') {
     module.exports.default = Resource; // eslint-disable-line no-undef
 }
 
-},{"mini-signals":98,"parse-uri":101}],278:[function(require,module,exports){
+},{"mini-signals":94,"parse-uri":97}],274:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56606,7 +51716,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],279:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56685,7 +51795,7 @@ if (typeof module !== 'undefined') {
     module.exports.default = encodeBinary; // eslint-disable-line no-undef
 }
 
-},{}],280:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -56742,7 +51852,7 @@ module.exports = Loader;
 module.exports.Loader = Loader;
 module.exports.default = Loader;
 
-},{"./Loader":276,"./Resource":277,"./async":278,"./b64":279}],281:[function(require,module,exports){
+},{"./Loader":272,"./Resource":273,"./async":274,"./b64":275}],277:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -56815,7 +51925,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":277,"../../b64":279}],282:[function(require,module,exports){
+},{"../../Resource":273,"../../b64":275}],278:[function(require,module,exports){
 'use strict'
 
 /**
@@ -56844,7 +51954,7 @@ module.exports = function removeItems (arr, startIdx, removeCount) {
   arr.length = len
 }
 
-},{}],283:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -57497,7 +52607,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":284,"./async":285,"mini-signals":98,"parse-uri":101}],284:[function(require,module,exports){
+},{"./Resource":280,"./async":281,"mini-signals":94,"parse-uri":97}],280:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58653,7 +53763,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":98,"parse-uri":101}],285:[function(require,module,exports){
+},{"mini-signals":94,"parse-uri":97}],281:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58862,7 +53972,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],286:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -58930,7 +54040,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],287:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -58954,7 +54064,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":283,"./Resource":284,"./async":285,"./b64":286}],288:[function(require,module,exports){
+},{"./Loader":279,"./Resource":280,"./async":281,"./b64":282}],284:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -59050,7 +54160,7 @@ exports.connect = lookup;
 exports.Manager = require('./manager');
 exports.Socket = require('./socket');
 
-},{"./manager":289,"./socket":291,"./url":292,"debug":293,"socket.io-parser":296}],289:[function(require,module,exports){
+},{"./manager":285,"./socket":287,"./url":288,"debug":289,"socket.io-parser":292}],285:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -59625,7 +54735,7 @@ Manager.prototype.onreconnect = function () {
   this.emitAll('reconnect', attempt);
 };
 
-},{"./on":290,"./socket":291,"backo2":65,"component-bind":69,"component-emitter":70,"debug":293,"engine.io-client":76,"indexof":96,"socket.io-parser":296}],290:[function(require,module,exports){
+},{"./on":286,"./socket":287,"backo2":61,"component-bind":65,"component-emitter":66,"debug":289,"engine.io-client":72,"indexof":92,"socket.io-parser":292}],286:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -59651,7 +54761,7 @@ function on (obj, ev, fn) {
   };
 }
 
-},{}],291:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -60091,7 +55201,7 @@ Socket.prototype.binary = function (binary) {
   return this;
 };
 
-},{"./on":290,"component-bind":69,"component-emitter":70,"debug":293,"has-binary2":91,"parseqs":102,"socket.io-parser":296,"to-array":301}],292:[function(require,module,exports){
+},{"./on":286,"component-bind":65,"component-emitter":66,"debug":289,"has-binary2":87,"parseqs":98,"socket.io-parser":292,"to-array":297}],288:[function(require,module,exports){
 (function (global){
 
 /**
@@ -60170,11 +55280,11 @@ function url (uri, loc) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"debug":293,"parseuri":103}],293:[function(require,module,exports){
-arguments[4][85][0].apply(exports,arguments)
-},{"./debug":294,"_process":308,"dup":85}],294:[function(require,module,exports){
-arguments[4][86][0].apply(exports,arguments)
-},{"dup":86,"ms":99}],295:[function(require,module,exports){
+},{"debug":289,"parseuri":99}],289:[function(require,module,exports){
+arguments[4][81][0].apply(exports,arguments)
+},{"./debug":290,"_process":304,"dup":81}],290:[function(require,module,exports){
+arguments[4][82][0].apply(exports,arguments)
+},{"dup":82,"ms":95}],291:[function(require,module,exports){
 (function (global){
 /*global Blob,File*/
 
@@ -60319,7 +55429,7 @@ exports.removeBlobs = function(data, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./is-buffer":297,"isarray":300}],296:[function(require,module,exports){
+},{"./is-buffer":293,"isarray":296}],292:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -60738,7 +55848,7 @@ function error(msg) {
   };
 }
 
-},{"./binary":295,"./is-buffer":297,"component-emitter":70,"debug":298,"isarray":300}],297:[function(require,module,exports){
+},{"./binary":291,"./is-buffer":293,"component-emitter":66,"debug":294,"isarray":296}],293:[function(require,module,exports){
 (function (global){
 
 module.exports = isBuf;
@@ -60766,13 +55876,13 @@ function isBuf(obj) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],298:[function(require,module,exports){
-arguments[4][85][0].apply(exports,arguments)
-},{"./debug":299,"_process":308,"dup":85}],299:[function(require,module,exports){
-arguments[4][86][0].apply(exports,arguments)
-},{"dup":86,"ms":99}],300:[function(require,module,exports){
-arguments[4][92][0].apply(exports,arguments)
-},{"dup":92}],301:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
+arguments[4][81][0].apply(exports,arguments)
+},{"./debug":295,"_process":304,"dup":81}],295:[function(require,module,exports){
+arguments[4][82][0].apply(exports,arguments)
+},{"dup":82,"ms":95}],296:[function(require,module,exports){
+arguments[4][88][0].apply(exports,arguments)
+},{"dup":88}],297:[function(require,module,exports){
 module.exports = toArray
 
 function toArray(list, index) {
@@ -60787,7 +55897,7 @@ function toArray(list, index) {
     return array
 }
 
-},{}],302:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 'use strict';
 
 var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
@@ -60857,7 +55967,7 @@ yeast.encode = encode;
 yeast.decode = decode;
 module.exports = yeast;
 
-},{}],303:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -61010,9 +56120,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],304:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 
-},{}],305:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -62791,7 +57901,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":303,"ieee754":306}],306:[function(require,module,exports){
+},{"base64-js":299,"ieee754":302}],302:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -62877,7 +57987,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],307:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -63183,7 +58293,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":308}],308:[function(require,module,exports){
+},{"_process":304}],304:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -63369,7 +58479,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],309:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -63906,7 +59016,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],310:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63992,7 +59102,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],311:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64079,13 +59189,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],312:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":310,"./encode":311}],313:[function(require,module,exports){
+},{"./decode":306,"./encode":307}],309:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64819,7 +59929,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":314,"punycode":309,"querystring":312}],314:[function(require,module,exports){
+},{"./util":310,"punycode":305,"querystring":308}],310:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -64837,4 +59947,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[39]);
+},{}]},{},[37]);
