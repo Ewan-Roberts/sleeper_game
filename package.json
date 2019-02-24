@@ -17,14 +17,11 @@
   "author": "Ewan",
   "license": "ISC",
   "dependencies": {
-    "chai": "^4.2.0",
+    "compression": "^1.7.3",
     "easystarjs": "^0.4.3",
     "express": "^4.16.3",
     "imagemin-jpegtran": "^5.0.2",
     "imagemin-pngquant": "^6.0.0",
-    "mocha": "^5.2.0",
-    "mongoose": "^5.2.15",
-    "password-generator": "^2.2.0",
     "pixi-layers": "^0.1.9",
     "pixi-packer-parser": "^2.0.0",
     "pixi-shadows": "0.0.7",
@@ -32,8 +29,7 @@
     "pixi-tween": "^0.2.0",
     "pixi.js": "^4.8.5",
     "socket.io": "^2.1.1",
-    "socket.io-client": "^2.1.1",
-    "uuid": "^3.3.2"
+    "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
     "eslint": "^5.13.0",

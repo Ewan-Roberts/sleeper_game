@@ -8,6 +8,15 @@
 
 # Updates
 
+## 24.02.19:
+- Large scale performanse and cruft removal :rocket: :sparkle:
+- Add Lighting types and effect
+- Add Camera engine
+- Add Tween engine
+- Add Track(sound) engine
+- Adopted _ for private functions
+
+
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_information/update_11.png)
 ## 17.02.19:
 - Add new lighting engine :tada:

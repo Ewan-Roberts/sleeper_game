@@ -43,11 +43,12 @@ Key:
 - create gun effects
 
 ## cutscene (high)
-- create cutscene management engine (stop keyboard inputs etc)
+- create cutscene management engine (stop keyboard inputs etc) DONE
 - create player best friend
 
 ## Sound: (low)
 `later`
+- Engine DONE
 
 ## GUI: (high)
 - NPC buy/sell etc
@@ -60,19 +61,17 @@ Key:
 ## ART: (outsource)
 - Spine format replacement for spritesheet
 - Large scale art replacement (may need artist)
-- Loaders
 
 ## mechanics: (low)
 - Add scavenging
 - Add starting fires
-- create architype system
+- create architype system DONE
 - buy sell/buy engine
 - Level loader
 
 # Infra:
 - Create EC2 server (again)
 
-
 # Small things I have to do:
-- Get the merc from the spritesheet
-- and the note
+- Get the merc from the spritesheet DONE
+- and the note DONE
