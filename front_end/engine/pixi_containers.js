@@ -99,6 +99,7 @@ world.addChild(
 world.updateLayersOrder();
 
 module.exports = {
+  cutscene_container,
   background_container,
   collision_container,
   critter_container,

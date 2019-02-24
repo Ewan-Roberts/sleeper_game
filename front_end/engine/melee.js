@@ -6,7 +6,6 @@
  */
 
 function melee_attack(attacker, target) {
-  console.log(attacker)
   const { damage } = attacker.inventory.melee_weapon;
 
   target.vitals.damage(damage);

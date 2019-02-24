@@ -7,6 +7,8 @@ function distance_between_points(point_1, point_2) {
   return Math.sqrt((dx * dx) + (dy * dy));
 }
 
+//TODO make this function name longer
+// will round
 function generate_number_between_min_and_max(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
