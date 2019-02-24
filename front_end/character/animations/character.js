@@ -138,6 +138,8 @@ class Human {
 
   idle() { this.switch(this.weapon, 'idle'); }
 
+  walk() { this.switch(this.weapon, 'walk'); }
+
   kill() {
     this.sprite.textures = frames.bow.dead;
 
@@ -147,7 +149,9 @@ class Human {
     this.sprite.width  = 80;
   }
 
-  walk() { this.switch(this.weapon, 'walk'); }
+  set current_weapon(weapon) { this.weapon = weapon; }
+
+  get current_weapon() { return this.weapon; }
 
   face_up() { this.sprite.rotation = -2; }
 
@@ -156,10 +160,6 @@ class Human {
   face_left() { this.sprite.rotation = -3; }
 
   face_right() { this.sprite.rotation = 0; }
-
-  set current_weapon(weapon) { this.weapon = weapon; }
-
-  get current_weapon() { return this.weapon; }
 
   move_up_by(amount) { this.sprite.y -= amount; }
 

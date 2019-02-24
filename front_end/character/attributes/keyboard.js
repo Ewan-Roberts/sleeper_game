@@ -25,7 +25,6 @@ const keymap = {
   Shift: 'Shift',
 };
 
-const buffer = 50;
 
 function point_collides(position) {
   const { children } = collision_container;
@@ -38,20 +37,17 @@ class Keyboard {
     this.name   = 'keyboard';
     this.entity = entity;
     this.shift_pressed = false;
+    this.speed = this.entity.vitals.speed;
+    this.buffer = 50;
+
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
   }
 
-  save_game() {
-    Game.save(this.entity);
-  }
+  save_game() { Game.save(this.entity); }
 
   key_down(key) {
-    if(!this.entity.keyboard) return;
-    const translated_key = keymap[key];
-    if (!translated_key) return;
-
-    switch(translated_key) {
+    switch(keymap[key]) {
       case 'up'    : this.keyboard_up();          return;
       case 'left'  : this.keyboard_left();        return;
       case 'down'  : this.keyboard_down();        return;
@@ -60,39 +56,33 @@ class Keyboard {
       case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;
       case 'Shift' : this.keyboard_shift();       return;
+      default      : return;
     }
   }
 
   key_up() {
-    if(!this.entity.keyboard) return;
-
-    //TODO player could hold two buttons
+    //TODO bug player could hold two buttons
     this.shift_pressed = false;
 
     this.entity.animation.idle();
   }
 
-  keyboard_shift() {
-    this.shift_pressed = true;
-  }
+  keyboard_shift() { this.shift_pressed = true; }
 
   keyboard_up() {
     this.entity.animation.walk();
     this.entity.animation.face_up();
+
     const point = this.entity.sprite.getGlobalPosition();
-    point.y -= buffer;
+    point.y -= this.buffer;
 
     const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
+    if(collision) return this.entity.animation.idle();
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_up_by(movement_speed);
-    //TODO remove this bind
-    shadow.position.copy(this.entity.sprite);
-    world.y += movement_speed;
+    this.entity.animation.move_up_by(this.speed);
+    shadow.position.copy(point);
+
+    world.y += this.speed;
   }
 
   keyboard_down() {
@@ -100,19 +90,15 @@ class Keyboard {
     this.entity.animation.face_down();
 
     const point = this.entity.sprite.getGlobalPosition();
-    point.y += buffer;
+    point.y += this.buffer;
 
     const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
+    if(collision) return this.entity.animation.idle();
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_down_by(movement_speed);
+    this.entity.animation.move_down_by(this.speed);
+    shadow.position.copy(point);
 
-    shadow.position.copy(this.entity.sprite);
-    world.y -= movement_speed;
+    world.y -= this.speed;
   }
 
   keyboard_left() {
@@ -120,19 +106,15 @@ class Keyboard {
     this.entity.animation.face_left();
 
     const point = this.entity.sprite.getGlobalPosition();
-    point.x -= buffer;
+    point.x -= this.buffer;
 
     const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
+    if(collision) return this.entity.animation.idle();
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_left_by(movement_speed);
-    shadow.position.copy(this.entity.sprite);
+    this.entity.animation.move_left_by(this.speed);
+    shadow.position.copy(point);
 
-    world.x += movement_speed;
+    world.x += this.speed;
   }
 
   keyboard_right() {
@@ -140,19 +122,15 @@ class Keyboard {
     this.entity.animation.face_right();
 
     const point = this.entity.sprite.getGlobalPosition();
-    point.x += buffer;
+    point.x += this.buffer;
 
     const collision = point_collides(point);
-    if(collision){
-      this.entity.sprite.gotoAndStop(1);
-      return;
-    }
+    if(collision) return this.entity.animation.idle();
 
-    const { movement_speed } = this.entity.vitals;
-    this.entity.animation.move_right_by(movement_speed);
-    shadow.position.copy(this.entity.sprite);
+    this.entity.animation.move_right_by(this.speed);
+    shadow.position.copy(point);
 
-    world.x -= movement_speed;
+    world.x -= this.speed;
   }
 }
 

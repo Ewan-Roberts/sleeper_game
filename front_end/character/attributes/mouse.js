@@ -20,10 +20,6 @@ class Mouse {
   }
 
   _mouse_up(event) {
-    if(!this.entity.mouse) return;
-    // TODO: implies dependancy
-    if(!this.entity.keyboard.shift_pressed) return;
-
     const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type, weapon_speed } = this.entity.inventory;
 
@@ -41,27 +37,21 @@ class Mouse {
   }
 
   _mouse_down(event) {
-    if(!this.entity.mouse) return;
-    // TODO: implies dependancy
-    if(!this.entity.keyboard.shift_pressed) return;
-
     const mouse_position = event.data.getLocalPosition(world);
-    const rotation       = radian(mouse_position, this.entity.sprite);
 
     this.entity.animation.ready_weapon();
-    this.entity.sprite.rotation = rotation;
+    this.entity.face_point(mouse_position);
 
+    //TODO: this should be managed better it creates a timer each time
     this.cone_timer = View_Aiming_Cone.start_at(this.entity.sprite);
     this.cone_timer.start();
   }
 
   _mouse_move(event) {
-    if(!this.entity.mouse) return;
-
     const mouse_position = event.data.getLocalPosition(world);
-    const rotation       = radian(mouse_position, this.entity.sprite);
+    this.entity.face_point(mouse_position);
 
-    this.entity.sprite.rotation = rotation;
+    const rotation = radian(mouse_position, this.entity.sprite);
     cone.rotation = rotation - 1.57;
   }
 }

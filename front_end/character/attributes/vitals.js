@@ -5,16 +5,16 @@ const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
   constructor(entity) {
-    this.entity         = entity;
-    this.name           ='vitals';
-    this.movement_speed = 15;
-    this.power          = 5000;
-    this.health         = 140;
-    this.food           = 40;
-    this.water          = 20;
-    this.heat           = 90;
-    this.sleep          = 100;
-    this.status         = 'alive';
+    this.entity = entity;
+    this.name   ='vitals';
+    this.speed  = 15;
+    this.power  = 5000;
+    this.health = 140;
+    this.food   = 40;
+    this.water  = 20;
+    this.heat   = 90;
+    this.sleep  = 100;
+    this.status = 'alive';
   }
 
   get alive() { return (this.status === 'alive'); }

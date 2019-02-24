@@ -30,32 +30,34 @@ class DevelopmentLevel {
     player.inventory.add_melee_weapon_by_name('rusty_knife');
     player.inventory.equip_weapon_by_name('dev_bow');
 
-    View_HUD.add_head('old_bandana');
-    View_HUD.add_hat('old_helmet');
-    View_HUD.add_chest('old_clothes');
-    View_HUD.add_shoes('old_boots');
+    // View_HUD.add_head('old_bandana');
+    // View_HUD.add_hat('old_helmet');
+    // View_HUD.add_chest('old_clothes');
+    // View_HUD.add_shoes('old_boots');
     //View_HUD.add_background('merc_portrait');
-    View_HUD.add_primary_weapon('wrench_blade');
-    View_HUD.add_secondary_weapon('rusty_knife');
-    View_HUD.inventory_slot('rat_leg_bone', 0);
-    View_HUD.inventory_slot('rat_femur', 1);
-    View_HUD.inventory_slot('meat', 2);
-    View_HUD.inventory_slot('skull_cap_bone', 3);
+    // View_HUD.add_primary_weapon('wrench_blade');
+    // View_HUD.add_secondary_weapon('rusty_knife');
+    // View_HUD.inventory_slot('rat_leg_bone', 0);
+    // View_HUD.inventory_slot('rat_femur', 1);
+    // View_HUD.inventory_slot('meat', 2);
+    // View_HUD.inventory_slot('skull_cap_bone', 3);
 
-    this.load_test_level();
-    this.test_note();
 
-    const rat = new Rat();
-    rat.enemy(player);
-    rat.set_position({x: 900, y: 1100});
-    rat.animation.switch('move');
-    rat.logic_start();
+    intro_cutscene.start();
+
+    // this.load_test_level();
+    // this.test_note();
+
+    // const rat = new Rat();
+    // rat.enemy(player);
+    // rat.set_position({x: 900, y: 1100});
+    // rat.animation.switch('move');
+    // rat.logic_start();
 
     // TODO: remove from the input of a class to enemy_of
-    const archer = new Archer();
-    archer.enemy(rat);
-    archer.sprite.position.set(1550,1000);
-    archer.logic_start();
+    // const archer = new Archer();
+    // archer.enemy(rat);
+    // archer.sprite.position.set(1550,1000);
     // archer.raycasting.add(this.level.segments);
 
   }
@@ -74,7 +76,6 @@ class DevelopmentLevel {
   }
 
   load_test_level() {
-
     const debug_room_tiled_data = require('../debug/debug_map_output.json');
     const debug_room_tiled_tiles = require('../debug/debug_map_tiles.json');
     const debug_room_image = PIXI.Sprite.fromFrame('debug_room');

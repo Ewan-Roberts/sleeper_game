@@ -21,6 +21,10 @@ class Archer extends Enemy {
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
 
+    this._logic = timer.createTimer(800);
+    this._logic.repeat = 20;
+    this._logic.expire = true;
+
     Entity_Container.add(this);
   }
 
@@ -50,10 +54,12 @@ class Archer extends Enemy {
 
   enemy(character) {
     this.enemy = character;
+
+    this.logic_start();
   }
 
   kill() {
-    if(!this.loot.items) this.loot.populate();
+    if(!this.loot.items.length) this.loot.populate();
     this.loot.create_icon();
 
     this.animation.kill();
@@ -64,13 +70,8 @@ class Archer extends Enemy {
   }
 
   logic_start() {
-    this._logic = timer.createTimer(800);
-    this._logic.repeat = 20;
-    this._logic.expire = true;
     this._logic.start();
-
     this.animation.ready_weapon();
-
     this._logic.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
 

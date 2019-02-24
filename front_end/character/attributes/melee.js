@@ -21,7 +21,7 @@ class Melee {
     this.equip();
     this.entity.animation.attack();
 
-    this.entity.face_sprite(target.sprite);
+    this.entity.face_point(target.sprite);
 
     melee_attack(this.entity, target);
   }

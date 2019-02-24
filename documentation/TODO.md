@@ -38,7 +38,7 @@ Key:
 
 ## Effects (low)
 - create fire effects
-- create blood effects
+- create blood effects DONE
 - create arrow effects
 - create gun effects
 

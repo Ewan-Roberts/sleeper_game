@@ -3,9 +3,9 @@
 # Needed for ALPHA
 - get a bigger map
 - put 2 prey on the map
-- put one enemy on the map
+- put one enemy on the map DONE
 - prod server
-- basic arrow management
+- basic arrow management DONE
 - basic different graphics
 
 # To deploy

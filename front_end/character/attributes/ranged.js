@@ -1,6 +1,7 @@
 'use strict';
 
 const { shoot_arrow      } = require('../../engine/ranged');
+const { View_Aiming_Line } = require('../../view/view_aiming_line');
 
 class Range {
   constructor(entity) {
@@ -20,9 +21,13 @@ class Range {
     this.equip();
     this.entity.animation.ready_weapon();
 
-    this.entity.face_sprite(target.sprite);
+    this.entity.face_point(target.sprite);
 
     shoot_arrow(this.entity, target);
+  }
+
+  _add_line(sprite) {
+    View_Aiming_Line.add_between_sprites(this.entity.sprite, sprite);
   }
 }
 

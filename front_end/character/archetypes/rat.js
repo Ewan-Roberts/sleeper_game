@@ -15,6 +15,9 @@ class Rat extends Animal {
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
 
+    this._logic = timer.createTimer(800);
+    this._logic.repeat = 20;
+    this._logic.expire = true;
     Entity_Container.add(this);
   }
 
@@ -31,7 +34,7 @@ class Rat extends Animal {
   }
 
   kill() {
-    if(!this.loot.items) this.loot.populate();
+    if(!this.loot.items.length) this.loot.populate();
     this.loot.create_icon();
 
     this.animation.kill();
@@ -47,12 +50,8 @@ class Rat extends Animal {
 
   logic_start() {
     if(!this.enemy) return new Error('no enemy');
-
-    this._logic = timer.createTimer(800);
-    this._logic.repeat = 20;
-    this._logic.expire = true;
-
     this._logic.start();
+
     this._logic.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
 
