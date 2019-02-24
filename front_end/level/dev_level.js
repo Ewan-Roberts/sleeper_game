@@ -2,22 +2,22 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { world    } = require('../../engine/shadows');
-const { Campfire } = require('../../items/fire_place');
-const { Chest    } = require('../../items/chest');
-const { Note     } = require('../../items/Note');
-const { Backpack } = require('../../items/back_pack');
+const { world    } = require('../engine/shadows');
+const { Campfire } = require('../items/fire_place');
+const { Chest    } = require('../items/chest');
+const { Note     } = require('../items/Note');
+const { Backpack } = require('../items/back_pack');
 
-const { Level          } = require('../level_utils');
-const { intro_cutscene } = require('../../cutscene/intro.js');
-const { Enemy          } = require('../../character/types/enemy');
-const { Inventory      } = require('../../character/attributes/inventory');
-const { View_Inventory } = require('../../view/view_inventory');
-const { View_HUD       } = require('../../view/view_player_inventory');
+const { Level          } = require('./level_utils');
+const { intro_cutscene } = require('../cutscene/intro.js');
+const { Enemy          } = require('../character/types/enemy');
+const { Inventory      } = require('../character/attributes/inventory');
+const { View_Inventory } = require('../view/view_inventory');
+const { View_HUD       } = require('../view/view_player_inventory');
 
-const { Player } = require('../../character/types/player.js');
-const { Archer } = require('../../character/archetypes/archer');
-const { Rat    } = require('../../character/archetypes/rat');
+const { Player } = require('../character/types/player.js');
+const { Archer } = require('../character/archetypes/archer');
+const { Rat    } = require('../character/archetypes/rat');
 
 // THIS IS ALL FOR TESTING
 class DevelopmentLevel {
@@ -75,8 +75,8 @@ class DevelopmentLevel {
   // }
 
   load_test_level() {
-    const debug_room_tiled_data = require('../debug/debug_map_output.json');
-    const debug_room_tiled_tiles = require('../debug/debug_map_tiles.json');
+    const debug_room_tiled_data = require('./debug_map_output.json');
+    const debug_room_tiled_tiles = require('./debug_map_tiles.json');
     const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
     debug_room_image.alpha= 0.5;
 

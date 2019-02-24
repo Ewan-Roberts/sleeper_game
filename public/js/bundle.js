@@ -2377,7 +2377,7 @@ loader.add('../../images/bedroom_EN_web.json');
 loader.load(async function() {
   require('./engine/shadows');
 
-  const { DevelopmentLevel } = require('./level/development/dev_level.js');
+  const { DevelopmentLevel } = require('./level/dev_level.js');
 
   new DevelopmentLevel();
 
@@ -2385,7 +2385,7 @@ loader.load(async function() {
 
 });
 
-},{"./engine/pixi_containers":29,"./engine/shadows":33,"./level/development/dev_level.js":47,"./view/view_inventory":56,"pixi-packer-parser":118,"pixi.js":237}],38:[function(require,module,exports){
+},{"./engine/pixi_containers":29,"./engine/shadows":33,"./level/dev_level.js":47,"./view/view_inventory":56,"pixi-packer-parser":118,"pixi.js":237}],38:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3624,22 +3624,22 @@ module.exports={ "columns":20,
 'use strict';
 const PIXI = require('pixi.js');
 
-const { world    } = require('../../engine/shadows');
-const { Campfire } = require('../../items/fire_place');
-const { Chest    } = require('../../items/chest');
-const { Note     } = require('../../items/Note');
-const { Backpack } = require('../../items/back_pack');
+const { world    } = require('../engine/shadows');
+const { Campfire } = require('../items/fire_place');
+const { Chest    } = require('../items/chest');
+const { Note     } = require('../items/Note');
+const { Backpack } = require('../items/back_pack');
 
-const { Level          } = require('../level_utils');
-const { intro_cutscene } = require('../../cutscene/intro.js');
-const { Enemy          } = require('../../character/types/enemy');
-const { Inventory      } = require('../../character/attributes/inventory');
-const { View_Inventory } = require('../../view/view_inventory');
-const { View_HUD       } = require('../../view/view_player_inventory');
+const { Level          } = require('./level_utils');
+const { intro_cutscene } = require('../cutscene/intro.js');
+const { Enemy          } = require('../character/types/enemy');
+const { Inventory      } = require('../character/attributes/inventory');
+const { View_Inventory } = require('../view/view_inventory');
+const { View_HUD       } = require('../view/view_player_inventory');
 
-const { Player } = require('../../character/types/player.js');
-const { Archer } = require('../../character/archetypes/archer');
-const { Rat    } = require('../../character/archetypes/rat');
+const { Player } = require('../character/types/player.js');
+const { Archer } = require('../character/archetypes/archer');
+const { Rat    } = require('../character/archetypes/rat');
 
 // THIS IS ALL FOR TESTING
 class DevelopmentLevel {
@@ -3697,8 +3697,8 @@ class DevelopmentLevel {
   // }
 
   load_test_level() {
-    const debug_room_tiled_data = require('../debug/debug_map_output.json');
-    const debug_room_tiled_tiles = require('../debug/debug_map_tiles.json');
+    const debug_room_tiled_data = require('./debug_map_output.json');
+    const debug_room_tiled_tiles = require('./debug_map_tiles.json');
     const debug_room_image = PIXI.Sprite.fromFrame('debug_room');
     debug_room_image.alpha= 0.5;
 
@@ -3773,7 +3773,7 @@ module.exports = {
 
 
 
-},{"../../character/archetypes/archer":3,"../../character/archetypes/rat":4,"../../character/attributes/inventory":5,"../../character/types/enemy":17,"../../character/types/player.js":18,"../../cutscene/intro.js":22,"../../engine/shadows":33,"../../items/Note":38,"../../items/back_pack":39,"../../items/chest":40,"../../items/fire_place":41,"../../view/view_inventory":56,"../../view/view_player_inventory":57,"../debug/debug_map_output.json":45,"../debug/debug_map_tiles.json":46,"../level_utils":49,"pixi.js":237}],48:[function(require,module,exports){
+},{"../character/archetypes/archer":3,"../character/archetypes/rat":4,"../character/attributes/inventory":5,"../character/types/enemy":17,"../character/types/player.js":18,"../cutscene/intro.js":22,"../engine/shadows":33,"../items/Note":38,"../items/back_pack":39,"../items/chest":40,"../items/fire_place":41,"../view/view_inventory":56,"../view/view_player_inventory":57,"./debug_map_output.json":45,"./debug_map_tiles.json":46,"./level_utils":49,"pixi.js":237}],48:[function(require,module,exports){
 'use strict';
 
 const PIXI         = require('pixi.js');

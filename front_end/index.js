@@ -14,7 +14,7 @@ loader.add('../../images/bedroom_EN_web.json');
 loader.load(async function() {
   require('./engine/shadows');
 
-  const { DevelopmentLevel } = require('./level/development/dev_level.js');
+  const { DevelopmentLevel } = require('./level/dev_level.js');
 
   new DevelopmentLevel();
 
