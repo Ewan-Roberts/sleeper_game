@@ -22,9 +22,9 @@ const items = [
     speed:          400,
     condition:      100,
 
-    visual_name: 'rusty knife',
-    description: 'The rusty knife someone sharpened on what looks like a rock',
-    image_name:  'rusty_knife',
+    visual_name:    'rusty knife',
+    description:    'The rusty knife someone sharpened on what looks like a rock',
+    image_name:     'rusty_knife',
   },
   {
     name:           'dev_knife',
@@ -78,7 +78,6 @@ const items = [
     description:    'this is my dev bow, there are many like it but this one kills',
     image_name:     'bunny',
   },
-
   {
     name:        'rat_teeth',
     id:          1004,
@@ -96,50 +95,49 @@ const items = [
   },
 
   {
-    name:       'wrench_blade',
-    id:         1002,
-    rank:       1,
-    cost:       80,
-    category:   'primary',
-    range:      20,
-    damage:     2,
-    speed:      1,
-    condition:  100,
+    name:        'wrench_blade',
+    id:          1002,
+    rank:        1,
+    cost:        80,
+    category:    'primary',
+    range:       20,
+    damage:      2,
+    speed:       1,
+    condition:   100,
 
     visual_name: 'wrench blade',
     description: 'This blade looks to be a hastily sharped from an old wrench',
-    image_name: 'wrench_blade',
+    image_name:  'wrench_blade',
   },
 
   //secondary
   {
-    name:       'pistol',
-    id:         1004,
-    rank:       0,
-    cost:       50,
-    category:       'weapon',
-    range:      20,
-    damage:     10,
-    speed:      400,
-    condition:  100,
+    name:        'pistol',
+    id:          1004,
+    rank:        0,
+    cost:        50,
+    category:    'weapon',
+    range:       20,
+    damage:      10,
+    speed:       400,
+    condition:   100,
 
-    visual_name:  'pistol',
-    description:  'a pistol from a cop',
-
-    image_name: 'bunny',
+    visual_name: 'pistol',
+    description: 'a pistol from a cop',
+    image_name:  'bunny',
   },
 
   //melee
   {
-    name:       'wrench_blade',
-    id:         1002,
-    rank:       1,
-    cost:       80,
-    category:       'weapon',
-    range:      20,
-    damage:     2,
-    speed:      1,
-    condition:  100,
+    name:         'wrench_blade',
+    id:           1002,
+    rank:         1,
+    cost:         80,
+    category:     'weapon',
+    range:        20,
+    damage:       2,
+    speed:        1,
+    condition:    100,
 
     visual_name:  'wrench blade',
     display_name: 'wrench blade',
@@ -298,7 +296,6 @@ const items = [
     description: 'the leg bone of a rat',
     image_name: 'right_leg_bone',
   },
-
 ];
 
 function get_random_items(max) {
@@ -315,12 +312,8 @@ function get_random_items(max) {
 
 const get_item = name => {
   let found_item = items.find(item => item.name === name);
-  console.log(name)
-  console.log(found_item)
 
-  if(!found_item) {
-    found_item = items.find(item => item.item_name === name);
-  }
+  if(!found_item) found_item = items.find(item => item.item_name === name);
 
   if(!found_item) throw new Error('No item found for ' + JSON.stringify( name ));
 
@@ -339,12 +332,9 @@ const get_item_by_id = id => items.find(item => item.id === id);
 
 const extract_item_image_by_name = name => {
   const item = get_item_by_name(name);
-
   const image_name = item ? item.image_name: name;
 
-  if(!image_name) {
-    throw new Error('Can not find ' + name);
-  }
+  if(!image_name) throw new Error('Can not find ' + name);
 
   const found_sprite = PIXI.Sprite.fromFrame(image_name);
   const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);

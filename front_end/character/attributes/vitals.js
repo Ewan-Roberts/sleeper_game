@@ -7,7 +7,7 @@ class Vitals {
   constructor(entity) {
     this.entity = entity;
     this.name   ='vitals';
-    this.speed  = 15;
+
     this.power  = 5000;
     this.health = 140;
     this.food   = 40;

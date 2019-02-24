@@ -17,13 +17,12 @@ class Range {
     this.entity.animation.weapon = this.ranged_weapon.animation_name;
   }
 
-  attack(target) {
+  attack(target, accuracy) {
     this.equip();
     this.entity.animation.ready_weapon();
-
     this.entity.face_point(target.sprite);
 
-    shoot_arrow(this.entity, target);
+    shoot_arrow(this.entity, target, accuracy);
   }
 
   _add_line(sprite) {

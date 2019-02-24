@@ -69,9 +69,14 @@ class Archer extends Enemy {
     this._logic.remove();
   }
 
+  _accuracy() {
+    const { vitals } = this;
+  }
+
   logic_start() {
-    this._logic.start();
     this.animation.ready_weapon();
+    this._accuracy();
+    this._logic.start();
     this._logic.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
 
@@ -79,7 +84,7 @@ class Archer extends Enemy {
 
         if(!this.enemy.vitals.alive) return this._walk_to_enemy();
 
-        return this.range.attack(this.enemy);
+        return this.range.attack(this.enemy, 20);
       }
 
       if(!this.enemy.vitals.alive) return this._loot_enemy();
