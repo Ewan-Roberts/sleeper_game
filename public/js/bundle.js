@@ -1290,53 +1290,31 @@ module.exports = {
 
 },{"../engine/pixi_containers":31,"pixi.js":240}],23:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
 
 const { world } = require('../engine/shadows');
 
 class Camera {
-  static begin_at(point) {
-    world.position.set(point);
-
-    return this;
+  constructor() {
+    this.sprite = world;
   }
 
-  static from(point) {
-    this.path = new PIXI.tween.TweenPath();
-
-    this.path.moveTo(point.x, point.y);
-
-    return this;
-  }
-
-  static to(point) {
-    this.path.lineTo(point.x, point.y);
-    return this;
-  }
-
-  static start() {
-    this.tween  = PIXI.tweenManager.createTween(world);
-    this.tween.expire = true;
-    this.tween.path   = this.path;
-    this.tween.time   = 3000;
-
-    this.tween.start();
+  set_position(x, y) {
+    world.position.set(x, y);
   }
 }
-
-
 
 module.exports = {
   Camera,
 };
 
-},{"../engine/shadows":35,"pixi.js":240}],24:[function(require,module,exports){
+},{"../engine/shadows":35}],24:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
 const {
   // lantern,
   dev_light,
+  candle,
 } = require('./light');
 
 const { Cutscene_NPC   } = require('../character/types/cutscene_npc');
@@ -1412,20 +1390,33 @@ class intro_cutscene {
       {x: 1250, y: 140},
       {x: 1450, y: 130},
       {x: 1650, y: 120},
+      {x: 1951, y: 110},
     ]);
 
     lantern_light.tween.show();
-    lantern_light.tween.start();
+    lantern_light.tween.start(10000);
     lantern_light.flicker();
+    lantern_light.tween.movement.on('end', () => {
+      lantern_light.remove();
+    });
 
-    //TODO Although this is very fun lets not do this
-    Camera.begin_at({x: 1000, y: 400})
-      .from({x: 1000, y: 200})
-      .to({x: 100, y: 100})
-      .to({x: 200, y: 200})
-      .to({x: 400, y: -100})
-      .start();
 
+    const lighter = new candle();
+    lighter.set_position(1040, 400);
+    lighter.wait(8000);
+
+    const camera = new Camera();
+    camera.set_position(100, 100);
+    camera.tween = new tween(camera.sprite);
+    camera.tween.add_path([
+      {x: -50, y:  50},
+      {x: -50, y:  50},
+      {x:  50, y: -50},
+      {x:  50, y: -50},
+    ]);
+
+    camera.tween.show();
+    camera.tween.start(7000);
 
     world.on('pointermove', event => {
       const mouse_position = event.data.getLocalPosition(world);
@@ -1503,11 +1494,46 @@ class torch {
 class candle {
   constructor() {
     this.shadow = new PIXI.shadows.Shadow(500);
-    this.shadow.pointCount = 23;
+    this.shadow.pointCount = 2;
+    this.shadow.range = 200;
     this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.9;
-    this.shadow.ambientLight = 0.2;
-    world.addChild(this.shadow);
+    this.shadow.intensity = 0.5;
+    this.shadow.ambientLight = 0.5;
+
+    PIXI.shadows.filter.ambientLight = 0.02;
+  }
+
+  _strike() {
+    this.shadow.range = 200;
+
+    setTimeout(() => {
+      this.shadow.intensity = 0.5;
+      this.shadow.range = 110;
+
+      PIXI.shadows.filter.ambientLight = 0.12;
+    }, 230);
+
+    setTimeout(() => {
+      this.shadow.intensity = 0.4;
+      this.shadow.range = 140;
+
+      PIXI.shadows.filter.ambientLight = 0.09;
+    }, 310);
+
+    setTimeout(() => {
+      this.shadow.intensity = 0.5;
+      this.shadow.range = 120;
+
+      PIXI.shadows.filter.ambientLight = 0.1;
+    }, 400);
+  }
+
+  wait(time) {
+    setTimeout(() => {
+      world.addChild(this.shadow);
+
+      this._strike();
+    },time);
   }
 
   set_position(x, y) {
@@ -1544,6 +1570,10 @@ class dev_light {
 
   set_position(x, y) {
     this.sprite.position.set(x, y);
+  }
+
+  remove() {
+    world.removeChild(this.sprite);
   }
 
   flicker() {
@@ -2290,17 +2320,17 @@ class tween {
         tween_path[i-1].y,
         tween_path[i].x,
         tween_path[i].y,
-        25);
+        15);
     }
   }
 
-  start() {
-    const tween  = PIXI.tweenManager.createTween(this.sprite);
-    tween.expire = true;
-    tween.path   = this.path;
-    tween.time   = this.path.arc.length * 1000;
+  start(time) {
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire  = true;
+    this.movement.path   = this.path;
+    this.movement.time   = time;
 
-    tween.start();
+    this.movement.start();
   }
 
   show() {

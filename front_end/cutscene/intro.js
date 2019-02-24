@@ -4,6 +4,7 @@ const PIXI = require('pixi.js');
 const {
   // lantern,
   dev_light,
+  candle,
 } = require('./light');
 
 const { Cutscene_NPC   } = require('../character/types/cutscene_npc');
@@ -79,20 +80,33 @@ class intro_cutscene {
       {x: 1250, y: 140},
       {x: 1450, y: 130},
       {x: 1650, y: 120},
+      {x: 1951, y: 110},
     ]);
 
     lantern_light.tween.show();
-    lantern_light.tween.start();
+    lantern_light.tween.start(10000);
     lantern_light.flicker();
+    lantern_light.tween.movement.on('end', () => {
+      lantern_light.remove();
+    });
 
-    //TODO Although this is very fun lets not do this
-    Camera.begin_at({x: 1000, y: 400})
-      .from({x: 1000, y: 200})
-      .to({x: 100, y: 100})
-      .to({x: 200, y: 200})
-      .to({x: 400, y: -100})
-      .start();
 
+    const lighter = new candle();
+    lighter.set_position(1040, 400);
+    lighter.wait(8000);
+
+    const camera = new Camera();
+    camera.set_position(100, 100);
+    camera.tween = new tween(camera.sprite);
+    camera.tween.add_path([
+      {x: -50, y:  50},
+      {x: -50, y:  50},
+      {x:  50, y: -50},
+      {x:  50, y: -50},
+    ]);
+
+    camera.tween.show();
+    camera.tween.start(7000);
 
     world.on('pointermove', event => {
       const mouse_position = event.data.getLocalPosition(world);

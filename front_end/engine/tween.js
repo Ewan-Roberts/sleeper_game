@@ -18,17 +18,17 @@ class tween {
         tween_path[i-1].y,
         tween_path[i].x,
         tween_path[i].y,
-        25);
+        15);
     }
   }
 
-  start() {
-    const tween  = PIXI.tweenManager.createTween(this.sprite);
-    tween.expire = true;
-    tween.path   = this.path;
-    tween.time   = this.path.arc.length * 1000;
+  start(time) {
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire  = true;
+    this.movement.path   = this.path;
+    this.movement.time   = time;
 
-    tween.start();
+    this.movement.start();
   }
 
   show() {

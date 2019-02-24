@@ -24,11 +24,46 @@ class torch {
 class candle {
   constructor() {
     this.shadow = new PIXI.shadows.Shadow(500);
-    this.shadow.pointCount = 23;
+    this.shadow.pointCount = 2;
+    this.shadow.range = 200;
     this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.9;
-    this.shadow.ambientLight = 0.2;
-    world.addChild(this.shadow);
+    this.shadow.intensity = 0.5;
+    this.shadow.ambientLight = 0.5;
+
+    PIXI.shadows.filter.ambientLight = 0.02;
+  }
+
+  _strike() {
+    this.shadow.range = 200;
+
+    setTimeout(() => {
+      this.shadow.intensity = 0.5;
+      this.shadow.range = 110;
+
+      PIXI.shadows.filter.ambientLight = 0.12;
+    }, 230);
+
+    setTimeout(() => {
+      this.shadow.intensity = 0.4;
+      this.shadow.range = 140;
+
+      PIXI.shadows.filter.ambientLight = 0.09;
+    }, 310);
+
+    setTimeout(() => {
+      this.shadow.intensity = 0.5;
+      this.shadow.range = 120;
+
+      PIXI.shadows.filter.ambientLight = 0.1;
+    }, 400);
+  }
+
+  wait(time) {
+    setTimeout(() => {
+      world.addChild(this.shadow);
+
+      this._strike();
+    },time);
   }
 
   set_position(x, y) {
@@ -65,6 +100,10 @@ class dev_light {
 
   set_position(x, y) {
     this.sprite.position.set(x, y);
+  }
+
+  remove() {
+    world.removeChild(this.sprite);
   }
 
   flicker() {
