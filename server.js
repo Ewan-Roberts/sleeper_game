@@ -9,9 +9,5 @@ const web_server = require('http').Server(app);
 web_server.listen(port, () => console.log('server on:' + port)); // eslint-disable-line
 
 app.use(express.static('./public'));
-app.get('/', response => response.sendFile(`${__dirname}/public/index.html`));
-
-
-
-
+app.get('/', res => res.sendFile(`${__dirname}/public/index.html`));
 
