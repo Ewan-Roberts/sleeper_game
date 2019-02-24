@@ -4,6 +4,7 @@ const PIXI = require('pixi.js');
 const {
   // lantern,
   dev_light,
+  lighter,
   candle,
 } = require('./light');
 
@@ -81,19 +82,22 @@ class intro_cutscene {
       {x: 1450, y: 130},
       {x: 1650, y: 120},
       {x: 1951, y: 110},
+      {x: 2551, y: 110},
     ]);
 
     lantern_light.tween.show();
     lantern_light.tween.start(10000);
     lantern_light.flicker();
-    lantern_light.tween.movement.on('end', () => {
-      lantern_light.remove();
-    });
+    lantern_light.tween.movement.on('end', () => lantern_light.remove());
 
 
-    const lighter = new candle();
-    lighter.set_position(1040, 400);
-    lighter.wait(8000);
+    const pocket_lighter = new lighter();
+    pocket_lighter.set_position(1040, 400);
+    pocket_lighter.wait(6000);
+
+    const candle_stick = new candle();
+    candle_stick.set_position(1040, 380);
+    candle_stick.add_candle();
 
     const camera = new Camera();
     camera.set_position(100, 100);
