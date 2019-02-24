@@ -22,4 +22,11 @@
 - add login user done
 - re-add multiplayer not adding
 - create items search function done
-
+- put one enemy on the map DONE
+- basic arrow management DONE
+- create blood effects DONE
+- Engine DONE
+- create cutscene management engine (stop keyboard inputs etc) DONE
+- create architype system DONE
+- Get the merc from the spritesheet DONE
+- and the note DONE

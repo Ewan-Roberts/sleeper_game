@@ -1,4 +1,22 @@
 
+# ROADMAP:
+
+# Needed for ALPHA
+- get a bigger map
+- put 2 prey on the map
+- prod server
+- basic different graphics
+
+# To deploy
+- Set up mongo on ec2
+- end to end a user
+
+# Needed for BETA
+- secure register user
+- Server-side rendered images
+- CD
+- Add email user
+
 Key:
 - priority = (low || medium || high || outsource)
 
@@ -38,17 +56,14 @@ Key:
 
 ## Effects (low)
 - create fire effects
-- create blood effects DONE
 - create arrow effects
 - create gun effects
 
 ## cutscene (high)
-- create cutscene management engine (stop keyboard inputs etc) DONE
 - create player best friend
 
 ## Sound: (low)
 `later`
-- Engine DONE
 
 ## GUI: (high)
 - NPC buy/sell etc
@@ -65,13 +80,8 @@ Key:
 ## mechanics: (low)
 - Add scavenging
 - Add starting fires
-- create architype system DONE
 - buy sell/buy engine
 - Level loader
 
 # Infra:
 - Create EC2 server (again)
-
-# Small things I have to do:
-- Get the merc from the spritesheet DONE
-- and the note DONE
