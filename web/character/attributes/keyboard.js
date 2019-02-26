@@ -33,17 +33,18 @@ function point_collides(position) {
 }
 
 class Keyboard {
-  constructor(entity) {
-    this.name   = 'keyboard';
-    this.entity = entity;
+  constructor({ animation, sprite, vitals }) {
+    this.name          = 'keyboard';
+    this.animation     = animation;
+    this.sprite        = sprite;
     this.shift_pressed = false;
-    this.speed = this.entity.vitals.speed;
-    this.buffer = 50;
+    this.speed         = vitals.speed;
+    this.buffer        = 50;
 
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
   }
-
+  //TODO
   save_game() { Game.save(this.entity); }
 
   key_down(key) {
@@ -64,70 +65,72 @@ class Keyboard {
     //TODO bug player could hold two buttons
     this.shift_pressed = false;
 
-    this.entity.animation.idle();
+    this.animation.idle();
   }
 
   keyboard_shift() { this.shift_pressed = true; }
 
   keyboard_up() {
-    this.entity.animation.walk();
-    this.entity.animation.face_up();
+    this.animation.walk();
+    this.animation.face_up();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.y -= this.buffer;
 
     const collision = point_collides(point);
-    if(collision) return this.entity.animation.idle();
+    if(collision) return this.animation.idle();
 
-    this.entity.animation.move_up_by(this.speed);
+    this.animation.move_up_by(this.speed);
     shadow.position.copy(point);
 
     world.y += this.speed;
   }
 
   keyboard_down() {
-    this.entity.animation.walk();
-    this.entity.animation.face_down();
+    console.log('poo')
+    this.animation.walk();
+    this.animation.face_down();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.y += this.buffer;
 
     const collision = point_collides(point);
-    if(collision) return this.entity.animation.idle();
+    if(collision) return this.animation.idle();
 
-    this.entity.animation.move_down_by(this.speed);
+    this.animation.move_down_by(this.speed);
     shadow.position.copy(point);
 
+    console.log('poo')
     world.y -= this.speed;
   }
 
   keyboard_left() {
-    this.entity.animation.walk();
-    this.entity.animation.face_left();
+    this.animation.walk();
+    this.animation.face_left();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.x -= this.buffer;
 
     const collision = point_collides(point);
-    if(collision) return this.entity.animation.idle();
+    if(collision) return this.animation.idle();
 
-    this.entity.animation.move_left_by(this.speed);
+    this.animation.move_left_by(this.speed);
     shadow.position.copy(point);
 
     world.x += this.speed;
   }
 
   keyboard_right() {
-    this.entity.animation.walk();
-    this.entity.animation.face_right();
+    this.animation.walk();
+    this.animation.face_right();
 
-    const point = this.entity.sprite.getGlobalPosition();
+    const point = this.sprite.getGlobalPosition();
     point.x += this.buffer;
 
     const collision = point_collides(point);
-    if(collision) return this.entity.animation.idle();
+    if(collision) return this.animation.idle();
 
-    this.entity.animation.move_right_by(this.speed);
+    this.animation.move_right_by(this.speed);
     shadow.position.copy(point);
 
     world.x -= this.speed;

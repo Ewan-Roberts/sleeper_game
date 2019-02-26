@@ -2,12 +2,12 @@
 
 const { get_random_items } = require('../../items/item_data');
 const { View_Inventory   } = require('../../view/view_inventory');
-const { icon             } = require('../../view/view_icons');
+const { icon             } = require('../../effects/view_icons');
 
 class Lootable {
-  constructor(entity) {
+  constructor({ sprite }) {
     this.name     = 'loot';
-    this.entity   = entity;
+    this.sprite   = sprite;
     this.looted   = false;
     this.items    = [];
   }
@@ -17,10 +17,10 @@ class Lootable {
   }
 
   create_icon() {
-    const button = new icon('bunny', this.entity.sprite);
+    const button = new icon('bunny', this.sprite);
 
     button.element.on('click', () => {
-      this.entity.sprite.buttonMode = false;
+      this.sprite.buttonMode = false;
       this.looted = true;
       this.show();
       button.remove();
@@ -32,7 +32,7 @@ class Lootable {
   }
 
   show() {
-    View_Inventory.create_populated_slots(this.entity.sprite, this.items);
+    View_Inventory.create_populated_slots(this.sprite, this.items);
   }
 
   empty() {

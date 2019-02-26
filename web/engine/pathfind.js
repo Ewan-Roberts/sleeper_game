@@ -7,7 +7,7 @@ const {
   grid_container,
 } = require('./pixi_containers');
 
-const { easystar } = require('../utils/easystar');
+const { easystar } = require('../vendor/easystar');
 
 const {
   generate_number_between_min_and_max,

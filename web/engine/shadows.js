@@ -17,20 +17,21 @@ world.updateLayersOrder = function () {
   });
 };
 
-//const shadow = new PIXI.shadows.Shadow(900, 1);
-//shadow.pointCount = 1;
-//shadow.overlayLightLength = 200;
-//shadow.intensity = 1;
-//shadow.ambientLight = 1;
-//shadow.position.set(450, 150);
+const shadow = new PIXI.shadows.Shadow(900, 1);
+shadow.pointCount = 1;
+shadow.overlayLightLength = 200;
+shadow.intensity = 1;
+shadow.ambientLight = 1;
+shadow.position.set(450, 150);
 
-////FOR TESTING make 0.5 for lighting
-//PIXI.shadows.filter.ambientLight = 1;
+//FOR TESTING make 0.5 for lighting
+PIXI.shadows.filter.ambientLight = 1;
 
-//world.addChild(shadow);
+world.addChild(shadow);
 
 module.exports = {
   world,
+  shadow,
 };
 
 

@@ -1,14 +1,17 @@
 'use strict';
 
-const { blood } = require('../../cutscene/blood');
+const { blood } = require('../../effects/blood');
 const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
-  constructor(entity) {
-    this.entity = entity;
+  constructor({ name, sprite, logic }) {
     this.name   ='vitals';
+    this.entity_name = name;
+    this.sprite = sprite;
+    this.logic = logic;
 
     this.power  = 5000;
+    this.speed  = 50;
     this.health = 140;
     this.food   = 40;
     this.water  = 20;
@@ -26,10 +29,10 @@ class Vitals {
   }
 
   _kill() {
-    if(this.entity.name === 'player') Game.over();
+    if(this.name === 'player') Game.over();
 
     this.status = 'dead';
-    this.entity.kill();
+    this.logic.kill();
   }
 
   damage(damage) {
@@ -38,7 +41,7 @@ class Vitals {
     const is_dead = this._dead(damage);
 
     if(is_dead) {
-      blood.add_at_point(this.entity.sprite);
+      blood.add_at_point(this.sprite);
       this._kill();
     }
   }

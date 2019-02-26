@@ -5,7 +5,7 @@ const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 const { visual_effects_container } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 const { timer } = require('../engine/ticker');
-const { Track } = require('../engine/sound');
+const { Track } = require('../effects/sound');
 
 class torch {
   constructor() {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { save_user } = require('../utils/socket');
+const { save_user } = require('../vendor/socket');
 
 class Game {
   constructor(player_data) {

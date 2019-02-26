@@ -1,9 +1,9 @@
 'use strict';
 
-const port        = process.env.PORT || 3000;
-const express     = require('express');
-const compression = require('compression');
-const app         = express().use(compression());
+const port     = process.env.PORT || 3000;
+const compress = require('compression');
+const express  = require('express');
+const app      = express().use(compress());
 
 const web_server = require('http').Server(app);
 web_server.listen(port, () => console.log('server on:' + port)); // eslint-disable-line

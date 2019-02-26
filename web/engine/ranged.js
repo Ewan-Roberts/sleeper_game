@@ -48,7 +48,7 @@ function create_arrow_tween(arrow, power, arrow_path) {
  * @params {number}    - power
  */
 function shoot_arrow_with_collision(origin, point) {
-  const { speed, damage } = origin.inventory.ranged_weapon;
+  const { speed, damage } = origin.ranged_weapon;
   const arrow       = create_rotated_arrow(origin.sprite, point);
   const arrow_path  = create_arrow_path(origin.sprite, point);
   const arrow_tween = create_arrow_tween(arrow, speed, arrow_path);
@@ -73,7 +73,7 @@ function shoot_arrow_with_collision(origin, point) {
  * @params {number}    - power
  */
 function shoot_arrow(origin, target, accuracy) {
-  const { speed, damage } = origin.inventory.ranged_weapon;
+  const { speed, damage } = origin.ranged_weapon;
   const arrow       = create_rotated_arrow(origin.sprite, target.sprite);
   const arrow_path  = create_arrow_path(origin.sprite, target.sprite, accuracy);
   const arrow_tween = create_arrow_tween(arrow, speed, arrow_path);

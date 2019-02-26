@@ -4,15 +4,19 @@ const { gui_container              } = require('../../engine/pixi_containers');
 const { world                      } = require('../../engine/shadows');
 const { shoot_arrow_with_collision } = require('../../engine/ranged');
 
-const { View_Aiming_Cone } = require('../../view/view_aiming_cone');
+const { View_Aiming_Cone } = require('../../effects/view_aiming_cone');
 const { radian           } = require('../../utils/math');
 
 const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
 
 class Mouse {
-  constructor(entity) {
-    this.name   = 'mouse';
-    this.entity = entity;
+  constructor({ keyboard, animation, inventory, sprite, util }) {
+    this.name      = 'mouse';
+    this.keyboard  = keyboard;
+    this.animation = animation;
+    this.inventory = inventory;
+    this.sprite    = sprite;
+    this.util      = util;
 
     world.on('pointerup',   event => this._mouse_up(event));
     world.on('pointermove', event => this._mouse_move(event));
@@ -21,16 +25,20 @@ class Mouse {
 
   _mouse_up(event) {
     const mouse_position = event.data.getLocalPosition(world);
-    const { ammo_type, weapon_speed } = this.entity.inventory;
+    const { ammo_type } = this.inventory;
 
     this.cone_timer.stop();
-    this.entity.animation.idle();
-
+    this.animation.idle();
+    const { ranged_weapon } = this.inventory;
+    const sprite = this.sprite;
     //TODO ammo management engine
-    if(this.entity.keyboard.shift_pressed) {
+    if(this.keyboard.shift_pressed) {
       switch(ammo_type) {
         case 'arrow':
-          shoot_arrow_with_collision(this.entity, mouse_position, weapon_speed);
+          shoot_arrow_with_collision({
+            ranged_weapon,
+            sprite,
+          }, mouse_position);
           return;
       }
     }
@@ -39,19 +47,19 @@ class Mouse {
   _mouse_down(event) {
     const mouse_position = event.data.getLocalPosition(world);
 
-    this.entity.animation.ready_weapon();
-    this.entity.face_point(mouse_position);
+    this.animation.ready_weapon();
+    this.util.face_point(mouse_position);
 
     //TODO: this should be managed better it creates a timer each time
-    this.cone_timer = View_Aiming_Cone.start_at(this.entity.sprite);
+    this.cone_timer = View_Aiming_Cone.start_at(this.sprite);
     this.cone_timer.start();
   }
 
   _mouse_move(event) {
     const mouse_position = event.data.getLocalPosition(world);
-    this.entity.face_point(mouse_position);
+    this.util.face_point(mouse_position);
 
-    const rotation = radian(mouse_position, this.entity.sprite);
+    const rotation = radian(mouse_position, this.sprite);
     cone.rotation = rotation - 1.57;
   }
 }

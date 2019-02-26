@@ -8,11 +8,11 @@ const {
   candle,
 } = require('./light');
 
-const { Cutscene_NPC   } = require('../character/types/cutscene_npc');
+const { Cutscene_NPC   } = require('../character/types/npc');
 const { background_container } = require('../engine/pixi_containers');
 const { world  } = require('../engine/shadows');
 const { tween  } = require('../engine/tween');
-const { Camera } = require('./camera');
+const { Camera } = require('../engine/camera');
 
 function create_wall(x, y) {
   const wall_texture = PIXI.Texture.fromImage('black_dot');

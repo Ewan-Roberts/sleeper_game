@@ -8,8 +8,8 @@ const { Human      } = require('../animations/character');
 class Cutscene_NPC extends Character {
   constructor() {
     super();
-    this.name = 'cutscene_npc';
-    this.sprite.name = 'cutscene_npc';
+    this.name = 'npc';
+    this.sprite.name = 'npc';
 
     this.add_component(new Human(this.sprite));
 

@@ -7,27 +7,9 @@ const { Enemy } = require('../types/enemy');
 const { Melee } = require('../attributes/melee');
 const { Range } = require('../attributes/ranged');
 
-class Archer extends Enemy {
+class Archer_Logic {
   constructor() {
-    super();
-    this.name = 'archer';
-
-    this.inventory.add_ranged_weapon_by_name('old_bow');
-    this.inventory.add_melee_weapon_by_name('dev_knife');
-    this.inventory.equip_ranged_weapon();
-    this.animation.weapon = 'bow';
-
-    // TODO these are coupled
-    this.add_component(new Melee(this));
-    this.add_component(new Range(this));
-
-    this._logic = timer.createTimer(800);
-    this._logic.repeat = 20;
-    this._logic.expire = true;
-
-    Entity_Container.add(this);
   }
-
   _walk_to_enemy() {
     this.animation.walk();
 
@@ -91,6 +73,30 @@ class Archer extends Enemy {
 
       return this.melee.attack(this.enemy);
     });
+  }
+}
+
+
+class Archer extends Enemy {
+  constructor() {
+    super();
+    this.name = 'archer';
+
+    this.inventory.add_ranged_weapon_by_name('old_bow');
+    this.inventory.add_melee_weapon_by_name('dev_knife');
+    this.inventory.equip_ranged_weapon();
+    this.animation.weapon = 'bow';
+
+    // TODO these are coupled
+    this.add_component(new Melee(this));
+    this.add_component(new Range(this));
+    this.logic = new Archer_Logic();
+
+    this._logic = timer.createTimer(800);
+    this._logic.repeat = 20;
+    this._logic.expire = true;
+
+    Entity_Container.add(this);
   }
 }
 
