@@ -1,8 +1,8 @@
 'use strict';
 
-const { get_random_items } = require('../../items/item_data');
-const { View_Inventory   } = require('../../view/view_inventory');
-const { icon             } = require('../../effects/view_icons');
+const { Item_Manager   } = require('../../items/item_manager');
+const { View_Inventory } = require('../../view/view_inventory');
+const { icon           } = require('../../effects/view_icons');
 
 class Lootable {
   constructor({ sprite }) {
@@ -13,7 +13,7 @@ class Lootable {
   }
 
   populate() {
-    this.items = get_random_items();
+    this.items = Item_Manager.get_random_items();
   }
 
   create_icon() {

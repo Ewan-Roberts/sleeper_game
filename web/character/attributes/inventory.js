@@ -1,6 +1,6 @@
 'use strict';
 
-const { get_item } = require('../../items/item_data');
+const { Item_Manager } = require('../../items/item_manager');
 
 class Inventory {
   constructor() {
@@ -11,7 +11,7 @@ class Inventory {
   }
 
   equip_weapon_by_name(name) {
-    const weapon = get_item(name);
+    const weapon = Item_Manager.get_item(name);
 
     this.equipped = weapon;
   }
@@ -29,13 +29,13 @@ class Inventory {
   }
 
   add_ranged_weapon_by_name(name) {
-    const weapon = get_item(name);
+    const weapon = Item_Manager.get_item(name);
 
     this.ranged_weapon = weapon;
   }
 
   add_melee_weapon_by_name(name) {
-    const weapon = get_item(name);
+    const weapon = Item_Manager.get_item(name);
 
     this.melee_weapon = weapon;
   }

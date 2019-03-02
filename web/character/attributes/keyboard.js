@@ -87,7 +87,6 @@ class Keyboard {
   }
 
   keyboard_down() {
-    console.log('poo')
     this.animation.walk();
     this.animation.face_down();
 
@@ -100,7 +99,6 @@ class Keyboard {
     this.animation.move_down_by(this.speed);
     shadow.position.copy(point);
 
-    console.log('poo')
     world.y -= this.speed;
   }
 

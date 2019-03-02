@@ -1,12 +1,9 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const {
-  // lantern,
-  dev_light,
-  lighter,
-  candle,
-} = require('./light');
+const { Dev_Light } = require('../effects/light/types/development');
+const { Lighter   } = require('../effects/light/types/lighter');
+const { Candle    } = require('../effects/light/types/candle');
 
 const { Cutscene_NPC   } = require('../character/types/npc');
 const { background_container } = require('../engine/pixi_containers');
@@ -72,10 +69,9 @@ class intro_cutscene {
     create_wall(1400, 250);
 
     //TODO All very dependent without
-    const lantern_light = new dev_light();
+    const lantern_light = new Dev_Light();
     lantern_light.set_position(800, 100);
-
-    lantern_light.tween = new tween(lantern_light.sprite);
+    lantern_light.tween = new tween(lantern_light.shadow);
     lantern_light.tween.add_path([
       {x: 1100, y: 100},
       {x: 1250, y: 140},
@@ -87,17 +83,20 @@ class intro_cutscene {
 
     lantern_light.tween.show();
     lantern_light.tween.start(10000);
-    lantern_light.flicker();
+    lantern_light.flicker.start();
     lantern_light.tween.movement.on('end', () => lantern_light.remove());
 
-
-    const pocket_lighter = new lighter();
-    pocket_lighter.set_position(1040, 400);
+    const pocket_lighter = new Lighter();
+    pocket_lighter.set_position({ x: 1040, y:400 });
     pocket_lighter.wait(6000);
 
-    const candle_stick = new candle();
-    candle_stick.set_position(1040, 380);
+    const candle_stick = new Candle();
+    candle_stick.set_position({ x: 1040, y:380});
     candle_stick.add_candle();
+    setTimeout(() => {
+      console.log(candle_stick)
+      candle_stick.shadow.alpha = 1;
+    }, 8500);
 
     const camera = new Camera();
     camera.set_position(100, 100);

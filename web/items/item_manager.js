@@ -11,9 +11,8 @@ const {
 } = require('../utils/math');
 
 class Item_Manager {
-  static get_random_items(max) {
-    const number_of_items_to_return = generate_number_between_min_and_max(1, max|2);
-
+  static get_random_items(max = 2) {
+    const number_of_items_to_return = generate_number_between_min_and_max(1, max);
     const item_array = [];
 
     for(let i = 0; i < number_of_items_to_return; i++) {

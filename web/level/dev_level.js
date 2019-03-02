@@ -11,6 +11,7 @@ const { Weapon   } = require('../items/item_model');
 
 const { Level          } = require('./level_utils');
 const { intro_cutscene } = require('../cutscene/intro.js');
+const { dev_light      } = require('../effects/light/light.js');
 const { Enemy          } = require('../character/types/enemy');
 const { Inventory      } = require('../character/attributes/inventory');
 const { View_Inventory } = require('../view/view_inventory');
@@ -23,13 +24,14 @@ const { Rat    } = require('../character/archetypes/rat');
 // THIS IS ALL FOR TESTING
 class DevelopmentLevel {
   constructor() {
-    const player = new Player();
-    player.set_position({ x: 1000, y: 400});
-
+    // const player = new Player();
+    // player.set_position({ x: 1000, y: 400});
+    // const light = new dev_light()
+    // light.set_position({ x: 1000, y: 400})
     // dev bow for testing one hit kill
-    player.inventory.add_ranged_weapon_by_name('dev_bow');
-    player.inventory.add_melee_weapon_by_name('rusty_knife');
-    player.inventory.equip_weapon_by_name('dev_bow');
+    // player.inventory.add_ranged_weapon_by_name('dev_bow');
+    // player.inventory.add_melee_weapon_by_name('rusty_knife');
+    // player.inventory.equip_weapon_by_name('dev_bow');
 
     // View_HUD.add_head('old_bandana');
     // View_HUD.add_hat('old_helmet');
@@ -43,9 +45,9 @@ class DevelopmentLevel {
     // View_HUD.inventory_slot('meat', 2);
     // View_HUD.inventory_slot('skull_cap_bone', 3);
 
-    // intro_cutscene.start();
+    intro_cutscene.start();
 
-    this.load_test_level();
+    // this.load_test_level();
     // this.test_note();
 
     // const rat = new Rat();
