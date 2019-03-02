@@ -1,14 +1,21 @@
 'use strict';
 
 const { world } = require('../engine/shadows');
+const { Tween } = require('../engine/tween');
 
 class Camera {
   constructor() {
     this.sprite = world;
+
+    this.add_component(new Tween(this.sprite));
   }
 
-  set_position(x, y) {
-    world.position.set(x, y);
+  add_component(component) { this[component.name] = component; }
+
+  remove_component(name) { delete this[name]; }
+
+  set_position({ x, y }) {
+    this.sprite.position.set(x, y);
   }
 }
 

@@ -3,13 +3,23 @@ const PIXI = require('pixi.js');
 
 const { gui_container } = require('./pixi_containers');
 
-class tween {
+class Tween {
   constructor(sprite) {
-    this.sprite = sprite;
+    this.name   = 'tween';
 
-    this.path = new PIXI.tween.TweenPath();
-    this.path.moveTo(sprite.x, sprite.y);
+    this.sprite = sprite;
+    this.path   = new PIXI.tween.TweenPath();
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire  = true;
   }
+
+  from(start) { this.path.moveTo(start.x, start.y); }
+
+  to(finish) { this.path.lineTo(finish.x, finish.y); }
+
+  move_to({ x, y }) { this.path.lineTo(x, y); }
+
+  smooth() { this.movement.easing = PIXI.tween.Easing.inOutQuad(); }
 
   add_path(tween_path) {
     for (let i = 1; i < tween_path.length; i++) {
@@ -23,17 +33,15 @@ class tween {
   }
 
   start(time) {
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
-    this.movement.expire  = true;
-    this.movement.path   = this.path;
-    this.movement.time   = time;
+    this.movement.path = this.path;
+    this.movement.time = time;
 
     this.movement.start();
   }
 
   show() {
     const graphical_path = new PIXI.Graphics();
-    graphical_path.lineStyle(5, 0xffffff, 0.1);
+    graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
 
     gui_container.addChild(graphical_path);
@@ -42,7 +50,7 @@ class tween {
 
 
 module.exports = {
-  tween,
+  Tween,
 };
 
 

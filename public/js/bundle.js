@@ -46284,8 +46284,7 @@ const { Candle    } = require('../effects/light/types/candle');
 
 const { Cutscene_NPC   } = require('../character/types/npc');
 const { background_container } = require('../engine/pixi_containers');
-const { world  } = require('../engine/shadows');
-const { tween  } = require('../engine/tween');
+const { Tween  } = require('../engine/tween');
 const { Camera } = require('../engine/camera');
 
 function create_wall(x, y) {
@@ -46345,10 +46344,9 @@ class intro_cutscene {
     create_bit(1100, 248);
     create_wall(1400, 250);
 
-    //TODO All very dependent without
     const lantern_light = new Dev_Light();
     lantern_light.set_position(800, 100);
-    lantern_light.tween = new tween(lantern_light.shadow);
+    lantern_light.tween = new Tween(lantern_light.shadow);
     lantern_light.tween.add_path([
       {x: 1100, y: 100},
       {x: 1250, y: 140},
@@ -46360,39 +46358,31 @@ class intro_cutscene {
 
     lantern_light.tween.show();
     lantern_light.tween.start(10000);
-    lantern_light.flicker.start();
     lantern_light.tween.movement.on('end', () => lantern_light.remove());
 
     const pocket_lighter = new Lighter();
-    pocket_lighter.set_position({ x: 1040, y:400 });
-    pocket_lighter.wait(6000);
+    pocket_lighter.set_position({ x: 1040, y: 400 });
+    pocket_lighter.wait(6000, async () => {
+      const candle_stick = new Candle();
 
-    const candle_stick = new Candle();
-    candle_stick.set_position({ x: 1040, y:380});
-    candle_stick.add_candle();
-    setTimeout(() => {
-      console.log(candle_stick)
-      candle_stick.shadow.alpha = 1;
-    }, 8500);
+      candle_stick.set_position({ x: 1040, y: 400 });
+      candle_stick.add_candle();
+
+      await pocket_lighter.strike.start();
+
+      candle_stick.with_flickering();
+
+      candle_stick.shadow.alpha = 0.2;
+      candle_stick.shadow.range = 150;
+      candle_stick.shadow.intensity = 0.4;
+    });
 
     const camera = new Camera();
-    camera.set_position(100, 100);
-    camera.tween = new tween(camera.sprite);
-    camera.tween.add_path([
-      {x: -50, y:  50},
-      {x: -50, y:  50},
-      {x:  50, y: -50},
-      {x:  50, y: -50},
-    ]);
-
-    camera.tween.show();
-    camera.tween.start(7000);
-
-    world.on('pointermove', event => {
-      const mouse_position = event.data.getLocalPosition(world);
-
-      lantern_light.set_position(mouse_position.x, mouse_position.y);
-    });
+    camera.tween.from({ x: -120, y: -150 });
+    camera.tween.to({ x: -100,  y: -120 });
+    camera.tween.to({ x: 120, y: -100 });
+    camera.tween.smooth();
+    camera.tween.start(13000);
   }
 }
 
@@ -46437,7 +46427,7 @@ module.exports = {
   intro_cutscene,
 };
 
-},{"../character/types/npc":213,"../effects/light/types/candle":222,"../effects/light/types/development":223,"../effects/light/types/lighter":224,"../engine/camera":231,"../engine/pixi_containers":237,"../engine/shadows":241,"../engine/tween":243,"pixi.js":150}],217:[function(require,module,exports){
+},{"../character/types/npc":213,"../effects/light/types/candle":222,"../effects/light/types/development":223,"../effects/light/types/lighter":224,"../engine/camera":231,"../engine/pixi_containers":237,"../engine/tween":243,"pixi.js":150}],217:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46471,15 +46461,24 @@ class Flicker {
   }
 
   start() {
-    const flicker_timer  = timer.createTimer(200);
-    flicker_timer.repeat = 25;
+    const flicker_timer  = timer.createTimer(140);
+    flicker_timer.repeat = 100;
 
     flicker_timer.on('repeat', () => {
+      if(this.shadow.intensity > 0.4) {
+        return this.shadow.intensity += ( Math.random()/16 - 0.05) ;
+      }
+      if(this.shadow.intensity < 0.9) {
+        return this.shadow.intensity += ( Math.random()/16 + 0.05) ;
+      }
+
       this.shadow.intensity += ( Math.random()/16 - 0.03) ;
     });
 
-    flicker_timer.on('end', function() {
-      this.remove();
+    flicker_timer.on('end', () => {
+      this.shadow.intensity = 0.5;
+
+      flicker_timer.remove();
     });
 
     flicker_timer.start();
@@ -46503,38 +46502,35 @@ class Strike {
 
     this.shadow = shadow;
     this.sound = new Track('lighter.wav');
-    this.sound.volume = 0.03;
+    this.sound.volume = 0;
   }
 
   async start() {
-    this.shadow.intensity = 0;
     this.sound.play();
 
     await sleep(300);
+    this.shadow.alpha = 1;
     this.shadow.intensity = 0.5;
     this.shadow.range = 110;
-    PIXI.shadows.filter.ambientLight = 0.12;
 
     await sleep(40);
     this.shadow.alpha = 0;
-    PIXI.shadows.filter.ambientLight = 0;
 
     await sleep(1100);
     this.shadow.alpha = 1;
     this.shadow.intensity = 0.4;
     this.shadow.range = 140;
-    PIXI.shadows.filter.ambientLight = 0.09;
 
     await sleep(30);
     this.shadow.alpha = 0;
-    PIXI.shadows.filter.ambientLight = 0;
 
     await sleep(1000);
     this.shadow.alpha = 1;
     this.shadow.intensity = 0.6;
-    this.shadow.range = 120;
+    this.shadow.range = 180;
 
-    await sleep(40);
+    await sleep(50);
+    PIXI.shadows.filter.ambientLight = 0.15;
     this.shadow.destroy();
   }
 }
@@ -46740,7 +46736,7 @@ const PIXI = require('pixi.js');
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
-const { world } = require('../../engine/shadows');
+// const { world } = require('../../engine/shadows');
 
 class Light {
   constructor() {
@@ -46755,13 +46751,14 @@ class Light {
 
   set_position({x, y}) { this.shadow.position.set(x, y); }
 
-  remove() { world.removeChild(this.shadow); }
-  async wait(time) {
+  remove() { visual_effects_container.removeChild(this.shadow); }
+
+  add() { visual_effects_container.addChild(this.shadow); }
+
+  async wait(time, callback)  {
     await sleep(time);
 
-    world.addChild(this.shadow);
-    //TODO
-    this.strike.start();
+    callback();
   }
 }
 
@@ -46770,27 +46767,28 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":237,"../../engine/shadows":241,"pixi.js":150}],222:[function(require,module,exports){
+},{"../../engine/pixi_containers":237,"pixi.js":150}],222:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
 const { visual_effects_container } = require('../../../engine/pixi_containers');
 const { Light } = require('../light_model');
+const { Flicker } = require('../attributes/flicker');
 
 class Candle extends Light {
   constructor() {
     super();
 
+    this.add_component(new Flicker(this.shadow));
     this.shadow.alpha = 0;
     this.shadow.pointCount = 1;
     this.shadow.range = 200;
     this.shadow.overlayLightLength = 200;
     this.shadow.intensity = 0.5;
     this.shadow.ambientLight = 0.5;
-
-    PIXI.shadows.filter.ambientLight = 0.02;
   }
 
+  //TODO this shouldnt be here
   add_candle() {
     const candle_sprite = PIXI.Sprite.fromFrame('small_candle');
     candle_sprite.anchor.set(0.5);
@@ -46799,16 +46797,26 @@ class Candle extends Light {
     candle_sprite.position.copy(this.shadow);
 
     visual_effects_container.addChild(candle_sprite);
-
-    PIXI.shadows.filter.ambientLight = 0.13;
   }
+
+  with_flickering() {
+    const candle_wick = new Candle();
+
+    candle_wick.set_position({ x: 1040, y: 400 });
+    candle_wick.shadow.range = 15;
+    candle_wick.shadow.alpha = 1;
+    candle_wick.shadow.intensity = 1;
+    this.flicker.start();
+    candle_wick.flicker.start();
+  }
+
 }
 
 module.exports = {
   Candle,
 };
 
-},{"../../../engine/pixi_containers":237,"../light_model":221,"pixi.js":150}],223:[function(require,module,exports){
+},{"../../../engine/pixi_containers":237,"../attributes/flicker":218,"../light_model":221,"pixi.js":150}],223:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46845,16 +46853,12 @@ module.exports = {
 },{"../../sound":225,"../attributes/flicker":218,"../attributes/strike":219,"../light_model":221,"pixi.js":150}],224:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-
-const { Track  } = require('../../sound');
 const { Light  } = require('../light_model');
 const { Strike } = require('../attributes/strike');
 
 class Lighter extends Light {
   constructor() {
     super();
-
     this.add_component(new Strike(this.shadow));
 
     this.shadow.alpha = 0;
@@ -46863,10 +46867,6 @@ class Lighter extends Light {
     this.shadow.overlayLightLength = 200;
     this.shadow.intensity = 0.5;
     this.shadow.ambientLight = 0.5;
-    this.sound = new Track('lighter.wav');
-    this.sound.volume = 0.03;
-
-    PIXI.shadows.filter.ambientLight = 0.02;
   }
 }
 
@@ -46874,7 +46874,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../sound":225,"../attributes/strike":219,"../light_model":221,"pixi.js":150}],225:[function(require,module,exports){
+},{"../attributes/strike":219,"../light_model":221}],225:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -47053,14 +47053,21 @@ module.exports = {
 'use strict';
 
 const { world } = require('../engine/shadows');
+const { Tween } = require('../engine/tween');
 
 class Camera {
   constructor() {
     this.sprite = world;
+
+    this.add_component(new Tween(this.sprite));
   }
 
-  set_position(x, y) {
-    world.position.set(x, y);
+  add_component(component) { this[component.name] = component; }
+
+  remove_component(name) { delete this[name]; }
+
+  set_position({ x, y }) {
+    this.sprite.position.set(x, y);
   }
 }
 
@@ -47068,7 +47075,7 @@ module.exports = {
   Camera,
 };
 
-},{"../engine/shadows":241}],232:[function(require,module,exports){
+},{"../engine/shadows":241,"../engine/tween":243}],232:[function(require,module,exports){
 'use strict';
 
 const entities = [];
@@ -47770,13 +47777,23 @@ const PIXI = require('pixi.js');
 
 const { gui_container } = require('./pixi_containers');
 
-class tween {
+class Tween {
   constructor(sprite) {
-    this.sprite = sprite;
+    this.name   = 'tween';
 
-    this.path = new PIXI.tween.TweenPath();
-    this.path.moveTo(sprite.x, sprite.y);
+    this.sprite = sprite;
+    this.path   = new PIXI.tween.TweenPath();
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire  = true;
   }
+
+  from(start) { this.path.moveTo(start.x, start.y); }
+
+  to(finish) { this.path.lineTo(finish.x, finish.y); }
+
+  move_to({ x, y }) { this.path.lineTo(x, y); }
+
+  smooth() { this.movement.easing = PIXI.tween.Easing.inOutQuad(); }
 
   add_path(tween_path) {
     for (let i = 1; i < tween_path.length; i++) {
@@ -47790,17 +47807,15 @@ class tween {
   }
 
   start(time) {
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
-    this.movement.expire  = true;
-    this.movement.path   = this.path;
-    this.movement.time   = time;
+    this.movement.path = this.path;
+    this.movement.time = time;
 
     this.movement.start();
   }
 
   show() {
     const graphical_path = new PIXI.Graphics();
-    graphical_path.lineStyle(5, 0xffffff, 0.1);
+    graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
 
     gui_container.addChild(graphical_path);
@@ -47809,7 +47824,7 @@ class tween {
 
 
 module.exports = {
-  tween,
+  Tween,
 };
 
 

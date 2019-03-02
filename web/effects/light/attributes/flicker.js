@@ -10,15 +10,24 @@ class Flicker {
   }
 
   start() {
-    const flicker_timer  = timer.createTimer(200);
-    flicker_timer.repeat = 25;
+    const flicker_timer  = timer.createTimer(140);
+    flicker_timer.repeat = 100;
 
     flicker_timer.on('repeat', () => {
+      if(this.shadow.intensity > 0.4) {
+        return this.shadow.intensity += ( Math.random()/16 - 0.05) ;
+      }
+      if(this.shadow.intensity < 0.9) {
+        return this.shadow.intensity += ( Math.random()/16 + 0.05) ;
+      }
+
       this.shadow.intensity += ( Math.random()/16 - 0.03) ;
     });
 
-    flicker_timer.on('end', function() {
-      this.remove();
+    flicker_timer.on('end', () => {
+      this.shadow.intensity = 0.5;
+
+      flicker_timer.remove();
     });
 
     flicker_timer.start();

@@ -3,7 +3,7 @@ const PIXI = require('pixi.js');
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
-const { world } = require('../../engine/shadows');
+// const { world } = require('../../engine/shadows');
 
 class Light {
   constructor() {
@@ -18,13 +18,14 @@ class Light {
 
   set_position({x, y}) { this.shadow.position.set(x, y); }
 
-  remove() { world.removeChild(this.shadow); }
-  async wait(time) {
+  remove() { visual_effects_container.removeChild(this.shadow); }
+
+  add() { visual_effects_container.addChild(this.shadow); }
+
+  async wait(time, callback)  {
     await sleep(time);
 
-    world.addChild(this.shadow);
-    //TODO
-    this.strike.start();
+    callback();
   }
 }
 

@@ -7,8 +7,7 @@ const { Candle    } = require('../effects/light/types/candle');
 
 const { Cutscene_NPC   } = require('../character/types/npc');
 const { background_container } = require('../engine/pixi_containers');
-const { world  } = require('../engine/shadows');
-const { tween  } = require('../engine/tween');
+const { Tween  } = require('../engine/tween');
 const { Camera } = require('../engine/camera');
 
 function create_wall(x, y) {
@@ -68,10 +67,9 @@ class intro_cutscene {
     create_bit(1100, 248);
     create_wall(1400, 250);
 
-    //TODO All very dependent without
     const lantern_light = new Dev_Light();
     lantern_light.set_position(800, 100);
-    lantern_light.tween = new tween(lantern_light.shadow);
+    lantern_light.tween = new Tween(lantern_light.shadow);
     lantern_light.tween.add_path([
       {x: 1100, y: 100},
       {x: 1250, y: 140},
@@ -83,39 +81,31 @@ class intro_cutscene {
 
     lantern_light.tween.show();
     lantern_light.tween.start(10000);
-    lantern_light.flicker.start();
     lantern_light.tween.movement.on('end', () => lantern_light.remove());
 
     const pocket_lighter = new Lighter();
-    pocket_lighter.set_position({ x: 1040, y:400 });
-    pocket_lighter.wait(6000);
+    pocket_lighter.set_position({ x: 1040, y: 400 });
+    pocket_lighter.wait(6000, async () => {
+      const candle_stick = new Candle();
 
-    const candle_stick = new Candle();
-    candle_stick.set_position({ x: 1040, y:380});
-    candle_stick.add_candle();
-    setTimeout(() => {
-      console.log(candle_stick)
-      candle_stick.shadow.alpha = 1;
-    }, 8500);
+      candle_stick.set_position({ x: 1040, y: 400 });
+      candle_stick.add_candle();
+
+      await pocket_lighter.strike.start();
+
+      candle_stick.with_flickering();
+
+      candle_stick.shadow.alpha = 0.2;
+      candle_stick.shadow.range = 150;
+      candle_stick.shadow.intensity = 0.4;
+    });
 
     const camera = new Camera();
-    camera.set_position(100, 100);
-    camera.tween = new tween(camera.sprite);
-    camera.tween.add_path([
-      {x: -50, y:  50},
-      {x: -50, y:  50},
-      {x:  50, y: -50},
-      {x:  50, y: -50},
-    ]);
-
-    camera.tween.show();
-    camera.tween.start(7000);
-
-    world.on('pointermove', event => {
-      const mouse_position = event.data.getLocalPosition(world);
-
-      lantern_light.set_position(mouse_position.x, mouse_position.y);
-    });
+    camera.tween.from({ x: -120, y: -150 });
+    camera.tween.to({ x: -100,  y: -120 });
+    camera.tween.to({ x: 120, y: -100 });
+    camera.tween.smooth();
+    camera.tween.start(13000);
   }
 }
 
