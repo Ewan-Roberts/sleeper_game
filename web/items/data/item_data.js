@@ -1,11 +1,4 @@
 'use strict';
-const PIXI = require('pixi.js');
-
-const app  = require('../engine/app');
-
-const {
-  generate_number_between_min_and_max,
-} = require('../utils/math');
 
 //https://www.uihere.com/free-graphics/search?q=knife
 const items = [
@@ -298,66 +291,7 @@ const items = [
   },
 ];
 
-function get_random_items(max) {
-  const number_of_items_to_return = generate_number_between_min_and_max(1, max|2);
-
-  const item_array = [];
-
-  for(let i = 0; i < number_of_items_to_return; i++) {
-    item_array.push(items[Math.floor(Math.random()*items.length)]);
-  }
-
-  return item_array;
-}
-
-const get_item = name => {
-  let found_item = items.find(item => item.name === name);
-
-  if(!found_item) found_item = items.find(item => item.item_name === name);
-
-  if(!found_item) throw new Error('No item found for ' + JSON.stringify( name ));
-
-  return found_item;
-};
-
-const get_item_by_name = name => {
-  const found_item = items.find(item => item.name === name);
-
-  if(!found_item) throw new Error('no item found based on name ' + name);
-
-  return found_item;
-};
-
-const get_item_by_id = id => items.find(item => item.id === id);
-
-const extract_item_image_by_name = name => {
-  const item = get_item_by_name(name);
-  const image_name = item ? item.image_name: name;
-
-  if(!image_name) throw new Error('Can not find ' + name);
-
-  const found_sprite = PIXI.Sprite.fromFrame(image_name);
-  const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
-
-  return image_from_spritesheet;
-};
-
-
-const extract_image_by_item_object = item => {
-  const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
-
-  const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
-
-  return image_from_spritesheet;
-};
-
-
 module.exports = {
-  get_item,
-  get_item_by_name,
-  get_item_by_id,
-  get_random_items,
-  extract_item_image_by_name,
-  extract_image_by_item_object,
+  items,
 };
 
