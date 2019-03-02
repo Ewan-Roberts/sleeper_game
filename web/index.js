@@ -20,4 +20,7 @@ loader.load(async function() {
 
   require('./view/view_inventory');
 
+  const { update_build_version } = require('./view/build_info');
+
+  await update_build_version();
 });

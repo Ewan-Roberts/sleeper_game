@@ -11,7 +11,8 @@ web_server.listen(port, () => console.log('server on:' + port)); // eslint-disab
 app.use(express.static('./public'));
 app.get('/', res => res.sendFile(`${__dirname}/public/index.html`));
 
-const { github } = require('./scripts/automation');
+const { Build } = require('./scripts/automation');
 
-app.post('/automation', (request, response) => github(request, response));
+app.post('/automation', (request, response) => Build.set_version(request, response));
+app.get( '/automation', (request, response) => Build.get_version(request, response));
 
