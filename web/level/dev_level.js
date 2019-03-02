@@ -3,10 +3,11 @@
 const PIXI = require('pixi.js');
 
 const { world    } = require('../engine/shadows');
-const { Campfire } = require('../items/fire_place');
-const { Chest    } = require('../items/chest');
-const { Note     } = require('../items/Note');
-const { Backpack } = require('../items/back_pack');
+// const { Campfire } = require('../items/fire_place');
+// const { Chest    } = require('../items/chest');
+// const { Note     } = require('../items/Note');
+// const { Backpack } = require('../items/back_pack');
+const { Weapon   } = require('../items/item_model');
 
 const { Level          } = require('./level_utils');
 const { intro_cutscene } = require('../cutscene/intro.js');
@@ -111,12 +112,12 @@ class DevelopmentLevel {
 
   test_note() {
 
-    const note = new Note();
-    note.set_position({ x: 900, y: 900 });
-    note.without_character_collision();
-    note.without_projectile_collision();
-    note.immovable();
-    note.with_action_on_click();
+    // const note = new Note();
+    // note.set_position({ x: 900, y: 900 });
+    // note.without_character_collision();
+    // note.without_projectile_collision();
+    // note.immovable();
+    // note.with_action_on_click();
 
   }
 

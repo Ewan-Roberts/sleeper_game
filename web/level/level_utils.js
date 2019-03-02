@@ -15,9 +15,9 @@ const { Player } = require('../character/types/player.js');
 //const { NetworkCharacter } = require('../character/network/network_player.js');
 
 // const { Door     } = require('./door.js');
-const { Note     } = require('../items/note');
-const { Chest    } = require('../items/chest');
-const { Campfire } = require('../items/fire_place');
+// const { Note     } = require('../items/note');
+// const { Chest    } = require('../items/chest');
+// const { Campfire } = require('../items/fire_place');
 
 class Level {
   constructor() {
