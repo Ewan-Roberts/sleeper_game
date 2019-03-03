@@ -1,6 +1,5 @@
 'use strict';
 const PIXI = require('pixi.js');
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
 // const { world } = require('../../engine/shadows');
@@ -21,12 +20,6 @@ class Light {
   remove() { visual_effects_container.removeChild(this.shadow); }
 
   add() { visual_effects_container.addChild(this.shadow); }
-
-  async wait(time, callback)  {
-    await sleep(time);
-
-    callback();
-  }
 }
 
 module.exports = {

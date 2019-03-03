@@ -9,12 +9,14 @@ const { background_container } = require('../../engine/pixi_containers');
 const { Camera               } = require('../../engine/camera');
 const { Wall                 } = require('../../items/types/wall');
 
+const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+
 class Intro {
   constructor() {
     this.player         = new Cutscene_NPC();
-    this.player2         = new Cutscene_NPC();
-
+    this.player2        = new Cutscene_NPC();
     this.background     = PIXI.Sprite.fromFrame('debug_room');
+    this.candle_stick   = new Candle();
     this.top_left_wall  = new Wall();
     this.top_right_wall = new Wall();
     this.left_pole      = new Wall();
@@ -65,26 +67,30 @@ class Intro {
       {x: 2551, y: 110},
     ]);
 
+    this.candle_stick.set_position({ x: 1040, y: 400 });
+    this.candle_stick.shadow.alpha = 0.2;
+    this.candle_stick.shadow.range = 150;
+    this.candle_stick.shadow.intensity = 0.4;
+
     this.pocket_lighter.set_position({ x: 1040, y: 400 });
   }
 
-  start() {
+  async start() {
     global.set_light_level(0.4);
 
-    this.camera.tween.start(13000);
-    this.lantern_light.tween.start(10000);
-    this.pocket_lighter.wait(6000, async () => {
+    this.camera.tween.time = 13000;
+    this.camera.tween.start();
 
-      const candle_stick = new Candle();
-      candle_stick.set_position({ x: 1040, y: 400 });
+    this.lantern_light.tween.time = 10000;
+    this.lantern_light.tween.start();
 
-      await this.pocket_lighter.strike.start();
+    await sleep(6000);
 
-      candle_stick.start_flickering();
-      candle_stick.shadow.alpha = 0.2;
-      candle_stick.shadow.range = 150;
-      candle_stick.shadow.intensity = 0.4;
-    });
+    this.pocket_lighter.strike.start();
+
+    await sleep(2500);
+
+    this.candle_stick.start_flickering();
   }
 }
 

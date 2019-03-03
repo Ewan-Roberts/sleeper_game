@@ -11,6 +11,8 @@ class Tween {
     this.path   = new PIXI.tween.TweenPath();
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire  = true;
+
+    this.time = 0;
   }
 
   from(start) { this.path.moveTo(start.x, start.y); }
@@ -31,11 +33,16 @@ class Tween {
         15);
     }
   }
+  set time(amount) {
+    this.movement.time = amount;
+  }
 
-  start(time) {
+  start() {
+    if(!this.movement.time) {
+      throw new Error('time not set for tween');
+    }
+
     this.movement.path = this.path;
-    this.movement.time = time;
-
     this.movement.start();
   }
 

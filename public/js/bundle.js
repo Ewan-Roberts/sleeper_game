@@ -46287,12 +46287,14 @@ const { background_container } = require('../../engine/pixi_containers');
 const { Camera               } = require('../../engine/camera');
 const { Wall                 } = require('../../items/types/wall');
 
+const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+
 class Intro {
   constructor() {
     this.player         = new Cutscene_NPC();
-    this.player2         = new Cutscene_NPC();
-
+    this.player2        = new Cutscene_NPC();
     this.background     = PIXI.Sprite.fromFrame('debug_room');
+    this.candle_stick   = new Candle();
     this.top_left_wall  = new Wall();
     this.top_right_wall = new Wall();
     this.left_pole      = new Wall();
@@ -46343,26 +46345,30 @@ class Intro {
       {x: 2551, y: 110},
     ]);
 
+    this.candle_stick.set_position({ x: 1040, y: 400 });
+    this.candle_stick.shadow.alpha = 0.2;
+    this.candle_stick.shadow.range = 150;
+    this.candle_stick.shadow.intensity = 0.4;
+
     this.pocket_lighter.set_position({ x: 1040, y: 400 });
   }
 
-  start() {
+  async start() {
     global.set_light_level(0.4);
 
-    this.camera.tween.start(13000);
-    this.lantern_light.tween.start(10000);
-    this.pocket_lighter.wait(6000, async () => {
+    this.camera.tween.time = 13000;
+    this.camera.tween.start();
 
-      const candle_stick = new Candle();
-      candle_stick.set_position({ x: 1040, y: 400 });
+    this.lantern_light.tween.time = 10000;
+    this.lantern_light.tween.start();
 
-      await this.pocket_lighter.strike.start();
+    await sleep(6000);
 
-      candle_stick.start_flickering();
-      candle_stick.shadow.alpha = 0.2;
-      candle_stick.shadow.range = 150;
-      candle_stick.shadow.intensity = 0.4;
-    });
+    this.pocket_lighter.strike.start();
+
+    await sleep(2500);
+
+    this.candle_stick.start_flickering();
   }
 }
 
@@ -46486,7 +46492,6 @@ module.exports = {
 },{"../../sound":224,"pixi.js":150}],220:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
 // const { world } = require('../../engine/shadows');
@@ -46507,12 +46512,6 @@ class Light {
   remove() { visual_effects_container.removeChild(this.shadow); }
 
   add() { visual_effects_container.addChild(this.shadow); }
-
-  async wait(time, callback)  {
-    await sleep(time);
-
-    callback();
-  }
 }
 
 module.exports = {
@@ -46814,9 +46813,8 @@ module.exports = {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],230:[function(require,module,exports){
 'use strict';
-
-const { world } = require('../engine/shadows');
-const { Tween } = require('../engine/tween');
+const { world } = require('./shadows');
+const { Tween } = require('./tween');
 
 class Camera {
   constructor() {
@@ -46838,7 +46836,7 @@ module.exports = {
   Camera,
 };
 
-},{"../engine/shadows":241,"../engine/tween":243}],231:[function(require,module,exports){
+},{"./shadows":241,"./tween":243}],231:[function(require,module,exports){
 'use strict';
 
 const entities = [];
@@ -47567,6 +47565,8 @@ class Tween {
     this.path   = new PIXI.tween.TweenPath();
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire  = true;
+
+    this.time = 0;
   }
 
   from(start) { this.path.moveTo(start.x, start.y); }
@@ -47587,11 +47587,16 @@ class Tween {
         15);
     }
   }
+  set time(amount) {
+    this.movement.time = amount;
+  }
 
-  start(time) {
+  start() {
+    if(!this.movement.time) {
+      throw new Error('time not set for tween');
+    }
+
     this.movement.path = this.path;
-    this.movement.time = time;
-
     this.movement.start();
   }
 
