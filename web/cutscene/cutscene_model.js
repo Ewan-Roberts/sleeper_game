@@ -12,7 +12,6 @@ class Cutscene {
   stop() {}
 }
 
-
 module.exports = {
   Cutscene,
 };

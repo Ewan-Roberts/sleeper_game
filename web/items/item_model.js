@@ -12,7 +12,6 @@ class Item {
     this.sprite.width  = 50;
     this.sprite.height = 50;
     this.sprite.anchor.set(0.5);
-
   }
 
   set height(value) {

@@ -46308,8 +46308,8 @@ class Intro {
     this.right_pole     = new Wall();
     this.box            = new Chest();
 
-    this.candle_stick   = new Candle();
-    this.candle_stick_2 = new Candle();
+    this.wall_candle    = new Candle();
+    this.table_candle   = new Candle();
     this.lantern        = new Lantern();
     this.sun            = new Sun();
     this.ambient        = new Ambient();
@@ -46335,7 +46335,7 @@ class Intro {
     this.top_right_wall.shadow = true;
     this.top_right_wall.width = 300;
 
-    this.right_wall.set_position({ x: 1450, y: 400 });
+    this.right_wall.set_position({ x: 1450, y: 393 });
     this.right_wall.shadow = true;
     this.right_wall.rotation = 1.57;
 
@@ -46370,15 +46370,15 @@ class Intro {
       {x: 2551, y: 110},
     ]);
 
-    this.box.set_position({ x: 950, y: 450 });
+    this.box.set_position({ x: 950, y: 480 });
     this.box.shadow = true;
     this.box.height = 25;
     this.box.width = 50;
-    this.box.rotation = 1;
+    this.box.rotation = 1.1;
 
-    this.candle_stick_2.set_position({ x: 915, y: 510 });
+    this.table_candle.set_position({ x: 915, y: 510 });
 
-    this.candle_stick.set_position({ x: 1115, y: 410 });
+    this.wall_candle.set_position({ x: 1115, y: 410 });
     this.lighter.set_position({ x: 1115, y: 410 });
     this.sun.set_position({ x: 1141, y: 0 });
   }
@@ -46386,8 +46386,10 @@ class Intro {
   async start() {
     global.set_light_level(0.4);
 
-    this.candle_stick.hide();
-    this.candle_stick_2.hide();
+    this.wall_candle.hide();
+    this.table_candle.hide();
+    this.lighter.hide();
+
     this.sun.show();
     this.sun.fade.in(0.05, 0.3);
 
@@ -46408,13 +46410,15 @@ class Intro {
     await sleep(6000);
     this.lighter.strike.start();
 
-    await sleep(2500);
-    this.candle_stick.show();
-    this.candle_stick.start_flickering();
+    global.set_light_level(0.15);
 
     await sleep(2500);
-    this.candle_stick_2.show();
-    this.candle_stick_2.start_flickering();
+    this.wall_candle.show();
+    this.wall_candle.start_flickering();
+
+    await sleep(2500);
+    this.table_candle.show();
+    this.table_candle.start_flickering();
   }
 }
 
@@ -46466,7 +46470,7 @@ class Fade {
         return fade_timer.remove();
       }
 
-      return this.shadow.intensity += speed;
+      this.shadow.intensity += speed;
     });
 
     fade_timer.on('end', () => fade_timer.remove());
@@ -46484,12 +46488,11 @@ class Fade {
         return fade_timer.remove();
       }
 
-      return this.shadow.intensity -= speed;
+      this.shadow.intensity -= speed;
     });
 
     fade_timer.on('end', () => {
       this.entity.remove();
-
       fade_timer.remove();
     });
 
@@ -46545,7 +46548,7 @@ module.exports = {
 
 },{"../../../engine/ticker":244}],220:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+
 const { Track } = require('../../sound');
 const { sleep } = require('../../../engine/time');
 
@@ -46562,28 +46565,23 @@ class Strike {
     this.sound.play();
 
     await sleep(300);
-    this.shadow.alpha = 1;
-    this.shadow.intensity = 0.5;
+    this.shadow.alpha = 0.5;
     this.shadow.range = 110;
 
     await sleep(40);
     this.shadow.alpha = 0;
 
     await sleep(1100);
-    this.shadow.alpha = 1;
-    this.shadow.intensity = 0.4;
+    this.shadow.alpha = 0.4;
     this.shadow.range = 140;
 
     await sleep(30);
     this.shadow.alpha = 0;
 
     await sleep(1000);
-    this.shadow.alpha = 1;
-    this.shadow.intensity = 0.6;
+    this.shadow.alpha = 0.6;
     this.shadow.range = 180;
 
-    await sleep(50);
-    PIXI.shadows.filter.ambientLight = 0.15;
     this.shadow.destroy();
   }
 }
@@ -46592,7 +46590,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../../engine/time":245,"../../sound":227,"pixi.js":150}],221:[function(require,module,exports){
+},{"../../../engine/time":245,"../../sound":227}],221:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46601,6 +46599,7 @@ const { visual_effects_container } = require('../../engine/pixi_containers');
 class Light {
   constructor() {
     this.shadow = new PIXI.shadows.Shadow(500);
+    this.shadow.anchor.set(0.5);
 
     visual_effects_container.addChild(this.shadow);
   }
@@ -46688,46 +46687,40 @@ class Candle extends Light {
     super();
 
     this.add_component(new Flicker(this.shadow));
-    this.shadow.alpha = 0.2;
+
+    this.shadow.alpha      = 0.2;
     this.shadow.pointCount = 1;
-    this.shadow.range = 150;
-    this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.4;
-    this.shadow.ambientLight = 0.5;
+    this.shadow.range      = 150;
+    this.shadow.intensity  = 0.4;
+
+    this.sprite = PIXI.Sprite.fromFrame('small_candle');
+    this.sprite.anchor.set(0.5);
+    this.sprite.width  = 20;
+    this.sprite.height = 20;
+
+    visual_effects_container.addChild(this.sprite);
   }
 
   // This overwrites the base class version
   set_position({x, y}) {
     this.shadow.position.set(x, y);
 
-    this._add_candle();
-
-    if(this.candle_sprite) {
-      this.candle_sprite.position.copy(this.shadow);
+    if(this.sprite) {
+      this.sprite.position.copy(this.shadow);
     }
-  }
-
-  _add_candle() {
-    this.candle_sprite = PIXI.Sprite.fromFrame('small_candle');
-    this.candle_sprite.anchor.set(0.5);
-    this.candle_sprite.width = 20;
-    this.candle_sprite.height = 20;
-    this.candle_sprite.position.copy(this.shadow);
-
-    visual_effects_container.addChild(this.candle_sprite);
   }
 
   start_flickering() {
     const candle_wick = new Candle();
 
-    candle_wick.set_position(this.candle_sprite);
+    candle_wick.set_position(this.sprite);
     candle_wick.shadow.range = 15;
     candle_wick.shadow.alpha = 1;
     candle_wick.shadow.intensity = 1;
-    this.flicker.start();
     candle_wick.flicker.start();
-  }
 
+    this.flicker.start();
+  }
 }
 
 module.exports = {
@@ -46749,10 +46742,8 @@ class Lantern extends Light {
     this.add_component(new Tween(this.shadow));
 
     this.shadow.pointCount = 1;
-    this.shadow.range = 500;
-    this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.6;
-    this.shadow.ambientLight = 0.5;
+    this.shadow.range      = 500;
+    this.shadow.intensity  = 0.6;
   }
 }
 
@@ -46771,12 +46762,9 @@ class Lighter extends Light {
     super();
     this.add_component(new Strike(this.shadow));
 
-    this.shadow.alpha = 0;
     this.shadow.pointCount = 1;
-    this.shadow.range = 200;
-    this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.5;
-    this.shadow.ambientLight = 0.5;
+    this.shadow.range      = 200;
+    this.shadow.intensity  = 0.5;
   }
 }
 
@@ -46797,10 +46785,8 @@ class Sun extends Light {
     this.add_component(new Fade(this));
 
     this.shadow.pointCount = 1;
-    this.shadow.range = 500;
-    this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.3;
-    this.shadow.ambientLight = 0.2;
+    this.shadow.range      = 500;
+    this.shadow.intensity  = 0.3;
   }
 }
 
@@ -48192,7 +48178,6 @@ class Item {
     this.sprite.width  = 50;
     this.sprite.height = 50;
     this.sprite.anchor.set(0.5);
-
   }
 
   set height(value) {

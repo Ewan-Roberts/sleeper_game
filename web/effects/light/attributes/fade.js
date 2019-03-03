@@ -19,7 +19,7 @@ class Fade {
         return fade_timer.remove();
       }
 
-      return this.shadow.intensity += speed;
+      this.shadow.intensity += speed;
     });
 
     fade_timer.on('end', () => fade_timer.remove());
@@ -37,12 +37,11 @@ class Fade {
         return fade_timer.remove();
       }
 
-      return this.shadow.intensity -= speed;
+      this.shadow.intensity -= speed;
     });
 
     fade_timer.on('end', () => {
       this.entity.remove();
-
       fade_timer.remove();
     });
 

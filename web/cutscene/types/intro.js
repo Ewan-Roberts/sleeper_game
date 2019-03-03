@@ -28,8 +28,8 @@ class Intro {
     this.right_pole     = new Wall();
     this.box            = new Chest();
 
-    this.candle_stick   = new Candle();
-    this.candle_stick_2 = new Candle();
+    this.wall_candle    = new Candle();
+    this.table_candle   = new Candle();
     this.lantern        = new Lantern();
     this.sun            = new Sun();
     this.ambient        = new Ambient();
@@ -55,7 +55,7 @@ class Intro {
     this.top_right_wall.shadow = true;
     this.top_right_wall.width = 300;
 
-    this.right_wall.set_position({ x: 1450, y: 400 });
+    this.right_wall.set_position({ x: 1450, y: 393 });
     this.right_wall.shadow = true;
     this.right_wall.rotation = 1.57;
 
@@ -90,15 +90,15 @@ class Intro {
       {x: 2551, y: 110},
     ]);
 
-    this.box.set_position({ x: 950, y: 450 });
+    this.box.set_position({ x: 950, y: 480 });
     this.box.shadow = true;
     this.box.height = 25;
     this.box.width = 50;
-    this.box.rotation = 1;
+    this.box.rotation = 1.1;
 
-    this.candle_stick_2.set_position({ x: 915, y: 510 });
+    this.table_candle.set_position({ x: 915, y: 510 });
 
-    this.candle_stick.set_position({ x: 1115, y: 410 });
+    this.wall_candle.set_position({ x: 1115, y: 410 });
     this.lighter.set_position({ x: 1115, y: 410 });
     this.sun.set_position({ x: 1141, y: 0 });
   }
@@ -106,8 +106,10 @@ class Intro {
   async start() {
     global.set_light_level(0.4);
 
-    this.candle_stick.hide();
-    this.candle_stick_2.hide();
+    this.wall_candle.hide();
+    this.table_candle.hide();
+    this.lighter.hide();
+
     this.sun.show();
     this.sun.fade.in(0.05, 0.3);
 
@@ -128,13 +130,15 @@ class Intro {
     await sleep(6000);
     this.lighter.strike.start();
 
-    await sleep(2500);
-    this.candle_stick.show();
-    this.candle_stick.start_flickering();
+    global.set_light_level(0.15);
 
     await sleep(2500);
-    this.candle_stick_2.show();
-    this.candle_stick_2.start_flickering();
+    this.wall_candle.show();
+    this.wall_candle.start_flickering();
+
+    await sleep(2500);
+    this.table_candle.show();
+    this.table_candle.start_flickering();
   }
 }
 

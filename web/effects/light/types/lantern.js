@@ -12,10 +12,8 @@ class Lantern extends Light {
     this.add_component(new Tween(this.shadow));
 
     this.shadow.pointCount = 1;
-    this.shadow.range = 500;
-    this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.6;
-    this.shadow.ambientLight = 0.5;
+    this.shadow.range      = 500;
+    this.shadow.intensity  = 0.6;
   }
 }
 
