@@ -33,6 +33,7 @@ class Tween {
         15);
     }
   }
+
   set time(amount) {
     this.movement.time = amount;
   }

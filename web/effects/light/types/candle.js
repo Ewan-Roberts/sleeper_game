@@ -6,7 +6,7 @@ const { Light } = require('../light_model');
 const { Flicker } = require('../attributes/flicker');
 
 class Candle extends Light {
-  constructor(x,y) {
+  constructor() {
     super();
 
     this.add_component(new Flicker(this.shadow));
@@ -16,12 +16,14 @@ class Candle extends Light {
     this.shadow.overlayLightLength = 200;
     this.shadow.intensity = 0.4;
     this.shadow.ambientLight = 0.5;
-    this._add_candle({x, y});
   }
 
   // This overwrites the base class version
   set_position({x, y}) {
     this.shadow.position.set(x, y);
+
+    this._add_candle();
+
     if(this.candle_sprite) {
       this.candle_sprite.position.copy(this.shadow);
     }
@@ -40,7 +42,7 @@ class Candle extends Light {
   start_flickering() {
     const candle_wick = new Candle();
 
-    candle_wick.set_position({ x: 1040, y: 400 });
+    candle_wick.set_position(this.candle_sprite);
     candle_wick.shadow.range = 15;
     candle_wick.shadow.alpha = 1;
     candle_wick.shadow.intensity = 1;
