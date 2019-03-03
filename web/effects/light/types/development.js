@@ -3,10 +3,11 @@
 const PIXI = require('pixi.js');
 // const { visual_effects_container } = require('../../engine/pixi_containers');
 
-const { Track  } = require('../../sound');
-const { Light  } = require('../light_model');
-const { Strike } = require('../attributes/strike');
+const { Track   } = require('../../sound');
+const { Light   } = require('../light_model');
+const { Strike  } = require('../attributes/strike');
 const { Flicker } = require('../attributes/flicker');
+const { Tween   } = require('../../../engine/tween');
 
 class Dev_Light extends Light {
   constructor() {
@@ -14,6 +15,7 @@ class Dev_Light extends Light {
 
     this.add_component(new Strike());
     this.add_component(new Flicker(this.shadow));
+    this.add_component(new Tween(this.shadow));
 
     this.shadow.pointCount = 1;
     this.shadow.range = 500;

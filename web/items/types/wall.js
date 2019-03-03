@@ -2,7 +2,7 @@
 
 const PIXI = require('pixi.js');
 
-const { background_container } = require('../../engine/pixi_containers');
+const { collision_container } = require('../../engine/pixi_containers');
 
 class Wall {
   constructor() {
@@ -14,7 +14,7 @@ class Wall {
     this.wall.height = 20;
     this.wall.anchor.set(0.5);
 
-    background_container.addChild(this.wall);
+    collision_container.addChild(this.wall);
   }
 
   set height(value) {
@@ -43,7 +43,7 @@ class Wall {
 
   set shadow(state) {
     if(!state && this.shade) {
-      background_container.removeChild(this.shade);
+      collision_container.removeChild(this.shade);
     }
 
     this.shade = new PIXI.Sprite(this.wall_texture);
@@ -52,7 +52,7 @@ class Wall {
     this.shade.width = 300;
     this.shade.height = 20;
     this.shade.anchor.set(0.5);
-    background_container.addChild(this.shade);
+    collision_container.addChild(this.shade);
   }
 }
 

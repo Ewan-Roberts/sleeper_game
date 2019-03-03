@@ -6,7 +6,7 @@ const { Light } = require('../light_model');
 const { Flicker } = require('../attributes/flicker');
 
 class Candle extends Light {
-  constructor() {
+  constructor(x,y) {
     super();
 
     this.add_component(new Flicker(this.shadow));
@@ -16,20 +16,28 @@ class Candle extends Light {
     this.shadow.overlayLightLength = 200;
     this.shadow.intensity = 0.5;
     this.shadow.ambientLight = 0.5;
+    this._add_candle({x, y});
   }
 
-  //TODO this shouldnt be here
-  add_candle() {
-    const candle_sprite = PIXI.Sprite.fromFrame('small_candle');
-    candle_sprite.anchor.set(0.5);
-    candle_sprite.width = 20;
-    candle_sprite.height = 20;
-    candle_sprite.position.copy(this.shadow);
-
-    visual_effects_container.addChild(candle_sprite);
+  // This overwrites the base class version
+  set_position({x, y}) {
+    this.shadow.position.set(x, y);
+    if(this.candle_sprite) {
+      this.candle_sprite.position.copy(this.shadow);
+    }
   }
 
-  with_flickering() {
+  _add_candle() {
+    this.candle_sprite = PIXI.Sprite.fromFrame('small_candle');
+    this.candle_sprite.anchor.set(0.5);
+    this.candle_sprite.width = 20;
+    this.candle_sprite.height = 20;
+    this.candle_sprite.position.copy(this.shadow);
+
+    visual_effects_container.addChild(this.candle_sprite);
+  }
+
+  start_flickering() {
     const candle_wick = new Candle();
 
     candle_wick.set_position({ x: 1040, y: 400 });

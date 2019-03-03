@@ -10,7 +10,7 @@ const {
 const { easystar } = require('../vendor/easystar');
 
 const {
-  generate_number_between_min_and_max,
+  random_number,
   radian,
 } = require('../utils/math');
 
@@ -48,7 +48,7 @@ class pathfind_sprite {
 
   static create_path(sprite, path_array) {
     const path = new PIXI.tween.TweenPath();
-    const random_number = () => generate_number_between_min_and_max(-30, 30);
+    const random_number = () => random_number(-30, 30);
 
     path.moveTo(sprite.x, sprite.y);
 

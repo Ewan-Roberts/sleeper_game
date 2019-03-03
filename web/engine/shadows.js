@@ -1,7 +1,6 @@
 
 'use strict';
 const PIXI = require('pixi.js');
-
 require('pixi-layers');
 require('pixi-shadows');
 
@@ -16,6 +15,7 @@ world.updateLayersOrder = function () {
     return b.zIndex - a.zIndex;
   });
 };
+
 
 //const shadow = new PIXI.shadows.Shadow(900, 1);
 //shadow.pointCount = 1;

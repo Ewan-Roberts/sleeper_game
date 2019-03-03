@@ -6,10 +6,12 @@ function distance_between_points(point_1, point_2) {
 
   return Math.sqrt((dx * dx) + (dy * dy));
 }
+//TODO replace random number with this
+// function random_number1() {
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
 
-//TODO make this function name longer
-// will round
-function generate_number_between_min_and_max(min, max) {
+function random_number(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
@@ -39,6 +41,6 @@ module.exports = {
   radian_positive,
   radian,
   angle_360,
-  generate_number_between_min_and_max,
+  random_number,
   distance_between_points,
 };
