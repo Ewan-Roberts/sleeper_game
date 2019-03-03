@@ -20,36 +20,39 @@ class Wall {
   set height(value) {
     this.wall.height = value;
 
-    if(this.shadow) {
-      this.shadow.height = value;
+    if(this.shade) {
+      this.shade.height = value;
     }
   }
 
   set width(value) {
     this.wall.width = value;
 
-    if(this.shadow) {
-      this.shadow.width = value;
+    if(this.shade) {
+      this.shade.width = value;
     }
   }
 
   set_position({x, y}) {
     this.wall.position.set(x, y);
 
-    if(this.shadow) {
-      this.shadow.position.set(x, y);
+    if(this.shade) {
+      this.shade.position.set(x, y);
     }
   }
 
-  with_shadow() {
-    this.shadow = new PIXI.Sprite(this.wall_texture);
+  set shadow(state) {
+    if(!state && this.shade) {
+      background_container.removeChild(this.shade);
+    }
 
-    this.shadow.parentGroup = PIXI.shadows.casterGroup;
-    this.shadow.position.copy(this.wall);
-    this.shadow.width = 300;
-    this.shadow.height = 20;
-    this.shadow.anchor.set(0.5);
-    background_container.addChild(this.shadow);
+    this.shade = new PIXI.Sprite(this.wall_texture);
+    this.shade.parentGroup = PIXI.shadows.casterGroup;
+    this.shade.position.copy(this.wall);
+    this.shade.width = 300;
+    this.shade.height = 20;
+    this.shade.anchor.set(0.5);
+    background_container.addChild(this.shade);
   }
 }
 
