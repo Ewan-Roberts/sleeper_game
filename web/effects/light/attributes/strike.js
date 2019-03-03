@@ -1,15 +1,14 @@
 'use strict';
 const PIXI = require('pixi.js');
 const { Track } = require('../../sound');
-
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+const { sleep } = require('../../../engine/time');
 
 class Strike {
   constructor(shadow) {
     this.name = 'strike';
 
     this.shadow = shadow;
-    this.sound = new Track('lighter.wav');
+    this.sound  = new Track('lighter.wav');
     this.sound.volume = 0;
   }
 

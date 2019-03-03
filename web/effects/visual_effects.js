@@ -2,11 +2,10 @@
 
 const PIXI          = require('pixi.js');
 const { ticker    } = require('../engine/ticker');
-const { world } = require('../engine/shadows');
+const { world     } = require('../engine/shadows');
 const { cutscene_container } = require('../engine/pixi_containers');
 
 class visual_effects {
-
   static fade_out_sprite(sprite, speed){
     const count_down = () => {
       if (sprite.alpha > 0) {

@@ -33,6 +33,14 @@ class Wall {
     }
   }
 
+  set rotation(value) {
+    this.wall.rotation = value;
+
+    if(this.shade) {
+      this.shade.rotation = value;
+    }
+  }
+
   set_position({x, y}) {
     this.wall.position.set(x, y);
 

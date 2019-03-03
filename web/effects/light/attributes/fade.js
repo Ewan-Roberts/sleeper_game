@@ -23,7 +23,6 @@ class Fade {
     });
 
     fade_timer.on('end', () => fade_timer.remove());
-
     fade_timer.start();
   }
 

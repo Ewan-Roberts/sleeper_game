@@ -17,6 +17,7 @@ class Flicker {
       if(this.shadow.intensity > 0.4) {
         return this.shadow.intensity += ( Math.random()/16 - 0.05) ;
       }
+
       if(this.shadow.intensity < 0.9) {
         return this.shadow.intensity += ( Math.random()/16 + 0.05) ;
       }

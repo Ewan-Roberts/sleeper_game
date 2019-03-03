@@ -17704,7 +17704,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":65,"../../../../textures/TextureMatrix":111,"../Filter":81,"path":260}],85:[function(require,module,exports){
+},{"../../../../math":65,"../../../../textures/TextureMatrix":111,"../Filter":81,"path":264}],85:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21504,7 +21504,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":39,"path":260}],103:[function(require,module,exports){
+},{"../../Shader":39,"path":264}],103:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27342,7 +27342,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":266}],120:[function(require,module,exports){
+},{"url":270}],120:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31916,7 +31916,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":60,"../../core/const":41,"path":260}],138:[function(require,module,exports){
+},{"../../core":60,"../../core/const":41,"path":264}],138:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32000,7 +32000,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":60,"path":260}],139:[function(require,module,exports){
+},{"../../core":60,"path":264}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33163,7 +33163,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":60,"path":260}],146:[function(require,module,exports){
+},{"../../core":60,"path":264}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33271,7 +33271,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":60,"path":260}],147:[function(require,module,exports){
+},{"../../core":60,"path":264}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33325,7 +33325,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":60,"path":260}],148:[function(require,module,exports){
+},{"../../core":60,"path":264}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33501,7 +33501,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":60,"path":260}],150:[function(require,module,exports){
+},{"../../core":60,"path":264}],150:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36168,7 +36168,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":136,"path":260,"resource-loader":189}],158:[function(require,module,exports){
+},{"../extras":136,"path":264,"resource-loader":189}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36531,7 +36531,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":60,"resource-loader":189,"url":266}],161:[function(require,module,exports){
+},{"../core":60,"resource-loader":189,"url":270}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38257,7 +38257,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":60,"../Mesh":162,"path":260,"pixi-gl-core":19}],169:[function(require,module,exports){
+},{"../../core":60,"../Mesh":162,"path":264,"pixi-gl-core":19}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45432,7 +45432,7 @@ module.exports = {
   Archer,
 };
 
-},{"../../engine/entity_container.js":231,"../../engine/ticker":242,"../attributes/melee":204,"../attributes/ranged":207,"../types/enemy":212}],200:[function(require,module,exports){
+},{"../../engine/entity_container.js":234,"../../engine/ticker":245,"../attributes/melee":204,"../attributes/ranged":207,"../types/enemy":212}],200:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45502,7 +45502,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/entity_container.js":231,"../../engine/ticker":242,"../attributes/melee":204,"../types/rat":215}],201:[function(require,module,exports){
+},{"../../engine/entity_container.js":234,"../../engine/ticker":245,"../attributes/melee":204,"../types/rat":215}],201:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -45570,7 +45570,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":246}],202:[function(require,module,exports){
+},{"../../items/item_manager":250}],202:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -45714,7 +45714,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":237,"../../engine/save_manager":240,"../../engine/shadows":241,"../../view/view_player_inventory":258}],203:[function(require,module,exports){
+},{"../../engine/pixi_containers":240,"../../engine/save_manager":243,"../../engine/shadows":244,"../../view/view_player_inventory":262}],203:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -45761,7 +45761,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/view_icons":227,"../../items/item_manager":246,"../../view/view_inventory":257}],204:[function(require,module,exports){
+},{"../../effects/view_icons":230,"../../items/item_manager":250,"../../view/view_inventory":261}],204:[function(require,module,exports){
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
@@ -45797,7 +45797,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":235}],205:[function(require,module,exports){
+},{"../../engine/melee":238}],205:[function(require,module,exports){
 'use strict';
 
 const { gui_container              } = require('../../engine/pixi_containers');
@@ -45868,7 +45868,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/view_aiming_cone":225,"../../engine/pixi_containers":237,"../../engine/ranged":238,"../../engine/shadows":241,"../../utils/math":253}],206:[function(require,module,exports){
+},{"../../effects/view_aiming_cone":228,"../../engine/pixi_containers":240,"../../engine/ranged":241,"../../engine/shadows":244,"../../utils/math":257}],206:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -45897,7 +45897,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":236,"pixi.js":150}],207:[function(require,module,exports){
+},{"../../engine/pathfind.js":239,"pixi.js":150}],207:[function(require,module,exports){
 'use strict';
 
 const { shoot_arrow      } = require('../../engine/ranged');
@@ -45938,7 +45938,7 @@ module.exports = {
   Range,
 };
 
-},{"../../effects/view_aiming_line":226,"../../engine/ranged":238}],208:[function(require,module,exports){
+},{"../../effects/view_aiming_line":229,"../../engine/ranged":241}],208:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46023,7 +46023,7 @@ module.exports = {
   Raycasting,
 };
 
-},{"../../engine/pixi_containers":237,"../../engine/raycasting":239,"../../engine/ticker":242,"pixi.js":150}],209:[function(require,module,exports){
+},{"../../engine/pixi_containers":240,"../../engine/raycasting":242,"../../engine/ticker":245,"pixi.js":150}],209:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -46058,7 +46058,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":242,"../../view/view_player_status_meter":259}],210:[function(require,module,exports){
+},{"../../engine/ticker":245,"../../view/view_player_status_meter":263}],210:[function(require,module,exports){
 'use strict';
 
 const { blood } = require('../../effects/blood');
@@ -46113,7 +46113,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":217,"../../engine/save_manager":240}],211:[function(require,module,exports){
+},{"../../effects/blood":217,"../../engine/save_manager":243}],211:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46146,7 +46146,7 @@ module.exports = {
 
 
 
-},{"../utils/math":253,"pixi.js":150}],212:[function(require,module,exports){
+},{"../utils/math":257,"pixi.js":150}],212:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
@@ -46181,7 +46181,7 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":237,"../animations/character":197,"../attributes/inventory":201,"../attributes/lootable":203,"../attributes/pathfind":206,"../attributes/raycasting":208,"../attributes/vitals":210,"../character_model":211}],213:[function(require,module,exports){
+},{"../../engine/pixi_containers":240,"../animations/character":197,"../attributes/inventory":201,"../attributes/lootable":203,"../attributes/pathfind":206,"../attributes/raycasting":208,"../attributes/vitals":210,"../character_model":211}],213:[function(require,module,exports){
 'use strict';
 
 const { cutscene_container } = require('../../engine/pixi_containers');
@@ -46205,7 +46205,7 @@ module.exports = {
   Cutscene_NPC,
 };
 
-},{"../../engine/pixi_containers":237,"../animations/character":197,"../character_model":211}],214:[function(require,module,exports){
+},{"../../engine/pixi_containers":240,"../animations/character":197,"../character_model":211}],214:[function(require,module,exports){
 'use strict';
 
 const { world     } = require('../../engine/shadows');
@@ -46242,7 +46242,7 @@ module.exports = {
   Player,
 };
 
-},{"../../engine/shadows":241,"../animations/character":197,"../attributes/inventory":201,"../attributes/keyboard":202,"../attributes/mouse":205,"../attributes/status_bar":209,"../attributes/vitals":210,"../character_model":211}],215:[function(require,module,exports){
+},{"../../engine/shadows":244,"../animations/character":197,"../attributes/inventory":201,"../attributes/keyboard":202,"../attributes/mouse":205,"../attributes/status_bar":209,"../attributes/vitals":210,"../character_model":211}],215:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -46274,20 +46274,21 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":237,"../animations/rat":198,"../attributes/inventory":201,"../attributes/lootable":203,"../attributes/pathfind":206,"../attributes/vitals":210,"../character_model":211}],216:[function(require,module,exports){
-(function (global){
+},{"../../engine/pixi_containers":240,"../animations/rat":198,"../attributes/inventory":201,"../attributes/lootable":203,"../attributes/pathfind":206,"../attributes/vitals":210,"../character_model":211}],216:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
-const { Dev_Light            } = require('../../effects/light/types/development');
+// const { Dev_Light            } = require('../../effects/light/types/development');
+const { Lantern              } = require('../../effects/light/types/lantern');
+const { Sun                  } = require('../../effects/light/types/sun');
 const { Lighter              } = require('../../effects/light/types/lighter');
 const { Candle               } = require('../../effects/light/types/candle');
+const { Ambient              } = require('../../effects/light/types/ambient');
 const { Cutscene_NPC         } = require('../../character/types/npc');
 const { background_container } = require('../../engine/pixi_containers');
 const { Camera               } = require('../../engine/camera');
+const { sleep                } = require('../../engine/time');
 const { Wall                 } = require('../../items/types/wall');
-
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 class Intro {
   constructor() {
@@ -46295,13 +46296,18 @@ class Intro {
     this.player2        = new Cutscene_NPC();
     this.background     = PIXI.Sprite.fromFrame('debug_room');
     this.candle_stick   = new Candle();
+
     this.top_left_wall  = new Wall();
     this.top_right_wall = new Wall();
+    this.right_wall     = new Wall();
+
     this.left_pole      = new Wall();
     this.right_pole     = new Wall();
     this.camera         = new Camera();
-    this.lantern_light  = new Dev_Light();
-    this.pocket_lighter = new Lighter();
+    this.lantern        = new Lantern();
+    this.sun            = new Sun();
+    this.ambient        = new Ambient();
+    this.lighter        = new Lighter();
   }
 
   // sets the elements in the Scene but wont start anything
@@ -46317,27 +46323,33 @@ class Intro {
     this.top_left_wall.set_position({ x: 900, y:250 });
     this.top_left_wall.shadow = true;
 
-    this.top_right_wall.set_position({ x: 1400, y:252 });
+    this.top_right_wall.set_position({ x: 1300, y:252 });
     this.top_right_wall.shadow = true;
+    this.top_right_wall.width = 300;
 
-    this.left_pole.shadow = true;
-    this.left_pole.set_position({ x: 1200, y:252 });
-    this.left_pole.width  = 10;
-    this.left_pole.height = 5;
+    this.right_wall.set_position({ x: 1450, y: 400 });
+    this.right_wall.shadow = true;
+    this.right_wall.rotation = 1.57;
 
     this.right_pole.shadow = true;
-    this.right_pole.set_position({ x: 1100, y:242 });
-    this.right_pole.width = 10;
+    this.right_pole.set_position({ x: 1135, y:255 });
+    this.right_pole.rotation = 1.07;
+    this.right_pole.width  = 15;
     this.right_pole.height = 5;
+
+    this.left_pole.shadow = true;
+    this.left_pole.set_position({ x: 1080, y:242 });
+    this.left_pole.width = 10;
+    this.left_pole.height = 5;
 
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
     this.camera.tween.to({ x: 120, y: -100 });
     this.camera.tween.smooth();
 
-    this.lantern_light.set_position(800, 100);
-    this.lantern_light.tween.add_path([
-      {x: 1100, y: 100},
+    this.lantern.set_position(800, 100);
+    this.lantern.tween.add_path([
+      {x: 1000, y: 100},
       {x: 1250, y: 140},
       {x: 1450, y: 130},
       {x: 1650, y: 120},
@@ -46346,28 +46358,33 @@ class Intro {
     ]);
 
     this.candle_stick.set_position({ x: 1040, y: 400 });
-    this.candle_stick.shadow.alpha = 0.2;
-    this.candle_stick.shadow.range = 150;
-    this.candle_stick.shadow.intensity = 0.4;
 
-    this.pocket_lighter.set_position({ x: 1040, y: 400 });
+    this.sun.set_position({ x: 1141, y: 0 });
+
+    this.lighter.set_position({ x: 1040, y: 400 });
   }
 
   async start() {
-    global.set_light_level(0.4);
+    // global.set_light_level(0.4);
+    this.sun.show();
+    this.sun.fade.in(0.05, 0.4);
+
+    this.ambient.fade_in(0.005, 0.1);
 
     this.camera.tween.time = 13000;
     this.camera.tween.start();
 
-    this.lantern_light.tween.time = 10000;
-    this.lantern_light.tween.start();
+    this.candle_stick.show();
+    this.lantern.tween.time = 10000;
+    this.lantern.tween.start();
+    this.lantern.tween.movement.on('end', () => {
+      this.lantern.remove();
+    });
 
     await sleep(6000);
-
-    this.pocket_lighter.strike.start();
-
+    this.lighter.strike.start();
+    this.sun.show();
     await sleep(2500);
-
     this.candle_stick.start_flickering();
   }
 }
@@ -46376,8 +46393,7 @@ module.exports = {
   Intro,
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":213,"../../effects/light/types/candle":221,"../../effects/light/types/development":222,"../../effects/light/types/lighter":223,"../../engine/camera":230,"../../engine/pixi_containers":237,"../../items/types/wall":248,"pixi.js":150}],217:[function(require,module,exports){
+},{"../../character/types/npc":213,"../../effects/light/types/ambient":222,"../../effects/light/types/candle":223,"../../effects/light/types/lantern":224,"../../effects/light/types/lighter":225,"../../effects/light/types/sun":226,"../../engine/camera":233,"../../engine/pixi_containers":240,"../../engine/time":246,"../../items/types/wall":252,"pixi.js":150}],217:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46398,7 +46414,64 @@ module.exports = {
   blood,
 };
 
-},{"../engine/pixi_containers":237,"pixi.js":150}],218:[function(require,module,exports){
+},{"../engine/pixi_containers":240,"pixi.js":150}],218:[function(require,module,exports){
+'use strict';
+
+const { timer } = require('../../../engine/ticker');
+
+class Fade {
+  constructor(entity) {
+    this.name = 'fade';
+
+    this.entity = entity;
+    this.shadow = entity.shadow;
+  }
+
+  in(speed = 0.05, limit = 1) {
+    const fade_timer  = timer.createTimer(100);
+    fade_timer.repeat = 50;
+
+    fade_timer.on('repeat', () => {
+      if(this.shadow.intensity > limit) {
+        return fade_timer.remove();
+      }
+
+      return this.shadow.intensity += speed;
+    });
+
+    fade_timer.on('end', () => fade_timer.remove());
+    fade_timer.start();
+  }
+
+  out(speed = 0.05, limit = 0) {
+    const fade_timer  = timer.createTimer(140);
+    fade_timer.repeat = 50;
+
+    fade_timer.on('repeat', () => {
+      if(this.shadow.intensity < limit) {
+        this.entity.remove();
+
+        return fade_timer.remove();
+      }
+
+      return this.shadow.intensity -= speed;
+    });
+
+    fade_timer.on('end', () => {
+      this.entity.remove();
+
+      fade_timer.remove();
+    });
+
+    fade_timer.start();
+  }
+}
+
+module.exports = {
+  Fade,
+};
+
+},{"../../../engine/ticker":245}],219:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../../engine/ticker');
@@ -46418,6 +46491,7 @@ class Flicker {
       if(this.shadow.intensity > 0.4) {
         return this.shadow.intensity += ( Math.random()/16 - 0.05) ;
       }
+
       if(this.shadow.intensity < 0.9) {
         return this.shadow.intensity += ( Math.random()/16 + 0.05) ;
       }
@@ -46439,19 +46513,18 @@ module.exports = {
   Flicker,
 };
 
-},{"../../../engine/ticker":242}],219:[function(require,module,exports){
+},{"../../../engine/ticker":245}],220:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { Track } = require('../../sound');
-
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+const { sleep } = require('../../../engine/time');
 
 class Strike {
   constructor(shadow) {
     this.name = 'strike';
 
     this.shadow = shadow;
-    this.sound = new Track('lighter.wav');
+    this.sound  = new Track('lighter.wav');
     this.sound.volume = 0;
   }
 
@@ -46489,12 +46562,11 @@ module.exports = {
   Strike,
 };
 
-},{"../../sound":224,"pixi.js":150}],220:[function(require,module,exports){
+},{"../../../engine/time":246,"../../sound":227,"pixi.js":150}],221:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
-// const { world } = require('../../engine/shadows');
 
 class Light {
   constructor() {
@@ -46509,6 +46581,10 @@ class Light {
 
   set_position({x, y}) { this.shadow.position.set(x, y); }
 
+  hide() { this.shadow.alpha = 0; }
+
+  show() { this.shadow.alpha = 1; }
+
   remove() { visual_effects_container.removeChild(this.shadow); }
 
   add() { visual_effects_container.addChild(this.shadow); }
@@ -46519,7 +46595,57 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":237,"pixi.js":150}],221:[function(require,module,exports){
+},{"../../engine/pixi_containers":240,"pixi.js":150}],222:[function(require,module,exports){
+'use strict';
+const PIXI = require('pixi.js');
+
+const { timer } = require('../../../engine/ticker');
+
+class Ambient {
+  constructor() {
+    this.name = 'ambient';
+  }
+
+  fade_in(speed = 0.05, limit = 1) {
+    const fade_timer  = timer.createTimer(140);
+    fade_timer.repeat = 50;
+
+    fade_timer.on('repeat', () => {
+      if(PIXI.shadows.filter.ambientLight > limit) {
+        return fade_timer.remove();
+      }
+
+      return PIXI.shadows.filter.ambientLight += speed;
+    });
+
+    fade_timer.on('end', () => fade_timer.remove());
+
+    fade_timer.start();
+  }
+
+  fade_out(speed = 0.05, limit = 0) {
+    const fade_timer  = timer.createTimer(100);
+    fade_timer.repeat = 50;
+
+    fade_timer.on('repeat', () => {
+      if(PIXI.shadows.filter.ambientLight < limit) {
+        return fade_timer.remove();
+      }
+
+      return PIXI.shadows.filter.ambientLight -= speed;
+    });
+
+    fade_timer.on('end', () => fade_timer.remove());
+
+    fade_timer.start();
+  }
+}
+
+module.exports = {
+  Ambient,
+};
+
+},{"../../../engine/ticker":245,"pixi.js":150}],223:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46532,11 +46658,11 @@ class Candle extends Light {
     super();
 
     this.add_component(new Flicker(this.shadow));
-    this.shadow.alpha = 0;
+    this.shadow.alpha = 0.2;
     this.shadow.pointCount = 1;
-    this.shadow.range = 200;
+    this.shadow.range = 150;
     this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.5;
+    this.shadow.intensity = 0.4;
     this.shadow.ambientLight = 0.5;
     this._add_candle({x, y});
   }
@@ -46576,43 +46702,33 @@ module.exports = {
   Candle,
 };
 
-},{"../../../engine/pixi_containers":237,"../attributes/flicker":218,"../light_model":220,"pixi.js":150}],222:[function(require,module,exports){
+},{"../../../engine/pixi_containers":240,"../attributes/flicker":219,"../light_model":221,"pixi.js":150}],224:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
-// const { visual_effects_container } = require('../../engine/pixi_containers');
-
-const { Track   } = require('../../sound');
 const { Light   } = require('../light_model');
-const { Strike  } = require('../attributes/strike');
 const { Flicker } = require('../attributes/flicker');
 const { Tween   } = require('../../../engine/tween');
 
-class Dev_Light extends Light {
+class Lantern extends Light {
   constructor() {
     super();
 
-    this.add_component(new Strike());
     this.add_component(new Flicker(this.shadow));
     this.add_component(new Tween(this.shadow));
 
     this.shadow.pointCount = 1;
     this.shadow.range = 500;
     this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.8;
+    this.shadow.intensity = 0.6;
     this.shadow.ambientLight = 0.5;
-    this.sound = new Track('lighter.wav');
-    this.sound.volume = 0.03;
-
-    PIXI.shadows.filter.ambientLight = 0.02;
   }
 }
 
 module.exports = {
-  Dev_Light,
+  Lantern,
 };
 
-},{"../../../engine/tween":243,"../../sound":224,"../attributes/flicker":218,"../attributes/strike":219,"../light_model":220,"pixi.js":150}],223:[function(require,module,exports){
+},{"../../../engine/tween":247,"../attributes/flicker":219,"../light_model":221}],225:[function(require,module,exports){
 'use strict';
 
 const { Light  } = require('../light_model');
@@ -46636,7 +46752,31 @@ module.exports = {
   Lighter,
 };
 
-},{"../attributes/strike":219,"../light_model":220}],224:[function(require,module,exports){
+},{"../attributes/strike":220,"../light_model":221}],226:[function(require,module,exports){
+'use strict';
+
+const { Light   } = require('../light_model');
+const { Fade    } = require('../attributes/fade');
+
+class Sun extends Light {
+  constructor() {
+    super();
+
+    this.add_component(new Fade(this));
+
+    this.shadow.pointCount = 1;
+    this.shadow.range = 500;
+    this.shadow.overlayLightLength = 200;
+    this.shadow.intensity = 0.3;
+    this.shadow.ambientLight = 0.2;
+  }
+}
+
+module.exports = {
+  Sun,
+};
+
+},{"../attributes/fade":218,"../light_model":221}],227:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46659,7 +46799,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],225:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46705,7 +46845,7 @@ module.exports = {
   View_Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":237,"../engine/ticker":242,"pixi.js":150}],226:[function(require,module,exports){
+},{"../engine/pixi_containers":240,"../engine/ticker":245,"pixi.js":150}],229:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46733,7 +46873,7 @@ module.exports = {
   View_Aiming_Line,
 };
 
-},{"../engine/pixi_containers":237,"pixi.js":150}],227:[function(require,module,exports){
+},{"../engine/pixi_containers":240,"pixi.js":150}],230:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46768,7 +46908,7 @@ module.exports = {
   icon,
 };
 
-},{"../engine/pixi_containers":237,"pixi.js":150}],228:[function(require,module,exports){
+},{"../engine/pixi_containers":240,"pixi.js":150}],231:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46793,7 +46933,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":150}],229:[function(require,module,exports){
+},{"pixi.js":150}],232:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46811,7 +46951,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],230:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 'use strict';
 const { world } = require('./shadows');
 const { Tween } = require('./tween');
@@ -46836,7 +46976,7 @@ module.exports = {
   Camera,
 };
 
-},{"./shadows":241,"./tween":243}],231:[function(require,module,exports){
+},{"./shadows":244,"./tween":247}],234:[function(require,module,exports){
 'use strict';
 
 const entities = [];
@@ -46860,7 +47000,7 @@ module.exports = {
   Entity_Container,
 };
 
-},{}],232:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46879,7 +47019,7 @@ global.set_light_level = amount => {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":150}],233:[function(require,module,exports){
+},{"pixi.js":150}],236:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46966,7 +47106,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./pixi_containers":237,"pixi.js":150}],234:[function(require,module,exports){
+},{"./pixi_containers":240,"pixi.js":150}],237:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46991,7 +47131,7 @@ module.exports = {
   Image,
 };
 
-},{"./app":228,"pixi.js":150}],235:[function(require,module,exports){
+},{"./app":231,"pixi.js":150}],238:[function(require,module,exports){
 'use strict';
 
 /*
@@ -47009,7 +47149,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],236:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -47190,7 +47330,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/math":253,"../vendor/easystar":254,"./grid":233,"./pixi_containers":237,"pixi.js":150}],237:[function(require,module,exports){
+},{"../utils/math":257,"../vendor/easystar":258,"./grid":236,"./pixi_containers":240,"pixi.js":150}],240:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -47308,7 +47448,7 @@ module.exports = {
 
 
 
-},{"./shadows":241,"pixi.js":150}],238:[function(require,module,exports){
+},{"./shadows":244,"pixi.js":150}],241:[function(require,module,exports){
 'use strict';
 const PIXI                 = require('pixi.js');
 
@@ -47407,7 +47547,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":253,"./entity_container.js":231,"./pixi_containers":237,"pixi.js":150}],239:[function(require,module,exports){
+},{"../utils/math":257,"./entity_container.js":234,"./pixi_containers":240,"pixi.js":150}],242:[function(require,module,exports){
 'use strict';
 
 function get_intersection(ray, segment){
@@ -47450,7 +47590,7 @@ module.exports = {
   get_intersection,
 };
 
-},{}],240:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 'use strict';
 
 const { save_user } = require('../vendor/socket');
@@ -47482,7 +47622,7 @@ module.exports = {
   Game,
 };
 
-},{"../vendor/socket":255}],241:[function(require,module,exports){
+},{"../vendor/socket":259}],244:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -47525,7 +47665,7 @@ module.exports = {
 
 
 
-},{"./app":228,"pixi-layers":30,"pixi-shadows":32,"pixi.js":150}],242:[function(require,module,exports){
+},{"./app":231,"pixi-layers":30,"pixi-shadows":32,"pixi.js":150}],245:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -47551,7 +47691,18 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":228,"pixi-timer":33,"pixi-tween":34,"pixi.js":150}],243:[function(require,module,exports){
+},{"./app":231,"pixi-timer":33,"pixi-tween":34,"pixi.js":150}],246:[function(require,module,exports){
+'use strict';
+
+function sleep(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+module.exports = {
+  sleep,
+};
+
+},{}],247:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47617,7 +47768,7 @@ module.exports = {
 
 
 
-},{"./pixi_containers":237,"pixi.js":150}],244:[function(require,module,exports){
+},{"./pixi_containers":240,"pixi.js":150}],248:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -47646,7 +47797,7 @@ loader.load(async function() {
   await update_build_version();
 });
 
-},{"./engine/globals":232,"./engine/pixi_containers":237,"./engine/shadows":241,"./level/dev_level.js":251,"./view/build_info":256,"./view/view_inventory":257,"pixi-packer-parser":31,"pixi.js":150}],245:[function(require,module,exports){
+},{"./engine/globals":235,"./engine/pixi_containers":240,"./engine/shadows":244,"./level/dev_level.js":255,"./view/build_info":260,"./view/view_inventory":261,"pixi-packer-parser":31,"pixi.js":150}],249:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -47945,7 +48096,7 @@ module.exports = {
 };
 
 
-},{}],246:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -48018,7 +48169,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":228,"../utils/math":253,"./data/item_data":245,"pixi.js":150}],247:[function(require,module,exports){
+},{"../engine/app":231,"../utils/math":257,"./data/item_data":249,"pixi.js":150}],251:[function(require,module,exports){
 'use strict';
 
 // function condition () {}
@@ -48100,7 +48251,7 @@ module.exports = {
   Weapon,
 };
 
-},{"../engine/image":234}],248:[function(require,module,exports){
+},{"../engine/image":237}],252:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -48136,6 +48287,14 @@ class Wall {
     }
   }
 
+  set rotation(value) {
+    this.wall.rotation = value;
+
+    if(this.shade) {
+      this.shade.rotation = value;
+    }
+  }
+
   set_position({x, y}) {
     this.wall.position.set(x, y);
 
@@ -48163,7 +48322,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":237,"pixi.js":150}],249:[function(require,module,exports){
+},{"../../engine/pixi_containers":240,"pixi.js":150}],253:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -48304,7 +48463,7 @@ module.exports={ "height":100,
  "version":1,
  "width":95
 }
-},{}],250:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 module.exports={ "columns":20,
  "image":"..\/..\/..\/..\/assets\/debug\/debug_room.jpg",
  "imageheight":1700,
@@ -48755,7 +48914,7 @@ module.exports={ "columns":20,
  "tilewidth":100,
  "type":"tileset"
 }
-},{}],251:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 /* eslint-disable */  // --> OFF
 'use strict';
 const PIXI = require('pixi.js');
@@ -48914,7 +49073,7 @@ module.exports = {
 
 
 
-},{"../character/archetypes/archer":199,"../character/archetypes/rat":200,"../character/attributes/inventory":201,"../character/types/enemy":212,"../character/types/player.js":214,"../cutscene/types/intro.js":216,"../engine/shadows":241,"../items/item_model":247,"../view/view_inventory":257,"../view/view_player_inventory":258,"./debug_map_output.json":249,"./debug_map_tiles.json":250,"./level_utils":252,"pixi.js":150}],252:[function(require,module,exports){
+},{"../character/archetypes/archer":199,"../character/archetypes/rat":200,"../character/attributes/inventory":201,"../character/types/enemy":212,"../character/types/player.js":214,"../cutscene/types/intro.js":216,"../engine/shadows":244,"../items/item_model":251,"../view/view_inventory":261,"../view/view_player_inventory":262,"./debug_map_output.json":253,"./debug_map_tiles.json":254,"./level_utils":256,"pixi.js":150}],256:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -49210,7 +49369,7 @@ module.exports = {
 
 
 
-},{"../character/types/enemy.js":212,"../character/types/player.js":214,"../character/types/rat":215,"../engine/pathfind.js":236,"../engine/pixi_containers":237,"../engine/shadows":241,"pixi.js":150}],253:[function(require,module,exports){
+},{"../character/types/enemy.js":212,"../character/types/player.js":214,"../character/types/rat":215,"../engine/pathfind.js":239,"../engine/pixi_containers":240,"../engine/shadows":244,"pixi.js":150}],257:[function(require,module,exports){
 'use strict';
 
 function distance_between_points(point_1, point_2) {
@@ -49258,7 +49417,7 @@ module.exports = {
   distance_between_points,
 };
 
-},{}],254:[function(require,module,exports){
+},{}],258:[function(require,module,exports){
 'use strict';
 
 const easystarjs = require('easystarjs');
@@ -49274,7 +49433,7 @@ module.exports = {
 };
 
 
-},{"easystarjs":3}],255:[function(require,module,exports){
+},{"easystarjs":3}],259:[function(require,module,exports){
 'use strict';
 
 // const io     = require('socket.io-client');
@@ -49320,7 +49479,7 @@ module.exports = {
 //   socket,
 // };
 
-},{}],256:[function(require,module,exports){
+},{}],260:[function(require,module,exports){
 (function (global){
 
 'use strict';
@@ -49341,7 +49500,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/build_details":229}],257:[function(require,module,exports){
+},{"../engine/build_details":232}],261:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -49391,7 +49550,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/pixi_containers":237,"pixi.js":150}],258:[function(require,module,exports){
+},{"../engine/pixi_containers":240,"pixi.js":150}],262:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -49589,7 +49748,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":246}],259:[function(require,module,exports){
+},{"../items/item_manager":250}],263:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -49623,7 +49782,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],260:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -49929,7 +50088,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":261}],261:[function(require,module,exports){
+},{"_process":265}],265:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -50115,7 +50274,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],262:[function(require,module,exports){
+},{}],266:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -50652,7 +50811,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],263:[function(require,module,exports){
+},{}],267:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -50738,7 +50897,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],264:[function(require,module,exports){
+},{}],268:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -50825,13 +50984,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],265:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":263,"./encode":264}],266:[function(require,module,exports){
+},{"./decode":267,"./encode":268}],270:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -51565,7 +51724,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":267,"punycode":262,"querystring":265}],267:[function(require,module,exports){
+},{"./util":271,"punycode":266,"querystring":269}],271:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -51583,4 +51742,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[244]);
+},{}]},{},[248]);
