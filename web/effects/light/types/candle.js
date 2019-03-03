@@ -10,11 +10,11 @@ class Candle extends Light {
     super();
 
     this.add_component(new Flicker(this.shadow));
-    this.shadow.alpha = 0;
+    this.shadow.alpha = 0.2;
     this.shadow.pointCount = 1;
-    this.shadow.range = 200;
+    this.shadow.range = 150;
     this.shadow.overlayLightLength = 200;
-    this.shadow.intensity = 0.5;
+    this.shadow.intensity = 0.4;
     this.shadow.ambientLight = 0.5;
     this._add_candle({x, y});
   }

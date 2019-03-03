@@ -2,7 +2,6 @@
 const PIXI = require('pixi.js');
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
-// const { world } = require('../../engine/shadows');
 
 class Light {
   constructor() {
@@ -16,6 +15,10 @@ class Light {
   remove_component(name) { delete this[name]; }
 
   set_position({x, y}) { this.shadow.position.set(x, y); }
+
+  hide() { this.shadow.alpha = 0; }
+
+  show() { this.shadow.alpha = 1; }
 
   remove() { visual_effects_container.removeChild(this.shadow); }
 
