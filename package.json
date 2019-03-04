@@ -22,6 +22,7 @@
     "pixi-layers": "^0.1.9",
     "pixi-packer-parser": "^2.0.0",
     "pixi-shadows": "0.0.7",
+    "pixi-spine": "^1.5.19",
     "pixi-timer": "^1.0.1",
     "pixi-tween": "^0.2.0",
     "pixi.js": "^4.8.5",
