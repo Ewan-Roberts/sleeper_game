@@ -2,7 +2,7 @@
 
 const { Item_Manager   } = require('../../items/item_manager');
 const { View_Inventory } = require('../../view/view_inventory');
-const { icon           } = require('../../effects/view_icons');
+const { Button         } = require('../../view/types/button');
 
 class Lootable {
   constructor({ sprite }) {
@@ -17,13 +17,14 @@ class Lootable {
   }
 
   create_icon() {
-    const button = new icon('bunny', this.sprite);
-
-    button.element.on('click', () => {
+    const prompt = new Button('bunny');
+    prompt.set_position(this.sprite);
+    prompt.sprite.on('click', () => {
       this.sprite.buttonMode = false;
       this.looted = true;
       this.show();
-      button.remove();
+
+      prompt.remove();
     });
   }
 

@@ -14,7 +14,6 @@ class Entity_Container {
   static get() {
     return entities;
   }
-
 }
 
 module.exports = {

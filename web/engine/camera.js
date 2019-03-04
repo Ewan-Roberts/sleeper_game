@@ -4,14 +4,20 @@ const { Tween } = require('./tween');
 
 class Camera {
   constructor() {
+    this.name = 'camera';
+
     this.sprite = world;
 
     this.add_component(new Tween(this.sprite));
   }
 
-  add_component(component) { this[component.name] = component; }
+  add_component(component) {
+    this[component.name] = component;
+  }
 
-  remove_component(name) { delete this[name]; }
+  remove_component(name) {
+    delete this[name];
+  }
 
   set_position({ x, y }) {
     this.sprite.position.set(x, y);

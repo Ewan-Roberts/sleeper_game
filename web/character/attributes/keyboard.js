@@ -2,7 +2,7 @@
 
 const { Game                } = require('../../engine/save_manager');
 const { collision_container } = require('../../engine/pixi_containers');
-const { world, shadow       } = require('../../engine/shadows');
+const { world               } = require('../../engine/shadows');
 
 const { View_HUD } = require('../../view/view_player_inventory');
 
@@ -81,7 +81,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_up_by(this.speed);
-    shadow.position.copy(point);
 
     world.y += this.speed;
   }
@@ -97,7 +96,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_down_by(this.speed);
-    shadow.position.copy(point);
 
     world.y -= this.speed;
   }
@@ -113,7 +111,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_left_by(this.speed);
-    shadow.position.copy(point);
 
     world.x += this.speed;
   }
@@ -129,7 +126,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_right_by(this.speed);
-    shadow.position.copy(point);
 
     world.x -= this.speed;
   }

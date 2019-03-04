@@ -47,7 +47,6 @@ class Level {
 
     world.updateLayersOrder();
     this.add_to_segments(this.background_image);
-
     background_container.addChild(this.background_image);
   }
 

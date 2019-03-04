@@ -3,6 +3,9 @@ const PIXI = require('pixi.js');
 
 const { timer } = require('../../../engine/ticker');
 
+// TODO This class is a slight exception
+// It does not extent the Light model
+// it may need to be in effects
 class Ambient {
   constructor() {
     this.name = 'ambient';

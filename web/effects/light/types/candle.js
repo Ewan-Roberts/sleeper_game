@@ -8,20 +8,20 @@ const { Flicker } = require('../attributes/flicker');
 class Candle extends Light {
   constructor() {
     super();
+    this.name = 'candle';
 
     this.add_component(new Flicker(this.shadow));
+    this.sprite = PIXI.Sprite.fromFrame('small_candle');
+    this.sprite.anchor.set(0.5);
+    this.sprite.width  = 20;
+    this.sprite.height = 20;
 
     this.shadow.alpha      = 0.2;
     this.shadow.pointCount = 1;
     this.shadow.range      = 150;
     this.shadow.intensity  = 0.4;
 
-    this.sprite = PIXI.Sprite.fromFrame('small_candle');
-    this.sprite.anchor.set(0.5);
-    this.sprite.width  = 20;
-    this.sprite.height = 20;
-
-    visual_effects_container.addChild(this.sprite);
+    visual_effects_container.addChild(this.sprite, this.shadow);
   }
 
   // This overwrites the base class version

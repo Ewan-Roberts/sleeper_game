@@ -1,7 +1,7 @@
 'use strict';
 
-const { shoot_arrow      } = require('../../engine/ranged');
-const { View_Aiming_Line } = require('../../effects/view_aiming_line');
+const { shoot_arrow } = require('../../engine/ranged');
+const { Aiming_Line } = require('../../effects/aiming_line');
 
 class Range {
   constructor({ inventory, animation, util, sprite }) {
@@ -10,6 +10,7 @@ class Range {
     this.animation = animation;
     this.util      = util;
     this.sprite    = sprite;
+    this.aiming    = new Aiming_Line();
 
     this.ranged_weapon = inventory.ranged_weapon;
   }
@@ -30,7 +31,7 @@ class Range {
   }
 
   _add_line(sprite) {
-    View_Aiming_Line.add_between_sprites(this.sprite, sprite);
+    this.line.add_between_sprites(this.sprite, sprite);
   }
 }
 

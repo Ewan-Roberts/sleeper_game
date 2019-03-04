@@ -5,12 +5,13 @@ const PIXI = require('pixi.js');
 const { gui_container } = require('../engine/pixi_containers');
 const { timer         } = require('../engine/ticker');
 
+//TODO this needs to be abstracted
 const cone = PIXI.Sprite.fromFrame('yellow_triangle');
 cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
 gui_container.addChild(cone);
 
-class View_Aiming_Cone {
+class Aiming_Cone {
   static start_at(point) {
     cone.position.set(point.x, point.y);
     cone.height   = 800;
@@ -40,5 +41,5 @@ class View_Aiming_Cone {
 }
 
 module.exports = {
-  View_Aiming_Cone,
+  Aiming_Cone,
 };

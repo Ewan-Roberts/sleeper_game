@@ -4,8 +4,8 @@ const { gui_container              } = require('../../engine/pixi_containers');
 const { world                      } = require('../../engine/shadows');
 const { shoot_arrow_with_collision } = require('../../engine/ranged');
 
-const { View_Aiming_Cone } = require('../../effects/view_aiming_cone');
-const { radian           } = require('../../utils/math');
+const { Aiming_Cone } = require('../../effects/aiming_cone');
+const { radian      } = require('../../utils/math');
 
 const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
 
@@ -51,7 +51,7 @@ class Mouse {
     this.util.face_point(mouse_position);
 
     //TODO: this should be managed better it creates a timer each time
-    this.cone_timer = View_Aiming_Cone.start_at(this.sprite);
+    this.cone_timer = Aiming_Cone.start_at(this.sprite);
     this.cone_timer.start();
   }
 

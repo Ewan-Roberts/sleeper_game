@@ -1,7 +1,5 @@
 'use strict';
 
-// const { Dev_Light            } = require('../../effects/light/types/development');
-// const { Item                 } = require('../../items/item_model');
 const { Lantern      } = require('../../effects/light/types/lantern');
 const { Sun          } = require('../../effects/light/types/sun');
 const { Lighter      } = require('../../effects/light/types/lighter');
@@ -16,6 +14,8 @@ const { Chest        } = require('../../items/types/chest');
 
 class Intro {
   constructor() {
+    this.name           = 'intro';
+
     this.player         = new Cutscene_NPC();
     this.background     = new Background('debug_room');
     this.camera         = new Camera();

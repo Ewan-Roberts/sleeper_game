@@ -13,3 +13,10 @@ const PIXI = require('pixi.js');
 global.set_light_level = amount => {
   PIXI.shadows.filter.ambientLight = amount;
 };
+
+// AUTO-REFRESH WINDOW
+// For dev auto refesh
+// let blurred = false;
+// global.window.onblur = function() { blurred = true; };
+// global.window.onfocus = function() { blurred && (global.location.reload()); };
+

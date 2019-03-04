@@ -48,16 +48,16 @@ class pathfind_sprite {
 
   static create_path(sprite, path_array) {
     const path = new PIXI.tween.TweenPath();
-    const random_number = () => random_number(-30, 30);
+    const random = () => random_number(-30, 30);
 
     path.moveTo(sprite.x, sprite.y);
 
     for (let i = 2; i < path_array.length; i++) {
       path.arcTo(
-        path_array[i-1].middle.x + random_number(),
-        path_array[i-1].middle.y + random_number(),
-        path_array[i].middle.x   + random_number(),
-        path_array[i].middle.y   + random_number(),
+        path_array[i-1].middle.x + random(),
+        path_array[i-1].middle.y + random(),
+        path_array[i].middle.x   + random(),
+        path_array[i].middle.y   + random(),
         25
       );
     }

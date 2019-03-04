@@ -7,8 +7,9 @@ const { Entity_Container } = require('./entity_container.js');
 
 class Arrow {
   constructor() {
+    this.name = 'arrow';
+
     this.sprite = new PIXI.Sprite.fromFrame('arrow');
-    //const arrow_embedded = PIXI.Sprite.fromFrame('arrow_embedded');
     this.sprite.name = 'arrow';
     this.sprite.anchor.set(0.95);
     this.sprite.height *= 2;

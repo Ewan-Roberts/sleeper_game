@@ -1,10 +1,11 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
 const { dialog_container } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 
+//TODO (When you get here)
+//This is far too complicated break into attributes
 class Dialog {
   create_background() {
     this.background = new PIXI.Sprite.fromFrame('black_dot');

@@ -10,7 +10,7 @@ const { world    } = require('../engine/shadows');
 const { Weapon   } = require('../items/item_model');
 
 const { Level          } = require('./level_utils');
-// const { dev_light      } = require('../effects/light/types/development.js');
+const { Dev_Light      } = require('../effects/light/types/development.js');
 const { Intro          } = require('../cutscene/types/intro.js');
 const { Enemy          } = require('../character/types/enemy');
 const { Inventory      } = require('../character/attributes/inventory');
@@ -26,9 +26,10 @@ class DevelopmentLevel {
   constructor() {
     // const player = new Player();
     // player.set_position({ x: 1000, y: 400});
-    // const light = new dev_light()
+
+    // const light = new Dev_Light()
     // light.set_position({ x: 1000, y: 400})
-    // dev bow for testing one hit kill
+    // // dev bow for testing one hit kill
     // player.inventory.add_ranged_weapon_by_name('dev_bow');
     // player.inventory.add_melee_weapon_by_name('rusty_knife');
     // player.inventory.equip_weapon_by_name('dev_bow');
@@ -51,17 +52,19 @@ class DevelopmentLevel {
 
     // this.load_test_level();
     // this.test_note();
-
+    // global.set_light_level(1)
     // const rat = new Rat();
     // rat.enemy(player);
     // rat.set_position({x: 900, y: 1100});
     // rat.animation.switch('move');
-    // rat.logic_start();
 
     // TODO: remove from the input of a class to enemy_of
     // const archer = new Archer();
-    // archer.enemy(rat);
     // archer.sprite.position.set(1550,1000);
+    // archer.enemy(rat);
+
+
+    // rat.logic_start();
     // archer.raycasting.add(this.level.segments);
 
   }
