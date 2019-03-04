@@ -40,6 +40,7 @@ class Keyboard {
     this.shift_pressed = false;
     this.speed         = vitals.speed;
     this.buffer        = 50;
+    this.can_move      = true;
 
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
@@ -48,6 +49,8 @@ class Keyboard {
   save_game() { Game.save(this.entity); }
 
   key_down(key) {
+    if(!this.can_move) return;
+
     switch(keymap[key]) {
       case 'up'    : this.keyboard_up();          return;
       case 'left'  : this.keyboard_left();        return;

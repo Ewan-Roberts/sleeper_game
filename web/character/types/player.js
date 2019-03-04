@@ -10,6 +10,7 @@ const { Mouse     } = require('../attributes/mouse');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Status    } = require('../attributes/status_bar');
+const { Tween     } = require('../../engine/tween');
 
 class Player extends Character {
   constructor() {
@@ -18,8 +19,10 @@ class Player extends Character {
     this.sprite.name = 'player';
 
     this.add_component(new Human(this.sprite));
-    //TODO this is good to not couple this to inventory looks weird think about it
     this.animation.weapon = 'bow';
+
+    this.add_component(new Tween(this.sprite));
+    //TODO this is good to not couple this to inventory looks weird think about it
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Keyboard(this));

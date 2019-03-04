@@ -5,7 +5,7 @@ const { Sun          } = require('../../effects/light/types/sun');
 const { Lighter      } = require('../../effects/light/types/lighter');
 const { Candle       } = require('../../effects/light/types/candle');
 const { Ambient      } = require('../../effects/light/types/ambient');
-const { Cutscene_NPC } = require('../../character/types/npc');
+const { Player       } = require('../../character/types/player');
 const { Camera       } = require('../../engine/camera');
 const { sleep        } = require('../../engine/time');
 const { Background   } = require('../../level/level_model');
@@ -16,7 +16,7 @@ class Intro {
   constructor() {
     this.name           = 'intro';
 
-    this.player         = new Cutscene_NPC();
+    this.player         = new Player();
     this.background     = new Background('debug_room');
     this.camera         = new Camera();
 
@@ -77,7 +77,7 @@ class Intro {
 
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: 120, y: -100 });
+    this.camera.tween.to({ x: 0, y: -100 });
     this.camera.tween.smooth();
 
     this.lantern.set_position(800, 100);
@@ -106,6 +106,8 @@ class Intro {
   async start() {
     global.set_light_level(0.4);
 
+    this.player.keyboard.can_move = false;
+
     this.wall_candle.hide();
     this.table_candle.hide();
     this.lighter.hide();
@@ -115,7 +117,7 @@ class Intro {
 
     this.ambient.fade_in(0.005, 0.05);
 
-    this.camera.tween.time = 13000;
+    this.camera.tween.time = 11000;
     this.camera.tween.start();
 
     this.lantern.tween.time = 10000;
@@ -139,6 +141,8 @@ class Intro {
     await sleep(2500);
     this.table_candle.show();
     this.table_candle.start_flickering();
+
+    this.player.keyboard.can_move = true;
   }
 }
 
