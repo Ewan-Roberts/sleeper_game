@@ -8,7 +8,7 @@ const { Ambient      } = require('../../effects/light/types/ambient');
 const { Player       } = require('../../character/types/player');
 const { Camera       } = require('../../engine/camera');
 const { sleep        } = require('../../engine/time');
-const { Background   } = require('../../level/level_model');
+const { Background   } = require('../../level/attributes/background');
 const { Wall         } = require('../../items/types/wall');
 const { Chest        } = require('../../items/types/chest');
 

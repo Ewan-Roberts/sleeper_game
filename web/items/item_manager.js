@@ -1,11 +1,9 @@
-
 'use strict';
 const PIXI = require('pixi.js');
 
 const app               = require('../engine/app');
 const { random_number } = require('../utils/math');
 const { items         } = require('./data/item_data');
-
 //TODO This needs to be broken down
 //Consider this interface
 

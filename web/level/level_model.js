@@ -1,12 +1,16 @@
 'use strict';
-const PIXI = require('pixi.js');
 
 const { background_container } = require('../engine/pixi_containers');
 
-class Background {
-  constructor(name) {
-    this.sprite = PIXI.Sprite.fromFrame(name);
-    this.sprite.anchor.set(0.5);
+class Level {
+  constructor() {}
+
+  add_component(component) {
+    this[component.name] = component;
+  }
+
+  remove_component(name) {
+    delete this[name];
   }
 
   set_position({x, y}) {
@@ -17,5 +21,5 @@ class Background {
 }
 
 module.exports = {
-  Background,
+  Level,
 };

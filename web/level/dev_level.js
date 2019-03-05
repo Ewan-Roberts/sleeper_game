@@ -10,6 +10,7 @@ const { world    } = require('../engine/shadows');
 const { Weapon   } = require('../items/item_model');
 
 const { Level          } = require('./level_utils');
+const { Dev_Room       } = require('./types/dev_room');
 const { Dev_Light      } = require('../effects/light/types/development.js');
 const { Intro          } = require('../cutscene/types/intro.js');
 const { Enemy          } = require('../character/types/enemy');
@@ -46,10 +47,10 @@ class DevelopmentLevel {
     // View_HUD.inventory_slot('meat', 2);
     // View_HUD.inventory_slot('skull_cap_bone', 3);
 
-    const intro_cutscene = new Intro();
-    intro_cutscene._set_elements();
-    intro_cutscene.start();
-
+    // const intro_cutscene = new Intro();
+    // intro_cutscene._set_elements();
+    // intro_cutscene.start();
+    const development_room = new Dev_Room();
     // this.load_test_level();
     // this.test_note();
     // global.set_light_level(1)

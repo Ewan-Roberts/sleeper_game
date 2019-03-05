@@ -22,6 +22,12 @@ class Camera {
   set_position({ x, y }) {
     this.sprite.position.set(x, y);
   }
+
+  // TODO you cant anchor set containers
+  set_center({ x, y }) {
+    this.sprite.position.y = (this.sprite.height / 2) - y;
+    this.sprite.position.x = (this.sprite.width  / 2) - x;
+  }
 }
 
 module.exports = {
