@@ -65,6 +65,7 @@ class Item {
     this.shade.width = 300;
     this.shade.height = 20;
     this.shade.anchor.set(0.5);
+
     collision_container.addChild(this.shade);
   }
 }

@@ -5,8 +5,9 @@ const app  = require('./app');
 
 class Image {
   constructor(name) {
-    this.src = this._extract(name);
     this.name = name;
+
+    this.src = this._extract(name);
   }
 
   _extract(image_name) {

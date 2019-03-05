@@ -1,5 +1,4 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
 const { timer                } = require('../../engine/ticker');

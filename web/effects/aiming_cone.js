@@ -1,5 +1,4 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
 const { gui_container } = require('../engine/pixi_containers');

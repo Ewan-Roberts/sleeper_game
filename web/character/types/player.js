@@ -10,6 +10,7 @@ const { Mouse     } = require('../attributes/mouse');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Status    } = require('../attributes/status_bar');
+const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
 
 class Player extends Character {
@@ -19,6 +20,7 @@ class Player extends Character {
 
     this.add_component(new Human(this));
 
+    this.add_component(new Light(this));
     this.add_component(new Tween(this.sprite));
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());

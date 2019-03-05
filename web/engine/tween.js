@@ -4,10 +4,11 @@ const PIXI = require('pixi.js');
 const { gui_container } = require('./pixi_containers');
 
 class Tween {
-  constructor(sprite) {
+  constructor(sprite, light) {
     this.name   = 'tween';
 
     this.sprite = sprite;
+    this.light  = light;
     this.path   = new PIXI.tween.TweenPath();
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire  = true;

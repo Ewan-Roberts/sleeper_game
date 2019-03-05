@@ -1,10 +1,10 @@
 'use strict';
 
 const { cutscene_container } = require('../../engine/pixi_containers');
-const { Tween } = require('../../engine/tween');
 
-const { Character    } = require('../character_model');
-const { Human } = require('../animations/human');
+const { Tween     } = require('../../engine/tween');
+const { Character } = require('../character_model');
+const { Human     } = require('../animations/human');
 
 class NPC extends Character {
   constructor() {

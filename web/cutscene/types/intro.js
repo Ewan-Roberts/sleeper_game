@@ -1,39 +1,42 @@
 'use strict';
 
-const { Lantern      } = require('../../light/types/lantern');
-const { Sun          } = require('../../light/types/sun');
-const { Lighter      } = require('../../light/types/lighter');
-const { Candle       } = require('../../light/types/candle');
-const { Ambient      } = require('../../light/types/ambient');
-const { Player       } = require('../../character/types/player');
-const { Camera       } = require('../../engine/camera');
-const { sleep        } = require('../../engine/time');
-const { Background   } = require('../../level/attributes/background');
-const { Wall         } = require('../../items/types/wall');
-const { Chest        } = require('../../items/types/chest');
+const { Lantern    } = require('../../light/types/lantern');
+const { Sun        } = require('../../light/types/sun');
+const { Lighter    } = require('../../light/types/lighter');
+const { Candle     } = require('../../light/types/candle');
+const { Ambient    } = require('../../light/types/ambient');
+const { Player     } = require('../../character/types/player');
+const { Camera     } = require('../../engine/camera');
+const { sleep      } = require('../../engine/time');
+const { Background } = require('../../level/attributes/background');
+const { Wall       } = require('../../items/types/wall');
+const { Chest      } = require('../../items/types/chest');
 
 class Intro {
   constructor() {
-    this.name           = 'intro';
+    this.name            = 'intro';
 
-    this.player         = new Player();
-    this.background     = new Background('debug_room');
-    this.camera         = new Camera();
+    this.player          = new Player();
+    this.background      = new Background('debug_room');
+    this.camera          = new Camera();
 
-    this.top_left_wall  = new Wall();
-    this.top_right_wall = new Wall();
-    this.right_wall     = new Wall();
-    this.middle_wall    = new Wall();
-    this.left_pole      = new Wall();
-    this.right_pole     = new Wall();
-    this.box            = new Chest();
+    this.top_left_wall   = new Wall();
+    this.down_left_wall  = new Wall();
+    this.top_right_wall  = new Wall();
+    this.down_right_wall = new Wall();
+    this.right_wall      = new Wall();
+    this.left_wall       = new Wall();
+    this.middle_wall     = new Wall();
+    this.left_pole       = new Wall();
+    this.right_pole      = new Wall();
+    this.box             = new Chest();
 
-    this.wall_candle    = new Candle();
-    this.table_candle   = new Candle();
-    this.lantern        = new Lantern();
-    this.sun            = new Sun();
-    this.ambient        = new Ambient();
-    this.lighter        = new Lighter();
+    this.wall_candle     = new Candle();
+    this.table_candle    = new Candle();
+    this.lantern         = new Lantern();
+    this.sun             = new Sun();
+    this.ambient         = new Ambient();
+    this.lighter         = new Lighter();
   }
 
   // sets the elements in the Scene but wont start anything
@@ -41,6 +44,8 @@ class Intro {
     this.background.set_position({x: 1100, y: 500});
 
     this.player.set_position({x: 1000, y: 400});
+    this.player.sprite.scale.set(0.5);
+
     this.player.animation.weapon = 'knife';
     this.player.animation.idle();
 
@@ -48,20 +53,40 @@ class Intro {
     this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
 
-    this.top_left_wall.set_position({ x: 900, y:250 });
+    this.top_left_wall.set_position({ x: 910, y:250 });
     this.top_left_wall.shadow = true;
+    this.top_left_wall.height = 40;
 
-    this.top_right_wall.set_position({ x: 1300, y:252 });
+    this.down_left_wall.set_position({ x: 910, y:753 });
+    this.down_left_wall.shadow = true;
+    this.down_left_wall.height = 40;
+
+    this.down_right_wall.set_position({ x: 1340, y:755});
+    this.down_right_wall.shadow = true;
+    this.down_right_wall.width  = 325;
+    this.down_right_wall.height = 40;
+
+    this.top_right_wall.set_position({ x: 1325, y:255 });
     this.top_right_wall.shadow = true;
-    this.top_right_wall.width = 300;
+    this.top_right_wall.height = 40;
+    this.top_right_wall.width = 350;
 
-    this.right_wall.set_position({ x: 1450, y: 393 });
+    this.right_wall.set_position({ x: 1485, y: 493 });
     this.right_wall.shadow = true;
+    this.right_wall.height = 40;
+    this.right_wall.width  = 500;
     this.right_wall.rotation = 1.57;
 
-    this.middle_wall.set_position({ x: 1150, y: 342 });
+    this.left_wall.set_position({ x: 780, y: 493 });
+    this.left_wall.shadow = true;
+    this.left_wall.height = 40;
+    this.left_wall.width  = 500;
+    this.left_wall.rotation = 1.57;
+
+    this.middle_wall.set_position({ x: 1150, y: 345});
     this.middle_wall.shadow = true;
-    this.middle_wall.width = 200;
+    this.middle_wall.height = 40;
+    this.middle_wall.width  = 220;
     this.middle_wall.rotation = 1.57;
 
     this.right_pole.shadow = true;
@@ -77,7 +102,7 @@ class Intro {
 
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: 0, y: -100 });
+    this.camera.tween.to({ x: -300, y: 100 });
     this.camera.tween.smooth();
 
     this.lantern.set_position(800, 100);
@@ -90,23 +115,25 @@ class Intro {
       {x: 2551, y: 110},
     ]);
 
-    this.box.set_position({ x: 950, y: 480 });
+    this.box.set_position({ x: 920, y: 400 });
     this.box.shadow = true;
     this.box.height = 25;
     this.box.width = 50;
     this.box.rotation = 1.1;
 
-    this.table_candle.set_position({ x: 915, y: 510 });
-
+    this.table_candle.set_position({ x: 910, y: 540 });
     this.wall_candle.set_position({ x: 1115, y: 410 });
     this.lighter.set_position({ x: 1115, y: 410 });
     this.sun.set_position({ x: 1141, y: 0 });
   }
 
   async start() {
-    global.set_light_level(0.4);
+    // global.set_light_level(0.4);
 
     this.player.keyboard.can_move = false;
+    this.player.keyboard.move.on('event', () => {
+      this.player.light.set_position(this.player.sprite);
+    });
 
     this.wall_candle.hide();
     this.table_candle.hide();
@@ -129,18 +156,20 @@ class Intro {
     this.player.tween.time = 6000;
     this.player.tween.start();
 
+    this.player.tween.movement.on('update', () => {
+      this.player.light.set_position(this.player.sprite);
+    });
+
     await sleep(6000);
     this.lighter.strike.start();
-
-    global.set_light_level(0.15);
 
     await sleep(2500);
     this.wall_candle.show();
     this.wall_candle.start_flickering();
 
     await sleep(2500);
-    this.table_candle.show();
-    this.table_candle.start_flickering();
+    // this.table_candle.show();
+    // this.table_candle.start_flickering();
 
     this.player.keyboard.can_move = true;
   }

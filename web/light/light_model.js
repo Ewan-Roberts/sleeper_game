@@ -6,6 +6,7 @@ const { visual_effects_container } = require('../engine/pixi_containers');
 class Light {
   constructor() {
     this.name   = 'light';
+
     this.shadow = new PIXI.shadows.Shadow(500);
     this.shadow.anchor.set(0.5);
   }

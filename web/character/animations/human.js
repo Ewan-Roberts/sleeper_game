@@ -11,6 +11,7 @@ class Human {
     entity.sprite = new PIXI.spine.Spine(loader.resources.player_walk.spineData);
 
     this.sprite = entity.sprite;
+    this.entity = entity;
   }
 
   switch(action) {
@@ -65,13 +66,21 @@ class Human {
 
   face_right() { this.sprite.rotation = 0; }
 
-  move_up_by(amount) { this.sprite.y -= amount; }
+  move_up_by(amount) {
+    this.sprite.y -= amount;
+  }
 
-  move_down_by(amount) { this.sprite.y += amount; }
+  move_down_by(amount) {
+    this.sprite.y += amount;
+  }
 
-  move_left_by(amount) { this.sprite.x -= amount; }
+  move_left_by(amount) {
+    this.sprite.x -= amount;
+  }
 
-  move_right_by(amount) { this.sprite.x += amount; }
+  move_right_by(amount) {
+    this.sprite.x += amount;
+  }
 }
 
 

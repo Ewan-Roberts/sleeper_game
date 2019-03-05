@@ -2,9 +2,9 @@
 
 const { collision_container } = require('../../engine/pixi_containers');
 
-const { Game                } = require('../../engine/save_manager');
-const { world               } = require('../../engine/shadows');
-
+const event        = require('events');
+const { Game     } = require('../../engine/save_manager');
+const { world    } = require('../../engine/shadows');
 const { View_HUD } = require('../../view/view_player_inventory');
 
 const keymap = {
@@ -42,6 +42,7 @@ class Keyboard {
     this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
+    this.move          = new event();
 
     global.window.addEventListener('keydown', event => this.key_down(event.key));
     global.window.addEventListener('keyup',   ()    => this.key_up());
@@ -85,6 +86,7 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_up_by(this.speed);
+    this.move.emit('event');
 
     world.y += this.speed;
   }
@@ -100,6 +102,7 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_down_by(this.speed);
+    this.move.emit('event');
 
     world.y -= this.speed;
   }
@@ -115,6 +118,7 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_left_by(this.speed);
+    this.move.emit('event');
 
     world.x += this.speed;
   }
@@ -130,6 +134,7 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_right_by(this.speed);
+    this.move.emit('event');
 
     world.x -= this.speed;
   }

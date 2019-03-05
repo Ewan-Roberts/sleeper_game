@@ -1,6 +1,6 @@
 'use strict';
-
 const PIXI = require('pixi.js');
+
 const app = require('./app');
 
 //Needed for utils

@@ -9,7 +9,7 @@ class Strike {
 
     this.shadow = shadow;
     this.sound  = new Track('lighter.wav');
-    this.sound.volume = 0;
+    this.sound.mute();
   }
 
   async start() {

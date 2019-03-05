@@ -13,7 +13,7 @@ class Vitals {
 
     //TODO derive from archtype data
     this.power  = 5000;
-    this.speed  = 50;
+    this.speed  = 20;
     this.health = 140;
     this.food   = 40;
     this.water  = 20;
@@ -22,7 +22,9 @@ class Vitals {
     this.status = 'alive';
   }
 
-  get alive() { return (this.status === 'alive'); }
+  get alive() {
+    return (this.status === 'alive');
+  }
 
   _dead(damage) {
     this.health -= damage;

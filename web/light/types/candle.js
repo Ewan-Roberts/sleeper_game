@@ -18,8 +18,8 @@ class Candle extends Light {
 
     this.shadow.alpha      = 0.2;
     this.shadow.pointCount = 1;
-    this.shadow.range      = 150;
-    this.shadow.intensity  = 0.4;
+    this.shadow.range      = 350;
+    this.shadow.intensity  = 0.5;
 
     visual_effects_container.addChild(this.sprite, this.shadow);
   }

@@ -1,8 +1,8 @@
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
-const { distance_between } = require('../../utils/math');
 const { Entity_Container } = require('../../engine/entity_container.js');
+const { distance_between } = require('../../utils/math');
 
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');

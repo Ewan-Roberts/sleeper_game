@@ -30,3 +30,5 @@
 - create architype system DONE
 - Get the merc from the spritesheet DONE
 - and the note DONE
+- put one enemy on the map DONE
+- basic arrow management DONE
