@@ -1,7 +1,7 @@
 'use strict';
 
 const { pathfind_sprite } = require('../engine/pathfind.js');
-const { Wall } = require('../items/types/wall.js');
+const { Wall            } = require('../items/types/wall.js');
 
 class Level_Utils {
   constructor() {
@@ -20,7 +20,6 @@ class Level_Utils {
       {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
     );
   }
-
 
   render_walls(wall_array) {
     wall_array.forEach((wall_data) => {

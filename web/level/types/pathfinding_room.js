@@ -33,7 +33,7 @@ class Pathfind_Room extends Level {
     this.player.inventory.add_melee_weapon_by_name('rusty_knife');
     this.player.inventory.equip_weapon_by_name('dev_bow');
 
-    this.background.sprite.alpha = 0.2;
+    this.background.alpha = 0.2;
     this.background.set_position({ x: 1000, y: 800});
     this.background.width  = this.tiled_tiles.imagewidth;
     this.background.height = this.tiled_tiles.imageheight;
