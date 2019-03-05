@@ -17,13 +17,13 @@ class Inventory {
   }
 
   equip_ranged_weapon() {
-    if(!this.ranged_weapon) throw new Error('No ranged weapon equipped');
+    if(!this.ranged_weapon) throw new Error('no ranged weapon equipped');
 
     this.equiped = this.ranged_weapon;
   }
 
   equip_melee_weapon() {
-    if(!this.melee_weapon) throw new Error('No melee weapon equipped');
+    if(!this.melee_weapon) throw new Error('no melee weapon equipped');
 
     this.equiped = this.melee_weapon;
   }
@@ -41,20 +41,20 @@ class Inventory {
   }
 
   get ammo_type() {
-    if(!this.equipped) throw new Error('No weapon equipped');
-    if(!this.equipped.ammo) throw new Error('Does not have an ammo type: ' + this.equipped);
+    if(!this.equipped) throw new Error('no weapon equipped');
+    if(!this.equipped.ammo) throw new Error('does not have an ammo type: ' + this.equipped);
 
     return this.equipped.ammo;
   }
 
   get weapon_speed() {
-    if(!this.equipped) throw new Error('No weapon equipped');
+    if(!this.equipped) throw new Error('no weapon equipped');
 
     return this.equipped.speed;
   }
 
   get weapon_damage() {
-    if(!this.equipped) throw new Error('No weapon equipped');
+    if(!this.equipped) throw new Error('no weapon equipped');
 
     return this.equipped.damage;
   }

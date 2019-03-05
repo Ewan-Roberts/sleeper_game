@@ -3,7 +3,7 @@
 const { world     } = require('../../engine/shadows');
 
 const { Character } = require('../character_model');
-const { Human     } = require('../animations/character');
+const { Human     } = require('../animations/human');
 
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');
@@ -16,13 +16,10 @@ class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
-    this.sprite.name = 'player';
 
-    this.add_component(new Human(this.sprite));
-    this.animation.weapon = 'bow';
+    this.add_component(new Human(this));
 
     this.add_component(new Tween(this.sprite));
-    //TODO this is good to not couple this to inventory looks weird think about it
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Keyboard(this));

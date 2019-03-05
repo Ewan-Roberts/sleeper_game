@@ -3,13 +3,13 @@
 const { melee_attack } = require('../../engine/melee');
 
 class Melee {
-  constructor({ inventory, animation, util }) {
+  constructor({ inventory, animation }) {
     if(!inventory) throw new Error('This component needs an inventory');
+    this.name      = 'melee';
+
     this.inventory = inventory;
     this.animation = animation;
-    this.util      = util;
 
-    this.name   = 'melee';
     this.melee_weapon = inventory.melee_weapon;
   }
 
@@ -23,7 +23,7 @@ class Melee {
     this.equip();
     this.animation.attack();
 
-    this.util.face_point(target.sprite);
+    this.animation.face_point(target.sprite);
 
     melee_attack(this.melee_weapon, target);
   }

@@ -3,7 +3,7 @@
 const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Character  } = require('../character_model');
-const { Human      } = require('../animations/character');
+const { Human      } = require('../animations/human');
 
 const { Inventory  } = require('../attributes/inventory');
 const { Vitals     } = require('../attributes/vitals');
@@ -15,9 +15,9 @@ class Enemy extends Character {
   constructor() {
     super();
     this.name = 'enemy';
-    this.sprite.name = 'enemy';
 
-    this.add_component(new Human(this.sprite));
+    this.add_component(new Human(this));
+
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));

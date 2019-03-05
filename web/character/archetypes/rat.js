@@ -1,6 +1,7 @@
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
+const { distance_between } = require('../../utils/math');
 const { Entity_Container } = require('../../engine/entity_container.js');
 
 const { Animal } = require('../types/rat');
@@ -15,9 +16,10 @@ class Rat extends Animal {
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
 
-    this._logic = timer.createTimer(800);
+    this._logic        = timer.createTimer(800);
     this._logic.repeat = 20;
     this._logic.expire = true;
+
     Entity_Container.add(this);
   }
 
@@ -27,8 +29,12 @@ class Rat extends Animal {
     this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
+  _distance_to(point) {
+    return distance_between(point, this.sprite);
+  }
+
   get _target_far_away() {
-    const distance = this.distance_to(this.enemy.sprite);
+    const distance = this._distance_to(this.enemy.sprite);
 
     return distance > 200;
   }

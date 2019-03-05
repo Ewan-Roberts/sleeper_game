@@ -1,9 +1,10 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
-class rat_animations {
+const { radian } = require('../../utils/math');
 
+//TODO move to dragon
+class rat_animations {
   static move_frames() {
     const moving_frames = [];
 
@@ -83,6 +84,10 @@ class Rodent {
     this.sprite.loop = true;
     this.sprite.play();
     this.state = action;
+  }
+
+  face_point(point) {
+    this.sprite.rotation = radian(point, this.sprite);
   }
 
   attack() {

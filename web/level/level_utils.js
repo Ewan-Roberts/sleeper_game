@@ -19,7 +19,7 @@ const { Player } = require('../character/types/player.js');
 // const { Chest    } = require('../items/chest');
 // const { Campfire } = require('../items/fire_place');
 
-class Level {
+class Level_Utils {
   constructor() {
     this.segments = [];
   }
@@ -39,7 +39,7 @@ class Level {
 
   set_background_image(image, tile_data) {
     this.background_image = image;
-    this.background_image.position.set(0, 0);
+    // this.background_image.position.set(0, 0);
     this.background_image.width = tile_data.imagewidth;
     this.background_image.height = tile_data.imageheight;
     this.background_image.opacity = 0;
@@ -146,7 +146,7 @@ class Level {
   }
 }
 
-class Bedroom extends Level {
+class Bedroom extends Level_Utils {
   constructor(data, image) {
     super();
 
@@ -284,7 +284,7 @@ function load_bedroom_map() {
 }
 
 module.exports = {
-  Level,
+  Level_Utils,
   load_bedroom_map,
   load_debug_map_image,
 };

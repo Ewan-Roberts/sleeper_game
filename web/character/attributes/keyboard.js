@@ -1,7 +1,8 @@
 'use strict';
 
-const { Game                } = require('../../engine/save_manager');
 const { collision_container } = require('../../engine/pixi_containers');
+
+const { Game                } = require('../../engine/save_manager');
 const { world               } = require('../../engine/shadows');
 
 const { View_HUD } = require('../../view/view_player_inventory');

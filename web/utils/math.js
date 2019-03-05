@@ -1,6 +1,6 @@
 'use strict';
 
-function distance_between_points(point_1, point_2) {
+function distance_between(point_1, point_2) {
   const dx = point_2.x - point_1.x;
   const dy = point_2.y - point_1.y;
 
@@ -42,5 +42,5 @@ module.exports = {
   radian,
   angle_360,
   random_number,
-  distance_between_points,
+  distance_between,
 };

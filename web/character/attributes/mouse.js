@@ -10,13 +10,13 @@ const { radian      } = require('../../utils/math');
 const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
 
 class Mouse {
-  constructor({ keyboard, animation, inventory, sprite, util }) {
+  constructor({ keyboard, animation, inventory, sprite }) {
     this.name      = 'mouse';
+
     this.keyboard  = keyboard;
     this.animation = animation;
     this.inventory = inventory;
     this.sprite    = sprite;
-    this.util      = util;
 
     world.on('pointerup',   event => this._mouse_up(event));
     world.on('pointermove', event => this._mouse_move(event));
@@ -31,16 +31,10 @@ class Mouse {
     this.animation.idle();
     const { ranged_weapon } = this.inventory;
     const sprite = this.sprite;
+
     //TODO ammo management engine
-    if(this.keyboard.shift_pressed) {
-      switch(ammo_type) {
-        case 'arrow':
-          shoot_arrow_with_collision({
-            ranged_weapon,
-            sprite,
-          }, mouse_position);
-          return;
-      }
+    if(this.keyboard.shift_pressed && ammo_type === 'arrow') {
+      shoot_arrow_with_collision({ ranged_weapon, sprite }, mouse_position);
     }
   }
 
@@ -48,7 +42,7 @@ class Mouse {
     const mouse_position = event.data.getLocalPosition(world);
 
     this.animation.ready_weapon();
-    this.util.face_point(mouse_position);
+    this.animation.face_point(mouse_position);
 
     //TODO: this should be managed better it creates a timer each time
     this.cone_timer = Aiming_Cone.start_at(this.sprite);
@@ -57,7 +51,7 @@ class Mouse {
 
   _mouse_move(event) {
     const mouse_position = event.data.getLocalPosition(world);
-    this.util.face_point(mouse_position);
+    this.animation.face_point(mouse_position);
 
     const rotation = radian(mouse_position, this.sprite);
     cone.rotation = rotation - 1.57;

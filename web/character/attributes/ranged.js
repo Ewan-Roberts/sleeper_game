@@ -4,11 +4,10 @@ const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Line } = require('../../effects/aiming_line');
 
 class Range {
-  constructor({ inventory, animation, util, sprite }) {
+  constructor({ inventory, animation, sprite }) {
     this.name      = 'range';
     this.inventory = inventory;
     this.animation = animation;
-    this.util      = util;
     this.sprite    = sprite;
     this.aiming    = new Aiming_Line();
 
@@ -24,7 +23,7 @@ class Range {
   attack(target) {
     this.equip();
     this.animation.ready_weapon();
-    this.util.face_point(target.sprite);
+    this.animation.face_point(target.sprite);
     const ranged_weapon = this.ranged_weapon;
     const sprite = this.sprite;
     shoot_arrow({ ranged_weapon, sprite }, target);

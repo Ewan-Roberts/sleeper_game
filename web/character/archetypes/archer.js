@@ -2,6 +2,7 @@
 
 const { timer            } = require('../../engine/ticker');
 const { Entity_Container } = require('../../engine/entity_container.js');
+const { distance_between } = require('../../utils/math');
 
 const { Enemy } = require('../types/enemy');
 const { Melee } = require('../attributes/melee');
@@ -45,8 +46,12 @@ class Archer extends Enemy {
     this._logic.remove();
   }
 
+  _distance_to(point) {
+    return distance_between(point, this.sprite);
+  }
+
   get _target_far_away() {
-    const distance = this.distance_to(this.enemy.sprite);
+    const distance = this._distance_to(this.enemy.sprite);
 
     return distance > 200;
   }

@@ -8,8 +8,9 @@ const { raycasting_container } = require('../../engine/pixi_containers');
 
 class Raycasting {
   constructor(sprite) {
-    this.raycast = new PIXI.Graphics();
     this.name    = 'raycasting';
+
+    this.raycast = new PIXI.Graphics();
     this.sprite  = sprite;
   }
 

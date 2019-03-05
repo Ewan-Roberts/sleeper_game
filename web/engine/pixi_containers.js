@@ -1,6 +1,6 @@
 'use strict';
-
 const PIXI = require('pixi.js');
+
 const { world } = require('./shadows');
 
 const zIndex_layer = {

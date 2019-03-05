@@ -4,13 +4,14 @@ const { Blood } = require('../../view/types/blood');
 const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
-  constructor({ name, sprite, logic }) {
+  constructor({ sprite, logic }) {
     this.name   ='vitals';
-    this.entity_name = name;
+
     this.sprite = sprite;
     this.logic = logic;
     this.blood = new Blood();
 
+    //TODO derive from archtype data
     this.power  = 5000;
     this.speed  = 50;
     this.health = 140;

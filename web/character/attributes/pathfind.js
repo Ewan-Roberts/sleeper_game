@@ -1,5 +1,4 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');

@@ -1,6 +1,6 @@
 'use strict';
 
-const { Level } = require('../level_model');
+const { Level      } = require('../level_model');
 const { Background } = require('../attributes/background');
 const { Camera     } = require('../../engine/camera');
 
