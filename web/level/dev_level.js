@@ -8,26 +8,34 @@ const { Animations_Room } = require('./types/player_animations');
 const { Intro           } = require('../cutscene/types/intro.js');
 
 // Boot loader for testing
+// archer.raycasting.add(this.level.segments);
 class Level_Loader {
-  constructor() {
-    // const intro_cutscene = new Intro();
-    // intro_cutscene._set_elements();
-    // intro_cutscene.start();
-
-    //ANIMATION TESTS
-    // const development_room = new Dev_Room();
-    // const animation_room = new Animations_Room();
-
-    // archer.raycasting.add(this.level.segments);
-  }
-
-  static boot() {
-
+  static _intro() {
     const intro_cutscene = new Intro();
     intro_cutscene._set_elements();
     intro_cutscene.start();
+  }
 
-    // new Pathfind_Room();
+  static _development() {
+    new Dev_Room();
+  }
+
+  static _animation() {
+    new Animations_Room();
+  }
+
+  static _pathfind() {
+    new Pathfind_Room();
+  }
+
+  static boot() {
+    this._intro();
+
+    // this._development();
+
+    // this._animation();
+
+    // this._pathfind();
   }
 }
 

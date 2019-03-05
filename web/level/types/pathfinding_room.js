@@ -2,8 +2,6 @@
 
 const { Level       } = require('../level_model');
 
-const { Level_Utils } = require('../level_utils');
-
 const { Player      } = require('../../character/types/player');
 const { Rat         } = require('../../character/archetypes/rat');
 const { Archer      } = require('../../character/archetypes/archer');
@@ -38,11 +36,9 @@ class Pathfind_Room extends Level {
     this.background.width  = this.tiled_tiles.imagewidth;
     this.background.height = this.tiled_tiles.imageheight;
 
-    //TODO this needs to be abstracted
-    const debug_room = new Level_Utils();
-    debug_room.add_to_segments(this.background.sprite);
-    debug_room.render_walls(this.tiled_data.layers[1].objects);
-    debug_room.create_grid(this.tiled_tiles);
+    this.add_to_segments(this.background.sprite);
+    this.render_walls(this.tiled_data.layers[1].objects);
+    this.create_grid(this.tiled_tiles);
 
     this.rat.set_position({x: 900, y: 1100});
     this.rat.animation.switch('move');
