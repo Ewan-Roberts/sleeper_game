@@ -1,5 +1,4 @@
 'use strict';
-const PIXI = require('pixi.js');
 
 const { critter_container } = require('../../engine/pixi_containers');
 
@@ -16,10 +15,7 @@ class Animal extends Character {
     super();
     this.name = 'rat';
 
-    const texture = [PIXI.Texture.fromFrame('bunny')];
-    this.sprite = new PIXI.extras.AnimatedSprite(texture);
-
-    this.add_component(new Rodent(this.sprite));
+    this.add_component(new Rodent(this));
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));

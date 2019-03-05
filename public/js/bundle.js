@@ -52496,9 +52496,13 @@ const frames = {
 };
 
 class Rodent {
-  constructor(sprite) {
+  constructor(entity) {
     this.name   = 'animation';
-    this.sprite = sprite;
+
+    const texture = [PIXI.Texture.fromFrame('bunny')];
+    //TODO Finish migrating animation
+    entity.sprite = new PIXI.extras.AnimatedSprite(texture);
+    this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;
   }
@@ -53447,7 +53451,6 @@ module.exports = {
 
 },{"../../engine/shadows":242,"../../engine/tween":245,"../animations/human":198,"../attributes/inventory":202,"../attributes/keyboard":203,"../attributes/mouse":206,"../attributes/status_bar":210,"../attributes/vitals":211,"../character_model":212}],216:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
 
 const { critter_container } = require('../../engine/pixi_containers');
 
@@ -53464,10 +53467,7 @@ class Animal extends Character {
     super();
     this.name = 'rat';
 
-    const texture = [PIXI.Texture.fromFrame('bunny')];
-    this.sprite = new PIXI.extras.AnimatedSprite(texture);
-
-    this.add_component(new Rodent(this.sprite));
+    this.add_component(new Rodent(this));
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
@@ -53481,7 +53481,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":238,"../animations/rat":199,"../attributes/inventory":202,"../attributes/lootable":204,"../attributes/pathfind":207,"../attributes/vitals":211,"../character_model":212,"pixi.js":151}],217:[function(require,module,exports){
+},{"../../engine/pixi_containers":238,"../animations/rat":199,"../attributes/inventory":202,"../attributes/lootable":204,"../attributes/pathfind":207,"../attributes/vitals":211,"../character_model":212}],217:[function(require,module,exports){
 (function (global){
 'use strict';
 

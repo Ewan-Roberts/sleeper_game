@@ -70,9 +70,13 @@ const frames = {
 };
 
 class Rodent {
-  constructor(sprite) {
+  constructor(entity) {
     this.name   = 'animation';
-    this.sprite = sprite;
+
+    const texture = [PIXI.Texture.fromFrame('bunny')];
+    //TODO Finish migrating animation
+    entity.sprite = new PIXI.extras.AnimatedSprite(texture);
+    this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;
   }
