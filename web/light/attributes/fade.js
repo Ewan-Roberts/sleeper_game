@@ -1,6 +1,6 @@
 'use strict';
 
-const { timer } = require('../../../engine/ticker');
+const { timer } = require('../../engine/ticker');
 
 class Fade {
   constructor(entity) {

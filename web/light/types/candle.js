@@ -1,9 +1,9 @@
 'use strict';
-
 const PIXI = require('pixi.js');
-const { visual_effects_container } = require('../../../engine/pixi_containers');
-const { Light } = require('../light_model');
-const { Flicker } = require('../attributes/flicker');
+
+const { visual_effects_container } = require('../../engine/pixi_containers');
+const { Light                    } = require('../light_model');
+const { Flicker                  } = require('../attributes/flicker');
 
 class Candle extends Light {
   constructor() {

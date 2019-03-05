@@ -1,9 +1,9 @@
 'use strict';
 
-const { visual_effects_container } = require('../../../engine/pixi_containers');
+const { visual_effects_container } = require('../../engine/pixi_containers');
 
-const { Light   } = require('../light_model');
-const { Fade    } = require('../attributes/fade');
+const { Light } = require('../light_model');
+const { Fade  } = require('../attributes/fade');
 
 class Sun extends Light {
   constructor() {

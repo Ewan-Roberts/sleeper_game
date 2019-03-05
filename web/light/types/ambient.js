@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { timer } = require('../../../engine/ticker');
+const { timer } = require('../../engine/ticker');
 
 // TODO This class is a slight exception
 // It does not extent the Light model

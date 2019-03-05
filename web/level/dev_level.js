@@ -22,7 +22,12 @@ class Level_Loader {
   }
 
   static boot() {
-    new Pathfind_Room();
+
+    const intro_cutscene = new Intro();
+    intro_cutscene._set_elements();
+    intro_cutscene.start();
+
+    // new Pathfind_Room();
   }
 }
 

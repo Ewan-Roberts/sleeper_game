@@ -1,6 +1,6 @@
 'use strict';
 
-const { save_user } = require('../vendor/socket');
+// const { save_user } = require('../vendor/socket');
 
 class Game {
   constructor(player_data) {
@@ -15,9 +15,9 @@ class Game {
   }
 
   static save(player_data) {
-    const save_data = new Game(player_data);
+    // const save_data = new Game(player_data);
 
-    save_user(save_data);
+    // save_user(save_data);
   }
 
   static over() {

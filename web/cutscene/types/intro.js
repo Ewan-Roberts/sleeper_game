@@ -1,10 +1,10 @@
 'use strict';
 
-const { Lantern      } = require('../../effects/light/types/lantern');
-const { Sun          } = require('../../effects/light/types/sun');
-const { Lighter      } = require('../../effects/light/types/lighter');
-const { Candle       } = require('../../effects/light/types/candle');
-const { Ambient      } = require('../../effects/light/types/ambient');
+const { Lantern      } = require('../../light/types/lantern');
+const { Sun          } = require('../../light/types/sun');
+const { Lighter      } = require('../../light/types/lighter');
+const { Candle       } = require('../../light/types/candle');
+const { Ambient      } = require('../../light/types/ambient');
 const { Player       } = require('../../character/types/player');
 const { Camera       } = require('../../engine/camera');
 const { sleep        } = require('../../engine/time');

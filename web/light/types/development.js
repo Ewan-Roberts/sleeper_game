@@ -1,12 +1,12 @@
 'use strict';
 
-const { visual_effects_container } = require('../../../engine/pixi_containers');
+const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { Light   } = require('../light_model');
 const { Strike  } = require('../attributes/strike');
 const { Flicker } = require('../attributes/flicker');
 const { Fade    } = require('../attributes/fade');
-const { Tween   } = require('../../../engine/tween');
+const { Tween   } = require('../../engine/tween');
 
 class Dev_Light extends Light {
   constructor() {

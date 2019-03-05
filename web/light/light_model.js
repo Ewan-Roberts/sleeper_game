@@ -1,10 +1,11 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 
 class Light {
   constructor() {
+    this.name   = 'light';
     this.shadow = new PIXI.shadows.Shadow(500);
     this.shadow.anchor.set(0.5);
   }
