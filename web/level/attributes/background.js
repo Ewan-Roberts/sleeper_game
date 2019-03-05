@@ -15,6 +15,14 @@ class Background {
     background_container.addChild(this.sprite);
   }
 
+  set width(value) {
+    this.sprite.width = value;
+  }
+
+  set height(value) {
+    this.sprite.height = value;
+  }
+
   set alpha(amount) {
     this.sprite.alpha = amount;
   }

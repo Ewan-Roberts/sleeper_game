@@ -22,6 +22,14 @@ class Item {
     }
   }
 
+  set anchor(value) {
+    this.sprite.anchor.set(value);
+
+    if(this.shade) {
+      this.shade.anchor.set(value);
+    }
+  }
+
   set width(value) {
     this.sprite.width = value;
 

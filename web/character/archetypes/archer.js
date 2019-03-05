@@ -58,8 +58,6 @@ class Archer extends Enemy {
 
   enemy(character) {
     this.enemy = character;
-
-    this.logic_start();
   }
 
   kill() {

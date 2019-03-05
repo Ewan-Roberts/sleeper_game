@@ -14,13 +14,13 @@ class Pathfind_Room extends Level {
     super();
     this.name        = 'pathfinding_room';
 
-    this.player         = new Player();
-    this.rat            = new Rat();
-    this.archer         = new Archer();
+    this.player      = new Player();
+    this.rat         = new Rat();
+    this.archer      = new Archer();
 
-    this.background     = new Background('debug_room');
-    this.tiled_data     = require('../debug_map_output.json');
-    this.tiled_tiles    = require('../debug_map_tiles.json');
+    this.background  = new Background('debug_room');
+    this.tiled_data  = require('../data/debug_map_output.json');
+    this.tiled_tiles = require('../data/debug_map_tiles.json');
 
     this._set_elements();
   }
@@ -34,25 +34,24 @@ class Pathfind_Room extends Level {
     this.player.inventory.equip_weapon_by_name('dev_bow');
 
     this.background.sprite.alpha = 0.2;
-    this.background.set_position({ x: 1000, y: 850});
+    this.background.set_position({ x: 1000, y: 800});
+    this.background.width  = this.tiled_tiles.imagewidth;
+    this.background.height = this.tiled_tiles.imageheight;
 
-    const debug_room = new Level_Utils(this.tiled_data, this.tiled_tiles);
-    debug_room.set_background_image(this.background.sprite, this.tiled_tiles);
-    debug_room.render_walls(this.tiled_data.layers[1]);
+    //TODO this needs to be abstracted
+    const debug_room = new Level_Utils();
+    debug_room.add_to_segments(this.background.sprite);
+    debug_room.render_walls(this.tiled_data.layers[1].objects);
     debug_room.create_grid(this.tiled_tiles);
-
-    this.level = debug_room;
 
     this.rat.set_position({x: 900, y: 1100});
     this.rat.animation.switch('move');
-
     this.rat.enemy(this.player);
+    this.rat.logic_start();
 
     this.archer.set_position({x: 1400, y: 1100});
-
     this.archer.enemy(this.rat);
-
-    this.rat.logic_start();
+    this.archer.logic_start();
   }
 }
 
