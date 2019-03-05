@@ -7,7 +7,13 @@ const {
   grid_container,
 } = require('./pixi_containers');
 
-const { easystar } = require('../vendor/easystar');
+const easystarjs = require('easystarjs');
+const easystar = new easystarjs.js();
+
+easystar.setIterationsPerCalculation(1000);
+easystar.setAcceptableTiles([0]);
+easystar.enableDiagonals();
+easystar.enableCornerCutting();
 
 const {
   random_number,
