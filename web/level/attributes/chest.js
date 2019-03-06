@@ -2,7 +2,7 @@
 
 const { Inventory          } = require('../../character/attributes/inventory');
 const { cutscene_container } = require('../../engine/pixi_containers');
-const { Item               } = require('../item_model');
+const { Item               } = require('./item_model');
 
 class Chest extends Item {
   constructor() {

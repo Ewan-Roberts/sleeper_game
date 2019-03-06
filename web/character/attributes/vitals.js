@@ -4,11 +4,10 @@ const { Blood } = require('../../view/types/blood');
 const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
-  constructor({ sprite, logic }) {
+  constructor({ sprite }) {
     this.name   ='vitals';
 
     this.sprite = sprite;
-    this.logic = logic;
     this.blood = new Blood();
 
     //TODO derive from archtype data

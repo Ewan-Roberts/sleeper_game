@@ -1,7 +1,7 @@
 'use strict';
-
 const PIXI         = require('pixi.js');
-const { collision_container } = require('../engine/pixi_containers');
+
+const { collision_container } = require('../../engine/pixi_containers');
 
 class Door {
   constructor(door_data) {

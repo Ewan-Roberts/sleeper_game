@@ -52733,6 +52733,7 @@ const { Item_Manager } = require('../../items/item_manager');
 class Inventory {
   constructor() {
     this.name          = 'inventory';
+
     this.equipped      = null;
     this.ranged_weapon = null;
     this.melee_weapon  = null;
@@ -52949,11 +52950,10 @@ module.exports = {
 const { Candle } = require('../../light/types/candle');
 
 class Light {
-  constructor({ tween, sprite }) {
+  constructor({ sprite }) {
     this.name      = 'light';
     this.candle    = new Candle();
 
-    this.tween  = tween;
     this.sprite = sprite;
   }
 
@@ -52976,6 +52976,7 @@ const { Button         } = require('../../view/types/button');
 class Lootable {
   constructor({ sprite }) {
     this.name     = 'loot';
+
     this.sprite   = sprite;
     this.looted   = false;
     this.items    = [];
@@ -53311,11 +53312,10 @@ const { Blood } = require('../../view/types/blood');
 const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
-  constructor({ sprite, logic }) {
+  constructor({ sprite }) {
     this.name   ='vitals';
 
     this.sprite = sprite;
-    this.logic = logic;
     this.blood = new Blood();
 
     //TODO derive from archtype data
@@ -53531,9 +53531,10 @@ const { Ambient    } = require('../../light/types/ambient');
 const { Player     } = require('../../character/types/player');
 const { Camera     } = require('../../engine/camera');
 const { sleep      } = require('../../engine/time');
+
 const { Background } = require('../../level/attributes/background');
-const { Wall       } = require('../../items/types/wall');
-const { Chest      } = require('../../items/types/chest');
+const { Wall       } = require('../../level/attributes/wall');
+const { Chest      } = require('../../level/attributes/chest');
 
 class Intro {
   constructor() {
@@ -53702,7 +53703,7 @@ module.exports = {
   Intro,
 };
 
-},{"../../character/types/player":216,"../../engine/camera":223,"../../engine/time":236,"../../items/types/chest":242,"../../items/types/wall":243,"../../level/attributes/background":244,"../../light/types/ambient":256,"../../light/types/candle":257,"../../light/types/lantern":258,"../../light/types/lighter":259,"../../light/types/sun":260}],219:[function(require,module,exports){
+},{"../../character/types/player":216,"../../engine/camera":223,"../../engine/time":236,"../../level/attributes/background":241,"../../level/attributes/chest":242,"../../level/attributes/wall":244,"../../light/types/ambient":256,"../../light/types/candle":257,"../../light/types/lantern":258,"../../light/types/lighter":259,"../../light/types/sun":260}],219:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -55119,8 +55120,107 @@ module.exports = {
 'use strict';
 const PIXI = require('pixi.js');
 
-const { collision_container } = require('../engine/pixi_containers');
+const { background_container } = require('../../engine/pixi_containers');
 
+class Background {
+  constructor(name) {
+    this.sprite = PIXI.Sprite.fromFrame(name);
+    this.sprite.anchor.set(0.5);
+  }
+
+  set_position({x, y}) {
+    this.sprite.position.set(x, y);
+
+    background_container.addChild(this.sprite);
+  }
+
+  set width(value) {
+    this.sprite.width = value;
+  }
+
+  set height(value) {
+    this.sprite.height = value;
+  }
+
+  set alpha(amount) {
+    this.sprite.alpha = amount;
+  }
+}
+
+module.exports = {
+  Background,
+};
+
+},{"../../engine/pixi_containers":230,"pixi.js":151}],242:[function(require,module,exports){
+'use strict';
+
+const { Inventory          } = require('../../character/attributes/inventory');
+const { cutscene_container } = require('../../engine/pixi_containers');
+const { Item               } = require('./item_model');
+
+class Chest extends Item {
+  constructor() {
+    super('chest_full');
+
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+    this.state = 'closed';
+    // this.sprite.click = () => console.log('click');
+
+    cutscene_container.addChild(this.sprite);
+    this._add_state_handling();
+  }
+
+  _add_state_handling() {
+    this.sprite.click = () => {
+      switch(this.state) {
+        case 'closed':
+          this._open_inventory_box();
+          break;
+        case 'full':
+          this._empty();
+          break;
+      }
+    };
+  }
+
+  _open_inventory_box() {
+    if(this.state === 'open') return;
+    this.state = 'open';
+
+    const inventory_box = new Inventory();
+    inventory_box.add_item_tiles();
+    inventory_box.populate_slot('bunny', 0);
+    inventory_box.populate_slot('bunny', 1);
+    inventory_box.populate_slot('bunny', 2);
+    inventory_box.populate_slot('bunny', 3);
+    this.sprite.addChild(inventory_box.container);
+  }
+
+  _empty() {
+    this.sprite.texture = this.image_cache.state.empty;
+    this.state = 'empty';
+    return this;
+  }
+
+  fill() {
+    this.sprite.texture = this.image_cache.state.full;
+    this.state = 'full';
+    return this;
+  }
+}
+
+module.exports = {
+  Chest,
+};
+
+},{"../../character/attributes/inventory":202,"../../engine/pixi_containers":230,"./item_model":243}],243:[function(require,module,exports){
+'use strict';
+const PIXI = require('pixi.js');
+
+const { collision_container } = require('../../engine/pixi_containers');
+
+//TODO this needs to be the parent of the elements in this folder
 class Item {
   constructor(name) {
     this.texture = PIXI.Texture.fromImage(name);
@@ -55193,74 +55293,11 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],242:[function(require,module,exports){
-'use strict';
-
-const { Inventory          } = require('../../character/attributes/inventory');
-const { cutscene_container } = require('../../engine/pixi_containers');
-const { Item               } = require('../item_model');
-
-class Chest extends Item {
-  constructor() {
-    super('chest_full');
-
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
-    this.state = 'closed';
-    // this.sprite.click = () => console.log('click');
-
-    cutscene_container.addChild(this.sprite);
-    this._add_state_handling();
-  }
-
-  _add_state_handling() {
-    this.sprite.click = () => {
-      switch(this.state) {
-        case 'closed':
-          this._open_inventory_box();
-          break;
-        case 'full':
-          this._empty();
-          break;
-      }
-    };
-  }
-
-  _open_inventory_box() {
-    if(this.state === 'open') return;
-    this.state = 'open';
-
-    const inventory_box = new Inventory();
-    inventory_box.add_item_tiles();
-    inventory_box.populate_slot('bunny', 0);
-    inventory_box.populate_slot('bunny', 1);
-    inventory_box.populate_slot('bunny', 2);
-    inventory_box.populate_slot('bunny', 3);
-    this.sprite.addChild(inventory_box.container);
-  }
-
-  _empty() {
-    this.sprite.texture = this.image_cache.state.empty;
-    this.state = 'empty';
-    return this;
-  }
-
-  fill() {
-    this.sprite.texture = this.image_cache.state.full;
-    this.state = 'full';
-    return this;
-  }
-}
-
-module.exports = {
-  Chest,
-};
-
-},{"../../character/attributes/inventory":202,"../../engine/pixi_containers":230,"../item_model":241}],243:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"pixi.js":151}],244:[function(require,module,exports){
 'use strict';
 
 const { collision_container } = require('../../engine/pixi_containers');
-const { Item } = require('../item_model');
+const { Item } = require('./item_model');
 
 class Wall extends Item {
   constructor() {
@@ -55277,42 +55314,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":230,"../item_model":241}],244:[function(require,module,exports){
-'use strict';
-const PIXI = require('pixi.js');
-
-const { background_container } = require('../../engine/pixi_containers');
-
-class Background {
-  constructor(name) {
-    this.sprite = PIXI.Sprite.fromFrame(name);
-    this.sprite.anchor.set(0.5);
-  }
-
-  set_position({x, y}) {
-    this.sprite.position.set(x, y);
-
-    background_container.addChild(this.sprite);
-  }
-
-  set width(value) {
-    this.sprite.width = value;
-  }
-
-  set height(value) {
-    this.sprite.height = value;
-  }
-
-  set alpha(amount) {
-    this.sprite.alpha = amount;
-  }
-}
-
-module.exports = {
-  Background,
-};
-
-},{"../../engine/pixi_containers":230,"pixi.js":151}],245:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"./item_model":243}],245:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -55958,7 +55960,7 @@ module.exports = {
 const { background_container } = require('../engine/pixi_containers');
 
 const { pathfind_sprite      } = require('../engine/pathfind.js');
-const { Wall                 } = require('../items/types/wall.js');
+const { Wall                 } = require('./attributes/wall.js');
 
 class Level {
   constructor() {
@@ -56010,7 +56012,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":229,"../engine/pixi_containers":230,"../items/types/wall.js":243}],249:[function(require,module,exports){
+},{"../engine/pathfind.js":229,"../engine/pixi_containers":230,"./attributes/wall.js":244}],249:[function(require,module,exports){
 'use strict';
 
 const { Level      } = require('../level_model');
@@ -56040,7 +56042,7 @@ module.exports = {
   Dev_Room,
 };
 
-},{"../../engine/camera":223,"../attributes/background":244,"../level_model":248}],250:[function(require,module,exports){
+},{"../../engine/camera":223,"../attributes/background":241,"../level_model":248}],250:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56100,7 +56102,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/archer":200,"../../character/archetypes/rat":201,"../../character/types/player":216,"../../level/attributes/background":244,"../data/debug_map_output.json":245,"../data/debug_map_tiles.json":246,"../level_model":248}],251:[function(require,module,exports){
+},{"../../character/archetypes/archer":200,"../../character/archetypes/rat":201,"../../character/types/player":216,"../../level/attributes/background":241,"../data/debug_map_output.json":245,"../data/debug_map_tiles.json":246,"../level_model":248}],251:[function(require,module,exports){
 (function (global){
 
 'use strict';
@@ -56142,7 +56144,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":215,"../../engine/camera":223,"../attributes/background":244,"../level_model":248}],252:[function(require,module,exports){
+},{"../../character/types/npc":215,"../../engine/camera":223,"../attributes/background":241,"../level_model":248}],252:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');

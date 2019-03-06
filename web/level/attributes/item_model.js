@@ -1,8 +1,9 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { collision_container } = require('../engine/pixi_containers');
+const { collision_container } = require('../../engine/pixi_containers');
 
+//TODO this needs to be the parent of the elements in this folder
 class Item {
   constructor(name) {
     this.texture = PIXI.Texture.fromImage(name);

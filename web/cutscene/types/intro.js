@@ -8,9 +8,10 @@ const { Ambient    } = require('../../light/types/ambient');
 const { Player     } = require('../../character/types/player');
 const { Camera     } = require('../../engine/camera');
 const { sleep      } = require('../../engine/time');
+
 const { Background } = require('../../level/attributes/background');
-const { Wall       } = require('../../items/types/wall');
-const { Chest      } = require('../../items/types/chest');
+const { Wall       } = require('../../level/attributes/wall');
+const { Chest      } = require('../../level/attributes/chest');
 
 class Intro {
   constructor() {

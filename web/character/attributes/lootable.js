@@ -7,6 +7,7 @@ const { Button         } = require('../../view/types/button');
 class Lootable {
   constructor({ sprite }) {
     this.name     = 'loot';
+
     this.sprite   = sprite;
     this.looted   = false;
     this.items    = [];

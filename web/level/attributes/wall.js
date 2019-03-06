@@ -1,7 +1,7 @@
 'use strict';
 
 const { collision_container } = require('../../engine/pixi_containers');
-const { Item } = require('../item_model');
+const { Item } = require('./item_model');
 
 class Wall extends Item {
   constructor() {

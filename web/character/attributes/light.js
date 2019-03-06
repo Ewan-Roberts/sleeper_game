@@ -4,11 +4,10 @@
 const { Candle } = require('../../light/types/candle');
 
 class Light {
-  constructor({ tween, sprite }) {
+  constructor({ sprite }) {
     this.name      = 'light';
     this.candle    = new Candle();
 
-    this.tween  = tween;
     this.sprite = sprite;
   }
 
