@@ -4,7 +4,7 @@ const PIXI = require('pixi.js');
 const { grid_container } = require('./pixi_containers');
 
 class Grid {
-  static create_level_grid(tiles_object) {
+  static create(tiles_object) {
     const sprite_grid = [];
     const binary_grid_map = [];
 

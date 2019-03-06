@@ -39,6 +39,10 @@ class Tween {
     this.movement.time = amount;
   }
 
+  stop() {
+    this.movement.stop();
+  }
+
   start() {
     if(!this.movement.time) {
       throw new Error('time not set for tween');

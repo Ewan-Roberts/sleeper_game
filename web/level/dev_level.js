@@ -5,6 +5,7 @@ const PIXI = require('pixi.js');
 const { Dev_Room        } = require('./types/dev_room');
 const { Pathfind_Room   } = require('./types/pathfinding_room');
 const { Animations_Room } = require('./types/player_animations');
+const { Projectile_Room } = require('./types/projectile_room');
 const { Intro           } = require('../cutscene/types/intro.js');
 
 // Boot loader for testing
@@ -28,12 +29,18 @@ class Level_Loader {
     new Pathfind_Room();
   }
 
+  static _projectile() {
+    new Projectile_Room();
+  }
+
   static boot() {
-    this._intro();
+    // this._intro();
 
     // this._development();
 
     // this._animation();
+
+    this._projectile();
 
     // this._pathfind();
   }

@@ -39,6 +39,15 @@ class Item {
     }
   }
 
+  set alpha(value) {
+    this.sprite.alpha = value;
+
+    if(this.shade) {
+      this.shade.alpha = value;
+    }
+  }
+
+
   set rotation(value) {
     this.sprite.rotation = value;
 

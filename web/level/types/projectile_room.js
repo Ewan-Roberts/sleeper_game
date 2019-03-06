@@ -2,17 +2,20 @@
 
 const { Level      } = require('../level_model');
 const { Background } = require('../attributes/background');
-const { Camera     } = require('../../engine/camera');
-const { NPC        } = require('../../character/types/npc');
+const { Hay        } = require('../attributes/hay_bale');
 
-class Animations_Room extends Level {
+const { Camera     } = require('../../engine/camera');
+const { Player     } = require('../../character/types/player');
+
+class Projectile_Room extends Level {
   constructor() {
     super();
     this.name        = 'animations_room';
 
     this.background  = new Background('grid_floor');
+    this.hay_bale    = new Hay();
     this.camera      = new Camera();
-    this.walking     = new NPC();
+    this.player      = new Player();
 
     this._set_elements();
   }
@@ -25,12 +28,15 @@ class Animations_Room extends Level {
 
     this.camera.set_center({ x: 1400, y: 500 });
 
-    this.walking.set_position({x: 800, y: 300});
-    this.walking.sprite.scale.set(0.4);
-    this.walking.animation.switch('walk');
+    this.player.set_position({x: 800, y: 500});
+    this.player.inventory.arm_ranged('old_bow');
+
+    this.hay_bale.set_position({x: 1300, y: 500});
+    this.hay_bale.rotation = -1.5;
+    this.hay_bale.alpha = 0.5;
   }
 }
 
 module.exports = {
-  Animations_Room,
+  Projectile_Room,
 };

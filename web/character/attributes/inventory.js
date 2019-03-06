@@ -17,16 +17,20 @@ class Inventory {
     this.equipped = weapon;
   }
 
+  arm_ranged(name) {
+    this.equipped = Item_Manager.get_item(name);
+  }
+
   equip_ranged_weapon() {
     if(!this.ranged_weapon) throw new Error('no ranged weapon equipped');
 
-    this.equiped = this.ranged_weapon;
+    this.equipped = this.ranged_weapon;
   }
 
   equip_melee_weapon() {
     if(!this.melee_weapon) throw new Error('no melee weapon equipped');
 
-    this.equiped = this.melee_weapon;
+    this.equipped = this.melee_weapon;
   }
 
   add_ranged_weapon_by_name(name) {

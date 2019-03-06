@@ -28,7 +28,7 @@ class pathfind_sprite {
 
   static create_level_grid(tiles_object) {
     const { binary_grid_map, 'sprite_grid': grid }
-      = Grid.create_level_grid(tiles_object);
+      = Grid.create(tiles_object);
     this.sprite_grid = grid;
     easystar.setGrid(binary_grid_map);
   }

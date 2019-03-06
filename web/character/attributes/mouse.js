@@ -2,7 +2,7 @@
 
 const { gui_container              } = require('../../engine/pixi_containers');
 const { world                      } = require('../../engine/shadows');
-const { shoot_arrow_with_collision } = require('../../engine/ranged');
+const { shoot_arrow } = require('../../engine/ranged');
 
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
@@ -24,21 +24,26 @@ class Mouse {
   }
 
   _mouse_up(event) {
+    // if(!this.keyboard.shift_pressed) return;
+
     const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type } = this.inventory;
 
     this.cone_timer.stop();
     this.animation.idle();
-    const { ranged_weapon } = this.inventory;
-    const sprite = this.sprite;
 
     //TODO ammo management engine
     if(this.keyboard.shift_pressed && ammo_type === 'arrow') {
-      shoot_arrow_with_collision({ ranged_weapon, sprite }, mouse_position);
+      const { equipped } = this.inventory;
+
+      shoot_arrow(equipped.speed, equipped.damage, this.sprite, mouse_position);
     }
   }
 
   _mouse_down(event) {
+    // if(!this.keyboard.shift_pressed) return;
+    console.log(this.inventory);
+
     const mouse_position = event.data.getLocalPosition(world);
 
     this.animation.ready_weapon();

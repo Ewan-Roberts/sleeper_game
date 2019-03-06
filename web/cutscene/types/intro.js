@@ -141,7 +141,7 @@ class Intro {
     this.lighter.hide();
 
     this.sun.show();
-    this.sun.fade.in(0.05, 0.3);
+    this.sun.fade.in(0.05, 0.8);
 
     this.ambient.fade_in(0.005, 0.05);
 

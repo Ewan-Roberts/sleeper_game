@@ -17,7 +17,11 @@ function random_number(min, max) {
 
 // -1.57 to 1.57
 function radian(anchor, point){
-  return Math.atan2(anchor.y - point.y, anchor.x - point.x);
+  const radian_value = Math.atan2(anchor.y - point.y, anchor.x - point.x);
+
+  if(!radian_value) throw new Error('invald radian ' + radian_value);
+
+  return radian_value;
 }
 
 // 0 - 3.14 always positive
