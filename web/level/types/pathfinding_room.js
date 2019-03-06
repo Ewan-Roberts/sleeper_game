@@ -1,11 +1,11 @@
 'use strict';
 
-const { Level       } = require('../level_model');
+const { Level      } = require('../level_model');
 
-const { Player      } = require('../../character/types/player');
-const { Rat         } = require('../../character/archetypes/rat');
-const { Archer      } = require('../../character/archetypes/archer');
-const { Background  } = require('../../level/attributes/background');
+const { Player     } = require('../../character/types/player');
+const { Rat        } = require('../../character/archetypes/rat');
+const { Archer     } = require('../../character/archetypes/archer');
+const { Background } = require('../../level/attributes/background');
 
 class Pathfind_Room extends Level {
   constructor() {

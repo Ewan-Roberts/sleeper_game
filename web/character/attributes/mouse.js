@@ -25,7 +25,6 @@ class Mouse {
 
   _mouse_up(event) {
     // if(!this.keyboard.shift_pressed) return;
-
     const mouse_position = event.data.getLocalPosition(world);
     const { ammo_type } = this.inventory;
 
@@ -42,8 +41,6 @@ class Mouse {
 
   _mouse_down(event) {
     // if(!this.keyboard.shift_pressed) return;
-    console.log(this.inventory);
-
     const mouse_position = event.data.getLocalPosition(world);
 
     this.animation.ready_weapon();

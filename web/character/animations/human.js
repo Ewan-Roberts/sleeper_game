@@ -7,19 +7,26 @@ const { radian } = require('../../utils/math');
 class Human {
   constructor(entity) {
     this.name   = 'animation';
-    this.state  = undefined;
-    entity.sprite = new PIXI.spine.Spine(loader.resources.player_walk.spineData);
+    this.state  = 'nothing';
+    this.current_action = 'idle';
+    entity.sprite = new PIXI.spine.Spine(loader.resources.player.spineData);
 
     this.sprite = entity.sprite;
     this.entity = entity;
   }
 
   switch(action) {
-    if(this.state === action) return;
-    if(!this.sprite.state.hasAnimation(action))
-      throw new Error('no animation for ' + action);
+    if(this.current_action === action) return;
+    // if(!this.sprite.state.hasAnimation(action))
+    //   throw new Error('no animation for ' + action);
+    const name = this.state + '_' + action;
 
-    this.sprite.state.setAnimation(0, 'walk', true);
+    this.sprite.state.setAnimation(0, name, true);
+    this.current_action = action;
+  }
+
+  set state_to (name) {
+    this.state = name;
   }
 
   face_point(point) {
@@ -38,7 +45,7 @@ class Human {
 
   idle() {
     //TODO
-    this.switch('walk');
+    this.switch('idle');
   }
 
   walk() {
@@ -46,12 +53,16 @@ class Human {
     this.switch('walk');
   }
 
-  kill() {
+  //TODO for testing
+  custom(name){
+    //TODO
+    this.sprite.state.setAnimation(0, name, true);
+  }
 
-    this.sprite.stop();
-    //TODO remove magic number
-    this.sprite.height = 120;
-    this.sprite.width  = 80;
+
+  kill() {
+    //TODO
+    this.switch('walk');
   }
 
   set current_weapon(weapon) { this.weapon = weapon; }

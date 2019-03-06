@@ -26,7 +26,6 @@ const keymap = {
   Shift: 'Shift',
 };
 
-
 function point_collides(position) {
   const { children } = collision_container;
 

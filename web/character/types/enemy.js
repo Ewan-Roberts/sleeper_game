@@ -15,7 +15,6 @@ class Enemy extends Character {
   constructor() {
     super();
     this.name = 'enemy';
-
     this.add_component(new Human(this));
 
     this.add_component(new Vitals(this));

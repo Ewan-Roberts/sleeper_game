@@ -54,6 +54,25 @@ const items = [
     image_name:     'bunny',
   },
   {
+    name:           'weak_bow',
+    animation_name: 'bow',
+    id:             1009,
+    rank:           0,
+    cost:           200,
+    category:       'primary',
+    type:           'projectile',
+    ammo:           'arrow',
+    range:          200,
+    damage:         1,
+    speed:          400,
+    condition:      100,
+
+    visual_name:    'weak bow',
+    description:    'A weak bow for testing',
+    image_name:     'bunny',
+  },
+
+  {
     name:           'dev_bow',
     animation_name: 'bow',
     id:             1003,

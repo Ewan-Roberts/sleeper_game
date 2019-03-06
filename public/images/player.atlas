@@ -1,26 +1,47 @@
 
-player_walk.png
+player.png
 size: 256,256
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 foot
   rotate: false
-  xy: 87, 95
+  xy: 87, 64
   size: 71, 37
   orig: 96, 64
   offset: 13, 12
   index: -1
 leg
   rotate: false
-  xy: 87, 49
+  xy: 178, 49
   size: 69, 44
   orig: 96, 64
   offset: 13, 10
   index: -1
+hand_steadying_gun
+  rotate: false
+  xy: 87, 103
+  size: 38, 39
+  orig: 64, 64
+  offset: 14, 13
+  index: -1
+forearm
+  rotate: false
+  xy: 160, 95
+  size: 59, 38
+  orig: 64, 64
+  offset: 1, 13
+  index: -1
+small_candle
+  rotate: false
+  xy: 1, 161
+  size: 84, 92
+  orig: 100, 100
+  offset: 7, 4
+  index: -1
 arm
   rotate: false
-  xy: 87, 1
+  xy: 178, 1
   size: 72, 46
   orig: 96, 64
   offset: 12, 6
@@ -34,7 +55,7 @@ torso
   index: -1
 head
   rotate: false
-  xy: 1, 161
+  xy: 87, 1
   size: 89, 61
   orig: 96, 96
   offset: 3, 17

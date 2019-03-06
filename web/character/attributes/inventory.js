@@ -19,6 +19,7 @@ class Inventory {
 
   arm_ranged(name) {
     this.equipped = Item_Manager.get_item(name);
+    this.ranged_weapon = Item_Manager.get_item(name);
   }
 
   equip_ranged_weapon() {

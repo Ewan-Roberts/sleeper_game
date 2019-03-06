@@ -16,11 +16,11 @@ global.set_light_level = amount => {
 };
 
 // QUICK POINT CHECKING
-global.place_bunny = (x, y) => {
+global.place_bunny = ({ x, y }) => {
   const texture = PIXI.Texture.fromImage('bunny');
   texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
-  const bunny = new PIXI.Sprite.fromFrame(texture);
+  const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
   bunny.anchor.set(0.5);
 

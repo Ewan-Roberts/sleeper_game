@@ -15,6 +15,10 @@ class Item {
     this.sprite.anchor.set(0.5);
   }
 
+  add_component(component) {
+    this[component.name] = component;
+  }
+
   set height(value) {
     this.sprite.height = value;
 

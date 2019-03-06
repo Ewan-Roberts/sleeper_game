@@ -19,7 +19,10 @@ function random_number(min, max) {
 function radian(anchor, point){
   const radian_value = Math.atan2(anchor.y - point.y, anchor.x - point.x);
 
-  if(!radian_value) throw new Error('invald radian ' + radian_value);
+  if(
+    global.isNaN(radian_value) ||
+    radian_value === undefined
+  ) throw new Error('invald radian ' + radian_value);
 
   return radian_value;
 }

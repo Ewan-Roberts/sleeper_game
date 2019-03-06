@@ -10,23 +10,22 @@ class Range {
     this.animation = animation;
     this.sprite    = sprite;
     this.aiming    = new Aiming_Line();
-
-    this.ranged_weapon = inventory.ranged_weapon;
   }
 
   equip() {
     this.inventory.equip_ranged_weapon();
 
-    this.animation.weapon = this.ranged_weapon.animation_name;
+    this.animation.weapon = this.inventory.ranged_weapon.animation_name;
   }
 
   attack(target) {
     this.equip();
     this.animation.ready_weapon();
     this.animation.face_point(target.sprite);
-    const ranged_weapon = this.ranged_weapon;
-    const sprite = this.sprite;
-    shoot_arrow({ ranged_weapon, sprite }, target);
+
+    const ranged_weapon = this.inventory.ranged_weapon;
+    const origin = this.sprite;
+    shoot_arrow(ranged_weapon.speed, ranged_weapon.damage, origin, target.sprite);
   }
 
   _add_line(sprite) {

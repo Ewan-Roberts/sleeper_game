@@ -31,23 +31,13 @@ class Vitals {
     return this.health < 0;
   }
 
-  _kill() {
-    if(this.name === 'player') Game.over();
-
-    this.status = 'dead';
-    // this.logic.kill();
-  }
-
   damage(damage) {
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
-    const is_dead = this._dead(damage);
 
-    if(is_dead) {
-      this.blood.add_at(this.sprite);
+    this.health -= damage;
 
-      this._kill();
-    }
+    if(this.health < 0) this.status = 'dead';
   }
 }
 

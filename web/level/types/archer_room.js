@@ -6,15 +6,16 @@ const { Hay        } = require('../attributes/hay_bale');
 
 const { Camera     } = require('../../engine/camera');
 const { Player     } = require('../../character/types/player');
+const { Archer     } = require('../../character/archetypes/archer');
 
-class Projectile_Room extends Level {
+class Archer_Room extends Level {
   constructor() {
     super();
     this.name        = 'animations_room';
 
     this.background  = new Background('grid_floor');
+    this.archer      = new Archer();
     this.hay_bale    = new Hay();
-    this.hay_bale_2  = new Hay();
 
     this.camera      = new Camera();
     this.player      = new Player();
@@ -33,17 +34,19 @@ class Projectile_Room extends Level {
     this.player.set_position({x: 800, y: 500});
     this.player.inventory.arm_ranged('old_bow');
 
-    this.hay_bale.set_position({x: 1300, y: 500});
+    this.hay_bale.set_position({x: 1300, y: 400});
     this.hay_bale.rotation = -1.5;
     this.hay_bale.alpha = 0.5;
 
-    this.hay_bale_2.set_position({x: 1100, y: 300});
-    this.hay_bale_2.rotation = -2.5;
-    this.hay_bale_2.alpha = 0.5;
+    this.archer.set_position({x: 1300, y: 600});
 
+    this.archer.enemy(this.player);
+    this.archer.logic_start();
+
+    this.archer.inventory.arm_ranged('weak_bow');
   }
 }
 
 module.exports = {
-  Projectile_Room,
+  Archer_Room,
 };

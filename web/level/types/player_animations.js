@@ -8,11 +8,14 @@ const { NPC        } = require('../../character/types/npc');
 class Animations_Room extends Level {
   constructor() {
     super();
-    this.name        = 'animations_room';
+    this.name           = 'animations_room';
 
-    this.background  = new Background('grid_floor');
-    this.camera      = new Camera();
-    this.walking     = new NPC();
+    this.background     = new Background('grid_floor');
+    this.camera         = new Camera();
+    this.nothing_walking = new NPC();
+    this.nothing_idle   = new NPC();
+    this.candle_walking = new NPC();
+    this.candle_idle    = new NPC();
 
     this._set_elements();
   }
@@ -25,9 +28,17 @@ class Animations_Room extends Level {
 
     this.camera.set_center({ x: 1400, y: 500 });
 
-    this.walking.set_position({x: 800, y: 300});
-    this.walking.sprite.scale.set(0.4);
-    this.walking.animation.switch('walk');
+    this.nothing_walking.set_position({x: 800, y: 250});
+    this.nothing_walking.animation.custom('nothing_walk');
+
+    this.candle_walking.set_position({x: 800, y: 400});
+    this.candle_walking.animation.custom('candle_walk');
+
+    this.nothing_idle.set_position({x: 800, y: 600});
+    this.nothing_idle.animation.custom('nothing_idle');
+
+    this.candle_idle.set_position({x: 800, y: 750});
+    this.candle_idle.animation.custom('candle_idle');
   }
 }
 

@@ -1,15 +1,13 @@
 'use strict';
 
 require('./engine/globals');
-require('./engine/shadows');
 
 const { loader } = require('./engine/packer');
 
 loader.add('../../images/bedroom_EN_web.json');
-loader.add('dragon',      'images/Dragon.json');
-loader.add('player_walk', 'images/player_walk.json');
+loader.add('dragon', 'images/Dragon.json');
+loader.add('player', 'images/player.json');
 loader.load(() => {
-  const { Level_Loader } = require('./level/dev_level.js');
-
+  const { Level_Loader } = require('./level/boot_loader.js');
   Level_Loader.boot();
 });

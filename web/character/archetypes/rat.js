@@ -4,21 +4,29 @@ const { timer            } = require('../../engine/ticker');
 const { Entity_Container } = require('../../engine/entity_container.js');
 const { distance_between } = require('../../utils/math');
 
+const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
+const { Blood  } = require('../../view/types/blood');
 
 class Rat extends Animal {
   constructor() {
     super();
     this.name = 'rat';
 
+    this.sprite.events = new event();
+    this.sprite.events.on('damage', amount => this.on_damage(amount));
+    this.sprite.id = 2;
+
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
+    this.blood = new Blood();
 
     this._logic        = timer.createTimer(800);
     this._logic.repeat = 20;
     this._logic.expire = true;
+    this._logic.dead   = false;
 
     Entity_Container.add(this);
   }
@@ -39,6 +47,17 @@ class Rat extends Animal {
     return distance > 200;
   }
 
+  on_damage(amount) {
+    if(this._logic.dead) return;
+
+    this.vitals.damage(amount);
+
+    if(this.vitals.status === 'dead') {
+      this.blood.add_at(this.sprite);
+      this.kill();
+    }
+  }
+
   kill() {
     if(!this.loot.items.length) this.loot.populate();
     this.loot.create_icon();
@@ -48,6 +67,7 @@ class Rat extends Animal {
     this.pathfind.stop();
     this._logic.stop();
     this._logic.remove();
+    this._logic.dead = true;
   }
 
   enemy(character) {
