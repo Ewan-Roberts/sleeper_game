@@ -31,9 +31,9 @@ const collision_container = new PIXI.Container();
 collision_container.name = 'collision_items';
 collision_container.zIndex = low;
 
-const non_collision_container = new PIXI.Container();
-non_collision_container.name = 'non_collision_items';
-non_collision_container.zIndex = low;
+const item_container = new PIXI.Container();
+item_container.name = 'non_collision_items';
+item_container.zIndex = low;
 
 const door_container = new PIXI.Container();
 door_container.name = 'door_container';
@@ -43,13 +43,6 @@ const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';
 critter_container.zIndex = low;
 
-const network_player_container = new PIXI.Container();
-network_player_container.name = 'network_players';
-
-const friend_container = new PIXI.Container();
-friend_container.name = 'friend_container';
-friend_container.zIndex = medium;
-
 const arrow_container = new PIXI.Container();
 arrow_container.name = 'arrow_container';
 arrow_container.zIndex = medium;
@@ -58,9 +51,13 @@ const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
 enemy_container.zIndex = medium;
 
+const player_container = new PIXI.Container();
+player_container.name = 'player_container';
+player_container.zIndex = medium;
+
 const visual_effects_container = new PIXI.Container();
 visual_effects_container.name = 'visual_effects_container';
-visual_effects_container.zIndex = -999;
+visual_effects_container.zIndex = close;
 
 const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
@@ -83,13 +80,12 @@ world.addChild(
   background_container,
   grid_container,
   collision_container,
-  non_collision_container,
+  item_container,
   door_container,
   critter_container,
-  network_player_container,
-  friend_container,
   arrow_container,
   enemy_container,
+  player_container,
   cutscene_container,
   gui_container,
   dialog_container,
@@ -105,12 +101,13 @@ module.exports = {
   critter_container,
   gui_container,
   enemy_container,
+  player_container,
   door_container,
   arrow_container,
   raycasting_container,
   visual_effects_container,
   grid_container,
-  non_collision_container,
+  item_container,
 };
 
 

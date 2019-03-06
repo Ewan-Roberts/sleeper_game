@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { gui_container } = require('../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 const { timer         } = require('../engine/ticker');
 
 //TODO this needs to be abstracted
@@ -9,7 +9,7 @@ const cone = PIXI.Sprite.fromFrame('yellow_triangle');
 cone.alpha = 0;
 cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
-gui_container.addChild(cone);
+visual_effects_container.addChild(cone);
 
 class Aiming_Cone {
   static start_at(point) {

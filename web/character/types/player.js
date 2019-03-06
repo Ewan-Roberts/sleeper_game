@@ -1,6 +1,6 @@
 'use strict';
 
-const { world } = require('../../engine/shadows');
+const { player_container } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
 const { Human     } = require('../animations/human');
@@ -23,7 +23,8 @@ class Player extends Character {
     this.add_component(new Human(this));
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.blood = new Blood();
+    this.sprite.id = 3;
+    this.blood     = new Blood();
 
     this.add_component(new Light(this));
     this.add_component(new Tween(this.sprite));
@@ -33,7 +34,7 @@ class Player extends Character {
     this.add_component(new Mouse(this));
     this.add_component(new Status());
 
-    world.addChild(this.sprite);
+    player_container.addChild(this.sprite);
   }
 
   on_damage(amount) {

@@ -1,28 +1,40 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { loader } = require('../../engine/packer');
 const { radian } = require('../../utils/math');
+
+class animation {
+  static idle_nothing() {
+    const frames = [];
+    for (let i = 0; i <= 36; i++) {
+      const name = (i<10)?`Armature_nothing_idle_0${i}`:`Armature_nothing_idle_${i}`;
+
+      frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return frames;
+  }
+}
 
 class Human {
   constructor(entity) {
     this.name   = 'animation';
     this.state  = 'nothing';
     this.current_action = 'idle';
-    entity.sprite = new PIXI.spine.Spine(loader.resources.player.spineData);
-
+    this.idle_texture = animation.idle_nothing();
+    entity.sprite = new PIXI.extras.AnimatedSprite(this.idle_texture);
     this.sprite = entity.sprite;
+    this.sprite.anchor.set(0.5);
     this.entity = entity;
   }
 
   switch(action) {
-    if(this.current_action === action) return;
-    // if(!this.sprite.state.hasAnimation(action))
-    //   throw new Error('no animation for ' + action);
-    const name = this.state + '_' + action;
+    if (this.state === action) return;
 
-    this.sprite.state.setAnimation(0, name, true);
-    this.current_action = action;
+    this.sprite.textures = this.idle_texture;
+    this.sprite.loop = true;
+    this.sprite.play();
+    this.state = action;
   }
 
   set state_to (name) {

@@ -19,6 +19,19 @@ class Item {
     this[component.name] = component;
   }
 
+  // This is passing in a function
+  // and this is amazing
+  set click(action) {
+    this.sprite.interactive = true;
+    this.sprite.buttonMode = true;
+
+    this.shade.interactive = true;
+    this.shade.buttonMode = true;
+
+    this.sprite.click = action;
+    this.shade.click  = action;
+  }
+
   set height(value) {
     this.sprite.height = value;
 

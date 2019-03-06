@@ -1,8 +1,8 @@
 'use strict';
 
-const { gui_container              } = require('../../engine/pixi_containers');
-const { world                      } = require('../../engine/shadows');
-const { shoot_arrow } = require('../../engine/ranged');
+const { gui_container } = require('../../engine/pixi_containers');
+const { world         } = require('../../engine/shadows');
+const { shoot_arrow   } = require('../../engine/ranged');
 
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
@@ -26,13 +26,12 @@ class Mouse {
   _mouse_up(event) {
     // if(!this.keyboard.shift_pressed) return;
     const mouse_position = event.data.getLocalPosition(world);
-    const { ammo_type } = this.inventory;
+    if(this.cone_timer) this.cone_timer.stop();
 
-    this.cone_timer.stop();
     this.animation.idle();
 
     //TODO ammo management engine
-    if(this.keyboard.shift_pressed && ammo_type === 'arrow') {
+    if(this.keyboard.shift_pressed) {
       const { equipped } = this.inventory;
 
       shoot_arrow(equipped.speed, equipped.damage, this.sprite, mouse_position);
@@ -47,8 +46,10 @@ class Mouse {
     this.animation.face_point(mouse_position);
 
     //TODO: this should be managed better it creates a timer each time
-    this.cone_timer = Aiming_Cone.start_at(this.sprite);
-    this.cone_timer.start();
+    if(this.keyboard.shift_pressed) {
+      this.cone_timer = Aiming_Cone.start_at(this.sprite);
+      this.cone_timer.start();
+    }
   }
 
   _mouse_move(event) {
@@ -56,7 +57,7 @@ class Mouse {
     this.animation.face_point(mouse_position);
 
     const rotation = radian(mouse_position, this.sprite);
-    cone.rotation = rotation - 1.57;
+    if(cone) cone.rotation = rotation - 1.57;
   }
 }
 

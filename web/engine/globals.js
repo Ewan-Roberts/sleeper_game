@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { gui_container } = require('./pixi_containers.js');
+const { gui_container } = require('./pixi_containers');
 
 /* ***************************************************************
  *                                                               *
@@ -28,7 +28,7 @@ global.place_bunny = ({ x, y }) => {
   shade.parentGroup = PIXI.shadows.casterGroup;
   shade.position.copy(bunny);
 
-  gui_container.addChild(bunny);
+  gui_container.addChild(bunny, shade);
 
   return bunny;
 };
