@@ -4,21 +4,17 @@ const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
 const { Hay        } = require('../elements/hay_bale');
 
-const { Camera     } = require('../../engine/camera');
-const { Player     } = require('../../character/types/player');
 const { Archer     } = require('../../character/archetypes/archer');
 
 class Archer_Room extends Level {
-  constructor() {
+  constructor(player) {
     super();
     this.name        = 'animations_room';
 
     this.background  = new Background('grid_floor');
     this.archer      = new Archer();
     this.hay_bale    = new Hay();
-
-    this.camera      = new Camera();
-    this.player      = new Player();
+    this.player      = player;
 
     this._set_elements();
   }
@@ -28,8 +24,6 @@ class Archer_Room extends Level {
 
     this.background.alpha = 0.2;
     this.background.set_position({x: 1100, y: 500});
-
-    this.camera.set_center({ x: 1400, y: 500 });
 
     this.player.set_position({x: 800, y: 500});
     this.player.inventory.arm_ranged('old_bow');

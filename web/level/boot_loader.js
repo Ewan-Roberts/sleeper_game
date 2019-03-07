@@ -9,12 +9,13 @@ const { Shadow_Room     } = require('./types/shadow_room');
 const { Random_Room     } = require('./types/random_room');
 const { Transition_Room } = require('./types/transition_room');
 const { Intro           } = require('../cutscene/types/intro.js');
+const { Player          } = require('../character/types/player.js');
 
 // Boot loader for testing
 // archer.raycasting.add(this.level.segments);
 class Level_Loader {
-  static _intro() {
-    const intro_cutscene = new Intro();
+  static _intro(player) {
+    const intro_cutscene = new Intro(player);
     intro_cutscene.start();
   }
 
@@ -26,42 +27,45 @@ class Level_Loader {
     new Animations_Room();
   }
 
-  static _pathfind() {
-    new Pathfind_Room();
+  static _pathfind(player) {
+    new Pathfind_Room(player);
   }
 
-  static _projectile() {
-    new Projectile_Room();
+  static _projectile(player) {
+    new Projectile_Room(player);
   }
 
-  static _archer() {
-    new Archer_Room();
+  static _archer(player) {
+    new Archer_Room(player);
   }
 
-  static _random() {
-    new Random_Room();
+  static _random(player) {
+    new Random_Room(player);
   }
 
-  static _transition() {
-    new Transition_Room();
+  static _transition(player) {
+    new Transition_Room(player);
   }
 
-  static _shadow() {
-    const shadow = new Shadow_Room();
+  static _shadow(player) {
+    const shadow = new Shadow_Room(player);
 
     shadow.start();
   }
 
   static boot() {
-    // this._intro();
+    const player = new Player();
+    player.set_position({x:800, y:500});
+
+    // this._intro(player);
     // this._development();
     // this._animation();
-    // this._pathfind();
-    // this._projectile();
-    // this._archer();
-    // this._random();
-    // this._shadow();
-    this._transition();
+    // this._pathfind(player);
+    // this._projectile(player);
+    // this._archer(player);
+    // this._random(player);
+    // this._shadow(player);
+    this._transition(player);
   }
 }
 

@@ -17,7 +17,7 @@ class Mouse {
     this.animation = animation;
     this.inventory = inventory;
     this.sprite    = sprite;
-
+    this.shift_pressed = true;
     world.on('pointerup',   event => this._mouse_up(event));
     world.on('pointermove', event => this._mouse_move(event));
     world.on('pointerdown', event => this._mouse_down(event));
@@ -31,7 +31,7 @@ class Mouse {
     this.animation.idle();
 
     //TODO ammo management engine
-    if(this.keyboard.shift_pressed) {
+    if(this.shift_pressed) {
       const { equipped } = this.inventory;
 
       shoot_arrow(equipped.speed, equipped.damage, this.sprite, mouse_position);
@@ -46,7 +46,7 @@ class Mouse {
     this.animation.face_point(mouse_position);
 
     //TODO: this should be managed better it creates a timer each time
-    if(this.keyboard.shift_pressed) {
+    if(this.shift_pressed) {
       this.cone_timer = Aiming_Cone.start_at(this.sprite);
       this.cone_timer.start();
     }

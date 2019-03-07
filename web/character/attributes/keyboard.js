@@ -1,5 +1,6 @@
 'use strict';
 
+const PIXI = require('pixi.js');
 const { collision_container } = require('../../engine/pixi_containers');
 const { pad_container } = require('../../engine/pixi_containers');
 
@@ -48,22 +49,22 @@ class Keyboard {
     this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
-    this.move          = new event();
+    // this.move          = new event();
 
-    global.window.addEventListener('keydown', event => this.key_down(event.key));
-    global.window.addEventListener('keyup',   ()    => this.key_up());
+    PIXI.keyboardManager.on('down', key => this.key_down(key));
+    PIXI.keyboardManager.on('released', () => this.key_up());
+    // global.window.addEventListener('keydown', event => this.key_down(event.key));
+    // global.window.addEventListener('keyup',   ()    => this.key_up());
   }
   //TODO
   save_game() { Game.save(this.entity); }
 
   key_down(key) {
-    if(!this.can_move) return;
-
-    switch(keymap[key]) {
-      case 'up'    : this.keyboard_up();          return;
-      case 'left'  : this.keyboard_left();        return;
-      case 'down'  : this.keyboard_down();        return;
-      case 'right' : this.keyboard_right();       return;
+    switch(key) {
+      case  87    : this.keyboard_up();          return;//up
+      case  65  : this.keyboard_left();        return;//left
+      case  83  : this.keyboard_down();        return;
+      case  68 : this.keyboard_right();       return;
       case 'n'     : this.save_game();            return;
       case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;
@@ -77,6 +78,10 @@ class Keyboard {
     this.shift_pressed = false;
 
     this.animation.idle();
+  }
+
+  destroy() {
+    PIXI.keyboardManager.disable();
   }
 
   keyboard_shift() { this.shift_pressed = true; }
@@ -93,7 +98,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_up_by(this.speed);
-    this.move.emit('event');
 
     world.y += this.speed;
   }
@@ -110,7 +114,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_down_by(this.speed);
-    this.move.emit('event');
 
     world.y -= this.speed;
   }
@@ -127,7 +130,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_left_by(this.speed);
-    this.move.emit('event');
 
     world.x += this.speed;
   }
@@ -144,7 +146,6 @@ class Keyboard {
     if(collision) return this.animation.idle();
 
     this.animation.move_right_by(this.speed);
-    this.move.emit('event');
 
     world.x -= this.speed;
   }

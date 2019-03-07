@@ -2,19 +2,22 @@
 
 const { sleep       } = require('../../engine/time');
 const { Shadow_Room } = require('../../level/types/shadow_room');
+const { Camera      } = require('../../engine/camera');
 
 class Intro extends Shadow_Room {
-  constructor() {
-    super();
+  constructor(player) {
+    super(player);
+
+    this.camera = new Camera();
   }
 
   async start() {
     // global.set_light_level(0.4);
-
+    this.camera.tween.from({ x: -120, y: -150 });
+    this.camera.tween.to({ x: -100,  y: -120 });
+    this.camera.tween.to({ x: -300, y: 100 });
+    this.camera.tween.smooth();
     this.player.keyboard.can_move = false;
-    this.player.keyboard.move.on('event', () => {
-      this.player.light.set_position(this.player.sprite);
-    });
 
     this.wall_candle.hide();
     this.table_candle.hide();

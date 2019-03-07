@@ -5,8 +5,6 @@ const { Sun        } = require('../../light/types/sun');
 const { Lighter    } = require('../../light/types/lighter');
 const { Candle     } = require('../../light/types/candle');
 const { Ambient    } = require('../../light/types/ambient');
-const { Player     } = require('../../character/types/player');
-const { Camera     } = require('../../engine/camera');
 // const { sleep      } = require('../../engine/time');
 
 const { Background } = require('../elements/background');
@@ -14,10 +12,9 @@ const { Wall       } = require('../elements/wall');
 const { Chest      } = require('../elements/chest');
 
 class Shadow_Room {
-  constructor() {
-    this.player          = new Player();
+  constructor(player) {
+    this.player          = player;
     this.background      = new Background('debug_room');
-    this.camera          = new Camera();
 
     this.top_left_wall   = new Wall();
     this.down_left_wall  = new Wall();
@@ -101,11 +98,6 @@ class Shadow_Room {
     this.left_pole.width = 10;
     this.left_pole.height = 5;
 
-    this.camera.tween.from({ x: -120, y: -150 });
-    this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -300, y: 100 });
-    this.camera.tween.smooth();
-
     this.lantern.set_position(800, 100);
     this.lantern.tween.add_path([
       {x: 1000, y: 100},
@@ -130,9 +122,9 @@ class Shadow_Room {
   }
 
   start() {
-    this.player.keyboard.move.on('event', () => {
-      this.player.light.set_position(this.player.sprite);
-    });
+    // this.player.keyboard.move.on('event', () => {
+    //   this.player.light.set_position(this.player.sprite);
+    // });
 
     this.wall_candle.hide();
     this.table_candle.hide();
@@ -142,10 +134,6 @@ class Shadow_Room {
     this.sun.fade.in(0.05, 0.8);
 
     this.ambient.fade_in(0.005, 0.05);
-
-    this.camera.tween.time = 11000;
-    this.camera.tween.start();
-
     this.lantern.tween.time = 10000;
     this.lantern.tween.start();
     this.lantern.tween.movement.on('end', () => {

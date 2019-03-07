@@ -1,18 +1,16 @@
 'use strict';
 
 const { Level      } = require('../level_model');
-
-const { Player     } = require('../../character/types/player');
 const { Rat        } = require('../../character/archetypes/rat');
 const { Archer     } = require('../../character/archetypes/archer');
 const { Background } = require('../../level/elements/background');
 
 class Pathfind_Room extends Level {
-  constructor() {
+  constructor(player) {
     super();
     this.name        = 'pathfinding_room';
 
-    this.player      = new Player();
+    this.player      = player;
     this.rat         = new Rat();
     this.archer      = new Archer();
 

@@ -19,6 +19,7 @@
     "express": "^4.16.3",
     "imagemin-jpegtran": "^5.0.2",
     "imagemin-pngquant": "^6.0.0",
+    "pixi-keyboard": "^0.9.4",
     "pixi-layers": "^0.1.9",
     "pixi-packer-parser": "^2.0.0",
     "pixi-shadows": "0.0.7",
