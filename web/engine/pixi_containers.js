@@ -59,6 +59,10 @@ const visual_effects_container = new PIXI.Container();
 visual_effects_container.name = 'visual_effects_container';
 visual_effects_container.zIndex = close;
 
+const pad_container = new PIXI.Container();
+pad_container.name = 'pad_container';
+pad_container.zIndex = close;
+
 const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = close;
@@ -89,7 +93,8 @@ world.addChild(
   cutscene_container,
   gui_container,
   dialog_container,
-  raycasting_container
+  raycasting_container,
+  pad_container
 );
 
 world.updateLayersOrder();
@@ -108,6 +113,7 @@ module.exports = {
   visual_effects_container,
   grid_container,
   item_container,
+  pad_container,
 };
 
 

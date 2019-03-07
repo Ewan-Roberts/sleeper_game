@@ -26,6 +26,10 @@ class Background {
   set alpha(amount) {
     this.sprite.alpha = amount;
   }
+
+  destroy() {
+    background_container.removeChild(this.sprite);
+  }
 }
 
 module.exports = {

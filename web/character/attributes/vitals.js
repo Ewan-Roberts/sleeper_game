@@ -1,7 +1,6 @@
 'use strict';
 
 const { Blood } = require('../../view/types/blood');
-const { Game  } = require('../../engine/save_manager');
 
 class Vitals {
   constructor({ sprite }) {

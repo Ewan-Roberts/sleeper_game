@@ -1,6 +1,7 @@
 'use strict';
 
 const { collision_container } = require('../../engine/pixi_containers');
+const { pad_container } = require('../../engine/pixi_containers');
 
 const event        = require('events');
 const { Game     } = require('../../engine/save_manager');
@@ -30,6 +31,12 @@ function point_collides(position) {
   const { children } = collision_container;
 
   return children.find(child => child.containsPoint(position));
+}
+
+function event_pad(position) {
+  const { children } = pad_container;
+  const pad = children.find(child => child.containsPoint(position));
+  if(pad) pad.events.emit('trigger');
 }
 
 class Keyboard {
@@ -81,6 +88,7 @@ class Keyboard {
     const point = this.sprite.getGlobalPosition();
     point.y -= this.buffer;
 
+    event_pad(point);
     const collision = point_collides(point);
     if(collision) return this.animation.idle();
 
@@ -97,6 +105,7 @@ class Keyboard {
     const point = this.sprite.getGlobalPosition();
     point.y += this.buffer;
 
+    event_pad(point);
     const collision = point_collides(point);
     if(collision) return this.animation.idle();
 
@@ -113,6 +122,7 @@ class Keyboard {
     const point = this.sprite.getGlobalPosition();
     point.x -= this.buffer;
 
+    event_pad(point);
     const collision = point_collides(point);
     if(collision) return this.animation.idle();
 
@@ -129,6 +139,7 @@ class Keyboard {
     const point = this.sprite.getGlobalPosition();
     point.x += this.buffer;
 
+    event_pad(point);
     const collision = point_collides(point);
     if(collision) return this.animation.idle();
 

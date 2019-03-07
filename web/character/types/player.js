@@ -47,6 +47,10 @@ class Player extends Character {
       return;
     }
   }
+
+  destroy() {
+    player_container.removeChild(this.sprite);
+  }
 }
 
 module.exports = {

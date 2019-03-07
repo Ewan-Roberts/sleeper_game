@@ -31,9 +31,11 @@ class Random_Room extends Level {
     global.set_light_level(1);
     this.background.alpha = 0.2;
     this.background.set_position({x:1100, y:500});
-    this.camera.set_center({x:1400, y:500});
+    this.camera.set_center({x:800, y:200});
+    this.camera.set_position({x:800, y:200});
     this.player.set_position({x:800, y:500});
     this.player.inventory.arm_ranged('old_bow');
+    this.player.vitals.speed = 10;
 
     this.randomise.box(200);
     this.randomise.set_position({x:700, y:250});
