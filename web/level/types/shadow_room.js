@@ -9,9 +9,9 @@ const { Player     } = require('../../character/types/player');
 const { Camera     } = require('../../engine/camera');
 // const { sleep      } = require('../../engine/time');
 
-const { Background } = require('../../level/attributes/background');
-const { Wall       } = require('../../level/attributes/wall');
-const { Chest      } = require('../../level/attributes/chest');
+const { Background } = require('../elements/background');
+const { Wall       } = require('../elements/wall');
+const { Chest      } = require('../elements/chest');
 
 class Shadow_Room {
   constructor() {

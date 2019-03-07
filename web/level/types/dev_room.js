@@ -1,7 +1,7 @@
 'use strict';
 
 const { Level      } = require('../level_model');
-const { Background } = require('../attributes/background');
+const { Background } = require('../elements/background');
 const { Camera     } = require('../../engine/camera');
 
 class Dev_Room extends Level {

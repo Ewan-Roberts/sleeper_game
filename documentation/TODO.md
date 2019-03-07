@@ -73,7 +73,6 @@ Key:
 - Make basic alert boxes
 
 ## ART: (outsource)
-- Spine format replacement for spritesheet
 - Large scale art replacement (may need artist)
 
 ## mechanics: (low)

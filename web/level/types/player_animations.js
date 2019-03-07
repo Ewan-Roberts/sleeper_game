@@ -1,7 +1,7 @@
 'use strict';
 
 const { Level      } = require('../level_model');
-const { Background } = require('../attributes/background');
+const { Background } = require('../elements/background');
 const { Camera     } = require('../../engine/camera');
 const { NPC        } = require('../../character/types/npc');
 
@@ -14,9 +14,13 @@ class Animations_Room extends Level {
     this.camera         = new Camera();
     this.nothing_walking = new NPC();
     this.nothing_idle   = new NPC();
+
     this.candle_walking = new NPC();
     this.candle_idle    = new NPC();
 
+    this.bow_walking = new NPC();
+    this.bow_idle= new NPC();
+    this.bow_shoot= new NPC();
     this._set_elements();
   }
 
@@ -29,16 +33,28 @@ class Animations_Room extends Level {
     this.camera.set_center({ x: 1400, y: 500 });
 
     this.nothing_walking.set_position({x: 800, y: 250});
-    this.nothing_walking.animation.custom('nothing_walk');
+    this.nothing_walking.animation.switch('nothing_walk');
 
     this.candle_walking.set_position({x: 800, y: 400});
-    this.candle_walking.animation.custom('candle_walk');
+    this.candle_walking.animation.switch('candle_walk');
 
     this.nothing_idle.set_position({x: 800, y: 600});
-    this.nothing_idle.animation.custom('nothing_idle');
+    this.nothing_idle.animation.switch('nothing_idle');
 
     this.candle_idle.set_position({x: 800, y: 750});
-    this.candle_idle.animation.custom('candle_idle');
+    this.candle_idle.animation.switch('candle_idle');
+
+    this.bow_walking.animation.switch('bow_walk');
+    this.bow_walking.animation.speed = 0.4;
+    this.bow_walking.set_position({x: 1000, y: 750});
+
+    this.bow_idle.animation.switch('bow_idle');
+    this.bow_idle.animation.speed = 0.4;
+    this.bow_idle.set_position({x: 1000, y: 600});
+
+    this.bow_shoot.animation.switch('bow_shoot');
+    this.bow_shoot.animation.speed = 0.4;
+    this.bow_shoot.set_position({x: 1000, y: 450});
   }
 }
 

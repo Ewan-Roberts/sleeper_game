@@ -1,8 +1,8 @@
 'use strict';
 
 const { Level      } = require('../level_model');
-const { Background } = require('../attributes/background');
-const { Hay        } = require('../attributes/hay_bale');
+const { Background } = require('../elements/background');
+const { Hay        } = require('../elements/hay_bale');
 
 const { Camera     } = require('../../engine/camera');
 const { Player     } = require('../../character/types/player');

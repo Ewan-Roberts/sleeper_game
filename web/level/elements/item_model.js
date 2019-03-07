@@ -95,6 +95,37 @@ class Item {
 
     collision_container.addChild(this.shade);
   }
+
+  set state_handling(bool) {
+    if(bool) this._add_state_handling();
+  }
+
+  _add_state_handling() {
+    this.click = () => {
+      switch(this.state) {
+        case 'closed': this._open();  break;
+        case 'full'  : this._empty(); break;
+      }
+    };
+  }
+
+  _open() {
+    if(this.state === 'open') return;
+    this.state = 'open';
+
+    global.set_light_level(1);
+    this.loot.populate();
+    this.loot.show();
+  }
+
+  _empty() {
+    this.state = 'empty';
+  }
+
+  fill() {
+    this.state = 'full';
+  }
+
 }
 
 module.exports = {

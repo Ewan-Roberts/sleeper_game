@@ -1,13 +1,13 @@
 'use strict';
 
-const { gui_container } = require('../../engine/pixi_containers');
-const { world         } = require('../../engine/shadows');
-const { shoot_arrow   } = require('../../engine/ranged');
+const { visual_effects_container } = require('../../engine/pixi_containers');
 
+const { world       } = require('../../engine/shadows');
+const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
 
-const cone = gui_container.children.find(elem => elem.name === 'aiming_cone');
+const cone = visual_effects_container.children.find(elem => elem.name === 'aiming_cone');
 
 class Mouse {
   constructor({ keyboard, animation, inventory, sprite }) {

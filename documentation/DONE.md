@@ -32,3 +32,5 @@
 - and the note DONE
 - put one enemy on the map DONE
 - basic arrow management DONE
+- Spine format replacement for spritesheet DONE
+

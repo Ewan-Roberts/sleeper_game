@@ -26,6 +26,7 @@ class Camera {
 
   // TODO you cant anchor set containers
   set_center({ x, y }) {
+    console.log(this.sprite);
     this.sprite.position.y = (this.sprite.height / 2) - y;
     this.sprite.position.x = (this.sprite.width  / 2) - x;
   }

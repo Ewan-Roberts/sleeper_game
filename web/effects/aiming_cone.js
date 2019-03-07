@@ -2,7 +2,8 @@
 const PIXI = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
-const { timer         } = require('../engine/ticker');
+
+const { timer                    } = require('../engine/ticker');
 
 //TODO this needs to be abstracted
 const cone = PIXI.Sprite.fromFrame('yellow_triangle');

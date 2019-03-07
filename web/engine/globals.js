@@ -23,7 +23,8 @@ global.place_bunny = ({ x, y }) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
   bunny.anchor.set(0.5);
-
+  bunny.width = 200;
+  bunny.height = 200;
   const shade = new PIXI.Sprite(texture);
   shade.parentGroup = PIXI.shadows.casterGroup;
   shade.position.copy(bunny);

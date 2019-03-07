@@ -6,6 +6,7 @@ const { Animations_Room } = require('./types/player_animations');
 const { Projectile_Room } = require('./types/projectile_room');
 const { Archer_Room     } = require('./types/archer_room');
 const { Shadow_Room     } = require('./types/shadow_room');
+const { Random_Room     } = require('./types/random_room');
 const { Intro           } = require('../cutscene/types/intro.js');
 
 // Boot loader for testing
@@ -36,6 +37,10 @@ class Level_Loader {
     new Archer_Room();
   }
 
+  static _random() {
+    new Random_Room();
+  }
+
   static _shadow() {
     const shadow = new Shadow_Room();
 
@@ -43,12 +48,13 @@ class Level_Loader {
   }
 
   static boot() {
-    this._intro();
+    // this._intro();
     // this._development();
     // this._animation();
     // this._pathfind();
     // this._projectile();
     // this._archer();
+    this._random();
     // this._shadow();
   }
 }
