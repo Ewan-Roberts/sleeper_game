@@ -6,9 +6,10 @@ const { Hay        } = require('../elements/hay_bale');
 const { Wall       } = require('../elements/wall');
 const { Chest      } = require('../elements/chest');
 const { Candle     } = require('../../light/types/candle');
-const { Backpack  } = require('../elements/back_pack');
-const { Workbench } = require('../elements/workbench');
-const { Item      } = require('../elements/item_model');
+const { Backpack   } = require('../elements/back_pack');
+const { Workbench  } = require('../elements/workbench');
+const { Chair      } = require('../elements/chair');
+const { Matress    } = require('../elements/dirty_matress');
 
 class Items_Room extends Level {
   constructor(player) {
@@ -18,6 +19,8 @@ class Items_Room extends Level {
     this.player      = player;
     this.background  = new Background('grid_floor');
     this.hay_bale    = new Hay();
+    this.chair       = new Chair();
+    this.matress     = new Matress();
     this.chest       = new Chest();
     this.candle      = new Candle();
     this.backpack    = new Backpack();
@@ -35,25 +38,13 @@ class Items_Room extends Level {
     this.background.alpha = 0.5;
     this.background.set_position({x: 1100, y: 500});
 
-    const workbench = new Item('workbench');
-    workbench.width = 150;
-    workbench.height = 100;
-    workbench.add();
-    workbench.set_position({x: iterate_x, y: iterate_y });
+    this.workbench.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
 
-    const dirty_matress = new Item('dirty_matress');
-    dirty_matress.width  = 200;
-    dirty_matress.height = 150;
-    dirty_matress.add();
-    dirty_matress.set_position({x: iterate_x, y: iterate_y });
+    this.matress.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
 
-    const chair = new Item('chair');
-    chair.width  = 100;
-    chair.height = 100;
-    chair.add();
-    chair.set_position({x: iterate_x, y: iterate_y });
+    this.chair.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
 
     this.hay_bale.set_position({x: iterate_x, y: iterate_y });

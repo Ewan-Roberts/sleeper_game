@@ -8,7 +8,8 @@ const { Chest     } = require('../elements/chest');
 const { Hay       } = require('../elements/hay_bale');
 const { Backpack  } = require('../elements/back_pack');
 const { Workbench } = require('../elements/workbench');
-const { Item      } = require('../elements/item_model');
+const { Chair     } = require('../elements/chair');
+const { Matress   } = require('../elements/dirty_matress');
 
 class Randomise {
   constructor() {
@@ -46,28 +47,14 @@ class Randomise {
 
   random_items() {
     //TODO these ae created when invoked
-    const workbench = new Item('workbench');
-    workbench.width = 150;
-    workbench.height = 100;
-    workbench.add();
-
-    const dirty_matress = new Item('dirty_matress');
-    dirty_matress.width  = 200;
-    dirty_matress.height = 150;
-    dirty_matress.add();
-
-    const chair = new Item('chair');
-    chair.width  = 100;
-    chair.height = 100;
-    chair.add();
 
     const item_array = [
       new Hay(),
       new Chest(),
       new Backpack(),
-      workbench,
-      dirty_matress,
-      chair,
+      new Workbench(),
+      new Matress(),
+      new Chair(),
     ];
     const item = item_array[Math.floor(Math.random()*item_array.length)];
 

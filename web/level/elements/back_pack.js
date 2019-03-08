@@ -9,6 +9,9 @@ class Backpack extends Item {
     super('back_pack');
     this.name  = 'back_pack';
 
+    this.sprite.width = 50;
+    this.sprite.height = 80;
+
     this.state = 'closed';
     this.add_component(new Lootable(this));
 

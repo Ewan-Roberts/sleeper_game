@@ -10,7 +10,8 @@ class Workbench extends Item {
     super('workbench');
     this.name  = 'workbench';
 
-    this.sprite.width = 150;
+    this.sprite.width = 200;
+    this.sprite.height = 100;
     this.state = 'closed';
     this.add_component(new Lootable(this));
 

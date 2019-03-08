@@ -9,6 +9,8 @@ class Chest extends Item {
     super('chest_full');
     this.name  = 'chest';
 
+    this.sprite.width = 100;
+    this.sprite.height= 50;
     this.state = 'closed';
     this.add_component(new Lootable(this));
 
