@@ -28,7 +28,7 @@ class Tiled_Homestead extends Level {
 
     this.background.alpha = 0.2;
     this.background.sprite.anchor.set(0);
-    this.background.set_position({x: 90, y: 80});
+    this.background.set_position({x: 0, y: 0});
     this.background.width  = background_data.width;
     this.background.height = background_data.height;
 

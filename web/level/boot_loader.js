@@ -7,6 +7,7 @@ const { Projectile_Room } = require('./types/projectile_room');
 const { Archer_Room     } = require('./types/archer_room');
 const { Shadow_Room     } = require('./types/shadow_room');
 const { Random_Room     } = require('./types/random_room');
+const { Items_Room      } = require('./types/item_room');
 const { Transition_Room } = require('./types/transition_room');
 const { Outside_Room    } = require('./types/outside_room');
 const { Tiled_Room      } = require('./types/tiles_room');
@@ -65,6 +66,10 @@ class Level_Loader {
     new Tiled_Room(player);
   }
 
+  static _item_room(player) {
+    new Items_Room(player);
+  }
+
   static _shadow(player) {
     const shadow = new Shadow_Room(player);
 
@@ -77,7 +82,8 @@ class Level_Loader {
     player.inventory.arm_ranged('old_bow');
 
     // this._tiled_created(player);
-    this._tiled_homestead(player);
+    // this._tiled_homestead(player);
+    this._item_room(player);
     // this._outside(player);
     // this._intro(player);
     // this._development(player);
