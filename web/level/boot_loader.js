@@ -83,7 +83,7 @@ class Level_Loader {
 
     // this._tiled_created(player);
     // this._tiled_homestead(player);
-    this._item_room(player);
+    // this._item_room(player);
     // this._outside(player);
     // this._intro(player);
     // this._development(player);
@@ -93,7 +93,7 @@ class Level_Loader {
     // this._archer(player);
     // this._random(player);
     // this._shadow(player);
-    // this._transition(player);
+    this._transition(player);
   }
 }
 

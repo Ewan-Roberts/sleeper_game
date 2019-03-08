@@ -63,6 +63,7 @@ class Random_Room extends Level {
       const new_level = new Random_Room(this.player);
       new_level.set_elements({x:0,y:this.player.sprite.y});
     });
+    global.set_light_level(1);
   }
 
   _destroy() {
