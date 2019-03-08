@@ -7,14 +7,15 @@
 
 # Updates
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_12.png)
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_13.png)
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_14.png)
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_15.png)
 ## 02-08.03.19:
-- :tada: Random level generator
-- :tada: Lighting engine and types
 - :tada: Cutscene manager
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_12.png)
+- :tada: Item manager
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_13.png)
+- :tada: Lighting engine and types
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_14.png)
+- :tada: Random level generator
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_15.png)
 - :tada: Level engine and types
 - :tada: Level boot loader
 - :tada: Trigger manager
