@@ -14,7 +14,7 @@ class Sun extends Light {
 
     this.shadow.pointCount = 1;
     this.shadow.range      = 500;
-    this.shadow.intensity  = 0.3;
+    this.shadow.intensity  = 0.5;
 
     visual_effects_container.addChild(this.shadow);
   }

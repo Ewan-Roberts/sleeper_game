@@ -10,6 +10,7 @@ const { Random_Room     } = require('./types/random_room');
 const { Transition_Room } = require('./types/transition_room');
 const { Outside_Room    } = require('./types/outside_room');
 const { Tiled_Room      } = require('./types/tiles_room');
+const { Tiled_Homestead } = require('./types/tiled_homestead_room');
 const { Intro           } = require('../cutscene/types/intro.js');
 const { Player          } = require('../character/types/player.js');
 
@@ -49,6 +50,10 @@ class Level_Loader {
     new Random_Room(player);
   }
 
+  static _tiled_homestead(player) {
+    new Tiled_Homestead(player);
+  }
+
   static _transition(player) {
     const new_level = new Transition_Room(player);
     new_level.set_elements({x:0,y:player.sprite.y});
@@ -71,7 +76,8 @@ class Level_Loader {
     player.set_position({x:800, y:500});
     player.inventory.arm_ranged('old_bow');
 
-    this._tiled_created(player);
+    // this._tiled_created(player);
+    this._tiled_homestead(player);
     // this._outside(player);
     // this._intro(player);
     // this._development(player);

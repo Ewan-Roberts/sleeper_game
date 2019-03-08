@@ -43,6 +43,16 @@ class Tiled_Data {
     return pads;
   }
 
+  get background() {
+    const found_layer = this.level_data.layers.find(layer => layer.name ==='background');
+
+    if(!found_layer) throw new Error('no background  found in level data');
+    const background = found_layer.objects;
+
+    //There should only ever be one background
+    return background[0];
+  }
+
   get lights() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='lights');
 
