@@ -24,6 +24,7 @@ class Candle extends Light {
     visual_effects_container.addChild(this.sprite, this.shadow);
   }
 
+
   // This overwrites the base class version
   set_position({x, y}) {
     this.shadow.position.set(x, y);

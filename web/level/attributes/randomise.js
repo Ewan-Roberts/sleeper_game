@@ -23,6 +23,10 @@ class Randomise {
     this.area.height = value;
   }
 
+  set anchor(value) {
+    this.area.anchor.set(value);
+  }
+
   set width(value) {
     this.area.width = value;
   }
@@ -31,7 +35,7 @@ class Randomise {
     let item = null;
     switch(name) {
       case 'workbench' : item = new Workbench(); break;
-      case 'hay'       : item = new Hay(); break;
+      case 'hay'       : item = new Hay();       break;
     }
 
     const point = this.bound_point(item.sprite);

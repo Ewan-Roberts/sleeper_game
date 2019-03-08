@@ -2,10 +2,9 @@
 
 const { collision_container } = require('../../engine/pixi_containers');
 
-const event        = require('events');
+const event      = require('events');
 const { Item   } = require('./item_model');
 const { Vitals } = require('../../character/attributes/vitals');
-const { Blood  } = require('../../view/types/blood');
 
 class Hay extends Item {
   constructor() {
@@ -14,8 +13,6 @@ class Hay extends Item {
     this.sprite.width  = 150;
     this.sprite.height = 120;
     this.sprite.events = new event();
-
-    this.blood = new Blood();
 
     this.add_component(new Vitals(this));
 
@@ -26,8 +23,6 @@ class Hay extends Item {
 
   on_hit(amount) {
     if(this.vitals.status === 'dead') {
-      this.blood.add_at(this.sprite);
-
       this.sprite.destroy();
       return;
     }

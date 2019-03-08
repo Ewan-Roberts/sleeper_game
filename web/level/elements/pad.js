@@ -26,6 +26,9 @@ class Trigger_Pad {
     this.area.alpha = value;
   }
 
+  set anchor(value) {
+    this.area.anchor.set(value);
+  }
 
   set_position({x,y}) {
     this.area.position.set(x,y);

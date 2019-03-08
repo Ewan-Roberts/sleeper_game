@@ -14,6 +14,11 @@ class Light {
   set_position({x, y}) {
     this.candle.set_position({x,y});
   }
+
+  hide() {
+    this.candle.hide();
+  }
+
 }
 
 module.exports = {
