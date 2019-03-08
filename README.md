@@ -7,6 +7,14 @@
 
 # Updates
 
+## 02-08.03.19:
+- :tada: Random level generator
+- :tada: Lighting engine and types
+- :tada: Cutscene manager
+- :tada: Level engine and types
+- :tada: Level boot loader
+- :tada: Trigger manager
+
 ## 24.02.19:
 - Large scale performanse and cruft removal :rocket: :sparkle:
 - Add Lighting types and effect
