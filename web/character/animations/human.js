@@ -152,13 +152,6 @@ class Human {
     this.switch('bow_walk');
   }
 
-  //TODO for testing
-  custom(name){
-    //TODO
-    // this.sprite.state.setAnimation(0, name, true);
-  }
-
-
   kill() {
     //TODO
     this.switch('walk');

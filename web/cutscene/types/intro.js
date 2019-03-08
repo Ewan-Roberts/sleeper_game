@@ -48,12 +48,12 @@ class Intro extends Shadow_Room {
     this.lighter.strike.start();
 
     await sleep(2500);
-    // this.wall_candle.show();
-    // this.wall_candle.start_flickering();
+    this.wall_candle.show();
+    this.wall_candle.start_flickering();
     this.player.animation.state_to = 'candle';
     await sleep(2500);
-    // this.table_candle.show();
-    // this.table_candle.start_flickering();
+    this.table_candle.show();
+    this.table_candle.start_flickering();
 
     this.player.keyboard.can_move = true;
   }

@@ -33,7 +33,6 @@ class Projectile_Room extends Level {
     this.hay_bale_2.set_position({x: 1100, y: 300});
     this.hay_bale_2.rotation = -2.5;
     this.hay_bale_2.alpha = 0.5;
-
   }
 }
 

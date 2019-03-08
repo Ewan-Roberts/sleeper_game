@@ -5,7 +5,9 @@ const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
   constructor(name) {
-    this.sprite = PIXI.Sprite.fromFrame(name);
+    //This is not pulled from the packer but from the level folder
+    this.sprite = PIXI.Sprite.fromImage('level/'+name+'.png');
+
     this.sprite.anchor.set(0.5);
   }
 

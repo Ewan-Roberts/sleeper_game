@@ -40,12 +40,8 @@ class Shadow_Room {
   // sets the elements in the Scene but wont start anything
   _set_elements() {
     this.background.set_position({x: 1100, y: 500});
-
-    this.player.set_position({x: 1000, y: 400});
-    this.player.sprite.scale.set(0.5);
-
-    this.player.animation.weapon = 'knife';
-    this.player.animation.idle();
+    this.background.sprite.scale.x = 0.5;
+    this.background.sprite.scale.y = 0.5;
 
     this.player.tween.from({ x: 1000, y: 400 });
     this.player.tween.to({ x: 1080, y: 410 });
@@ -122,10 +118,6 @@ class Shadow_Room {
   }
 
   start() {
-    // this.player.keyboard.move.on('event', () => {
-    //   this.player.light.set_position(this.player.sprite);
-    // });
-
     this.wall_candle.hide();
     this.table_candle.hide();
     this.lighter.hide();
@@ -139,16 +131,7 @@ class Shadow_Room {
     this.lantern.tween.movement.on('end', () => {
       this.lantern.remove();
     });
-
-    this.player.tween.time = 3000;
-    this.player.tween.start();
-
-    this.player.tween.movement.on('update', () => {
-      this.player.light.set_position(this.player.sprite);
-    });
-
     this.lighter.strike.start();
-
     this.wall_candle.show();
     this.wall_candle.start_flickering();
     this.table_candle.show();

@@ -8,6 +8,7 @@ const { Archer_Room     } = require('./types/archer_room');
 const { Shadow_Room     } = require('./types/shadow_room');
 const { Random_Room     } = require('./types/random_room');
 const { Transition_Room } = require('./types/transition_room');
+const { Outside_Room    } = require('./types/outside_room');
 const { Intro           } = require('../cutscene/types/intro.js');
 const { Player          } = require('../character/types/player.js');
 
@@ -21,6 +22,10 @@ class Level_Loader {
 
   static _development() {
     new Dev_Room();
+  }
+
+  static _outside(player) {
+    new Outside_Room(player);
   }
 
   static _animation() {
@@ -44,6 +49,9 @@ class Level_Loader {
   }
 
   static _transition(player) {
+    const new_level = new Transition_Room(player);
+    new_level.set_elements({x:0,y:player.sprite.y});
+
     new Transition_Room(player);
   }
 
@@ -56,7 +64,9 @@ class Level_Loader {
   static boot() {
     const player = new Player();
     player.set_position({x:800, y:500});
+    player.inventory.arm_ranged('old_bow');
 
+    // this._outside(player);
     // this._intro(player);
     // this._development();
     // this._animation();
@@ -65,7 +75,7 @@ class Level_Loader {
     // this._archer(player);
     // this._random(player);
     // this._shadow(player);
-    this._transition(player);
+    // this._transition(player);
   }
 }
 
