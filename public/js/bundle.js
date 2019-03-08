@@ -48063,6 +48063,7 @@ class Randomise {
   }
 
   random_items() {
+    //TODO these ae created when invoked
     const item_array = [
       new Hay(),
       new Chest(),
@@ -49034,8 +49035,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2140,
-                 "y":2120
+                 "x":2218,
+                 "y":2180
                 }, 
                 {
                  "height":0,
@@ -49046,16 +49047,67 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1340,
-                 "y":3386
+                 "x":1258,
+                 "y":3106
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "layers":[
+                {
+                 "draworder":"topdown",
+                 "name":"random_item_00",
+                 "objects":[
+                        {
+                         "height":600,
+                         "id":21,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":280,
+                         "x":1752,
+                         "y":2232
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"random_item_01",
+                 "objects":[
+                        {
+                         "height":600,
+                         "id":22,
+                         "name":"",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":280,
+                         "x":2152,
+                         "y":2038
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"item_areas",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":21,
+ "nextobjectid":24,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -50293,6 +50345,7 @@ module.exports = {
 const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Randomise  } = require('../attributes/randomise');
 const { Wall       } = require('../elements/wall');
 const { Bright_Light } = require('../../light/types/bright_light');
 const level_data     = require('../data/homestead_tiled.json');
@@ -50336,6 +50389,18 @@ class Tiled_Homestead extends Level {
       light.width  = data.width;
       light.set_position(data);
     });
+
+    this.elements.item_areas.forEach(data => {
+      const area = new Randomise();
+      // area.anchor = 0;
+      area.height = data.height;
+      area.width  = data.width;
+      area.alpha = 0.02;
+      area.set_position(data);
+      area.random_items(true);
+    });
+
+
   }
 }
 
@@ -50344,7 +50409,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":274,"../attributes/parse_tiled_data":242,"../data/homestead_tiled.json":247,"../elements/background":250,"../elements/wall":255,"../level_model":257}],267:[function(require,module,exports){
+},{"../../light/types/bright_light":274,"../attributes/parse_tiled_data":242,"../attributes/randomise":243,"../data/homestead_tiled.json":247,"../elements/background":250,"../elements/wall":255,"../level_model":257}],267:[function(require,module,exports){
 (function (global){
 
 'use strict';
@@ -50734,7 +50799,7 @@ class Bright_Light extends Light {
     this.name = 'bright_light';
 
     this.shadow.pointCount = 1;
-    this.shadow.range      = 1000;
+    this.shadow.range      = 400;
     this.shadow.intensity  = 0.5;
 
     visual_effects_container.addChild(this.shadow);

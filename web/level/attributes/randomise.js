@@ -44,6 +44,7 @@ class Randomise {
   }
 
   random_items() {
+    //TODO these ae created when invoked
     const item_array = [
       new Hay(),
       new Chest(),

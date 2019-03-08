@@ -3,6 +3,7 @@
 const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Randomise  } = require('../attributes/randomise');
 const { Wall       } = require('../elements/wall');
 const { Bright_Light } = require('../../light/types/bright_light');
 const level_data     = require('../data/homestead_tiled.json');
@@ -46,6 +47,18 @@ class Tiled_Homestead extends Level {
       light.width  = data.width;
       light.set_position(data);
     });
+
+    this.elements.item_areas.forEach(data => {
+      const area = new Randomise();
+      // area.anchor = 0;
+      area.height = data.height;
+      area.width  = data.width;
+      area.alpha = 0.02;
+      area.set_position(data);
+      area.random_items(true);
+    });
+
+
   }
 }
 
