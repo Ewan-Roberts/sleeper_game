@@ -43,6 +43,23 @@ class Tiled_Data {
     return pads;
   }
 
+  get chairs() {
+    const chairs = this.level_data.layers.find(layer => layer.name ==='chairs');
+
+    if(!chairs) throw new Error('no elements areas found in level data');
+
+    return chairs.objects;
+  }
+
+  get prey() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'prey');
+
+    if(!found_layer) throw new Error('no prey areas found in level data');
+    const prey = found_layer.objects;
+
+    return prey;
+  }
+
   get background() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='background');
 

@@ -10,8 +10,8 @@ class Bright_Light extends Light {
     this.name = 'bright_light';
 
     this.shadow.pointCount = 1;
-    this.shadow.range      = 400;
-    this.shadow.intensity  = 0.5;
+    this.shadow.range      = 800;
+    this.shadow.intensity  = 0.05;
 
     visual_effects_container.addChild(this.shadow);
   }

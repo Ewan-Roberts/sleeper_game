@@ -2,6 +2,7 @@
 
 const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
+const { Chair      } = require('../elements/chair');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Randomise  } = require('../attributes/randomise');
 const { Wall       } = require('../elements/wall');
@@ -21,7 +22,7 @@ class Tiled_Homestead extends Level {
   }
 
   _set_elements() {
-    global.set_light_level(0.1);
+    global.set_light_level(1);
     const background_data = this.elements.background;
     console.log(this.elements);
     console.log(this.player);
@@ -58,7 +59,10 @@ class Tiled_Homestead extends Level {
       area.random_items(true);
     });
 
-
+    this.elements.chairs.forEach(data => {
+      const chair = new Chair();
+      chair.set_position(data);
+    });
   }
 }
 

@@ -22,5 +22,3 @@ class Backpack extends Item {
 module.exports = {
   Backpack,
 };
-
-

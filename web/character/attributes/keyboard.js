@@ -46,7 +46,7 @@ class Keyboard {
     this.animation     = animation;
     this.sprite        = sprite;
     this.shift_pressed = false;
-    this.speed         = vitals.speed;
+    this.speed         = vitals.speed*2;
     this.buffer        = 50;
     this.can_move      = true;
     // this.move          = new event();

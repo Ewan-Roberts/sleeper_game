@@ -1,4 +1,3 @@
-
 'use strict';
 
 const { Level      } = require('../level_model');
@@ -6,11 +5,11 @@ const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Randomise  } = require('../attributes/randomise');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
-const { Candle     } = require('../../light/types/candle');
-const { Trigger_Pad } = require('../elements/pad');
-const level_data  = require('../data/tiled_room.json');
+const { Bright_Light     } = require('../../light/types/bright_light');
+// const { Trigger_Pad } = require('../elements/pad');
+const level_data  = require('../data/large_level.json');
 
-class Tiled_Room extends Level {
+class Large_Room extends Level {
   constructor(player) {
     super();
     this.name       = 'tiled_room';
@@ -23,11 +22,13 @@ class Tiled_Room extends Level {
   }
 
   _set_elements() {
-    global.set_light_level(0.1);
+    global.set_light_level(0.05);
     this.player.light.hide();
 
     this.background.set_position({x: 1100, y: 800});
-    this.background.alpha = 0.5;
+    this.background.height = 5000;
+    this.background.width = 8000;
+    // this.background.alpha = 0.5;
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
@@ -43,28 +44,28 @@ class Tiled_Room extends Level {
       // area.anchor = 0;
       area.height = data.height;
       area.width  = data.width;
-      area.alpha = 0.2;
+      area.alpha = 0;
       area.set_position(data);
       area.random_items();
     });
 
     this.elements.lights.forEach(data => {
-      const light = new Candle();
+      const light = new Bright_Light();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
     });
 
-    this.elements.exit.forEach(data => {
-      const pad = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-    });
+    // this.elements.exit.forEach(data => {
+    //   const pad = new Trigger_Pad();
+    //   pad.height = data.height;
+    //   pad.width  = data.width;
+    //   pad.anchor = 0;
+    //   pad.set_position(data);
+    // });
   }
 }
 
 module.exports = {
-  Tiled_Room,
+  Large_Room,
 };

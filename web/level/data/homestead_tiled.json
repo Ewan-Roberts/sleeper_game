@@ -191,6 +191,62 @@
                  "width":52,
                  "x":1036,
                  "y":3300
+                }, 
+                {
+                 "height":18,
+                 "id":24,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1504,
+                 "y":1644
+                }, 
+                {
+                 "height":19.3333333333333,
+                 "id":25,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.6666666666667,
+                 "x":1622.66666666667,
+                 "y":1643
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"chairs",
+         "objects":[
+                {
+                 "height":0,
+                 "id":27,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1737.33333333333,
+                 "y":1742.66666666667
+                }, 
+                {
+                 "height":0,
+                 "id":32,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1458.66666666667,
+                 "y":2261.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -236,27 +292,6 @@
          "layers":[
                 {
                  "draworder":"topdown",
-                 "name":"random_item_00",
-                 "objects":[
-                        {
-                         "height":600,
-                         "id":21,
-                         "name":"",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":280,
-                         "x":1668,
-                         "y":2178
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "name":"random_item_01",
                  "objects":[
                         {
@@ -283,7 +318,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":24,
+ "nextobjectid":33,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

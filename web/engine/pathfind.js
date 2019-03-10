@@ -34,7 +34,7 @@ class pathfind_sprite {
   }
 
   static highlight_grid_cell_from_path(path) {
-    path.forEach(grid => this.sprite_grid[grid.y][grid.x].alpha = 0.1);
+    path.forEach(grid => this.sprite_grid[grid.y][grid.x].alpha = 0.2);
   }
 
   static create_path_from_two_grid_points(sprite_one, sprite_two) {
