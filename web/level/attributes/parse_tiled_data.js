@@ -62,28 +62,25 @@ class Tiled_Data {
 
   get route() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
-
     const route_layer = found_layer.layers.find(layer => layer.name === 'route');
 
-    const route_array = [];
+    const route_array = route_layer.layers.map(step => {
+      const { objects, properties } = step;
+      const data = objects[0];
 
-    route_layer.layers.forEach(step => {
-      const data = step.objects[0];
-      const path_data = [];
+      const path = data.polyline.map(line => ({
+        x: line.x+data.x,
+        y: line.y+data.y,
+      }));
 
-      data.polyline.forEach(polyline => {
-        path_data.push({
-          x: polyline.x+data.x,
-          y: polyline.y+data.y,
-        });
-      });
-      const step_data = {
-        path: path_data,
-        properties: step.properties,
+      return {
+        path,
+        properties,
       };
-      route_array.push(step_data);
     });
-    route_array.sort((route_one, route_two) => route_one.properties.order - route_two.properties.order);
+
+    route_array.sort((route_one, route_two) =>
+      route_one.properties.order - route_two.properties.order);
     return route_array;
   }
 
@@ -91,17 +88,12 @@ class Tiled_Data {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
 
     if(!found_layer) throw new Error('no cats areas found in level data');
-    const path = [];
     const data = found_layer.layers.find(object => object.name === 'path').objects[0];
 
-    data.polyline.forEach(point => {
-      const entity_point = {
-        x: point.x + data.x,
-        y: point.y + data.y,
-      };
-
-      path.push(entity_point);
-    });
+    const path = data.polyline.map(point => ({
+      x: point.x + data.x,
+      y: point.y + data.y,
+    }));
 
     const cat = {
       entity: found_layer.layers.find(object => object.name === 'entity'),
