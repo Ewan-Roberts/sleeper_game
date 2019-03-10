@@ -60,6 +60,30 @@ class Tiled_Data {
     return prey;
   }
 
+  get cat() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
+
+    if(!found_layer) throw new Error('no cats areas found in level data');
+    const path = [];
+    const data = found_layer.layers.find(object => object.name === 'path').objects[0];
+
+    data.polyline.forEach(point => {
+      const entity_point = {
+        x: point.x + data.x,
+        y: point.y + data.y,
+      };
+
+      path.push(entity_point);
+    });
+
+    const cat = {
+      entity: found_layer.layers.find(object => object.name === 'entity'),
+      path,
+    };
+
+    return cat;
+  }
+
   get background() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='background');
 

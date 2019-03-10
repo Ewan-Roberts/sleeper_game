@@ -11,7 +11,8 @@ class Tween {
     this.light  = light;
     this.path   = new PIXI.tween.TweenPath();
     this.movement = PIXI.tweenManager.createTween(this.sprite);
-    this.movement.expire  = true;
+    // this.movement.expire  = true;
+    this.path_arc = 15;
 
     this.time = 0;
   }
@@ -24,6 +25,10 @@ class Tween {
 
   smooth() { this.movement.easing = PIXI.tween.Easing.inOutQuad(); }
 
+  set path_smoothness(value) {
+    this.path_arc = value;
+  }
+
   add_path(tween_path) {
     for (let i = 1; i < tween_path.length; i++) {
       this.path.arcTo(
@@ -31,7 +36,7 @@ class Tween {
         tween_path[i-1].y,
         tween_path[i].x,
         tween_path[i].y,
-        15);
+        this.path_arc);
     }
   }
 

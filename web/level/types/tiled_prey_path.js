@@ -5,7 +5,8 @@ const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Candle     } = require('../../light/types/candle');
-const { Rat        } = require('../../character/archetypes/rat');
+// const { Rat        } = require('../../character/archetypes/rat');
+const { Cat        } = require('../../character/archetypes/cat');
 const level_data  = require('../data/tiled_room.json');
 const level_tiled = require('../data/tiled_room_tiled.json');
 
@@ -32,14 +33,20 @@ class Tiled_Prey_Path extends Level {
     this.add_to_segments(this.background.sprite);
     this.create_grid(level_tiled);
 
-    this.elements.prey.forEach(data => {
-      const prey = new Rat();
-      prey.sprite.width = 50;
-      prey.sprite.height = 100;
-      prey.enemy(this.player);
-      prey.logic_start();
-      prey.set_position(data);
-    });
+    const { entity, path } = this.elements.cat;
+    const cat = new Cat();
+    cat.sprite.width = 50;
+    cat.sprite.height = 100;
+    cat.tween.path_smoothness = 100;
+    cat.tween.path.closed = true;
+    cat.tween.movement.loop = true;
+    cat.tween.add_path(path);
+
+    cat.tween.time = 6000;
+    cat.tween.show();
+    cat.tween.start();
+    cat.logic_start();
+    cat.set_position(entity);
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
