@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { grid_container } = require('./pixi_containers');
+const { grid_container } = require('../engine/pixi_containers');
 
 class Grid {
   static create(tiles_object) {

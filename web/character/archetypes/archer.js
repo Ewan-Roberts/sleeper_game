@@ -1,7 +1,6 @@
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
-const { Entity_Container } = require('../../engine/entity_container.js');
 const { distance_between } = require('../../utils/math');
 
 const event     = require('events');
@@ -32,8 +31,6 @@ class Archer extends Enemy {
     this._logic.repeat = 20;
     this._logic.expire = true;
     this._logic.dead   = false;
-
-    Entity_Container.add(this);
   }
 
   _walk_to_enemy() {

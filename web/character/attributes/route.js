@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-// const { sleep } = require('../../engine/time');
+// const { sleep } = require('../../utils/time');
 
 class Route {
   constructor({ sprite, tween }) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const { Track } = require('../../effects/sound');
-const { sleep } = require('../../engine/time');
+const { sleep } = require('../../utils/time');
 
 class Strike {
   constructor(shadow) {

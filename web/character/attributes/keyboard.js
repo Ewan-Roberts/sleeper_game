@@ -4,8 +4,6 @@ const PIXI = require('pixi.js');
 const { collision_container } = require('../../engine/pixi_containers');
 const { pad_container } = require('../../engine/pixi_containers');
 
-const event        = require('events');
-const { Game     } = require('../../engine/save_manager');
 const { world    } = require('../../engine/shadows');
 const { View_HUD } = require('../../view/view_player_inventory');
 
@@ -57,7 +55,7 @@ class Keyboard {
     // global.window.addEventListener('keyup',   ()    => this.key_up());
   }
   //TODO
-  save_game() { Game.save(this.entity); }
+  save_game() {}
 
   key_down(key) {
     switch(key) {

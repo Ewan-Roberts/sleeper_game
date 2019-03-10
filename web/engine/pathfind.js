@@ -1,7 +1,7 @@
 'use strict';
 
 const PIXI     = require('pixi.js');
-const { Grid } = require('./grid');
+const { Grid } = require('../utils/grid');
 const {
   gui_container,
   grid_container,

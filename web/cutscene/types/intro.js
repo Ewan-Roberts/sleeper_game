@@ -1,6 +1,6 @@
 'use strict';
 
-const { sleep       } = require('../../engine/time');
+const { sleep       } = require('../../utils/time');
 const { Shadow_Room } = require('../../level/types/shadow_room');
 const { Camera      } = require('../../engine/camera');
 
