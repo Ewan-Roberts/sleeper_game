@@ -60,6 +60,33 @@ class Tiled_Data {
     return prey;
   }
 
+  get route() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
+
+    const route_layer = found_layer.layers.find(layer => layer.name === 'route');
+
+    const route_array = [];
+
+    route_layer.layers.forEach(step => {
+      const data = step.objects[0];
+      const path_data = [];
+
+      data.polyline.forEach(polyline => {
+        path_data.push({
+          x: polyline.x+data.x,
+          y: polyline.y+data.y,
+        });
+      });
+      const step_data = {
+        path: path_data,
+        properties: step.properties,
+      };
+      route_array.push(step_data);
+    });
+    route_array.sort((route_one, route_two) => route_one.properties.order - route_two.properties.order);
+    return route_array;
+  }
+
   get cat() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
 

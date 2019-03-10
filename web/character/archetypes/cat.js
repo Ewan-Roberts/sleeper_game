@@ -7,6 +7,7 @@ const { distance_between } = require('../../utils/math');
 const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
+const { Route  } = require('../attributes/route');
 const { Blood  } = require('../../view/types/blood');
 const { Tween  } = require('../../engine/tween');
 
@@ -23,6 +24,7 @@ class Cat extends Animal {
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
     this.add_component(new Tween(this.sprite));
+    this.add_component(new Route(this));
 
     this.blood = new Blood();
 

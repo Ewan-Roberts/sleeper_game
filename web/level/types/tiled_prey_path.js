@@ -22,7 +22,7 @@ class Tiled_Prey_Path extends Level {
     this._set_elements();
   }
 
-  _set_elements() {
+  async _set_elements() {
     global.set_light_level(1);
     this.player.light.hide();
 
@@ -33,18 +33,20 @@ class Tiled_Prey_Path extends Level {
     this.add_to_segments(this.background.sprite);
     this.create_grid(level_tiled);
 
-    const { entity, path } = this.elements.cat;
+    const { entity } = this.elements.cat;
+    const { route } = this.elements;
     const cat = new Cat();
     cat.sprite.width = 50;
     cat.sprite.height = 100;
-    cat.tween.path_smoothness = 100;
-    cat.tween.path.closed = true;
-    cat.tween.movement.loop = true;
-    cat.tween.add_path(path);
 
-    cat.tween.time = 6000;
+    cat.tween.path_smoothness = 100;
+    cat.tween.add_path(route[0].path);
+    cat.tween.time = 2000;
     cat.tween.show();
     cat.tween.start();
+    cat.route.route_path(route[1].path);
+    // cat.route.route_path(route[2].path);
+
     cat.logic_start();
     cat.set_position(entity);
 
