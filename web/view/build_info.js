@@ -1,4 +1,3 @@
-
 'use strict';
 
 const { current_build_version } = require('../engine/build_details');
