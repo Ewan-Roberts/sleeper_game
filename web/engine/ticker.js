@@ -10,7 +10,7 @@ global.window.PIXI.default = PIXI;
 require('pixi-tween');
 require('pixi-timer');
 require('pixi-keyboard');
-require('./keyboard');
+// require('./keyboard');
 
 const timer = PIXI.timerManager;
 

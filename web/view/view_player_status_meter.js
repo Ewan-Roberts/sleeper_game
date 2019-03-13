@@ -3,9 +3,6 @@
 const { Selector } = require('../utils/dom')
 
 class Meter extends Selector {
-  constuctor(name) {
-    super(name);
-  }
 
   set value(amount) {
     this.element.innerHTML = amount;
