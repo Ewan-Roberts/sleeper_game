@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function register_click() {
   const element = document.querySelector('.login_register_button');
