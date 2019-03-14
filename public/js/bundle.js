@@ -2,25 +2,48 @@
 (function (global){
 'use strict';
 
-function register_click() {
-  // const element = global.document.querySelector('.login_register_button');
-  console.log('hi');
-  const data = {element: 'barium'};
-  global.fetch('/register', {
+const { Selector } = require('../utils/dom');
+
+const player_name = new Selector('.player_name_input');
+const login_input = new Selector('.login_password_input');
+const button      = new Selector('.login_register_button');
+
+button.event('click', () => {
+  console.log('thing');
+});
+
+async function register_user(data) {
+  await global.fetch('/register', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(res => {
-    console.log('Request complete! response:', res);
-  });
+  })
 }
 
-register_click();
+
+async function register_click() {
+  console.log({ player_name });
+  const data = {element: 'barium'};
+
+  console.log({ player_name});
+
+  const details = {
+    user_name: player_name,
+    email:     login_input,
+  }
+
+  console.log(details);
+
+  const response = await register_user(data);
+
+  console.log(response);
+}
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],2:[function(require,module,exports){
+},{"../utils/dom":3}],2:[function(require,module,exports){
 'use strict';
 
 // require('./engine/globals');
@@ -34,4 +57,43 @@ register_click();
 
 require('./engine/register');
 
-},{"./engine/register":1}]},{},[2]);
+},{"./engine/register":1}],3:[function(require,module,exports){
+(function (global){
+'use strict';
+
+class Selector {
+  constructor(name){
+    this.element = global.document.querySelector(name);
+  }
+
+  set width(value){
+    this.element.style.width = value;
+  }
+
+  set opacity(value){
+    this.element.style.opacity = value / 100;
+  }
+
+  // get value(){
+  //   return this.element.value;
+  // }
+
+  set display(value) {
+    this.element.style.display = value;
+  }
+
+  event(name, func) {
+    this.element.addEventListener(name, func);
+  }
+
+  set innerHTML(value) {
+    this.element.innerHTML = value;
+  }
+}
+
+module.exports = {
+  Selector,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}]},{},[2]);

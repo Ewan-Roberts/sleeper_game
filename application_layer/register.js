@@ -9,7 +9,6 @@ class Register {
 
 
 function handler(event, res) {
-  // console.log(event);
   console.log(res);
   const user_details = new Register(event);
 

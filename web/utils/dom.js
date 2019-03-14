@@ -2,11 +2,7 @@
 
 class Selector {
   constructor(name){
-    this.element = this._element(name);
-  }
-
-  _element(name) {
-    global.document.querySelector(name);
+    this.element = global.document.querySelector(name);
   }
 
   set width(value){
@@ -17,8 +13,16 @@ class Selector {
     this.element.style.opacity = value / 100;
   }
 
+  // get value(){
+  //   return this.element.value;
+  // }
+
   set display(value) {
     this.element.style.display = value;
+  }
+
+  event(name, func) {
+    this.element.addEventListener(name, func);
   }
 
   set innerHTML(value) {
