@@ -9,7 +9,7 @@ const button      = new Selector('.login_register_button');
 button.event('click', async () => {
   console.log('thing');
 
-  await register_click()
+  await register_click();
 });
 
 async function register_user(data) {
@@ -19,7 +19,7 @@ async function register_user(data) {
     headers: {
       'Content-Type': 'application/json',
     },
-  })
+  });
 }
 
 
@@ -32,7 +32,7 @@ async function register_click() {
   const details = {
     user_name: player_name,
     email:     login_input,
-  }
+  };
 
   console.log(details);
 
