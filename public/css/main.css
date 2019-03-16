@@ -5,6 +5,8 @@
 
 html, body {
   background-color: #222;
+  height: 100%;
+  width: 100%;
 }
 
 html, body, canvas {
@@ -25,9 +27,72 @@ div {
   opacity: 0.8;
 }
 
+.input_holder {
+  position: absolute;
+  bottom: 0;
+
+}
+
+.game_start {
+  bottom: 0;
+  margin-left: 250px;
+  margin-bottom: 400px;
+  position: absolute;
+  display: black;
+  font-size: 1vw;
+  color: white;
+}
+
+.game_overlay {
+  position: absolute;
+  display: black;
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+
+.red_triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: 0;
+  border-left: 0px solid transparent;
+  border-right: 2500px solid transparent;
+  border-bottom: 800px solid red;
+  opacity: 0.5;
+}
+
+.game_text {
+  text-align: center;
+  color: white;
+  width: 85%;
+  /* height: 25%; */
+  margin: 5%;
+  position: absolute;
+  font-size: 9vw;
+  padding: 1%;
+  border: 50px solid white;
+  font-weight: normal;
+}
+
+.game_image {
+  position: absolute;
+  display: black;
+  color: white;
+  background-image: url('../title/post_apoc_city_scape.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.2;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* height: 100%; */
+  float: left;
+}
 .login_overlay {
   position: absolute;
-  display: block;
+  display: none;
   color: #8b0000;
   width: 100%;
   height: 100%;
@@ -37,17 +102,17 @@ div {
 
 .login_title {
   font-size: 5vw;
-  padding: 100px;
   left: 20%;
 }
 
 .login_mode button {
   border: 0;
-  font-size: 2vw;
+  font-size: 1.5vw;
+  margin-right: 40px;
   cursor: pointer;
-  margin-left: 100px;
   left: 20%;
   width: 300px;
+  height: 100px;
 }
 
 .response_overlay {
@@ -72,21 +137,32 @@ div {
 }
 
 .login_menu {
-  padding-left: 100px;
+  padding-left: 230px;
+  padding-bottom: 100px;
   float: left;
 }
 
 .login_menu h2 {
-  font-size: 2vw;
+  color: white;
+  margin: 0px;
+  font-size: 1.5vw;
 }
 
 .login_menu input {
-  border: 0;
+  text-indent: 20px;
+  background-color: transparent;
+  border: 10px white solid;
+  margin-top: 50px;
+  color: white;
   font-size: 2vw;
   height: 100px;
   width: 100%;
   float: left;
-  margin-bottom: 50px;
+}
+
+::placeholder {
+  color: white;
+  opacity: 0.3;
 }
 
 .login_register {
@@ -119,8 +195,8 @@ div {
   margin-top: 50px;
   border: 0;
   padding: 0;
-  background: green;
-  width: 705px;
+  background: white;
+  width: 300px;
   height: 100px;
 }
 
@@ -132,8 +208,8 @@ div {
   margin-top: 254px;
   border: 0;
   padding: 0;
-  background: green;
-  width: 705px;
+  width: 300px;
+  background: white;
   height: 60px;
 }
 
