@@ -47288,6 +47288,7 @@ class Tween {
     this.sprite   = sprite;
     this.light    = light;
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.path = new PIXI.tween.TweenPath();
     // this.movement.expire  = true;
     this.path_arc = 15;
     this.show = false;
@@ -47332,6 +47333,10 @@ class Tween {
     this.movement.time = amount;
   }
 
+  set delay(amount) {
+    this.movement.delay = amount;
+  }
+
   stop() {
     this.movement.stop();
   }
@@ -47343,27 +47348,19 @@ class Tween {
 
     this.movement.path = this.path;
     this.movement.start();
-
-    if(this.show) this._draw_path();
   }
 
-  chain(path) {
-    this.movement.on('end', () => {
-      const new_tween = PIXI.tweenManager.createTween(this.sprite);
+  chain() {
+    if(this.show) this.draw_path();
 
-      this.add_path(path);
-      new_tween.path = this.path;
+    const chain_tween = PIXI.tweenManager.createTween(this.sprite);
+    chain_tween.path = this.path;
 
-      if(this.show) this._draw_path();
-
-      new_tween.time = 1000;
-      new_tween.delay = 500;
-      this.movement.chain(new_tween);
-      this.movement = new_tween;
-    });
+    this.movement.chain(chain_tween);
+    this.movement = chain_tween;
   }
 
-  _draw_path() {
+  draw_path() {
     const graphical_path = new PIXI.Graphics();
     graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
@@ -52065,10 +52062,12 @@ module.exports = {
 (function (global){
 'use strict';
 
+const PIXI = require('pixi.js');
 const { Level      } = require('../level_model');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
+const { Chest      } = require('../elements/chest');
 const { Candle     } = require('../../light/types/candle');
 // const { Rat        } = require('../../character/archetypes/rat');
 const { Cat        } = require('../../character/archetypes/cat');
@@ -52083,6 +52082,7 @@ class Tiled_Prey_Path extends Level {
     this.player     = player;
     this.elements   = new Tiled_Data(level_data);
     this.background = new Background('grid_floor');
+    this.chest      = new Chest();
 
     this._set_elements();
   }
@@ -52098,19 +52098,63 @@ class Tiled_Prey_Path extends Level {
     this.add_to_segments(this.background.sprite);
     this.create_grid(level_tiled);
 
+
+    this.chest.set_position({x: 1400, y: 300});
+    this.chest.loot.populate();
+    this.chest.loot.show();
+    const chest_items = this.chest.loot.items;
+
     const { entity } = this.elements.cat;
     const { route  } = this.elements;
-
     const cat = new Cat();
-    cat.sprite.width = 50;
+    cat.sprite.width  = 50;
     cat.sprite.height = 100;
 
     cat.tween.path_smoothness = 100;
     cat.tween.add_path(route[0].path);
-    cat.tween.time = 1000;
+    cat.tween.time = 2000;
+    cat.tween.delay = 2000;
     cat.tween.show = true;
-    cat.tween.chain(route[1].path);
-    cat.tween.chain(route[2].path);
+    cat.tween.draw_path();
+
+    cat.tween.movement.on('end', () => {
+      cat.tween.add_path(route[1].path);
+      cat.tween.chain();
+
+      cat.tween.time  = 1000;
+      cat.tween.delay = 1000;
+      cat.loot.take_items(chest_items);
+    });
+
+    cat.tween.movement.on('end', () => {
+      cat.tween.add_path(route[2].path);
+      cat.tween.chain();
+
+      cat.tween.time  = 1000;
+      cat.tween.delay = 1000;
+    });
+
+
+    cat.tween.movement.on('end', () => {
+      cat.tween.add_path(route[1].path);
+      cat.tween.chain();
+
+      cat.tween.time  = 1000;
+      cat.tween.delay = 1000;
+    });
+
+    // cat.tween.chain(route[1].path, () => {
+    //   cat.tween.time = 1000;
+    //   cat.tween.delay = 2000;
+    //   cat.loot.take_items(chest_items);
+    //   console.log(cat);
+    // });
+
+    // cat.tween.chain(route[2].path, ()=> {
+    //   cat.tween.time = 1000;
+    //   cat.tween.delay = 2000;
+    // });
+
     cat.tween.start();
     // cat.route.route_path(route[2].path);
 
@@ -52140,7 +52184,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/cat":201,"../../light/types/candle":279,"../attributes/parse_tiled_data":238,"../data/tiled_room.json":245,"../data/tiled_room_tiled.json":246,"../elements/background":248,"../elements/wall":255,"../level_model":257}],271:[function(require,module,exports){
+},{"../../character/archetypes/cat":201,"../../light/types/candle":279,"../attributes/parse_tiled_data":238,"../data/tiled_room.json":245,"../data/tiled_room_tiled.json":246,"../elements/background":248,"../elements/chest":250,"../elements/wall":255,"../level_model":257,"pixi.js":151}],271:[function(require,module,exports){
 (function (global){
 
 'use strict';

@@ -10,6 +10,7 @@ class Tween {
     this.sprite   = sprite;
     this.light    = light;
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.path = new PIXI.tween.TweenPath();
     // this.movement.expire  = true;
     this.path_arc = 15;
     this.show = false;
@@ -54,6 +55,10 @@ class Tween {
     this.movement.time = amount;
   }
 
+  set delay(amount) {
+    this.movement.delay = amount;
+  }
+
   stop() {
     this.movement.stop();
   }
@@ -65,27 +70,19 @@ class Tween {
 
     this.movement.path = this.path;
     this.movement.start();
-
-    if(this.show) this._draw_path();
   }
 
-  chain(path) {
-    this.movement.on('end', () => {
-      const new_tween = PIXI.tweenManager.createTween(this.sprite);
+  chain() {
+    if(this.show) this.draw_path();
 
-      this.add_path(path);
-      new_tween.path = this.path;
+    const chain_tween = PIXI.tweenManager.createTween(this.sprite);
+    chain_tween.path = this.path;
 
-      if(this.show) this._draw_path();
-
-      new_tween.time = 1000;
-      new_tween.delay = 500;
-      this.movement.chain(new_tween);
-      this.movement = new_tween;
-    });
+    this.movement.chain(chain_tween);
+    this.movement = chain_tween;
   }
 
-  _draw_path() {
+  draw_path() {
     const graphical_path = new PIXI.Graphics();
     graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
