@@ -34,17 +34,19 @@ class Tiled_Prey_Path extends Level {
     this.create_grid(level_tiled);
 
     const { entity } = this.elements.cat;
-    const { route } = this.elements;
+    const { route  } = this.elements;
+
     const cat = new Cat();
     cat.sprite.width = 50;
     cat.sprite.height = 100;
 
     cat.tween.path_smoothness = 100;
     cat.tween.add_path(route[0].path);
-    cat.tween.time = 2000;
-    cat.tween.show();
+    cat.tween.time = 1000;
+    cat.tween.show = true;
+    cat.tween.chain(route[1].path);
+    cat.tween.chain(route[2].path);
     cat.tween.start();
-    cat.route.route_path(route[1].path);
     // cat.route.route_path(route[2].path);
 
     cat.logic_start();
