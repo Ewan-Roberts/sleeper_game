@@ -45470,18 +45470,19 @@ module.exports = {
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
+const { sleep               } = require('../../utils/time');
 const { collision_container } = require('../../engine/pixi_containers');
 const { distance_between    } = require('../../utils/math');
 const { Sight               } = require('../../utils/line_of_sight');
 
-const event      = require('events');
-const { Animal } = require('../types/rat');
-const { Melee  } = require('../attributes/melee');
+const event         = require('events');
+const { Animal    } = require('../types/rat');
+const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
 const { Scavenge  } = require('../attributes/scavenge');
 // const { Route  } = require('../attributes/route');
-const { Blood  } = require('../../view/types/blood');
-const { Tween  } = require('../../engine/tween');
+const { Blood     } = require('../../view/types/blood');
+const { Tween     } = require('../../engine/tween');
 
 class Cat extends Animal {
   constructor() {
@@ -45575,33 +45576,23 @@ class Cat extends Animal {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
 
-    setTimeout(async () => {
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-      this._escape();
-    },2000);
-
-    //TODO remove callbacks
-    // setTimeout(() => {
-    //   this.scavenge.path_to_item();
-    //   this.tween.movement.on('end', () => {
-    //     this.scavenge.path_to_item();
-
-    //     this.tween.movement.on('end', () => {
-    //       this.scavenge.path_to_item();
-    //     });
-    //   });
-    // }, 2000);
-
     this._logic.on('repeat', () => {
       if(this._in_influence && this._enemy_seen){
         this._escape();
       }
     });
+
+    await sleep(1500);
+    await this.scavenge.get_new_path();
+    await this.scavenge.go_to_item();
+    await sleep(1000);
+    await this.scavenge.get_new_path();
+    await this.scavenge.go_to_item();
+    await sleep(1000);
+    await this.scavenge.get_new_path();
+    await this.scavenge.go_to_item();
+    await sleep(1000);
+    this._escape();
   }
 }
 
@@ -45610,7 +45601,7 @@ module.exports = {
   Cat,
 };
 
-},{"../../engine/pixi_containers":231,"../../engine/ticker":235,"../../engine/tween":236,"../../utils/line_of_sight":288,"../../utils/math":289,"../../view/types/blood":291,"../attributes/influence":203,"../attributes/melee":208,"../attributes/scavenge":213,"../types/rat":220,"events":296}],202:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/ticker":235,"../../engine/tween":236,"../../utils/line_of_sight":288,"../../utils/math":289,"../../utils/time":290,"../../view/types/blood":291,"../attributes/influence":203,"../attributes/melee":208,"../attributes/scavenge":213,"../types/rat":220,"events":296}],202:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -46023,7 +46014,6 @@ class Lootable {
 
   take_items(items) {
     items.forEach(item => this.items.push(item));
-    this.clear();
   }
 
   show() {
@@ -46336,27 +46326,34 @@ class Scavenge {
     const { first } = this.pool;
 
     this.pathfind.go_to_sprite(first.sprite);
-
-    console.log(this);
   }
 
   async get_new_path() {
-    const { first } = this.pool;
-
-    this.path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
-
     this.tween.chain();
+    // const item_closest = this.pool.closest_item_to(this.sprite);
+    const { first } = this.pool;
+    this.target_item = first;
+
+    try {
+      this.path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   go_to_item() {
     return new Promise(resolve => {
       this.tween.add_tile_path(this.path);
       this.tween.time = 3000;
-      this.tween.movement.on('end', ()=> resolve('poo'));
+      this.tween.movement.on('end', () => {
+        this.loot.take_items(this.target_item.loot.items);
+
+        resolve();
+      });
+
       this.tween.start();
     });
   }
-
 
   async path_to_item() {
     this.tween.chain();
@@ -48064,6 +48061,8 @@ module.exports = {
 },{"../engine/app":225,"../utils/math":289,"./data/item_data":238,"pixi.js":151}],240:[function(require,module,exports){
 'use strict';
 
+const { distance_between } = require('../../utils/math');
+
 class Item_Pool {
   constructor() {
     this.items = [];
@@ -48080,13 +48079,21 @@ class Item_Pool {
 
     return item;
   }
+
+  closest_item_to(sprite) {
+    return this.items.reduce((a,b) =>
+      distance_between(sprite, a.sprite) <
+      distance_between(sprite, b.sprite) ?
+        a : b
+    );
+  }
 }
 
 module.exports = {
   Item_Pool,
 };
 
-},{}],241:[function(require,module,exports){
+},{"../../utils/math":289}],241:[function(require,module,exports){
 'use strict';
 
 //This is purely an interface for TILED data
@@ -52065,34 +52072,34 @@ class Scavenge_Room extends Level {
     this.chest = new Chest();
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
-    this.chest.loot.show();
 
     this.chest1 = new Chest();
     this.chest1.set_position({x: 1500, y: 700});
     this.chest1.loot.populate();
-    this.chest1.loot.show();
 
     this.chest2 = new Chest();
-    this.chest2.set_position({x: 800, y: 700});
+    this.chest2.set_position({x: 800, y: 900});
     this.chest2.loot.populate();
-    this.chest2.loot.show();
 
     this.item_pool.load(this.chest1);
-    this.item_pool.load(this.chest);
     this.item_pool.load(this.chest2);
+    this.item_pool.load(this.chest);
 
     const { exit_point } = this.elements.cat;
     const cat = new Cat();
 
     cat.set_position({x: 400, y:500});
+
+    const foo = this.item_pool.closest_item_to(cat.sprite);
+    console.log(foo);
+    this.item_pool.load(foo);
+
     cat.sprite.width  = 50;
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
     cat.route.exit = exit_point;
     cat.set_enemy(this.player);
     cat.scavenge.load_pool(this.item_pool);
-
-
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;

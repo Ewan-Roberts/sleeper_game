@@ -31,7 +31,6 @@ class Lootable {
 
   take_items(items) {
     items.forEach(item => this.items.push(item));
-    this.clear();
   }
 
   show() {

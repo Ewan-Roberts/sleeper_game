@@ -1,5 +1,7 @@
 'use strict';
 
+const { distance_between } = require('../../utils/math');
+
 class Item_Pool {
   constructor() {
     this.items = [];
@@ -15,6 +17,14 @@ class Item_Pool {
     this.items.shift();
 
     return item;
+  }
+
+  closest_item_to(sprite) {
+    return this.items.reduce((a,b) =>
+      distance_between(sprite, a.sprite) <
+      distance_between(sprite, b.sprite) ?
+        a : b
+    );
   }
 }
 

@@ -1,18 +1,19 @@
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
+const { sleep               } = require('../../utils/time');
 const { collision_container } = require('../../engine/pixi_containers');
 const { distance_between    } = require('../../utils/math');
 const { Sight               } = require('../../utils/line_of_sight');
 
-const event      = require('events');
-const { Animal } = require('../types/rat');
-const { Melee  } = require('../attributes/melee');
+const event         = require('events');
+const { Animal    } = require('../types/rat');
+const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
 const { Scavenge  } = require('../attributes/scavenge');
 // const { Route  } = require('../attributes/route');
-const { Blood  } = require('../../view/types/blood');
-const { Tween  } = require('../../engine/tween');
+const { Blood     } = require('../../view/types/blood');
+const { Tween     } = require('../../engine/tween');
 
 class Cat extends Animal {
   constructor() {
@@ -106,33 +107,23 @@ class Cat extends Animal {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
 
-    setTimeout(async () => {
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-      this._escape();
-    },2000);
-
-    //TODO remove callbacks
-    // setTimeout(() => {
-    //   this.scavenge.path_to_item();
-    //   this.tween.movement.on('end', () => {
-    //     this.scavenge.path_to_item();
-
-    //     this.tween.movement.on('end', () => {
-    //       this.scavenge.path_to_item();
-    //     });
-    //   });
-    // }, 2000);
-
     this._logic.on('repeat', () => {
       if(this._in_influence && this._enemy_seen){
         this._escape();
       }
     });
+
+    await sleep(1500);
+    await this.scavenge.get_new_path();
+    await this.scavenge.go_to_item();
+    await sleep(1000);
+    await this.scavenge.get_new_path();
+    await this.scavenge.go_to_item();
+    await sleep(1000);
+    await this.scavenge.get_new_path();
+    await this.scavenge.go_to_item();
+    await sleep(1000);
+    this._escape();
   }
 }
 

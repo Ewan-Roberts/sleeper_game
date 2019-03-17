@@ -19,27 +19,34 @@ class Scavenge {
     const { first } = this.pool;
 
     this.pathfind.go_to_sprite(first.sprite);
-
-    console.log(this);
   }
 
   async get_new_path() {
-    const { first } = this.pool;
-
-    this.path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
-
     this.tween.chain();
+    // const item_closest = this.pool.closest_item_to(this.sprite);
+    const { first } = this.pool;
+    this.target_item = first;
+
+    try {
+      this.path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   go_to_item() {
     return new Promise(resolve => {
       this.tween.add_tile_path(this.path);
       this.tween.time = 3000;
-      this.tween.movement.on('end', ()=> resolve('poo'));
+      this.tween.movement.on('end', () => {
+        this.loot.take_items(this.target_item.loot.items);
+
+        resolve();
+      });
+
       this.tween.start();
     });
   }
-
 
   async path_to_item() {
     this.tween.chain();

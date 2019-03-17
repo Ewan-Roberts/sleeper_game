@@ -38,34 +38,34 @@ class Scavenge_Room extends Level {
     this.chest = new Chest();
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
-    this.chest.loot.show();
 
     this.chest1 = new Chest();
     this.chest1.set_position({x: 1500, y: 700});
     this.chest1.loot.populate();
-    this.chest1.loot.show();
 
     this.chest2 = new Chest();
-    this.chest2.set_position({x: 800, y: 700});
+    this.chest2.set_position({x: 800, y: 900});
     this.chest2.loot.populate();
-    this.chest2.loot.show();
 
     this.item_pool.load(this.chest1);
-    this.item_pool.load(this.chest);
     this.item_pool.load(this.chest2);
+    this.item_pool.load(this.chest);
 
     const { exit_point } = this.elements.cat;
     const cat = new Cat();
 
     cat.set_position({x: 400, y:500});
+
+    const foo = this.item_pool.closest_item_to(cat.sprite);
+    console.log(foo);
+    this.item_pool.load(foo);
+
     cat.sprite.width  = 50;
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
     cat.route.exit = exit_point;
     cat.set_enemy(this.player);
     cat.scavenge.load_pool(this.item_pool);
-
-
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;
