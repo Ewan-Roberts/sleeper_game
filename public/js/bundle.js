@@ -45500,7 +45500,7 @@ class Cat extends Animal {
     this.add_component(new Scavenge(this));
     // this.add_component(new Route(this));
     this.route = {};
-    this.influence.add_box(800, 800);
+    this.influence.add_box(500, 500);
 
     this.blood = new Blood();
 
@@ -45555,7 +45555,7 @@ class Cat extends Animal {
 
   _escape() {
     this.tween.movement.stop();
-    console.log(this.route);
+
     this.pathfind.go_to_point(this.route.exit);
   }
 
@@ -45571,25 +45571,37 @@ class Cat extends Animal {
     return this.influence.sprite.containsPoint(enemy_point);
   }
 
-  logic_start() {
+  async logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
+
+    setTimeout(async () => {
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+      this._escape();
+    },2000);
+
+    //TODO remove callbacks
+    // setTimeout(() => {
+    //   this.scavenge.path_to_item();
+    //   this.tween.movement.on('end', () => {
+    //     this.scavenge.path_to_item();
+
+    //     this.tween.movement.on('end', () => {
+    //       this.scavenge.path_to_item();
+    //     });
+    //   });
+    // }, 2000);
 
     this._logic.on('repeat', () => {
       if(this._in_influence && this._enemy_seen){
         this._escape();
-      } else {
-        this.scavenge.for_item();
       }
     });
-
-    // this._logic.on('repeat', () => {
-    // if(!this.vitals.alive) this.kill();
-
-    // if(this._target_far_away) return this._walk_to_enemy();
-
-    // return this.melee.attack(this.enemy);
-    // });
   }
 }
 
@@ -46305,11 +46317,15 @@ module.exports = {
 },{"../../engine/pixi_containers":231,"../../engine/raycasting":233,"../../engine/ticker":235,"pixi.js":151}],213:[function(require,module,exports){
 'use strict';
 
+const { pathfind_sprite } = require('../../engine/pathfind.js');
+
 class Scavenge {
-  constructor({ sprite, pathfind }) {
+  constructor({ sprite, pathfind, tween, loot }) {
     this.name     = 'scavenge';
     this.sprite   = sprite;
     this.pathfind = pathfind;
+    this.tween    = tween;
+    this.loot     = loot;
   }
 
   load_pool(item_pool) {
@@ -46323,13 +46339,48 @@ class Scavenge {
 
     console.log(this);
   }
+
+  async get_new_path() {
+    const { first } = this.pool;
+
+    this.path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
+
+    this.tween.chain();
+  }
+
+  go_to_item() {
+    return new Promise(resolve => {
+      this.tween.add_tile_path(this.path);
+      this.tween.time = 3000;
+      this.tween.movement.on('end', ()=> resolve('poo'));
+      this.tween.start();
+    });
+  }
+
+
+  async path_to_item() {
+    this.tween.chain();
+
+    const { first } = this.pool;
+
+    const path_to_item = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
+    this.tween.path_smoothness = 100;
+    this.tween.add_tile_path(path_to_item);
+    this.tween.time = 3000;
+    this.tween.draw_path();
+    this.tween.start();
+
+    this.tween.movement.on('end', () => {
+      this.loot.take_items(first.loot.items);
+    });
+  }
 }
 
 module.exports = {
   Scavenge,
 };
 
-},{}],214:[function(require,module,exports){
+},{"../../engine/pathfind.js":230}],214:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -47067,6 +47118,27 @@ class pathfind_sprite {
     this.highlight_grid_cell_from_path(path_data);
     this.move_sprite_on_path(from_sprite, path_array);
   }
+
+  static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(from_sprite.getGlobalPosition()));
+
+    const to_point = grids.find(grid =>
+      grid.containsPoint(to_sprite.getGlobalPosition()));
+
+    if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
+    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
+    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
+
+    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
+
+    this.highlight_grid_cell_from_path(path_data);
+
+    return path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+  }
+
 }
 
 module.exports = {
@@ -47455,7 +47527,19 @@ class Tween {
         tween_path[i].y,
         this.path_arc);
     }
+  }
 
+  add_tile_path(tween_path) {
+    this.path = new PIXI.tween.TweenPath();
+
+    for (let i = 1; i < tween_path.length; i++) {
+      this.path.arcTo(
+        tween_path[i-1].middle.x,
+        tween_path[i-1].middle.y,
+        tween_path[i].middle.x,
+        tween_path[i].middle.y,
+        this.path_arc);
+    }
   }
 
   set time(amount) {
@@ -47991,6 +48075,8 @@ class Item_Pool {
 
   get first() {
     const [item] = this.items;
+
+    this.items.shift();
 
     return item;
   }
@@ -51980,12 +52066,25 @@ class Scavenge_Room extends Level {
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
     this.chest.loot.show();
+
+    this.chest1 = new Chest();
+    this.chest1.set_position({x: 1500, y: 700});
+    this.chest1.loot.populate();
+    this.chest1.loot.show();
+
+    this.chest2 = new Chest();
+    this.chest2.set_position({x: 800, y: 700});
+    this.chest2.loot.populate();
+    this.chest2.loot.show();
+
+    this.item_pool.load(this.chest1);
     this.item_pool.load(this.chest);
+    this.item_pool.load(this.chest2);
 
     const { exit_point } = this.elements.cat;
     const cat = new Cat();
 
-    cat.set_position({x: 400, y:400});
+    cat.set_position({x: 400, y:500});
     cat.sprite.width  = 50;
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
@@ -51993,11 +52092,6 @@ class Scavenge_Room extends Level {
     cat.set_enemy(this.player);
     cat.scavenge.load_pool(this.item_pool);
 
-    setTimeout(()=> {
-      cat.pathfind.go_to_sprite(this.chest.sprite);
-    },2000);
-
-    cat.logic_start();
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
@@ -52022,6 +52116,9 @@ class Scavenge_Room extends Level {
       pad.anchor = 0;
       pad.set_position(data);
     });
+
+    cat.logic_start();
+
   }
 }
 

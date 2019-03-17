@@ -31,7 +31,7 @@ class Cat extends Animal {
     this.add_component(new Scavenge(this));
     // this.add_component(new Route(this));
     this.route = {};
-    this.influence.add_box(800, 800);
+    this.influence.add_box(500, 500);
 
     this.blood = new Blood();
 
@@ -86,7 +86,7 @@ class Cat extends Animal {
 
   _escape() {
     this.tween.movement.stop();
-    console.log(this.route);
+
     this.pathfind.go_to_point(this.route.exit);
   }
 
@@ -102,25 +102,37 @@ class Cat extends Animal {
     return this.influence.sprite.containsPoint(enemy_point);
   }
 
-  logic_start() {
+  async logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
+
+    setTimeout(async () => {
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+      this._escape();
+    },2000);
+
+    //TODO remove callbacks
+    // setTimeout(() => {
+    //   this.scavenge.path_to_item();
+    //   this.tween.movement.on('end', () => {
+    //     this.scavenge.path_to_item();
+
+    //     this.tween.movement.on('end', () => {
+    //       this.scavenge.path_to_item();
+    //     });
+    //   });
+    // }, 2000);
 
     this._logic.on('repeat', () => {
       if(this._in_influence && this._enemy_seen){
         this._escape();
-      } else {
-        this.scavenge.for_item();
       }
     });
-
-    // this._logic.on('repeat', () => {
-    // if(!this.vitals.alive) this.kill();
-
-    // if(this._target_far_away) return this._walk_to_enemy();
-
-    // return this.melee.attack(this.enemy);
-    // });
   }
 }
 

@@ -39,12 +39,25 @@ class Scavenge_Room extends Level {
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
     this.chest.loot.show();
+
+    this.chest1 = new Chest();
+    this.chest1.set_position({x: 1500, y: 700});
+    this.chest1.loot.populate();
+    this.chest1.loot.show();
+
+    this.chest2 = new Chest();
+    this.chest2.set_position({x: 800, y: 700});
+    this.chest2.loot.populate();
+    this.chest2.loot.show();
+
+    this.item_pool.load(this.chest1);
     this.item_pool.load(this.chest);
+    this.item_pool.load(this.chest2);
 
     const { exit_point } = this.elements.cat;
     const cat = new Cat();
 
-    cat.set_position({x: 400, y:400});
+    cat.set_position({x: 400, y:500});
     cat.sprite.width  = 50;
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
@@ -52,11 +65,6 @@ class Scavenge_Room extends Level {
     cat.set_enemy(this.player);
     cat.scavenge.load_pool(this.item_pool);
 
-    setTimeout(()=> {
-      cat.pathfind.go_to_sprite(this.chest.sprite);
-    },2000);
-
-    cat.logic_start();
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
@@ -81,6 +89,9 @@ class Scavenge_Room extends Level {
       pad.anchor = 0;
       pad.set_position(data);
     });
+
+    cat.logic_start();
+
   }
 }
 

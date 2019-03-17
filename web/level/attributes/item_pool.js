@@ -12,6 +12,8 @@ class Item_Pool {
   get first() {
     const [item] = this.items;
 
+    this.items.shift();
+
     return item;
   }
 }

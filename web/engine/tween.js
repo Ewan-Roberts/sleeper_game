@@ -48,7 +48,19 @@ class Tween {
         tween_path[i].y,
         this.path_arc);
     }
+  }
 
+  add_tile_path(tween_path) {
+    this.path = new PIXI.tween.TweenPath();
+
+    for (let i = 1; i < tween_path.length; i++) {
+      this.path.arcTo(
+        tween_path[i-1].middle.x,
+        tween_path[i-1].middle.y,
+        tween_path[i].middle.x,
+        tween_path[i].middle.y,
+        this.path_arc);
+    }
   }
 
   set time(amount) {

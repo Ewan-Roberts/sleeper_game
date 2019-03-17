@@ -170,6 +170,27 @@ class pathfind_sprite {
     this.highlight_grid_cell_from_path(path_data);
     this.move_sprite_on_path(from_sprite, path_array);
   }
+
+  static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(from_sprite.getGlobalPosition()));
+
+    const to_point = grids.find(grid =>
+      grid.containsPoint(to_sprite.getGlobalPosition()));
+
+    if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
+    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
+    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
+
+    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
+
+    this.highlight_grid_cell_from_path(path_data);
+
+    return path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+  }
+
 }
 
 module.exports = {
