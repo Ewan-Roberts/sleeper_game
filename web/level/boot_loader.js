@@ -9,6 +9,7 @@ const { Shadow_Room     } = require('./types/shadow_room');
 const { Random_Room     } = require('./types/random_room');
 const { Items_Room      } = require('./types/item_room');
 const { Transition_Room } = require('./types/transition_room');
+const { Scavenge_Room   } = require('./types/scavenge_room');
 const { Outside_Room    } = require('./types/outside_room');
 const { Tiled_Room      } = require('./types/tiles_room');
 const { Tiled_Prey      } = require('./types/tiled_prey');
@@ -54,6 +55,9 @@ class Level_Loader {
     new Random_Room(player);
   }
 
+  static _scavenge(player){
+    new Scavenge_Room(player);
+  }
 
   static _transition(player) {
     const new_level = new Transition_Room(player);
@@ -97,7 +101,8 @@ class Level_Loader {
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
 
-    this._tiled_prey_path(player);
+    // this._tiled_prey_path(player);
+    this._scavenge(player);
     // this._tiled_created(player);
     // this._tiled_prey(player);
     // this._tiled_large(player);

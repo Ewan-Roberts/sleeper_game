@@ -1,19 +1,18 @@
 'use strict';
 
-const PIXI = require('pixi.js');
 const { Level      } = require('../level_model');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Item_Pool  } = require('../attributes/item_pool');
 const { Trigger_Pad } = require('../elements/pad');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Chest      } = require('../elements/chest');
 const { Candle     } = require('../../light/types/candle');
-// const { Rat        } = require('../../character/archetypes/rat');
 const { Cat        } = require('../../character/archetypes/cat');
 const level_data  = require('../data/tiled_room.json');
 const level_tiled = require('../data/tiled_room_tiled.json');
 
-class Tiled_Prey_Path extends Level {
+class Scavenge_Room extends Level {
   constructor(player) {
     super();
     this.name       = 'tiled_room';
@@ -21,7 +20,7 @@ class Tiled_Prey_Path extends Level {
     this.player     = player;
     this.elements   = new Tiled_Data(level_data);
     this.background = new Background('grid_floor');
-    this.chest      = new Chest();
+    this.item_pool  = new Item_Pool();
 
     this._set_elements();
   }
@@ -30,60 +29,34 @@ class Tiled_Prey_Path extends Level {
     global.set_light_level(1);
     this.player.light.hide();
 
-    console.log(this.elements);
     this.background.set_position({x: 1100, y: 800});
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
     this.create_grid(level_tiled);
 
+    this.chest = new Chest();
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
     this.chest.loot.show();
-    const chest_items = this.chest.loot.items;
+    this.item_pool.load(this.chest);
 
-    const { entity, exit_point, route } = this.elements.cat;
+    const { exit_point } = this.elements.cat;
     const cat = new Cat();
+
+    cat.set_position({x: 400, y:400});
+    cat.sprite.width  = 50;
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
     cat.route.exit = exit_point;
     cat.set_enemy(this.player);
+    cat.scavenge.load_pool(this.item_pool);
 
-    cat.tween.path_smoothness = 100;
-    cat.tween.add_path(route[0].path);
-    cat.tween.time = 2000;
-    cat.tween.delay = 2000;
-    cat.tween.show = true;
-    cat.tween.draw_path();
+    setTimeout(()=> {
+      cat.pathfind.go_to_sprite(this.chest.sprite);
+    },2000);
 
-    cat.tween.movement.on('end', () => {
-      cat.tween.add_path(route[1].path);
-      cat.tween.chain();
-
-      cat.tween.time  = 1000;
-      cat.tween.delay = 1000;
-      cat.loot.take_items(chest_items);
-    });
-
-    cat.tween.movement.on('end', () => {
-      cat.tween.add_path(route[2].path);
-      cat.tween.chain();
-
-      cat.tween.time  = 1000;
-      cat.tween.delay = 1000;
-    });
-
-    cat.tween.movement.on('end', () => {
-      cat.tween.add_path(route[1].path);
-      cat.tween.chain();
-
-      cat.tween.time  = 1000;
-      cat.tween.delay = 1000;
-    });
-
-    cat.tween.start();
     cat.logic_start();
-    cat.set_position(entity);
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
@@ -108,10 +81,9 @@ class Tiled_Prey_Path extends Level {
       pad.anchor = 0;
       pad.set_position(data);
     });
-
   }
 }
 
 module.exports = {
-  Tiled_Prey_Path,
+  Scavenge_Room,
 };

@@ -9,6 +9,7 @@ const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
+const { Scavenge  } = require('../attributes/scavenge');
 // const { Route  } = require('../attributes/route');
 const { Blood  } = require('../../view/types/blood');
 const { Tween  } = require('../../engine/tween');
@@ -27,6 +28,7 @@ class Cat extends Animal {
     this.add_component(new Melee(this));
     this.add_component(new Tween(this.sprite));
     this.add_component(new Influence(this));
+    this.add_component(new Scavenge(this));
     // this.add_component(new Route(this));
     this.route = {};
     this.influence.add_box(800, 800);
@@ -107,6 +109,8 @@ class Cat extends Animal {
     this._logic.on('repeat', () => {
       if(this._in_influence && this._enemy_seen){
         this._escape();
+      } else {
+        this.scavenge.for_item();
       }
     });
 
