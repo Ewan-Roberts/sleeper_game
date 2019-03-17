@@ -3,6 +3,7 @@
 const PIXI = require('pixi.js');
 const { Level      } = require('../level_model');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad } = require('../elements/pad');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Chest      } = require('../elements/chest');
@@ -42,11 +43,12 @@ class Tiled_Prey_Path extends Level {
     this.chest.loot.show();
     const chest_items = this.chest.loot.items;
 
-    const { entity } = this.elements.cat;
-    const { route  } = this.elements;
+    const { entity, exit_point, route } = this.elements.cat;
     const cat = new Cat();
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
+    cat.route.exit = exit_point;
+    cat.set_enemy(this.player);
 
     cat.tween.path_smoothness = 100;
     cat.tween.add_path(route[0].path);
@@ -72,7 +74,6 @@ class Tiled_Prey_Path extends Level {
       cat.tween.delay = 1000;
     });
 
-
     cat.tween.movement.on('end', () => {
       cat.tween.add_path(route[1].path);
       cat.tween.chain();
@@ -81,20 +82,7 @@ class Tiled_Prey_Path extends Level {
       cat.tween.delay = 1000;
     });
 
-    // cat.tween.chain(route[1].path, () => {
-    //   cat.tween.time = 1000;
-    //   cat.tween.delay = 2000;
-    //   cat.loot.take_items(chest_items);
-    //   console.log(cat);
-    // });
-
-    // cat.tween.chain(route[2].path, ()=> {
-    //   cat.tween.time = 1000;
-    //   cat.tween.delay = 2000;
-    // });
-
     cat.tween.start();
-    // cat.route.route_path(route[2].path);
 
     cat.logic_start();
     cat.set_position(entity);
@@ -114,6 +102,17 @@ class Tiled_Prey_Path extends Level {
       light.width  = data.width;
       light.set_position(data);
     });
+
+    this.elements.exit_pad.forEach(data => {
+      const pad = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+
+      cat.exit_point = {x: data.x+100, y:data.y};
+    });
+
   }
 }
 

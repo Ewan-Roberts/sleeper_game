@@ -1,11 +1,14 @@
 'use strict';
 
-const { timer            } = require('../../engine/ticker');
-const { distance_between } = require('../../utils/math');
+const { timer               } = require('../../engine/ticker');
+const { collision_container } = require('../../engine/pixi_containers');
+const { distance_between    } = require('../../utils/math');
+const { Sight               } = require('../../utils/line_of_sight');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
+const { Influence } = require('../attributes/influence');
 // const { Route  } = require('../attributes/route');
 const { Blood  } = require('../../view/types/blood');
 const { Tween  } = require('../../engine/tween');
@@ -23,12 +26,15 @@ class Cat extends Animal {
     this.inventory.equip_melee_weapon();
     this.add_component(new Melee(this));
     this.add_component(new Tween(this.sprite));
+    this.add_component(new Influence(this));
     // this.add_component(new Route(this));
+    this.route = {};
+    this.influence.add_box(800, 800);
 
     this.blood = new Blood();
 
     this._logic        = timer.createTimer(800);
-    this._logic.repeat = 20;
+    this._logic.repeat = 90;
     this._logic.expire = true;
     this._logic.dead   = false;
   }
@@ -72,13 +78,38 @@ class Cat extends Animal {
     this._logic.dead = true;
   }
 
-  enemy(character) {
+  set_enemy(character) {
     this.enemy = character;
+  }
+
+  _escape() {
+    this.tween.movement.stop();
+    console.log(this.route);
+    this.pathfind.go_to_point(this.route.exit);
+  }
+
+  get _enemy_seen() {
+    return Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children);
+  }
+
+  get _in_influence() {
+    this.influence.sprite.position.copy(this.sprite);
+
+    const enemy_point = this.enemy.sprite.getGlobalPosition();
+
+    return this.influence.sprite.containsPoint(enemy_point);
   }
 
   logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
+
+    this._logic.on('repeat', () => {
+      if(this._in_influence && this._enemy_seen){
+        this._escape();
+      }
+    });
+
     // this._logic.on('repeat', () => {
     // if(!this.vitals.alive) this.kill();
 

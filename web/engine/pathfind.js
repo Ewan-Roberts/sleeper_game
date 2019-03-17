@@ -130,6 +130,26 @@ class pathfind_sprite {
     }
   }
 
+  static async move_sprite_to_point_on_grid(from_sprite, point) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(from_sprite.getGlobalPosition()));
+
+    const to_point = grids.find(grid => grid.containsPoint(point));
+
+    if(!to_point  ) throw 'no point found';
+    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
+    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
+
+    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
+
+    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+
+    this.highlight_grid_cell_from_path(path_data);
+    this.move_sprite_on_path(from_sprite, path_array);
+  }
+
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const grids = grid_container.children;
 

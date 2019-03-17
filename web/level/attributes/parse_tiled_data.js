@@ -60,11 +60,15 @@ class Tiled_Data {
     return prey;
   }
 
-  get route() {
+  get cat() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
+
+    if(!found_layer) throw new Error('no cats areas found in level data');
+    const exit_point = found_layer.layers.find(object => object.name === 'exit').objects[0];
+
     const route_layer = found_layer.layers.find(layer => layer.name === 'route');
 
-    const route_array = route_layer.layers.map(step => {
+    const route = route_layer.layers.map(step => {
       const { objects, properties } = step;
       const data = objects[0];
 
@@ -79,34 +83,20 @@ class Tiled_Data {
       };
     });
 
-    route_array.sort((route_one, route_two) =>
+    route.sort((route_one, route_two) =>
       route_one.properties.order - route_two.properties.order);
-    return route_array;
-  }
 
-  get cat() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
-
-    if(!found_layer) throw new Error('no cats areas found in level data');
-    const data = found_layer.layers.find(object => object.name === 'path').objects[0];
-
-    const path = data.polyline.map(point => ({
-      x: point.x + data.x,
-      y: point.y + data.y,
-    }));
-
-    const cat = {
+    return {
       entity: found_layer.layers.find(object => object.name === 'entity'),
-      path,
+      exit_point,
+      route,
     };
-
-    return cat;
   }
 
   get background() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='background');
 
-    if(!found_layer) throw new Error('no background  found in level data');
+    if(!found_layer) throw new Error('no background found in level data');
     const background = found_layer.objects;
 
     //There should only ever be one background
@@ -123,7 +113,7 @@ class Tiled_Data {
     return lights;
   }
 
-  get exit() {
+  get exit_pad() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='exit_pad');
 
     if(!found_layer) throw new Error('no pads found in level data');

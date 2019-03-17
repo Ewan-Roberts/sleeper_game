@@ -55,7 +55,7 @@ class Tiled_Room extends Level {
       light.set_position(data);
     });
 
-    this.elements.exit.forEach(data => {
+    this.elements.exit_pad.forEach(data => {
       const pad = new Trigger_Pad();
       pad.height = data.height;
       pad.width  = data.width;

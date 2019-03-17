@@ -36,6 +36,10 @@ class View_Inventory {
     visual_effects_container.addChild(this.slot_container);
   }
 
+  static clear_slots() {
+    this.slot_container.removeChildren();
+  }
+
   static create_populated_slots(point, loot) {
     this.create_inventory_slots_at(point, loot.length);
 

@@ -156,6 +156,28 @@
                 }, 
                 {
                  "draworder":"topdown",
+                 "name":"exit",
+                 "objects":[
+                        {
+                         "height":0,
+                         "id":42,
+                         "name":"",
+                         "point":true,
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":0,
+                         "x":393.333333333333,
+                         "y":1349.33333333333
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "name":"path",
                  "objects":[
                         {
@@ -517,8 +539,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":495.620589456205,
-                 "y":1411.93441261934
+                 "x":591.620589456205,
+                 "y":1377.26774595267
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -620,7 +642,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":41,
+ "nextobjectid":43,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
