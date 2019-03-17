@@ -26,6 +26,14 @@ class Item_Pool {
         a : b
     );
   }
+
+  sortest_by_distance_to(sprite) {
+    this.items.sort((a,b) =>
+      distance_between(sprite, a.sprite) -
+      distance_between(sprite, b.sprite)
+    );
+  }
+
 }
 
 module.exports = {
