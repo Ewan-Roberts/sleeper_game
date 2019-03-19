@@ -77,6 +77,10 @@ class Selector {
     this.element.style.display = value;
   }
 
+  hide() {
+    this.element.style.display = none;
+  }
+
   event(name, func) {
     this.element.addEventListener(name, func);
   }

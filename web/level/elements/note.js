@@ -1,8 +1,8 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
-const { Item } = require('./item_model');
+const { Selector } = require('../../utils/dom');
+const { Item     } = require('./item_model');
 
 class Note extends Item {
   constructor() {
@@ -19,9 +19,8 @@ class Note extends Item {
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
     this.state = 'closed';
-
-    this.dom_note = global.document.querySelector('.note');
-    this.dom_note.addEventListener('click', () => {
+    this.dom_note = new Selector('.note');
+    this.dom_note.event('click', function() {
       this.hide();
     });
   }
