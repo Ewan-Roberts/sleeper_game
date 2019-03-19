@@ -22,14 +22,11 @@ async function register_user(data) {
   });
 }
 
-
 async function register_click() {
   const details = {
     user_name: player_name.value,
     password:  login_input.value,
   };
-
-  console.log(details);
 
   await register_user(details);
 }

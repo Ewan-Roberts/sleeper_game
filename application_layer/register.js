@@ -1,12 +1,11 @@
 'use strict';
 
-class Register {
+class User {
   constructor(attribute) {
     this.user_name = attribute.user_name;
     this.password  = attribute.password;
   }
 }
-
 
 function handler(request, response) {
   const parsed_body = request.body;
@@ -19,7 +18,7 @@ function handler(request, response) {
     throw new Error('no username provided');
   }
 
-  const user_details = new Register(parsed_body);
+  const user_details = new User(parsed_body);
 
   return user_details;
 }
