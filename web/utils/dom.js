@@ -13,9 +13,9 @@ class Selector {
     this.element.style.opacity = value / 100;
   }
 
-  // get value(){
-  //   return this.element.value;
-  // }
+  get value(){
+    return this.element.value;
+  }
 
   set display(value) {
     this.element.style.display = value;

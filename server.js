@@ -17,7 +17,7 @@ app.get('/', res => res.sendFile(`${__dirname}/public/index.html`));
 // app.post('/automation', (request, response) => Build.set_version(request, response));
 // app.get( '/automation', (request, response) => Build.get_version(request, response));
 
-// const { handler } = require('./application_layer/register.js');
+const { handler } = require('./application_layer/register.js');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -30,9 +30,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.post('/register', (req, res) => {
-  console.log(req.body);
-  console.log(res.body);
-  res.send('hifwfwe');
+app.post('/register', (request, res) => {
+  const result = handler(request);
+
+  console.log(result);
 });
 

@@ -26,21 +26,14 @@ async function register_user(data) {
 
 
 async function register_click() {
-  console.log({ player_name });
-  const data = {element: 'barium'};
-
-  console.log({ player_name});
-
   const details = {
-    user_name: player_name,
-    email:     login_input,
+    user_name: player_name.value,
+    password:  login_input.value,
   };
 
   console.log(details);
 
-  const response = await register_user(data);
-
-  console.log(response);
+  await register_user(details);
 }
 
 
@@ -76,9 +69,9 @@ class Selector {
     this.element.style.opacity = value / 100;
   }
 
-  // get value(){
-  //   return this.element.value;
-  // }
+  get value(){
+    return this.element.value;
+  }
 
   set display(value) {
     this.element.style.display = value;

@@ -8,9 +8,18 @@ class Register {
 }
 
 
-function handler(event, res) {
-  console.log(res);
-  const user_details = new Register(event);
+function handler(request, response) {
+  const parsed_body = request.body;
+
+  if(!parsed_body.password) {
+    throw new Error('no password provided');
+  }
+
+  if(!parsed_body.user_name) {
+    throw new Error('no username provided');
+  }
+
+  const user_details = new Register(parsed_body);
 
   return user_details;
 }
