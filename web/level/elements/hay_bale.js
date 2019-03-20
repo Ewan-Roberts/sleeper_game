@@ -1,5 +1,4 @@
 'use strict';
-
 const { collision_container } = require('../../engine/pixi_containers');
 
 const event      = require('events');
@@ -16,18 +15,7 @@ class Hay extends Item {
 
     this.add_component(new Vitals(this));
 
-    this.sprite.events.on('damage', damage => this.on_hit(damage));
-
     collision_container.addChild(this.sprite);
-  }
-
-  on_hit(amount) {
-    if(this.vitals.status === 'dead') {
-      this.sprite.destroy();
-      return;
-    }
-
-    this.vitals.damage(amount);
   }
 }
 

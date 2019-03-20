@@ -1,5 +1,4 @@
 'use strict';
-
 const { collision_container } = require('../../engine/pixi_containers');
 
 const { Lootable } = require('../../character/attributes/lootable');
@@ -12,7 +11,6 @@ class Workbench extends Item {
 
     this.sprite.width = 200;
     this.sprite.height = 100;
-    this.state = 'closed';
     this.add_component(new Lootable(this));
 
     collision_container.addChild(this.sprite);
