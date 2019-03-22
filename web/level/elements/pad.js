@@ -1,8 +1,8 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const event        = require('events');
 const { pad_container } = require('../../engine/pixi_containers');
+const event = require('events');
 
 class Trigger_Pad {
   constructor() {
