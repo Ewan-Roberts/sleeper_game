@@ -1,6 +1,5 @@
 'use strict';
 
-const PIXI = require('pixi.js');
 const { Level      } = require('../level_model');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
@@ -9,7 +8,7 @@ const { Wall       } = require('../elements/wall');
 const { Chest      } = require('../elements/chest');
 const { Candle     } = require('../../light/types/candle');
 // const { Rat        } = require('../../character/archetypes/rat');
-const { Cat        } = require('../../character/archetypes/cat');
+const { Scavenger  } = require('../../character/archetypes/scavenger');
 const level_data  = require('../data/tiled_room.json');
 const level_tiled = require('../data/tiled_room_tiled.json');
 
@@ -42,8 +41,9 @@ class Tiled_Prey_Path extends Level {
     this.chest.loot.show();
     const chest_items = this.chest.loot.items;
 
+    //TODO Rename cat to scavener
     const { entity, exit_point, route } = this.elements.cat;
-    const cat = new Cat();
+    const cat = new Scavenger();
     cat.sprite.width  = 50;
     cat.sprite.height = 100;
     cat.route.exit = exit_point;

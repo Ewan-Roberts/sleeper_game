@@ -15,10 +15,10 @@ const { Scavenge  } = require('../attributes/scavenge');
 const { Blood     } = require('../../view/types/blood');
 const { Tween     } = require('../../engine/tween');
 
-class Cat extends Animal {
+class Scavenger extends Animal {
   constructor() {
     super();
-    this.name = 'cat';
+    this.name = 'scavenger';
 
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
@@ -125,5 +125,5 @@ class Cat extends Animal {
 
 
 module.exports = {
-  Cat,
+  Scavenger,
 };
