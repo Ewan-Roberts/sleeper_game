@@ -5,31 +5,28 @@
     <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-
     <div class = 'build_version'></div>
-    <div class = 'login_overlay'>
-      <!-- <img src= './images/tunnel_black.png' class = 'login_background'> -->
-      <div class = 'login_title'> Game_title</div>
-      <div class = 'login_mode'>
-        <button>Login</button>
+    <div class = 'game_overlay'>
+      <div class = 'game_image'></div>
+      <div class = 'red_triangle'></div>
+      <div class = 'input_holder'>
+         <div class = 'login_menu'>
+           <div class = 'login_mode'>
+             <button>login</button>
+             <button>register</button>
+           </div>
+           <input class  = 'player_name_input' value = 'name' placeholder = 'name'>
+           <input class  = 'login_password_input' value = 'password' placeholder = 'password'>
+           <button class = 'login_register_button'> start </button>
+         </div>
+
+         <div class = 'login_register'>
+           <h2> Passcode </h2>
+           <input class  = 'login_passcode' value = 'password'>
+           <button class = 'login_start_button'> Submit </button>
+         </div>
       </div>
-
-      <div class = 'login_menu'>
-        <h2> Player name </h2>
-        <input class = 'login_title_input' value = ''>
-
-        <h2> Email (optional) </h2>
-        <input class = 'login_password_input' value = ''>
-
-        <button class = 'login_register_button'> Submit </button>
-      </div>
-
-      <div class = 'login_register'>
-        <h2> Passcode </h2>
-        <input class = 'login_passcode' value = ''>
-
-        <button class = 'login_start_button'> Submit </button>
-      </div>
+      <div class = 'game_text'>LORIUM IPSUM</div>
     </div>
 
     <div class = 'response_overlay'>
@@ -37,11 +34,6 @@
       <p>user_name</p>
       <h2> Password </h2>
       <p>user_password</p>
-    </div>
-
-    <div class = "fps"></div>
-    <div class = "start_menu">
-      <div class = "start_button">START</div>
     </div>
 
     <div class = "note">

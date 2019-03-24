@@ -34,7 +34,9 @@ function point_collides(position) {
 
 function event_pad(position) {
   const { children } = pad_container;
+
   const pad = children.find(child => child.containsPoint(position));
+
   if(pad) pad.events.emit('trigger');
 }
 
@@ -59,10 +61,10 @@ class Keyboard {
 
   key_down(key) {
     switch(key) {
-      case  87    : this.keyboard_up();          return;//up
-      case  65  : this.keyboard_left();        return;//left
-      case  83  : this.keyboard_down();        return;
-      case  68 : this.keyboard_right();       return;
+      case  87     : this.keyboard_up();          return;//up
+      case  65     : this.keyboard_left();        return;//left
+      case  83     : this.keyboard_down();        return;
+      case  68     : this.keyboard_right();       return;
       case 'n'     : this.save_game();            return;
       case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;

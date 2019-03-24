@@ -16,8 +16,3 @@ class Start_Menu {
 }
 
 new Start_Menu();
-
-
-
-
-

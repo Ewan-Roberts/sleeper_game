@@ -1,6 +1,6 @@
 'use strict';
 
-require('./engine/globals');
+require('./utils/globals');
 
 const { loader } = require('./engine/packer');
 loader.add('../../images/bedroom_EN_web.json');

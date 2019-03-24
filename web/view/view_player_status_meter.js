@@ -1,28 +1,33 @@
 'use strict';
 
-function update_meter_with_value (selector, value) {
-  selector.innerHTML     = value;
-  selector.style.width   = value + '%';
-  selector.style.opacity = value / 100;
+const { Selector } = require('../utils/dom')
+
+class Meter extends Selector {
+
+  set value(amount) {
+    this.element.innerHTML = amount;
+    this.element.width     = amout + '%';
+    this.element.opacity   = amount;
+  }
 }
 
-const select = name => global.document.querySelector(name);
-
-const health_remaining = select('.health_remaining');
-const food_remaining   = select('.food_remaining');
-const water_remaining  = select('.water_remaining');
-const heat_remaining   = select('.heat_remaining');
-const sleep_remaining  = select('.sleep_remaining');
 
 class status_meter {
-  static update(data) {
-    update_meter_with_value(health_remaining, data.health);
-    update_meter_with_value(food_remaining,   data.food);
-    update_meter_with_value(water_remaining,  data.water);
-    update_meter_with_value(heat_remaining,   data.heat);
-    update_meter_with_value(sleep_remaining,  data.sleep);
+  constructor() {
+    this.health_remaining = Meter('.health_remaining');
+    this.food_remaining   = Meter('.food_remaining');
+    this.water_remaining  = Meter('.water_remaining');
+    this.heat_remaining   = Meter('.heat_remaining');
+    this.sleep_remaining  = Meter('.sleep_remaining');
   }
 
+  static update(data) {
+    this.health_remaining.value = data.health;
+    this.food_remaining.value   = data.food;
+    this.water_remaining.value  = data.water;
+    this.heat_remaining.value   = data.heat;
+    this.sleep_remaining.value  = data.sleep;
+  }
 }
 
 module.exports = {
