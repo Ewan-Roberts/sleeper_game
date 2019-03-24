@@ -1,13 +1,13 @@
 'use strict';
 
-//This is purely an interface for TILED data
+// This is purely an interface for TILED data
 class Tiled_Data {
   constructor(level_data) {
     this.level_data = level_data;
   }
 
   get player() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='player');
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'player');
 
     if(!found_layer) throw new Error('no found player in level data');
 
@@ -17,7 +17,7 @@ class Tiled_Data {
   }
 
   get center() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='center');
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'center');
 
     if(!found_layer) throw new Error('no center found in level data');
 
@@ -27,8 +27,18 @@ class Tiled_Data {
     return center[0];
   }
 
+  get furnishing() {
+    console.log(this);
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'furnishing');
+    if(!found_layer) throw new Error('no furnishings found in level data');
+
+    const group = found_layer.layers.map(thing => thing.objects[0]);
+
+    return group;
+  }
+
   get item_areas() {
-    const item_areas = this.level_data.layers.find(layer => layer.name ==='item_areas');
+    const item_areas = this.level_data.layers.find(layer => layer.name === 'item_areas');
 
     if(!item_areas) throw new Error('no item areas found in level data');
     const pads = [];
@@ -44,7 +54,7 @@ class Tiled_Data {
   }
 
   get chairs() {
-    const chairs = this.level_data.layers.find(layer => layer.name ==='chairs');
+    const chairs = this.level_data.layers.find(layer => layer.name === 'chairs');
 
     if(!chairs) throw new Error('no elements areas found in level data');
 
@@ -60,6 +70,7 @@ class Tiled_Data {
     return prey;
   }
 
+  //TODO rename scavenger
   get cat() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
 

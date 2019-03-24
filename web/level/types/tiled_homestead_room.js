@@ -1,13 +1,13 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background } = require('../elements/background');
-const { Chair      } = require('../elements/chair');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
-const { Randomise  } = require('../attributes/randomise');
-const { Wall       } = require('../elements/wall');
-const { Bright_Light } = require('../../light/types/bright_light');
-const level_data     = require('../data/homestead_tiled.json');
+const { Level           } = require('../level_model');
+const { Background      } = require('../elements/background');
+const { Tiled_Data      } = require('../attributes/parse_tiled_data');
+const { Randomise       } = require('../attributes/randomise');
+const { Wall            } = require('../elements/wall');
+const { Bright_Light    } = require('../../light/types/bright_light');
+const { Element_Factory } = require('../elements/elements_factory');
+const level_data       = require('../data/homestead_tiled.json');
 
 class Tiled_Homestead extends Level {
   constructor(player) {
@@ -60,7 +60,8 @@ class Tiled_Homestead extends Level {
     });
 
     this.elements.chairs.forEach(data => {
-      const chair = new Chair();
+      const chair = Element_Factory.generate('chair');
+
       chair.set_position(data);
     });
   }

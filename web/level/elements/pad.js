@@ -1,8 +1,9 @@
 'use strict';
 const PIXI = require('pixi.js');
-
-const event        = require('events');
 const { pad_container } = require('../../engine/pixi_containers');
+
+const event          = require('events');
+const { Color_Pick } = require('../../utils/color_picker');
 
 class Trigger_Pad {
   constructor() {
@@ -39,14 +40,8 @@ class Trigger_Pad {
     this.area.height = value;
   }
 
-  set tint(color) {
-    switch(color) {
-      case 'red'    : this.area.tint = 0xff0000; break;
-      case 'yellow' : this.area.tint = 0xbdb76b; break;
-      case 'white'  : this.area.tint = 0xffffff; break;
-      case 'green'  : this.area.tint = 0x008000; break;
-      case 'grey'   : this.area.tint = 0xd3d3d3; break;
-    }
+  set tint(name) {
+    this.area = Color_Pick.get_hex_from(name);
   }
 
   destroy() {

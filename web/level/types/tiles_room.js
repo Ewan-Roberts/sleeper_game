@@ -1,12 +1,12 @@
 
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
-const { Randomise  } = require('../attributes/randomise');
-const { Background } = require('../elements/background');
-const { Wall       } = require('../elements/wall');
-const { Candle     } = require('../../light/types/candle');
+const { Level       } = require('../level_model');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Randomise   } = require('../attributes/randomise');
+const { Background  } = require('../elements/background');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
 const { Trigger_Pad } = require('../elements/pad');
 const level_data  = require('../data/tiled_room.json');
 

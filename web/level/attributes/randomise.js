@@ -1,15 +1,10 @@
 'use strict';
 const PIXI = require('pixi.js');
-
 const { visual_effects_container } = require('../../engine/pixi_containers');
-const { random_bound } = require('../../utils/math');
 
-const { Chest     } = require('../elements/chest');
-const { Hay       } = require('../elements/hay_bale');
-const { Backpack  } = require('../elements/back_pack');
-const { Workbench } = require('../elements/workbench');
-const { Chair     } = require('../elements/chair');
-const { Matress   } = require('../elements/dirty_matress');
+const { random_bound    } = require('../../utils/math');
+const { Color_Pick      } = require('../../utils/color_picker');
+const { Element_Factory } = require('../elements/elements_factory');
 
 class Randomise {
   constructor() {
@@ -34,11 +29,7 @@ class Randomise {
   }
 
   populate_with_item(name) {
-    let item = null;
-    switch(name) {
-      case 'workbench' : item = new Workbench(); break;
-      case 'hay'       : item = new Hay();       break;
-    }
+    const item = Element_Factory.generate(name);
 
     const point = this.bound_point(item.sprite);
 
@@ -47,15 +38,15 @@ class Randomise {
 
   random_items() {
     //TODO these ae created when invoked
-
     const item_array = [
-      new Hay(),
-      new Chest(),
-      new Backpack(),
-      new Workbench(),
-      new Matress(),
-      new Chair(),
+      Element_Factory.generate('hay'),
+      Element_Factory.generate('chest'),
+      Element_Factory.generate('backpack'),
+      Element_Factory.generate('workbench'),
+      Element_Factory.generate('mattress'),
+      Element_Factory.generate('chair'),
     ];
+
     const item = item_array[Math.floor(Math.random()*item_array.length)];
 
     const point = this.bound_point(item.sprite);
@@ -72,14 +63,8 @@ class Randomise {
     this.area.alpha = value;
   }
 
-  set tint(color) {
-    switch(color) {
-      case 'red'    : this.area.tint = 0xff0000; break;
-      case 'yellow' : this.area.tint = 0xbdb76b; break;
-      case 'white'  : this.area.tint = 0xffffff; break;
-      case 'green'  : this.area.tint = 0x008000; break;
-      case 'grey'   : this.area.tint = 0xd3d3d3; break;
-    }
+  set tint(name) {
+    this.area = Color_Pick.get_hex_from(name);
   }
 
   set_position({x,y}) {

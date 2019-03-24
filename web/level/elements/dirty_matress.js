@@ -1,5 +1,4 @@
 'use strict';
-
 const { collision_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
@@ -16,6 +15,7 @@ class Matress extends Item {
   }
 }
 
+//TODO spelling
 module.exports = {
   Matress,
 };

@@ -1,12 +1,12 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
-const { Randomise  } = require('../attributes/randomise');
-const { Background } = require('../elements/background');
-const { Wall       } = require('../elements/wall');
-const { Bright_Light     } = require('../../light/types/bright_light');
-// const { Trigger_Pad } = require('../elements/pad');
+const { Level        } = require('../level_model');
+const { Tiled_Data   } = require('../attributes/parse_tiled_data');
+const { Randomise    } = require('../attributes/randomise');
+const { Background   } = require('../elements/background');
+const { Wall         } = require('../elements/wall');
+const { Bright_Light } = require('../../light/types/bright_light');
+
 const level_data  = require('../data/large_level.json');
 
 class Large_Room extends Level {
@@ -28,7 +28,6 @@ class Large_Room extends Level {
     this.background.set_position({x: 1100, y: 800});
     this.background.height = 5000;
     this.background.width = 8000;
-    // this.background.alpha = 0.5;
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
@@ -41,7 +40,6 @@ class Large_Room extends Level {
 
     this.elements.item_areas.forEach(data => {
       const area = new Randomise();
-      // area.anchor = 0;
       area.height = data.height;
       area.width  = data.width;
       area.alpha = 0;
@@ -55,14 +53,6 @@ class Large_Room extends Level {
       light.width  = data.width;
       light.set_position(data);
     });
-
-    // this.elements.exit.forEach(data => {
-    //   const pad = new Trigger_Pad();
-    //   pad.height = data.height;
-    //   pad.width  = data.width;
-    //   pad.anchor = 0;
-    //   pad.set_position(data);
-    // });
   }
 }
 

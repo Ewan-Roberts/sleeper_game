@@ -45,7 +45,6 @@ class Item_Pool {
       distance_between(sprite, b.sprite)
     );
   }
-
 }
 
 module.exports = {

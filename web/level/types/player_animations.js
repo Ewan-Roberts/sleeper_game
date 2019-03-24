@@ -8,19 +8,19 @@ const { NPC        } = require('../../character/types/npc');
 class Animations_Room extends Level {
   constructor() {
     super();
-    this.name           = 'animations_room';
+    this.name            = 'animations_room';
 
-    this.background     = new Background('grid_floor');
-    this.camera         = new Camera();
+    this.background      = new Background('grid_floor');
+    this.camera          = new Camera();
     this.nothing_walking = new NPC();
-    this.nothing_idle   = new NPC();
+    this.nothing_idle    = new NPC();
 
-    this.candle_walking = new NPC();
-    this.candle_idle    = new NPC();
+    this.candle_walking  = new NPC();
+    this.candle_idle     = new NPC();
 
-    this.bow_walking = new NPC();
-    this.bow_idle= new NPC();
-    this.bow_shoot= new NPC();
+    this.bow_walking     = new NPC();
+    this.bow_idle        = new NPC();
+    this.bow_shoot       = new NPC();
     this._set_elements();
   }
 

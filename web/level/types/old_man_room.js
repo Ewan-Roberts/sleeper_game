@@ -1,16 +1,17 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
-// const { Item_Pool  } = require('../attributes/item_pool');
+const { Level       } = require('../level_model');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
-const { Background } = require('../elements/background');
-const { Wall       } = require('../elements/wall');
-const { Chest      } = require('../elements/chest');
-const { Candle     } = require('../../light/types/candle');
-const { Scavenger  } = require('../../character/archetypes/scavenger');
-const level_data  = require('../data/tiled_room.json');
-const level_tiled = require('../data/tiled_room_tiled.json');
+const { Background  } = require('../elements/background');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
+const { Scavenger   } = require('../../character/archetypes/scavenger');
+
+const { Element_Factory } = require('../elements/elements_factory');
+
+const level_data  = require('../data/old_man_room.json');
+const level_tiled = require('../data/old_man_room_tiled.json');
 
 class Old_Man_Room extends Level {
   constructor(player) {
@@ -27,20 +28,13 @@ class Old_Man_Room extends Level {
   async _set_elements() {
     global.set_light_level(1);
     this.player.light.hide();
+    this.player.set_position({x:700, y:600});
 
     this.background.set_position({x: 1100, y: 800});
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
     this.create_grid(level_tiled);
-
-    this.chest = new Chest();
-    this.chest.set_position({x: 1400, y: 300});
-    this.chest.loot.populate();
-
-    this.chest1 = new Chest();
-    this.chest1.set_position({x: 1500, y: 700});
-    this.chest1.loot.populate();
 
     const { exit_point } = this.elements.cat;
     const cat = new Scavenger();
@@ -54,6 +48,12 @@ class Old_Man_Room extends Level {
     cat.set_enemy(this.player);
 
     cat.scavenge.load_pool(this.item_pool);
+
+    this.elements.furnishing.forEach(data => {
+      Element_Factory.generate_tiled(data);
+
+      console.log(data);
+    });
 
     this.elements.walls.forEach(data => {
       const wall  = new Wall();

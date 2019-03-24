@@ -10,6 +10,9 @@ const { Vitals    } = require('../attributes/vitals');
 const { Lootable  } = require('../attributes/lootable');
 const { Pathfind  } = require('../attributes/pathfind');
 
+//TODO: Animal isnt quite right, more neutral character
+// the logic for it being an animal is in the parent
+// ArcheTyoe
 class Animal extends Character {
   constructor() {
     super();

@@ -1,5 +1,6 @@
 'use strict';
 
+const event     = require('events');
 const { Blood } = require('../../view/types/blood');
 
 class Vitals {
@@ -18,6 +19,8 @@ class Vitals {
     this.heat   = 90;
     this.sleep  = 100;
     this.status = 'alive';
+    this.sprite.events = new event();
+    this.sprite.events.on('damage', damage => this.on_hit(damage));
   }
 
   get alive() {

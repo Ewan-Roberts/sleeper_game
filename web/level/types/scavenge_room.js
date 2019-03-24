@@ -1,14 +1,16 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
-const { Item_Pool  } = require('../attributes/item_pool');
+const { Level       } = require('../level_model');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Item_Pool   } = require('../attributes/item_pool');
 const { Trigger_Pad } = require('../elements/pad');
-const { Background } = require('../elements/background');
-const { Wall       } = require('../elements/wall');
-const { Chest      } = require('../elements/chest');
-const { Candle     } = require('../../light/types/candle');
-const { Cat        } = require('../../character/archetypes/cat');
+const { Background  } = require('../elements/background');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
+const { Scavenger   } = require('../../character/archetypes/scavenger');
+
+const { Element_Factory } = require('../elements/elements_factory');
+
 const level_data  = require('../data/tiled_room.json');
 const level_tiled = require('../data/tiled_room_tiled.json');
 
@@ -22,6 +24,11 @@ class Scavenge_Room extends Level {
     this.background = new Background('grid_floor');
     this.item_pool  = new Item_Pool();
 
+    this.chest      = Element_Factory.generate('chest');
+    this.chest1     = Element_Factory.generate('chest');
+    this.chest2     = Element_Factory.generate('chest');
+
+    this.cat       = new Scavenger();
     this._set_elements();
   }
 
@@ -35,15 +42,12 @@ class Scavenge_Room extends Level {
     this.add_to_segments(this.background.sprite);
     this.create_grid(level_tiled);
 
-    this.chest = new Chest();
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
 
-    this.chest1 = new Chest();
     this.chest1.set_position({x: 1500, y: 700});
     this.chest1.loot.populate();
 
-    this.chest2 = new Chest();
     this.chest2.set_position({x: 800, y: 900});
     this.chest2.loot.populate();
 
@@ -52,20 +56,13 @@ class Scavenge_Room extends Level {
     this.item_pool.load(this.chest);
 
     const { exit_point } = this.elements.cat;
-    const cat = new Cat();
-    cat.set_position({x: 400, y:500});
-    console.log(this.item_pool);
-    // this.item_pool.shortest_by_distance_to(cat.sprite);
+    this.cat.set_position({x: 400, y:500});
 
-    // const foo = this.item_pool.closest_item_to(cat.sprite);
-    // console.log(foo);
-    // this.item_pool.load(foo);
-
-    cat.sprite.width  = 50;
-    cat.sprite.height = 100;
-    cat.route.exit = exit_point;
-    cat.set_enemy(this.player);
-    cat.scavenge.load_pool(this.item_pool);
+    this.cat.sprite.width  = 50;
+    this.cat.sprite.height = 100;
+    this.cat.route.exit = exit_point;
+    this.cat.set_enemy(this.player);
+    this.cat.scavenge.load_pool(this.item_pool);
     this.elements.walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;
@@ -91,7 +88,6 @@ class Scavenge_Room extends Level {
     });
 
     cat.logic_start();
-
   }
 }
 

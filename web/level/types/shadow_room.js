@@ -5,8 +5,6 @@ const { Sun        } = require('../../light/types/sun');
 const { Lighter    } = require('../../light/types/lighter');
 const { Candle     } = require('../../light/types/candle');
 const { Ambient    } = require('../../light/types/ambient');
-// const { sleep      } = require('../../engine/time');
-
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Chest      } = require('../elements/chest');

@@ -1,15 +1,10 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background } = require('../elements/background');
-const { Hay        } = require('../elements/hay_bale');
-const { Wall       } = require('../elements/wall');
-const { Chest      } = require('../elements/chest');
-const { Candle     } = require('../../light/types/candle');
-const { Backpack   } = require('../elements/back_pack');
-const { Workbench  } = require('../elements/workbench');
-const { Chair      } = require('../elements/chair');
-const { Matress    } = require('../elements/dirty_matress');
+const { Level           } = require('../level_model');
+const { Background      } = require('../elements/background');
+const { Wall            } = require('../elements/wall');
+const { Candle          } = require('../../light/types/candle');
+const { Element_Factory } = require('../elements/elements_factory');
 
 class Items_Room extends Level {
   constructor(player) {
@@ -18,14 +13,15 @@ class Items_Room extends Level {
 
     this.player      = player;
     this.background  = new Background('grid_floor');
-    this.hay_bale    = new Hay();
-    this.chair       = new Chair();
-    this.matress     = new Matress();
-    this.chest       = new Chest();
     this.candle      = new Candle();
-    this.backpack    = new Backpack();
-    this.workbench   = new Workbench();
     this.wall        = new Wall();
+
+    this.hay_bale    = Element_Factory.generate('hay');
+    this.chair       = Element_Factory.generate('chair');
+    this.matress     = Element_Factory.generate('mattress');
+    this.chest       = Element_Factory.generate('chest');
+    this.backpack    = Element_Factory.generate('backpack');
+    this.workbench   = Element_Factory.generate('workbench');
 
     this._set_elements();
   }

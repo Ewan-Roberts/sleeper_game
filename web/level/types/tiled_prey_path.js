@@ -1,14 +1,14 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Level       } = require('../level_model');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
-const { Background } = require('../elements/background');
-const { Wall       } = require('../elements/wall');
-const { Chest      } = require('../elements/chest');
-const { Candle     } = require('../../light/types/candle');
-// const { Rat        } = require('../../character/archetypes/rat');
-const { Scavenger  } = require('../../character/archetypes/scavenger');
+const { Background  } = require('../elements/background');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
+const { Scavenger   } = require('../../character/archetypes/scavenger');
+
+const { Element_Factory } = require('../elements/elements_factory');
 const level_data  = require('../data/tiled_room.json');
 const level_tiled = require('../data/tiled_room_tiled.json');
 
@@ -20,7 +20,7 @@ class Tiled_Prey_Path extends Level {
     this.player     = player;
     this.elements   = new Tiled_Data(level_data);
     this.background = new Background('grid_floor');
-    this.chest      = new Chest();
+    this.chest      = Element_Factory.generate('chest');
 
     this._set_elements();
   }
@@ -108,7 +108,6 @@ class Tiled_Prey_Path extends Level {
       pad.anchor = 0;
       pad.set_position(data);
     });
-
   }
 }
 

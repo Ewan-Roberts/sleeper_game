@@ -1,10 +1,9 @@
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background } = require('../elements/background');
-const { Hay        } = require('../elements/hay_bale');
-
-const { Archer     } = require('../../character/archetypes/archer');
+const { Level           } = require('../level_model');
+const { Background      } = require('../elements/background');
+const { Element_Factory } = require('../elements/elements_factory');
+const { Archer          } = require('../../character/archetypes/archer');
 
 class Archer_Room extends Level {
   constructor(player) {
@@ -13,7 +12,7 @@ class Archer_Room extends Level {
 
     this.background  = new Background('grid_floor');
     this.archer      = new Archer();
-    this.hay_bale    = new Hay();
+    this.hay_bale    = Element_Factory.generate('hay');
     this.player      = player;
 
     this._set_elements();

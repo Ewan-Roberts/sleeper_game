@@ -2,17 +2,18 @@
 
 const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
-const { Hay        } = require('../elements/hay_bale');
+
+const { Element_Factory } = require('../elements/elements_factory');
 
 class Projectile_Room extends Level {
   constructor(player) {
     super();
-    this.name        = 'animations_room';
+    this.name       = 'animations_room';
 
-    this.background  = new Background('grid_floor');
-    this.hay_bale    = new Hay();
-    this.hay_bale_2  = new Hay();
-    this.player      = player;
+    this.background = new Background('grid_floor');
+    this.hay_bale   = Element_Factory.generate('hay');
+    this.hay_bale_2 = Element_Factory.generate('hay');
+    this.player     = player;
 
     this._set_elements();
   }
