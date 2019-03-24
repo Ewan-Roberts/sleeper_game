@@ -1,7 +1,6 @@
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
-const { sleep               } = require('../../utils/time');
 const { collision_container } = require('../../engine/pixi_containers');
 const { distance_between    } = require('../../utils/math');
 const { Sight               } = require('../../utils/line_of_sight');
@@ -11,6 +10,7 @@ const { Animal    } = require('../types/rat');
 const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
 const { Scavenge  } = require('../attributes/scavenge');
+const { Script    } = require('../attributes/script');
 const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
 
@@ -30,6 +30,8 @@ class Scripted_NPC extends Animal {
     this.add_component(new Tween(this.sprite));
     this.add_component(new Influence(this));
     this.add_component(new Scavenge(this));
+    this.add_component(new Script(['hi', 'two', 'three']));
+
     this.influence.add_box(600, 600);
     this.route = {};
 
@@ -100,8 +102,8 @@ class Scripted_NPC extends Animal {
     return this.influence.sprite.containsPoint(enemy_point);
   }
 
-  * while_player_seen() {
-    yield 'i see you';
+  * talk() {
+    yield 'I see you';
     yield 'now dont run away';
     yield '...';
     yield '...';
@@ -109,26 +111,38 @@ class Scripted_NPC extends Animal {
     return this._escape();
   }
 
+  * too_close() {
+    yield () => console.log('111111');
+    yield () => console.log('222222');
+    yield () => console.log('333333');
+    yield () => console.log('444444');
+
+    return this._escape();
+  }
+
   async logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
-    this.generator = this.while_player_seen();
+
+    this.talk_generator  = this.talk();
+    this.close_generator = this.too_close();
 
     this._logic.on('repeat', () => {
-      if(this._enemy_seen) {
-        console.log(this.generator.next().value);
-      }
 
       if(this._in_influence && this._enemy_seen){
-        this._escape();
+
+        console.log(this.script.data.next().value);
+
+        this.close_generator.next().value();
+        return;
+      }
+
+      if(this._enemy_seen) {
+        console.log(this.talk_generator.next().value);
       }
     });
-
   }
 }
-
-
-
 
 module.exports = {
   Scripted_NPC,
