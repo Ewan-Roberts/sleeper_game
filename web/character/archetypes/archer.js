@@ -7,7 +7,7 @@ const event     = require('events');
 const { Enemy } = require('../types/enemy');
 const { Melee } = require('../attributes/melee');
 const { Range } = require('../attributes/ranged');
-const { Blood } = require('../../view/types/blood');
+const { Blood } = require('../../effects/blood');
 
 class Archer extends Enemy {
   constructor() {

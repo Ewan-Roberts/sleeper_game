@@ -12,7 +12,7 @@ const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
 const { Scavenge  } = require('../attributes/scavenge');
 // const { Route  } = require('../attributes/route');
-const { Blood     } = require('../../view/types/blood');
+const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
 
 class Scavenger extends Animal {

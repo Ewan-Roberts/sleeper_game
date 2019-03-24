@@ -1,7 +1,7 @@
 'use strict';
 
 const event     = require('events');
-const { Blood } = require('../../view/types/blood');
+const { Blood } = require('../../effects/blood');
 
 class Vitals {
   constructor({ sprite }) {

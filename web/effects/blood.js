@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 
 class Blood {
   add_at(point) {

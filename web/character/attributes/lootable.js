@@ -2,7 +2,7 @@
 
 const { Item_Manager   } = require('../../items/item_manager');
 const { View_Inventory } = require('../../view/view_inventory');
-const { Button         } = require('../../view/types/button');
+const { Button         } = require('../../view/button');
 
 class Lootable {
   constructor({ sprite }) {

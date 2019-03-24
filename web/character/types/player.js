@@ -13,7 +13,7 @@ const { Vitals    } = require('../attributes/vitals');
 const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
-const { Blood     } = require('../../view/types/blood');
+const { Blood     } = require('../../effects/blood');
 
 class Player extends Character {
   constructor() {

@@ -6,7 +6,7 @@ const { distance_between } = require('../../utils/math');
 const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
-const { Blood  } = require('../../view/types/blood');
+const { Blood  } = require('../../effects/blood');
 
 class Rat extends Animal {
   constructor() {
