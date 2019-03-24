@@ -54,8 +54,8 @@ class Scavenge_Room extends Level {
     const { exit_point } = this.elements.cat;
     const cat = new Cat();
     cat.set_position({x: 400, y:500});
-
-    this.item_pool.shortest_by_distance_to(cat.sprite);
+    console.log(this.item_pool);
+    // this.item_pool.shortest_by_distance_to(cat.sprite);
 
     // const foo = this.item_pool.closest_item_to(cat.sprite);
     // console.log(foo);

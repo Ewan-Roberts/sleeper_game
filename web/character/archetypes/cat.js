@@ -113,16 +113,12 @@ class Cat extends Animal {
       }
     });
 
-    await sleep(1500);
-    await this.scavenge.get_new_path();
-    await this.scavenge.go_to_item();
-    await sleep(1000);
-    await this.scavenge.get_new_path();
-    await this.scavenge.go_to_item();
-    await sleep(1000);
-    await this.scavenge.get_new_path();
-    await this.scavenge.go_to_item();
-    await sleep(1000);
+    for(let i = 0; i < 3; i++) {
+      await sleep(1500);
+      await this.scavenge.get_new_path();
+      await this.scavenge.go_to_item();
+    }
+
     this._escape();
   }
 }

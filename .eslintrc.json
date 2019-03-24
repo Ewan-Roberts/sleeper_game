@@ -1,0 +1,54 @@
+{
+  "root": true,
+  "extends": "eslint:recommended",
+  "rules": {
+    "no-console": 0,
+    "array-callback-return": "error",
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "never"
+    }],
+    "strict": ["error", "global"],
+    "dot-notation": "error",
+    "eqeqeq": ["error", "always"],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "no-array-constructor": "error",
+    "no-else-return": "error",
+    "no-eval": "error",
+    "no-new-object": "error",
+    "no-param-reassign": "error",
+    "no-restricted-globals": ["error", "isNaN", "isFinite"],
+    "no-trailing-spaces": "error",
+    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+    "no-var": "error",
+    "prefer-const": "error",
+    "quote-props": ["error", "consistent-as-needed"],
+    "quotes": ["error", "single", {
+      "avoidEscape": true
+    }],
+    "radix": "error",
+    "semi": ["error", "always"]
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "globals": {
+    "chai": true,
+    "server": true,
+    "skip_when_running_simplified_test_suite": true,
+    "skip_when_testing_intranet_api": true,
+    "skip_when_testing_investor_api": true,
+    "skip_when_testing_seller_api": true
+  }
+}
