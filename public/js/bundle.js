@@ -45569,10 +45569,19 @@ class Scripted_NPC extends Animal {
     return this.influence.sprite.containsPoint(enemy_point);
   }
 
+  * while_player_seen() {
+    yield 'i see you';
+    yield 'now dont run away';
+    yield '...';
+    yield '...';
+    yield 'dont worry i wont shoot';
+    return this._escape();
+  }
+
   async logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
-    this.generator = while_player_seen();
+    this.generator = this.while_player_seen();
 
     this._logic.on('repeat', () => {
       if(this._enemy_seen) {
@@ -45587,13 +45596,6 @@ class Scripted_NPC extends Animal {
   }
 }
 
-function* while_player_seen() {
-  yield 'i see you';
-  yield 'now dont run away';
-  yield '...';
-  yield '...';
-  yield 'dont worry i wont shoot';
-}
 
 
 
