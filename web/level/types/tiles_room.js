@@ -8,7 +8,7 @@ const { Background  } = require('../elements/background');
 const { Wall        } = require('../elements/wall');
 const { Candle      } = require('../../light/types/candle');
 const { Trigger_Pad } = require('../elements/pad');
-const level_data  = require('../data/tiled_room.json');
+const level_data      = require('../data/tiled_room.json');
 
 class Tiled_Room extends Level {
   constructor(player) {

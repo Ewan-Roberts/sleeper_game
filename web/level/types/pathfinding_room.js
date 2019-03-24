@@ -3,7 +3,7 @@
 const { Level      } = require('../level_model');
 const { Rat        } = require('../../character/archetypes/rat');
 const { Archer     } = require('../../character/archetypes/archer');
-const { Background } = require('../../level/elements/background');
+const { Background } = require('../elements/background');
 
 class Pathfind_Room extends Level {
   constructor(player) {

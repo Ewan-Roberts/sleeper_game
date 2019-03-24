@@ -17,7 +17,7 @@ const { Tiled_Prey      } = require('../level/types/tiled_prey');
 const { Tiled_Prey_Path } = require('../level/types/tiled_prey_path');
 const { Large_Room      } = require('../level/types/large_level');
 const { Tiled_Homestead } = require('../level/types/tiled_homestead_room');
-const { Intro           } = require('../cutscene/types/intro.js');
+const { Intro           } = require('../level/types/intro.js');
 const { Player          } = require('../character/types/player.js');
 
 // Boot loader for testing

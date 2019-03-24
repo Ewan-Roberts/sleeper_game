@@ -1,5 +1,4 @@
 'use strict';
-
 const { background_container } = require('../engine/pixi_containers');
 
 const { pathfind_sprite      } = require('../engine/pathfind.js');

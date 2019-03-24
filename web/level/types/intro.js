@@ -1,7 +1,7 @@
 'use strict';
 
 const { sleep       } = require('../../utils/time');
-const { Shadow_Room } = require('../../level/types/shadow_room');
+const { Shadow_Room } = require('./shadow_room');
 const { Camera      } = require('../../engine/camera');
 
 class Intro extends Shadow_Room {
