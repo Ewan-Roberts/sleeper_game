@@ -22,7 +22,7 @@ class Selector {
   }
 
   hide() {
-    this.element.style.display = none;
+    this.element.style.display = 'none';
   }
 
   event(name, func) {
