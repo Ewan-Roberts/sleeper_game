@@ -30,7 +30,13 @@ class Scripted_NPC extends Animal {
     this.add_component(new Tween(this.sprite));
     this.add_component(new Influence(this));
     this.add_component(new Scavenge(this));
-    this.add_component(new Script(['hi', 'two', 'three']));
+    this.normal_script = new Script(['normal1','normal2','normal3']);
+    this.close_script  = new Script(['close1','close2','close3']);
+    this.exec_script  = new Script([
+      () => console.log('111111'),
+      () => console.log('222222'),
+      () => console.log('333333'),
+    ]);
 
     this.influence.add_box(600, 600);
     this.route = {};
@@ -102,43 +108,21 @@ class Scripted_NPC extends Animal {
     return this.influence.sprite.containsPoint(enemy_point);
   }
 
-  * talk() {
-    yield 'I see you';
-    yield 'now dont run away';
-    yield '...';
-    yield '...';
-    yield 'dont worry i wont shoot';
-    return this._escape();
-  }
-
-  * too_close() {
-    yield () => console.log('111111');
-    yield () => console.log('222222');
-    yield () => console.log('333333');
-    yield () => console.log('444444');
-
-    return this._escape();
-  }
-
   async logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
 
-    this.talk_generator  = this.talk();
-    this.close_generator = this.too_close();
-
     this._logic.on('repeat', () => {
 
       if(this._in_influence && this._enemy_seen){
+        this.close_script.speak();
+        this.exec_script.next();
 
-        console.log(this.script.data.next().value);
-
-        this.close_generator.next().value();
         return;
       }
 
       if(this._enemy_seen) {
-        console.log(this.talk_generator.next().value);
+        this.normal_script.speak();
       }
     });
   }

@@ -12,6 +12,17 @@ class Script {
       yield data[i];
     }
   }
+
+  speak() {
+    console.log(this.data.next().value);
+  }
+
+  next() {
+    const next_step = this.data.next().value;
+    if(next_step) {
+      next_step();
+    }
+  }
 }
 
 module.exports = {
