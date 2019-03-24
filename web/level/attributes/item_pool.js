@@ -19,7 +19,7 @@ class Item_Pool {
     return item;
   }
 
-  get closest_to_sprite(sprite){
+  closest_to_sprite(sprite){
     const item_list = [...this.items];
 
     const closests_item = item_list.reduce((a,b) =>
