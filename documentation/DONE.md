@@ -1,36 +1,38 @@
 
 ## DONE PILE:
-- create items randomiser functions DONE
-- basic item/inventory management done
-- save game states done
-- add player inventory done
-- move items into slots done
-- move item from inventory to player inventory done
-- add condition management (thirst etc.) done
-- create rain effects done
-- error messages for user exists done
-- start screen done
-- register users done
-- basic predetor/prey done
-- login with user details done
-- title screen done
-- inventory slots done
-- primary weapon done
-- secondary weapon done
-- player visual model done
-- add register user done
-- add login user done
-- re-add multiplayer not adding
-- create items search function done
-- put one enemy on the map DONE
-- basic arrow management DONE
-- create blood effects DONE
+- Create items randomiser functions DONE
+- Basic item/inventory management done
+- Save game states done
+- Add player inventory done
+- Move items into slots done
+- Move item from inventory to player inventory done
+- Add condition management (thirst etc.) done
+- Create rain effects done
+- Error messages for user exists done
+- Start screen done
+- Register users done
+- Basic predetor/prey done
+- Login with user details done
+- Title screen done
+- Inventory slots done
+- Primary weapon done
+- Secondary weapon done
+- Player visual model done
+- Add register user done
+- Add login user done
+- Re-add multiplayer not adding
+- Create items search function done
+- Put one enemy on the map DONE
+- Basic arrow management DONE
+- Create blood effects DONE
 - Engine DONE
-- create cutscene management engine (stop keyboard inputs etc) DONE
-- create architype system DONE
+- Create cutscene management engine (stop keyboard inputs etc) DONE
+- Create architype system DONE
 - Get the merc from the spritesheet DONE
-- and the note DONE
-- put one enemy on the map DONE
-- basic arrow management DONE
+- And the note DONE
+- Put one enemy on the map DONE
+- Basic arrow management DONE
 - Spine format replacement for spritesheet DONE
+- Put 2 prey on the map DONE
+- Level loader DONE
 

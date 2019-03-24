@@ -30,7 +30,6 @@ div {
 .input_holder {
   position: absolute;
   bottom: 0;
-
 }
 
 .game_start {
@@ -45,7 +44,7 @@ div {
 
 .game_overlay {
   position: absolute;
-  display: black;
+  display: none;
   width: 100%;
   height: 100%;
   float: left;

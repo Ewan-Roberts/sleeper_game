@@ -30,7 +30,8 @@ class Scripted_NPC extends Animal {
     this.add_component(new Tween(this.sprite));
     this.add_component(new Influence(this));
     this.add_component(new Scavenge(this));
-    this.influence.add_box(500, 500);
+    this.influence.add_box(600, 600);
+    this.route = {};
 
     this._logic        = timer.createTimer(800);
     this._logic.repeat = 90;
@@ -102,22 +103,29 @@ class Scripted_NPC extends Animal {
   async logic_start() {
     if(!this.enemy) return new Error('no enemy');
     this._logic.start();
+    this.generator = while_player_seen();
 
     this._logic.on('repeat', () => {
+      if(this._enemy_seen) {
+        console.log(this.generator.next().value);
+      }
+
       if(this._in_influence && this._enemy_seen){
         this._escape();
       }
     });
 
-    for(let i = 0; i < 3; i++) {
-      await sleep(1500);
-      await this.scavenge.get_new_path();
-      await this.scavenge.go_to_item();
-    }
-
-    this._escape();
   }
 }
+
+function* while_player_seen() {
+  yield 'i see you';
+  yield 'now dont run away';
+  yield '...';
+  yield '...';
+  yield 'dont worry i wont shoot';
+}
+
 
 
 module.exports = {

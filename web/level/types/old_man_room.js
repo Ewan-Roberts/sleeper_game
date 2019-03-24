@@ -1,12 +1,12 @@
 'use strict';
 
-const { Level       } = require('../level_model');
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad } = require('../elements/pad');
-const { Background  } = require('../elements/background');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
-const { Scavenger   } = require('../../character/archetypes/scavenger');
+const { Level        } = require('../level_model');
+const { Tiled_Data   } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad  } = require('../elements/pad');
+const { Background   } = require('../elements/background');
+const { Wall         } = require('../elements/wall');
+const { Candle       } = require('../../light/types/candle');
+const { Scripted_NPC } = require('../../character/archetypes/neutral');
 
 const { Element_Factory } = require('../elements/elements_factory');
 
@@ -21,6 +21,7 @@ class Old_Man_Room extends Level {
     this.player     = player;
     this.elements   = new Tiled_Data(level_data);
     this.background = new Background('grid_floor');
+    this.old_man    = new Scripted_NPC();
 
     this._set_elements();
   }
@@ -37,17 +38,17 @@ class Old_Man_Room extends Level {
     this.create_grid(level_tiled);
 
     const { exit_point } = this.elements.cat;
-    const cat = new Scavenger();
-    cat.set_position({x: 400, y:500});
-    console.log(this.item_pool);
+    const { prey       } = this.elements;
+    const old_man_data = prey[0];
 
-    cat.sprite.width  = 50;
-    cat.sprite.width  = 50;
-    cat.sprite.height = 100;
-    cat.route.exit = exit_point;
-    cat.set_enemy(this.player);
+    this.old_man.set_position(old_man_data);
+    this.old_man.sprite.width  = 50;
+    this.old_man.sprite.width  = 50;
+    this.old_man.sprite.height = 100;
+    this.old_man.route.exit = exit_point;
+    this.old_man.set_enemy(this.player);
 
-    cat.scavenge.load_pool(this.item_pool);
+    this.old_man.scavenge.load_pool(this.item_pool);
 
     this.elements.furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
@@ -65,22 +66,21 @@ class Old_Man_Room extends Level {
     });
 
     this.elements.lights.forEach(data => {
-      const light = new Candle();
+      const light  = new Candle();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
     });
 
     this.elements.exit_pad.forEach(data => {
-      const pad = new Trigger_Pad();
+      const pad  = new Trigger_Pad();
       pad.height = data.height;
       pad.width  = data.width;
       pad.anchor = 0;
       pad.set_position(data);
     });
 
-    cat.logic_start();
-
+    this.old_man.logic_start();
   }
 }
 
