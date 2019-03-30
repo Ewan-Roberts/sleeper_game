@@ -67,6 +67,10 @@ const cutscene_container = new PIXI.Container();
 cutscene_container.name = 'cutscene_container';
 cutscene_container.zIndex = close;
 
+const roof_container = new PIXI.Container();
+roof_container.name = 'roof_container';
+roof_container.zIndex = close;
+
 const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
@@ -81,6 +85,7 @@ raycasting_container.zIndex = close;
 
 world.addChild(
   visual_effects_container,
+  roof_container,
   background_container,
   grid_container,
   collision_container,
@@ -101,6 +106,7 @@ world.updateLayersOrder();
 
 module.exports = {
   cutscene_container,
+  roof_container,
   background_container,
   collision_container,
   critter_container,

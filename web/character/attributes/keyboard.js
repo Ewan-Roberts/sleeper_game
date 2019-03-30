@@ -2,6 +2,7 @@
 
 const PIXI = require('pixi.js');
 const { collision_container } = require('../../engine/pixi_containers');
+const { roof_container } = require('../../engine/pixi_containers');
 const { pad_container } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -32,6 +33,13 @@ function point_collides(position) {
   return children.find(child => child.containsPoint(position));
 }
 
+function point_contains(position) {
+  const { children } = roof_container;
+  children.forEach(child => {
+    child.alpha = (child.containsPoint(position))?0.6:1;
+  });
+}
+
 function event_pad(position) {
   const { children } = pad_container;
 
@@ -49,12 +57,9 @@ class Keyboard {
     this.speed         = vitals.speed*2;
     this.buffer        = 50;
     this.can_move      = true;
-    // this.move          = new event();
 
     PIXI.keyboardManager.on('down', key => this.key_down(key));
     PIXI.keyboardManager.on('released', () => this.key_up());
-    // global.window.addEventListener('keydown', event => this.key_down(event.key));
-    // global.window.addEventListener('keyup',   ()    => this.key_up());
   }
   //TODO
   save_game() {}
@@ -95,6 +100,8 @@ class Keyboard {
 
     event_pad(point);
     const collision = point_collides(point);
+    point_contains(point);
+
     if(collision) return this.animation.idle();
 
     this.animation.move_up_by(this.speed);
@@ -111,6 +118,7 @@ class Keyboard {
 
     event_pad(point);
     const collision = point_collides(point);
+    point_contains(point);
     if(collision) return this.animation.idle();
 
     this.animation.move_down_by(this.speed);
@@ -127,6 +135,7 @@ class Keyboard {
 
     event_pad(point);
     const collision = point_collides(point);
+    point_contains(point);
     if(collision) return this.animation.idle();
 
     this.animation.move_left_by(this.speed);
@@ -143,6 +152,7 @@ class Keyboard {
 
     event_pad(point);
     const collision = point_collides(point);
+    point_contains(point);
     if(collision) return this.animation.idle();
 
     this.animation.move_right_by(this.speed);

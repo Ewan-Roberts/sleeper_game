@@ -11,6 +11,16 @@ class Background {
     this.sprite.anchor.set(0.5);
   }
 
+  tile(name) {
+    const texture = PIXI.Texture.fromImage('level/'+name+'.jpg');
+
+    this.sprite = new PIXI.extras.TilingSprite(
+      texture,
+      5000,
+      5000
+    );
+  }
+
   set_position({x, y}) {
     this.sprite.position.set(x, y);
 

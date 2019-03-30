@@ -32,7 +32,10 @@ class Tiled_Data {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'furnishing');
     if(!found_layer) throw new Error('no furnishings found in level data');
 
-    const group = found_layer.layers.map(thing => thing.objects[0]);
+    const group = found_layer.layers.map(thing => ({
+      properties: thing.properties,
+      ...thing.objects[0],
+    }));
 
     return group;
   }
