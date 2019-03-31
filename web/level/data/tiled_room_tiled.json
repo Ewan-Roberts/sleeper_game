@@ -5,6 +5,19 @@
  "margin":0,
  "name":"tiled_room_tiled",
  "spacing":0,
+ "terrains":[
+        {
+         "name":"wall_foo",
+         "properties":
+            {
+             "wall":true
+            },
+         "propertytypes":
+            {
+             "wall":"bool"
+            },
+         "tile":81
+        }],
  "tilecount":300,
  "tileheight":100,
  "tileproperties":
@@ -90,10 +103,6 @@
          "wall":true
         },
      "22":
-        {
-         "wall":true
-        },
-     "221":
         {
          "wall":true
         },
@@ -329,10 +338,6 @@
          "wall":"bool"
         },
      "22":
-        {
-         "wall":"bool"
-        },
-     "221":
         {
          "wall":"bool"
         },

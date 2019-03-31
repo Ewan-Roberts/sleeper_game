@@ -5,6 +5,7 @@ const { grid_container } = require('../engine/pixi_containers');
 
 class Grid {
   static create(tiles_object) {
+    console.log(tiles_object);
     const sprite_grid = [];
     const binary_grid_map = [];
 

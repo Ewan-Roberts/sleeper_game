@@ -47067,7 +47067,7 @@ const app = new PIXI.Application({
   height         : global.window.innerHeight,
   antialias      : false,
   autoResize     : true,
-  backgroundColor: 0x000000,
+  backgroundColor: 0x005000,
 });
 
 global.document.body.appendChild(app.view);
@@ -48000,10 +48000,16 @@ require('./utils/globals');
 
 const { loader } = require('./engine/packer');
 loader.add('../../images/bedroom_EN_web.json');
-loader.load(() => {
+loader.add('TestMap1', '../../tiled_room.json');
+loader.load((res) => {
   const { Level_Loader } = require('./engine/boot_loader.js');
+
+  
   Level_Loader.boot();
 });
+
+
+
 
 },{"./engine/boot_loader.js":229,"./engine/packer":232,"./utils/globals":304}],241:[function(require,module,exports){
 'use strict';
@@ -55267,7 +55273,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":43,
+ "nextobjectid":51,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -55294,6 +55300,19 @@ module.exports={ "columns":20,
  "margin":0,
  "name":"tiled_room_tiled",
  "spacing":0,
+ "terrains":[
+        {
+         "name":"wall_foo",
+         "properties":
+            {
+             "wall":true
+            },
+         "propertytypes":
+            {
+             "wall":"bool"
+            },
+         "tile":81
+        }],
  "tilecount":300,
  "tileheight":100,
  "tileproperties":
@@ -55379,10 +55398,6 @@ module.exports={ "columns":20,
          "wall":true
         },
      "22":
-        {
-         "wall":true
-        },
-     "221":
         {
          "wall":true
         },
@@ -55618,10 +55633,6 @@ module.exports={ "columns":20,
          "wall":"bool"
         },
      "22":
-        {
-         "wall":"bool"
-        },
-     "221":
         {
          "wall":"bool"
         },
@@ -57562,7 +57573,7 @@ module.exports = {
 },{"../../character/archetypes/deer":201,"../../character/archetypes/neutral":202,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/outside_room.json":252,"../data/outside_room_tiled.json":253,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],288:[function(require,module,exports){
 (function (global){
 'use strict';
-
+const PIXI           = require('pixi.js');
 const { Level      } = require('../level_model');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
@@ -57571,6 +57582,55 @@ const { Candle     } = require('../../light/types/candle');
 const { Rat        } = require('../../character/archetypes/rat');
 const level_data     = require('../data/tiled_room.json');
 const level_tiled    = require('../data/tiled_room_tiled.json');
+console.log(level_data);
+
+const { visual_effects_container } = require('../../engine/pixi_containers');
+const { collision_container } = require('../../engine/pixi_containers');
+
+const fuck = [];
+
+function create_grid() {
+  let y = 0;
+  let x = 0;
+  let alpha = 1;
+
+  for(let i=0;i<=100;i++){
+    const tile = PIXI.Sprite.fromFrame('black_dot');
+    tile.width  = 100;
+    tile.height = 100;
+    tile.x = x;
+    tile.y = y;
+    alpha-=0.01;
+    tile.alpha =alpha;
+    x += 100;
+
+    if(i % 10 === 0) {
+      if(i ===0) {
+        y=0;
+      }else{
+        y += 100;
+      }
+      x= 0;
+    }
+
+
+    visual_effects_container.addChild(tile);
+    fuck.push(tile);
+  }
+}
+
+function check(rect1, rect2) {
+
+  if (rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y) {
+    return true;
+  }
+
+}
+
+
 
 class Tiled_Prey extends Level {
   constructor(player) {
@@ -57587,6 +57647,10 @@ class Tiled_Prey extends Level {
   _set_elements() {
     global.set_light_level(1);
     this.player.light.hide();
+
+    create_grid();
+    console.log( collision_container );
+
 
     this.background.set_position({x: 1100, y: 800});
     this.background.alpha = 0.5;
@@ -57616,6 +57680,17 @@ class Tiled_Prey extends Level {
       light.width  = data.width;
       light.set_position(data);
     });
+
+    collision_container.children.forEach(object => {
+      console.log(object);
+      fuck.forEach(shit => {
+        if(check(shit, object)) {
+          shit.alpha = 1;
+        }
+      });
+
+    });
+
   }
 }
 
@@ -57624,7 +57699,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":203,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/wall":270,"../level_model":272}],289:[function(require,module,exports){
+},{"../../character/archetypes/rat":203,"../../engine/pixi_containers":234,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/wall":270,"../level_model":272,"pixi.js":151}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58396,6 +58471,7 @@ const { grid_container } = require('../engine/pixi_containers');
 
 class Grid {
   static create(tiles_object) {
+    console.log(tiles_object);
     const sprite_grid = [];
     const binary_grid_map = [];
 

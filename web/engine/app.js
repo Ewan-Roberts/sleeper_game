@@ -6,7 +6,7 @@ const app = new PIXI.Application({
   height         : global.window.innerHeight,
   antialias      : false,
   autoResize     : true,
-  backgroundColor: 0x000000,
+  backgroundColor: 0x005000,
 });
 
 global.document.body.appendChild(app.view);
