@@ -5,7 +5,7 @@ const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Candle     } = require('../../light/types/candle');
-const { Deer       } = require('../../character/archetypes/deer');
+const { Rat        } = require('../../character/archetypes/rat');
 const level_data     = require('../data/tiled_room.json');
 const level_tiled    = require('../data/tiled_room_tiled.json');
 
@@ -32,7 +32,7 @@ class Tiled_Prey extends Level {
     this.create_grid(level_tiled);
 
     this.elements.prey.forEach(data => {
-      const prey = new Deer();
+      const prey = new Rat();
       prey.enemy(this.player);
       prey.logic_start();
       prey.set_position(data);

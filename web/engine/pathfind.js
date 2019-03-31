@@ -9,7 +9,6 @@ const {
 
 const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
-
 easystar.setIterationsPerCalculation(1000);
 easystar.setAcceptableTiles([0]);
 easystar.enableDiagonals();
@@ -150,7 +149,36 @@ class pathfind_sprite {
     this.move_sprite_on_path(from_sprite, path_array);
   }
 
+  static async ad_array_arround(sprite) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(sprite.getGlobalPosition()));
+    const array_thing = [
+      [
+        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1],
+        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x],
+        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1],
+      ],
+      [
+        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1],
+        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x],
+        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1],
+      ],
+      [
+        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1],
+        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x],
+        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1],
+      ],
+    ];
+
+    console.log(array_thing);
+  }
+
+
   static async grid_around_sprite(sprite) {
+    // this.ad_array_arround(sprite);
+
     const grids = grid_container.children;
 
     const from_point = grids.find(grid =>
@@ -170,12 +198,9 @@ class pathfind_sprite {
 
     const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
     this.highlight_grid_cell_from_path(path_data);
-    this.move_sprite_on_path(sprite, path_array);
+    // this.move_sprite_on_path(sprite, path_array);
 
 
-    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x].alpha =1;
-    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1].alpha =1;
     this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1].alpha =1;
     this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x].alpha =1;
     this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1].alpha =1;

@@ -47191,11 +47191,11 @@ class Level_Loader {
     player.inventory.arm_ranged('old_bow');
 
     // this._old_man(player);
-    this._outside(player);
+    // this._outside(player);
     // this._tiled_prey_path(player);
     // this._scavenge(player);
     // this._tiled_created(player);
-    // this._tiled_prey(player);
+    this._tiled_prey(player);
     // this._tiled_large(player);
     // this._tiled_homestead(player);
     // this._item_room(player);
@@ -47299,7 +47299,6 @@ const {
 
 const easystarjs = require('easystarjs');
 const easystar = new easystarjs.js();
-
 easystar.setIterationsPerCalculation(1000);
 easystar.setAcceptableTiles([0]);
 easystar.enableDiagonals();
@@ -47440,7 +47439,36 @@ class pathfind_sprite {
     this.move_sprite_on_path(from_sprite, path_array);
   }
 
+  static async ad_array_arround(sprite) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(sprite.getGlobalPosition()));
+    const array_thing = [
+      [
+        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1],
+        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x],
+        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1],
+      ],
+      [
+        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1],
+        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x],
+        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1],
+      ],
+      [
+        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1],
+        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x],
+        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1],
+      ],
+    ];
+
+    console.log(array_thing);
+  }
+
+
   static async grid_around_sprite(sprite) {
+    // this.ad_array_arround(sprite);
+
     const grids = grid_container.children;
 
     const from_point = grids.find(grid =>
@@ -47460,12 +47488,9 @@ class pathfind_sprite {
 
     const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
     this.highlight_grid_cell_from_path(path_data);
-    this.move_sprite_on_path(sprite, path_array);
+    // this.move_sprite_on_path(sprite, path_array);
 
 
-    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x].alpha =1;
-    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1].alpha =1;
     this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1].alpha =1;
     this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x].alpha =1;
     this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1].alpha =1;
@@ -57543,7 +57568,7 @@ const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Candle     } = require('../../light/types/candle');
-const { Deer       } = require('../../character/archetypes/deer');
+const { Rat        } = require('../../character/archetypes/rat');
 const level_data     = require('../data/tiled_room.json');
 const level_tiled    = require('../data/tiled_room_tiled.json');
 
@@ -57570,7 +57595,7 @@ class Tiled_Prey extends Level {
     this.create_grid(level_tiled);
 
     this.elements.prey.forEach(data => {
-      const prey = new Deer();
+      const prey = new Rat();
       prey.enemy(this.player);
       prey.logic_start();
       prey.set_position(data);
@@ -57599,7 +57624,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/deer":201,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/wall":270,"../level_model":272}],289:[function(require,module,exports){
+},{"../../character/archetypes/rat":203,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/wall":270,"../level_model":272}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
