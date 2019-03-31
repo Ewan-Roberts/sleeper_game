@@ -20,17 +20,17 @@ function create_grid() {
   let x = 0;
   let alpha = 1;
 
-  for(let i=0;i<=100;i++){
+  for(let i=0;i<=400;i++){
     const tile = PIXI.Sprite.fromFrame('black_dot');
     tile.width  = 100;
     tile.height = 100;
     tile.x = x;
     tile.y = y;
-    alpha-=0.01;
+    alpha-=0.002;
     tile.alpha =alpha;
     x += 100;
 
-    if(i % 10 === 0) {
+    if(i % 20 === 0) {
       if(i ===0) {
         y=0;
       }else{
