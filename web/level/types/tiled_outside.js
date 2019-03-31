@@ -5,6 +5,7 @@ const { Tiled_Data   } = require('../attributes/parse_tiled_data');
 const { Background   } = require('../elements/background');
 const { Wall         } = require('../elements/wall');
 const { Candle       } = require('../../light/types/candle');
+const { Deer         } = require('../../character/archetypes/deer');
 const { Scripted_NPC } = require('../../character/archetypes/neutral');
 
 const { Element_Factory } = require('../elements/elements_factory');
@@ -47,7 +48,16 @@ class Outside_Map extends Level {
       wall.height = data.height;
       wall.width  = data.width;
       wall.anchor = 0;
+      wall.rotation = (data.rotation * (Math.PI/180));
+
       wall.set_position(data);
+    });
+
+    this.elements.prey.forEach(data => {
+      const prey = new Deer();
+      prey.enemy(this.player);
+      prey.logic_start();
+      prey.set_position(data);
     });
 
     this.elements.lights.forEach(data => {

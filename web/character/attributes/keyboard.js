@@ -36,7 +36,8 @@ function point_collides(position) {
 function point_contains(position) {
   const { children } = roof_container;
   children.forEach(child => {
-    child.alpha = (child.containsPoint(position))?0.6:1;
+    const custom_opacity = child.fade_opacity || 0.6;
+    child.alpha = (child.containsPoint(position))?custom_opacity:1;
   });
 }
 

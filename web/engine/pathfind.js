@@ -150,6 +150,40 @@ class pathfind_sprite {
     this.move_sprite_on_path(from_sprite, path_array);
   }
 
+  static async grid_around_sprite(sprite) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(sprite.getGlobalPosition()));
+
+    const to_point = {
+      ...from_point.cell_position,
+    };
+    to_point.y-=2;
+    // to_point.x+1;
+    // console.log(to_point);
+    // console.log(from_point.cell_position);
+    const path_data= await this.create_path_from_two_grid_points(
+      from_point.cell_position,
+      to_point
+    );
+
+    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+    this.highlight_grid_cell_from_path(path_data);
+    this.move_sprite_on_path(sprite, path_array);
+
+
+    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x].alpha =1;
+    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x].alpha =1;
+    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x].alpha =1;
+    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1].alpha =1;
+  }
+
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const grids = grid_container.children;
 
@@ -162,11 +196,11 @@ class pathfind_sprite {
     if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
     if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
     //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-
     const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
 
     const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
 
+    // console.log(path_data);
     this.highlight_grid_cell_from_path(path_data);
     this.move_sprite_on_path(from_sprite, path_array);
   }

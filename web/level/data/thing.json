@@ -1,0 +1,13 @@
+{ "columns":20,
+ "image":"..\/..\/..\/public\/level\/grid_floor.png",
+ "imageheight":1536,
+ "imagewidth":2048,
+ "margin":0,
+ "name":"grid_floor",
+ "spacing":0,
+ "tilecount":300,
+ "tileheight":100,
+ "tilewidth":100,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset"
+}

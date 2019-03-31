@@ -10,10 +10,11 @@ const { Note      } = require('./note');
 const { Workbench } = require('./workbench');
 const { Tree      } = require('./tree');
 const { Roof      } = require('./ceiling');
+const { Rock      } = require('./rock');
 
 //TODO This is not a Factory make it one and abstract this
 class Element_Factory {
-  static generate(type, name) {
+  static generate(type, options) {
     switch(type) {
       case 'chest':     return new Chest();
       //TODO spelling
@@ -25,8 +26,9 @@ class Element_Factory {
       case 'note':      return new Note();
       case 'workbench': return new Workbench();
       case 'chair':     return new Chair();
-      case 'tree':      return new Tree(name);
-      case 'roof':      return new Roof(name);
+      case 'tree':      return new Tree(options);
+      case 'roof':      return new Roof(options);
+      case 'rock':      return new Rock(options);
     }
   }
 
@@ -34,14 +36,13 @@ class Element_Factory {
     let generated;
 
     if(data.properties) {
-      generated = this.generate(data.name, data.properties.image_name);
+      generated = this.generate(data.name, data.properties);
     } else {
       generated = this.generate(data.name);
     }
 
     generated.set_position(data);
     //TODO flip
-    console.log(data);
     generated.width = data.height;
     generated.height = data.width;
     generated.rotation = ((data.rotation +90) * (Math.PI/180));

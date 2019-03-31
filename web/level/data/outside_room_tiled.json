@@ -1,43 +1,31 @@
 { "columns":20,
  "image":"..\/..\/..\/public\/level\/grid_floor.png",
- "imageheight":1536,
- "imagewidth":2048,
+ "imageheight":10536,
+ "imagewidth":4048,
  "margin":0,
  "name":"tiled_room_tiled",
  "spacing":0,
- "tilecount":300,
+ "tilecount":1000,
  "tileheight":100,
  "tileproperties":
     {
-     "101":
+     "153":
         {
          "wall":true
         },
-     "108":
+     "154":
         {
          "wall":true
         },
-     "118":
+     "155":
         {
          "wall":true
         },
-     "121":
+     "156":
         {
          "wall":true
         },
-     "128":
-        {
-         "wall":true
-        },
-     "138":
-        {
-         "wall":true
-        },
-     "141":
-        {
-         "wall":true
-        },
-     "148":
+     "157":
         {
          "wall":true
         },
@@ -45,155 +33,175 @@
         {
          "wall":true
         },
-     "161":
+     "334":
         {
          "wall":true
         },
-     "168":
+     "326":
         {
          "wall":true
         },
-     "178":
+     "327":
         {
          "wall":true
         },
-     "181":
+     "328":
         {
          "wall":true
         },
-     "188":
+     "329":
         {
          "wall":true
         },
-     "198":
+     "330":
         {
          "wall":true
         },
-     "201":
+     "331":
         {
          "wall":true
         },
-     "208":
+     "332":
         {
          "wall":true
         },
-     "21":
+     "333":
         {
          "wall":true
         },
-     "218":
+     "334":
         {
          "wall":true
         },
-     "22":
+     "335":
         {
          "wall":true
         },
-     "221":
+     "336":
         {
          "wall":true
         },
-     "228":
+     "337":
         {
          "wall":true
         },
-     "23":
+     "338":
         {
          "wall":true
         },
-     "238":
+     "339":
         {
          "wall":true
         },
-     "24":
+     "354":
         {
          "wall":true
         },
-     "241":
+     "342":
         {
          "wall":true
         },
-     "248":
+     "343":
         {
          "wall":true
         },
-     "25":
+     "344":
         {
          "wall":true
         },
-     "258":
+     "345":
         {
          "wall":true
         },
-     "26":
+     "346":
         {
          "wall":true
         },
-     "261":
+     "347":
         {
          "wall":true
         },
-     "266":
+     "348":
         {
          "wall":true
         },
-     "267":
+     "349":
         {
          "wall":true
         },
-     "268":
+     "352":
         {
          "wall":true
         },
-     "269":
+     "353":
         {
          "wall":true
         },
-     "27":
+     "354":
         {
          "wall":true
         },
-     "270":
+     "355":
         {
          "wall":true
         },
-     "271":
+     "356":
         {
          "wall":true
         },
-     "272":
+     "357":
         {
          "wall":true
         },
-     "273":
+     "358":
         {
          "wall":true
         },
-     "274":
+     "359":
         {
          "wall":true
         },
-     "275":
+     "360":
         {
          "wall":true
         },
-     "276":
+     "454":
         {
          "wall":true
         },
-     "277":
+     "452":
         {
          "wall":true
         },
-     "278":
+     "453":
         {
          "wall":true
         },
-     "28":
+     "454":
         {
          "wall":true
         },
-     "29":
+     "455":
+        {
+         "wall":true
+        },
+     "456":
+        {
+         "wall":true
+        },
+     "457":
+        {
+         "wall":true
+        },
+     "458":
+        {
+         "wall":true
+        },
+     "459":
+        {
+         "wall":true
+        },
+     "460":
         {
          "wall":true
         },
@@ -229,226 +237,74 @@
         {
          "wall":true
         },
-     "38":
+     "50":
         {
          "wall":true
         },
-     "41":
+     "51":
         {
          "wall":true
         },
-     "58":
+     "52":
         {
          "wall":true
         },
-     "61":
+     "53":
         {
          "wall":true
         },
-     "78":
+     "54":
         {
          "wall":true
         },
-     "81":
+     "55":
         {
          "wall":true
         },
-     "84":
+     "56":
         {
          "wall":true
         },
-     "98":
+     "57":
+        {
+         "wall":true
+        },
+     "70":
+        {
+         "wall":true
+        },
+     "71":
+        {
+         "wall":true
+        },
+     "72":
         {
          "wall":true
         }
     },
  "tilepropertytypes":
     {
-     "101":
+     "153":
         {
          "wall":"bool"
         },
-     "108":
+     "154":
         {
          "wall":"bool"
         },
-     "118":
+     "155":
         {
          "wall":"bool"
         },
-     "121":
+     "156":
         {
          "wall":"bool"
         },
-     "128":
-        {
-         "wall":"bool"
-        },
-     "138":
-        {
-         "wall":"bool"
-        },
-     "141":
-        {
-         "wall":"bool"
-        },
-     "148":
+     "157":
         {
          "wall":"bool"
         },
      "158":
-        {
-         "wall":"bool"
-        },
-     "161":
-        {
-         "wall":"bool"
-        },
-     "168":
-        {
-         "wall":"bool"
-        },
-     "178":
-        {
-         "wall":"bool"
-        },
-     "181":
-        {
-         "wall":"bool"
-        },
-     "188":
-        {
-         "wall":"bool"
-        },
-     "198":
-        {
-         "wall":"bool"
-        },
-     "201":
-        {
-         "wall":"bool"
-        },
-     "208":
-        {
-         "wall":"bool"
-        },
-     "21":
-        {
-         "wall":"bool"
-        },
-     "218":
-        {
-         "wall":"bool"
-        },
-     "22":
-        {
-         "wall":"bool"
-        },
-     "221":
-        {
-         "wall":"bool"
-        },
-     "228":
-        {
-         "wall":"bool"
-        },
-     "23":
-        {
-         "wall":"bool"
-        },
-     "238":
-        {
-         "wall":"bool"
-        },
-     "24":
-        {
-         "wall":"bool"
-        },
-     "241":
-        {
-         "wall":"bool"
-        },
-     "248":
-        {
-         "wall":"bool"
-        },
-     "25":
-        {
-         "wall":"bool"
-        },
-     "258":
-        {
-         "wall":"bool"
-        },
-     "26":
-        {
-         "wall":"bool"
-        },
-     "261":
-        {
-         "wall":"bool"
-        },
-     "266":
-        {
-         "wall":"bool"
-        },
-     "267":
-        {
-         "wall":"bool"
-        },
-     "268":
-        {
-         "wall":"bool"
-        },
-     "269":
-        {
-         "wall":"bool"
-        },
-     "27":
-        {
-         "wall":"bool"
-        },
-     "270":
-        {
-         "wall":"bool"
-        },
-     "271":
-        {
-         "wall":"bool"
-        },
-     "272":
-        {
-         "wall":"bool"
-        },
-     "273":
-        {
-         "wall":"bool"
-        },
-     "274":
-        {
-         "wall":"bool"
-        },
-     "275":
-        {
-         "wall":"bool"
-        },
-     "276":
-        {
-         "wall":"bool"
-        },
-     "277":
-        {
-         "wall":"bool"
-        },
-     "278":
-        {
-         "wall":"bool"
-        },
-     "28":
-        {
-         "wall":"bool"
-        },
-     "29":
         {
          "wall":"bool"
         },
@@ -484,35 +340,47 @@
         {
          "wall":"bool"
         },
-     "38":
+     "50":
         {
          "wall":"bool"
         },
-     "41":
+     "51":
         {
          "wall":"bool"
         },
-     "58":
+     "52":
         {
          "wall":"bool"
         },
-     "61":
+     "53":
         {
          "wall":"bool"
         },
-     "78":
+     "54":
         {
          "wall":"bool"
         },
-     "81":
+     "55":
         {
          "wall":"bool"
         },
-     "84":
+     "56":
         {
          "wall":"bool"
         },
-     "98":
+     "57":
+        {
+         "wall":"bool"
+        },
+     "70":
+        {
+         "wall":"bool"
+        },
+     "71":
+        {
+         "wall":"bool"
+        },
+     "72":
         {
          "wall":"bool"
         }

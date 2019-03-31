@@ -11,7 +11,7 @@ class Pathfind {
     this.sprite = sprite;
     //TODO create utils containter for level anshor points
     this.anchor_sprite = new PIXI.Sprite.fromFrame('bunny');
-    this.anchor_sprite.alpha = 0;
+    this.anchor_sprite.alpha = 1;
 
     item_container.addChild(this.anchor_sprite);
   }
@@ -26,6 +26,14 @@ class Pathfind {
     const global_point = this.anchor_sprite.getGlobalPosition();
 
     pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, global_point);
+  }
+
+  go_to_local_point(point) {
+    pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, point);
+  }
+
+  hightlight_grid_around() {
+    pathfind_sprite.grid_around_sprite(this.sprite);
   }
 
   stop() {

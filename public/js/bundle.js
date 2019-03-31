@@ -17707,7 +17707,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":312}],86:[function(require,module,exports){
+},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":314}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21507,7 +21507,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":40,"path":312}],104:[function(require,module,exports){
+},{"../../Shader":40,"path":314}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27345,7 +27345,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":318}],121:[function(require,module,exports){
+},{"url":320}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31919,7 +31919,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":61,"../../core/const":42,"path":312}],139:[function(require,module,exports){
+},{"../../core":61,"../../core/const":42,"path":314}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32003,7 +32003,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":61,"path":312}],140:[function(require,module,exports){
+},{"../../core":61,"path":314}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33166,7 +33166,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":61,"path":312}],147:[function(require,module,exports){
+},{"../../core":61,"path":314}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33274,7 +33274,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":61,"path":312}],148:[function(require,module,exports){
+},{"../../core":61,"path":314}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33328,7 +33328,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":61,"path":312}],149:[function(require,module,exports){
+},{"../../core":61,"path":314}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33504,7 +33504,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":61,"path":312}],151:[function(require,module,exports){
+},{"../../core":61,"path":314}],151:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36171,7 +36171,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":137,"path":312,"resource-loader":190}],159:[function(require,module,exports){
+},{"../extras":137,"path":314,"resource-loader":190}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36534,7 +36534,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":61,"resource-loader":190,"url":318}],162:[function(require,module,exports){
+},{"../core":61,"resource-loader":190,"url":320}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38260,7 +38260,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":61,"../Mesh":163,"path":312,"pixi-gl-core":19}],170:[function(require,module,exports){
+},{"../../core":61,"../Mesh":163,"path":314,"pixi-gl-core":19}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45233,7 +45233,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":305,"pixi.js":151}],199:[function(require,module,exports){
+},{"../../utils/math":307,"pixi.js":151}],199:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45348,7 +45348,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":305,"pixi.js":151}],200:[function(require,module,exports){
+},{"../../utils/math":307,"pixi.js":151}],200:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45466,7 +45466,114 @@ module.exports = {
   Archer,
 };
 
-},{"../../effects/blood":225,"../../engine/ticker":237,"../../utils/math":305,"../attributes/melee":209,"../attributes/ranged":212,"../types/enemy":219,"events":311}],201:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":307,"../attributes/melee":210,"../attributes/ranged":213,"../types/enemy":220,"events":313}],201:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const { timer            } = require('../../engine/ticker');
+const { distance_between } = require('../../utils/math');
+
+const event      = require('events');
+const { Animal } = require('../types/rat');
+const { Melee  } = require('../attributes/melee');
+const { Blood  } = require('../../effects/blood');
+
+class Deer extends Animal {
+  constructor() {
+    super();
+    this.name = 'rat';
+
+    this.sprite.events = new event();
+    this.sprite.events.on('damage', amount => this.on_damage(amount));
+    this.sprite.id = 2;
+
+    this.inventory.add_melee_weapon_by_name('rat_teeth');
+    this.inventory.equip_melee_weapon();
+    this.add_component(new Melee(this));
+    this.blood         = new Blood();
+    this.escape_point  = global.place_bunny(this.sprite);
+
+    this._logic        = timer.createTimer(800);
+    this._logic.repeat = 200;
+    this._logic.expire = true;
+    this._logic.dead   = false;
+  }
+
+  _walk_to_enemy() {
+    this.animation.walk();
+
+    this.pathfind.go_to_sprite(this.enemy.sprite);
+  }
+
+  _distance_to(point) {
+    return distance_between(point, this.sprite);
+  }
+
+  get _target_far_away() {
+    const distance = this._distance_to(this.enemy.sprite);
+
+    return distance > 400;
+  }
+
+  on_damage(amount) {
+    if(this._logic.dead) return;
+
+    this.vitals.damage(amount);
+
+    if(this.vitals.status === 'dead') {
+      this.blood.add_at(this.sprite);
+      this.kill();
+    }
+  }
+
+  kill() {
+    if(!this.loot.items.length) this.loot.populate();
+    this.loot.create_icon();
+
+    this.animation.kill();
+
+    this.pathfind.stop();
+    this._logic.stop();
+    this._logic.remove();
+    this._logic.dead = true;
+  }
+
+  enemy(character) {
+    this.enemy = character;
+  }
+
+  _run_away_from_enemy() {
+    this.animation.walk();
+
+    const exit_point = global.place_bunny({x: 1500, y: 3000});
+    exit_point.alpha = 0;
+    this.pathfind.go_to_sprite(exit_point);
+  }
+
+  logic_start() {
+    if(!this.enemy) return new Error('no enemy');
+    this._logic.start();
+
+    this._logic.on('repeat', () => {
+
+      this.pathfind.hightlight_grid_around();
+      // if(!this.vitals.alive) this.kill();
+
+      if(this._target_far_away) return;
+      this._run_away_from_enemy();
+
+      // return this.melee.attack(this.enemy);
+    });
+  }
+}
+
+
+module.exports = {
+  Deer,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":307,"../attributes/melee":210,"../types/rat":223,"events":313}],202:[function(require,module,exports){
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
@@ -45601,7 +45708,7 @@ module.exports = {
   Scripted_NPC,
 };
 
-},{"../../effects/blood":225,"../../engine/pixi_containers":233,"../../engine/ticker":237,"../../engine/tween":238,"../../utils/line_of_sight":304,"../../utils/math":305,"../attributes/influence":204,"../attributes/melee":209,"../attributes/scavenge":214,"../attributes/script":215,"../types/rat":222,"events":311}],202:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/ticker":238,"../../engine/tween":239,"../../utils/line_of_sight":306,"../../utils/math":307,"../attributes/influence":205,"../attributes/melee":210,"../attributes/scavenge":215,"../attributes/script":216,"../types/rat":223,"events":313}],203:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45694,7 +45801,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":225,"../../engine/ticker":237,"../../utils/math":305,"../attributes/melee":209,"../types/rat":222,"events":311}],203:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":307,"../attributes/melee":210,"../types/rat":223,"events":313}],204:[function(require,module,exports){
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
@@ -45825,7 +45932,7 @@ module.exports = {
   Scavenger,
 };
 
-},{"../../effects/blood":225,"../../engine/pixi_containers":233,"../../engine/ticker":237,"../../engine/tween":238,"../../utils/line_of_sight":304,"../../utils/math":305,"../../utils/time":306,"../attributes/influence":204,"../attributes/melee":209,"../attributes/scavenge":214,"../types/rat":222,"events":311}],204:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/ticker":238,"../../engine/tween":239,"../../utils/line_of_sight":306,"../../utils/math":307,"../../utils/time":308,"../attributes/influence":205,"../attributes/melee":210,"../attributes/scavenge":215,"../types/rat":223,"events":313}],205:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45853,7 +45960,7 @@ module.exports = {
   Influence,
 };
 
-},{"../../engine/pixi_containers":233,"pixi.js":151}],205:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"pixi.js":151}],206:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -45927,7 +46034,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":241}],206:[function(require,module,exports){
+},{"../../items/item_manager":242}],207:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -45966,7 +46073,8 @@ function point_collides(position) {
 function point_contains(position) {
   const { children } = roof_container;
   children.forEach(child => {
-    child.alpha = (child.containsPoint(position))?0.6:1;
+    const custom_opacity = child.fade_opacity || 0.6;
+    child.alpha = (child.containsPoint(position))?custom_opacity:1;
   });
 }
 
@@ -46095,7 +46203,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/shadows":236,"../../view/view_player_inventory":309,"pixi.js":151}],207:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../engine/shadows":237,"../../view/view_player_inventory":311,"pixi.js":151}],208:[function(require,module,exports){
 
 'use strict';
 
@@ -46123,7 +46231,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":296}],208:[function(require,module,exports){
+},{"../../light/types/candle":298}],209:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -46176,7 +46284,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../items/item_manager":241,"../../view/button":307,"../../view/view_inventory":308}],209:[function(require,module,exports){
+},{"../../items/item_manager":242,"../../view/button":309,"../../view/view_inventory":310}],210:[function(require,module,exports){
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
@@ -46212,7 +46320,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":230}],210:[function(require,module,exports){
+},{"../../engine/melee":231}],211:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -46280,7 +46388,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":223,"../../engine/pixi_containers":233,"../../engine/ranged":234,"../../engine/shadows":236,"../../utils/math":305}],211:[function(require,module,exports){
+},{"../../effects/aiming_cone":224,"../../engine/pixi_containers":234,"../../engine/ranged":235,"../../engine/shadows":237,"../../utils/math":307}],212:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46294,7 +46402,7 @@ class Pathfind {
     this.sprite = sprite;
     //TODO create utils containter for level anshor points
     this.anchor_sprite = new PIXI.Sprite.fromFrame('bunny');
-    this.anchor_sprite.alpha = 0;
+    this.anchor_sprite.alpha = 1;
 
     item_container.addChild(this.anchor_sprite);
   }
@@ -46311,6 +46419,14 @@ class Pathfind {
     pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, global_point);
   }
 
+  go_to_local_point(point) {
+    pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, point);
+  }
+
+  hightlight_grid_around() {
+    pathfind_sprite.grid_around_sprite(this.sprite);
+  }
+
   stop() {
     const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
 
@@ -46322,7 +46438,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":232,"../../engine/pixi_containers":233,"pixi.js":151}],212:[function(require,module,exports){
+},{"../../engine/pathfind.js":233,"../../engine/pixi_containers":234,"pixi.js":151}],213:[function(require,module,exports){
 'use strict';
 
 const { shoot_arrow } = require('../../engine/ranged');
@@ -46362,7 +46478,7 @@ module.exports = {
   Range,
 };
 
-},{"../../effects/aiming_line":224,"../../engine/ranged":234}],213:[function(require,module,exports){
+},{"../../effects/aiming_line":225,"../../engine/ranged":235}],214:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46447,7 +46563,7 @@ module.exports = {
   Raycasting,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/raycasting":235,"../../engine/ticker":237,"pixi.js":151}],214:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../engine/raycasting":236,"../../engine/ticker":238,"pixi.js":151}],215:[function(require,module,exports){
 'use strict';
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');
@@ -46520,7 +46636,7 @@ module.exports = {
   Scavenge,
 };
 
-},{"../../engine/pathfind.js":232}],215:[function(require,module,exports){
+},{"../../engine/pathfind.js":233}],216:[function(require,module,exports){
 'use strict';
 
 class Script {
@@ -46553,7 +46669,7 @@ module.exports = {
 };
 
 
-},{}],216:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -46588,7 +46704,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":237,"../../view/view_player_status_meter":310}],217:[function(require,module,exports){
+},{"../../engine/ticker":238,"../../view/view_player_status_meter":312}],218:[function(require,module,exports){
 'use strict';
 
 const event     = require('events');
@@ -46639,7 +46755,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":225,"events":311}],218:[function(require,module,exports){
+},{"../../effects/blood":226,"events":313}],219:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -46662,7 +46778,7 @@ module.exports = {
   Character,
 };
 
-},{}],219:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
@@ -46696,7 +46812,7 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":233,"../animations/human":198,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/pathfind":211,"../attributes/raycasting":213,"../attributes/vitals":217,"../character_model":218}],220:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../animations/human":198,"../attributes/inventory":206,"../attributes/lootable":209,"../attributes/pathfind":212,"../attributes/raycasting":214,"../attributes/vitals":218,"../character_model":219}],221:[function(require,module,exports){
 'use strict';
 
 const { cutscene_container } = require('../../engine/pixi_containers');
@@ -46721,7 +46837,7 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/tween":238,"../animations/human":198,"../character_model":218}],221:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../engine/tween":239,"../animations/human":198,"../character_model":219}],222:[function(require,module,exports){
 'use strict';
 
 const { player_container } = require('../../engine/pixi_containers');
@@ -46781,7 +46897,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":225,"../../engine/pixi_containers":233,"../../engine/tween":238,"../animations/human":198,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":216,"../attributes/vitals":217,"../character_model":218,"events":311}],222:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/tween":239,"../animations/human":198,"../attributes/inventory":206,"../attributes/keyboard":207,"../attributes/light":208,"../attributes/mouse":211,"../attributes/status_bar":217,"../attributes/vitals":218,"../character_model":219,"events":313}],223:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -46816,7 +46932,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":233,"../animations/rat":199,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/pathfind":211,"../attributes/vitals":217,"../character_model":218}],223:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../animations/rat":199,"../attributes/inventory":206,"../attributes/lootable":209,"../attributes/pathfind":212,"../attributes/vitals":218,"../character_model":219}],224:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46864,7 +46980,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":233,"../engine/ticker":237,"pixi.js":151}],224:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"../engine/ticker":238,"pixi.js":151}],225:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46891,7 +47007,7 @@ module.exports = {
   Aiming_Line,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],225:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],226:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46912,7 +47028,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],226:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],227:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46941,7 +47057,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],227:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -46960,7 +47076,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":151}],228:[function(require,module,exports){
+},{"pixi.js":151}],229:[function(require,module,exports){
 'use strict';
 
 const { Dev_Room        } = require('../level/types/dev_room');
@@ -47100,7 +47216,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":221,"../level/types/archer_room":271,"../level/types/dev_room":272,"../level/types/intro.js":273,"../level/types/item_room":274,"../level/types/large_level":275,"../level/types/old_man_room":276,"../level/types/outside_room":277,"../level/types/pathfinding_room":278,"../level/types/player_animations":279,"../level/types/projectile_room":280,"../level/types/random_room":281,"../level/types/scavenge_room":282,"../level/types/shadow_room":283,"../level/types/tiled_homestead_room":284,"../level/types/tiled_outside":285,"../level/types/tiled_prey":286,"../level/types/tiled_prey_path":287,"../level/types/tiles_room":288,"../level/types/transition_room":289}],229:[function(require,module,exports){
+},{"../character/types/player.js":222,"../level/types/archer_room":273,"../level/types/dev_room":274,"../level/types/intro.js":275,"../level/types/item_room":276,"../level/types/large_level":277,"../level/types/old_man_room":278,"../level/types/outside_room":279,"../level/types/pathfinding_room":280,"../level/types/player_animations":281,"../level/types/projectile_room":282,"../level/types/random_room":283,"../level/types/scavenge_room":284,"../level/types/shadow_room":285,"../level/types/tiled_homestead_room":286,"../level/types/tiled_outside":287,"../level/types/tiled_prey":288,"../level/types/tiled_prey_path":289,"../level/types/tiles_room":290,"../level/types/transition_room":291}],230:[function(require,module,exports){
 'use strict';
 
 const { world } = require('./shadows');
@@ -47144,7 +47260,7 @@ module.exports = {
   Camera,
 };
 
-},{"./shadows":236,"./tween":238}],230:[function(require,module,exports){
+},{"./shadows":237,"./tween":239}],231:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -47157,7 +47273,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],231:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47170,7 +47286,7 @@ module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":32,"pixi.js":151}],232:[function(require,module,exports){
+},{"pixi-packer-parser":32,"pixi.js":151}],233:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -47324,6 +47440,40 @@ class pathfind_sprite {
     this.move_sprite_on_path(from_sprite, path_array);
   }
 
+  static async grid_around_sprite(sprite) {
+    const grids = grid_container.children;
+
+    const from_point = grids.find(grid =>
+      grid.containsPoint(sprite.getGlobalPosition()));
+
+    const to_point = {
+      ...from_point.cell_position,
+    };
+    to_point.y-=2;
+    // to_point.x+1;
+    // console.log(to_point);
+    // console.log(from_point.cell_position);
+    const path_data= await this.create_path_from_two_grid_points(
+      from_point.cell_position,
+      to_point
+    );
+
+    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+    this.highlight_grid_cell_from_path(path_data);
+    this.move_sprite_on_path(sprite, path_array);
+
+
+    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x].alpha =1;
+    this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x].alpha =1;
+    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1].alpha =1;
+    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x].alpha =1;
+    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1].alpha =1;
+  }
+
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const grids = grid_container.children;
 
@@ -47336,11 +47486,11 @@ class pathfind_sprite {
     if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
     if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
     //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-
     const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
 
     const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
 
+    // console.log(path_data);
     this.highlight_grid_cell_from_path(path_data);
     this.move_sprite_on_path(from_sprite, path_array);
   }
@@ -47397,7 +47547,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/grid":303,"../utils/math":305,"./pixi_containers":233,"easystarjs":3,"pixi.js":151}],233:[function(require,module,exports){
+},{"../utils/grid":305,"../utils/math":307,"./pixi_containers":234,"easystarjs":3,"pixi.js":151}],234:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47524,7 +47674,7 @@ module.exports = {
 
 
 
-},{"./shadows":236,"pixi.js":151}],234:[function(require,module,exports){
+},{"./shadows":237,"pixi.js":151}],235:[function(require,module,exports){
 'use strict';
 const PIXI                 = require('pixi.js');
 
@@ -47606,7 +47756,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":305,"./pixi_containers":233,"./tween":238,"pixi.js":151}],235:[function(require,module,exports){
+},{"../utils/math":307,"./pixi_containers":234,"./tween":239,"pixi.js":151}],236:[function(require,module,exports){
 'use strict';
 
 function get_intersection(ray, segment){
@@ -47649,7 +47799,7 @@ module.exports = {
   get_intersection,
 };
 
-},{}],236:[function(require,module,exports){
+},{}],237:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -47680,7 +47830,7 @@ module.exports = {
 
 
 
-},{"./app":227,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],237:[function(require,module,exports){
+},{"./app":228,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],238:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -47708,7 +47858,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":227,"pixi-keyboard":30,"pixi-timer":34,"pixi-tween":35,"pixi.js":151}],238:[function(require,module,exports){
+},{"./app":228,"pixi-keyboard":30,"pixi-timer":34,"pixi-tween":35,"pixi.js":151}],239:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47818,7 +47968,7 @@ module.exports = {
   Tween,
 };
 
-},{"./pixi_containers":233,"pixi.js":151}],239:[function(require,module,exports){
+},{"./pixi_containers":234,"pixi.js":151}],240:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -47830,7 +47980,7 @@ loader.load(() => {
   Level_Loader.boot();
 });
 
-},{"./engine/boot_loader.js":228,"./engine/packer":231,"./utils/globals":302}],240:[function(require,module,exports){
+},{"./engine/boot_loader.js":229,"./engine/packer":232,"./utils/globals":304}],241:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -48148,7 +48298,7 @@ module.exports = {
 };
 
 
-},{}],241:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48293,7 +48443,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":227,"../utils/math":305,"./data/item_data":240,"pixi.js":151}],242:[function(require,module,exports){
+},{"../engine/app":228,"../utils/math":307,"./data/item_data":241,"pixi.js":151}],243:[function(require,module,exports){
 'use strict';
 
 const { distance_between } = require('../../utils/math');
@@ -48347,7 +48497,7 @@ module.exports = {
   Item_Pool,
 };
 
-},{"../../utils/math":305}],243:[function(require,module,exports){
+},{"../../utils/math":307}],244:[function(require,module,exports){
 'use strict';
 
 // This is purely an interface for TILED data
@@ -48502,7 +48652,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -48606,7 +48756,7 @@ module.exports = {
   Randomise,
 };
 
-},{"../../engine/pixi_containers":233,"../../utils/color_picker":300,"../../utils/math":305,"../elements/elements_factory":261,"pixi.js":151}],245:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../utils/color_picker":302,"../../utils/math":307,"../elements/elements_factory":262,"pixi.js":151}],246:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -48747,7 +48897,7 @@ module.exports={ "height":100,
  "version":1,
  "width":95
 }
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "columns":20,
  "image":"..\/..\/..\/..\/assets\/debug\/debug_room.jpg",
  "imageheight":1700,
@@ -49198,7 +49348,7 @@ module.exports={ "columns":20,
  "tilewidth":100,
  "type":"tileset"
 }
-},{}],247:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49538,7 +49688,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49974,7 +50124,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50662,7 +50812,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],250:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 module.exports={ "columns":20,
  "image":"..\/..\/..\/public\/level\/grid_floor.png",
  "imageheight":1536,
@@ -50674,129 +50824,749 @@ module.exports={ "columns":20,
  "tileheight":100,
  "tileproperties":
     {
+     "0":
+        {
+         "wall":null
+        },
+     "1":
+        {
+         "wall":null
+        },
+     "10":
+        {
+         "wall":null
+        },
+     "100":
+        {
+         "wall":null
+        },
      "101":
         {
          "wall":true
+        },
+     "102":
+        {
+         "wall":null
+        },
+     "103":
+        {
+         "wall":null
+        },
+     "104":
+        {
+         "wall":null
+        },
+     "105":
+        {
+         "wall":null
+        },
+     "106":
+        {
+         "wall":null
+        },
+     "107":
+        {
+         "wall":null
         },
      "108":
         {
          "wall":true
         },
+     "109":
+        {
+         "wall":null
+        },
+     "11":
+        {
+         "wall":null
+        },
+     "110":
+        {
+         "wall":null
+        },
+     "111":
+        {
+         "wall":null
+        },
+     "112":
+        {
+         "wall":null
+        },
+     "113":
+        {
+         "wall":null
+        },
+     "114":
+        {
+         "wall":null
+        },
+     "115":
+        {
+         "wall":null
+        },
+     "116":
+        {
+         "wall":null
+        },
+     "117":
+        {
+         "wall":null
+        },
      "118":
         {
          "wall":true
+        },
+     "119":
+        {
+         "wall":null
+        },
+     "12":
+        {
+         "wall":null
+        },
+     "120":
+        {
+         "wall":null
         },
      "121":
         {
          "wall":true
         },
+     "122":
+        {
+         "wall":null
+        },
+     "123":
+        {
+         "wall":null
+        },
+     "124":
+        {
+         "wall":null
+        },
+     "125":
+        {
+         "wall":null
+        },
+     "126":
+        {
+         "wall":null
+        },
+     "127":
+        {
+         "wall":null
+        },
      "128":
         {
          "wall":true
+        },
+     "129":
+        {
+         "wall":null
+        },
+     "13":
+        {
+         "wall":null
+        },
+     "130":
+        {
+         "wall":null
+        },
+     "131":
+        {
+         "wall":null
+        },
+     "132":
+        {
+         "wall":null
+        },
+     "133":
+        {
+         "wall":null
+        },
+     "134":
+        {
+         "wall":null
+        },
+     "135":
+        {
+         "wall":null
+        },
+     "136":
+        {
+         "wall":null
+        },
+     "137":
+        {
+         "wall":null
         },
      "138":
         {
          "wall":true
         },
+     "139":
+        {
+         "wall":null
+        },
+     "14":
+        {
+         "wall":null
+        },
+     "140":
+        {
+         "wall":null
+        },
      "141":
         {
          "wall":true
+        },
+     "142":
+        {
+         "wall":null
+        },
+     "143":
+        {
+         "wall":null
+        },
+     "144":
+        {
+         "wall":null
+        },
+     "145":
+        {
+         "wall":null
+        },
+     "146":
+        {
+         "wall":null
+        },
+     "147":
+        {
+         "wall":null
         },
      "148":
         {
          "wall":true
         },
+     "149":
+        {
+         "wall":null
+        },
+     "15":
+        {
+         "wall":null
+        },
+     "150":
+        {
+         "wall":null
+        },
+     "151":
+        {
+         "wall":null
+        },
+     "152":
+        {
+         "wall":null
+        },
+     "153":
+        {
+         "wall":null
+        },
+     "154":
+        {
+         "wall":null
+        },
+     "155":
+        {
+         "wall":null
+        },
+     "156":
+        {
+         "wall":null
+        },
+     "157":
+        {
+         "wall":null
+        },
      "158":
         {
          "wall":true
+        },
+     "159":
+        {
+         "wall":null
+        },
+     "16":
+        {
+         "wall":null
+        },
+     "160":
+        {
+         "wall":null
         },
      "161":
         {
          "wall":true
         },
+     "162":
+        {
+         "wall":null
+        },
+     "163":
+        {
+         "wall":null
+        },
+     "164":
+        {
+         "wall":null
+        },
+     "165":
+        {
+         "wall":null
+        },
+     "166":
+        {
+         "wall":null
+        },
+     "167":
+        {
+         "wall":null
+        },
      "168":
         {
          "wall":true
+        },
+     "169":
+        {
+         "wall":null
+        },
+     "17":
+        {
+         "wall":null
+        },
+     "170":
+        {
+         "wall":null
+        },
+     "171":
+        {
+         "wall":null
+        },
+     "172":
+        {
+         "wall":null
+        },
+     "173":
+        {
+         "wall":null
+        },
+     "174":
+        {
+         "wall":null
+        },
+     "175":
+        {
+         "wall":null
+        },
+     "176":
+        {
+         "wall":null
+        },
+     "177":
+        {
+         "wall":null
         },
      "178":
         {
          "wall":true
         },
+     "179":
+        {
+         "wall":null
+        },
+     "18":
+        {
+         "wall":null
+        },
+     "180":
+        {
+         "wall":null
+        },
      "181":
         {
          "wall":true
+        },
+     "182":
+        {
+         "wall":null
+        },
+     "183":
+        {
+         "wall":null
+        },
+     "184":
+        {
+         "wall":null
+        },
+     "185":
+        {
+         "wall":null
+        },
+     "186":
+        {
+         "wall":null
+        },
+     "187":
+        {
+         "wall":null
         },
      "188":
         {
          "wall":true
         },
+     "189":
+        {
+         "wall":null
+        },
+     "19":
+        {
+         "wall":null
+        },
+     "190":
+        {
+         "wall":null
+        },
+     "191":
+        {
+         "wall":null
+        },
+     "192":
+        {
+         "wall":null
+        },
+     "193":
+        {
+         "wall":null
+        },
+     "194":
+        {
+         "wall":null
+        },
+     "195":
+        {
+         "wall":null
+        },
+     "196":
+        {
+         "wall":null
+        },
+     "197":
+        {
+         "wall":null
+        },
      "198":
         {
          "wall":true
+        },
+     "199":
+        {
+         "wall":null
+        },
+     "2":
+        {
+         "wall":null
+        },
+     "20":
+        {
+         "wall":null
+        },
+     "200":
+        {
+         "wall":null
         },
      "201":
         {
          "wall":true
         },
+     "202":
+        {
+         "wall":null
+        },
+     "203":
+        {
+         "wall":null
+        },
+     "204":
+        {
+         "wall":null
+        },
+     "205":
+        {
+         "wall":null
+        },
+     "206":
+        {
+         "wall":null
+        },
+     "207":
+        {
+         "wall":null
+        },
      "208":
         {
          "wall":true
+        },
+     "209":
+        {
+         "wall":null
         },
      "21":
         {
          "wall":true
         },
+     "210":
+        {
+         "wall":null
+        },
+     "211":
+        {
+         "wall":null
+        },
+     "212":
+        {
+         "wall":null
+        },
+     "213":
+        {
+         "wall":null
+        },
+     "214":
+        {
+         "wall":null
+        },
+     "215":
+        {
+         "wall":null
+        },
+     "216":
+        {
+         "wall":null
+        },
+     "217":
+        {
+         "wall":null
+        },
      "218":
         {
          "wall":true
+        },
+     "219":
+        {
+         "wall":null
         },
      "22":
         {
          "wall":true
         },
+     "220":
+        {
+         "wall":null
+        },
      "221":
         {
          "wall":true
+        },
+     "222":
+        {
+         "wall":null
+        },
+     "223":
+        {
+         "wall":null
+        },
+     "224":
+        {
+         "wall":null
+        },
+     "225":
+        {
+         "wall":null
+        },
+     "226":
+        {
+         "wall":null
+        },
+     "227":
+        {
+         "wall":null
         },
      "228":
         {
          "wall":true
         },
+     "229":
+        {
+         "wall":null
+        },
      "23":
         {
          "wall":true
+        },
+     "230":
+        {
+         "wall":null
+        },
+     "231":
+        {
+         "wall":null
+        },
+     "232":
+        {
+         "wall":null
+        },
+     "233":
+        {
+         "wall":null
+        },
+     "234":
+        {
+         "wall":null
+        },
+     "235":
+        {
+         "wall":null
+        },
+     "236":
+        {
+         "wall":null
+        },
+     "237":
+        {
+         "wall":null
         },
      "238":
         {
          "wall":true
         },
+     "239":
+        {
+         "wall":null
+        },
      "24":
         {
          "wall":true
+        },
+     "240":
+        {
+         "wall":null
         },
      "241":
         {
          "wall":true
         },
+     "242":
+        {
+         "wall":null
+        },
+     "243":
+        {
+         "wall":null
+        },
+     "244":
+        {
+         "wall":null
+        },
+     "245":
+        {
+         "wall":null
+        },
+     "246":
+        {
+         "wall":null
+        },
+     "247":
+        {
+         "wall":null
+        },
      "248":
         {
          "wall":true
+        },
+     "249":
+        {
+         "wall":null
         },
      "25":
         {
          "wall":true
         },
+     "250":
+        {
+         "wall":null
+        },
+     "251":
+        {
+         "wall":null
+        },
+     "252":
+        {
+         "wall":null
+        },
+     "253":
+        {
+         "wall":null
+        },
+     "254":
+        {
+         "wall":null
+        },
+     "255":
+        {
+         "wall":null
+        },
+     "256":
+        {
+         "wall":null
+        },
+     "257":
+        {
+         "wall":null
+        },
      "258":
         {
          "wall":true
+        },
+     "259":
+        {
+         "wall":null
         },
      "26":
         {
          "wall":true
         },
+     "260":
+        {
+         "wall":null
+        },
      "261":
         {
          "wall":true
+        },
+     "262":
+        {
+         "wall":null
+        },
+     "263":
+        {
+         "wall":null
+        },
+     "264":
+        {
+         "wall":null
+        },
+     "265":
+        {
+         "wall":null
         },
      "266":
         {
@@ -50854,13 +51624,101 @@ module.exports={ "columns":20,
         {
          "wall":true
         },
+     "279":
+        {
+         "wall":null
+        },
      "28":
         {
          "wall":true
         },
+     "280":
+        {
+         "wall":null
+        },
+     "281":
+        {
+         "wall":null
+        },
+     "282":
+        {
+         "wall":null
+        },
+     "283":
+        {
+         "wall":null
+        },
+     "284":
+        {
+         "wall":null
+        },
+     "285":
+        {
+         "wall":null
+        },
+     "286":
+        {
+         "wall":null
+        },
+     "287":
+        {
+         "wall":null
+        },
+     "288":
+        {
+         "wall":null
+        },
+     "289":
+        {
+         "wall":null
+        },
      "29":
         {
          "wall":true
+        },
+     "290":
+        {
+         "wall":null
+        },
+     "291":
+        {
+         "wall":null
+        },
+     "292":
+        {
+         "wall":null
+        },
+     "293":
+        {
+         "wall":null
+        },
+     "294":
+        {
+         "wall":null
+        },
+     "295":
+        {
+         "wall":null
+        },
+     "296":
+        {
+         "wall":null
+        },
+     "297":
+        {
+         "wall":null
+        },
+     "298":
+        {
+         "wall":null
+        },
+     "299":
+        {
+         "wall":null
+        },
+     "3":
+        {
+         "wall":null
         },
      "30":
         {
@@ -50898,160 +51756,1020 @@ module.exports={ "columns":20,
         {
          "wall":true
         },
+     "39":
+        {
+         "wall":null
+        },
+     "4":
+        {
+         "wall":null
+        },
+     "40":
+        {
+         "wall":null
+        },
      "41":
         {
          "wall":true
+        },
+     "42":
+        {
+         "wall":null
+        },
+     "43":
+        {
+         "wall":null
+        },
+     "44":
+        {
+         "wall":null
+        },
+     "45":
+        {
+         "wall":null
+        },
+     "46":
+        {
+         "wall":null
+        },
+     "47":
+        {
+         "wall":null
+        },
+     "48":
+        {
+         "wall":null
+        },
+     "49":
+        {
+         "wall":null
+        },
+     "5":
+        {
+         "wall":null
+        },
+     "50":
+        {
+         "wall":null
+        },
+     "51":
+        {
+         "wall":null
+        },
+     "52":
+        {
+         "wall":null
+        },
+     "53":
+        {
+         "wall":null
+        },
+     "54":
+        {
+         "wall":null
+        },
+     "55":
+        {
+         "wall":null
+        },
+     "56":
+        {
+         "wall":null
+        },
+     "57":
+        {
+         "wall":null
         },
      "58":
         {
          "wall":true
         },
+     "59":
+        {
+         "wall":null
+        },
+     "6":
+        {
+         "wall":null
+        },
+     "60":
+        {
+         "wall":null
+        },
      "61":
         {
          "wall":true
+        },
+     "62":
+        {
+         "wall":null
+        },
+     "63":
+        {
+         "wall":null
+        },
+     "64":
+        {
+         "wall":null
+        },
+     "65":
+        {
+         "wall":null
+        },
+     "66":
+        {
+         "wall":null
+        },
+     "67":
+        {
+         "wall":null
+        },
+     "68":
+        {
+         "wall":null
+        },
+     "69":
+        {
+         "wall":null
+        },
+     "7":
+        {
+         "wall":null
+        },
+     "70":
+        {
+         "wall":null
+        },
+     "71":
+        {
+         "wall":null
+        },
+     "72":
+        {
+         "wall":null
+        },
+     "73":
+        {
+         "wall":null
+        },
+     "74":
+        {
+         "wall":null
+        },
+     "75":
+        {
+         "wall":null
+        },
+     "76":
+        {
+         "wall":null
+        },
+     "77":
+        {
+         "wall":null
         },
      "78":
         {
          "wall":true
         },
+     "79":
+        {
+         "wall":null
+        },
+     "8":
+        {
+         "wall":null
+        },
+     "80":
+        {
+         "wall":null
+        },
      "81":
         {
          "wall":true
+        },
+     "82":
+        {
+         "wall":null
+        },
+     "83":
+        {
+         "wall":null
         },
      "84":
         {
          "wall":true
         },
+     "85":
+        {
+         "wall":null
+        },
+     "86":
+        {
+         "wall":null
+        },
+     "87":
+        {
+         "wall":null
+        },
+     "88":
+        {
+         "wall":null
+        },
+     "89":
+        {
+         "wall":null
+        },
+     "9":
+        {
+         "wall":null
+        },
+     "90":
+        {
+         "wall":null
+        },
+     "91":
+        {
+         "wall":null
+        },
+     "92":
+        {
+         "wall":null
+        },
+     "93":
+        {
+         "wall":null
+        },
+     "94":
+        {
+         "wall":null
+        },
+     "95":
+        {
+         "wall":null
+        },
+     "96":
+        {
+         "wall":null
+        },
+     "97":
+        {
+         "wall":null
+        },
      "98":
         {
          "wall":true
+        },
+     "99":
+        {
+         "wall":null
         }
     },
  "tilepropertytypes":
     {
+     "0":
+        {
+         "wall":""
+        },
+     "1":
+        {
+         "wall":""
+        },
+     "10":
+        {
+         "wall":""
+        },
+     "100":
+        {
+         "wall":""
+        },
      "101":
         {
          "wall":"bool"
+        },
+     "102":
+        {
+         "wall":""
+        },
+     "103":
+        {
+         "wall":""
+        },
+     "104":
+        {
+         "wall":""
+        },
+     "105":
+        {
+         "wall":""
+        },
+     "106":
+        {
+         "wall":""
+        },
+     "107":
+        {
+         "wall":""
         },
      "108":
         {
          "wall":"bool"
         },
+     "109":
+        {
+         "wall":""
+        },
+     "11":
+        {
+         "wall":""
+        },
+     "110":
+        {
+         "wall":""
+        },
+     "111":
+        {
+         "wall":""
+        },
+     "112":
+        {
+         "wall":""
+        },
+     "113":
+        {
+         "wall":""
+        },
+     "114":
+        {
+         "wall":""
+        },
+     "115":
+        {
+         "wall":""
+        },
+     "116":
+        {
+         "wall":""
+        },
+     "117":
+        {
+         "wall":""
+        },
      "118":
         {
          "wall":"bool"
+        },
+     "119":
+        {
+         "wall":""
+        },
+     "12":
+        {
+         "wall":""
+        },
+     "120":
+        {
+         "wall":""
         },
      "121":
         {
          "wall":"bool"
         },
+     "122":
+        {
+         "wall":""
+        },
+     "123":
+        {
+         "wall":""
+        },
+     "124":
+        {
+         "wall":""
+        },
+     "125":
+        {
+         "wall":""
+        },
+     "126":
+        {
+         "wall":""
+        },
+     "127":
+        {
+         "wall":""
+        },
      "128":
         {
          "wall":"bool"
+        },
+     "129":
+        {
+         "wall":""
+        },
+     "13":
+        {
+         "wall":""
+        },
+     "130":
+        {
+         "wall":""
+        },
+     "131":
+        {
+         "wall":""
+        },
+     "132":
+        {
+         "wall":""
+        },
+     "133":
+        {
+         "wall":""
+        },
+     "134":
+        {
+         "wall":""
+        },
+     "135":
+        {
+         "wall":""
+        },
+     "136":
+        {
+         "wall":""
+        },
+     "137":
+        {
+         "wall":""
         },
      "138":
         {
          "wall":"bool"
         },
+     "139":
+        {
+         "wall":""
+        },
+     "14":
+        {
+         "wall":""
+        },
+     "140":
+        {
+         "wall":""
+        },
      "141":
         {
          "wall":"bool"
+        },
+     "142":
+        {
+         "wall":""
+        },
+     "143":
+        {
+         "wall":""
+        },
+     "144":
+        {
+         "wall":""
+        },
+     "145":
+        {
+         "wall":""
+        },
+     "146":
+        {
+         "wall":""
+        },
+     "147":
+        {
+         "wall":""
         },
      "148":
         {
          "wall":"bool"
         },
+     "149":
+        {
+         "wall":""
+        },
+     "15":
+        {
+         "wall":""
+        },
+     "150":
+        {
+         "wall":""
+        },
+     "151":
+        {
+         "wall":""
+        },
+     "152":
+        {
+         "wall":""
+        },
+     "153":
+        {
+         "wall":""
+        },
+     "154":
+        {
+         "wall":""
+        },
+     "155":
+        {
+         "wall":""
+        },
+     "156":
+        {
+         "wall":""
+        },
+     "157":
+        {
+         "wall":""
+        },
      "158":
         {
          "wall":"bool"
+        },
+     "159":
+        {
+         "wall":""
+        },
+     "16":
+        {
+         "wall":""
+        },
+     "160":
+        {
+         "wall":""
         },
      "161":
         {
          "wall":"bool"
         },
+     "162":
+        {
+         "wall":""
+        },
+     "163":
+        {
+         "wall":""
+        },
+     "164":
+        {
+         "wall":""
+        },
+     "165":
+        {
+         "wall":""
+        },
+     "166":
+        {
+         "wall":""
+        },
+     "167":
+        {
+         "wall":""
+        },
      "168":
         {
          "wall":"bool"
+        },
+     "169":
+        {
+         "wall":""
+        },
+     "17":
+        {
+         "wall":""
+        },
+     "170":
+        {
+         "wall":""
+        },
+     "171":
+        {
+         "wall":""
+        },
+     "172":
+        {
+         "wall":""
+        },
+     "173":
+        {
+         "wall":""
+        },
+     "174":
+        {
+         "wall":""
+        },
+     "175":
+        {
+         "wall":""
+        },
+     "176":
+        {
+         "wall":""
+        },
+     "177":
+        {
+         "wall":""
         },
      "178":
         {
          "wall":"bool"
         },
+     "179":
+        {
+         "wall":""
+        },
+     "18":
+        {
+         "wall":""
+        },
+     "180":
+        {
+         "wall":""
+        },
      "181":
         {
          "wall":"bool"
+        },
+     "182":
+        {
+         "wall":""
+        },
+     "183":
+        {
+         "wall":""
+        },
+     "184":
+        {
+         "wall":""
+        },
+     "185":
+        {
+         "wall":""
+        },
+     "186":
+        {
+         "wall":""
+        },
+     "187":
+        {
+         "wall":""
         },
      "188":
         {
          "wall":"bool"
         },
+     "189":
+        {
+         "wall":""
+        },
+     "19":
+        {
+         "wall":""
+        },
+     "190":
+        {
+         "wall":""
+        },
+     "191":
+        {
+         "wall":""
+        },
+     "192":
+        {
+         "wall":""
+        },
+     "193":
+        {
+         "wall":""
+        },
+     "194":
+        {
+         "wall":""
+        },
+     "195":
+        {
+         "wall":""
+        },
+     "196":
+        {
+         "wall":""
+        },
+     "197":
+        {
+         "wall":""
+        },
      "198":
         {
          "wall":"bool"
+        },
+     "199":
+        {
+         "wall":""
+        },
+     "2":
+        {
+         "wall":""
+        },
+     "20":
+        {
+         "wall":""
+        },
+     "200":
+        {
+         "wall":""
         },
      "201":
         {
          "wall":"bool"
         },
+     "202":
+        {
+         "wall":""
+        },
+     "203":
+        {
+         "wall":""
+        },
+     "204":
+        {
+         "wall":""
+        },
+     "205":
+        {
+         "wall":""
+        },
+     "206":
+        {
+         "wall":""
+        },
+     "207":
+        {
+         "wall":""
+        },
      "208":
         {
          "wall":"bool"
+        },
+     "209":
+        {
+         "wall":""
         },
      "21":
         {
          "wall":"bool"
         },
+     "210":
+        {
+         "wall":""
+        },
+     "211":
+        {
+         "wall":""
+        },
+     "212":
+        {
+         "wall":""
+        },
+     "213":
+        {
+         "wall":""
+        },
+     "214":
+        {
+         "wall":""
+        },
+     "215":
+        {
+         "wall":""
+        },
+     "216":
+        {
+         "wall":""
+        },
+     "217":
+        {
+         "wall":""
+        },
      "218":
         {
          "wall":"bool"
+        },
+     "219":
+        {
+         "wall":""
         },
      "22":
         {
          "wall":"bool"
         },
+     "220":
+        {
+         "wall":""
+        },
      "221":
         {
          "wall":"bool"
+        },
+     "222":
+        {
+         "wall":""
+        },
+     "223":
+        {
+         "wall":""
+        },
+     "224":
+        {
+         "wall":""
+        },
+     "225":
+        {
+         "wall":""
+        },
+     "226":
+        {
+         "wall":""
+        },
+     "227":
+        {
+         "wall":""
         },
      "228":
         {
          "wall":"bool"
         },
+     "229":
+        {
+         "wall":""
+        },
      "23":
         {
          "wall":"bool"
+        },
+     "230":
+        {
+         "wall":""
+        },
+     "231":
+        {
+         "wall":""
+        },
+     "232":
+        {
+         "wall":""
+        },
+     "233":
+        {
+         "wall":""
+        },
+     "234":
+        {
+         "wall":""
+        },
+     "235":
+        {
+         "wall":""
+        },
+     "236":
+        {
+         "wall":""
+        },
+     "237":
+        {
+         "wall":""
         },
      "238":
         {
          "wall":"bool"
         },
+     "239":
+        {
+         "wall":""
+        },
      "24":
         {
          "wall":"bool"
+        },
+     "240":
+        {
+         "wall":""
         },
      "241":
         {
          "wall":"bool"
         },
+     "242":
+        {
+         "wall":""
+        },
+     "243":
+        {
+         "wall":""
+        },
+     "244":
+        {
+         "wall":""
+        },
+     "245":
+        {
+         "wall":""
+        },
+     "246":
+        {
+         "wall":""
+        },
+     "247":
+        {
+         "wall":""
+        },
      "248":
         {
          "wall":"bool"
+        },
+     "249":
+        {
+         "wall":""
         },
      "25":
         {
          "wall":"bool"
         },
+     "250":
+        {
+         "wall":""
+        },
+     "251":
+        {
+         "wall":""
+        },
+     "252":
+        {
+         "wall":""
+        },
+     "253":
+        {
+         "wall":""
+        },
+     "254":
+        {
+         "wall":""
+        },
+     "255":
+        {
+         "wall":""
+        },
+     "256":
+        {
+         "wall":""
+        },
+     "257":
+        {
+         "wall":""
+        },
      "258":
         {
          "wall":"bool"
+        },
+     "259":
+        {
+         "wall":""
         },
      "26":
         {
          "wall":"bool"
         },
+     "260":
+        {
+         "wall":""
+        },
      "261":
         {
          "wall":"bool"
+        },
+     "262":
+        {
+         "wall":""
+        },
+     "263":
+        {
+         "wall":""
+        },
+     "264":
+        {
+         "wall":""
+        },
+     "265":
+        {
+         "wall":""
         },
      "266":
         {
@@ -51109,13 +52827,101 @@ module.exports={ "columns":20,
         {
          "wall":"bool"
         },
+     "279":
+        {
+         "wall":""
+        },
      "28":
         {
          "wall":"bool"
         },
+     "280":
+        {
+         "wall":""
+        },
+     "281":
+        {
+         "wall":""
+        },
+     "282":
+        {
+         "wall":""
+        },
+     "283":
+        {
+         "wall":""
+        },
+     "284":
+        {
+         "wall":""
+        },
+     "285":
+        {
+         "wall":""
+        },
+     "286":
+        {
+         "wall":""
+        },
+     "287":
+        {
+         "wall":""
+        },
+     "288":
+        {
+         "wall":""
+        },
+     "289":
+        {
+         "wall":""
+        },
      "29":
         {
          "wall":"bool"
+        },
+     "290":
+        {
+         "wall":""
+        },
+     "291":
+        {
+         "wall":""
+        },
+     "292":
+        {
+         "wall":""
+        },
+     "293":
+        {
+         "wall":""
+        },
+     "294":
+        {
+         "wall":""
+        },
+     "295":
+        {
+         "wall":""
+        },
+     "296":
+        {
+         "wall":""
+        },
+     "297":
+        {
+         "wall":""
+        },
+     "298":
+        {
+         "wall":""
+        },
+     "299":
+        {
+         "wall":""
+        },
+     "3":
+        {
+         "wall":""
         },
      "30":
         {
@@ -51153,65 +52959,283 @@ module.exports={ "columns":20,
         {
          "wall":"bool"
         },
+     "39":
+        {
+         "wall":""
+        },
+     "4":
+        {
+         "wall":""
+        },
+     "40":
+        {
+         "wall":""
+        },
      "41":
         {
          "wall":"bool"
+        },
+     "42":
+        {
+         "wall":""
+        },
+     "43":
+        {
+         "wall":""
+        },
+     "44":
+        {
+         "wall":""
+        },
+     "45":
+        {
+         "wall":""
+        },
+     "46":
+        {
+         "wall":""
+        },
+     "47":
+        {
+         "wall":""
+        },
+     "48":
+        {
+         "wall":""
+        },
+     "49":
+        {
+         "wall":""
+        },
+     "5":
+        {
+         "wall":""
+        },
+     "50":
+        {
+         "wall":""
+        },
+     "51":
+        {
+         "wall":""
+        },
+     "52":
+        {
+         "wall":""
+        },
+     "53":
+        {
+         "wall":""
+        },
+     "54":
+        {
+         "wall":""
+        },
+     "55":
+        {
+         "wall":""
+        },
+     "56":
+        {
+         "wall":""
+        },
+     "57":
+        {
+         "wall":""
         },
      "58":
         {
          "wall":"bool"
         },
+     "59":
+        {
+         "wall":""
+        },
+     "6":
+        {
+         "wall":""
+        },
+     "60":
+        {
+         "wall":""
+        },
      "61":
         {
          "wall":"bool"
+        },
+     "62":
+        {
+         "wall":""
+        },
+     "63":
+        {
+         "wall":""
+        },
+     "64":
+        {
+         "wall":""
+        },
+     "65":
+        {
+         "wall":""
+        },
+     "66":
+        {
+         "wall":""
+        },
+     "67":
+        {
+         "wall":""
+        },
+     "68":
+        {
+         "wall":""
+        },
+     "69":
+        {
+         "wall":""
+        },
+     "7":
+        {
+         "wall":""
+        },
+     "70":
+        {
+         "wall":""
+        },
+     "71":
+        {
+         "wall":""
+        },
+     "72":
+        {
+         "wall":""
+        },
+     "73":
+        {
+         "wall":""
+        },
+     "74":
+        {
+         "wall":""
+        },
+     "75":
+        {
+         "wall":""
+        },
+     "76":
+        {
+         "wall":""
+        },
+     "77":
+        {
+         "wall":""
         },
      "78":
         {
          "wall":"bool"
         },
+     "79":
+        {
+         "wall":""
+        },
+     "8":
+        {
+         "wall":""
+        },
+     "80":
+        {
+         "wall":""
+        },
      "81":
         {
          "wall":"bool"
+        },
+     "82":
+        {
+         "wall":""
+        },
+     "83":
+        {
+         "wall":""
         },
      "84":
         {
          "wall":"bool"
         },
+     "85":
+        {
+         "wall":""
+        },
+     "86":
+        {
+         "wall":""
+        },
+     "87":
+        {
+         "wall":""
+        },
+     "88":
+        {
+         "wall":""
+        },
+     "89":
+        {
+         "wall":""
+        },
+     "9":
+        {
+         "wall":""
+        },
+     "90":
+        {
+         "wall":""
+        },
+     "91":
+        {
+         "wall":""
+        },
+     "92":
+        {
+         "wall":""
+        },
+     "93":
+        {
+         "wall":""
+        },
+     "94":
+        {
+         "wall":""
+        },
+     "95":
+        {
+         "wall":""
+        },
+     "96":
+        {
+         "wall":""
+        },
+     "97":
+        {
+         "wall":""
+        },
      "98":
         {
          "wall":"bool"
+        },
+     "99":
+        {
+         "wall":""
         }
     },
  "tilewidth":100,
  "transparentcolor":"#ff00ff",
  "type":"tileset"
 }
-},{}],251:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
-        {
-         "data":"AgAAAAMAAAAEAAAABQAAAAYAAAAHAAAACAAAAAkAAAAKAAAACwAAAAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAAcAAAAHQAAAB4AAAAfAAAAIAAAACEAAAAiAAAAIwAAACQAAAAlAAAAJgAAACcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoAAAArAAAALAAAAC0AAAAuAAAALwAAADAAAAAxAAAAMgAAADMAAAA0AAAANQAAADYAAAA3AAAAOAAAADkAAAA6AAAAOwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAAAD8AAABAAAAAQQAAAEIAAABDAAAARAAAAEUAAABGAAAARwAAAEgAAABJAAAASgAAAEsAAABMAAAATQAAAE4AAABPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAF0AAABeAAAAXwAAAGAAAABhAAAAYgAAAGMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGYAAABnAAAAaAAAAGkAAABqAAAAawAAAGwAAABtAAAAbgAAAG8AAABwAAAAcQAAAHIAAABzAAAAdAAAAHUAAAB2AAAAdwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAegAAAHsAAAB8AAAAfQAAAH4AAAB\/AAAAgAAAAIEAAACCAAAAgwAAAIQAAACFAAAAhgAAAIcAAACIAAAAiQAAAIoAAACLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOAAAAjwAAAJAAAACRAAAAkgAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAJkAAACaAAAAmwAAAJwAAACdAAAAngAAAJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKIAAACjAAAApAAAAKUAAACmAAAApwAAAKgAAACpAAAAqgAAAKsAAACsAAAArQAAAK4AAACvAAAAsAAAALEAAACyAAAAswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtgAAALcAAAC4AAAAuQAAALoAAAC7AAAAvAAAAL0AAAC+AAAAvwAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAMYAAADHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADKAAAAywAAAMwAAADNAAAAzgAAAM8AAADQAAAA0QAAANIAAADTAAAA1AAAANUAAADWAAAA1wAAANgAAADZAAAA2gAAANsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AAADfAAAA4AAAAOEAAADiAAAA4wAAAOQAAADlAAAA5gAAAOcAAADoAAAA6QAAAOoAAADrAAAA7AAAAO0AAADuAAAA7wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8gAAAPMAAAD0AAAA9QAAAPYAAAD3AAAA+AAAAPkAAAD6AAAA+wAAAPwAAAD9AAAA\/gAAAP8AAAAAAQAAAQEAAAIBAAADAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAQAABwEAAAgBAAAJAQAACgEAAAsBAAAMAQAADQEAAA4BAAAPAQAAEAEAABEBAAASAQAAEwEAABQBAAAVAQAAFgEAABcBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoBAAAbAQAAHAEAAB0BAAAeAQAAHwEAACABAAAhAQAAIgEAACMBAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAKwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-         "encoding":"base64",
-         "height":50,
-         "name":"tiles",
-         "offsetx":100,
-         "offsety":100,
-         "opacity":1,
-         "properties":
-            {
-             "wall":false
-            },
-         "propertytypes":
-            {
-             "wall":"bool"
-            },
-         "type":"tilelayer",
-         "visible":true,
-         "width":50,
-         "x":0,
-         "y":0
-        }, 
         {
          "color":"#000000",
          "draworder":"topdown",
@@ -51243,34 +53267,34 @@ module.exports={ "height":50,
                  "height":1244.66666666667,
                  "id":2,
                  "name":"",
-                 "rotation":0,
+                 "rotation":16.990929789589,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":43.363636363636,
-                 "y":381.393939393939
+                 "width":28.4757095272328,
+                 "x":829.146762874308,
+                 "y":1599.51661575137
                 }, 
                 {
-                 "height":32,
+                 "height":28.8189213430137,
                  "id":3,
                  "name":"",
-                 "rotation":0,
+                 "rotation":-74,
                  "type":"",
                  "visible":true,
                  "width":1660,
-                 "x":1344.9696969697,
-                 "y":1385.09090909091
+                 "x":-23.6969696969709,
+                 "y":2644.66666666667
                 }, 
                 {
-                 "height":460.69047619047,
+                 "height":554.546484964159,
                  "id":4,
                  "name":"",
-                 "rotation":0,
+                 "rotation":105.778371097504,
                  "type":"",
                  "visible":true,
-                 "width":30.6666666666665,
-                 "x":1951,
-                 "y":352.787878787879
+                 "width":25.0740204057715,
+                 "x":503.200363565934,
+                 "y":2798.94432541998
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51291,8 +53315,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1028.15765069552,
-                 "y":1022.54714064915
+                 "x":1236.49098402885,
+                 "y":1799.54714064915
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51327,19 +53351,7 @@ module.exports={ "height":50,
                 {
                  "draworder":"topdown",
                  "name":"exit",
-                 "objects":[
-                        {
-                         "height":0,
-                         "id":42,
-                         "name":"",
-                         "point":true,
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":0,
-                         "x":393.333333333333,
-                         "y":1349.33333333333
-                        }],
+                 "objects":[],
                  "opacity":1,
                  "type":"objectgroup",
                  "visible":true,
@@ -51686,40 +53698,6 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"lights",
-         "objects":[
-                {
-                 "height":0,
-                 "id":10,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1762.76795350768,
-                 "y":944.003874360039
-                }, 
-                {
-                 "height":0,
-                 "id":11,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":591.620589456205,
-                 "y":1377.26774595267
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "name":"player",
          "objects":[
                 {
@@ -51741,58 +53719,77 @@ module.exports={ "height":50,
          "y":0
         }, 
         {
-         "layers":[
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
                 {
-                 "draworder":"topdown",
-                 "name":"tree",
-                 "objects":[
-                        {
-                         "height":698.666666666667,
-                         "id":63,
-                         "name":"tree",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":698.666666666667,
-                         "x":1031.33333333333,
-                         "y":-231.333333333333
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "image_name":"tree_4"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "type":"objectgroup",
+                 "height":0,
+                 "id":10,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
                  "visible":true,
-                 "x":0,
-                 "y":0
+                 "width":0,
+                 "x":1762.76795350768,
+                 "y":944.003874360039
                 }, 
+                {
+                 "height":0,
+                 "id":76,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":896,
+                 "y":1086.66666666667
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1277.33333333333,
+                 "y":2224
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "layers":[
                 {
                  "draworder":"topdown",
                  "name":"roof",
                  "objects":[
                         {
-                         "height":2102.66666666667,
+                         "height":2671.22899604454,
                          "id":65,
                          "name":"roof",
                          "rotation":16,
                          "type":"",
                          "visible":true,
-                         "width":604.666666666667,
-                         "x":163.33333333333,
-                         "y":246.666666666667
+                         "width":768.168896452884,
+                         "x":652.303030303027,
+                         "y":130.303030303031
                         }],
                  "opacity":1,
                  "properties":
                     {
+                     "fade":0.8,
                      "image_name":"long_broken"
                     },
                  "propertytypes":
                     {
+                     "fade":"float",
                      "image_name":"string"
                     },
                  "type":"objectgroup",
@@ -51805,78 +53802,283 @@ module.exports={ "height":50,
                  "name":"tree",
                  "objects":[
                         {
-                         "height":698.666666666667,
-                         "id":58,
-                         "name":"tree",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":698.666666666667,
-                         "x":907.333333333333,
-                         "y":2302.66666666667
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "image_name":"tree_3"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"tree",
-                 "objects":[
-                        {
-                         "height":698.666666666667,
-                         "id":62,
-                         "name":"tree",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":698.666666666667,
-                         "x":2729.33333333333,
-                         "y":442.666666666667
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "image_name":"tree_2"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"tree",
-                 "objects":[
-                        {
-                         "height":784.666666666667,
+                         "height":1282,
                          "id":61,
                          "name":"tree",
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":784.666666666667,
-                         "x":2496.66666666667,
-                         "y":1526
+                         "width":1241.33333333334,
+                         "x":-722,
+                         "y":530
                         }],
                  "opacity":1,
                  "properties":
                     {
-                     "image_name":"tree_1"
+                     "fade":1,
+                     "image_name":"tree_4"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":1582.2486938349,
+                         "id":63,
+                         "name":"tree",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1823.73657079539,
+                         "x":1320.2634292046,
+                         "y":-1217.33333333333
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "fade":1,
+                     "image_name":"tree_4"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":2102.78787878788,
+                         "id":70,
+                         "name":"tree",
+                         "properties":
+                            {
+                             "fade":1,
+                             "image_name":"tree_11"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":2239.36450520418,
+                         "x":-825.272727272731,
+                         "y":2352.36363636364
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"tree_4"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":2102.78787878788,
+                         "id":80,
+                         "name":"tree",
+                         "properties":
+                            {
+                             "fade":0.7,
+                             "image_name":"tree_11"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":2239.36450520418,
+                         "x":1593.69542559351,
+                         "y":-513.87840185292
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"tree_4"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"rock",
+                 "objects":[
+                        {
+                         "height":737.710127143204,
+                         "id":68,
+                         "name":"rock",
+                         "properties":
+                            {
+                             "image_name":"rock_2"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":770.741923880951,
+                         "x":1437.89832667838,
+                         "y":-60.4380644509234
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_2"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"rock",
+                 "objects":[
+                        {
+                         "height":533.823074873438,
+                         "id":69,
+                         "name":"rock",
+                         "properties":
+                            {
+                             "image_name":"rock_3"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":617.100985877964,
+                         "x":340.417192129328,
+                         "y":2411.16535715647
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_2"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"rock",
+                 "objects":[
+                        {
+                         "height":730.034106048498,
+                         "id":67,
+                         "name":"rock",
+                         "properties":
+                            {
+                             "image_name":"rock_1"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":798.138476417392,
+                         "x":844.92962536445,
+                         "y":-55.9514172101809
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_1"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"rock",
+                 "objects":[
+                        {
+                         "height":485.80952380953,
+                         "id":66,
+                         "name":"rock",
+                         "properties":
+                            {
+                             "image_name":"rock_0"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":507.562189054728,
+                         "x":522.540883949763,
+                         "y":2053.90240658172
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_0"
                     },
                  "propertytypes":
                     {
@@ -51892,23 +54094,87 @@ module.exports={ "height":50,
                  "name":"tree",
                  "objects":[
                         {
-                         "height":698.666666666667,
+                         "height":1174.66666666667,
+                         "id":58,
+                         "name":"tree",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1174.66666666667,
+                         "x":-648.484848484849,
+                         "y":1496.84848484849
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "fade":1,
+                     "image_name":"tree_3"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":1362.66666666667,
+                         "id":62,
+                         "name":"tree",
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1362.66666666667,
+                         "x":-316.9696969697,
+                         "y":-352
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "fade":1,
+                     "image_name":"tree_2"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":1532.66613375966,
                          "id":64,
                          "name":"tree",
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":698.666666666667,
-                         "x":2141.33333333333,
-                         "y":-33.3333333333335
+                         "width":1515.83334150202,
+                         "x":371.427778680354,
+                         "y":-977.09981067453
                         }],
                  "opacity":1,
                  "properties":
                     {
+                     "fade":1,
                      "image_name":"tree_0"
                     },
                  "propertytypes":
                     {
+                     "fade":"float",
                      "image_name":"string"
                     },
                  "type":"objectgroup",
@@ -51923,7 +54189,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":66,
+ "nextobjectid":81,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -51931,10 +54197,6 @@ module.exports={ "height":50,
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tiled_room_background.json"
-        }, 
-        {
-         "firstgid":2,
          "source":"old_man_room_tiled.json"
         }],
  "tilewidth":100,
@@ -51942,9 +54204,400 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],252:[function(require,module,exports){
-arguments[4][250][0].apply(exports,arguments)
-},{"dup":250}],253:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
+module.exports={ "columns":20,
+ "image":"..\/..\/..\/public\/level\/grid_floor.png",
+ "imageheight":10536,
+ "imagewidth":4048,
+ "margin":0,
+ "name":"tiled_room_tiled",
+ "spacing":0,
+ "tilecount":1000,
+ "tileheight":100,
+ "tileproperties":
+    {
+     "153":
+        {
+         "wall":true
+        },
+     "154":
+        {
+         "wall":true
+        },
+     "155":
+        {
+         "wall":true
+        },
+     "156":
+        {
+         "wall":true
+        },
+     "157":
+        {
+         "wall":true
+        },
+     "158":
+        {
+         "wall":true
+        },
+     "334":
+        {
+         "wall":true
+        },
+     "326":
+        {
+         "wall":true
+        },
+     "327":
+        {
+         "wall":true
+        },
+     "328":
+        {
+         "wall":true
+        },
+     "329":
+        {
+         "wall":true
+        },
+     "330":
+        {
+         "wall":true
+        },
+     "331":
+        {
+         "wall":true
+        },
+     "332":
+        {
+         "wall":true
+        },
+     "333":
+        {
+         "wall":true
+        },
+     "334":
+        {
+         "wall":true
+        },
+     "335":
+        {
+         "wall":true
+        },
+     "336":
+        {
+         "wall":true
+        },
+     "337":
+        {
+         "wall":true
+        },
+     "338":
+        {
+         "wall":true
+        },
+     "339":
+        {
+         "wall":true
+        },
+     "354":
+        {
+         "wall":true
+        },
+     "342":
+        {
+         "wall":true
+        },
+     "343":
+        {
+         "wall":true
+        },
+     "344":
+        {
+         "wall":true
+        },
+     "345":
+        {
+         "wall":true
+        },
+     "346":
+        {
+         "wall":true
+        },
+     "347":
+        {
+         "wall":true
+        },
+     "348":
+        {
+         "wall":true
+        },
+     "349":
+        {
+         "wall":true
+        },
+     "352":
+        {
+         "wall":true
+        },
+     "353":
+        {
+         "wall":true
+        },
+     "354":
+        {
+         "wall":true
+        },
+     "355":
+        {
+         "wall":true
+        },
+     "356":
+        {
+         "wall":true
+        },
+     "357":
+        {
+         "wall":true
+        },
+     "358":
+        {
+         "wall":true
+        },
+     "359":
+        {
+         "wall":true
+        },
+     "360":
+        {
+         "wall":true
+        },
+     "454":
+        {
+         "wall":true
+        },
+     "452":
+        {
+         "wall":true
+        },
+     "453":
+        {
+         "wall":true
+        },
+     "454":
+        {
+         "wall":true
+        },
+     "455":
+        {
+         "wall":true
+        },
+     "456":
+        {
+         "wall":true
+        },
+     "457":
+        {
+         "wall":true
+        },
+     "458":
+        {
+         "wall":true
+        },
+     "459":
+        {
+         "wall":true
+        },
+     "460":
+        {
+         "wall":true
+        },
+     "30":
+        {
+         "wall":true
+        },
+     "31":
+        {
+         "wall":true
+        },
+     "32":
+        {
+         "wall":true
+        },
+     "33":
+        {
+         "wall":true
+        },
+     "34":
+        {
+         "wall":true
+        },
+     "35":
+        {
+         "wall":true
+        },
+     "36":
+        {
+         "wall":true
+        },
+     "37":
+        {
+         "wall":true
+        },
+     "50":
+        {
+         "wall":true
+        },
+     "51":
+        {
+         "wall":true
+        },
+     "52":
+        {
+         "wall":true
+        },
+     "53":
+        {
+         "wall":true
+        },
+     "54":
+        {
+         "wall":true
+        },
+     "55":
+        {
+         "wall":true
+        },
+     "56":
+        {
+         "wall":true
+        },
+     "57":
+        {
+         "wall":true
+        },
+     "70":
+        {
+         "wall":true
+        },
+     "71":
+        {
+         "wall":true
+        },
+     "72":
+        {
+         "wall":true
+        }
+    },
+ "tilepropertytypes":
+    {
+     "153":
+        {
+         "wall":"bool"
+        },
+     "154":
+        {
+         "wall":"bool"
+        },
+     "155":
+        {
+         "wall":"bool"
+        },
+     "156":
+        {
+         "wall":"bool"
+        },
+     "157":
+        {
+         "wall":"bool"
+        },
+     "158":
+        {
+         "wall":"bool"
+        },
+     "30":
+        {
+         "wall":"bool"
+        },
+     "31":
+        {
+         "wall":"bool"
+        },
+     "32":
+        {
+         "wall":"bool"
+        },
+     "33":
+        {
+         "wall":"bool"
+        },
+     "34":
+        {
+         "wall":"bool"
+        },
+     "35":
+        {
+         "wall":"bool"
+        },
+     "36":
+        {
+         "wall":"bool"
+        },
+     "37":
+        {
+         "wall":"bool"
+        },
+     "50":
+        {
+         "wall":"bool"
+        },
+     "51":
+        {
+         "wall":"bool"
+        },
+     "52":
+        {
+         "wall":"bool"
+        },
+     "53":
+        {
+         "wall":"bool"
+        },
+     "54":
+        {
+         "wall":"bool"
+        },
+     "55":
+        {
+         "wall":"bool"
+        },
+     "56":
+        {
+         "wall":"bool"
+        },
+     "57":
+        {
+         "wall":"bool"
+        },
+     "70":
+        {
+         "wall":"bool"
+        },
+     "71":
+        {
+         "wall":"bool"
+        },
+     "72":
+        {
+         "wall":"bool"
+        }
+    },
+ "tilewidth":100,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset"
+}
+
+},{}],254:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -52608,7 +55261,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],254:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 module.exports={ "columns":20,
  "image":"..\/..\/..\/public\/level\/grid_floor.png",
  "imageheight":1536,
@@ -53100,7 +55753,7 @@ module.exports={ "columns":20,
  "transparentcolor":"#ff00ff",
  "type":"tileset"
 }
-},{}],255:[function(require,module,exports){
+},{}],256:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -53126,7 +55779,7 @@ module.exports = {
   Backpack,
 };
 
-},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":233,"./item_model":264}],256:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":265}],257:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -53177,15 +55830,17 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":233,"pixi.js":151}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"pixi.js":151}],258:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
 class Roof extends Item {
-  constructor(name) {
-    super(name);
+  constructor(options) {
+    super(options.image_name);
+
+    this.sprite.fade_opacity = options.fade;
 
     roof_container.addChild(this.sprite);
   }
@@ -53195,7 +55850,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":264}],258:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":265}],259:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53219,7 +55874,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":233,"./item_model":264}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":265}],260:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -53245,7 +55900,7 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":233,"./item_model":264}],260:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":265}],261:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53270,7 +55925,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":233,"./item_model":264}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":265}],262:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -53283,10 +55938,11 @@ const { Note      } = require('./note');
 const { Workbench } = require('./workbench');
 const { Tree      } = require('./tree');
 const { Roof      } = require('./ceiling');
+const { Rock      } = require('./rock');
 
 //TODO This is not a Factory make it one and abstract this
 class Element_Factory {
-  static generate(type, name) {
+  static generate(type, options) {
     switch(type) {
       case 'chest':     return new Chest();
       //TODO spelling
@@ -53298,8 +55954,9 @@ class Element_Factory {
       case 'note':      return new Note();
       case 'workbench': return new Workbench();
       case 'chair':     return new Chair();
-      case 'tree':      return new Tree(name);
-      case 'roof':      return new Roof(name);
+      case 'tree':      return new Tree(options);
+      case 'roof':      return new Roof(options);
+      case 'rock':      return new Rock(options);
     }
   }
 
@@ -53307,14 +55964,13 @@ class Element_Factory {
     let generated;
 
     if(data.properties) {
-      generated = this.generate(data.name, data.properties.image_name);
+      generated = this.generate(data.name, data.properties);
     } else {
       generated = this.generate(data.name);
     }
 
     generated.set_position(data);
     //TODO flip
-    console.log(data);
     generated.width = data.height;
     generated.height = data.width;
     generated.rotation = ((data.rotation +90) * (Math.PI/180));
@@ -53329,7 +55985,7 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./back_pack":255,"./ceiling":257,"./chair":258,"./chest":259,"./dirty_matress":260,"./fire_place":262,"./hay_bale":263,"./note":265,"./tree":267,"./workbench":269}],262:[function(require,module,exports){
+},{"./back_pack":256,"./ceiling":258,"./chair":259,"./chest":260,"./dirty_matress":261,"./fire_place":263,"./hay_bale":264,"./note":266,"./rock":268,"./tree":269,"./workbench":271}],263:[function(require,module,exports){
 'use strict';
 
 const { Item } = require('./item_model');
@@ -53347,7 +56003,7 @@ module.exports = {
   Campfire,
 };
 
-},{"./item_model":264}],263:[function(require,module,exports){
+},{"./item_model":265}],264:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53379,7 +56035,7 @@ module.exports = {
   Hay,
 };
 
-},{"../../character/attributes/vitals":217,"../../engine/pixi_containers":233,"./item_model":264}],264:[function(require,module,exports){
+},{"../../character/attributes/vitals":218,"../../engine/pixi_containers":234,"./item_model":265}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -53561,7 +56217,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":233,"pixi.js":151}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"pixi.js":151}],266:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -53600,7 +56256,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./item_model":264,"pixi.js":151}],266:[function(require,module,exports){
+},{"./item_model":265,"pixi.js":151}],267:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -53656,15 +56312,37 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":233,"../../utils/color_picker":300,"events":311,"pixi.js":151}],267:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../utils/color_picker":302,"events":313,"pixi.js":151}],268:[function(require,module,exports){
+'use strict';
+const { collision_container } = require('../../engine/pixi_containers');
+
+const { Item } = require('./item_model');
+
+class Rock extends Item {
+  constructor(options) {
+    super(options.image_name);
+
+    this.sprite.fade_opacity = options.fade;
+
+    collision_container.addChild(this.sprite);
+  }
+}
+
+module.exports = {
+  Rock,
+};
+
+},{"../../engine/pixi_containers":234,"./item_model":265}],269:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
 class Tree extends Item {
-  constructor(name) {
-    super(name);
+  constructor(options) {
+    super(options.image_name);
+
+    this.sprite.fade_opacity = options.fade;
 
     roof_container.addChild(this.sprite);
   }
@@ -53674,7 +56352,7 @@ module.exports = {
   Tree,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":264}],268:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":265}],270:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53703,7 +56381,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":264,"events":311}],269:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":265,"events":313}],271:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53730,7 +56408,7 @@ module.exports = {
 
 
 
-},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":233,"./item_model":264}],270:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":265}],272:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../engine/pixi_containers');
 
@@ -53787,7 +56465,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":232,"../engine/pixi_containers":233,"./elements/wall.js":268}],271:[function(require,module,exports){
+},{"../engine/pathfind.js":233,"../engine/pixi_containers":234,"./elements/wall.js":270}],273:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53836,7 +56514,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/archer":200,"../elements/background":256,"../elements/elements_factory":261,"../level_model":270}],272:[function(require,module,exports){
+},{"../../character/archetypes/archer":200,"../elements/background":257,"../elements/elements_factory":262,"../level_model":272}],274:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53868,7 +56546,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":256,"../level_model":270}],273:[function(require,module,exports){
+},{"../elements/background":257,"../level_model":272}],275:[function(require,module,exports){
 'use strict';
 
 const { sleep       } = require('../../utils/time');
@@ -53934,7 +56612,7 @@ module.exports = {
   Intro,
 };
 
-},{"../../engine/camera":229,"../../utils/time":306,"./shadow_room":283}],274:[function(require,module,exports){
+},{"../../engine/camera":230,"../../utils/time":308,"./shadow_room":285}],276:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54000,7 +56678,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/candle":296,"../elements/background":256,"../elements/elements_factory":261,"../elements/wall":268,"../level_model":270}],275:[function(require,module,exports){
+},{"../../light/types/candle":298,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],277:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54065,7 +56743,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":295,"../attributes/parse_tiled_data":243,"../attributes/randomise":244,"../data/large_level.json":248,"../elements/background":256,"../elements/wall":268,"../level_model":270}],276:[function(require,module,exports){
+},{"../../light/types/bright_light":297,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/large_level.json":249,"../elements/background":257,"../elements/wall":270,"../level_model":272}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54158,7 +56836,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/neutral":201,"../../light/types/candle":296,"../attributes/parse_tiled_data":243,"../data/old_man_room.json":249,"../data/old_man_room_tiled.json":250,"../elements/background":256,"../elements/elements_factory":261,"../elements/pad":266,"../elements/wall":268,"../level_model":270}],277:[function(require,module,exports){
+},{"../../character/archetypes/neutral":202,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/old_man_room.json":250,"../data/old_man_room_tiled.json":251,"../elements/background":257,"../elements/elements_factory":262,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54206,7 +56884,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":256,"../elements/elements_factory":261,"../level_model":270}],278:[function(require,module,exports){
+},{"../elements/background":257,"../elements/elements_factory":262,"../level_model":272}],280:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54264,7 +56942,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/archer":200,"../../character/archetypes/rat":202,"../data/debug_map_output.json":245,"../data/debug_map_tiles.json":246,"../elements/background":256,"../level_model":270}],279:[function(require,module,exports){
+},{"../../character/archetypes/archer":200,"../../character/archetypes/rat":203,"../data/debug_map_output.json":246,"../data/debug_map_tiles.json":247,"../elements/background":257,"../level_model":272}],281:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54331,7 +57009,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":220,"../../engine/camera":229,"../elements/background":256,"../level_model":270}],280:[function(require,module,exports){
+},{"../../character/types/npc":221,"../../engine/camera":230,"../elements/background":257,"../level_model":272}],282:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54377,7 +57055,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":256,"../elements/elements_factory":261,"../level_model":270}],281:[function(require,module,exports){
+},{"../elements/background":257,"../elements/elements_factory":262,"../level_model":272}],283:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54458,7 +57136,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/randomise":244,"../elements/background":256,"../elements/hay_bale":263,"../elements/pad":266,"../level_model":270}],282:[function(require,module,exports){
+},{"../attributes/randomise":245,"../elements/background":257,"../elements/hay_bale":264,"../elements/pad":267,"../level_model":272}],284:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54558,7 +57236,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/scavenger":203,"../../light/types/candle":296,"../attributes/item_pool":242,"../attributes/parse_tiled_data":243,"../data/tiled_room.json":253,"../data/tiled_room_tiled.json":254,"../elements/background":256,"../elements/elements_factory":261,"../elements/pad":266,"../elements/wall":268,"../level_model":270}],283:[function(require,module,exports){
+},{"../../character/archetypes/scavenger":204,"../../light/types/candle":298,"../attributes/item_pool":243,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/elements_factory":262,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],285:[function(require,module,exports){
 'use strict';
 
 const { Lantern    } = require('../../light/types/lantern');
@@ -54702,7 +57380,7 @@ module.exports = {
   Shadow_Room,
 };
 
-},{"../../light/types/ambient":294,"../../light/types/candle":296,"../../light/types/lantern":297,"../../light/types/lighter":298,"../../light/types/sun":299,"../elements/background":256,"../elements/chest":259,"../elements/wall":268}],284:[function(require,module,exports){
+},{"../../light/types/ambient":296,"../../light/types/candle":298,"../../light/types/lantern":299,"../../light/types/lighter":300,"../../light/types/sun":301,"../elements/background":257,"../elements/chest":260,"../elements/wall":270}],286:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54778,7 +57456,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":295,"../attributes/parse_tiled_data":243,"../attributes/randomise":244,"../data/homestead_tiled.json":247,"../elements/background":256,"../elements/elements_factory":261,"../elements/wall":268,"../level_model":270}],285:[function(require,module,exports){
+},{"../../light/types/bright_light":297,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/homestead_tiled.json":248,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],287:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54787,6 +57465,7 @@ const { Tiled_Data   } = require('../attributes/parse_tiled_data');
 const { Background   } = require('../elements/background');
 const { Wall         } = require('../elements/wall');
 const { Candle       } = require('../../light/types/candle');
+const { Deer         } = require('../../character/archetypes/deer');
 const { Scripted_NPC } = require('../../character/archetypes/neutral');
 
 const { Element_Factory } = require('../elements/elements_factory');
@@ -54829,7 +57508,16 @@ class Outside_Map extends Level {
       wall.height = data.height;
       wall.width  = data.width;
       wall.anchor = 0;
+      wall.rotation = (data.rotation * (Math.PI/180));
+
       wall.set_position(data);
+    });
+
+    this.elements.prey.forEach(data => {
+      const prey = new Deer();
+      prey.enemy(this.player);
+      prey.logic_start();
+      prey.set_position(data);
     });
 
     this.elements.lights.forEach(data => {
@@ -54846,7 +57534,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/neutral":201,"../../light/types/candle":296,"../attributes/parse_tiled_data":243,"../data/outside_room.json":251,"../data/outside_room_tiled.json":252,"../elements/background":256,"../elements/elements_factory":261,"../elements/wall":268,"../level_model":270}],286:[function(require,module,exports){
+},{"../../character/archetypes/deer":201,"../../character/archetypes/neutral":202,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/outside_room.json":252,"../data/outside_room_tiled.json":253,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],288:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54855,9 +57543,9 @@ const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
 const { Wall       } = require('../elements/wall');
 const { Candle     } = require('../../light/types/candle');
-const { Rat        } = require('../../character/archetypes/rat');
-const level_data  = require('../data/tiled_room.json');
-const level_tiled = require('../data/tiled_room_tiled.json');
+const { Deer       } = require('../../character/archetypes/deer');
+const level_data     = require('../data/tiled_room.json');
+const level_tiled    = require('../data/tiled_room_tiled.json');
 
 class Tiled_Prey extends Level {
   constructor(player) {
@@ -54882,7 +57570,7 @@ class Tiled_Prey extends Level {
     this.create_grid(level_tiled);
 
     this.elements.prey.forEach(data => {
-      const prey = new Rat();
+      const prey = new Deer();
       prey.enemy(this.player);
       prey.logic_start();
       prey.set_position(data);
@@ -54911,7 +57599,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":202,"../../light/types/candle":296,"../attributes/parse_tiled_data":243,"../data/tiled_room.json":253,"../data/tiled_room_tiled.json":254,"../elements/background":256,"../elements/wall":268,"../level_model":270}],287:[function(require,module,exports){
+},{"../../character/archetypes/deer":201,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/wall":270,"../level_model":272}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55031,7 +57719,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/scavenger":203,"../../light/types/candle":296,"../attributes/parse_tiled_data":243,"../data/tiled_room.json":253,"../data/tiled_room_tiled.json":254,"../elements/background":256,"../elements/elements_factory":261,"../elements/pad":266,"../elements/wall":268,"../level_model":270}],288:[function(require,module,exports){
+},{"../../character/archetypes/scavenger":204,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/elements_factory":262,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],290:[function(require,module,exports){
 (function (global){
 
 'use strict';
@@ -55105,7 +57793,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/candle":296,"../attributes/parse_tiled_data":243,"../attributes/randomise":244,"../data/tiled_room.json":253,"../elements/background":256,"../elements/pad":266,"../elements/wall":268,"../level_model":270}],289:[function(require,module,exports){
+},{"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/tiled_room.json":254,"../elements/background":257,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],291:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55164,7 +57852,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":256,"../elements/pad":266,"../level_model":270,"./random_room":281}],290:[function(require,module,exports){
+},{"../elements/background":257,"../elements/pad":267,"../level_model":272,"./random_room":283}],292:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -55220,7 +57908,7 @@ module.exports = {
   Fade,
 };
 
-},{"../../engine/ticker":237}],291:[function(require,module,exports){
+},{"../../engine/ticker":238}],293:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -55262,7 +57950,7 @@ module.exports = {
   Flicker,
 };
 
-},{"../../engine/ticker":237}],292:[function(require,module,exports){
+},{"../../engine/ticker":238}],294:[function(require,module,exports){
 'use strict';
 
 const { Track } = require('../../effects/sound');
@@ -55306,7 +57994,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../effects/sound":226,"../../utils/time":306}],293:[function(require,module,exports){
+},{"../../effects/sound":227,"../../utils/time":308}],295:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -55354,7 +58042,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],294:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],296:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -55407,7 +58095,7 @@ module.exports = {
   Ambient,
 };
 
-},{"../../engine/ticker":237,"pixi.js":151}],295:[function(require,module,exports){
+},{"../../engine/ticker":238,"pixi.js":151}],297:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -55431,7 +58119,7 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":233,"../light_model":293}],296:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../light_model":295}],298:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -55485,7 +58173,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":233,"../attributes/flicker":291,"../light_model":293,"pixi.js":151}],297:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../attributes/flicker":293,"../light_model":295,"pixi.js":151}],299:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -55514,7 +58202,7 @@ module.exports = {
   Lantern,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/tween":238,"../attributes/flicker":291,"../light_model":293}],298:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../engine/tween":239,"../attributes/flicker":293,"../light_model":295}],300:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -55540,7 +58228,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../engine/pixi_containers":233,"../attributes/strike":292,"../light_model":293}],299:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../attributes/strike":294,"../light_model":295}],301:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -55567,7 +58255,7 @@ module.exports = {
   Sun,
 };
 
-},{"../../engine/pixi_containers":233,"../attributes/fade":290,"../light_model":293}],300:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../attributes/fade":292,"../light_model":295}],302:[function(require,module,exports){
 'use strict';
 
 class Color_Pick {
@@ -55586,7 +58274,7 @@ module.exports = {
   Color_Pick,
 };
 
-},{}],301:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55629,7 +58317,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],302:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -55674,7 +58362,7 @@ global.place_bunny = ({ x, y }) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":233,"pixi.js":151}],303:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],305:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -55760,7 +58448,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":233,"pixi.js":151}],304:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],306:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -55880,7 +58568,7 @@ module.exports = {
 
 
 
-},{}],305:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55938,7 +58626,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],306:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -55949,7 +58637,7 @@ module.exports = {
   sleep,
 };
 
-},{}],307:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -55985,7 +58673,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],308:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],310:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -56039,7 +58727,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],309:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],311:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56237,7 +58925,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":241}],310:[function(require,module,exports){
+},{"../items/item_manager":242}],312:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -56274,7 +58962,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":301}],311:[function(require,module,exports){
+},{"../utils/dom":303}],313:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -56799,7 +59487,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],312:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -57105,7 +59793,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":313}],313:[function(require,module,exports){
+},{"_process":315}],315:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -57291,7 +59979,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],314:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -57828,7 +60516,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],315:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57914,7 +60602,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],316:[function(require,module,exports){
+},{}],318:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58001,13 +60689,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],317:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":315,"./encode":316}],318:[function(require,module,exports){
+},{"./decode":317,"./encode":318}],320:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58741,7 +61429,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":319,"punycode":314,"querystring":317}],319:[function(require,module,exports){
+},{"./util":321,"punycode":316,"querystring":319}],321:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -58759,4 +61447,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[239]);
+},{}]},{},[240]);
