@@ -15,7 +15,6 @@ class Tiled_Data {
 
     return player;
   }
-
   get center() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'center');
 

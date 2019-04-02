@@ -48546,7 +48546,6 @@ class Tiled_Data {
 
     return player;
   }
-
   get center() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'center');
 
@@ -57582,19 +57581,18 @@ const { Candle     } = require('../../light/types/candle');
 const { Rat        } = require('../../character/archetypes/rat');
 const level_data     = require('../data/tiled_room.json');
 const level_tiled    = require('../data/tiled_room_tiled.json');
-console.log(level_data);
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
 const { collision_container } = require('../../engine/pixi_containers');
 
-const fuck = [];
+const matrix = [];
 
 function create_grid() {
   let y = 0;
   let x = 0;
   let alpha = 1;
 
-  for(let i=0;i<=400;i++){
+  for(let i=0;i<=100;i++){
     const tile = PIXI.Sprite.fromFrame('black_dot');
     tile.width  = 100;
     tile.height = 100;
@@ -57604,7 +57602,7 @@ function create_grid() {
     tile.alpha =alpha;
     x += 100;
 
-    if(i % 20 === 0) {
+    if(i % 10 === 0) {
       if(i ===0) {
         y=0;
       }else{
@@ -57615,7 +57613,7 @@ function create_grid() {
 
 
     visual_effects_container.addChild(tile);
-    fuck.push(tile);
+    matrix.push(tile);
   }
 }
 
@@ -57681,16 +57679,38 @@ class Tiled_Prey extends Level {
       light.set_position(data);
     });
 
+    // const binary_matrix = [];
     collision_container.children.forEach(object => {
-      console.log(object);
-      fuck.forEach(shit => {
-        if(check(shit, object)) {
-          shit.alpha = 1;
+      matrix.forEach(tile => {
+        if(check(tile, object)) {
+          tile.alpha = 1;
+        } else {
+          tile.alpha = 0;
         }
       });
+      binary_matrix.push(binary_line);
+      binary_line = [];
 
     });
+    // console.log(binary_matrix);
 
+    const binary_matrix = [];
+    let binary_line = [];
+    matrix.forEach((tile, i) => {
+      if(i %10===0) {
+        binary_matrix.push(binary_line);
+
+        binary_line = [];
+      }
+
+      if(tile.alpha === 1) {
+        binary_line.push('|');
+      } else {
+        binary_line.push(0);
+      }
+    });
+
+    console.log(binary_matrix);
   }
 }
 
