@@ -1,5 +1,4 @@
 'use strict';
-
 const { Level        } = require('../level_model');
 const { Tiled_Data   } = require('../attributes/parse_tiled_data');
 const { Background   } = require('../elements/background');
@@ -11,7 +10,6 @@ const { Scripted_NPC } = require('../../character/archetypes/neutral');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const level_data  = require('../data/outside_room.json');
-const level_tiled = require('../data/outside_room_tiled.json');
 
 class Outside_Map extends Level {
   constructor(player) {
@@ -36,7 +34,7 @@ class Outside_Map extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
+    this.create_grid();
 
     this.elements.furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);

@@ -1,282 +1,112 @@
 'use strict';
+const { grid_container } = require('./pixi_containers');
 
-const PIXI     = require('pixi.js');
-const { Grid } = require('../utils/grid');
-const {
-  gui_container,
-  grid_container,
-} = require('./pixi_containers');
-
+const { Grid   } = require('../utils/grid');
+const { Tween  } = require('./tween');
+const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
-const easystar = new easystarjs.js();
+const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(1000);
 easystar.setAcceptableTiles([0]);
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
 
-const {
-  random_number,
-  radian,
-} = require('../utils/math');
+const find_grid = sprite => {
+  const grid  = grid_container.children;
+  const point = sprite.getGlobalPosition();
+
+  const found_tile = grid.find(tile => tile.containsPoint(point));
+
+  if(!found_tile) throw `${sprite.name} was not found`;
+
+  return found_tile;
+};
+
+const path_between_grids = (one, two) => {
+  return new Promise((resolve, reject) => {
+    easystar.findPath(one.x, one.y, two.x, two.y, path => {
+      if(path) resolve(path);
+
+      reject(new Error('no path found'));
+    });
+
+    easystar.calculate();
+  });
+};
 
 class pathfind_sprite {
-  constructor() {
-    this.boolean_time = true;
-    this.sprite_grid = [];
-  }
+  static create_level_grid() {
+    this.grid = new Grid();
+    this.grid.build();
+    this.grid.build_matrix();
 
-  static create_level_grid(tiles_object) {
-    const { binary_grid_map, 'sprite_grid': grid }
-      = Grid.create(tiles_object);
-    this.sprite_grid = grid;
-    easystar.setGrid(binary_grid_map);
+    easystar.setGrid(this.grid.binary);
   }
 
   static highlight_grid_cell_from_path(path) {
-    path.forEach(grid => this.sprite_grid[grid.y][grid.x].alpha = 0.2);
-  }
+    const { sprite } = this.grid;
 
-  static create_path_from_two_grid_points(sprite_one, sprite_two) {
-    return new Promise((resolve, reject) => {
-      easystar.findPath(sprite_one.x, sprite_one.y, sprite_two.x, sprite_two.y,
-        (path) => {
-          if(path === null) {
-            reject(new Error('no path found'));
-          } else {
-            resolve(path);
-          }
-        });
-
-      easystar.calculate();
-    });
-  }
-
-  static create_path(sprite, path_array) {
-    const path = new PIXI.tween.TweenPath();
-    const random = () => random_number(-30, 30);
-
-    path.moveTo(sprite.x, sprite.y);
-
-    for (let i = 2; i < path_array.length; i++) {
-      path.arcTo(
-        path_array[i-1].middle.x + random(),
-        path_array[i-1].middle.y + random(),
-        path_array[i].middle.x   + random(),
-        path_array[i].middle.y   + random(),
-        25
-      );
-    }
-
-    return path;
+    path.forEach(({x,y}) => sprite[y][x].alpha = 0.2);
   }
 
   static move_sprite_on_path(sprite, path_array) {
     if(path_array.length < 2) return;
 
-    const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
-    get_tween.forEach(tween => PIXI.tweenManager.removeTween(tween));
+    const tween = new Tween(sprite);
+    tween.time  = path_array.length * 300;
 
-    const path = this.create_path(sprite, path_array);
-
-    const tween  = PIXI.tweenManager.createTween(sprite);
-    tween.expire = true;
-    tween.path   = path;
-    tween.time   = path_array.length * 300;
-    //tween.easing = PIXI.tween.Easing.inOutSine();
+    tween.add_random_path(sprite, path_array);
+    tween.draw_path();
     tween.start();
 
-    tween.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
-
-    const graphical_path = new PIXI.Graphics();
-    graphical_path.lineStyle(5, 0xffffff, 0.1);
-    graphical_path.drawPath(path);
-
-    gui_container.addChild(graphical_path);
+    tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
   }
 
-  path_enemy_on_points(enemy_sprite, point_array) {
-    if( this.boolean_time === false ) return;
-    this.boolean_time = false;
+  static async grid_around_sprite(target) {
+    const { cell_position } = find_grid(target);
+    const { x, y } = cell_position;
+    const { sprite } = this.grid;
 
-    if(global.is_development) {
-      this.highlight_grid_cell_from_path(point_array);
-    }
-
-    const path_array = point_array.map(grid => (
-      this.sprite_grid[grid.y][grid.x]
-    ));
-
-    // move from the current position to the start of the path
-    this.move_sprite_to_point(enemy_sprite, path_array[0])
-      .then(() => this.move_sprite_on_path(enemy_sprite, path_array))
-      .then(() => this.wait_sprite(enemy_sprite, 500))
-      .then(() => this.look_around_sprite(enemy_sprite, 1000, 1))
-      .then(() => this.move_sprite_on_path(enemy_sprite, path_array.reverse()))
-      .then(() => this.move_sprite_on_route(enemy_sprite));
-
-  }
-
-
-  pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
-    const grid = grid_container.children;
-
-    const enemy_point = this.get_sprite_position_on_grid(enemy_sprite, grid);
-    const player_point = this.get_sprite_position_on_grid(player_sprite, grid);
-
-    if(enemy_point && player_point){
-      this.create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-        .then(path_data => this.path_enemy_on_points(enemy_sprite, path_data));
-    }
-  }
-
-  static async move_sprite_to_point_on_grid(from_sprite, point) {
-    const grids = grid_container.children;
-
-    const from_point = grids.find(grid =>
-      grid.containsPoint(from_sprite.getGlobalPosition()));
-
-    const to_point = grids.find(grid => grid.containsPoint(point));
-
-    if(!to_point  ) throw 'no point found';
-    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
-    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-
-    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
-
-    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
-
-    this.highlight_grid_cell_from_path(path_data);
-    this.move_sprite_on_path(from_sprite, path_array);
-  }
-
-  static async ad_array_arround(sprite) {
-    const grids = grid_container.children;
-
-    const from_point = grids.find(grid =>
-      grid.containsPoint(sprite.getGlobalPosition()));
     const array_thing = [
       [
-        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1],
-        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x],
-        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1],
+        sprite[y-1][x-1],
+        sprite[y-1][x  ],
+        sprite[y-1][x+1],
       ],
       [
-        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1],
-        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x],
-        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1],
+        sprite[y][x-1],
+        sprite[y][x  ],
+        sprite[y][x+1],
       ],
       [
-        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1],
-        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x],
-        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1],
+        sprite[y+1][x-1],
+        sprite[y+1][x  ],
+        sprite[y+1][x+1],
       ],
     ];
 
     console.log(array_thing);
   }
 
-
-  static async grid_around_sprite(sprite) {
-    // this.ad_array_arround(sprite);
-
-    const grids = grid_container.children;
-
-    const from_point = grids.find(grid =>
-      grid.containsPoint(sprite.getGlobalPosition()));
-
-    const to_point = {
-      ...from_point.cell_position,
-    };
-    to_point.y-=2;
-    // to_point.x+1;
-    // console.log(to_point);
-    // console.log(from_point.cell_position);
-    const path_data= await this.create_path_from_two_grid_points(
-      from_point.cell_position,
-      to_point
-    );
-
-    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
-    this.highlight_grid_cell_from_path(path_data);
-    // this.move_sprite_on_path(sprite, path_array);
-
-
-    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x].alpha =1;
-    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x].alpha =1;
-    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1].alpha =1;
-  }
-
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
-    const grids = grid_container.children;
+    const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
 
-    const from_point = grids.find(grid =>
-      grid.containsPoint(from_sprite.getGlobalPosition()));
+    console.log(path_array);
 
-    const to_point = grids.find(grid =>
-      grid.containsPoint(to_sprite.getGlobalPosition()));
-
-    if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
-    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
-    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
-
-    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
-
-    // console.log(path_data);
-    this.highlight_grid_cell_from_path(path_data);
     this.move_sprite_on_path(from_sprite, path_array);
   }
 
   static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
-    const grids = grid_container.children;
+    const from_point = find_grid(from_sprite);
+    const to_point   = find_grid(to_sprite);
 
-    const from_point = grids.find(grid =>
-      grid.containsPoint(from_sprite.getGlobalPosition()));
-
-    const to_point = grids.find(grid =>
-      grid.containsPoint(to_sprite.getGlobalPosition()));
-
-    if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
-    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
-    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-
-    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
+    const path_data = await path_between_grids(from_point.cell_position, to_point.cell_position);
 
     this.highlight_grid_cell_from_path(path_data);
-
-    return path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+    return path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
   }
-
 }
 
 module.exports = {
   pathfind_sprite,
 };
-
-
-//testing
-//async function run_pathfinding_test() {
-//  const grid = grid_container.children;
-//  const rat_sprite = viewport.getChildByName('critter_container').getChildByName('rat');
-//
-//  const rat_direction = viewport.getChildByName('enemy_container').getChildByName('enemy');
-//
-//  const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
-//  const rat_point = get_sprite_position_on_grid(rat_direction, grid);
-//
-//  //sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
-//
-//  const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
-//
-//  highlight_grid_cell_from_path(path_data);
-//
-//  const path_array = path_data.map(grid => (
-//    sprite_grid[grid.y][grid.x]
-//  ));
-//
-//  move_sprite_on_path(rat_sprite, path_array);
-//}
-

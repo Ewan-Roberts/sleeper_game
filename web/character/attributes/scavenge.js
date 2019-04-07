@@ -36,7 +36,7 @@ class Scavenge {
 
   go_to_item() {
     return new Promise(resolve => {
-      this.tween.add_tile_path(this.path);
+      this.tween.add_path(this.path);
       this.tween.time = 3000;
       this.tween.movement.on('end', () => {
         this.loot.take_items(this.target_item.loot.items);
@@ -55,7 +55,7 @@ class Scavenge {
 
     const path_to_item = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
     this.tween.path_smoothness = 100;
-    this.tween.add_tile_path(path_to_item);
+    this.tween.add_path(path_to_item);
     this.tween.time = 3000;
     this.tween.draw_path();
     this.tween.start();

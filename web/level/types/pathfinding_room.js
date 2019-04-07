@@ -36,7 +36,6 @@ class Pathfind_Room extends Level {
 
     this.add_to_segments(this.background.sprite);
     this.render_walls(this.tiled_data.layers[1].objects);
-    this.create_grid(this.tiled_tiles);
 
     this.rat.set_position({x: 900, y: 1100});
     this.rat.animation.switch('move');
@@ -46,6 +45,7 @@ class Pathfind_Room extends Level {
     this.archer.set_position({x: 1400, y: 1100});
     this.archer.enemy(this.rat);
     this.archer.logic_start();
+    this.create_grid();
   }
 }
 

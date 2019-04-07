@@ -1,8 +1,8 @@
 'use strict';
 const PIXI = require('pixi.js');
-
-const { grid_container } = require('../engine/pixi_containers');
+const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
+
 const row_length = 20;
 
 function check(rect1, rect2) {
@@ -13,106 +13,92 @@ function check(rect1, rect2) {
     return true;
   }
 }
+
+class Tile {
+  constructor() {
+    const thing = PIXI.Sprite.fromFrame('black_dot');
+    thing.width  = 100;
+    thing.height = 100;
+    thing.passable = true;
+
+    return thing;
+  }
+}
+
 class Grid {
-  static create(tiles_object) {
-    const sprite_grid = [];
-    const binary_grid_map = [];
+  constructor() {}
 
-    const grid_dimension = 100;
+  build() {
+    let y = 0;
+    let x = 0;
 
-    let line_grid = [];
-    let binary_line = [];
-
-    let current_x = 0;
-    let current_y = 0;
-
+    let alpha = 0.8;
     let current_grid_x = 0;
     let current_grid_y = 0;
 
-    for (let i = 0; i < tiles_object.tilecount; i++) {
-      const grid_cell = PIXI.Sprite.fromFrame('black_dot');
-      grid_cell.cell_position = {
+    for(let i=0; i<=200; i++){
+      const tile = new Tile();
+      tile.x = x;
+      tile.y = y;
+      tile.alpha = alpha -= 0.002;
+
+      tile.cell_position = {
         x: current_grid_x,
         y: current_grid_y,
       };
 
-      current_x += grid_dimension;
-      if(i % tiles_object.columns === 0){
-        sprite_grid.push(line_grid);
-        binary_grid_map.push(binary_line);
-
-        line_grid = [];
-        binary_line = [];
-
-        current_y += grid_dimension;
-        current_x = 0;
-        current_grid_x = 0;
-        current_grid_y += 1;
+      x += 100;
+      if(i % row_length === 0) {
+        if(i !== 0) {
+          y += 100;
+          current_grid_x = 0;
+          current_grid_y++;
+        }
+        x = 0;
       }
-      current_grid_x += 1;
+      current_grid_x++;
 
-      grid_cell.width   = grid_dimension;
-      grid_cell.height  = grid_dimension;
-      grid_cell.x       = current_x;
-      grid_cell.y       = current_y;
-      grid_cell.middle  = {
-        x: grid_cell.x + grid_dimension/2,
-        y: grid_cell.y + grid_dimension/2,
-      };
+      if(collision_container.children.length < 1) throw 'must have collision objects for grid';
 
-      if(tiles_object.tileproperties.hasOwnProperty(i)){
-        // is a wall
-        grid_cell.alpha = 1;
-        grid_cell.type = 'wall';
-        binary_line.push(1);
-      } else {
-        // is walkable ground
-        grid_cell.alpha = 0;
-        binary_line.push(0);
-      }
-
-      line_grid.push(grid_cell);
-
-      global.line_grid = line_grid;
-
-      grid_container.addChild(grid_cell);
-    }
-
-    collision_container.children.forEach(object => {
-      grid_container.children.forEach(tile => {
+      collision_container.children.forEach(object => {
         if(check(tile, object)) {
-          tile.alpha = 1;
+          tile.passable = false;
         }
       });
-    });
 
+      grid_container.addChild(tile);
+    }
+  }
+
+  build_matrix() {
     const binary_matrix = [];
-    let binary_line1 = [];
+    const sprite_matrix = [];
+
+    let binary_line = [];
+    let sprite_line = [];
+
     grid_container.children.forEach((tile, i) => {
+      if(!tile.passable) {
+        binary_line.push(1);
+      } else {
+        binary_line.push(0);
+      }
+      sprite_line.push(tile);
 
       if(i % row_length ===0) {
         if(i !== 0) {
-          binary_matrix.push(binary_line1);
+          binary_matrix.push(binary_line);
+
+          sprite_matrix.push(sprite_line);
         }
 
-        binary_line1 = [];
-      }
-      if(tile.alpha === 1) {
-        binary_line1.push(1);
-      } else {
-        binary_line1.push(0);
+        sprite_line = [];
+        binary_line = [];
       }
     });
 
-
-
-
-    console.log(binary_matrix);
-    console.log(binary_grid_map);
-    return {
-      binary_grid_map: binary_matrix,
-      sprite_grid,
-    };
+    this.binary = binary_matrix;
+    this.sprite = sprite_matrix;
   }
 }
 

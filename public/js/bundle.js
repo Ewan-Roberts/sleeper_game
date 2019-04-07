@@ -17707,7 +17707,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":314}],86:[function(require,module,exports){
+},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":311}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21507,7 +21507,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":40,"path":314}],104:[function(require,module,exports){
+},{"../../Shader":40,"path":311}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27345,7 +27345,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":320}],121:[function(require,module,exports){
+},{"url":317}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31919,7 +31919,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":61,"../../core/const":42,"path":314}],139:[function(require,module,exports){
+},{"../../core":61,"../../core/const":42,"path":311}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32003,7 +32003,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":61,"path":314}],140:[function(require,module,exports){
+},{"../../core":61,"path":311}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33166,7 +33166,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":61,"path":314}],147:[function(require,module,exports){
+},{"../../core":61,"path":311}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33274,7 +33274,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":61,"path":314}],148:[function(require,module,exports){
+},{"../../core":61,"path":311}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33328,7 +33328,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":61,"path":314}],149:[function(require,module,exports){
+},{"../../core":61,"path":311}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33504,7 +33504,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":61,"path":314}],151:[function(require,module,exports){
+},{"../../core":61,"path":311}],151:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36171,7 +36171,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":137,"path":314,"resource-loader":190}],159:[function(require,module,exports){
+},{"../extras":137,"path":311,"resource-loader":190}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36534,7 +36534,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":61,"resource-loader":190,"url":320}],162:[function(require,module,exports){
+},{"../core":61,"resource-loader":190,"url":317}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38260,7 +38260,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":61,"../Mesh":163,"path":314,"pixi-gl-core":19}],170:[function(require,module,exports){
+},{"../../core":61,"../Mesh":163,"path":311,"pixi-gl-core":19}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45233,7 +45233,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":307,"pixi.js":151}],199:[function(require,module,exports){
+},{"../../utils/math":304,"pixi.js":151}],199:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45348,7 +45348,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":307,"pixi.js":151}],200:[function(require,module,exports){
+},{"../../utils/math":304,"pixi.js":151}],200:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45466,7 +45466,7 @@ module.exports = {
   Archer,
 };
 
-},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":307,"../attributes/melee":210,"../attributes/ranged":213,"../types/enemy":220,"events":313}],201:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":304,"../attributes/melee":210,"../attributes/ranged":213,"../types/enemy":220,"events":310}],201:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -45573,7 +45573,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":307,"../attributes/melee":210,"../types/rat":223,"events":313}],202:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":304,"../attributes/melee":210,"../types/rat":223,"events":310}],202:[function(require,module,exports){
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
@@ -45708,7 +45708,7 @@ module.exports = {
   Scripted_NPC,
 };
 
-},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/ticker":238,"../../engine/tween":239,"../../utils/line_of_sight":306,"../../utils/math":307,"../attributes/influence":205,"../attributes/melee":210,"../attributes/scavenge":215,"../attributes/script":216,"../types/rat":223,"events":313}],203:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/ticker":238,"../../engine/tween":239,"../../utils/line_of_sight":303,"../../utils/math":304,"../attributes/influence":205,"../attributes/melee":210,"../attributes/scavenge":215,"../attributes/script":216,"../types/rat":223,"events":310}],203:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45801,7 +45801,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":307,"../attributes/melee":210,"../types/rat":223,"events":313}],204:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/ticker":238,"../../utils/math":304,"../attributes/melee":210,"../types/rat":223,"events":310}],204:[function(require,module,exports){
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
@@ -45932,7 +45932,7 @@ module.exports = {
   Scavenger,
 };
 
-},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/ticker":238,"../../engine/tween":239,"../../utils/line_of_sight":306,"../../utils/math":307,"../../utils/time":308,"../attributes/influence":205,"../attributes/melee":210,"../attributes/scavenge":215,"../types/rat":223,"events":313}],205:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/ticker":238,"../../engine/tween":239,"../../utils/line_of_sight":303,"../../utils/math":304,"../../utils/time":305,"../attributes/influence":205,"../attributes/melee":210,"../attributes/scavenge":215,"../types/rat":223,"events":310}],205:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46203,7 +46203,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../engine/pixi_containers":234,"../../engine/shadows":237,"../../view/view_player_inventory":311,"pixi.js":151}],208:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../engine/shadows":237,"../../view/view_player_inventory":308,"pixi.js":151}],208:[function(require,module,exports){
 
 'use strict';
 
@@ -46231,7 +46231,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":298}],209:[function(require,module,exports){
+},{"../../light/types/candle":295}],209:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -46284,7 +46284,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../items/item_manager":242,"../../view/button":309,"../../view/view_inventory":310}],210:[function(require,module,exports){
+},{"../../items/item_manager":242,"../../view/button":306,"../../view/view_inventory":307}],210:[function(require,module,exports){
 'use strict';
 
 const { melee_attack } = require('../../engine/melee');
@@ -46388,7 +46388,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":224,"../../engine/pixi_containers":234,"../../engine/ranged":235,"../../engine/shadows":237,"../../utils/math":307}],212:[function(require,module,exports){
+},{"../../effects/aiming_cone":224,"../../engine/pixi_containers":234,"../../engine/ranged":235,"../../engine/shadows":237,"../../utils/math":304}],212:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46414,13 +46414,7 @@ class Pathfind {
   go_to_point(point) {
     this.anchor_sprite.position.copy(point);
 
-    const global_point = this.anchor_sprite.getGlobalPosition();
-
-    pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, global_point);
-  }
-
-  go_to_local_point(point) {
-    pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, point);
+    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, this.anchor_sprite);
   }
 
   hightlight_grid_around() {
@@ -46602,7 +46596,7 @@ class Scavenge {
 
   go_to_item() {
     return new Promise(resolve => {
-      this.tween.add_tile_path(this.path);
+      this.tween.add_path(this.path);
       this.tween.time = 3000;
       this.tween.movement.on('end', () => {
         this.loot.take_items(this.target_item.loot.items);
@@ -46621,7 +46615,7 @@ class Scavenge {
 
     const path_to_item = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
     this.tween.path_smoothness = 100;
-    this.tween.add_tile_path(path_to_item);
+    this.tween.add_path(path_to_item);
     this.tween.time = 3000;
     this.tween.draw_path();
     this.tween.start();
@@ -46704,7 +46698,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":238,"../../view/view_player_status_meter":312}],218:[function(require,module,exports){
+},{"../../engine/ticker":238,"../../view/view_player_status_meter":309}],218:[function(require,module,exports){
 'use strict';
 
 const event     = require('events');
@@ -46755,7 +46749,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":226,"events":313}],219:[function(require,module,exports){
+},{"../../effects/blood":226,"events":310}],219:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -46864,6 +46858,7 @@ class Player extends Character {
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
     this.sprite.id = 3;
+    this.sprite.name = 'player';
     this.blood     = new Blood();
 
     this.add_component(new Light(this));
@@ -46897,7 +46892,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/tween":239,"../animations/human":198,"../attributes/inventory":206,"../attributes/keyboard":207,"../attributes/light":208,"../attributes/mouse":211,"../attributes/status_bar":217,"../attributes/vitals":218,"../character_model":219,"events":313}],223:[function(require,module,exports){
+},{"../../effects/blood":226,"../../engine/pixi_containers":234,"../../engine/tween":239,"../animations/human":198,"../attributes/inventory":206,"../attributes/keyboard":207,"../attributes/light":208,"../attributes/mouse":211,"../attributes/status_bar":217,"../attributes/vitals":218,"../character_model":219,"events":310}],223:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -47216,7 +47211,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":222,"../level/types/archer_room":273,"../level/types/dev_room":274,"../level/types/intro.js":275,"../level/types/item_room":276,"../level/types/large_level":277,"../level/types/old_man_room":278,"../level/types/outside_room":279,"../level/types/pathfinding_room":280,"../level/types/player_animations":281,"../level/types/projectile_room":282,"../level/types/random_room":283,"../level/types/scavenge_room":284,"../level/types/shadow_room":285,"../level/types/tiled_homestead_room":286,"../level/types/tiled_outside":287,"../level/types/tiled_prey":288,"../level/types/tiled_prey_path":289,"../level/types/tiles_room":290,"../level/types/transition_room":291}],230:[function(require,module,exports){
+},{"../character/types/player.js":222,"../level/types/archer_room":270,"../level/types/dev_room":271,"../level/types/intro.js":272,"../level/types/item_room":273,"../level/types/large_level":274,"../level/types/old_man_room":275,"../level/types/outside_room":276,"../level/types/pathfinding_room":277,"../level/types/player_animations":278,"../level/types/projectile_room":279,"../level/types/random_room":280,"../level/types/scavenge_room":281,"../level/types/shadow_room":282,"../level/types/tiled_homestead_room":283,"../level/types/tiled_outside":284,"../level/types/tiled_prey":285,"../level/types/tiled_prey_path":286,"../level/types/tiles_room":287,"../level/types/transition_room":288}],230:[function(require,module,exports){
 'use strict';
 
 const { world } = require('./shadows');
@@ -47287,292 +47282,120 @@ module.exports = {
 };
 
 },{"pixi-packer-parser":32,"pixi.js":151}],233:[function(require,module,exports){
-(function (global){
 'use strict';
+const { grid_container } = require('./pixi_containers');
 
-const PIXI     = require('pixi.js');
-const { Grid } = require('../utils/grid');
-const {
-  gui_container,
-  grid_container,
-} = require('./pixi_containers');
-
+const { Grid   } = require('../utils/grid');
+const { Tween  } = require('./tween');
+const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
-const easystar = new easystarjs.js();
+const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(1000);
 easystar.setAcceptableTiles([0]);
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
 
-const {
-  random_number,
-  radian,
-} = require('../utils/math');
+const find_grid = sprite => {
+  const grid  = grid_container.children;
+  const point = sprite.getGlobalPosition();
+
+  const found_tile = grid.find(tile => tile.containsPoint(point));
+
+  if(!found_tile) throw `${sprite.name} was not found`;
+
+  return found_tile;
+};
+
+const path_between_grids = (one, two) => {
+  return new Promise((resolve, reject) => {
+    easystar.findPath(one.x, one.y, two.x, two.y, path => {
+      if(path) resolve(path);
+
+      reject(new Error('no path found'));
+    });
+
+    easystar.calculate();
+  });
+};
 
 class pathfind_sprite {
-  constructor() {
-    this.boolean_time = true;
-    this.sprite_grid = [];
-  }
+  static create_level_grid() {
+    this.grid = new Grid();
+    this.grid.build();
+    this.grid.build_matrix();
 
-  static create_level_grid(tiles_object) {
-    const { binary_grid_map, 'sprite_grid': grid }
-      = Grid.create(tiles_object);
-    this.sprite_grid = grid;
-    easystar.setGrid(binary_grid_map);
+    easystar.setGrid(this.grid.binary);
   }
 
   static highlight_grid_cell_from_path(path) {
-    path.forEach(grid => this.sprite_grid[grid.y][grid.x].alpha = 0.2);
-  }
+    const { sprite } = this.grid;
 
-  static create_path_from_two_grid_points(sprite_one, sprite_two) {
-    return new Promise((resolve, reject) => {
-      easystar.findPath(sprite_one.x, sprite_one.y, sprite_two.x, sprite_two.y,
-        (path) => {
-          if(path === null) {
-            reject(new Error('no path found'));
-          } else {
-            resolve(path);
-          }
-        });
-
-      easystar.calculate();
-    });
-  }
-
-  static create_path(sprite, path_array) {
-    const path = new PIXI.tween.TweenPath();
-    const random = () => random_number(-30, 30);
-
-    path.moveTo(sprite.x, sprite.y);
-
-    for (let i = 2; i < path_array.length; i++) {
-      path.arcTo(
-        path_array[i-1].middle.x + random(),
-        path_array[i-1].middle.y + random(),
-        path_array[i].middle.x   + random(),
-        path_array[i].middle.y   + random(),
-        25
-      );
-    }
-
-    return path;
+    path.forEach(({x,y}) => sprite[y][x].alpha = 0.2);
   }
 
   static move_sprite_on_path(sprite, path_array) {
     if(path_array.length < 2) return;
 
-    const get_tween = PIXI.tweenManager.getTweensForTarget(sprite);
-    get_tween.forEach(tween => PIXI.tweenManager.removeTween(tween));
+    const tween = new Tween(sprite);
+    tween.time  = path_array.length * 300;
 
-    const path = this.create_path(sprite, path_array);
-
-    const tween  = PIXI.tweenManager.createTween(sprite);
-    tween.expire = true;
-    tween.path   = path;
-    tween.time   = path_array.length * 300;
-    //tween.easing = PIXI.tween.Easing.inOutSine();
+    tween.add_random_path(sprite, path_array);
+    tween.draw_path();
     tween.start();
 
-    tween.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
-
-    const graphical_path = new PIXI.Graphics();
-    graphical_path.lineStyle(5, 0xffffff, 0.1);
-    graphical_path.drawPath(path);
-
-    gui_container.addChild(graphical_path);
+    tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
   }
 
-  path_enemy_on_points(enemy_sprite, point_array) {
-    if( this.boolean_time === false ) return;
-    this.boolean_time = false;
+  static async grid_around_sprite(target) {
+    const { cell_position } = find_grid(target);
+    const { x, y } = cell_position;
+    const { sprite } = this.grid;
 
-    if(global.is_development) {
-      this.highlight_grid_cell_from_path(point_array);
-    }
-
-    const path_array = point_array.map(grid => (
-      this.sprite_grid[grid.y][grid.x]
-    ));
-
-    // move from the current position to the start of the path
-    this.move_sprite_to_point(enemy_sprite, path_array[0])
-      .then(() => this.move_sprite_on_path(enemy_sprite, path_array))
-      .then(() => this.wait_sprite(enemy_sprite, 500))
-      .then(() => this.look_around_sprite(enemy_sprite, 1000, 1))
-      .then(() => this.move_sprite_on_path(enemy_sprite, path_array.reverse()))
-      .then(() => this.move_sprite_on_route(enemy_sprite));
-
-  }
-
-
-  pathfind_from_enemy_to_player(enemy_sprite, player_sprite) {
-    const grid = grid_container.children;
-
-    const enemy_point = this.get_sprite_position_on_grid(enemy_sprite, grid);
-    const player_point = this.get_sprite_position_on_grid(player_sprite, grid);
-
-    if(enemy_point && player_point){
-      this.create_path_from_two_grid_points(enemy_point.cell_position, player_point.cell_position)
-        .then(path_data => this.path_enemy_on_points(enemy_sprite, path_data));
-    }
-  }
-
-  static async move_sprite_to_point_on_grid(from_sprite, point) {
-    const grids = grid_container.children;
-
-    const from_point = grids.find(grid =>
-      grid.containsPoint(from_sprite.getGlobalPosition()));
-
-    const to_point = grids.find(grid => grid.containsPoint(point));
-
-    if(!to_point  ) throw 'no point found';
-    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
-    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-
-    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
-
-    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
-
-    this.highlight_grid_cell_from_path(path_data);
-    this.move_sprite_on_path(from_sprite, path_array);
-  }
-
-  static async ad_array_arround(sprite) {
-    const grids = grid_container.children;
-
-    const from_point = grids.find(grid =>
-      grid.containsPoint(sprite.getGlobalPosition()));
     const array_thing = [
       [
-        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x-1],
-        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x],
-        this.sprite_grid[from_point.cell_position.y-1][from_point.cell_position.x+1],
+        sprite[y-1][x-1],
+        sprite[y-1][x  ],
+        sprite[y-1][x+1],
       ],
       [
-        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1],
-        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x],
-        this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1],
+        sprite[y][x-1],
+        sprite[y][x  ],
+        sprite[y][x+1],
       ],
       [
-        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1],
-        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x],
-        this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1],
+        sprite[y+1][x-1],
+        sprite[y+1][x  ],
+        sprite[y+1][x+1],
       ],
     ];
 
     console.log(array_thing);
   }
 
-
-  static async grid_around_sprite(sprite) {
-    // this.ad_array_arround(sprite);
-
-    const grids = grid_container.children;
-
-    const from_point = grids.find(grid =>
-      grid.containsPoint(sprite.getGlobalPosition()));
-
-    const to_point = {
-      ...from_point.cell_position,
-    };
-    to_point.y-=2;
-    // to_point.x+1;
-    // console.log(to_point);
-    // console.log(from_point.cell_position);
-    const path_data= await this.create_path_from_two_grid_points(
-      from_point.cell_position,
-      to_point
-    );
-
-    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
-    this.highlight_grid_cell_from_path(path_data);
-    // this.move_sprite_on_path(sprite, path_array);
-
-
-    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x-1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x].alpha =1;
-    this.sprite_grid[from_point.cell_position.y][from_point.cell_position.x+1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x-1].alpha =1;
-    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x].alpha =1;
-    this.sprite_grid[from_point.cell_position.y+1][from_point.cell_position.x+1].alpha =1;
-  }
-
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
-    const grids = grid_container.children;
+    const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
 
-    const from_point = grids.find(grid =>
-      grid.containsPoint(from_sprite.getGlobalPosition()));
+    console.log(path_array);
 
-    const to_point = grids.find(grid =>
-      grid.containsPoint(to_sprite.getGlobalPosition()));
-
-    if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
-    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
-    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
-
-    const path_array = path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
-
-    // console.log(path_data);
-    this.highlight_grid_cell_from_path(path_data);
     this.move_sprite_on_path(from_sprite, path_array);
   }
 
   static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
-    const grids = grid_container.children;
+    const from_point = find_grid(from_sprite);
+    const to_point   = find_grid(to_sprite);
 
-    const from_point = grids.find(grid =>
-      grid.containsPoint(from_sprite.getGlobalPosition()));
-
-    const to_point = grids.find(grid =>
-      grid.containsPoint(to_sprite.getGlobalPosition()));
-
-    if(!to_point  ) throw `sprite: ${to_sprite.name} was not found`;
-    if(!from_point) throw `sprite: ${from_sprite.name} was not found`;
-    //sprite_grid[to_point.cell_position.y][to_point.cell_position.x].alpha += 0.02;
-
-    const path_data = await this.create_path_from_two_grid_points(from_point.cell_position, to_point.cell_position);
+    const path_data = await path_between_grids(from_point.cell_position, to_point.cell_position);
 
     this.highlight_grid_cell_from_path(path_data);
-
-    return path_data.map(grid => this.sprite_grid[grid.y][grid.x]);
+    return path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
   }
-
 }
 
 module.exports = {
   pathfind_sprite,
 };
 
-
-//testing
-//async function run_pathfinding_test() {
-//  const grid = grid_container.children;
-//  const rat_sprite = viewport.getChildByName('critter_container').getChildByName('rat');
-//
-//  const rat_direction = viewport.getChildByName('enemy_container').getChildByName('enemy');
-//
-//  const enemy_point = get_sprite_position_on_grid(rat_sprite, grid);
-//  const rat_point = get_sprite_position_on_grid(rat_direction, grid);
-//
-//  //sprite_grid[rat_point.cell_position.y][rat_point.cell_position.x].alpha += 0.2;
-//
-//  const path_data = await create_path_from_two_grid_points(enemy_point.cell_position, rat_point.cell_position);
-//
-//  highlight_grid_cell_from_path(path_data);
-//
-//  const path_array = path_data.map(grid => (
-//    sprite_grid[grid.y][grid.x]
-//  ));
-//
-//  move_sprite_on_path(rat_sprite, path_array);
-//}
-
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utils/grid":305,"../utils/math":307,"./pixi_containers":234,"easystarjs":3,"pixi.js":151}],234:[function(require,module,exports){
+},{"../utils/grid":302,"../utils/math":304,"./pixi_containers":234,"./tween":239,"easystarjs":3}],234:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47658,6 +47481,10 @@ const raycasting_container = new PIXI.Container();
 raycasting_container.name = 'raycasting_container';
 raycasting_container.zIndex = close;
 
+// const grid_particles = new PIXI.ParticleContainer();
+// grid_particles.name = 'grid_particles';
+// grid_particles.zIndex = close;
+
 world.addChild(
   visual_effects_container,
   roof_container,
@@ -47675,6 +47502,7 @@ world.addChild(
   dialog_container,
   raycasting_container,
   pad_container
+  // grid_particles
 );
 
 world.updateLayersOrder();
@@ -47695,6 +47523,7 @@ module.exports = {
   grid_container,
   item_container,
   pad_container,
+  // grid_particles,
 };
 
 
@@ -47781,7 +47610,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":307,"./pixi_containers":234,"./tween":239,"pixi.js":151}],236:[function(require,module,exports){
+},{"../utils/math":304,"./pixi_containers":234,"./tween":239,"pixi.js":151}],236:[function(require,module,exports){
 'use strict';
 
 function get_intersection(ray, segment){
@@ -47888,6 +47717,7 @@ module.exports = {
 const PIXI = require('pixi.js');
 
 const { gui_container } = require('./pixi_containers');
+const { random_number } = require('../utils/math');
 
 class Tween {
   constructor(sprite, light) {
@@ -47936,15 +47766,17 @@ class Tween {
     }
   }
 
-  add_tile_path(tween_path) {
+  add_random_path(sprite, tween_path) {
     this.path = new PIXI.tween.TweenPath();
+    const random = () => random_number(-30, 30);
 
-    for (let i = 1; i < tween_path.length; i++) {
+    this.path.moveTo(sprite.x, sprite.y);
+    for (let i = 2; i < tween_path.length; i++) {
       this.path.arcTo(
-        tween_path[i-1].middle.x,
-        tween_path[i-1].middle.y,
-        tween_path[i].middle.x,
-        tween_path[i].middle.y,
+        tween_path[i-1].x + random(),
+        tween_path[i-1].y + random(),
+        tween_path[i].x   + random(),
+        tween_path[i].y   + random(),
         this.path_arc);
     }
   }
@@ -47993,7 +47825,7 @@ module.exports = {
   Tween,
 };
 
-},{"./pixi_containers":234,"pixi.js":151}],240:[function(require,module,exports){
+},{"../utils/math":304,"./pixi_containers":234,"pixi.js":151}],240:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -48011,7 +47843,7 @@ loader.load((res) => {
 
 
 
-},{"./engine/boot_loader.js":229,"./engine/packer":232,"./utils/globals":304}],241:[function(require,module,exports){
+},{"./engine/boot_loader.js":229,"./engine/packer":232,"./utils/globals":301}],241:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -48474,7 +48306,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":228,"../utils/math":307,"./data/item_data":241,"pixi.js":151}],243:[function(require,module,exports){
+},{"../engine/app":228,"../utils/math":304,"./data/item_data":241,"pixi.js":151}],243:[function(require,module,exports){
 'use strict';
 
 const { distance_between } = require('../../utils/math');
@@ -48528,7 +48360,7 @@ module.exports = {
   Item_Pool,
 };
 
-},{"../../utils/math":307}],244:[function(require,module,exports){
+},{"../../utils/math":304}],244:[function(require,module,exports){
 'use strict';
 
 // This is purely an interface for TILED data
@@ -48786,7 +48618,7 @@ module.exports = {
   Randomise,
 };
 
-},{"../../engine/pixi_containers":234,"../../utils/color_picker":302,"../../utils/math":307,"../elements/elements_factory":262,"pixi.js":151}],246:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../utils/color_picker":299,"../../utils/math":304,"../elements/elements_factory":259,"pixi.js":151}],246:[function(require,module,exports){
 module.exports={ "height":100,
  "infinite":true,
  "layers":[
@@ -50843,2426 +50675,6 @@ module.exports={ "height":50,
  "width":50
 }
 },{}],251:[function(require,module,exports){
-module.exports={ "columns":20,
- "image":"..\/..\/..\/public\/level\/grid_floor.png",
- "imageheight":1536,
- "imagewidth":2048,
- "margin":0,
- "name":"tiled_room_tiled",
- "spacing":0,
- "tilecount":300,
- "tileheight":100,
- "tileproperties":
-    {
-     "0":
-        {
-         "wall":null
-        },
-     "1":
-        {
-         "wall":null
-        },
-     "10":
-        {
-         "wall":null
-        },
-     "100":
-        {
-         "wall":null
-        },
-     "101":
-        {
-         "wall":true
-        },
-     "102":
-        {
-         "wall":null
-        },
-     "103":
-        {
-         "wall":null
-        },
-     "104":
-        {
-         "wall":null
-        },
-     "105":
-        {
-         "wall":null
-        },
-     "106":
-        {
-         "wall":null
-        },
-     "107":
-        {
-         "wall":null
-        },
-     "108":
-        {
-         "wall":true
-        },
-     "109":
-        {
-         "wall":null
-        },
-     "11":
-        {
-         "wall":null
-        },
-     "110":
-        {
-         "wall":null
-        },
-     "111":
-        {
-         "wall":null
-        },
-     "112":
-        {
-         "wall":null
-        },
-     "113":
-        {
-         "wall":null
-        },
-     "114":
-        {
-         "wall":null
-        },
-     "115":
-        {
-         "wall":null
-        },
-     "116":
-        {
-         "wall":null
-        },
-     "117":
-        {
-         "wall":null
-        },
-     "118":
-        {
-         "wall":true
-        },
-     "119":
-        {
-         "wall":null
-        },
-     "12":
-        {
-         "wall":null
-        },
-     "120":
-        {
-         "wall":null
-        },
-     "121":
-        {
-         "wall":true
-        },
-     "122":
-        {
-         "wall":null
-        },
-     "123":
-        {
-         "wall":null
-        },
-     "124":
-        {
-         "wall":null
-        },
-     "125":
-        {
-         "wall":null
-        },
-     "126":
-        {
-         "wall":null
-        },
-     "127":
-        {
-         "wall":null
-        },
-     "128":
-        {
-         "wall":true
-        },
-     "129":
-        {
-         "wall":null
-        },
-     "13":
-        {
-         "wall":null
-        },
-     "130":
-        {
-         "wall":null
-        },
-     "131":
-        {
-         "wall":null
-        },
-     "132":
-        {
-         "wall":null
-        },
-     "133":
-        {
-         "wall":null
-        },
-     "134":
-        {
-         "wall":null
-        },
-     "135":
-        {
-         "wall":null
-        },
-     "136":
-        {
-         "wall":null
-        },
-     "137":
-        {
-         "wall":null
-        },
-     "138":
-        {
-         "wall":true
-        },
-     "139":
-        {
-         "wall":null
-        },
-     "14":
-        {
-         "wall":null
-        },
-     "140":
-        {
-         "wall":null
-        },
-     "141":
-        {
-         "wall":true
-        },
-     "142":
-        {
-         "wall":null
-        },
-     "143":
-        {
-         "wall":null
-        },
-     "144":
-        {
-         "wall":null
-        },
-     "145":
-        {
-         "wall":null
-        },
-     "146":
-        {
-         "wall":null
-        },
-     "147":
-        {
-         "wall":null
-        },
-     "148":
-        {
-         "wall":true
-        },
-     "149":
-        {
-         "wall":null
-        },
-     "15":
-        {
-         "wall":null
-        },
-     "150":
-        {
-         "wall":null
-        },
-     "151":
-        {
-         "wall":null
-        },
-     "152":
-        {
-         "wall":null
-        },
-     "153":
-        {
-         "wall":null
-        },
-     "154":
-        {
-         "wall":null
-        },
-     "155":
-        {
-         "wall":null
-        },
-     "156":
-        {
-         "wall":null
-        },
-     "157":
-        {
-         "wall":null
-        },
-     "158":
-        {
-         "wall":true
-        },
-     "159":
-        {
-         "wall":null
-        },
-     "16":
-        {
-         "wall":null
-        },
-     "160":
-        {
-         "wall":null
-        },
-     "161":
-        {
-         "wall":true
-        },
-     "162":
-        {
-         "wall":null
-        },
-     "163":
-        {
-         "wall":null
-        },
-     "164":
-        {
-         "wall":null
-        },
-     "165":
-        {
-         "wall":null
-        },
-     "166":
-        {
-         "wall":null
-        },
-     "167":
-        {
-         "wall":null
-        },
-     "168":
-        {
-         "wall":true
-        },
-     "169":
-        {
-         "wall":null
-        },
-     "17":
-        {
-         "wall":null
-        },
-     "170":
-        {
-         "wall":null
-        },
-     "171":
-        {
-         "wall":null
-        },
-     "172":
-        {
-         "wall":null
-        },
-     "173":
-        {
-         "wall":null
-        },
-     "174":
-        {
-         "wall":null
-        },
-     "175":
-        {
-         "wall":null
-        },
-     "176":
-        {
-         "wall":null
-        },
-     "177":
-        {
-         "wall":null
-        },
-     "178":
-        {
-         "wall":true
-        },
-     "179":
-        {
-         "wall":null
-        },
-     "18":
-        {
-         "wall":null
-        },
-     "180":
-        {
-         "wall":null
-        },
-     "181":
-        {
-         "wall":true
-        },
-     "182":
-        {
-         "wall":null
-        },
-     "183":
-        {
-         "wall":null
-        },
-     "184":
-        {
-         "wall":null
-        },
-     "185":
-        {
-         "wall":null
-        },
-     "186":
-        {
-         "wall":null
-        },
-     "187":
-        {
-         "wall":null
-        },
-     "188":
-        {
-         "wall":true
-        },
-     "189":
-        {
-         "wall":null
-        },
-     "19":
-        {
-         "wall":null
-        },
-     "190":
-        {
-         "wall":null
-        },
-     "191":
-        {
-         "wall":null
-        },
-     "192":
-        {
-         "wall":null
-        },
-     "193":
-        {
-         "wall":null
-        },
-     "194":
-        {
-         "wall":null
-        },
-     "195":
-        {
-         "wall":null
-        },
-     "196":
-        {
-         "wall":null
-        },
-     "197":
-        {
-         "wall":null
-        },
-     "198":
-        {
-         "wall":true
-        },
-     "199":
-        {
-         "wall":null
-        },
-     "2":
-        {
-         "wall":null
-        },
-     "20":
-        {
-         "wall":null
-        },
-     "200":
-        {
-         "wall":null
-        },
-     "201":
-        {
-         "wall":true
-        },
-     "202":
-        {
-         "wall":null
-        },
-     "203":
-        {
-         "wall":null
-        },
-     "204":
-        {
-         "wall":null
-        },
-     "205":
-        {
-         "wall":null
-        },
-     "206":
-        {
-         "wall":null
-        },
-     "207":
-        {
-         "wall":null
-        },
-     "208":
-        {
-         "wall":true
-        },
-     "209":
-        {
-         "wall":null
-        },
-     "21":
-        {
-         "wall":true
-        },
-     "210":
-        {
-         "wall":null
-        },
-     "211":
-        {
-         "wall":null
-        },
-     "212":
-        {
-         "wall":null
-        },
-     "213":
-        {
-         "wall":null
-        },
-     "214":
-        {
-         "wall":null
-        },
-     "215":
-        {
-         "wall":null
-        },
-     "216":
-        {
-         "wall":null
-        },
-     "217":
-        {
-         "wall":null
-        },
-     "218":
-        {
-         "wall":true
-        },
-     "219":
-        {
-         "wall":null
-        },
-     "22":
-        {
-         "wall":true
-        },
-     "220":
-        {
-         "wall":null
-        },
-     "221":
-        {
-         "wall":true
-        },
-     "222":
-        {
-         "wall":null
-        },
-     "223":
-        {
-         "wall":null
-        },
-     "224":
-        {
-         "wall":null
-        },
-     "225":
-        {
-         "wall":null
-        },
-     "226":
-        {
-         "wall":null
-        },
-     "227":
-        {
-         "wall":null
-        },
-     "228":
-        {
-         "wall":true
-        },
-     "229":
-        {
-         "wall":null
-        },
-     "23":
-        {
-         "wall":true
-        },
-     "230":
-        {
-         "wall":null
-        },
-     "231":
-        {
-         "wall":null
-        },
-     "232":
-        {
-         "wall":null
-        },
-     "233":
-        {
-         "wall":null
-        },
-     "234":
-        {
-         "wall":null
-        },
-     "235":
-        {
-         "wall":null
-        },
-     "236":
-        {
-         "wall":null
-        },
-     "237":
-        {
-         "wall":null
-        },
-     "238":
-        {
-         "wall":true
-        },
-     "239":
-        {
-         "wall":null
-        },
-     "24":
-        {
-         "wall":true
-        },
-     "240":
-        {
-         "wall":null
-        },
-     "241":
-        {
-         "wall":true
-        },
-     "242":
-        {
-         "wall":null
-        },
-     "243":
-        {
-         "wall":null
-        },
-     "244":
-        {
-         "wall":null
-        },
-     "245":
-        {
-         "wall":null
-        },
-     "246":
-        {
-         "wall":null
-        },
-     "247":
-        {
-         "wall":null
-        },
-     "248":
-        {
-         "wall":true
-        },
-     "249":
-        {
-         "wall":null
-        },
-     "25":
-        {
-         "wall":true
-        },
-     "250":
-        {
-         "wall":null
-        },
-     "251":
-        {
-         "wall":null
-        },
-     "252":
-        {
-         "wall":null
-        },
-     "253":
-        {
-         "wall":null
-        },
-     "254":
-        {
-         "wall":null
-        },
-     "255":
-        {
-         "wall":null
-        },
-     "256":
-        {
-         "wall":null
-        },
-     "257":
-        {
-         "wall":null
-        },
-     "258":
-        {
-         "wall":true
-        },
-     "259":
-        {
-         "wall":null
-        },
-     "26":
-        {
-         "wall":true
-        },
-     "260":
-        {
-         "wall":null
-        },
-     "261":
-        {
-         "wall":true
-        },
-     "262":
-        {
-         "wall":null
-        },
-     "263":
-        {
-         "wall":null
-        },
-     "264":
-        {
-         "wall":null
-        },
-     "265":
-        {
-         "wall":null
-        },
-     "266":
-        {
-         "wall":true
-        },
-     "267":
-        {
-         "wall":true
-        },
-     "268":
-        {
-         "wall":true
-        },
-     "269":
-        {
-         "wall":true
-        },
-     "27":
-        {
-         "wall":true
-        },
-     "270":
-        {
-         "wall":true
-        },
-     "271":
-        {
-         "wall":true
-        },
-     "272":
-        {
-         "wall":true
-        },
-     "273":
-        {
-         "wall":true
-        },
-     "274":
-        {
-         "wall":true
-        },
-     "275":
-        {
-         "wall":true
-        },
-     "276":
-        {
-         "wall":true
-        },
-     "277":
-        {
-         "wall":true
-        },
-     "278":
-        {
-         "wall":true
-        },
-     "279":
-        {
-         "wall":null
-        },
-     "28":
-        {
-         "wall":true
-        },
-     "280":
-        {
-         "wall":null
-        },
-     "281":
-        {
-         "wall":null
-        },
-     "282":
-        {
-         "wall":null
-        },
-     "283":
-        {
-         "wall":null
-        },
-     "284":
-        {
-         "wall":null
-        },
-     "285":
-        {
-         "wall":null
-        },
-     "286":
-        {
-         "wall":null
-        },
-     "287":
-        {
-         "wall":null
-        },
-     "288":
-        {
-         "wall":null
-        },
-     "289":
-        {
-         "wall":null
-        },
-     "29":
-        {
-         "wall":true
-        },
-     "290":
-        {
-         "wall":null
-        },
-     "291":
-        {
-         "wall":null
-        },
-     "292":
-        {
-         "wall":null
-        },
-     "293":
-        {
-         "wall":null
-        },
-     "294":
-        {
-         "wall":null
-        },
-     "295":
-        {
-         "wall":null
-        },
-     "296":
-        {
-         "wall":null
-        },
-     "297":
-        {
-         "wall":null
-        },
-     "298":
-        {
-         "wall":null
-        },
-     "299":
-        {
-         "wall":null
-        },
-     "3":
-        {
-         "wall":null
-        },
-     "30":
-        {
-         "wall":true
-        },
-     "31":
-        {
-         "wall":true
-        },
-     "32":
-        {
-         "wall":true
-        },
-     "33":
-        {
-         "wall":true
-        },
-     "34":
-        {
-         "wall":true
-        },
-     "35":
-        {
-         "wall":true
-        },
-     "36":
-        {
-         "wall":true
-        },
-     "37":
-        {
-         "wall":true
-        },
-     "38":
-        {
-         "wall":true
-        },
-     "39":
-        {
-         "wall":null
-        },
-     "4":
-        {
-         "wall":null
-        },
-     "40":
-        {
-         "wall":null
-        },
-     "41":
-        {
-         "wall":true
-        },
-     "42":
-        {
-         "wall":null
-        },
-     "43":
-        {
-         "wall":null
-        },
-     "44":
-        {
-         "wall":null
-        },
-     "45":
-        {
-         "wall":null
-        },
-     "46":
-        {
-         "wall":null
-        },
-     "47":
-        {
-         "wall":null
-        },
-     "48":
-        {
-         "wall":null
-        },
-     "49":
-        {
-         "wall":null
-        },
-     "5":
-        {
-         "wall":null
-        },
-     "50":
-        {
-         "wall":null
-        },
-     "51":
-        {
-         "wall":null
-        },
-     "52":
-        {
-         "wall":null
-        },
-     "53":
-        {
-         "wall":null
-        },
-     "54":
-        {
-         "wall":null
-        },
-     "55":
-        {
-         "wall":null
-        },
-     "56":
-        {
-         "wall":null
-        },
-     "57":
-        {
-         "wall":null
-        },
-     "58":
-        {
-         "wall":true
-        },
-     "59":
-        {
-         "wall":null
-        },
-     "6":
-        {
-         "wall":null
-        },
-     "60":
-        {
-         "wall":null
-        },
-     "61":
-        {
-         "wall":true
-        },
-     "62":
-        {
-         "wall":null
-        },
-     "63":
-        {
-         "wall":null
-        },
-     "64":
-        {
-         "wall":null
-        },
-     "65":
-        {
-         "wall":null
-        },
-     "66":
-        {
-         "wall":null
-        },
-     "67":
-        {
-         "wall":null
-        },
-     "68":
-        {
-         "wall":null
-        },
-     "69":
-        {
-         "wall":null
-        },
-     "7":
-        {
-         "wall":null
-        },
-     "70":
-        {
-         "wall":null
-        },
-     "71":
-        {
-         "wall":null
-        },
-     "72":
-        {
-         "wall":null
-        },
-     "73":
-        {
-         "wall":null
-        },
-     "74":
-        {
-         "wall":null
-        },
-     "75":
-        {
-         "wall":null
-        },
-     "76":
-        {
-         "wall":null
-        },
-     "77":
-        {
-         "wall":null
-        },
-     "78":
-        {
-         "wall":true
-        },
-     "79":
-        {
-         "wall":null
-        },
-     "8":
-        {
-         "wall":null
-        },
-     "80":
-        {
-         "wall":null
-        },
-     "81":
-        {
-         "wall":true
-        },
-     "82":
-        {
-         "wall":null
-        },
-     "83":
-        {
-         "wall":null
-        },
-     "84":
-        {
-         "wall":true
-        },
-     "85":
-        {
-         "wall":null
-        },
-     "86":
-        {
-         "wall":null
-        },
-     "87":
-        {
-         "wall":null
-        },
-     "88":
-        {
-         "wall":null
-        },
-     "89":
-        {
-         "wall":null
-        },
-     "9":
-        {
-         "wall":null
-        },
-     "90":
-        {
-         "wall":null
-        },
-     "91":
-        {
-         "wall":null
-        },
-     "92":
-        {
-         "wall":null
-        },
-     "93":
-        {
-         "wall":null
-        },
-     "94":
-        {
-         "wall":null
-        },
-     "95":
-        {
-         "wall":null
-        },
-     "96":
-        {
-         "wall":null
-        },
-     "97":
-        {
-         "wall":null
-        },
-     "98":
-        {
-         "wall":true
-        },
-     "99":
-        {
-         "wall":null
-        }
-    },
- "tilepropertytypes":
-    {
-     "0":
-        {
-         "wall":""
-        },
-     "1":
-        {
-         "wall":""
-        },
-     "10":
-        {
-         "wall":""
-        },
-     "100":
-        {
-         "wall":""
-        },
-     "101":
-        {
-         "wall":"bool"
-        },
-     "102":
-        {
-         "wall":""
-        },
-     "103":
-        {
-         "wall":""
-        },
-     "104":
-        {
-         "wall":""
-        },
-     "105":
-        {
-         "wall":""
-        },
-     "106":
-        {
-         "wall":""
-        },
-     "107":
-        {
-         "wall":""
-        },
-     "108":
-        {
-         "wall":"bool"
-        },
-     "109":
-        {
-         "wall":""
-        },
-     "11":
-        {
-         "wall":""
-        },
-     "110":
-        {
-         "wall":""
-        },
-     "111":
-        {
-         "wall":""
-        },
-     "112":
-        {
-         "wall":""
-        },
-     "113":
-        {
-         "wall":""
-        },
-     "114":
-        {
-         "wall":""
-        },
-     "115":
-        {
-         "wall":""
-        },
-     "116":
-        {
-         "wall":""
-        },
-     "117":
-        {
-         "wall":""
-        },
-     "118":
-        {
-         "wall":"bool"
-        },
-     "119":
-        {
-         "wall":""
-        },
-     "12":
-        {
-         "wall":""
-        },
-     "120":
-        {
-         "wall":""
-        },
-     "121":
-        {
-         "wall":"bool"
-        },
-     "122":
-        {
-         "wall":""
-        },
-     "123":
-        {
-         "wall":""
-        },
-     "124":
-        {
-         "wall":""
-        },
-     "125":
-        {
-         "wall":""
-        },
-     "126":
-        {
-         "wall":""
-        },
-     "127":
-        {
-         "wall":""
-        },
-     "128":
-        {
-         "wall":"bool"
-        },
-     "129":
-        {
-         "wall":""
-        },
-     "13":
-        {
-         "wall":""
-        },
-     "130":
-        {
-         "wall":""
-        },
-     "131":
-        {
-         "wall":""
-        },
-     "132":
-        {
-         "wall":""
-        },
-     "133":
-        {
-         "wall":""
-        },
-     "134":
-        {
-         "wall":""
-        },
-     "135":
-        {
-         "wall":""
-        },
-     "136":
-        {
-         "wall":""
-        },
-     "137":
-        {
-         "wall":""
-        },
-     "138":
-        {
-         "wall":"bool"
-        },
-     "139":
-        {
-         "wall":""
-        },
-     "14":
-        {
-         "wall":""
-        },
-     "140":
-        {
-         "wall":""
-        },
-     "141":
-        {
-         "wall":"bool"
-        },
-     "142":
-        {
-         "wall":""
-        },
-     "143":
-        {
-         "wall":""
-        },
-     "144":
-        {
-         "wall":""
-        },
-     "145":
-        {
-         "wall":""
-        },
-     "146":
-        {
-         "wall":""
-        },
-     "147":
-        {
-         "wall":""
-        },
-     "148":
-        {
-         "wall":"bool"
-        },
-     "149":
-        {
-         "wall":""
-        },
-     "15":
-        {
-         "wall":""
-        },
-     "150":
-        {
-         "wall":""
-        },
-     "151":
-        {
-         "wall":""
-        },
-     "152":
-        {
-         "wall":""
-        },
-     "153":
-        {
-         "wall":""
-        },
-     "154":
-        {
-         "wall":""
-        },
-     "155":
-        {
-         "wall":""
-        },
-     "156":
-        {
-         "wall":""
-        },
-     "157":
-        {
-         "wall":""
-        },
-     "158":
-        {
-         "wall":"bool"
-        },
-     "159":
-        {
-         "wall":""
-        },
-     "16":
-        {
-         "wall":""
-        },
-     "160":
-        {
-         "wall":""
-        },
-     "161":
-        {
-         "wall":"bool"
-        },
-     "162":
-        {
-         "wall":""
-        },
-     "163":
-        {
-         "wall":""
-        },
-     "164":
-        {
-         "wall":""
-        },
-     "165":
-        {
-         "wall":""
-        },
-     "166":
-        {
-         "wall":""
-        },
-     "167":
-        {
-         "wall":""
-        },
-     "168":
-        {
-         "wall":"bool"
-        },
-     "169":
-        {
-         "wall":""
-        },
-     "17":
-        {
-         "wall":""
-        },
-     "170":
-        {
-         "wall":""
-        },
-     "171":
-        {
-         "wall":""
-        },
-     "172":
-        {
-         "wall":""
-        },
-     "173":
-        {
-         "wall":""
-        },
-     "174":
-        {
-         "wall":""
-        },
-     "175":
-        {
-         "wall":""
-        },
-     "176":
-        {
-         "wall":""
-        },
-     "177":
-        {
-         "wall":""
-        },
-     "178":
-        {
-         "wall":"bool"
-        },
-     "179":
-        {
-         "wall":""
-        },
-     "18":
-        {
-         "wall":""
-        },
-     "180":
-        {
-         "wall":""
-        },
-     "181":
-        {
-         "wall":"bool"
-        },
-     "182":
-        {
-         "wall":""
-        },
-     "183":
-        {
-         "wall":""
-        },
-     "184":
-        {
-         "wall":""
-        },
-     "185":
-        {
-         "wall":""
-        },
-     "186":
-        {
-         "wall":""
-        },
-     "187":
-        {
-         "wall":""
-        },
-     "188":
-        {
-         "wall":"bool"
-        },
-     "189":
-        {
-         "wall":""
-        },
-     "19":
-        {
-         "wall":""
-        },
-     "190":
-        {
-         "wall":""
-        },
-     "191":
-        {
-         "wall":""
-        },
-     "192":
-        {
-         "wall":""
-        },
-     "193":
-        {
-         "wall":""
-        },
-     "194":
-        {
-         "wall":""
-        },
-     "195":
-        {
-         "wall":""
-        },
-     "196":
-        {
-         "wall":""
-        },
-     "197":
-        {
-         "wall":""
-        },
-     "198":
-        {
-         "wall":"bool"
-        },
-     "199":
-        {
-         "wall":""
-        },
-     "2":
-        {
-         "wall":""
-        },
-     "20":
-        {
-         "wall":""
-        },
-     "200":
-        {
-         "wall":""
-        },
-     "201":
-        {
-         "wall":"bool"
-        },
-     "202":
-        {
-         "wall":""
-        },
-     "203":
-        {
-         "wall":""
-        },
-     "204":
-        {
-         "wall":""
-        },
-     "205":
-        {
-         "wall":""
-        },
-     "206":
-        {
-         "wall":""
-        },
-     "207":
-        {
-         "wall":""
-        },
-     "208":
-        {
-         "wall":"bool"
-        },
-     "209":
-        {
-         "wall":""
-        },
-     "21":
-        {
-         "wall":"bool"
-        },
-     "210":
-        {
-         "wall":""
-        },
-     "211":
-        {
-         "wall":""
-        },
-     "212":
-        {
-         "wall":""
-        },
-     "213":
-        {
-         "wall":""
-        },
-     "214":
-        {
-         "wall":""
-        },
-     "215":
-        {
-         "wall":""
-        },
-     "216":
-        {
-         "wall":""
-        },
-     "217":
-        {
-         "wall":""
-        },
-     "218":
-        {
-         "wall":"bool"
-        },
-     "219":
-        {
-         "wall":""
-        },
-     "22":
-        {
-         "wall":"bool"
-        },
-     "220":
-        {
-         "wall":""
-        },
-     "221":
-        {
-         "wall":"bool"
-        },
-     "222":
-        {
-         "wall":""
-        },
-     "223":
-        {
-         "wall":""
-        },
-     "224":
-        {
-         "wall":""
-        },
-     "225":
-        {
-         "wall":""
-        },
-     "226":
-        {
-         "wall":""
-        },
-     "227":
-        {
-         "wall":""
-        },
-     "228":
-        {
-         "wall":"bool"
-        },
-     "229":
-        {
-         "wall":""
-        },
-     "23":
-        {
-         "wall":"bool"
-        },
-     "230":
-        {
-         "wall":""
-        },
-     "231":
-        {
-         "wall":""
-        },
-     "232":
-        {
-         "wall":""
-        },
-     "233":
-        {
-         "wall":""
-        },
-     "234":
-        {
-         "wall":""
-        },
-     "235":
-        {
-         "wall":""
-        },
-     "236":
-        {
-         "wall":""
-        },
-     "237":
-        {
-         "wall":""
-        },
-     "238":
-        {
-         "wall":"bool"
-        },
-     "239":
-        {
-         "wall":""
-        },
-     "24":
-        {
-         "wall":"bool"
-        },
-     "240":
-        {
-         "wall":""
-        },
-     "241":
-        {
-         "wall":"bool"
-        },
-     "242":
-        {
-         "wall":""
-        },
-     "243":
-        {
-         "wall":""
-        },
-     "244":
-        {
-         "wall":""
-        },
-     "245":
-        {
-         "wall":""
-        },
-     "246":
-        {
-         "wall":""
-        },
-     "247":
-        {
-         "wall":""
-        },
-     "248":
-        {
-         "wall":"bool"
-        },
-     "249":
-        {
-         "wall":""
-        },
-     "25":
-        {
-         "wall":"bool"
-        },
-     "250":
-        {
-         "wall":""
-        },
-     "251":
-        {
-         "wall":""
-        },
-     "252":
-        {
-         "wall":""
-        },
-     "253":
-        {
-         "wall":""
-        },
-     "254":
-        {
-         "wall":""
-        },
-     "255":
-        {
-         "wall":""
-        },
-     "256":
-        {
-         "wall":""
-        },
-     "257":
-        {
-         "wall":""
-        },
-     "258":
-        {
-         "wall":"bool"
-        },
-     "259":
-        {
-         "wall":""
-        },
-     "26":
-        {
-         "wall":"bool"
-        },
-     "260":
-        {
-         "wall":""
-        },
-     "261":
-        {
-         "wall":"bool"
-        },
-     "262":
-        {
-         "wall":""
-        },
-     "263":
-        {
-         "wall":""
-        },
-     "264":
-        {
-         "wall":""
-        },
-     "265":
-        {
-         "wall":""
-        },
-     "266":
-        {
-         "wall":"bool"
-        },
-     "267":
-        {
-         "wall":"bool"
-        },
-     "268":
-        {
-         "wall":"bool"
-        },
-     "269":
-        {
-         "wall":"bool"
-        },
-     "27":
-        {
-         "wall":"bool"
-        },
-     "270":
-        {
-         "wall":"bool"
-        },
-     "271":
-        {
-         "wall":"bool"
-        },
-     "272":
-        {
-         "wall":"bool"
-        },
-     "273":
-        {
-         "wall":"bool"
-        },
-     "274":
-        {
-         "wall":"bool"
-        },
-     "275":
-        {
-         "wall":"bool"
-        },
-     "276":
-        {
-         "wall":"bool"
-        },
-     "277":
-        {
-         "wall":"bool"
-        },
-     "278":
-        {
-         "wall":"bool"
-        },
-     "279":
-        {
-         "wall":""
-        },
-     "28":
-        {
-         "wall":"bool"
-        },
-     "280":
-        {
-         "wall":""
-        },
-     "281":
-        {
-         "wall":""
-        },
-     "282":
-        {
-         "wall":""
-        },
-     "283":
-        {
-         "wall":""
-        },
-     "284":
-        {
-         "wall":""
-        },
-     "285":
-        {
-         "wall":""
-        },
-     "286":
-        {
-         "wall":""
-        },
-     "287":
-        {
-         "wall":""
-        },
-     "288":
-        {
-         "wall":""
-        },
-     "289":
-        {
-         "wall":""
-        },
-     "29":
-        {
-         "wall":"bool"
-        },
-     "290":
-        {
-         "wall":""
-        },
-     "291":
-        {
-         "wall":""
-        },
-     "292":
-        {
-         "wall":""
-        },
-     "293":
-        {
-         "wall":""
-        },
-     "294":
-        {
-         "wall":""
-        },
-     "295":
-        {
-         "wall":""
-        },
-     "296":
-        {
-         "wall":""
-        },
-     "297":
-        {
-         "wall":""
-        },
-     "298":
-        {
-         "wall":""
-        },
-     "299":
-        {
-         "wall":""
-        },
-     "3":
-        {
-         "wall":""
-        },
-     "30":
-        {
-         "wall":"bool"
-        },
-     "31":
-        {
-         "wall":"bool"
-        },
-     "32":
-        {
-         "wall":"bool"
-        },
-     "33":
-        {
-         "wall":"bool"
-        },
-     "34":
-        {
-         "wall":"bool"
-        },
-     "35":
-        {
-         "wall":"bool"
-        },
-     "36":
-        {
-         "wall":"bool"
-        },
-     "37":
-        {
-         "wall":"bool"
-        },
-     "38":
-        {
-         "wall":"bool"
-        },
-     "39":
-        {
-         "wall":""
-        },
-     "4":
-        {
-         "wall":""
-        },
-     "40":
-        {
-         "wall":""
-        },
-     "41":
-        {
-         "wall":"bool"
-        },
-     "42":
-        {
-         "wall":""
-        },
-     "43":
-        {
-         "wall":""
-        },
-     "44":
-        {
-         "wall":""
-        },
-     "45":
-        {
-         "wall":""
-        },
-     "46":
-        {
-         "wall":""
-        },
-     "47":
-        {
-         "wall":""
-        },
-     "48":
-        {
-         "wall":""
-        },
-     "49":
-        {
-         "wall":""
-        },
-     "5":
-        {
-         "wall":""
-        },
-     "50":
-        {
-         "wall":""
-        },
-     "51":
-        {
-         "wall":""
-        },
-     "52":
-        {
-         "wall":""
-        },
-     "53":
-        {
-         "wall":""
-        },
-     "54":
-        {
-         "wall":""
-        },
-     "55":
-        {
-         "wall":""
-        },
-     "56":
-        {
-         "wall":""
-        },
-     "57":
-        {
-         "wall":""
-        },
-     "58":
-        {
-         "wall":"bool"
-        },
-     "59":
-        {
-         "wall":""
-        },
-     "6":
-        {
-         "wall":""
-        },
-     "60":
-        {
-         "wall":""
-        },
-     "61":
-        {
-         "wall":"bool"
-        },
-     "62":
-        {
-         "wall":""
-        },
-     "63":
-        {
-         "wall":""
-        },
-     "64":
-        {
-         "wall":""
-        },
-     "65":
-        {
-         "wall":""
-        },
-     "66":
-        {
-         "wall":""
-        },
-     "67":
-        {
-         "wall":""
-        },
-     "68":
-        {
-         "wall":""
-        },
-     "69":
-        {
-         "wall":""
-        },
-     "7":
-        {
-         "wall":""
-        },
-     "70":
-        {
-         "wall":""
-        },
-     "71":
-        {
-         "wall":""
-        },
-     "72":
-        {
-         "wall":""
-        },
-     "73":
-        {
-         "wall":""
-        },
-     "74":
-        {
-         "wall":""
-        },
-     "75":
-        {
-         "wall":""
-        },
-     "76":
-        {
-         "wall":""
-        },
-     "77":
-        {
-         "wall":""
-        },
-     "78":
-        {
-         "wall":"bool"
-        },
-     "79":
-        {
-         "wall":""
-        },
-     "8":
-        {
-         "wall":""
-        },
-     "80":
-        {
-         "wall":""
-        },
-     "81":
-        {
-         "wall":"bool"
-        },
-     "82":
-        {
-         "wall":""
-        },
-     "83":
-        {
-         "wall":""
-        },
-     "84":
-        {
-         "wall":"bool"
-        },
-     "85":
-        {
-         "wall":""
-        },
-     "86":
-        {
-         "wall":""
-        },
-     "87":
-        {
-         "wall":""
-        },
-     "88":
-        {
-         "wall":""
-        },
-     "89":
-        {
-         "wall":""
-        },
-     "9":
-        {
-         "wall":""
-        },
-     "90":
-        {
-         "wall":""
-        },
-     "91":
-        {
-         "wall":""
-        },
-     "92":
-        {
-         "wall":""
-        },
-     "93":
-        {
-         "wall":""
-        },
-     "94":
-        {
-         "wall":""
-        },
-     "95":
-        {
-         "wall":""
-        },
-     "96":
-        {
-         "wall":""
-        },
-     "97":
-        {
-         "wall":""
-        },
-     "98":
-        {
-         "wall":"bool"
-        },
-     "99":
-        {
-         "wall":""
-        }
-    },
- "tilewidth":100,
- "transparentcolor":"#ff00ff",
- "type":"tileset"
-}
-},{}],252:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54234,400 +51646,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],253:[function(require,module,exports){
-module.exports={ "columns":20,
- "image":"..\/..\/..\/public\/level\/grid_floor.png",
- "imageheight":10536,
- "imagewidth":4048,
- "margin":0,
- "name":"tiled_room_tiled",
- "spacing":0,
- "tilecount":1000,
- "tileheight":100,
- "tileproperties":
-    {
-     "153":
-        {
-         "wall":true
-        },
-     "154":
-        {
-         "wall":true
-        },
-     "155":
-        {
-         "wall":true
-        },
-     "156":
-        {
-         "wall":true
-        },
-     "157":
-        {
-         "wall":true
-        },
-     "158":
-        {
-         "wall":true
-        },
-     "334":
-        {
-         "wall":true
-        },
-     "326":
-        {
-         "wall":true
-        },
-     "327":
-        {
-         "wall":true
-        },
-     "328":
-        {
-         "wall":true
-        },
-     "329":
-        {
-         "wall":true
-        },
-     "330":
-        {
-         "wall":true
-        },
-     "331":
-        {
-         "wall":true
-        },
-     "332":
-        {
-         "wall":true
-        },
-     "333":
-        {
-         "wall":true
-        },
-     "334":
-        {
-         "wall":true
-        },
-     "335":
-        {
-         "wall":true
-        },
-     "336":
-        {
-         "wall":true
-        },
-     "337":
-        {
-         "wall":true
-        },
-     "338":
-        {
-         "wall":true
-        },
-     "339":
-        {
-         "wall":true
-        },
-     "354":
-        {
-         "wall":true
-        },
-     "342":
-        {
-         "wall":true
-        },
-     "343":
-        {
-         "wall":true
-        },
-     "344":
-        {
-         "wall":true
-        },
-     "345":
-        {
-         "wall":true
-        },
-     "346":
-        {
-         "wall":true
-        },
-     "347":
-        {
-         "wall":true
-        },
-     "348":
-        {
-         "wall":true
-        },
-     "349":
-        {
-         "wall":true
-        },
-     "352":
-        {
-         "wall":true
-        },
-     "353":
-        {
-         "wall":true
-        },
-     "354":
-        {
-         "wall":true
-        },
-     "355":
-        {
-         "wall":true
-        },
-     "356":
-        {
-         "wall":true
-        },
-     "357":
-        {
-         "wall":true
-        },
-     "358":
-        {
-         "wall":true
-        },
-     "359":
-        {
-         "wall":true
-        },
-     "360":
-        {
-         "wall":true
-        },
-     "454":
-        {
-         "wall":true
-        },
-     "452":
-        {
-         "wall":true
-        },
-     "453":
-        {
-         "wall":true
-        },
-     "454":
-        {
-         "wall":true
-        },
-     "455":
-        {
-         "wall":true
-        },
-     "456":
-        {
-         "wall":true
-        },
-     "457":
-        {
-         "wall":true
-        },
-     "458":
-        {
-         "wall":true
-        },
-     "459":
-        {
-         "wall":true
-        },
-     "460":
-        {
-         "wall":true
-        },
-     "30":
-        {
-         "wall":true
-        },
-     "31":
-        {
-         "wall":true
-        },
-     "32":
-        {
-         "wall":true
-        },
-     "33":
-        {
-         "wall":true
-        },
-     "34":
-        {
-         "wall":true
-        },
-     "35":
-        {
-         "wall":true
-        },
-     "36":
-        {
-         "wall":true
-        },
-     "37":
-        {
-         "wall":true
-        },
-     "50":
-        {
-         "wall":true
-        },
-     "51":
-        {
-         "wall":true
-        },
-     "52":
-        {
-         "wall":true
-        },
-     "53":
-        {
-         "wall":true
-        },
-     "54":
-        {
-         "wall":true
-        },
-     "55":
-        {
-         "wall":true
-        },
-     "56":
-        {
-         "wall":true
-        },
-     "57":
-        {
-         "wall":true
-        },
-     "70":
-        {
-         "wall":true
-        },
-     "71":
-        {
-         "wall":true
-        },
-     "72":
-        {
-         "wall":true
-        }
-    },
- "tilepropertytypes":
-    {
-     "153":
-        {
-         "wall":"bool"
-        },
-     "154":
-        {
-         "wall":"bool"
-        },
-     "155":
-        {
-         "wall":"bool"
-        },
-     "156":
-        {
-         "wall":"bool"
-        },
-     "157":
-        {
-         "wall":"bool"
-        },
-     "158":
-        {
-         "wall":"bool"
-        },
-     "30":
-        {
-         "wall":"bool"
-        },
-     "31":
-        {
-         "wall":"bool"
-        },
-     "32":
-        {
-         "wall":"bool"
-        },
-     "33":
-        {
-         "wall":"bool"
-        },
-     "34":
-        {
-         "wall":"bool"
-        },
-     "35":
-        {
-         "wall":"bool"
-        },
-     "36":
-        {
-         "wall":"bool"
-        },
-     "37":
-        {
-         "wall":"bool"
-        },
-     "50":
-        {
-         "wall":"bool"
-        },
-     "51":
-        {
-         "wall":"bool"
-        },
-     "52":
-        {
-         "wall":"bool"
-        },
-     "53":
-        {
-         "wall":"bool"
-        },
-     "54":
-        {
-         "wall":"bool"
-        },
-     "55":
-        {
-         "wall":"bool"
-        },
-     "56":
-        {
-         "wall":"bool"
-        },
-     "57":
-        {
-         "wall":"bool"
-        },
-     "70":
-        {
-         "wall":"bool"
-        },
-     "71":
-        {
-         "wall":"bool"
-        },
-     "72":
-        {
-         "wall":"bool"
-        }
-    },
- "tilewidth":100,
- "transparentcolor":"#ff00ff",
- "type":"tileset"
-}
-
-},{}],254:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55291,504 +52310,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],255:[function(require,module,exports){
-module.exports={ "columns":20,
- "image":"..\/..\/..\/public\/level\/grid_floor.png",
- "imageheight":1536,
- "imagewidth":2048,
- "margin":0,
- "name":"tiled_room_tiled",
- "spacing":0,
- "terrains":[
-        {
-         "name":"wall_foo",
-         "properties":
-            {
-             "wall":true
-            },
-         "propertytypes":
-            {
-             "wall":"bool"
-            },
-         "tile":81
-        }],
- "tilecount":300,
- "tileheight":100,
- "tileproperties":
-    {
-     "101":
-        {
-         "wall":true
-        },
-     "117":
-        {
-         "wall":true
-        },
-     "121":
-        {
-         "wall":true
-        },
-     "122":
-        {
-         "wall":true
-        },
-     "123":
-        {
-         "wall":true
-        },
-     "124":
-        {
-         "wall":true
-        },
-     "125":
-        {
-         "wall":true
-        },
-     "126":
-        {
-         "wall":true
-        },
-     "127":
-        {
-         "wall":true
-        },
-     "128":
-        {
-         "wall":true
-        },
-     "137":
-        {
-         "wall":true
-        },
-     "141":
-        {
-         "wall":true
-        },
-     "157":
-        {
-         "wall":true
-        },
-     "161":
-        {
-         "wall":true
-        },
-     "177":
-        {
-         "wall":true
-        },
-     "181":
-        {
-         "wall":true
-        },
-     "197":
-        {
-         "wall":true
-        },
-     "201":
-        {
-         "wall":true
-        },
-     "21":
-        {
-         "wall":true
-        },
-     "217":
-        {
-         "wall":true
-        },
-     "22":
-        {
-         "wall":true
-        },
-     "23":
-        {
-         "wall":true
-        },
-     "237":
-        {
-         "wall":true
-        },
-     "24":
-        {
-         "wall":true
-        },
-     "241":
-        {
-         "wall":true
-        },
-     "25":
-        {
-         "wall":true
-        },
-     "257":
-        {
-         "wall":true
-        },
-     "26":
-        {
-         "wall":true
-        },
-     "261":
-        {
-         "wall":true
-        },
-     "266":
-        {
-         "wall":true
-        },
-     "267":
-        {
-         "wall":true
-        },
-     "268":
-        {
-         "wall":true
-        },
-     "269":
-        {
-         "wall":true
-        },
-     "27":
-        {
-         "wall":true
-        },
-     "270":
-        {
-         "wall":true
-        },
-     "271":
-        {
-         "wall":true
-        },
-     "272":
-        {
-         "wall":true
-        },
-     "273":
-        {
-         "wall":true
-        },
-     "274":
-        {
-         "wall":true
-        },
-     "275":
-        {
-         "wall":true
-        },
-     "276":
-        {
-         "wall":true
-        },
-     "277":
-        {
-         "wall":true
-        },
-     "28":
-        {
-         "wall":true
-        },
-     "29":
-        {
-         "wall":true
-        },
-     "30":
-        {
-         "wall":true
-        },
-     "31":
-        {
-         "wall":true
-        },
-     "32":
-        {
-         "wall":true
-        },
-     "33":
-        {
-         "wall":true
-        },
-     "34":
-        {
-         "wall":true
-        },
-     "35":
-        {
-         "wall":true
-        },
-     "36":
-        {
-         "wall":true
-        },
-     "37":
-        {
-         "wall":true
-        },
-     "41":
-        {
-         "wall":true
-        },
-     "57":
-        {
-         "wall":true
-        },
-     "61":
-        {
-         "wall":true
-        },
-     "77":
-        {
-         "wall":true
-        },
-     "81":
-        {
-         "wall":true
-        },
-     "97":
-        {
-         "wall":true
-        }
-    },
- "tilepropertytypes":
-    {
-     "101":
-        {
-         "wall":"bool"
-        },
-     "117":
-        {
-         "wall":"bool"
-        },
-     "121":
-        {
-         "wall":"bool"
-        },
-     "122":
-        {
-         "wall":"bool"
-        },
-     "123":
-        {
-         "wall":"bool"
-        },
-     "124":
-        {
-         "wall":"bool"
-        },
-     "125":
-        {
-         "wall":"bool"
-        },
-     "126":
-        {
-         "wall":"bool"
-        },
-     "127":
-        {
-         "wall":"bool"
-        },
-     "128":
-        {
-         "wall":"bool"
-        },
-     "137":
-        {
-         "wall":"bool"
-        },
-     "141":
-        {
-         "wall":"bool"
-        },
-     "157":
-        {
-         "wall":"bool"
-        },
-     "161":
-        {
-         "wall":"bool"
-        },
-     "177":
-        {
-         "wall":"bool"
-        },
-     "181":
-        {
-         "wall":"bool"
-        },
-     "197":
-        {
-         "wall":"bool"
-        },
-     "201":
-        {
-         "wall":"bool"
-        },
-     "21":
-        {
-         "wall":"bool"
-        },
-     "217":
-        {
-         "wall":"bool"
-        },
-     "22":
-        {
-         "wall":"bool"
-        },
-     "23":
-        {
-         "wall":"bool"
-        },
-     "237":
-        {
-         "wall":"bool"
-        },
-     "24":
-        {
-         "wall":"bool"
-        },
-     "241":
-        {
-         "wall":"bool"
-        },
-     "25":
-        {
-         "wall":"bool"
-        },
-     "257":
-        {
-         "wall":"bool"
-        },
-     "26":
-        {
-         "wall":"bool"
-        },
-     "261":
-        {
-         "wall":"bool"
-        },
-     "266":
-        {
-         "wall":"bool"
-        },
-     "267":
-        {
-         "wall":"bool"
-        },
-     "268":
-        {
-         "wall":"bool"
-        },
-     "269":
-        {
-         "wall":"bool"
-        },
-     "27":
-        {
-         "wall":"bool"
-        },
-     "270":
-        {
-         "wall":"bool"
-        },
-     "271":
-        {
-         "wall":"bool"
-        },
-     "272":
-        {
-         "wall":"bool"
-        },
-     "273":
-        {
-         "wall":"bool"
-        },
-     "274":
-        {
-         "wall":"bool"
-        },
-     "275":
-        {
-         "wall":"bool"
-        },
-     "276":
-        {
-         "wall":"bool"
-        },
-     "277":
-        {
-         "wall":"bool"
-        },
-     "28":
-        {
-         "wall":"bool"
-        },
-     "29":
-        {
-         "wall":"bool"
-        },
-     "30":
-        {
-         "wall":"bool"
-        },
-     "31":
-        {
-         "wall":"bool"
-        },
-     "32":
-        {
-         "wall":"bool"
-        },
-     "33":
-        {
-         "wall":"bool"
-        },
-     "34":
-        {
-         "wall":"bool"
-        },
-     "35":
-        {
-         "wall":"bool"
-        },
-     "36":
-        {
-         "wall":"bool"
-        },
-     "37":
-        {
-         "wall":"bool"
-        },
-     "41":
-        {
-         "wall":"bool"
-        },
-     "57":
-        {
-         "wall":"bool"
-        },
-     "61":
-        {
-         "wall":"bool"
-        },
-     "77":
-        {
-         "wall":"bool"
-        },
-     "81":
-        {
-         "wall":"bool"
-        },
-     "97":
-        {
-         "wall":"bool"
-        }
-    },
- "tilewidth":100,
- "transparentcolor":"#ff00ff",
- "type":"tileset"
-}
-},{}],256:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -55814,7 +52336,7 @@ module.exports = {
   Backpack,
 };
 
-},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":265}],257:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":262}],254:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -55865,7 +52387,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":234,"pixi.js":151}],258:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"pixi.js":151}],255:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -55885,7 +52407,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":234,"./item_model":265}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":262}],256:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -55909,7 +52431,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":234,"./item_model":265}],260:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":262}],257:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -55935,7 +52457,7 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":265}],261:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":262}],258:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -55960,7 +52482,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":234,"./item_model":265}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":262}],259:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -56020,7 +52542,7 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./back_pack":256,"./ceiling":258,"./chair":259,"./chest":260,"./dirty_matress":261,"./fire_place":263,"./hay_bale":264,"./note":266,"./rock":268,"./tree":269,"./workbench":271}],263:[function(require,module,exports){
+},{"./back_pack":253,"./ceiling":255,"./chair":256,"./chest":257,"./dirty_matress":258,"./fire_place":260,"./hay_bale":261,"./note":263,"./rock":265,"./tree":266,"./workbench":268}],260:[function(require,module,exports){
 'use strict';
 
 const { Item } = require('./item_model');
@@ -56038,7 +52560,7 @@ module.exports = {
   Campfire,
 };
 
-},{"./item_model":265}],264:[function(require,module,exports){
+},{"./item_model":262}],261:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -56070,7 +52592,7 @@ module.exports = {
   Hay,
 };
 
-},{"../../character/attributes/vitals":218,"../../engine/pixi_containers":234,"./item_model":265}],265:[function(require,module,exports){
+},{"../../character/attributes/vitals":218,"../../engine/pixi_containers":234,"./item_model":262}],262:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -56252,7 +52774,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":234,"pixi.js":151}],266:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"pixi.js":151}],263:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -56291,7 +52813,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./item_model":265,"pixi.js":151}],267:[function(require,module,exports){
+},{"./item_model":262,"pixi.js":151}],264:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -56347,7 +52869,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":234,"../../utils/color_picker":302,"events":313,"pixi.js":151}],268:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../utils/color_picker":299,"events":310,"pixi.js":151}],265:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -56367,7 +52889,7 @@ module.exports = {
   Rock,
 };
 
-},{"../../engine/pixi_containers":234,"./item_model":265}],269:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":262}],266:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -56387,7 +52909,7 @@ module.exports = {
   Tree,
 };
 
-},{"../../engine/pixi_containers":234,"./item_model":265}],270:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":262}],267:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -56416,7 +52938,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":234,"./item_model":265,"events":313}],271:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"./item_model":262,"events":310}],268:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -56443,7 +52965,7 @@ module.exports = {
 
 
 
-},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":265}],272:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":234,"./item_model":262}],269:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../engine/pixi_containers');
 
@@ -56500,7 +53022,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":233,"../engine/pixi_containers":234,"./elements/wall.js":270}],273:[function(require,module,exports){
+},{"../engine/pathfind.js":233,"../engine/pixi_containers":234,"./elements/wall.js":267}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56549,7 +53071,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/archer":200,"../elements/background":257,"../elements/elements_factory":262,"../level_model":272}],274:[function(require,module,exports){
+},{"../../character/archetypes/archer":200,"../elements/background":254,"../elements/elements_factory":259,"../level_model":269}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56581,7 +53103,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":257,"../level_model":272}],275:[function(require,module,exports){
+},{"../elements/background":254,"../level_model":269}],272:[function(require,module,exports){
 'use strict';
 
 const { sleep       } = require('../../utils/time');
@@ -56647,7 +53169,7 @@ module.exports = {
   Intro,
 };
 
-},{"../../engine/camera":230,"../../utils/time":308,"./shadow_room":285}],276:[function(require,module,exports){
+},{"../../engine/camera":230,"../../utils/time":305,"./shadow_room":282}],273:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56713,7 +53235,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/candle":298,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],277:[function(require,module,exports){
+},{"../../light/types/candle":295,"../elements/background":254,"../elements/elements_factory":259,"../elements/wall":267,"../level_model":269}],274:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56778,7 +53300,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":297,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/large_level.json":249,"../elements/background":257,"../elements/wall":270,"../level_model":272}],278:[function(require,module,exports){
+},{"../../light/types/bright_light":294,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/large_level.json":249,"../elements/background":254,"../elements/wall":267,"../level_model":269}],275:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56793,7 +53315,6 @@ const { Scripted_NPC } = require('../../character/archetypes/neutral');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const level_data  = require('../data/old_man_room.json');
-const level_tiled = require('../data/old_man_room_tiled.json');
 
 class Old_Man_Room extends Level {
   constructor(player) {
@@ -56817,7 +53338,6 @@ class Old_Man_Room extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
 
     const { exit_point } = this.elements.cat;
     const { prey       } = this.elements;
@@ -56862,6 +53382,7 @@ class Old_Man_Room extends Level {
       pad.set_position(data);
     });
 
+    this.create_grid();
     this.old_man.logic_start();
   }
 }
@@ -56871,7 +53392,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/neutral":202,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/old_man_room.json":250,"../data/old_man_room_tiled.json":251,"../elements/background":257,"../elements/elements_factory":262,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],279:[function(require,module,exports){
+},{"../../character/archetypes/neutral":202,"../../light/types/candle":295,"../attributes/parse_tiled_data":244,"../data/old_man_room.json":250,"../elements/background":254,"../elements/elements_factory":259,"../elements/pad":264,"../elements/wall":267,"../level_model":269}],276:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56919,7 +53440,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":257,"../elements/elements_factory":262,"../level_model":272}],280:[function(require,module,exports){
+},{"../elements/background":254,"../elements/elements_factory":259,"../level_model":269}],277:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -56959,7 +53480,6 @@ class Pathfind_Room extends Level {
 
     this.add_to_segments(this.background.sprite);
     this.render_walls(this.tiled_data.layers[1].objects);
-    this.create_grid(this.tiled_tiles);
 
     this.rat.set_position({x: 900, y: 1100});
     this.rat.animation.switch('move');
@@ -56969,6 +53489,7 @@ class Pathfind_Room extends Level {
     this.archer.set_position({x: 1400, y: 1100});
     this.archer.enemy(this.rat);
     this.archer.logic_start();
+    this.create_grid();
   }
 }
 
@@ -56977,7 +53498,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/archer":200,"../../character/archetypes/rat":203,"../data/debug_map_output.json":246,"../data/debug_map_tiles.json":247,"../elements/background":257,"../level_model":272}],281:[function(require,module,exports){
+},{"../../character/archetypes/archer":200,"../../character/archetypes/rat":203,"../data/debug_map_output.json":246,"../data/debug_map_tiles.json":247,"../elements/background":254,"../level_model":269}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57044,7 +53565,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":221,"../../engine/camera":230,"../elements/background":257,"../level_model":272}],282:[function(require,module,exports){
+},{"../../character/types/npc":221,"../../engine/camera":230,"../elements/background":254,"../level_model":269}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57090,7 +53611,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":257,"../elements/elements_factory":262,"../level_model":272}],283:[function(require,module,exports){
+},{"../elements/background":254,"../elements/elements_factory":259,"../level_model":269}],280:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57171,7 +53692,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/randomise":245,"../elements/background":257,"../elements/hay_bale":264,"../elements/pad":267,"../level_model":272}],284:[function(require,module,exports){
+},{"../attributes/randomise":245,"../elements/background":254,"../elements/hay_bale":261,"../elements/pad":264,"../level_model":269}],281:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57187,7 +53708,6 @@ const { Scavenger   } = require('../../character/archetypes/scavenger');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const level_data  = require('../data/tiled_room.json');
-const level_tiled = require('../data/tiled_room_tiled.json');
 
 class Scavenge_Room extends Level {
   constructor(player) {
@@ -57215,7 +53735,6 @@ class Scavenge_Room extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
 
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
@@ -57262,6 +53781,7 @@ class Scavenge_Room extends Level {
       pad.set_position(data);
     });
 
+    this.create_grid();
     cat.logic_start();
   }
 }
@@ -57271,7 +53791,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/scavenger":204,"../../light/types/candle":298,"../attributes/item_pool":243,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/elements_factory":262,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],285:[function(require,module,exports){
+},{"../../character/archetypes/scavenger":204,"../../light/types/candle":295,"../attributes/item_pool":243,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":252,"../elements/background":254,"../elements/elements_factory":259,"../elements/pad":264,"../elements/wall":267,"../level_model":269}],282:[function(require,module,exports){
 'use strict';
 
 const { Lantern    } = require('../../light/types/lantern');
@@ -57415,7 +53935,7 @@ module.exports = {
   Shadow_Room,
 };
 
-},{"../../light/types/ambient":296,"../../light/types/candle":298,"../../light/types/lantern":299,"../../light/types/lighter":300,"../../light/types/sun":301,"../elements/background":257,"../elements/chest":260,"../elements/wall":270}],286:[function(require,module,exports){
+},{"../../light/types/ambient":293,"../../light/types/candle":295,"../../light/types/lantern":296,"../../light/types/lighter":297,"../../light/types/sun":298,"../elements/background":254,"../elements/chest":257,"../elements/wall":267}],283:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57491,10 +54011,9 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":297,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/homestead_tiled.json":248,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],287:[function(require,module,exports){
+},{"../../light/types/bright_light":294,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/homestead_tiled.json":248,"../elements/background":254,"../elements/elements_factory":259,"../elements/wall":267,"../level_model":269}],284:[function(require,module,exports){
 (function (global){
 'use strict';
-
 const { Level        } = require('../level_model');
 const { Tiled_Data   } = require('../attributes/parse_tiled_data');
 const { Background   } = require('../elements/background');
@@ -57506,7 +54025,6 @@ const { Scripted_NPC } = require('../../character/archetypes/neutral');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const level_data  = require('../data/outside_room.json');
-const level_tiled = require('../data/outside_room_tiled.json');
 
 class Outside_Map extends Level {
   constructor(player) {
@@ -57531,7 +54049,7 @@ class Outside_Map extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
+    this.create_grid();
 
     this.elements.furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
@@ -57569,10 +54087,9 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/deer":201,"../../character/archetypes/neutral":202,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/outside_room.json":252,"../data/outside_room_tiled.json":253,"../elements/background":257,"../elements/elements_factory":262,"../elements/wall":270,"../level_model":272}],288:[function(require,module,exports){
+},{"../../character/archetypes/deer":201,"../../character/archetypes/neutral":202,"../../light/types/candle":295,"../attributes/parse_tiled_data":244,"../data/outside_room.json":251,"../elements/background":254,"../elements/elements_factory":259,"../elements/wall":267,"../level_model":269}],285:[function(require,module,exports){
 (function (global){
 'use strict';
-const PIXI           = require('pixi.js');
 const { Level      } = require('../level_model');
 const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Background } = require('../elements/background');
@@ -57580,64 +54097,8 @@ const { Wall       } = require('../elements/wall');
 const { Candle     } = require('../../light/types/candle');
 const { Rat        } = require('../../character/archetypes/rat');
 const level_data     = require('../data/tiled_room.json');
-const level_tiled    = require('../data/tiled_room_tiled.json');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
 const { collision_container } = require('../../engine/pixi_containers');
-
-const matrix = [];
-const row_length = 20;
-
-function create_grid() {
-  let y = 0;
-  let x = 0;
-  let alpha = 1;
-  let current_grid_x = 0;
-  let current_grid_y = 0;
-
-  for(let i=0;i<=200;i++){
-    const tile = PIXI.Sprite.fromFrame('black_dot');
-    tile.width  = 100;
-    tile.height = 100;
-    tile.x = x;
-    tile.y = y;
-    alpha -= 0.002;
-    tile.alpha = alpha;
-    x += 100;
-    tile.cell_position = {
-      x: current_grid_x,
-      y: current_grid_y,
-    };
-    tile.middle  = {
-      x: tile.x,
-      y: tile.y,
-    };
-
-    if(i % row_length === 0) {
-      if(i ===0) {
-        y = 0;
-      }else{
-        y += 100;
-        current_grid_y++;
-        current_grid_x = 0;
-      }
-      current_grid_x++;
-      x = 0;
-    }
-
-    visual_effects_container.addChild(tile);
-    matrix.push(tile);
-  }
-}
-
-function check(rect1, rect2) {
-  if (rect1.x < rect2.x + rect2.width &&
-    rect1.x + rect1.width > rect2.x &&
-    rect1.y < rect2.y + rect2.height &&
-    rect1.y + rect1.height > rect2.y) {
-    return true;
-  }
-}
 
 class Tiled_Prey extends Level {
   constructor(player) {
@@ -57655,7 +54116,6 @@ class Tiled_Prey extends Level {
     global.set_light_level(1);
     this.player.light.hide();
 
-    create_grid();
     console.log( collision_container );
 
 
@@ -57663,7 +54123,6 @@ class Tiled_Prey extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
 
     this.elements.prey.forEach(data => {
       const prey = new Rat();
@@ -57688,33 +54147,8 @@ class Tiled_Prey extends Level {
       light.set_position(data);
     });
 
-    collision_container.children.forEach(object => {
-      matrix.forEach(tile => {
-        if(check(tile, object)) {
-          tile.alpha = 1;
-        }
-      });
-    });
+    this.create_grid();
 
-    const binary_matrix = [];
-    let binary_line = [];
-    matrix.forEach((tile, i) => {
-      if(tile.alpha === 1) {
-        binary_line.push(1);
-      } else {
-        binary_line.push(0);
-      }
-
-      if(i % row_length ===0) {
-        if(i !== 0) {
-          binary_matrix.push(binary_line);
-        }
-
-        binary_line = [];
-      }
-    });
-
-    console.log(binary_matrix);
   }
 }
 
@@ -57723,7 +54157,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":203,"../../engine/pixi_containers":234,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/wall":270,"../level_model":272,"pixi.js":151}],289:[function(require,module,exports){
+},{"../../character/archetypes/rat":203,"../../engine/pixi_containers":234,"../../light/types/candle":295,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":252,"../elements/background":254,"../elements/wall":267,"../level_model":269}],286:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57737,7 +54171,6 @@ const { Scavenger   } = require('../../character/archetypes/scavenger');
 
 const { Element_Factory } = require('../elements/elements_factory');
 const level_data  = require('../data/tiled_room.json');
-const level_tiled = require('../data/tiled_room_tiled.json');
 
 class Tiled_Prey_Path extends Level {
   constructor(player) {
@@ -57761,7 +54194,6 @@ class Tiled_Prey_Path extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
 
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
@@ -57835,6 +54267,7 @@ class Tiled_Prey_Path extends Level {
       pad.anchor = 0;
       pad.set_position(data);
     });
+    this.create_grid();
   }
 }
 
@@ -57843,7 +54276,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/scavenger":204,"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":254,"../data/tiled_room_tiled.json":255,"../elements/background":257,"../elements/elements_factory":262,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],290:[function(require,module,exports){
+},{"../../character/archetypes/scavenger":204,"../../light/types/candle":295,"../attributes/parse_tiled_data":244,"../data/tiled_room.json":252,"../elements/background":254,"../elements/elements_factory":259,"../elements/pad":264,"../elements/wall":267,"../level_model":269}],287:[function(require,module,exports){
 (function (global){
 
 'use strict';
@@ -57917,7 +54350,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/candle":298,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/tiled_room.json":254,"../elements/background":257,"../elements/pad":267,"../elements/wall":270,"../level_model":272}],291:[function(require,module,exports){
+},{"../../light/types/candle":295,"../attributes/parse_tiled_data":244,"../attributes/randomise":245,"../data/tiled_room.json":252,"../elements/background":254,"../elements/pad":264,"../elements/wall":267,"../level_model":269}],288:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57976,7 +54409,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":257,"../elements/pad":267,"../level_model":272,"./random_room":283}],292:[function(require,module,exports){
+},{"../elements/background":254,"../elements/pad":264,"../level_model":269,"./random_room":280}],289:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -58032,7 +54465,7 @@ module.exports = {
   Fade,
 };
 
-},{"../../engine/ticker":238}],293:[function(require,module,exports){
+},{"../../engine/ticker":238}],290:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -58074,7 +54507,7 @@ module.exports = {
   Flicker,
 };
 
-},{"../../engine/ticker":238}],294:[function(require,module,exports){
+},{"../../engine/ticker":238}],291:[function(require,module,exports){
 'use strict';
 
 const { Track } = require('../../effects/sound');
@@ -58118,7 +54551,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../effects/sound":227,"../../utils/time":308}],295:[function(require,module,exports){
+},{"../../effects/sound":227,"../../utils/time":305}],292:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58166,7 +54599,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":234,"pixi.js":151}],296:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],293:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58219,7 +54652,7 @@ module.exports = {
   Ambient,
 };
 
-},{"../../engine/ticker":238,"pixi.js":151}],297:[function(require,module,exports){
+},{"../../engine/ticker":238,"pixi.js":151}],294:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58243,7 +54676,7 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":234,"../light_model":295}],298:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../light_model":292}],295:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58297,7 +54730,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":234,"../attributes/flicker":293,"../light_model":295,"pixi.js":151}],299:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../attributes/flicker":290,"../light_model":292,"pixi.js":151}],296:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58326,7 +54759,7 @@ module.exports = {
   Lantern,
 };
 
-},{"../../engine/pixi_containers":234,"../../engine/tween":239,"../attributes/flicker":293,"../light_model":295}],300:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../../engine/tween":239,"../attributes/flicker":290,"../light_model":292}],297:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58352,7 +54785,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../engine/pixi_containers":234,"../attributes/strike":294,"../light_model":295}],301:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../attributes/strike":291,"../light_model":292}],298:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58379,7 +54812,7 @@ module.exports = {
   Sun,
 };
 
-},{"../../engine/pixi_containers":234,"../attributes/fade":292,"../light_model":295}],302:[function(require,module,exports){
+},{"../../engine/pixi_containers":234,"../attributes/fade":289,"../light_model":292}],299:[function(require,module,exports){
 'use strict';
 
 class Color_Pick {
@@ -58398,7 +54831,7 @@ module.exports = {
   Color_Pick,
 };
 
-},{}],303:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58441,7 +54874,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],304:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -58486,13 +54919,12 @@ global.place_bunny = ({ x, y }) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":234,"pixi.js":151}],305:[function(require,module,exports){
-(function (global){
+},{"../engine/pixi_containers":234,"pixi.js":151}],302:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-
-const { grid_container } = require('../engine/pixi_containers');
+const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
+
 const row_length = 20;
 
 function check(rect1, rect2) {
@@ -58503,106 +54935,92 @@ function check(rect1, rect2) {
     return true;
   }
 }
+
+class Tile {
+  constructor() {
+    const thing = PIXI.Sprite.fromFrame('black_dot');
+    thing.width  = 100;
+    thing.height = 100;
+    thing.passable = true;
+
+    return thing;
+  }
+}
+
 class Grid {
-  static create(tiles_object) {
-    const sprite_grid = [];
-    const binary_grid_map = [];
+  constructor() {}
 
-    const grid_dimension = 100;
+  build() {
+    let y = 0;
+    let x = 0;
 
-    let line_grid = [];
-    let binary_line = [];
-
-    let current_x = 0;
-    let current_y = 0;
-
+    let alpha = 0.8;
     let current_grid_x = 0;
     let current_grid_y = 0;
 
-    for (let i = 0; i < tiles_object.tilecount; i++) {
-      const grid_cell = PIXI.Sprite.fromFrame('black_dot');
-      grid_cell.cell_position = {
+    for(let i=0; i<=200; i++){
+      const tile = new Tile();
+      tile.x = x;
+      tile.y = y;
+      tile.alpha = alpha -= 0.002;
+
+      tile.cell_position = {
         x: current_grid_x,
         y: current_grid_y,
       };
 
-      current_x += grid_dimension;
-      if(i % tiles_object.columns === 0){
-        sprite_grid.push(line_grid);
-        binary_grid_map.push(binary_line);
-
-        line_grid = [];
-        binary_line = [];
-
-        current_y += grid_dimension;
-        current_x = 0;
-        current_grid_x = 0;
-        current_grid_y += 1;
+      x += 100;
+      if(i % row_length === 0) {
+        if(i !== 0) {
+          y += 100;
+          current_grid_x = 0;
+          current_grid_y++;
+        }
+        x = 0;
       }
-      current_grid_x += 1;
+      current_grid_x++;
 
-      grid_cell.width   = grid_dimension;
-      grid_cell.height  = grid_dimension;
-      grid_cell.x       = current_x;
-      grid_cell.y       = current_y;
-      grid_cell.middle  = {
-        x: grid_cell.x + grid_dimension/2,
-        y: grid_cell.y + grid_dimension/2,
-      };
+      if(collision_container.children.length < 1) throw 'must have collision objects for grid';
 
-      if(tiles_object.tileproperties.hasOwnProperty(i)){
-        // is a wall
-        grid_cell.alpha = 1;
-        grid_cell.type = 'wall';
-        binary_line.push(1);
-      } else {
-        // is walkable ground
-        grid_cell.alpha = 0;
-        binary_line.push(0);
-      }
-
-      line_grid.push(grid_cell);
-
-      global.line_grid = line_grid;
-
-      grid_container.addChild(grid_cell);
-    }
-
-    collision_container.children.forEach(object => {
-      grid_container.children.forEach(tile => {
+      collision_container.children.forEach(object => {
         if(check(tile, object)) {
-          tile.alpha = 1;
+          tile.passable = false;
         }
       });
-    });
 
+      grid_container.addChild(tile);
+    }
+  }
+
+  build_matrix() {
     const binary_matrix = [];
-    let binary_line1 = [];
+    const sprite_matrix = [];
+
+    let binary_line = [];
+    let sprite_line = [];
+
     grid_container.children.forEach((tile, i) => {
+      if(!tile.passable) {
+        binary_line.push(1);
+      } else {
+        binary_line.push(0);
+      }
+      sprite_line.push(tile);
 
       if(i % row_length ===0) {
         if(i !== 0) {
-          binary_matrix.push(binary_line1);
+          binary_matrix.push(binary_line);
+
+          sprite_matrix.push(sprite_line);
         }
 
-        binary_line1 = [];
-      }
-      if(tile.alpha === 1) {
-        binary_line1.push(1);
-      } else {
-        binary_line1.push(0);
+        sprite_line = [];
+        binary_line = [];
       }
     });
 
-
-
-
-    console.log(binary_matrix);
-    console.log(binary_grid_map);
-    return {
-      binary_grid_map: binary_matrix,
-      sprite_grid,
-    };
+    this.binary = binary_matrix;
+    this.sprite = sprite_matrix;
   }
 }
 
@@ -58612,8 +55030,7 @@ module.exports = {
 
 
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":234,"pixi.js":151}],306:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],303:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -58733,7 +55150,7 @@ module.exports = {
 
 
 
-},{}],307:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58791,7 +55208,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],308:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -58802,7 +55219,7 @@ module.exports = {
   sleep,
 };
 
-},{}],309:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58838,7 +55255,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":234,"pixi.js":151}],310:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],307:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58892,7 +55309,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/pixi_containers":234,"pixi.js":151}],311:[function(require,module,exports){
+},{"../engine/pixi_containers":234,"pixi.js":151}],308:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59090,7 +55507,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":242}],312:[function(require,module,exports){
+},{"../items/item_manager":242}],309:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -59127,7 +55544,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":303}],313:[function(require,module,exports){
+},{"../utils/dom":300}],310:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -59652,7 +56069,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],314:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -59958,7 +56375,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":315}],315:[function(require,module,exports){
+},{"_process":312}],312:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -60144,7 +56561,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],316:[function(require,module,exports){
+},{}],313:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -60681,7 +57098,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],317:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60767,7 +57184,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],318:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60854,13 +57271,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],319:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":317,"./encode":318}],320:[function(require,module,exports){
+},{"./decode":314,"./encode":315}],317:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61594,7 +58011,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":321,"punycode":316,"querystring":319}],321:[function(require,module,exports){
+},{"./util":318,"punycode":313,"querystring":316}],318:[function(require,module,exports){
 'use strict';
 
 module.exports = {

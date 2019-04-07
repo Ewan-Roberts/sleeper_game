@@ -83,6 +83,10 @@ const raycasting_container = new PIXI.Container();
 raycasting_container.name = 'raycasting_container';
 raycasting_container.zIndex = close;
 
+// const grid_particles = new PIXI.ParticleContainer();
+// grid_particles.name = 'grid_particles';
+// grid_particles.zIndex = close;
+
 world.addChild(
   visual_effects_container,
   roof_container,
@@ -100,6 +104,7 @@ world.addChild(
   dialog_container,
   raycasting_container,
   pad_container
+  // grid_particles
 );
 
 world.updateLayersOrder();
@@ -120,6 +125,7 @@ module.exports = {
   grid_container,
   item_container,
   pad_container,
+  // grid_particles,
 };
 
 

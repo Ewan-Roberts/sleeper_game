@@ -23,13 +23,7 @@ class Pathfind {
   go_to_point(point) {
     this.anchor_sprite.position.copy(point);
 
-    const global_point = this.anchor_sprite.getGlobalPosition();
-
-    pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, global_point);
-  }
-
-  go_to_local_point(point) {
-    pathfind_sprite.move_sprite_to_point_on_grid(this.sprite, point);
+    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, this.anchor_sprite);
   }
 
   hightlight_grid_around() {

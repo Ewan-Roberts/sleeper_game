@@ -11,7 +11,6 @@ const { Scripted_NPC } = require('../../character/archetypes/neutral');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const level_data  = require('../data/old_man_room.json');
-const level_tiled = require('../data/old_man_room_tiled.json');
 
 class Old_Man_Room extends Level {
   constructor(player) {
@@ -35,7 +34,6 @@ class Old_Man_Room extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
 
     const { exit_point } = this.elements.cat;
     const { prey       } = this.elements;
@@ -80,6 +78,7 @@ class Old_Man_Room extends Level {
       pad.set_position(data);
     });
 
+    this.create_grid();
     this.old_man.logic_start();
   }
 }

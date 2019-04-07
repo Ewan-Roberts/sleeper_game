@@ -2,6 +2,7 @@
 const PIXI = require('pixi.js');
 
 const { gui_container } = require('./pixi_containers');
+const { random_number } = require('../utils/math');
 
 class Tween {
   constructor(sprite, light) {
@@ -50,15 +51,17 @@ class Tween {
     }
   }
 
-  add_tile_path(tween_path) {
+  add_random_path(sprite, tween_path) {
     this.path = new PIXI.tween.TweenPath();
+    const random = () => random_number(-30, 30);
 
-    for (let i = 1; i < tween_path.length; i++) {
+    this.path.moveTo(sprite.x, sprite.y);
+    for (let i = 2; i < tween_path.length; i++) {
       this.path.arcTo(
-        tween_path[i-1].middle.x,
-        tween_path[i-1].middle.y,
-        tween_path[i].middle.x,
-        tween_path[i].middle.y,
+        tween_path[i-1].x + random(),
+        tween_path[i-1].y + random(),
+        tween_path[i].x   + random(),
+        tween_path[i].y   + random(),
         this.path_arc);
     }
   }

@@ -10,7 +10,6 @@ const { Scavenger   } = require('../../character/archetypes/scavenger');
 
 const { Element_Factory } = require('../elements/elements_factory');
 const level_data  = require('../data/tiled_room.json');
-const level_tiled = require('../data/tiled_room_tiled.json');
 
 class Tiled_Prey_Path extends Level {
   constructor(player) {
@@ -34,7 +33,6 @@ class Tiled_Prey_Path extends Level {
     this.background.alpha = 0.5;
 
     this.add_to_segments(this.background.sprite);
-    this.create_grid(level_tiled);
 
     this.chest.set_position({x: 1400, y: 300});
     this.chest.loot.populate();
@@ -108,6 +106,7 @@ class Tiled_Prey_Path extends Level {
       pad.anchor = 0;
       pad.set_position(data);
     });
+    this.create_grid();
   }
 }
 
