@@ -2,6 +2,27 @@
  "infinite":false,
  "layers":[
         {
+         "draworder":"topdown",
+         "name":"background",
+         "objects":[
+                {
+                 "height":4686.41114982578,
+                 "id":81,
+                 "name":"grass_tile",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3841.46341463415,
+                 "x":0,
+                 "y":0
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "color":"#000000",
          "draworder":"topdown",
          "name":"center",
@@ -856,6 +877,43 @@
                 }, 
                 {
                  "draworder":"topdown",
+                 "name":"rock",
+                 "objects":[
+                        {
+                         "height":485.80952380953,
+                         "id":83,
+                         "name":"rock",
+                         "properties":
+                            {
+                             "image_name":"rock_0"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":507.562189054728,
+                         "x":1631.01042332569,
+                         "y":2303.53093555646
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_0"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "name":"tree",
                  "objects":[
                         {
@@ -954,7 +1012,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":81,
+ "nextobjectid":84,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

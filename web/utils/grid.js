@@ -14,12 +14,12 @@ function check(rect1, rect2) {
 
 class Tile {
   constructor() {
-    const thing = PIXI.Sprite.fromFrame('black_dot');
-    thing.width  = 100;
-    thing.height = 100;
-    thing.passable = true;
+    const tile = PIXI.Sprite.fromFrame('black_dot');
+    tile.width  = 100;
+    tile.height = 100;
+    tile.passable = true;
 
-    return thing;
+    return tile;
   }
 }
 
@@ -31,43 +31,40 @@ class Grid {
 
     this.tile_width  = Math.ceil(data.width/100);
     this.tile_height = Math.ceil(data.height/100);
-
-    this.tile_area= this.tile_height * this.tile_width;
-    console.log(this);
+    this.tile_area   = this.tile_height * this.tile_width;
   }
 
-  build(data) {
-    console.log(data);
-
+  build() {
     let y = 0;
     let x = 0;
+    let grid_x = 0;
+    let grid_y = 0;
 
     let alpha = 0.8;
-    let current_grid_x = 0;
-    let current_grid_y = 0;
 
     for(let i=0; i<=this.tile_area; i++){
       const tile = new Tile();
       tile.x = x;
       tile.y = y;
-      tile.alpha = alpha -= 0.002;
+      tile.alpha = alpha -= 0.0005;
       tile.anchor.set(0);
 
+      // This is for the pathfinder
       tile.cell_position = {
-        x: current_grid_x,
-        y: current_grid_y,
+        x: grid_x,
+        y: grid_y,
       };
 
       x += 100;
       if(i % this.tile_width === 0) {
         if(i !== 0) {
           y += 100;
-          current_grid_x = 0;
-          current_grid_y++;
+          grid_x = 0;
+          grid_y++;
         }
         x = 0;
       }
-      current_grid_x++;
+      grid_x++;
 
       if(collision_container.children.length < 1) throw 'must have collision objects for grid';
 

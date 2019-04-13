@@ -3,26 +3,29 @@ const PIXI = require('pixi.js');
 
 const { background_container } = require('../../engine/pixi_containers');
 
+//TODO sort out the file extensions
 class Background {
-  constructor(data) {
-    //This is not pulled from the packer but from the level folder
-    this.sprite = PIXI.Sprite.fromImage('level/'+data.name+'.png');
+  constructor(data, tile_image) {
+    if(tile_image) {
+      const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
+
+      this.sprite = new PIXI.extras.TilingSprite(
+        texture,
+        5000,
+        5000
+      );
+    } else {
+      const image_name = data.name || 'grid_floor';
+
+      this.sprite = PIXI.Sprite.fromImage('level/'+image_name+'.png');
+    }
+    //fallback to grid
     this.sprite.anchor.set(0);
     this.sprite.width = data.width;
     this.sprite.height = data.height;
     this.sprite.alpha = 0.5;
 
     this.set_position(data);
-  }
-
-  tile(name) {
-    const texture = PIXI.Texture.fromImage('level/'+name+'.jpg');
-
-    this.sprite = new PIXI.extras.TilingSprite(
-      texture,
-      5000,
-      5000
-    );
   }
 
   set_position({x, y}) {

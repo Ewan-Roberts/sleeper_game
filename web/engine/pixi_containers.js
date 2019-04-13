@@ -1,6 +1,6 @@
 'use strict';
 const PIXI = require('pixi.js');
-
+PIXI.settings.ROUND_PIXELS = true;
 const { world } = require('./shadows');
 
 const zIndex_layer = {

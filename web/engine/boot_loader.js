@@ -33,7 +33,7 @@ class Level_Loader {
     new Dev_Room(player);
   }
 
-  static _outside(player) {
+  static _outside_room(player) {
     new Outside_Room(player);
   }
 
@@ -110,13 +110,12 @@ class Level_Loader {
     const player = new Player();
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
-
     // this._old_man(player);
-    // this._outside(player);
+    this._outside(player);
     // this._tiled_prey_path(player);
     // this._scavenge(player);
     // this._tiled_created(player);
-    this._tiled_prey(player);
+    // this._tiled_prey(player);
     // this._tiled_large(player);
     // this._tiled_homestead(player);
     // this._item_room(player);

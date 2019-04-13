@@ -1,11 +1,10 @@
 'use strict';
-const { Level        } = require('../level_model');
-const { Tiled_Data   } = require('../attributes/parse_tiled_data');
-const { Background   } = require('../elements/background');
-const { Wall         } = require('../elements/wall');
-const { Candle       } = require('../../light/types/candle');
-const { Deer         } = require('../../character/archetypes/deer');
-const { Scripted_NPC } = require('../../character/archetypes/neutral');
+const { Level      } = require('../level_model');
+const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Background } = require('../elements/background');
+const { Wall       } = require('../elements/wall');
+const { Candle     } = require('../../light/types/candle');
+const { Rat        } = require('../../character/archetypes/rat');
 
 const { Element_Factory } = require('../elements/elements_factory');
 
@@ -18,29 +17,24 @@ class Outside_Map extends Level {
 
     this.player     = player;
     this.elements   = new Tiled_Data(level_data);
-    this.background = new Background('grid_floor');
-    this.background.tile('grass_tile');
-    this.old_man    = new Scripted_NPC();
 
     this._set_elements();
   }
 
   async _set_elements() {
     global.set_light_level(1);
+
+    const {prey, background, walls, lights, furnishing} = this.elements;
+
+    this.background = new Background(background, true);
+
     this.player.light.hide();
-    this.player.set_position({x:700, y:600});
 
-    this.background.set_position({x: 0, y:0});
-    this.background.alpha = 0.5;
-
-    this.add_to_segments(this.background.sprite);
-    this.create_grid();
-
-    this.elements.furnishing.forEach(data => {
+    furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
     });
 
-    this.elements.walls.forEach(data => {
+    walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;
       wall.height = data.height;
@@ -51,19 +45,21 @@ class Outside_Map extends Level {
       wall.set_position(data);
     });
 
-    this.elements.prey.forEach(data => {
-      const prey = new Deer();
+    prey.forEach(data => {
+      const prey = new Rat();
       prey.enemy(this.player);
       prey.logic_start();
       prey.set_position(data);
     });
 
-    this.elements.lights.forEach(data => {
+    lights.forEach(data => {
       const light  = new Candle();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
     });
+
+    this.create_grid(background);
   }
 }
 

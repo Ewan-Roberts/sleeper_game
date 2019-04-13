@@ -35,8 +35,8 @@ const path_between_grids = (one, two) => {
 };
 
 class pathfind_sprite {
-  static create_level_grid(data) {
-    this.grid = new Grid(data);
+  static create_level_grid(tiled_level_data) {
+    this.grid = new Grid(tiled_level_data);
     this.grid.build();
     this.grid.build_matrix();
 
@@ -55,7 +55,14 @@ class pathfind_sprite {
     const tween = new Tween(sprite);
     tween.time  = path_array.length * 300;
     tween.from(sprite);
-    tween.add_random_path(path_array);
+    const foo = path_array.map(path => {
+      return {
+        x: path.x + 50,
+        y: path.y + 50,
+      };
+    });
+
+    tween.add_random_path(foo);
     tween.draw_path();
     tween.start();
 
