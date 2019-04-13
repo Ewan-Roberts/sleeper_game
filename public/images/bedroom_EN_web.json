@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "4b74eb8a4319cdc1e12b3fb9fd0ace732da1e949.png",
-            "filesize": 1576166,
+            "image": "9865b375b3cdc6826aa3fbb93c41f94df0585838.png",
+            "filesize": 1576286,
             "sprites": [
                 {
                     "name": "wrench_blade",
@@ -66,10 +66,21 @@
                     }
                 },
                 {
-                    "name": "litter",
+                    "name": "long_broken",
                     "position": {
                         "x": 0,
                         "y": 1112
+                    },
+                    "dimension": {
+                        "w": 512,
+                        "h": 132
+                    }
+                },
+                {
+                    "name": "litter",
+                    "position": {
+                        "x": 0,
+                        "y": 1244
                     },
                     "dimension": {
                         "w": 512,
@@ -80,17 +91,6 @@
                         "y": 21,
                         "w": 512,
                         "h": 491
-                    }
-                },
-                {
-                    "name": "long_broken",
-                    "position": {
-                        "x": 0,
-                        "y": 1603
-                    },
-                    "dimension": {
-                        "w": 512,
-                        "h": 132
                     }
                 },
                 {
@@ -119,7 +119,7 @@
                     "name": "full-note-written",
                     "position": {
                         "x": 512,
-                        "y": 1112
+                        "y": 1244
                     },
                     "dimension": {
                         "w": 396,
@@ -409,7 +409,7 @@
                     "name": "item_slot",
                     "position": {
                         "x": 908,
-                        "y": 1112
+                        "y": 1244
                     },
                     "dimension": {
                         "w": 194,
@@ -420,7 +420,7 @@
                     "name": "test_2",
                     "position": {
                         "x": 908,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 121,
@@ -465,7 +465,7 @@
                     "name": "rock_0",
                     "position": {
                         "x": 1020,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 156,
@@ -476,7 +476,7 @@
                     "name": "rock_2",
                     "position": {
                         "x": 1176,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 146,
@@ -487,7 +487,7 @@
                     "name": "cupboard",
                     "position": {
                         "x": 1322,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 58,
@@ -509,7 +509,7 @@
                     "name": "tree_7",
                     "position": {
                         "x": 1380,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 152,
@@ -520,7 +520,7 @@
                     "name": "rock_1",
                     "position": {
                         "x": 1532,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 156,
@@ -646,26 +646,26 @@
                     }
                 },
                 {
-                    "name": "chair",
+                    "name": "survivor-bow-pull-37",
                     "position": {
-                        "x": 2452,
-                        "y": 2161
+                        "x": 1829,
+                        "y": 2702
                     },
                     "dimension": {
-                        "w": 150,
-                        "h": 141
+                        "w": 145,
+                        "h": 112
                     },
                     "trim": {
-                        "x": 6,
-                        "y": 7,
+                        "x": 11,
+                        "y": 19,
                         "w": 134,
-                        "h": 126
+                        "h": 63
                     }
                 },
                 {
                     "name": "survivor-bow-pull-33",
                     "position": {
-                        "x": 1829,
+                        "x": 1963,
                         "y": 2702
                     },
                     "dimension": {
@@ -680,20 +680,20 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-pull-37",
+                    "name": "chair",
                     "position": {
-                        "x": 1019,
-                        "y": 2570
+                        "x": 2452,
+                        "y": 2161
                     },
                     "dimension": {
-                        "w": 145,
-                        "h": 112
+                        "w": 150,
+                        "h": 141
                     },
                     "trim": {
-                        "x": 11,
-                        "y": 19,
+                        "x": 6,
+                        "y": 7,
                         "w": 134,
-                        "h": 63
+                        "h": 126
                     }
                 },
                 {
@@ -748,20 +748,9 @@
                     }
                 },
                 {
-                    "name": "messy_table",
-                    "position": {
-                        "x": 481,
-                        "y": 2485
-                    },
-                    "dimension": {
-                        "w": 130,
-                        "h": 66
-                    }
-                },
-                {
                     "name": "survivor-bow-pull-29",
                     "position": {
-                        "x": 1963,
+                        "x": 2097,
                         "y": 2702
                     },
                     "dimension": {
@@ -776,10 +765,21 @@
                     }
                 },
                 {
+                    "name": "messy_table",
+                    "position": {
+                        "x": 1019,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 130,
+                        "h": 66
+                    }
+                },
+                {
                     "name": "survivor-bow-pull-38",
                     "position": {
-                        "x": 611,
-                        "y": 2485
+                        "x": 1149,
+                        "y": 2570
                     },
                     "dimension": {
                         "w": 145,
@@ -795,7 +795,7 @@
                 {
                     "name": "survivor-bow-pull-28",
                     "position": {
-                        "x": 2093,
+                        "x": 2227,
                         "y": 2702
                     },
                     "dimension": {
@@ -812,7 +812,7 @@
                 {
                     "name": "survivor-bow-pull-27",
                     "position": {
-                        "x": 2221,
+                        "x": 2355,
                         "y": 2702
                     },
                     "dimension": {
@@ -829,7 +829,7 @@
                 {
                     "name": "survivor-bow-pull-26",
                     "position": {
-                        "x": 2348,
+                        "x": 2482,
                         "y": 2702
                     },
                     "dimension": {
@@ -846,7 +846,7 @@
                 {
                     "name": "survivor-bow-pull-25",
                     "position": {
-                        "x": 2474,
+                        "x": 2608,
                         "y": 2702
                     },
                     "dimension": {
@@ -861,9 +861,9 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-pull-23",
+                    "name": "survivor-bow-pull-24",
                     "position": {
-                        "x": 1153,
+                        "x": 1279,
                         "y": 2570
                     },
                     "dimension": {
@@ -878,9 +878,9 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-pull-24",
+                    "name": "survivor-bow-pull-23",
                     "position": {
-                        "x": 1276,
+                        "x": 1402,
                         "y": 2570
                     },
                     "dimension": {
@@ -892,13 +892,81 @@
                         "y": 24,
                         "w": 123,
                         "h": 58
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_11",
+                    "position": {
+                        "x": 862,
+                        "y": 2389
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 20,
+                        "y": 14,
+                        "w": 122,
+                        "h": 86
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_10",
+                    "position": {
+                        "x": 984,
+                        "y": 2389
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 19,
+                        "y": 14,
+                        "w": 122,
+                        "h": 86
+                    }
+                },
+                {
+                    "name": "survivor-bow-idle-17",
+                    "position": {
+                        "x": 2586,
+                        "y": 2161
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 21,
+                        "y": 13,
+                        "w": 122,
+                        "h": 87
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_07",
+                    "position": {
+                        "x": 1106,
+                        "y": 2389
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 17,
+                        "y": 14,
+                        "w": 122,
+                        "h": 86
                     }
                 },
                 {
                     "name": "survivor-bow-idle-02",
                     "position": {
-                        "x": 862,
-                        "y": 2389
+                        "x": 481,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 145,
@@ -914,8 +982,8 @@
                 {
                     "name": "survivor-bow-idle-03",
                     "position": {
-                        "x": 984,
-                        "y": 2389
+                        "x": 603,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 145,
@@ -931,8 +999,8 @@
                 {
                     "name": "survivor-bow-idle-04",
                     "position": {
-                        "x": 2586,
-                        "y": 2161
+                        "x": 1228,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
@@ -948,8 +1016,8 @@
                 {
                     "name": "survivor-bow-idle-05",
                     "position": {
-                        "x": 2708,
-                        "y": 2161
+                        "x": 1350,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
@@ -965,8 +1033,8 @@
                 {
                     "name": "survivor-bow-idle-06",
                     "position": {
-                        "x": 497,
-                        "y": 2035
+                        "x": 2708,
+                        "y": 2161
                     },
                     "dimension": {
                         "w": 145,
@@ -982,8 +1050,8 @@
                 {
                     "name": "survivor-bow-idle-07",
                     "position": {
-                        "x": 619,
-                        "y": 2035
+                        "x": 2830,
+                        "y": 2161
                     },
                     "dimension": {
                         "w": 145,
@@ -999,8 +1067,8 @@
                 {
                     "name": "survivor-bow-idle-08",
                     "position": {
-                        "x": 512,
-                        "y": 1603
+                        "x": 497,
+                        "y": 2035
                     },
                     "dimension": {
                         "w": 145,
@@ -1016,8 +1084,8 @@
                 {
                     "name": "survivor-bow-idle-09",
                     "position": {
-                        "x": 634,
-                        "y": 1603
+                        "x": 619,
+                        "y": 2035
                     },
                     "dimension": {
                         "w": 145,
@@ -1034,7 +1102,7 @@
                     "name": "survivor-bow-idle-10",
                     "position": {
                         "x": 1688,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 145,
@@ -1048,10 +1116,44 @@
                     }
                 },
                 {
+                    "name": "survivor-walk_bow_02",
+                    "position": {
+                        "x": 1472,
+                        "y": 2389
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 19,
+                        "y": 14,
+                        "w": 122,
+                        "h": 86
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_20",
+                    "position": {
+                        "x": 741,
+                        "y": 2035
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 22,
+                        "y": 12,
+                        "w": 122,
+                        "h": 88
+                    }
+                },
+                {
                     "name": "survivor-bow-idle-13",
                     "position": {
                         "x": 1810,
-                        "y": 1309
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 145,
@@ -1067,8 +1169,8 @@
                 {
                     "name": "survivor-bow-idle-14",
                     "position": {
-                        "x": 756,
-                        "y": 1603
+                        "x": 863,
+                        "y": 2035
                     },
                     "dimension": {
                         "w": 145,
@@ -1084,8 +1186,8 @@
                 {
                     "name": "survivor-bow-idle-15",
                     "position": {
-                        "x": 878,
-                        "y": 1603
+                        "x": 985,
+                        "y": 2035
                     },
                     "dimension": {
                         "w": 145,
@@ -1101,7 +1203,7 @@
                 {
                     "name": "survivor-bow-idle-16",
                     "position": {
-                        "x": 741,
+                        "x": 1107,
                         "y": 2035
                     },
                     "dimension": {
@@ -1116,27 +1218,27 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-idle-17",
+                    "name": "survivor-walk_bow_19",
                     "position": {
-                        "x": 863,
-                        "y": 2035
+                        "x": 1932,
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 145,
                         "h": 112
                     },
                     "trim": {
-                        "x": 21,
-                        "y": 13,
+                        "x": 23,
+                        "y": 11,
                         "w": 122,
-                        "h": 87
+                        "h": 89
                     }
                 },
                 {
                     "name": "survivor-bow-idle-18",
                     "position": {
-                        "x": 2830,
-                        "y": 2161
+                        "x": 1594,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
@@ -1152,8 +1254,8 @@
                 {
                     "name": "survivor-bow-idle-19",
                     "position": {
-                        "x": 985,
-                        "y": 2035
+                        "x": 1716,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
@@ -1169,8 +1271,8 @@
                 {
                     "name": "survivor-bow-idle-20",
                     "position": {
-                        "x": 1106,
-                        "y": 2389
+                        "x": 725,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 145,
@@ -1184,61 +1286,10 @@
                     }
                 },
                 {
-                    "name": "survivor-bow-pull-00",
-                    "position": {
-                        "x": 1107,
-                        "y": 2035
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 22,
-                        "y": 15,
-                        "w": 122,
-                        "h": 86
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_02",
-                    "position": {
-                        "x": 1229,
-                        "y": 2035
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 19,
-                        "y": 14,
-                        "w": 122,
-                        "h": 86
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_07",
-                    "position": {
-                        "x": 1351,
-                        "y": 2035
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 17,
-                        "y": 14,
-                        "w": 122,
-                        "h": 86
-                    }
-                },
-                {
                     "name": "survivor-walk_bow_09",
                     "position": {
-                        "x": 1473,
-                        "y": 2035
+                        "x": 1838,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
@@ -1252,197 +1303,44 @@
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_10",
+                    "name": "survivor-bow-pull-00",
                     "position": {
-                        "x": 1595,
-                        "y": 2035
+                        "x": 1960,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
                         "h": 112
                     },
                     "trim": {
-                        "x": 19,
-                        "y": 14,
+                        "x": 22,
+                        "y": 15,
                         "w": 122,
                         "h": 86
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_11",
+                    "name": "survivor-walk_bow_04",
                     "position": {
-                        "x": 1717,
-                        "y": 2035
+                        "x": 2082,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
                         "h": 112
                     },
                     "trim": {
-                        "x": 20,
+                        "x": 18,
                         "y": 14,
-                        "w": 122,
+                        "w": 121,
                         "h": 86
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_19",
-                    "position": {
-                        "x": 1932,
-                        "y": 1309
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 23,
-                        "y": 11,
-                        "w": 122,
-                        "h": 89
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_20",
-                    "position": {
-                        "x": 1000,
-                        "y": 1603
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 22,
-                        "y": 12,
-                        "w": 122,
-                        "h": 88
-                    }
-                },
-                {
-                    "name": "survivor-bow-idle-00",
-                    "position": {
-                        "x": 1228,
-                        "y": 2389
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 20,
-                        "y": 15,
-                        "w": 121,
-                        "h": 85
-                    }
-                },
-                {
-                    "name": "survivor-bow-idle-01",
-                    "position": {
-                        "x": 1349,
-                        "y": 2389
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 20,
-                        "y": 15,
-                        "w": 121,
-                        "h": 85
-                    }
-                },
-                {
-                    "name": "survivor-bow-idle-11",
-                    "position": {
-                        "x": 2054,
-                        "y": 1309
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 22,
-                        "y": 11,
-                        "w": 121,
-                        "h": 89
-                    }
-                },
-                {
-                    "name": "survivor-bow-idle-12",
-                    "position": {
-                        "x": 2175,
-                        "y": 1309
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 22,
-                        "y": 11,
-                        "w": 121,
-                        "h": 89
-                    }
-                },
-                {
-                    "name": "survivor-bow-idle-21",
-                    "position": {
-                        "x": 1470,
-                        "y": 2389
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 20,
-                        "y": 15,
-                        "w": 121,
-                        "h": 85
-                    }
-                },
-                {
-                    "name": "survivor-bow-pull-22",
-                    "position": {
-                        "x": 1399,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 24,
-                        "y": 24,
-                        "w": 121,
-                        "h": 58
                     }
                 },
                 {
                     "name": "survivor-walk_bow_00",
                     "position": {
-                        "x": 1591,
-                        "y": 2389
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 20,
-                        "y": 15,
-                        "w": 121,
-                        "h": 85
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_01",
-                    "position": {
-                        "x": 1712,
-                        "y": 2389
+                        "x": 847,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 145,
@@ -1458,8 +1356,8 @@
                 {
                     "name": "survivor-walk_bow_03",
                     "position": {
-                        "x": 1839,
-                        "y": 2035
+                        "x": 2203,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
@@ -1473,78 +1371,44 @@
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_04",
+                    "name": "survivor-bow-idle-00",
                     "position": {
-                        "x": 1960,
-                        "y": 2035
+                        "x": 968,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 145,
                         "h": 112
                     },
                     "trim": {
-                        "x": 18,
-                        "y": 14,
+                        "x": 20,
+                        "y": 15,
                         "w": 121,
-                        "h": 86
+                        "h": 85
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_05",
+                    "name": "survivor-bow-idle-01",
                     "position": {
-                        "x": 1122,
-                        "y": 1603
+                        "x": 1089,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 145,
                         "h": 112
                     },
                     "trim": {
-                        "x": 16,
-                        "y": 12,
+                        "x": 20,
+                        "y": 15,
                         "w": 121,
-                        "h": 87
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_06",
-                    "position": {
-                        "x": 2081,
-                        "y": 2035
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 17,
-                        "y": 13,
-                        "w": 121,
-                        "h": 86
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_08",
-                    "position": {
-                        "x": 2202,
-                        "y": 2035
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 18,
-                        "y": 14,
-                        "w": 121,
-                        "h": 86
+                        "h": 85
                     }
                 },
                 {
                     "name": "survivor-walk_bow_12",
                     "position": {
-                        "x": 2296,
-                        "y": 1309
+                        "x": 2054,
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 145,
@@ -1558,27 +1422,146 @@
                     }
                 },
                 {
-                    "name": "survivor-walk_bow_13",
+                    "name": "survivor-walk_bow_08",
                     "position": {
-                        "x": 1102,
-                        "y": 1112
+                        "x": 2324,
+                        "y": 2389
                     },
                     "dimension": {
                         "w": 145,
                         "h": 112
                     },
                     "trim": {
-                        "x": 25,
-                        "y": 7,
-                        "w": 120,
-                        "h": 93
+                        "x": 18,
+                        "y": 14,
+                        "w": 121,
+                        "h": 86
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_06",
+                    "position": {
+                        "x": 2445,
+                        "y": 2389
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 17,
+                        "y": 13,
+                        "w": 121,
+                        "h": 86
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_05",
+                    "position": {
+                        "x": 1229,
+                        "y": 2035
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 16,
+                        "y": 12,
+                        "w": 121,
+                        "h": 87
+                    }
+                },
+                {
+                    "name": "survivor-bow-idle-11",
+                    "position": {
+                        "x": 1102,
+                        "y": 1244
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 22,
+                        "y": 11,
+                        "w": 121,
+                        "h": 89
+                    }
+                },
+                {
+                    "name": "survivor-bow-idle-12",
+                    "position": {
+                        "x": 1102,
+                        "y": 1333
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 22,
+                        "y": 11,
+                        "w": 121,
+                        "h": 89
+                    }
+                },
+                {
+                    "name": "survivor-bow-pull-22",
+                    "position": {
+                        "x": 1525,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 24,
+                        "y": 24,
+                        "w": 121,
+                        "h": 58
+                    }
+                },
+                {
+                    "name": "survivor-bow-idle-21",
+                    "position": {
+                        "x": 1210,
+                        "y": 2485
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 20,
+                        "y": 15,
+                        "w": 121,
+                        "h": 85
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_01",
+                    "position": {
+                        "x": 1331,
+                        "y": 2485
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 20,
+                        "y": 15,
+                        "w": 121,
+                        "h": 85
                     }
                 },
                 {
                     "name": "survivor-walk_bow_18",
                     "position": {
-                        "x": 1102,
-                        "y": 1205
+                        "x": 512,
+                        "y": 1112
                     },
                     "dimension": {
                         "w": 145,
@@ -1592,9 +1575,26 @@
                     }
                 },
                 {
+                    "name": "survivor-walk_bow_13",
+                    "position": {
+                        "x": 265,
+                        "y": 515
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 25,
+                        "y": 7,
+                        "w": 120,
+                        "h": 93
+                    }
+                },
+                {
                     "name": "survivor-bow-pull-21",
                     "position": {
-                        "x": 1520,
+                        "x": 1646,
                         "y": 2570
                     },
                     "dimension": {
@@ -1611,8 +1611,8 @@
                 {
                     "name": "survivor-walk_bow_15",
                     "position": {
-                        "x": 1222,
-                        "y": 1112
+                        "x": 265,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 145,
@@ -1629,7 +1629,7 @@
                     "name": "survivor-walk_bow_17",
                     "position": {
                         "x": 265,
-                        "y": 515
+                        "y": 701
                     },
                     "dimension": {
                         "w": 145,
@@ -1643,10 +1643,44 @@
                     }
                 },
                 {
+                    "name": "survivor-bow-pull-20",
+                    "position": {
+                        "x": 1765,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 27,
+                        "y": 24,
+                        "w": 118,
+                        "h": 58
+                    }
+                },
+                {
+                    "name": "survivor-walk_bow_16",
+                    "position": {
+                        "x": 265,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 27,
+                        "y": 5,
+                        "w": 118,
+                        "h": 95
+                    }
+                },
+                {
                     "name": "survivor-bow-pull-01",
                     "position": {
-                        "x": 2417,
-                        "y": 1309
+                        "x": 2175,
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 145,
@@ -1660,9 +1694,26 @@
                     }
                 },
                 {
+                    "name": "survivor-walk_bow_14",
+                    "position": {
+                        "x": 265,
+                        "y": 890
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 27,
+                        "y": 5,
+                        "w": 118,
+                        "h": 95
+                    }
+                },
+                {
                     "name": "survivor-bow-pull-14",
                     "position": {
-                        "x": 741,
+                        "x": 1452,
                         "y": 2485
                     },
                     "dimension": {
@@ -1679,7 +1730,7 @@
                 {
                     "name": "survivor-bow-pull-15",
                     "position": {
-                        "x": 859,
+                        "x": 1570,
                         "y": 2485
                     },
                     "dimension": {
@@ -1696,7 +1747,7 @@
                 {
                     "name": "survivor-bow-pull-16",
                     "position": {
-                        "x": 977,
+                        "x": 1688,
                         "y": 2485
                     },
                     "dimension": {
@@ -1713,7 +1764,7 @@
                 {
                     "name": "survivor-bow-pull-17",
                     "position": {
-                        "x": 1639,
+                        "x": 1883,
                         "y": 2570
                     },
                     "dimension": {
@@ -1730,7 +1781,7 @@
                 {
                     "name": "survivor-bow-pull-18",
                     "position": {
-                        "x": 1095,
+                        "x": 1806,
                         "y": 2485
                     },
                     "dimension": {
@@ -1747,7 +1798,7 @@
                 {
                     "name": "survivor-bow-pull-19",
                     "position": {
-                        "x": 1757,
+                        "x": 2001,
                         "y": 2570
                     },
                     "dimension": {
@@ -1759,80 +1810,12 @@
                         "y": 24,
                         "w": 118,
                         "h": 58
-                    }
-                },
-                {
-                    "name": "survivor-bow-pull-20",
-                    "position": {
-                        "x": 1875,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 27,
-                        "y": 24,
-                        "w": 118,
-                        "h": 58
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_14",
-                    "position": {
-                        "x": 265,
-                        "y": 609
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 27,
-                        "y": 5,
-                        "w": 118,
-                        "h": 95
-                    }
-                },
-                {
-                    "name": "survivor-walk_bow_16",
-                    "position": {
-                        "x": 265,
-                        "y": 704
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 27,
-                        "y": 5,
-                        "w": 118,
-                        "h": 95
-                    }
-                },
-                {
-                    "name": "survivor-bow-pull-12",
-                    "position": {
-                        "x": 1833,
-                        "y": 2389
-                    },
-                    "dimension": {
-                        "w": 145,
-                        "h": 112
-                    },
-                    "trim": {
-                        "x": 28,
-                        "y": 23,
-                        "w": 117,
-                        "h": 61
                     }
                 },
                 {
                     "name": "survivor-bow-pull-13",
                     "position": {
-                        "x": 1213,
+                        "x": 1924,
                         "y": 2485
                     },
                     "dimension": {
@@ -1847,10 +1830,27 @@
                     }
                 },
                 {
+                    "name": "survivor-bow-pull-12",
+                    "position": {
+                        "x": 2566,
+                        "y": 2389
+                    },
+                    "dimension": {
+                        "w": 145,
+                        "h": 112
+                    },
+                    "trim": {
+                        "x": 28,
+                        "y": 23,
+                        "w": 117,
+                        "h": 61
+                    }
+                },
+                {
                     "name": "survivor-bow-pull-02",
                     "position": {
-                        "x": 1222,
-                        "y": 1205
+                        "x": 1223,
+                        "y": 1333
                     },
                     "dimension": {
                         "w": 145,
@@ -1867,7 +1867,7 @@
                     "name": "survivor-bow-pull-03",
                     "position": {
                         "x": 265,
-                        "y": 799
+                        "y": 985
                     },
                     "dimension": {
                         "w": 145,
@@ -1883,8 +1883,8 @@
                 {
                     "name": "survivor-bow-pull-04",
                     "position": {
-                        "x": 265,
-                        "y": 894
+                        "x": 601,
+                        "y": 94
                     },
                     "dimension": {
                         "w": 145,
@@ -1900,8 +1900,8 @@
                 {
                     "name": "survivor-bow-pull-06",
                     "position": {
-                        "x": 265,
-                        "y": 993
+                        "x": 601,
+                        "y": 193
                     },
                     "dimension": {
                         "w": 145,
@@ -1918,7 +1918,7 @@
                     "name": "survivor-bow-pull-05",
                     "position": {
                         "x": 601,
-                        "y": 94
+                        "y": 291
                     },
                     "dimension": {
                         "w": 145,
@@ -1934,7 +1934,7 @@
                 {
                     "name": "rat_hide",
                     "position": {
-                        "x": 1993,
+                        "x": 2119,
                         "y": 2570
                     },
                     "dimension": {
@@ -1951,7 +1951,7 @@
                 {
                     "name": "survivor-bow-pull-11",
                     "position": {
-                        "x": 2323,
+                        "x": 1350,
                         "y": 2035
                     },
                     "dimension": {
@@ -1968,8 +1968,8 @@
                 {
                     "name": "survivor-bow-pull-10",
                     "position": {
-                        "x": 1243,
-                        "y": 1603
+                        "x": 908,
+                        "y": 1625
                     },
                     "dimension": {
                         "w": 145,
@@ -1986,7 +1986,7 @@
                     "name": "femur",
                     "position": {
                         "x": 601,
-                        "y": 195
+                        "y": 392
                     },
                     "dimension": {
                         "w": 121,
@@ -2002,8 +2002,8 @@
                 {
                     "name": "survivor-bow-pull-09",
                     "position": {
-                        "x": 908,
-                        "y": 1493
+                        "x": 2293,
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 145,
@@ -2019,8 +2019,8 @@
                 {
                     "name": "survivor-bow-pull-08",
                     "position": {
-                        "x": 2535,
-                        "y": 1309
+                        "x": 1336,
+                        "y": 1333
                     },
                     "dimension": {
                         "w": 145,
@@ -2031,6 +2031,23 @@
                         "y": 21,
                         "w": 100,
                         "h": 72
+                    }
+                },
+                {
+                    "name": "tree_stump_00",
+                    "position": {
+                        "x": 694,
+                        "y": 392
+                    },
+                    "dimension": {
+                        "w": 140,
+                        "h": 140
+                    },
+                    "trim": {
+                        "x": 21,
+                        "y": 21,
+                        "w": 99,
+                        "h": 99
                     }
                 },
                 {
@@ -2053,8 +2070,8 @@
                 {
                     "name": "rock_4",
                     "position": {
-                        "x": 375,
-                        "y": 993
+                        "x": 793,
+                        "y": 392
                     },
                     "dimension": {
                         "w": 95,
@@ -2064,8 +2081,8 @@
                 {
                     "name": "rock_5",
                     "position": {
-                        "x": 470,
-                        "y": 993
+                        "x": 375,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 87,
@@ -2075,8 +2092,8 @@
                 {
                     "name": "survivor-bow-pull-07",
                     "position": {
-                        "x": 1335,
-                        "y": 1205
+                        "x": 1223,
+                        "y": 1244
                     },
                     "dimension": {
                         "w": 145,
@@ -2092,7 +2109,7 @@
                 {
                     "name": "rock_6",
                     "position": {
-                        "x": 1341,
+                        "x": 632,
                         "y": 1112
                     },
                     "dimension": {
@@ -2103,7 +2120,7 @@
                 {
                     "name": "rock_7",
                     "position": {
-                        "x": 1431,
+                        "x": 722,
                         "y": 1112
                     },
                     "dimension": {
@@ -2114,7 +2131,7 @@
                 {
                     "name": "cancel_button",
                     "position": {
-                        "x": 1521,
+                        "x": 812,
                         "y": 1112
                     },
                     "dimension": {
@@ -2131,7 +2148,7 @@
                 {
                     "name": "bush_0",
                     "position": {
-                        "x": 1610,
+                        "x": 901,
                         "y": 1112
                     },
                     "dimension": {
@@ -2142,8 +2159,8 @@
                 {
                     "name": "right_leg_bone",
                     "position": {
-                        "x": 557,
-                        "y": 993
+                        "x": 462,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 90,
@@ -2157,27 +2174,10 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_12",
-                    "position": {
-                        "x": 636,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 11,
-                        "y": 11,
-                        "w": 86,
-                        "h": 80
-                    }
-                },
-                {
                     "name": "Armature_candle_walk_36",
                     "position": {
-                        "x": 722,
-                        "y": 993
+                        "x": 541,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2191,10 +2191,78 @@
                     }
                 },
                 {
+                    "name": "Armature_candle_walk_12",
+                    "position": {
+                        "x": 627,
+                        "y": 985
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 11,
+                        "y": 11,
+                        "w": 86,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_13",
+                    "position": {
+                        "x": 713,
+                        "y": 985
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 12,
+                        "y": 11,
+                        "w": 85,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_11",
+                    "position": {
+                        "x": 798,
+                        "y": 985
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 12,
+                        "y": 11,
+                        "w": 85,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_35",
+                    "position": {
+                        "x": 883,
+                        "y": 985
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 9,
+                        "y": 11,
+                        "w": 85,
+                        "h": 80
+                    }
+                },
+                {
                     "name": "rock_8",
                     "position": {
-                        "x": 375,
-                        "y": 894
+                        "x": 383,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 76,
@@ -2202,44 +2270,10 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_11",
-                    "position": {
-                        "x": 808,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 12,
-                        "y": 11,
-                        "w": 85,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_13",
-                    "position": {
-                        "x": 893,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 12,
-                        "y": 11,
-                        "w": 85,
-                        "h": 80
-                    }
-                },
-                {
                     "name": "Armature_candle_walk_14",
                     "position": {
-                        "x": 978,
-                        "y": 993
+                        "x": 968,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2255,8 +2289,8 @@
                 {
                     "name": "Armature_candle_walk_34",
                     "position": {
-                        "x": 1063,
-                        "y": 993
+                        "x": 1053,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2270,27 +2304,27 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_35",
+                    "name": "Armature_candle_walk_33",
                     "position": {
-                        "x": 1148,
-                        "y": 993
+                        "x": 1138,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
                         "h": 100
                     },
                     "trim": {
-                        "x": 9,
+                        "x": 10,
                         "y": 11,
-                        "w": 85,
+                        "w": 84,
                         "h": 80
                     }
                 },
                 {
                     "name": "Armature_candle_walk_10",
                     "position": {
-                        "x": 1233,
-                        "y": 993
+                        "x": 1222,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2304,27 +2338,10 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_33",
-                    "position": {
-                        "x": 1317,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 10,
-                        "y": 11,
-                        "w": 84,
-                        "h": 80
-                    }
-                },
-                {
                     "name": "Armature_candle_walk_37",
                     "position": {
-                        "x": 1401,
-                        "y": 993
+                        "x": 1306,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2338,10 +2355,10 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_09",
+                    "name": "Armature_candle_walk_15",
                     "position": {
-                        "x": 1485,
-                        "y": 993
+                        "x": 1390,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2355,10 +2372,10 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_15",
+                    "name": "Armature_candle_walk_09",
                     "position": {
-                        "x": 1568,
-                        "y": 993
+                        "x": 1473,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2374,8 +2391,8 @@
                 {
                     "name": "Armature_candle_walk_38",
                     "position": {
-                        "x": 1651,
-                        "y": 993
+                        "x": 1556,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2391,8 +2408,8 @@
                 {
                     "name": "Armature_candle_walk_08",
                     "position": {
-                        "x": 1734,
-                        "y": 993
+                        "x": 1639,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2408,8 +2425,8 @@
                 {
                     "name": "Armature_candle_walk_16",
                     "position": {
-                        "x": 1816,
-                        "y": 993
+                        "x": 1721,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2425,8 +2442,8 @@
                 {
                     "name": "Armature_candle_walk_32",
                     "position": {
-                        "x": 1898,
-                        "y": 993
+                        "x": 1803,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -2437,47 +2454,13 @@
                         "y": 11,
                         "w": 82,
                         "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_39",
-                    "position": {
-                        "x": 1980,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 12,
-                        "y": 11,
-                        "w": 82,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_34",
-                    "position": {
-                        "x": 451,
-                        "y": 894
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 9,
-                        "y": 11,
-                        "w": 65,
-                        "h": 82
                     }
                 },
                 {
                     "name": "Armature_nothing_walk_35",
                     "position": {
-                        "x": 516,
-                        "y": 894
+                        "x": 459,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 81,
@@ -2491,44 +2474,10 @@
                     }
                 },
                 {
-                    "name": "Armature_nothing_walk_36",
-                    "position": {
-                        "x": 582,
-                        "y": 894
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 8,
-                        "y": 11,
-                        "w": 67,
-                        "h": 82
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_37",
-                    "position": {
-                        "x": 649,
-                        "y": 894
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 10,
-                        "y": 11,
-                        "w": 64,
-                        "h": 82
-                    }
-                },
-                {
                     "name": "Armature_nothing_walk_38",
                     "position": {
-                        "x": 713,
-                        "y": 894
+                        "x": 525,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 81,
@@ -2542,10 +2491,44 @@
                     }
                 },
                 {
+                    "name": "Armature_nothing_walk_34",
+                    "position": {
+                        "x": 587,
+                        "y": 890
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 9,
+                        "y": 11,
+                        "w": 65,
+                        "h": 82
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_37",
+                    "position": {
+                        "x": 652,
+                        "y": 890
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 10,
+                        "y": 11,
+                        "w": 64,
+                        "h": 82
+                    }
+                },
+                {
                     "name": "Armature_nothing_walk_39",
                     "position": {
-                        "x": 775,
-                        "y": 894
+                        "x": 716,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 81,
@@ -2559,10 +2542,61 @@
                     }
                 },
                 {
+                    "name": "Armature_nothing_walk_36",
+                    "position": {
+                        "x": 776,
+                        "y": 890
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 8,
+                        "y": 11,
+                        "w": 67,
+                        "h": 82
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_39",
+                    "position": {
+                        "x": 1885,
+                        "y": 985
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 12,
+                        "y": 11,
+                        "w": 82,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_41",
+                    "position": {
+                        "x": 843,
+                        "y": 890
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 14,
+                        "y": 11,
+                        "w": 56,
+                        "h": 81
+                    }
+                },
+                {
                     "name": "Armature_candle_idle_00",
                     "position": {
-                        "x": 835,
-                        "y": 894
+                        "x": 899,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2578,8 +2612,8 @@
                 {
                     "name": "Armature_candle_idle_01",
                     "position": {
-                        "x": 915,
-                        "y": 894
+                        "x": 979,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2595,8 +2629,8 @@
                 {
                     "name": "Armature_candle_idle_02",
                     "position": {
-                        "x": 995,
-                        "y": 894
+                        "x": 1059,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2612,8 +2646,8 @@
                 {
                     "name": "Armature_candle_idle_03",
                     "position": {
-                        "x": 1075,
-                        "y": 894
+                        "x": 1139,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2629,8 +2663,8 @@
                 {
                     "name": "Armature_candle_idle_04",
                     "position": {
-                        "x": 1155,
-                        "y": 894
+                        "x": 1219,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2646,8 +2680,8 @@
                 {
                     "name": "Armature_candle_idle_05",
                     "position": {
-                        "x": 1235,
-                        "y": 894
+                        "x": 1299,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2663,8 +2697,8 @@
                 {
                     "name": "Armature_candle_idle_06",
                     "position": {
-                        "x": 1315,
-                        "y": 894
+                        "x": 1379,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2680,8 +2714,8 @@
                 {
                     "name": "Armature_candle_idle_07",
                     "position": {
-                        "x": 1395,
-                        "y": 894
+                        "x": 1459,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2697,8 +2731,8 @@
                 {
                     "name": "Armature_candle_idle_08",
                     "position": {
-                        "x": 1475,
-                        "y": 894
+                        "x": 1539,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2714,8 +2748,8 @@
                 {
                     "name": "Armature_candle_idle_09",
                     "position": {
-                        "x": 1555,
-                        "y": 894
+                        "x": 1619,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2731,8 +2765,8 @@
                 {
                     "name": "Armature_candle_idle_10",
                     "position": {
-                        "x": 1635,
-                        "y": 894
+                        "x": 1699,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2748,8 +2782,8 @@
                 {
                     "name": "Armature_candle_idle_11",
                     "position": {
-                        "x": 1715,
-                        "y": 894
+                        "x": 1779,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2765,8 +2799,8 @@
                 {
                     "name": "Armature_candle_idle_12",
                     "position": {
-                        "x": 1794,
-                        "y": 894
+                        "x": 1858,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2782,8 +2816,8 @@
                 {
                     "name": "Armature_candle_idle_13",
                     "position": {
-                        "x": 1873,
-                        "y": 894
+                        "x": 1937,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2799,8 +2833,8 @@
                 {
                     "name": "Armature_candle_idle_14",
                     "position": {
-                        "x": 1952,
-                        "y": 894
+                        "x": 2016,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2816,8 +2850,8 @@
                 {
                     "name": "Armature_candle_idle_15",
                     "position": {
-                        "x": 2031,
-                        "y": 894
+                        "x": 2095,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2833,8 +2867,8 @@
                 {
                     "name": "Armature_candle_idle_16",
                     "position": {
-                        "x": 2111,
-                        "y": 894
+                        "x": 2175,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2850,8 +2884,8 @@
                 {
                     "name": "Armature_candle_idle_17",
                     "position": {
-                        "x": 2191,
-                        "y": 894
+                        "x": 2255,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2867,8 +2901,8 @@
                 {
                     "name": "Armature_candle_idle_18",
                     "position": {
-                        "x": 2271,
-                        "y": 894
+                        "x": 2335,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2884,8 +2918,8 @@
                 {
                     "name": "Armature_candle_idle_19",
                     "position": {
-                        "x": 2350,
-                        "y": 894
+                        "x": 2414,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2901,8 +2935,8 @@
                 {
                     "name": "Armature_candle_idle_20",
                     "position": {
-                        "x": 2430,
-                        "y": 894
+                        "x": 2494,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2918,8 +2952,8 @@
                 {
                     "name": "Armature_candle_idle_21",
                     "position": {
-                        "x": 2510,
-                        "y": 894
+                        "x": 2574,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2935,8 +2969,8 @@
                 {
                     "name": "Armature_candle_idle_22",
                     "position": {
-                        "x": 2590,
-                        "y": 894
+                        "x": 2654,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2952,8 +2986,8 @@
                 {
                     "name": "Armature_candle_idle_23",
                     "position": {
-                        "x": 2670,
-                        "y": 894
+                        "x": 2734,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2969,8 +3003,8 @@
                 {
                     "name": "Armature_candle_idle_24",
                     "position": {
-                        "x": 2750,
-                        "y": 894
+                        "x": 2814,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -2986,8 +3020,8 @@
                 {
                     "name": "Armature_candle_idle_25",
                     "position": {
-                        "x": 2830,
-                        "y": 894
+                        "x": 2894,
+                        "y": 890
                     },
                     "dimension": {
                         "w": 95,
@@ -3003,8 +3037,8 @@
                 {
                     "name": "Armature_candle_idle_26",
                     "position": {
-                        "x": 2910,
-                        "y": 894
+                        "x": 383,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3020,8 +3054,8 @@
                 {
                     "name": "Armature_candle_idle_27",
                     "position": {
-                        "x": 375,
-                        "y": 799
+                        "x": 463,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3037,8 +3071,8 @@
                 {
                     "name": "Armature_candle_idle_28",
                     "position": {
-                        "x": 455,
-                        "y": 799
+                        "x": 543,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3054,8 +3088,8 @@
                 {
                     "name": "Armature_candle_idle_29",
                     "position": {
-                        "x": 535,
-                        "y": 799
+                        "x": 623,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3071,8 +3105,8 @@
                 {
                     "name": "Armature_candle_idle_30",
                     "position": {
-                        "x": 615,
-                        "y": 799
+                        "x": 703,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3088,8 +3122,8 @@
                 {
                     "name": "Armature_candle_idle_31",
                     "position": {
-                        "x": 695,
-                        "y": 799
+                        "x": 783,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3103,27 +3137,27 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_32",
+                    "name": "Armature_nothing_walk_25",
                     "position": {
-                        "x": 775,
-                        "y": 799
+                        "x": 863,
+                        "y": 795
                     },
                     "dimension": {
-                        "w": 95,
-                        "h": 99
+                        "w": 81,
+                        "h": 104
                     },
                     "trim": {
-                        "x": 3,
-                        "y": 10,
-                        "w": 80,
+                        "x": 15,
+                        "y": 11,
+                        "w": 54,
                         "h": 81
                     }
                 },
                 {
                     "name": "Armature_candle_idle_33",
                     "position": {
-                        "x": 855,
-                        "y": 799
+                        "x": 917,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3139,8 +3173,8 @@
                 {
                     "name": "Armature_candle_idle_34",
                     "position": {
-                        "x": 935,
-                        "y": 799
+                        "x": 997,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3156,8 +3190,8 @@
                 {
                     "name": "Armature_candle_idle_35",
                     "position": {
-                        "x": 1015,
-                        "y": 799
+                        "x": 1077,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3173,8 +3207,8 @@
                 {
                     "name": "Armature_candle_idle_36",
                     "position": {
-                        "x": 1095,
-                        "y": 799
+                        "x": 1157,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 95,
@@ -3188,10 +3222,95 @@
                     }
                 },
                 {
+                    "name": "Armature_nothing_walk_24",
+                    "position": {
+                        "x": 1237,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 54,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_23",
+                    "position": {
+                        "x": 1291,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 52,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_22",
+                    "position": {
+                        "x": 1343,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 50,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_21",
+                    "position": {
+                        "x": 1393,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 50,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_20",
+                    "position": {
+                        "x": 1443,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 51,
+                        "h": 81
+                    }
+                },
+                {
                     "name": "Armature_candle_walk_05",
                     "position": {
-                        "x": 2062,
-                        "y": 993
+                        "x": 1967,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -3207,8 +3326,8 @@
                 {
                     "name": "Armature_candle_walk_06",
                     "position": {
-                        "x": 2143,
-                        "y": 993
+                        "x": 2048,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -3224,8 +3343,8 @@
                 {
                     "name": "Armature_candle_walk_07",
                     "position": {
-                        "x": 2224,
-                        "y": 993
+                        "x": 2129,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -3236,574 +3355,13 @@
                         "y": 11,
                         "w": 81,
                         "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_17",
-                    "position": {
-                        "x": 2305,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_18",
-                    "position": {
-                        "x": 2386,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_19",
-                    "position": {
-                        "x": 2467,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_20",
-                    "position": {
-                        "x": 2548,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_21",
-                    "position": {
-                        "x": 2629,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_22",
-                    "position": {
-                        "x": 2710,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_23",
-                    "position": {
-                        "x": 2791,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_40",
-                    "position": {
-                        "x": 2872,
-                        "y": 993
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 13,
-                        "y": 11,
-                        "w": 81,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_00",
-                    "position": {
-                        "x": 1175,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 49,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_01",
-                    "position": {
-                        "x": 1224,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 49,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_02",
-                    "position": {
-                        "x": 1273,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 49,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_03",
-                    "position": {
-                        "x": 1322,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 49,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_04",
-                    "position": {
-                        "x": 1371,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 50,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_05",
-                    "position": {
-                        "x": 1421,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 51,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_06",
-                    "position": {
-                        "x": 1472,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 52,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_07",
-                    "position": {
-                        "x": 1524,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 52,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_08",
-                    "position": {
-                        "x": 1576,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 14,
-                        "y": 11,
-                        "w": 54,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_18",
-                    "position": {
-                        "x": 1630,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 52,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_19",
-                    "position": {
-                        "x": 1682,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 51,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_20",
-                    "position": {
-                        "x": 1733,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 51,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_21",
-                    "position": {
-                        "x": 1784,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 50,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_22",
-                    "position": {
-                        "x": 1834,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 50,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_23",
-                    "position": {
-                        "x": 1884,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 52,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_24",
-                    "position": {
-                        "x": 1936,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 54,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_25",
-                    "position": {
-                        "x": 1990,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 54,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_26",
-                    "position": {
-                        "x": 2044,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 55,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_27",
-                    "position": {
-                        "x": 2099,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 55,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_28",
-                    "position": {
-                        "x": 2154,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 56,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_29",
-                    "position": {
-                        "x": 2210,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 56,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_30",
-                    "position": {
-                        "x": 2266,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 57,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_31",
-                    "position": {
-                        "x": 2323,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 14,
-                        "y": 11,
-                        "w": 59,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_32",
-                    "position": {
-                        "x": 2382,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 12,
-                        "y": 11,
-                        "w": 61,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_33",
-                    "position": {
-                        "x": 2443,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 11,
-                        "y": 11,
-                        "w": 63,
-                        "h": 81
                     }
                 },
                 {
                     "name": "Armature_nothing_walk_40",
                     "position": {
-                        "x": 2506,
-                        "y": 799
+                        "x": 1494,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 81,
@@ -3817,27 +3375,61 @@
                     }
                 },
                 {
-                    "name": "Armature_nothing_walk_41",
+                    "name": "Armature_nothing_walk_33",
                     "position": {
-                        "x": 2564,
-                        "y": 799
+                        "x": 1552,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 81,
                         "h": 104
                     },
                     "trim": {
-                        "x": 14,
+                        "x": 11,
+                        "y": 11,
+                        "w": 63,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_candle_idle_32",
+                    "position": {
+                        "x": 1615,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 95,
+                        "h": 99
+                    },
+                    "trim": {
+                        "x": 3,
+                        "y": 10,
+                        "w": 80,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_28",
+                    "position": {
+                        "x": 1695,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
                         "y": 11,
                         "w": 56,
                         "h": 81
                     }
                 },
                 {
-                    "name": "Armature_nothing_walk_42",
+                    "name": "Armature_nothing_walk_27",
                     "position": {
-                        "x": 2620,
-                        "y": 799
+                        "x": 1751,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 81,
@@ -3846,66 +3438,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 54,
+                        "w": 55,
                         "h": 81
                     }
                 },
                 {
-                    "name": "Armature_nothing_walk_43",
+                    "name": "Armature_nothing_walk_48",
                     "position": {
-                        "x": 2674,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 53,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_44",
-                    "position": {
-                        "x": 2727,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 51,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_45",
-                    "position": {
-                        "x": 2778,
-                        "y": 799
-                    },
-                    "dimension": {
-                        "w": 81,
-                        "h": 104
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 50,
-                        "h": 81
-                    }
-                },
-                {
-                    "name": "Armature_nothing_walk_46",
-                    "position": {
-                        "x": 2828,
-                        "y": 799
+                        "x": 1806,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 81,
@@ -3921,8 +3462,8 @@
                 {
                     "name": "Armature_nothing_walk_47",
                     "position": {
-                        "x": 2877,
-                        "y": 799
+                        "x": 1855,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 81,
@@ -3936,10 +3477,10 @@
                     }
                 },
                 {
-                    "name": "Armature_nothing_walk_48",
+                    "name": "Armature_nothing_walk_46",
                     "position": {
-                        "x": 2926,
-                        "y": 799
+                        "x": 1904,
+                        "y": 795
                     },
                     "dimension": {
                         "w": 81,
@@ -3953,10 +3494,27 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_00",
+                    "name": "Armature_nothing_walk_45",
                     "position": {
-                        "x": 383,
-                        "y": 704
+                        "x": 1953,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 50,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_17",
+                    "position": {
+                        "x": 2210,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -3965,15 +3523,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_01",
+                    "name": "Armature_candle_walk_18",
                     "position": {
-                        "x": 463,
-                        "y": 704
+                        "x": 2291,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -3982,15 +3540,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_02",
+                    "name": "Armature_candle_walk_19",
                     "position": {
-                        "x": 543,
-                        "y": 704
+                        "x": 2372,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -3999,15 +3557,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_03",
+                    "name": "Armature_candle_walk_20",
                     "position": {
-                        "x": 623,
-                        "y": 704
+                        "x": 2453,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -4016,15 +3574,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_04",
+                    "name": "Armature_candle_walk_21",
                     "position": {
-                        "x": 703,
-                        "y": 704
+                        "x": 2534,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -4033,15 +3591,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_24",
+                    "name": "Armature_candle_walk_22",
                     "position": {
-                        "x": 783,
-                        "y": 704
+                        "x": 2615,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -4050,15 +3608,15 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_25",
+                    "name": "Armature_candle_walk_23",
                     "position": {
-                        "x": 863,
-                        "y": 704
+                        "x": 2696,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -4067,168 +3625,372 @@
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_26",
+                    "name": "Armature_nothing_walk_19",
                     "position": {
-                        "x": 943,
-                        "y": 704
+                        "x": 2003,
+                        "y": 795
                     },
                     "dimension": {
-                        "w": 108,
-                        "h": 100
+                        "w": 81,
+                        "h": 104
                     },
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
-                        "h": 80
+                        "w": 51,
+                        "h": 81
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_27",
+                    "name": "Armature_nothing_walk_18",
                     "position": {
-                        "x": 1023,
-                        "y": 704
+                        "x": 2054,
+                        "y": 795
                     },
                     "dimension": {
-                        "w": 108,
-                        "h": 100
+                        "w": 81,
+                        "h": 104
                     },
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 80,
-                        "h": 80
+                        "w": 52,
+                        "h": 81
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_28",
+                    "name": "Armature_nothing_walk_08",
                     "position": {
-                        "x": 1103,
-                        "y": 704
+                        "x": 2106,
+                        "y": 795
                     },
                     "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 80,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_29",
-                    "position": {
-                        "x": 1183,
-                        "y": 704
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 80,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_30",
-                    "position": {
-                        "x": 1263,
-                        "y": 704
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 80,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_31",
-                    "position": {
-                        "x": 1343,
-                        "y": 704
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
+                        "w": 81,
+                        "h": 104
                     },
                     "trim": {
                         "x": 14,
                         "y": 11,
-                        "w": 80,
-                        "h": 80
+                        "w": 54,
+                        "h": 81
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_41",
+                    "name": "Armature_nothing_walk_07",
                     "position": {
-                        "x": 1423,
-                        "y": 704
+                        "x": 2160,
+                        "y": 795
                     },
                     "dimension": {
-                        "w": 108,
-                        "h": 100
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 52,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_06",
+                    "position": {
+                        "x": 2212,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 52,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_05",
+                    "position": {
+                        "x": 2264,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 51,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_04",
+                    "position": {
+                        "x": 2315,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 50,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_03",
+                    "position": {
+                        "x": 2365,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 49,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_32",
+                    "position": {
+                        "x": 2414,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 12,
+                        "y": 11,
+                        "w": 61,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_31",
+                    "position": {
+                        "x": 2475,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
                     },
                     "trim": {
                         "x": 14,
                         "y": 11,
-                        "w": 80,
-                        "h": 80
+                        "w": 59,
+                        "h": 81
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_42",
+                    "name": "Armature_nothing_walk_44",
                     "position": {
-                        "x": 1503,
-                        "y": 704
+                        "x": 2534,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 51,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_26",
+                    "position": {
+                        "x": 2585,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 55,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_43",
+                    "position": {
+                        "x": 2640,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 53,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_42",
+                    "position": {
+                        "x": 2693,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 54,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_30",
+                    "position": {
+                        "x": 2747,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 57,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_29",
+                    "position": {
+                        "x": 2804,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 56,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_40",
+                    "position": {
+                        "x": 2777,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
                         "h": 100
                     },
                     "trim": {
-                        "x": 15,
+                        "x": 13,
                         "y": 11,
-                        "w": 79,
+                        "w": 81,
                         "h": 80
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_43",
+                    "name": "Armature_nothing_walk_02",
                     "position": {
-                        "x": 1582,
-                        "y": 704
+                        "x": 2860,
+                        "y": 795
                     },
                     "dimension": {
-                        "w": 108,
-                        "h": 100
+                        "w": 81,
+                        "h": 104
                     },
                     "trim": {
                         "x": 15,
                         "y": 11,
-                        "w": 79,
+                        "w": 49,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_01",
+                    "position": {
+                        "x": 2909,
+                        "y": 795
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 49,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_walk_00",
+                    "position": {
+                        "x": 384,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 81,
+                        "h": 104
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 49,
+                        "h": 81
+                    }
+                },
+                {
+                    "name": "Armature_nothing_idle_30",
+                    "position": {
+                        "x": 2858,
+                        "y": 985
+                    },
+                    "dimension": {
+                        "w": 60,
+                        "h": 98
+                    },
+                    "trim": {
+                        "x": 3,
+                        "y": 10,
+                        "w": 51,
                         "h": 80
                     }
                 },
                 {
                     "name": "Armature_candle_walk_44",
                     "position": {
-                        "x": 1661,
-                        "y": 704
+                        "x": 2909,
+                        "y": 985
                     },
                     "dimension": {
                         "w": 108,
@@ -4242,44 +4004,10 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_walk_45",
-                    "position": {
-                        "x": 1740,
-                        "y": 704
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 80,
-                        "h": 80
-                    }
-                },
-                {
-                    "name": "Armature_candle_walk_46",
-                    "position": {
-                        "x": 1820,
-                        "y": 704
-                    },
-                    "dimension": {
-                        "w": 108,
-                        "h": 100
-                    },
-                    "trim": {
-                        "x": 15,
-                        "y": 11,
-                        "w": 80,
-                        "h": 80
-                    }
-                },
-                {
                     "name": "Armature_candle_walk_47",
                     "position": {
-                        "x": 1900,
-                        "y": 704
+                        "x": 433,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 108,
@@ -4295,8 +4023,8 @@
                 {
                     "name": "Armature_candle_walk_48",
                     "position": {
-                        "x": 1980,
-                        "y": 704
+                        "x": 513,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 108,
@@ -4312,8 +4040,8 @@
                 {
                     "name": "Armature_nothing_idle_00",
                     "position": {
-                        "x": 2060,
-                        "y": 704
+                        "x": 593,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4329,8 +4057,8 @@
                 {
                     "name": "Armature_nothing_idle_01",
                     "position": {
-                        "x": 2111,
-                        "y": 704
+                        "x": 644,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4346,8 +4074,8 @@
                 {
                     "name": "Armature_nothing_idle_02",
                     "position": {
-                        "x": 2162,
-                        "y": 704
+                        "x": 695,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4363,8 +4091,8 @@
                 {
                     "name": "Armature_nothing_idle_03",
                     "position": {
-                        "x": 2213,
-                        "y": 704
+                        "x": 746,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4380,8 +4108,8 @@
                 {
                     "name": "Armature_nothing_idle_04",
                     "position": {
-                        "x": 2264,
-                        "y": 704
+                        "x": 797,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4397,8 +4125,8 @@
                 {
                     "name": "Armature_nothing_idle_05",
                     "position": {
-                        "x": 2315,
-                        "y": 704
+                        "x": 848,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4414,8 +4142,8 @@
                 {
                     "name": "Armature_nothing_idle_06",
                     "position": {
-                        "x": 2366,
-                        "y": 704
+                        "x": 899,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4431,8 +4159,8 @@
                 {
                     "name": "Armature_nothing_idle_07",
                     "position": {
-                        "x": 2417,
-                        "y": 704
+                        "x": 950,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4448,8 +4176,8 @@
                 {
                     "name": "Armature_nothing_idle_08",
                     "position": {
-                        "x": 2468,
-                        "y": 704
+                        "x": 1001,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4465,8 +4193,8 @@
                 {
                     "name": "Armature_nothing_idle_09",
                     "position": {
-                        "x": 2519,
-                        "y": 704
+                        "x": 1052,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4482,8 +4210,8 @@
                 {
                     "name": "Armature_nothing_idle_10",
                     "position": {
-                        "x": 2570,
-                        "y": 704
+                        "x": 1103,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4499,8 +4227,8 @@
                 {
                     "name": "Armature_nothing_idle_11",
                     "position": {
-                        "x": 2621,
-                        "y": 704
+                        "x": 1154,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4516,8 +4244,8 @@
                 {
                     "name": "Armature_nothing_idle_12",
                     "position": {
-                        "x": 2672,
-                        "y": 704
+                        "x": 1205,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4533,8 +4261,8 @@
                 {
                     "name": "Armature_nothing_idle_13",
                     "position": {
-                        "x": 2723,
-                        "y": 704
+                        "x": 1256,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4550,8 +4278,8 @@
                 {
                     "name": "Armature_nothing_idle_14",
                     "position": {
-                        "x": 2774,
-                        "y": 704
+                        "x": 1307,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4567,8 +4295,8 @@
                 {
                     "name": "Armature_nothing_idle_15",
                     "position": {
-                        "x": 2825,
-                        "y": 704
+                        "x": 1358,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4584,8 +4312,8 @@
                 {
                     "name": "Armature_nothing_idle_16",
                     "position": {
-                        "x": 2876,
-                        "y": 704
+                        "x": 1409,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4601,8 +4329,8 @@
                 {
                     "name": "Armature_nothing_idle_17",
                     "position": {
-                        "x": 2927,
-                        "y": 704
+                        "x": 1460,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4618,8 +4346,8 @@
                 {
                     "name": "Armature_nothing_idle_18",
                     "position": {
-                        "x": 383,
-                        "y": 609
+                        "x": 1511,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4635,8 +4363,8 @@
                 {
                     "name": "Armature_nothing_idle_19",
                     "position": {
-                        "x": 434,
-                        "y": 609
+                        "x": 1562,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4652,8 +4380,8 @@
                 {
                     "name": "Armature_nothing_idle_20",
                     "position": {
-                        "x": 485,
-                        "y": 609
+                        "x": 1613,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4669,8 +4397,8 @@
                 {
                     "name": "Armature_nothing_idle_21",
                     "position": {
-                        "x": 536,
-                        "y": 609
+                        "x": 1664,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4686,8 +4414,8 @@
                 {
                     "name": "Armature_nothing_idle_22",
                     "position": {
-                        "x": 587,
-                        "y": 609
+                        "x": 1715,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4703,8 +4431,8 @@
                 {
                     "name": "Armature_nothing_idle_23",
                     "position": {
-                        "x": 638,
-                        "y": 609
+                        "x": 1766,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4720,8 +4448,8 @@
                 {
                     "name": "Armature_nothing_idle_24",
                     "position": {
-                        "x": 689,
-                        "y": 609
+                        "x": 1817,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4737,8 +4465,8 @@
                 {
                     "name": "Armature_nothing_idle_25",
                     "position": {
-                        "x": 740,
-                        "y": 609
+                        "x": 1868,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4754,8 +4482,8 @@
                 {
                     "name": "Armature_nothing_idle_26",
                     "position": {
-                        "x": 791,
-                        "y": 609
+                        "x": 1919,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4771,8 +4499,8 @@
                 {
                     "name": "Armature_nothing_idle_27",
                     "position": {
-                        "x": 842,
-                        "y": 609
+                        "x": 1970,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4788,8 +4516,8 @@
                 {
                     "name": "Armature_nothing_idle_28",
                     "position": {
-                        "x": 893,
-                        "y": 609
+                        "x": 2021,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4805,8 +4533,8 @@
                 {
                     "name": "Armature_nothing_idle_29",
                     "position": {
-                        "x": 944,
-                        "y": 609
+                        "x": 2072,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4820,27 +4548,27 @@
                     }
                 },
                 {
-                    "name": "Armature_nothing_idle_30",
+                    "name": "Armature_candle_walk_46",
                     "position": {
-                        "x": 995,
-                        "y": 609
+                        "x": 2123,
+                        "y": 701
                     },
                     "dimension": {
-                        "w": 60,
-                        "h": 98
+                        "w": 108,
+                        "h": 100
                     },
                     "trim": {
-                        "x": 3,
-                        "y": 10,
-                        "w": 51,
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
                         "h": 80
                     }
                 },
                 {
                     "name": "Armature_nothing_idle_31",
                     "position": {
-                        "x": 1046,
-                        "y": 609
+                        "x": 2203,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4856,8 +4584,8 @@
                 {
                     "name": "Armature_nothing_idle_32",
                     "position": {
-                        "x": 1097,
-                        "y": 609
+                        "x": 2254,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4873,8 +4601,8 @@
                 {
                     "name": "Armature_nothing_idle_33",
                     "position": {
-                        "x": 1148,
-                        "y": 609
+                        "x": 2305,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4890,8 +4618,8 @@
                 {
                     "name": "Armature_nothing_idle_34",
                     "position": {
-                        "x": 1199,
-                        "y": 609
+                        "x": 2356,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4907,8 +4635,8 @@
                 {
                     "name": "Armature_nothing_idle_35",
                     "position": {
-                        "x": 1250,
-                        "y": 609
+                        "x": 2407,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4924,8 +4652,8 @@
                 {
                     "name": "Armature_nothing_idle_36",
                     "position": {
-                        "x": 1301,
-                        "y": 609
+                        "x": 2458,
+                        "y": 701
                     },
                     "dimension": {
                         "w": 60,
@@ -4939,10 +4667,163 @@
                     }
                 },
                 {
+                    "name": "Armature_candle_walk_43",
+                    "position": {
+                        "x": 2509,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 79,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_42",
+                    "position": {
+                        "x": 2588,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 79,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_41",
+                    "position": {
+                        "x": 2667,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 14,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_31",
+                    "position": {
+                        "x": 2747,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 14,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_30",
+                    "position": {
+                        "x": 2827,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_29",
+                    "position": {
+                        "x": 2907,
+                        "y": 701
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_28",
+                    "position": {
+                        "x": 384,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_27",
+                    "position": {
+                        "x": 464,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_26",
+                    "position": {
+                        "x": 544,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
                     "name": "Armature_nothing_walk_09",
                     "position": {
-                        "x": 1352,
-                        "y": 609
+                        "x": 624,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -4958,8 +4839,8 @@
                 {
                     "name": "Armature_nothing_walk_10",
                     "position": {
-                        "x": 1408,
-                        "y": 609
+                        "x": 680,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -4975,8 +4856,8 @@
                 {
                     "name": "Armature_nothing_walk_11",
                     "position": {
-                        "x": 1465,
-                        "y": 609
+                        "x": 737,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -4992,8 +4873,8 @@
                 {
                     "name": "Armature_nothing_walk_12",
                     "position": {
-                        "x": 1523,
-                        "y": 609
+                        "x": 795,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -5009,8 +4890,8 @@
                 {
                     "name": "Armature_nothing_walk_13",
                     "position": {
-                        "x": 1583,
-                        "y": 609
+                        "x": 855,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -5026,8 +4907,8 @@
                 {
                     "name": "Armature_nothing_walk_14",
                     "position": {
-                        "x": 1642,
-                        "y": 609
+                        "x": 914,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -5043,8 +4924,8 @@
                 {
                     "name": "Armature_nothing_walk_15",
                     "position": {
-                        "x": 1699,
-                        "y": 609
+                        "x": 971,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -5060,8 +4941,8 @@
                 {
                     "name": "Armature_nothing_walk_16",
                     "position": {
-                        "x": 1754,
-                        "y": 609
+                        "x": 1026,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -5077,8 +4958,8 @@
                 {
                     "name": "Armature_nothing_walk_17",
                     "position": {
-                        "x": 1808,
-                        "y": 609
+                        "x": 1080,
+                        "y": 608
                     },
                     "dimension": {
                         "w": 81,
@@ -5088,6 +4969,142 @@
                         "x": 15,
                         "y": 11,
                         "w": 53,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_25",
+                    "position": {
+                        "x": 1133,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_24",
+                    "position": {
+                        "x": 1213,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_04",
+                    "position": {
+                        "x": 1293,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_03",
+                    "position": {
+                        "x": 1373,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_02",
+                    "position": {
+                        "x": 1453,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_01",
+                    "position": {
+                        "x": 1533,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_00",
+                    "position": {
+                        "x": 1613,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
+                        "h": 80
+                    }
+                },
+                {
+                    "name": "Armature_candle_walk_45",
+                    "position": {
+                        "x": 1693,
+                        "y": 608
+                    },
+                    "dimension": {
+                        "w": 108,
+                        "h": 100
+                    },
+                    "trim": {
+                        "x": 15,
+                        "y": 11,
+                        "w": 80,
                         "h": 80
                     }
                 },
@@ -5126,10 +5143,10 @@
                     }
                 },
                 {
-                    "name": "rock_10",
+                    "name": "rock_9",
                     "position": {
-                        "x": 1009,
-                        "y": 1493
+                        "x": 2394,
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 70,
@@ -5137,10 +5154,10 @@
                     }
                 },
                 {
-                    "name": "rock_9",
+                    "name": "rock_10",
                     "position": {
-                        "x": 1079,
-                        "y": 1493
+                        "x": 2464,
+                        "y": 1441
                     },
                     "dimension": {
                         "w": 70,
@@ -5167,8 +5184,8 @@
                 {
                     "name": "rock_11",
                     "position": {
-                        "x": 1347,
-                        "y": 1603
+                        "x": 1012,
+                        "y": 1625
                     },
                     "dimension": {
                         "w": 66,
@@ -5178,7 +5195,7 @@
                 {
                     "name": "dirty_rag_1",
                     "position": {
-                        "x": 1330,
+                        "x": 2041,
                         "y": 2485
                     },
                     "dimension": {
@@ -5193,20 +5210,14 @@
                     }
                 },
                 {
-                    "name": "old_helmet",
+                    "name": "chest_full",
                     "position": {
                         "x": 1127,
                         "y": 2877
                     },
                     "dimension": {
                         "w": 50,
-                        "h": 50
-                    },
-                    "trim": {
-                        "x": 0,
-                        "y": 7,
-                        "w": 50,
-                        "h": 37
+                        "h": 25
                     }
                 },
                 {
@@ -5221,20 +5232,26 @@
                     }
                 },
                 {
-                    "name": "chest_full",
+                    "name": "old_helmet",
                     "position": {
-                        "x": 1227,
-                        "y": 2877
+                        "x": 2063,
+                        "y": 2799
                     },
                     "dimension": {
                         "w": 50,
-                        "h": 25
+                        "h": 50
+                    },
+                    "trim": {
+                        "x": 0,
+                        "y": 7,
+                        "w": 50,
+                        "h": 37
                     }
                 },
                 {
                     "name": "old_boots",
                     "position": {
-                        "x": 2063,
+                        "x": 2113,
                         "y": 2799
                     },
                     "dimension": {
@@ -5251,62 +5268,7 @@
                 {
                     "name": "rat_2",
                     "position": {
-                        "x": 2599,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 48
-                    }
-                },
-                {
-                    "name": "rat_4",
-                    "position": {
-                        "x": 2614,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 48
-                    }
-                },
-                {
-                    "name": "rat_42",
-                    "position": {
-                        "x": 2629,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 48
-                    }
-                },
-                {
-                    "name": "rat_43",
-                    "position": {
-                        "x": 2644,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 48
-                    }
-                },
-                {
-                    "name": "rat_44",
-                    "position": {
-                        "x": 2659,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 48
-                    }
-                },
-                {
-                    "name": "rat_48",
-                    "position": {
-                        "x": 2674,
+                        "x": 2733,
                         "y": 2702
                     },
                     "dimension": {
@@ -5317,7 +5279,7 @@
                 {
                     "name": "rat_49",
                     "position": {
-                        "x": 2689,
+                        "x": 2748,
                         "y": 2702
                     },
                     "dimension": {
@@ -5326,9 +5288,53 @@
                     }
                 },
                 {
-                    "name": "rat_50",
+                    "name": "rat_48",
                     "position": {
-                        "x": 2704,
+                        "x": 2763,
+                        "y": 2702
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 48
+                    }
+                },
+                {
+                    "name": "rat_44",
+                    "position": {
+                        "x": 2778,
+                        "y": 2702
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 48
+                    }
+                },
+                {
+                    "name": "rat_43",
+                    "position": {
+                        "x": 2793,
+                        "y": 2702
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 48
+                    }
+                },
+                {
+                    "name": "rat_42",
+                    "position": {
+                        "x": 2808,
+                        "y": 2702
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 48
+                    }
+                },
+                {
+                    "name": "rat_4",
+                    "position": {
+                        "x": 2823,
                         "y": 2702
                     },
                     "dimension": {
@@ -5339,7 +5345,7 @@
                 {
                     "name": "rat_6",
                     "position": {
-                        "x": 2719,
+                        "x": 2838,
                         "y": 2702
                     },
                     "dimension": {
@@ -5348,26 +5354,31 @@
                     }
                 },
                 {
-                    "name": "old_bandana",
+                    "name": "rat_50",
                     "position": {
-                        "x": 2734,
+                        "x": 2853,
                         "y": 2702
                     },
                     "dimension": {
-                        "w": 50,
-                        "h": 50
+                        "w": 15,
+                        "h": 48
+                    }
+                },
+                {
+                    "name": "full-note-written-small",
+                    "position": {
+                        "x": 2868,
+                        "y": 2702
                     },
-                    "trim": {
-                        "x": 13,
-                        "y": 1,
-                        "w": 25,
+                    "dimension": {
+                        "w": 40,
                         "h": 47
                     }
                 },
                 {
                     "name": "full-note-written-small-read",
                     "position": {
-                        "x": 2759,
+                        "x": 2908,
                         "y": 2702
                     },
                     "dimension": {
@@ -5376,30 +5387,35 @@
                     }
                 },
                 {
-                    "name": "full-note-written-small",
+                    "name": "rat_47",
                     "position": {
-                        "x": 2799,
+                        "x": 2948,
                         "y": 2702
                     },
                     "dimension": {
-                        "w": 40,
+                        "w": 15,
                         "h": 47
                     }
                 },
                 {
-                    "name": "small_candle",
+                    "name": "rat_46",
                     "position": {
-                        "x": 2839,
+                        "x": 2963,
                         "y": 2702
                     },
                     "dimension": {
-                        "w": 50,
-                        "h": 50
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_45",
+                    "position": {
+                        "x": 2978,
+                        "y": 2702
                     },
-                    "trim": {
-                        "x": 3,
-                        "y": 1,
-                        "w": 43,
+                    "dimension": {
+                        "w": 15,
                         "h": 47
                     }
                 },
@@ -5417,117 +5433,7 @@
                 {
                     "name": "rat_10",
                     "position": {
-                        "x": 2882,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_21",
-                    "position": {
-                        "x": 2897,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 18,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_24",
-                    "position": {
-                        "x": 2915,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 19,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_25",
-                    "position": {
-                        "x": 2934,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 17,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_3",
-                    "position": {
-                        "x": 2951,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_45",
-                    "position": {
-                        "x": 2966,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_46",
-                    "position": {
-                        "x": 2981,
-                        "y": 2702
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_47",
-                    "position": {
-                        "x": 2101,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_5",
-                    "position": {
-                        "x": 2116,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_7",
-                    "position": {
-                        "x": 2131,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 47
-                    }
-                },
-                {
-                    "name": "rat_8",
-                    "position": {
-                        "x": 2146,
+                        "x": 2227,
                         "y": 2570
                     },
                     "dimension": {
@@ -5538,7 +5444,7 @@
                 {
                     "name": "rat_9",
                     "position": {
-                        "x": 2161,
+                        "x": 2242,
                         "y": 2570
                     },
                     "dimension": {
@@ -5547,9 +5453,131 @@
                     }
                 },
                 {
+                    "name": "rat_8",
+                    "position": {
+                        "x": 2257,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_7",
+                    "position": {
+                        "x": 2272,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "small_candle",
+                    "position": {
+                        "x": 2287,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 50,
+                        "h": 50
+                    },
+                    "trim": {
+                        "x": 3,
+                        "y": 1,
+                        "w": 43,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_3",
+                    "position": {
+                        "x": 2330,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_25",
+                    "position": {
+                        "x": 2345,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 17,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "old_bandana",
+                    "position": {
+                        "x": 2362,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 50,
+                        "h": 50
+                    },
+                    "trim": {
+                        "x": 13,
+                        "y": 1,
+                        "w": 25,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_21",
+                    "position": {
+                        "x": 2387,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 18,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_5",
+                    "position": {
+                        "x": 2405,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_24",
+                    "position": {
+                        "x": 2420,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 19,
+                        "h": 47
+                    }
+                },
+                {
+                    "name": "rat_14",
+                    "position": {
+                        "x": 2439,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 15,
+                        "h": 46
+                    }
+                },
+                {
                     "name": "rat_11",
                     "position": {
-                        "x": 2176,
+                        "x": 2454,
                         "y": 2570
                     },
                     "dimension": {
@@ -5560,7 +5588,7 @@
                 {
                     "name": "rat_12",
                     "position": {
-                        "x": 2191,
+                        "x": 2469,
                         "y": 2570
                     },
                     "dimension": {
@@ -5569,20 +5597,9 @@
                     }
                 },
                 {
-                    "name": "rat_14",
-                    "position": {
-                        "x": 2207,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 15,
-                        "h": 46
-                    }
-                },
-                {
                     "name": "rat_23",
                     "position": {
-                        "x": 2222,
+                        "x": 2485,
                         "y": 2570
                     },
                     "dimension": {
@@ -5593,7 +5610,7 @@
                 {
                     "name": "rat_36",
                     "position": {
-                        "x": 2243,
+                        "x": 2506,
                         "y": 2570
                     },
                     "dimension": {
@@ -5604,7 +5621,7 @@
                 {
                     "name": "rat_13",
                     "position": {
-                        "x": 2259,
+                        "x": 2522,
                         "y": 2570
                     },
                     "dimension": {
@@ -5613,20 +5630,9 @@
                     }
                 },
                 {
-                    "name": "rat_15",
-                    "position": {
-                        "x": 2275,
-                        "y": 2570
-                    },
-                    "dimension": {
-                        "w": 16,
-                        "h": 44
-                    }
-                },
-                {
                     "name": "rat_16",
                     "position": {
-                        "x": 2291,
+                        "x": 2538,
                         "y": 2570
                     },
                     "dimension": {
@@ -5637,7 +5643,7 @@
                 {
                     "name": "rat_22",
                     "position": {
-                        "x": 2307,
+                        "x": 2554,
                         "y": 2570
                     },
                     "dimension": {
@@ -5646,20 +5652,20 @@
                     }
                 },
                 {
-                    "name": "rat_17",
+                    "name": "rat_15",
                     "position": {
-                        "x": 2329,
+                        "x": 2576,
                         "y": 2570
                     },
                     "dimension": {
-                        "w": 18,
-                        "h": 43
+                        "w": 16,
+                        "h": 44
                     }
                 },
                 {
                     "name": "rat_18",
                     "position": {
-                        "x": 2347,
+                        "x": 2592,
                         "y": 2570
                     },
                     "dimension": {
@@ -5668,9 +5674,20 @@
                     }
                 },
                 {
-                    "name": "rat_19",
+                    "name": "rat_17",
                     "position": {
-                        "x": 2365,
+                        "x": 2610,
+                        "y": 2570
+                    },
+                    "dimension": {
+                        "w": 18,
+                        "h": 43
+                    }
+                },
+                {
+                    "name": "rat_20",
+                    "position": {
+                        "x": 2628,
                         "y": 2570
                     },
                     "dimension": {
@@ -5679,9 +5696,9 @@
                     }
                 },
                 {
-                    "name": "rat_20",
+                    "name": "rat_19",
                     "position": {
-                        "x": 2384,
+                        "x": 2647,
                         "y": 2570
                     },
                     "dimension": {
@@ -5692,8 +5709,8 @@
                 {
                     "name": "raindrop_10",
                     "position": {
-                        "x": 1019,
-                        "y": 2633
+                        "x": 2666,
+                        "y": 2570
                     },
                     "dimension": {
                         "w": 55,
@@ -5709,8 +5726,8 @@
                 {
                     "name": "rat_35",
                     "position": {
-                        "x": 2403,
-                        "y": 2570
+                        "x": 2102,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 17,
@@ -5720,8 +5737,8 @@
                 {
                     "name": "rat_37",
                     "position": {
-                        "x": 2420,
-                        "y": 2570
+                        "x": 2119,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 16,
@@ -5731,8 +5748,8 @@
                 {
                     "name": "rat_34",
                     "position": {
-                        "x": 2436,
-                        "y": 2570
+                        "x": 2135,
+                        "y": 2485
                     },
                     "dimension": {
                         "w": 16,
@@ -5742,8 +5759,8 @@
                 {
                     "name": "raindrop_08",
                     "position": {
-                        "x": 1059,
-                        "y": 2633
+                        "x": 2706,
+                        "y": 2570
                     },
                     "dimension": {
                         "w": 55,
@@ -5759,7 +5776,7 @@
                 {
                     "name": "raindrop_09",
                     "position": {
-                        "x": 2112,
+                        "x": 2162,
                         "y": 2799
                     },
                     "dimension": {
@@ -5776,7 +5793,7 @@
                 {
                     "name": "rat_38",
                     "position": {
-                        "x": 2143,
+                        "x": 2193,
                         "y": 2799
                     },
                     "dimension": {
@@ -5787,7 +5804,7 @@
                 {
                     "name": "rat_51",
                     "position": {
-                        "x": 2159,
+                        "x": 2209,
                         "y": 2799
                     },
                     "dimension": {
@@ -5804,7 +5821,7 @@
                 {
                     "name": "raindrop_07",
                     "position": {
-                        "x": 2175,
+                        "x": 2225,
                         "y": 2799
                     },
                     "dimension": {
@@ -5821,7 +5838,7 @@
                 {
                     "name": "back_pack",
                     "position": {
-                        "x": 2201,
+                        "x": 2251,
                         "y": 2799
                     },
                     "dimension": {
@@ -5832,7 +5849,7 @@
                 {
                     "name": "rat_40",
                     "position": {
-                        "x": 2229,
+                        "x": 2279,
                         "y": 2799
                     },
                     "dimension": {
@@ -5841,9 +5858,9 @@
                     }
                 },
                 {
-                    "name": "rat_39",
+                    "name": "rat_41",
                     "position": {
-                        "x": 2245,
+                        "x": 2295,
                         "y": 2799
                     },
                     "dimension": {
@@ -5852,20 +5869,31 @@
                     }
                 },
                 {
-                    "name": "rat_41",
+                    "name": "rat_39",
                     "position": {
-                        "x": 2261,
+                        "x": 2311,
                         "y": 2799
                     },
                     "dimension": {
                         "w": 16,
                         "h": 28
+                    }
+                },
+                {
+                    "name": "rat_33",
+                    "position": {
+                        "x": 2327,
+                        "y": 2799
+                    },
+                    "dimension": {
+                        "w": 14,
+                        "h": 27
                     }
                 },
                 {
                     "name": "raindrop_06",
                     "position": {
-                        "x": 2277,
+                        "x": 2341,
                         "y": 2799
                     },
                     "dimension": {
@@ -5880,20 +5908,9 @@
                     }
                 },
                 {
-                    "name": "rat_33",
-                    "position": {
-                        "x": 872,
-                        "y": 2670
-                    },
-                    "dimension": {
-                        "w": 14,
-                        "h": 27
-                    }
-                },
-                {
                     "name": "rat_27",
                     "position": {
-                        "x": 1277,
+                        "x": 1227,
                         "y": 2877
                     },
                     "dimension": {
@@ -5904,7 +5921,7 @@
                 {
                     "name": "rat_26",
                     "position": {
-                        "x": 1292,
+                        "x": 1242,
                         "y": 2877
                     },
                     "dimension": {
@@ -5915,7 +5932,7 @@
                 {
                     "name": "rat_30",
                     "position": {
-                        "x": 1307,
+                        "x": 1257,
                         "y": 2877
                     },
                     "dimension": {
@@ -5926,7 +5943,7 @@
                 {
                     "name": "raindrop_05",
                     "position": {
-                        "x": 1322,
+                        "x": 1272,
                         "y": 2877
                     },
                     "dimension": {
@@ -5943,7 +5960,7 @@
                 {
                     "name": "rat_31",
                     "position": {
-                        "x": 1345,
+                        "x": 1295,
                         "y": 2877
                     },
                     "dimension": {
@@ -5954,7 +5971,7 @@
                 {
                     "name": "rat_32",
                     "position": {
-                        "x": 1359,
+                        "x": 1309,
                         "y": 2877
                     },
                     "dimension": {
@@ -5965,7 +5982,7 @@
                 {
                     "name": "rat_28",
                     "position": {
-                        "x": 1372,
+                        "x": 1322,
                         "y": 2877
                     },
                     "dimension": {
@@ -5976,7 +5993,7 @@
                 {
                     "name": "rat_29",
                     "position": {
-                        "x": 1388,
+                        "x": 1338,
                         "y": 2877
                     },
                     "dimension": {
@@ -5987,7 +6004,7 @@
                 {
                     "name": "raindrop_04",
                     "position": {
-                        "x": 1403,
+                        "x": 1353,
                         "y": 2877
                     },
                     "dimension": {
@@ -6004,7 +6021,7 @@
                 {
                     "name": "bunny",
                     "position": {
-                        "x": 1423,
+                        "x": 1373,
                         "y": 2877
                     },
                     "dimension": {
@@ -6047,7 +6064,7 @@
                     }
                 },
                 {
-                    "name": "raindrop_01",
+                    "name": "raindrop_11",
                     "position": {
                         "x": 76,
                         "y": 2981
@@ -6058,15 +6075,15 @@
                     },
                     "trim": {
                         "x": 25,
-                        "y": 24,
-                        "w": 7,
+                        "y": 22,
+                        "w": 6,
                         "h": 8
                     }
                 },
                 {
-                    "name": "raindrop_11",
+                    "name": "raindrop_01",
                     "position": {
-                        "x": 83,
+                        "x": 82,
                         "y": 2981
                     },
                     "dimension": {
@@ -6075,8 +6092,8 @@
                     },
                     "trim": {
                         "x": 25,
-                        "y": 22,
-                        "w": 6,
+                        "y": 24,
+                        "w": 7,
                         "h": 8
                     }
                 },

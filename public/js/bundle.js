@@ -47078,14 +47078,14 @@ class Level_Loader {
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
     // this._old_man(player);
-    this._outside(player);
+    // this._outside(player);
     // this._tiled_prey_path(player);
     // this._scavenge(player);
     // this._tiled_created(player);
     // this._tiled_prey(player);
     // this._tiled_large(player);
     // this._tiled_homestead(player);
-    // this._item_room(player);
+    this._item_room(player);
     // this._outside(player);
     // this._intro(player);
     // this._development(player);
@@ -50655,6 +50655,17 @@ module.exports={ "height":50,
                  "width":25.0740204057715,
                  "x":503.200363565934,
                  "y":2798.94432541998
+                }, 
+                {
+                 "height":44.5765230312036,
+                 "id":84,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":701.337295690936,
+                 "x":939.078751857355,
+                 "y":2603.26894502229
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51270,7 +51281,7 @@ module.exports={ "height":50,
                          "name":"tree",
                          "properties":
                             {
-                             "fade":0.7,
+                             "fade":0.1,
                              "image_name":"tree_11"
                             },
                          "propertytypes":
@@ -51288,7 +51299,7 @@ module.exports={ "height":50,
                  "opacity":1,
                  "properties":
                     {
-                     "fade":0.5,
+                     "fade":0.9,
                      "image_name":"tree_4"
                     },
                  "propertytypes":
@@ -51586,7 +51597,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":84,
+ "nextobjectid":88,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -52857,7 +52868,9 @@ module.exports = {
 
 },{"../../engine/pixi_containers":233,"./item_model":261}],265:[function(require,module,exports){
 'use strict';
-const { roof_container } = require('../../engine/pixi_containers');
+const PIXI = require('pixi.js');
+const { roof_container      } = require('../../engine/pixi_containers');
+const { collision_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -52869,13 +52882,23 @@ class Tree extends Item {
 
     roof_container.addChild(this.sprite);
   }
+
+  set trunk(state) {
+    if(state) {
+      const tree_trunk = new PIXI.Sprite.fromImage('tree_stump_00');
+
+      tree_trunk.position.copy(this.sprite);
+
+      collision_container.addChild(tree_trunk);
+    }
+  }
 }
 
 module.exports = {
   Tree,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":261}],266:[function(require,module,exports){
+},{"../../engine/pixi_containers":233,"./item_model":261,"pixi.js":151}],266:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53161,6 +53184,7 @@ class Items_Room extends Level {
     this.chest       = Element_Factory.generate('chest');
     this.backpack    = Element_Factory.generate('backpack');
     this.workbench   = Element_Factory.generate('workbench');
+    this.tree        = Element_Factory.generate('tree', {image_name:'tree_4', fade: 0.5});
 
     this._set_elements();
   }
@@ -53172,6 +53196,13 @@ class Items_Room extends Level {
 
     this.background.alpha = 0.5;
     this.background.set_position({x: 1100, y: 500});
+
+    this.tree.set_position({x: iterate_x, y: iterate_y });
+    this.tree.width = 1000;
+    this.tree.height= 1000;
+    this.tree.trunk = true;
+
+    iterate_x += 200;
 
     this.workbench.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
@@ -53188,10 +53219,13 @@ class Items_Room extends Level {
 
     this.chest.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
+
     this.backpack.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
+
     this.workbench.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 300;
+
     this.wall.set_position({x: iterate_x, y: iterate_y });
   }
 }
@@ -54922,7 +54956,8 @@ class Grid {
       const tile = new Tile();
       tile.x = x;
       tile.y = y;
-      tile.alpha = alpha -= 0.0005;
+      tile.alpha = alpha -= 0.05;
+      //tile.alpha = alpha -= 0.0005;
       tile.anchor.set(0);
 
       // This is for the pathfinder

@@ -111,14 +111,14 @@ class Level_Loader {
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
     // this._old_man(player);
-    this._outside(player);
+    // this._outside(player);
     // this._tiled_prey_path(player);
     // this._scavenge(player);
     // this._tiled_created(player);
     // this._tiled_prey(player);
     // this._tiled_large(player);
     // this._tiled_homestead(player);
-    // this._item_room(player);
+    this._item_room(player);
     // this._outside(player);
     // this._intro(player);
     // this._development(player);

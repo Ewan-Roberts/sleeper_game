@@ -81,6 +81,17 @@
                  "width":25.0740204057715,
                  "x":503.200363565934,
                  "y":2798.94432541998
+                }, 
+                {
+                 "height":44.5765230312036,
+                 "id":84,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":701.337295690936,
+                 "x":939.078751857355,
+                 "y":2603.26894502229
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -696,7 +707,7 @@
                          "name":"tree",
                          "properties":
                             {
-                             "fade":0.7,
+                             "fade":0.1,
                              "image_name":"tree_11"
                             },
                          "propertytypes":
@@ -714,7 +725,7 @@
                  "opacity":1,
                  "properties":
                     {
-                     "fade":0.5,
+                     "fade":0.9,
                      "image_name":"tree_4"
                     },
                  "propertytypes":
@@ -1012,7 +1023,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":84,
+ "nextobjectid":88,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

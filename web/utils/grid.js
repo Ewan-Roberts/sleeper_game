@@ -46,7 +46,8 @@ class Grid {
       const tile = new Tile();
       tile.x = x;
       tile.y = y;
-      tile.alpha = alpha -= 0.0005;
+      tile.alpha = alpha -= 0.05;
+      //tile.alpha = alpha -= 0.0005;
       tile.anchor.set(0);
 
       // This is for the pathfinder

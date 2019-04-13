@@ -22,6 +22,7 @@ class Items_Room extends Level {
     this.chest       = Element_Factory.generate('chest');
     this.backpack    = Element_Factory.generate('backpack');
     this.workbench   = Element_Factory.generate('workbench');
+    this.tree        = Element_Factory.generate('tree', {image_name:'tree_4', fade: 0.5});
 
     this._set_elements();
   }
@@ -33,6 +34,13 @@ class Items_Room extends Level {
 
     this.background.alpha = 0.5;
     this.background.set_position({x: 1100, y: 500});
+
+    this.tree.set_position({x: iterate_x, y: iterate_y });
+    this.tree.width = 1000;
+    this.tree.height= 1000;
+    this.tree.trunk = true;
+
+    iterate_x += 200;
 
     this.workbench.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
@@ -49,10 +57,13 @@ class Items_Room extends Level {
 
     this.chest.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
+
     this.backpack.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 200;
+
     this.workbench.set_position({x: iterate_x, y: iterate_y });
     iterate_x += 300;
+
     this.wall.set_position({x: iterate_x, y: iterate_y });
   }
 }
