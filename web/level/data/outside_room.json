@@ -6,19 +6,19 @@
          "name":"background",
          "objects":[
                 {
-                 "height":4686.41114982578,
+                 "height":3039.35232629637,
                  "id":81,
                  "name":"grass_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":3841.46341463415,
+                 "width":2566.95361071258,
                  "x":0,
                  "y":0
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -81,17 +81,6 @@
                  "width":25.0740204057715,
                  "x":503.200363565934,
                  "y":2798.94432541998
-                }, 
-                {
-                 "height":44.5765230312036,
-                 "id":84,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":701.337295690936,
-                 "x":939.078751857355,
-                 "y":2603.26894502229
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -124,6 +113,34 @@
         {
          "layers":[
                 {
+                 "image":"..\/..\/..\/assets\/images\/outside\/rock_3.png",
+                 "name":"rock",
+                 "offsetx":2028.44173337721,
+                 "offsety":1807.10455636783,
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_3"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "type":"imagelayer",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"objects",
+         "opacity":1,
+         "type":"group",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "layers":[
+                {
                  "draworder":"topdown",
                  "name":"entity",
                  "objects":[
@@ -136,8 +153,8 @@
                          "type":"",
                          "visible":true,
                          "width":0,
-                         "x":265.428132206,
-                         "y":263.86010760953
+                         "x":2085.03597534325,
+                         "y":1099.15422525659
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -506,8 +523,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1089.09090909091,
-                 "y":353.454545454545
+                 "x":1591.05169340464,
+                 "y":1106.39572192513
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -521,18 +538,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":10,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1762.76795350768,
-                 "y":944.003874360039
-                }, 
-                {
-                 "height":0,
                  "id":76,
                  "name":"",
                  "point":true,
@@ -540,20 +545,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":896,
-                 "y":1086.66666666667
-                }, 
-                {
-                 "height":0,
-                 "id":77,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1277.33333333333,
-                 "y":2224
+                 "x":927.372549019608,
+                 "y":1584.70588235294
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -599,69 +592,7 @@
                  "name":"tree",
                  "objects":[
                         {
-                         "height":1282,
-                         "id":61,
-                         "name":"tree",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1241.33333333334,
-                         "x":-722,
-                         "y":530
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "fade":1,
-                     "image_name":"tree_4"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"tree",
-                 "objects":[
-                        {
-                         "height":1582.2486938349,
-                         "id":63,
-                         "name":"tree",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1823.73657079539,
-                         "x":1320.2634292046,
-                         "y":-1217.33333333333
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "fade":1,
-                     "image_name":"tree_4"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"tree",
-                 "objects":[
-                        {
-                         "height":2102.78787878788,
+                         "height":1612.59180035651,
                          "id":70,
                          "name":"tree",
                          "properties":
@@ -677,9 +608,9 @@
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":2239.36450520418,
-                         "x":-825.272727272731,
-                         "y":2352.36363636364
+                         "width":1717.33006240424,
+                         "x":-742.4539707473,
+                         "y":156.285204991091
                         }],
                  "opacity":1,
                  "properties":
@@ -693,7 +624,7 @@
                      "image_name":"string"
                     },
                  "type":"objectgroup",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -702,35 +633,78 @@
                  "name":"tree",
                  "objects":[
                         {
-                         "height":2102.78787878788,
+                         "height":977.297682709449,
                          "id":80,
                          "name":"tree",
                          "properties":
                             {
                              "fade":0.1,
-                             "image_name":"tree_11"
+                             "image_name":"tree_11",
+                             "trunk":true
                             },
                          "propertytypes":
                             {
                              "fade":"float",
-                             "image_name":"string"
+                             "image_name":"string",
+                             "trunk":"bool"
                             },
-                         "rotation":0,
+                         "rotation":-180,
                          "type":"",
                          "visible":true,
-                         "width":2239.36450520418,
-                         "x":1593.69542559351,
-                         "y":-513.87840185292
+                         "width":1040.77342453552,
+                         "x":2340.3512030702,
+                         "y":467.34084948398
                         }],
                  "opacity":1,
                  "properties":
                     {
                      "fade":0.9,
-                     "image_name":"tree_4"
+                     "image_name":"tree_4",
+                     "trunk":true
                     },
                  "propertytypes":
                     {
                      "fade":"float",
+                     "image_name":"string",
+                     "trunk":"bool"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"rock",
+                 "objects":[
+                        {
+                         "height":920.063068319674,
+                         "id":68,
+                         "name":"rock",
+                         "properties":
+                            {
+                             "image_name":"rock_ridge_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-265.61,
+                         "type":"",
+                         "visible":true,
+                         "width":376.312052263322,
+                         "x":1805.28255821844,
+                         "y":2442.60922303155
+                        }],
+                 "offsetx":76,
+                 "offsety":117,
+                 "opacity":1,
+                 "properties":
+                    {
+                     "image_name":"rock_2"
+                    },
+                 "propertytypes":
+                    {
                      "image_name":"string"
                     },
                  "type":"objectgroup",
@@ -743,12 +717,12 @@
                  "name":"rock",
                  "objects":[
                         {
-                         "height":737.710127143204,
-                         "id":68,
+                         "height":485.80952380953,
+                         "id":83,
                          "name":"rock",
                          "properties":
                             {
-                             "image_name":"rock_2"
+                             "image_name":"rock_0"
                             },
                          "propertytypes":
                             {
@@ -757,14 +731,14 @@
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":770.741923880951,
-                         "x":1437.89832667838,
-                         "y":-60.4380644509234
+                         "width":507.562189054728,
+                         "x":1744.95481343328,
+                         "y":1912.07818436637
                         }],
                  "opacity":1,
                  "properties":
                     {
-                     "image_name":"rock_2"
+                     "image_name":"rock_0"
                     },
                  "propertytypes":
                     {
@@ -832,8 +806,8 @@
                          "type":"",
                          "visible":true,
                          "width":798.138476417392,
-                         "x":844.92962536445,
-                         "y":-55.9514172101809
+                         "x":480.967811521968,
+                         "y":9.68104102370935
                         }],
                  "opacity":1,
                  "properties":
@@ -845,7 +819,7 @@
                      "image_name":"string"
                     },
                  "type":"objectgroup",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -868,46 +842,9 @@
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":507.562189054728,
-                         "x":522.540883949763,
-                         "y":2053.90240658172
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "image_name":"rock_0"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"rock",
-                 "objects":[
-                        {
-                         "height":485.80952380953,
-                         "id":83,
-                         "name":"rock",
-                         "properties":
-                            {
-                             "image_name":"rock_0"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":507.562189054728,
-                         "x":1631.01042332569,
-                         "y":2303.53093555646
+                         "width":676.18964003512,
+                         "x":495.089903557606,
+                         "y":2046.05926932682
                         }],
                  "opacity":1,
                  "properties":
@@ -959,15 +896,15 @@
                  "name":"tree",
                  "objects":[
                         {
-                         "height":1362.66666666667,
+                         "height":924.260064166034,
                          "id":62,
                          "name":"tree",
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":1362.66666666667,
-                         "x":-316.9696969697,
-                         "y":-352
+                         "width":924.260064166034,
+                         "x":1449.48258272732,
+                         "y":2063.79245091537
                         }],
                  "opacity":1,
                  "properties":
@@ -997,8 +934,8 @@
                          "type":"",
                          "visible":true,
                          "width":1515.83334150202,
-                         "x":371.427778680354,
-                         "y":-977.09981067453
+                         "x":-54.0296596649123,
+                         "y":-653.434688300998
                         }],
                  "opacity":1,
                  "properties":
@@ -1012,7 +949,7 @@
                      "image_name":"string"
                     },
                  "type":"objectgroup",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }],

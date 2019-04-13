@@ -39,6 +39,20 @@ class Tiled_Data {
     return group;
   }
 
+  get objects() {
+    console.log(this);
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'objects');
+    if(!found_layer) throw new Error('no objects found in level data');
+
+    const group = found_layer.layers.map(thing => ({
+      ...thing,
+      x: thing.offsetx,
+      y: thing.offsety,
+    }));
+
+    return group;
+  }
+
   get item_areas() {
     const item_areas = this.level_data.layers.find(layer => layer.name === 'item_areas');
 

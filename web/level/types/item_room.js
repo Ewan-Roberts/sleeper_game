@@ -22,7 +22,7 @@ class Items_Room extends Level {
     this.chest       = Element_Factory.generate('chest');
     this.backpack    = Element_Factory.generate('backpack');
     this.workbench   = Element_Factory.generate('workbench');
-    this.tree        = Element_Factory.generate('tree', {image_name:'tree_4', fade: 0.5});
+    this.tree        = Element_Factory.generate('tree', {image_name:'tree_4', fade: 0.2});
 
     this._set_elements();
   }

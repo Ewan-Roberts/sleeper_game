@@ -41,7 +41,7 @@ class Rat extends Animal {
   get _target_far_away() {
     const distance = this._distance_to(this.enemy.sprite);
 
-    return distance > 200;
+    return distance > 500;
   }
 
   on_damage(amount) {

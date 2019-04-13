@@ -5,7 +5,6 @@ const { Pathfind_Room   } = require('../level/types/pathfinding_room');
 const { Animations_Room } = require('../level/types/player_animations');
 const { Projectile_Room } = require('../level/types/projectile_room');
 const { Archer_Room     } = require('../level/types/archer_room');
-const { Shadow_Room     } = require('../level/types/shadow_room');
 const { Random_Room     } = require('../level/types/random_room');
 const { Items_Room      } = require('../level/types/item_room');
 const { Transition_Room } = require('../level/types/transition_room');
@@ -96,12 +95,6 @@ class Level_Loader {
     new Large_Room(player);
   }
 
-  static _shadow(player) {
-    const shadow = new Shadow_Room(player);
-
-    shadow.start();
-  }
-
   static _old_man(player) {
     new Old_Man_Room(player);
   }
@@ -118,9 +111,9 @@ class Level_Loader {
     // this._tiled_prey(player);
     // this._tiled_large(player);
     // this._tiled_homestead(player);
-    this._item_room(player);
+    // this._item_room(player);
     // this._outside(player);
-    // this._intro(player);
+    this._intro(player);
     // this._development(player);
     // this._animation();
     // this._pathfind(player);

@@ -11,6 +11,7 @@ const { Workbench } = require('./workbench');
 const { Tree      } = require('./tree');
 const { Roof      } = require('./ceiling');
 const { Rock      } = require('./rock');
+const { CollisionItem } = require('./collision_object');
 
 //TODO This is not a Factory make it one and abstract this
 class Element_Factory {
@@ -29,18 +30,18 @@ class Element_Factory {
       case 'tree':      return new Tree(options);
       case 'roof':      return new Roof(options);
       case 'rock':      return new Rock(options);
+      case 'collision': return new CollisionItem(options);
     }
   }
 
   static generate_tiled(data) {
     let generated;
-
+    console.log(data);
     if(data.properties) {
       generated = this.generate(data.name, data.properties);
     } else {
       generated = this.generate(data.name);
     }
-
     generated.set_position(data);
     //TODO flip
     generated.width = data.height;

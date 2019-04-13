@@ -9,6 +9,12 @@
 - Set up mongo on ec2
 - End to end a user
 
+# intro
+- fade in
+- light goes by widow
+- wake up in room
+- use lighter to turn on candle
+
 # Needed for BETA
 - Secure register user
 - Server-side rendered images

@@ -59,7 +59,7 @@ class Outside_Map extends Level {
       light.set_position(data);
     });
 
-    this.create_grid(background);
+    // this.create_grid(background);
   }
 }
 
