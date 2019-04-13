@@ -7,8 +7,6 @@ const { Candle     } = require('../../light/types/candle');
 const { Rat        } = require('../../character/archetypes/rat');
 const level_data     = require('../data/tiled_room.json');
 
-const { collision_container } = require('../../engine/pixi_containers');
-
 class Tiled_Prey extends Level {
   constructor(player) {
     super();
@@ -16,31 +14,26 @@ class Tiled_Prey extends Level {
 
     this.player     = player;
     this.elements   = new Tiled_Data(level_data);
-    this.background = new Background('grid_floor');
 
     this._set_elements();
   }
 
   _set_elements() {
     global.set_light_level(1);
+    const {prey, background, walls, lights} = this.elements;
+
+    this.background = new Background(background);
+
     this.player.light.hide();
 
-    console.log( collision_container );
-
-
-    this.background.set_position({x: 1100, y: 800});
-    this.background.alpha = 0.5;
-
-    this.add_to_segments(this.background.sprite);
-
-    this.elements.prey.forEach(data => {
+    prey.forEach(data => {
       const prey = new Rat();
       prey.enemy(this.player);
       prey.logic_start();
       prey.set_position(data);
     });
 
-    this.elements.walls.forEach(data => {
+    walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;
       wall.height = data.height;
@@ -49,14 +42,14 @@ class Tiled_Prey extends Level {
       wall.set_position(data);
     });
 
-    this.elements.lights.forEach(data => {
+    lights.forEach(data => {
       const light = new Candle();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
     });
 
-    this.create_grid();
+    this.create_grid(background);
   }
 }
 

@@ -35,8 +35,8 @@ const path_between_grids = (one, two) => {
 };
 
 class pathfind_sprite {
-  static create_level_grid() {
-    this.grid = new Grid();
+  static create_level_grid(data) {
+    this.grid = new Grid(data);
     this.grid.build();
     this.grid.build_matrix();
 

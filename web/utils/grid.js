@@ -3,8 +3,6 @@ const PIXI = require('pixi.js');
 const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
 
-const row_length = 20;
-
 function check(rect1, rect2) {
   if (rect1.x < rect2.x + rect2.width &&
     rect1.x + rect1.width > rect2.x &&
@@ -26,9 +24,21 @@ class Tile {
 }
 
 class Grid {
-  constructor() {}
+  constructor(data) {
+    this.width  = data.width;
+    this.height = data.height;
+    this.area   = data.width * data.height;
 
-  build() {
+    this.tile_width  = Math.ceil(data.width/100);
+    this.tile_height = Math.ceil(data.height/100);
+
+    this.tile_area= this.tile_height * this.tile_width;
+    console.log(this);
+  }
+
+  build(data) {
+    console.log(data);
+
     let y = 0;
     let x = 0;
 
@@ -36,12 +46,12 @@ class Grid {
     let current_grid_x = 0;
     let current_grid_y = 0;
 
-    for(let i=0; i<=200; i++){
+    for(let i=0; i<=this.tile_area; i++){
       const tile = new Tile();
       tile.x = x;
       tile.y = y;
       tile.alpha = alpha -= 0.002;
-      tile.anchor.set(0.5);
+      tile.anchor.set(0);
 
       tile.cell_position = {
         x: current_grid_x,
@@ -49,7 +59,7 @@ class Grid {
       };
 
       x += 100;
-      if(i % row_length === 0) {
+      if(i % this.tile_width === 0) {
         if(i !== 0) {
           y += 100;
           current_grid_x = 0;
@@ -87,7 +97,7 @@ class Grid {
       }
       sprite_line.push(tile);
 
-      if(i % row_length ===0) {
+      if(i % this.tile_width===0) {
         if(i !== 0) {
           binary_matrix.push(binary_line);
 

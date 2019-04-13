@@ -4,11 +4,15 @@ const PIXI = require('pixi.js');
 const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
-  constructor(name) {
+  constructor(data) {
     //This is not pulled from the packer but from the level folder
-    this.sprite = PIXI.Sprite.fromImage('level/'+name+'.png');
+    this.sprite = PIXI.Sprite.fromImage('level/'+data.name+'.png');
+    this.sprite.anchor.set(0);
+    this.sprite.width = data.width;
+    this.sprite.height = data.height;
+    this.sprite.alpha = 0.5;
 
-    this.sprite.anchor.set(0.5);
+    this.set_position(data);
   }
 
   tile(name) {
