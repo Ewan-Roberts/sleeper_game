@@ -26,7 +26,9 @@ class Tween {
     this.path.lineTo(finish.x, finish.y);
   }
 
-  move_to({ x, y }) {
+  line_to({ x, y }) {
+    this.path = new PIXI.tween.TweenPath();
+
     this.path.lineTo(x, y);
   }
 
@@ -51,12 +53,10 @@ class Tween {
     }
   }
 
-  add_random_path(sprite, tween_path) {
-    this.path = new PIXI.tween.TweenPath();
-    const random = () => random_number(-30, 30);
-
-    this.path.moveTo(sprite.x, sprite.y);
-    for (let i = 2; i < tween_path.length; i++) {
+  add_random_path(tween_path) {
+    const random = () => random_number(-20, 20);
+    //TODO big with the sprite move to
+    for (let i = 3; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x + random(),
         tween_path[i-1].y + random(),

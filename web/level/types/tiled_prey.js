@@ -57,7 +57,6 @@ class Tiled_Prey extends Level {
     });
 
     this.create_grid();
-
   }
 }
 

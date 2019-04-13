@@ -6,6 +6,8 @@
          "encoding":"base64",
          "height":50,
          "name":"tiles",
+         "offsetx":75,
+         "offsety":35,
          "opacity":1,
          "properties":
             {

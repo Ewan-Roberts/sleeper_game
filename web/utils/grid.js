@@ -41,6 +41,7 @@ class Grid {
       tile.x = x;
       tile.y = y;
       tile.alpha = alpha -= 0.002;
+      tile.anchor.set(0.5);
 
       tile.cell_position = {
         x: current_grid_x,
@@ -79,6 +80,7 @@ class Grid {
 
     grid_container.children.forEach((tile, i) => {
       if(!tile.passable) {
+        tile.alpha =0.8;
         binary_line.push(1);
       } else {
         binary_line.push(0);

@@ -6,7 +6,7 @@ const { Tween  } = require('./tween');
 const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
-easystar.setIterationsPerCalculation(1000);
+easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0]);
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
@@ -54,8 +54,8 @@ class pathfind_sprite {
 
     const tween = new Tween(sprite);
     tween.time  = path_array.length * 300;
-
-    tween.add_random_path(sprite, path_array);
+    tween.from(sprite);
+    tween.add_random_path(path_array);
     tween.draw_path();
     tween.start();
 
@@ -90,8 +90,6 @@ class pathfind_sprite {
 
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
-
-    console.log(path_array);
 
     this.move_sprite_on_path(from_sprite, path_array);
   }

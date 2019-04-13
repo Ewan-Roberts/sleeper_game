@@ -47290,7 +47290,7 @@ const { Tween  } = require('./tween');
 const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
-easystar.setIterationsPerCalculation(1000);
+easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0]);
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
@@ -47338,8 +47338,8 @@ class pathfind_sprite {
 
     const tween = new Tween(sprite);
     tween.time  = path_array.length * 300;
-
-    tween.add_random_path(sprite, path_array);
+    tween.from(sprite);
+    tween.add_random_path(path_array);
     tween.draw_path();
     tween.start();
 
@@ -47374,8 +47374,6 @@ class pathfind_sprite {
 
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
-
-    console.log(path_array);
 
     this.move_sprite_on_path(from_sprite, path_array);
   }
@@ -47741,7 +47739,9 @@ class Tween {
     this.path.lineTo(finish.x, finish.y);
   }
 
-  move_to({ x, y }) {
+  line_to({ x, y }) {
+    this.path = new PIXI.tween.TweenPath();
+
     this.path.lineTo(x, y);
   }
 
@@ -47766,12 +47766,10 @@ class Tween {
     }
   }
 
-  add_random_path(sprite, tween_path) {
-    this.path = new PIXI.tween.TweenPath();
-    const random = () => random_number(-30, 30);
-
-    this.path.moveTo(sprite.x, sprite.y);
-    for (let i = 2; i < tween_path.length; i++) {
+  add_random_path(tween_path) {
+    const random = () => random_number(-20, 20);
+    //TODO big with the sprite move to
+    for (let i = 3; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x + random(),
         tween_path[i-1].y + random(),
@@ -51655,6 +51653,8 @@ module.exports={ "height":50,
          "encoding":"base64",
          "height":50,
          "name":"tiles",
+         "offsetx":75,
+         "offsety":35,
          "opacity":1,
          "properties":
             {
@@ -54148,7 +54148,6 @@ class Tiled_Prey extends Level {
     });
 
     this.create_grid();
-
   }
 }
 
@@ -54963,6 +54962,7 @@ class Grid {
       tile.x = x;
       tile.y = y;
       tile.alpha = alpha -= 0.002;
+      tile.anchor.set(0.5);
 
       tile.cell_position = {
         x: current_grid_x,
@@ -55001,6 +55001,7 @@ class Grid {
 
     grid_container.children.forEach((tile, i) => {
       if(!tile.passable) {
+        tile.alpha =0.8;
         binary_line.push(1);
       } else {
         binary_line.push(0);
