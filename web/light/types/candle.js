@@ -22,6 +22,8 @@ class Candle extends Light {
     this.shadow.intensity  = 0.5;
 
     visual_effects_container.addChild(this.sprite, this.shadow);
+
+    // this.start_flickering();
   }
 
 

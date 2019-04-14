@@ -8,7 +8,6 @@ const { Wall        } = require('../elements/wall');
 const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
 const { Ambient     } = require('../../light/types/ambient');
-const { Chest      } = require('../elements/chest');
 const { Lantern    } = require('../../light/types/lantern');
 const { Element_Factory } = require('../elements/elements_factory');
 const level_data  = require('../data/intro_room.json');
@@ -18,13 +17,10 @@ class Intro  {
     this.name         = 'intrp';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
-    this.wall_candle  = new Candle();
-    this.table_candle = new Candle();
     this.lighter      = new Lighter();
     this.ambient      = new Ambient();
 
     this.camera       = new Camera();
-    this.box          = new Chest();
     this.lantern      = new Lantern();
     this.ambient      = new Ambient();
 
@@ -46,27 +42,19 @@ class Intro  {
       {x: 2551, y: 110},
     ]);
 
-    this.box.set_position({ x: 920, y: 400 });
-    this.box.shadow = true;
-    this.box.height = 25;
-    this.box.width = 50;
-    this.box.rotation = 1.1;
-    this.box.state_handling = true;
-
-    this.table_candle.set_position({ x: 910, y: 540 });
-    this.wall_candle.set_position({ x: 1115, y: 410 });
     this.lighter.set_position({ x: 1115, y: 410 });
   }
   async start() {
 
-    const {walls, background,furnishing} = this.elements;
+    const {walls, background, furnishing, lights} = this.elements;
     global.set_light_level(0.5);
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -300, y: 100 });
+    this.camera.tween.to({ x: -500, y: 100 });
     this.camera.tween.smooth();
-    this.player.keyboard.can_move = false;
-    console.log(this.elements);
+
+    this.player.keyboard.disable();
+
     this.background = new Background(background,true);
 
     walls.forEach(data => {
@@ -85,8 +73,13 @@ class Intro  {
       Element_Factory.generate_tiled(data);
     });
 
-    this.wall_candle.hide();
-    this.table_candle.hide();
+    lights.forEach(data => {
+      const light = new Candle();
+      light.height = data.height;
+      light.width  = data.width;
+      light.set_position(data);
+    });
+
     this.lighter.hide();
 
     this.ambient.fade_in(0.005, 0.05);
@@ -111,14 +104,10 @@ class Intro  {
     this.lighter.strike.start();
 
     await sleep(2500);
-    this.wall_candle.show();
-    this.wall_candle.start_flickering();
     this.player.animation.state_to = 'candle';
     await sleep(2500);
-    this.table_candle.show();
-    this.table_candle.start_flickering();
 
-    this.player.keyboard.can_move = true;
+    this.player.keyboard.enable();
   }
 }
 

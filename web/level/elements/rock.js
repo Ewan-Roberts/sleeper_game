@@ -6,6 +6,7 @@ const { Item } = require('./item_model');
 class Rock extends Item {
   constructor(options) {
     super(options.image_name);
+    this.name = 'rock';
 
     this.sprite.fade_opacity = options.fade;
 

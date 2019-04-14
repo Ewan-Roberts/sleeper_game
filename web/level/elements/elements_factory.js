@@ -11,13 +11,14 @@ const { Workbench } = require('./workbench');
 const { Tree      } = require('./tree');
 const { Roof      } = require('./ceiling');
 const { Rock      } = require('./rock');
+// const { Candle    } = require('../../light/types/candle');
 const { CollisionItem } = require('./collision_object');
 
 //TODO This is not a Factory make it one and abstract this
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'chest':     return new Chest();
+      case 'chest':     return new Chest(options);
       //TODO spelling
       case 'matress':   return new Matress();
       case 'mattress':  return new Matress();
@@ -31,6 +32,7 @@ class Element_Factory {
       case 'roof':      return new Roof(options);
       case 'rock':      return new Rock(options);
       case 'collision': return new CollisionItem(options);
+      // case 'candle':    return new Candle(options);
     }
   }
 

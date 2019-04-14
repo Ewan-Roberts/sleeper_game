@@ -4,7 +4,7 @@ const port     = process.env.PORT || 3000;
 const compress = require('compression');
 const express  = require('express');
 const app      = express();
-app.use(compress());
+app.use(compress({level: 9, memLevel:9}));
 
 const web_server = require('http').Server(app);
 web_server.listen(port, () =>

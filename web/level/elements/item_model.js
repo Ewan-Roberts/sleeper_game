@@ -25,11 +25,13 @@ class Item {
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
 
-    this.shade.interactive = true;
-    this.shade.buttonMode = true;
+    if(this.shade) {
+      this.shade.interactive = true;
+      this.shade.buttonMode = true;
+      this.shade.click  = action;
+    }
 
     this.sprite.click = action;
-    this.shade.click  = action;
   }
 
   //TODO this is to quickly add items

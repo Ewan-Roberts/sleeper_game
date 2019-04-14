@@ -7,7 +7,7 @@ const { Randomise       } = require('../attributes/randomise');
 const { Wall            } = require('../elements/wall');
 const { Bright_Light    } = require('../../light/types/bright_light');
 const { Element_Factory } = require('../elements/elements_factory');
-const level_data       = require('../data/homestead_tiled.json');
+// const level_data       = require('../data/homestead_tiled.json');
 
 class Tiled_Homestead extends Level {
   constructor(player) {

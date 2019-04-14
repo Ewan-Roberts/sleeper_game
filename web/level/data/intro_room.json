@@ -146,8 +146,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":916.767953507679,
-                 "y":488.003874360039
+                 "x":1146.10128684101,
+                 "y":516.670541026706
                 }, 
                 {
                  "height":0,
@@ -160,6 +160,18 @@
                  "width":0,
                  "x":591.620589456205,
                  "y":1377.26774595267
+                }, 
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":871.333333333333,
+                 "y":502.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -170,19 +182,7 @@
         {
          "draworder":"topdown",
          "name":"player",
-         "objects":[
-                {
-                 "height":0,
-                 "id":13,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1089.09090909091,
-                 "y":353.454545454545
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -243,6 +243,39 @@
                 }, 
                 {
                  "draworder":"topdown",
+                 "name":"chest",
+                 "objects":[
+                        {
+                         "height":72.6666666666667,
+                         "id":64,
+                         "name":"chest",
+                         "rotation":-26.1092158116312,
+                         "type":"",
+                         "visible":true,
+                         "width":40.0000000000001,
+                         "x":845.869341343124,
+                         "y":356.933484137746
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"chest_full",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "name":"collision",
                  "objects":[
                         {
@@ -274,7 +307,7 @@
                      "image_name":"string"
                     },
                  "type":"objectgroup",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -322,7 +355,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":61,
+ "nextobjectid":65,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

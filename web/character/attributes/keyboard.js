@@ -8,25 +8,6 @@ const { pad_container } = require('../../engine/pixi_containers');
 const { world    } = require('../../engine/shadows');
 const { View_HUD } = require('../../view/view_player_inventory');
 
-const keymap = {
-  w: 'up',
-  n: 'n',
-  a: 'left',
-  s: 'down',
-  d: 'right',
-  j: 'down',
-  k: 'up',
-  h: 'left',
-  l: 'right',
-  ArrowUp: 'up',
-  ArrowLeft: 'left',
-  ArrowDown: 'down',
-  ArrowRight: 'right',
-  i: 'i',
-  o: 'o',
-  Shift: 'Shift',
-};
-
 function point_collides(position) {
   const { children } = collision_container;
 
@@ -66,11 +47,13 @@ class Keyboard {
   save_game() {}
 
   key_down(key) {
+    if(!PIXI.keyboardManager.isEnabled) return;
+
     switch(key) {
       case  87     : this.keyboard_up();          return;//up
       case  65     : this.keyboard_left();        return;//left
-      case  83     : this.keyboard_down();        return;
-      case  68     : this.keyboard_right();       return;
+      case  83     : this.keyboard_down();        return;//down
+      case  68     : this.keyboard_right();       return;//right
       case 'n'     : this.save_game();            return;
       case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;
@@ -86,7 +69,11 @@ class Keyboard {
     this.animation.idle();
   }
 
-  destroy() {
+  enable() {
+    PIXI.keyboardManager.enable();
+  }
+
+  disable() {
     PIXI.keyboardManager.disable();
   }
 
