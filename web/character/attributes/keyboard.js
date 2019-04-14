@@ -31,14 +31,15 @@ function event_pad(position) {
 }
 
 class Keyboard {
-  constructor({ animation, sprite, vitals }) {
+  constructor({ animation, sprite, vitals, light }) {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
     this.shift_pressed = false;
-    this.speed         = vitals.speed*2;
+    this.speed         = vitals.speed/2;
     this.buffer        = 50;
     this.can_move      = true;
+    this.light         = light;
 
     PIXI.keyboardManager.on('down', key => this.key_down(key));
     PIXI.keyboardManager.on('released', () => this.key_up());
@@ -95,6 +96,7 @@ class Keyboard {
     this.animation.move_up_by(this.speed);
 
     world.y += this.speed;
+    if(this.light) this.light.set_position(this.sprite);
   }
 
   keyboard_down() {
@@ -112,6 +114,7 @@ class Keyboard {
     this.animation.move_down_by(this.speed);
 
     world.y -= this.speed;
+    if(this.light) this.light.set_position(this.sprite);
   }
 
   keyboard_left() {
@@ -129,6 +132,7 @@ class Keyboard {
     this.animation.move_left_by(this.speed);
 
     world.x += this.speed;
+    if(this.light) this.light.set_position(this.sprite);
   }
 
   keyboard_right() {
@@ -146,6 +150,7 @@ class Keyboard {
     this.animation.move_right_by(this.speed);
 
     world.x -= this.speed;
+    if(this.light) this.light.set_position(this.sprite);
   }
 }
 

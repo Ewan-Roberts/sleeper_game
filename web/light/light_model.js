@@ -23,6 +23,10 @@ class Light {
     this.shadow.position.set(x, y);
   }
 
+  set range(value) {
+    this.shadow.range = value;
+  }
+
   hide() {
     this.shadow.alpha = 0;
   }

@@ -8,7 +8,8 @@ class Roof extends Item {
     super(options.image_name);
 
     this.sprite.fade_opacity = options.fade;
-
+    this.sprite.alpha = 0;
+    console.log(this.sprite);
     roof_container.addChild(this.sprite);
   }
 }

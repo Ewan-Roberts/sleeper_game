@@ -51,7 +51,7 @@
                  "y":265.007575757576
                 }, 
                 {
-                 "height":616.69047619047,
+                 "height":710.651971689517,
                  "id":4,
                  "name":"",
                  "rotation":0,
@@ -69,8 +69,8 @@
                  "type":"",
                  "visible":true,
                  "width":342.124223602477,
-                 "x":752.30303030303,
-                 "y":830.787878787877
+                 "x":753.617177093226,
+                 "y":914.893273360451
                 }, 
                 {
                  "height":32,
@@ -101,12 +101,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":290,
+                 "width":604.422838400654,
                  "x":1159,
                  "y":242
                 }, 
                 {
-                 "height":567.333666666667,
+                 "height":646.839547473553,
                  "id":56,
                  "name":"",
                  "rotation":0,
@@ -124,8 +124,63 @@
                  "type":"",
                  "visible":true,
                  "width":211.333333333333,
-                 "x":1239,
-                 "y":826.666666666667
+                 "x":1236.37170641961,
+                 "y":921.285235560813
+                }, 
+                {
+                 "height":22.5471498109172,
+                 "id":90,
+                 "name":"",
+                 "rotation":47.1948876845693,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29573545256494,
+                 "x":1285.01606978907,
+                 "y":340.559197412138
+                }, 
+                {
+                 "height":131.50656776616,
+                 "id":91,
+                 "name":"",
+                 "rotation":-12.7409524044823,
+                 "type":"",
+                 "visible":true,
+                 "width":108.768833452634,
+                 "x":1340.06175931731,
+                 "y":272.219240972826
+                }, 
+                {
+                 "height":25.7585262715292,
+                 "id":92,
+                 "name":"",
+                 "rotation":47.1948612010685,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29574,
+                 "x":1313.28743671951,
+                 "y":314.737976467664
+                }, 
+                {
+                 "height":30.0431014673411,
+                 "id":93,
+                 "name":"",
+                 "rotation":47.1948612010685,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29574,
+                 "x":1344.13607047791,
+                 "y":285.207879443075
+                }, 
+                {
+                 "height":710.652,
+                 "id":94,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":1907.8469418006,
+                 "y":239.254531698703
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -139,18 +194,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":11,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":591.620589456205,
-                 "y":1377.26774595267
-                }, 
-                {
-                 "height":0,
                  "id":62,
                  "name":"",
                  "point":true,
@@ -158,8 +201,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":916.636753804136,
-                 "y":498.019508388607
+                 "x":923.068540782915,
+                 "y":99.721816199179
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -189,8 +232,8 @@
                  "type":"",
                  "visible":true,
                  "width":242.666666666667,
-                 "x":197.121212121212,
-                 "y":1369.42424242424
+                 "x":1051.66666666667,
+                 "y":999.72727272727
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -202,10 +245,39 @@
          "layers":[
                 {
                  "draworder":"topdown",
+                 "name":"pit",
+                 "objects":[
+                        {
+                         "height":240.629840131126,
+                         "id":79,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"pit_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-834.032043151896,
+                         "type":"",
+                         "visible":true,
+                         "width":228.641026316547,
+                         "x":852.955796008702,
+                         "y":308.71527520373
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "name":"broken_bow",
                  "objects":[
                         {
-                         "height":221.138340820313,
+                         "height":170.051612058509,
                          "id":70,
                          "name":"chest",
                          "properties":
@@ -223,9 +295,9 @@
                          "rotation":75.4565418448529,
                          "type":"",
                          "visible":true,
-                         "width":121.727527057053,
-                         "x":1089.51033275781,
-                         "y":538.007911817419
+                         "width":93.6063919588124,
+                         "x":1059.85109527477,
+                         "y":633.951453774605
                         }],
                  "opacity":1,
                  "properties":
@@ -247,27 +319,148 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"rock",
+                 "name":"door_mattress",
                  "objects":[
                         {
-                         "height":166,
-                         "id":58,
-                         "name":"rock",
-                         "rotation":0,
+                         "height":262.817726059863,
+                         "id":88,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"dirty_matress"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-1101.50022366135,
                          "type":"",
                          "visible":true,
-                         "width":246,
-                         "x":1192.31872570916,
-                         "y":27.1304797249018
+                         "width":163.789402411751,
+                         "x":803.861298951497,
+                         "y":-5.58989598556127
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"car",
+                 "objects":[
+                        {
+                         "height":385.047417159892,
+                         "id":72,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"car_00",
+                             "shadow":true
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string",
+                             "shadow":"bool"
+                            },
+                         "rotation":-682.784671786475,
+                         "type":"",
+                         "visible":true,
+                         "width":264.587997880478,
+                         "x":930.034151856236,
+                         "y":-132.772073185352
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"quiver",
+                 "objects":[
+                        {
+                         "height":86.2026023836605,
+                         "id":71,
+                         "name":"chest",
+                         "properties":
+                            {
+                             "container":true,
+                             "image_name":"quiver_00",
+                             "shadow":false
+                            },
+                         "propertytypes":
+                            {
+                             "container":"bool",
+                             "image_name":"string",
+                             "shadow":"bool"
+                            },
+                         "rotation":83.5292932158379,
+                         "type":"",
+                         "visible":true,
+                         "width":47.4509737891709,
+                         "x":919.277924214742,
+                         "y":371.340249653067
                         }],
                  "opacity":1,
                  "properties":
                     {
-                     "image_name":"rock_2"
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
                     },
                  "propertytypes":
                     {
-                     "image_name":"string"
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"backpack",
+                 "objects":[
+                        {
+                         "height":46.5833635695616,
+                         "id":87,
+                         "name":"chest",
+                         "properties":
+                            {
+                             "container":true,
+                             "image_name":"back_pack",
+                             "shadow":false
+                            },
+                         "propertytypes":
+                            {
+                             "container":"bool",
+                             "image_name":"string",
+                             "shadow":"bool"
+                            },
+                         "rotation":-105.649070726645,
+                         "type":"",
+                         "visible":true,
+                         "width":58.7240724074159,
+                         "x":1386.5964115837,
+                         "y":634.136285119398
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
                     },
                  "type":"objectgroup",
                  "visible":true,
@@ -282,12 +475,12 @@
                          "height":72.6666666666667,
                          "id":64,
                          "name":"chest",
-                         "rotation":-26.1092158116312,
+                         "rotation":-156.711516565965,
                          "type":"",
                          "visible":true,
                          "width":40.0000000000001,
-                         "x":845.869341343124,
-                         "y":356.933484137746
+                         "x":857.113793147659,
+                         "y":379.482782071434
                         }],
                  "opacity":1,
                  "properties":
@@ -302,6 +495,101 @@
                      "image_name":"string",
                      "shadow":"bool"
                     },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"chest",
+                 "objects":[
+                        {
+                         "height":72.6666666666667,
+                         "id":73,
+                         "name":"chest",
+                         "rotation":-244.834663811831,
+                         "type":"",
+                         "visible":true,
+                         "width":40.0000000000001,
+                         "x":887.236700632898,
+                         "y":479.445246185556
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"chest_full",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"dumpster",
+                 "objects":[
+                        {
+                         "height":212.337496486226,
+                         "id":102,
+                         "name":"chest",
+                         "rotation":-93.2396809250209,
+                         "type":"",
+                         "visible":true,
+                         "width":110.662237191037,
+                         "x":1479.64270088272,
+                         "y":238.257379190647
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"dumpster_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"mattress",
+                 "objects":[
+                        {
+                         "height":326.777495644357,
+                         "id":60,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"broken_mattress_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-87.7288953492821,
+                         "type":"",
+                         "visible":true,
+                         "width":323.206183112358,
+                         "x":776.959081592431,
+                         "y":906.135951326912
+                        }],
+                 "opacity":1,
                  "type":"objectgroup",
                  "visible":true,
                  "x":0,
@@ -327,8 +615,8 @@
                          "type":"",
                          "visible":true,
                          "width":249.333333333333,
-                         "x":989.951390388923,
-                         "y":320.875748624176
+                         "x":960.072265032411,
+                         "y":289.185767185451
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -338,26 +626,235 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"mattress",
+                 "name":"chair",
                  "objects":[
                         {
-                         "height":326.777495644357,
-                         "id":60,
+                         "height":75.6656370829608,
+                         "id":78,
                          "name":"collision",
                          "properties":
                             {
-                             "image_name":"broken_mattress_00"
+                             "image_name":"chair_00"
                             },
                          "propertytypes":
                             {
                              "image_name":"string"
                             },
-                         "rotation":-87.7288953492821,
+                         "rotation":-521.044460943984,
                          "type":"",
                          "visible":true,
-                         "width":270.768300089401,
-                         "x":769.829972229479,
-                         "y":822.23617663822
+                         "width":84.7774871089743,
+                         "x":1269.71335279219,
+                         "y":366.006587202568
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"stove",
+                 "objects":[
+                        {
+                         "height":120.932661831217,
+                         "id":80,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"stove_01"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-372.018905767599,
+                         "type":"",
+                         "visible":true,
+                         "width":128.352009424784,
+                         "x":1332.29591218934,
+                         "y":285.417187645687
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"long_table",
+                 "objects":[
+                        {
+                         "height":392.732378716508,
+                         "id":86,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"wood_table"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-538.94543013693,
+                         "type":"",
+                         "visible":true,
+                         "width":137.679088084613,
+                         "x":1459.27368287193,
+                         "y":945.135549545979
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"sink",
+                 "objects":[
+                        {
+                         "height":100.091501533926,
+                         "id":81,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"sink_04"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-720.1430510935,
+                         "type":"",
+                         "visible":true,
+                         "width":85.7470086786222,
+                         "x":1358.85965389004,
+                         "y":805.741923467557
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"truck",
+                 "objects":[
+                        {
+                         "height":208.709875734867,
+                         "id":95,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"truck_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":93.5381868303353,
+                         "type":"",
+                         "visible":true,
+                         "width":586.805387998021,
+                         "x":1744.3228818262,
+                         "y":298.481994813688
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"roof",
+                 "objects":[
+                        {
+                         "height":1560.80742846093,
+                         "id":82,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "fade":0.8,
+                             "image_name":"long_broken"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":-0.417604074992674,
+                         "type":"",
+                         "visible":true,
+                         "width":333.436565822732,
+                         "x":1889.85099408139,
+                         "y":-601.83377340187
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":916.300958021955,
+                         "id":101,
+                         "name":"roof",
+                         "properties":
+                            {
+                             "fade":1,
+                             "image_name":"tree_11"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":969.220740761071,
+                         "x":1523.41821533609,
+                         "y":-572.620503954807
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"home_roof",
+                 "objects":[
+                        {
+                         "height":837.281246488164,
+                         "id":89,
+                         "name":"roof",
+                         "properties":
+                            {
+                             "fade":0.1,
+                             "image_name":"roof_00"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1383.76837268766,
+                         "x":618.20247308009,
+                         "y":162.108419578289
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -390,7 +887,7 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -428,7 +925,7 @@
                  "name":"road",
                  "objects":[
                         {
-                         "height":1902.77349721408,
+                         "height":1917.65998772394,
                          "id":69,
                          "name":"floor_visual",
                          "properties":
@@ -442,9 +939,9 @@
                          "rotation":90,
                          "type":"",
                          "visible":true,
-                         "width":285.802497759327,
-                         "x":1912.69186981638,
-                         "y":-31.0042931544367
+                         "width":221.29437221659,
+                         "x":1927.57836032624,
+                         "y":33.5038323883
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -509,6 +1006,151 @@
                  "visible":true,
                  "x":0,
                  "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"concrete_decal",
+                 "objects":[
+                        {
+                         "height":319.08526801061,
+                         "id":99,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"concrete_decal_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-30.0311689804632,
+                         "type":"",
+                         "visible":true,
+                         "width":1071.70404545243,
+                         "x":842.705587029192,
+                         "y":142.379135248101
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"street_marks",
+                 "objects":[
+                        {
+                         "height":936.189934438698,
+                         "id":103,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"concrete_decal_01"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-180,
+                         "type":"",
+                         "visible":true,
+                         "width":1918.71300547962,
+                         "x":1918.67512584585,
+                         "y":32.2546438302819
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"litter_2",
+                 "objects":[
+                        {
+                         "height":304.459132157436,
+                         "id":105,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"litter_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":33.161054539476,
+                         "type":"",
+                         "visible":true,
+                         "width":257.239160217844,
+                         "x":1568.40918814527,
+                         "y":-104.631854364898
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"ladder",
+                 "objects":[
+                        {
+                         "height":370.545966119481,
+                         "id":98,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"ladder_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":173.304673940448,
+                         "type":"",
+                         "visible":true,
+                         "width":85.1822730557842,
+                         "x":1795.66018136539,
+                         "y":821.595016964597
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"litter",
+                 "objects":[
+                        {
+                         "height":148.297426162322,
+                         "id":85,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"litter_01"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":166.820632679455,
+                         "type":"",
+                         "visible":true,
+                         "width":164.540648760259,
+                         "x":1432.11968042507,
+                         "y":386.551482055475
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
                 }],
          "name":"furnishing",
          "opacity":1,
@@ -517,7 +1159,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":71,
+ "nextobjectid":106,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

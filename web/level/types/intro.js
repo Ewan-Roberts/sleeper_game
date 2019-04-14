@@ -36,21 +36,22 @@ class Intro  {
     this.lantern.tween.add_path([
       {x: 1000, y: 100},
       {x: 1250, y: 140},
-      {x: 1450, y: 130},
+      {x: 1450, y: 100},
       {x: 1650, y: 120},
       {x: 1951, y: 110},
       {x: 2551, y: 110},
     ]);
+    this.lantern.range = 700;
 
     this.lighter.set_position({ x: 1115, y: 410 });
   }
   async start() {
 
     const {walls, background, furnishing, lights} = this.elements;
-    global.set_light_level(0.6);
+    global.set_light_level(0);
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -700, y: 0 });
+    this.camera.tween.to({ x: -700, y: -200 });
     this.camera.tween.smooth();
 
     this.player.keyboard.disable();
@@ -69,22 +70,23 @@ class Intro  {
     });
 
     furnishing.forEach(data => {
-      console.log(data);
       Element_Factory.generate_tiled(data);
     });
 
-    lights.forEach(data => {
+    lights.forEach(async data => {
+      await sleep(2000);
       const light = new Candle();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
+      light.start_flickering();
     });
 
     this.lighter.hide();
 
     this.ambient.fade_in(0.005, 0.05);
 
-    this.camera.tween.time = 2000;
+    this.camera.tween.time = 1000;
     this.camera.tween.start();
 
     this.lantern.tween.time = 10000;
@@ -93,16 +95,14 @@ class Intro  {
       this.lantern.remove();
     });
 
-    this.player.tween.time = 2000;
+    this.player.tween.time = 1000;
     this.player.tween.start();
 
-    this.player.light.hide();
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
 
     this.player.keyboard.enable();
-    await sleep(6000);
     this.lighter.strike.start();
 
     await sleep(2500);

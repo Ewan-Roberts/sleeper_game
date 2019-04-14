@@ -94,6 +94,8 @@ class Human {
     entity.sprite = new PIXI.extras.AnimatedSprite(idle_texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
+    this.sprite.width  /=2;
+    this.sprite.height /=2;
     this.entity = entity;
     this.animations = {
       nothing_idle : animation.nothing_idle(),

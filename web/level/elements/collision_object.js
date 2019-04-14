@@ -7,6 +7,12 @@ class CollisionItem extends Item {
   constructor(options) {
     super(options.image_name);
 
+    if(options.shadow) {
+      this.shadow = true;
+      this.shade.anchor.y= 1;
+      this.shade.anchor.x= 0;
+    }
+
     collision_container.addChild(this.sprite);
   }
 }
