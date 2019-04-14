@@ -40,15 +40,15 @@
                  "y":273.393939393939
                 }, 
                 {
-                 "height":17.3333333333333,
+                 "height":13.0833333333333,
                  "id":3,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":16,
-                 "x":1078.9696969697,
-                 "y":249.757575757576
+                 "width":12.0769230769231,
+                 "x":1061.4696969697,
+                 "y":265.007575757576
                 }, 
                 {
                  "height":616.69047619047,
@@ -58,7 +58,7 @@
                  "type":"",
                  "visible":true,
                  "width":30.6666666666665,
-                 "x":1451,
+                 "x":1448,
                  "y":242.121212121212
                 }, 
                 {
@@ -81,18 +81,18 @@
                  "visible":true,
                  "width":290,
                  "x":755,
-                 "y":236
+                 "y":241
                 }, 
                 {
                  "height":14.6666666666666,
                  "id":54,
                  "name":"",
-                 "rotation":0,
+                 "rotation":7.21332652497806,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":1124,
-                 "y":262
+                 "x":1132.23411839358,
+                 "y":239.303527595128
                 }, 
                 {
                  "height":32,
@@ -139,18 +139,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":10,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1146.10128684101,
-                 "y":516.670541026706
-                }, 
-                {
-                 "height":0,
                  "id":11,
                  "name":"",
                  "point":true,
@@ -170,8 +158,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":871.333333333333,
-                 "y":502.666666666667
+                 "x":916.636753804136,
+                 "y":498.019508388607
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -214,6 +202,51 @@
          "layers":[
                 {
                  "draworder":"topdown",
+                 "name":"broken_bow",
+                 "objects":[
+                        {
+                         "height":221.138340820313,
+                         "id":70,
+                         "name":"chest",
+                         "properties":
+                            {
+                             "container":true,
+                             "image_name":"bow_broken_00",
+                             "shadow":false
+                            },
+                         "propertytypes":
+                            {
+                             "container":"bool",
+                             "image_name":"string",
+                             "shadow":"bool"
+                            },
+                         "rotation":75.4565418448529,
+                         "type":"",
+                         "visible":true,
+                         "width":121.727527057053,
+                         "x":1089.51033275781,
+                         "y":538.007911817419
+                        }],
+                 "opacity":1,
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"bow_broken_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "name":"rock",
                  "objects":[
                         {
@@ -223,14 +256,14 @@
                          "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":159.333333333333,
-                         "x":1214.48484848485,
-                         "y":696.424242424243
+                         "width":246,
+                         "x":1192.31872570916,
+                         "y":27.1304797249018
                         }],
                  "opacity":1,
                  "properties":
                     {
-                     "image_name":"rock_1"
+                     "image_name":"rock_2"
                     },
                  "propertytypes":
                     {
@@ -276,7 +309,7 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"collision",
+                 "name":"table",
                  "objects":[
                         {
                          "height":145.819234048688,
@@ -298,14 +331,6 @@
                          "y":320.875748624176
                         }],
                  "opacity":1,
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
                  "type":"objectgroup",
                  "visible":false,
                  "x":0,
@@ -313,10 +338,10 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"collision",
+                 "name":"mattress",
                  "objects":[
                         {
-                         "height":277.656667436426,
+                         "height":326.777495644357,
                          "id":60,
                          "name":"collision",
                          "properties":
@@ -327,22 +352,159 @@
                             {
                              "image_name":"string"
                             },
-                         "rotation":-265.398033013144,
+                         "rotation":-87.7288953492821,
                          "type":"",
                          "visible":true,
-                         "width":230.066711607555,
-                         "x":1082.17726846615,
-                         "y":611.221620484885
+                         "width":270.768300089401,
+                         "x":769.829972229479,
+                         "y":822.23617663822
                         }],
                  "opacity":1,
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"litter",
+                 "objects":[
+                        {
+                         "height":311.656667436426,
+                         "id":65,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"litter_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":258.239160217844,
+                         "x":754.177268466146,
+                         "y":421.221620484885
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"dirty_floor",
+                 "objects":[
+                        {
+                         "height":1088.03005799437,
+                         "id":66,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"floor_decal_03"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":724.905826884511,
+                         "x":755.843935132812,
+                         "y":236.888287151552
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"road",
+                 "objects":[
+                        {
+                         "height":1902.77349721408,
+                         "id":69,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"road_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":90,
+                         "type":"",
+                         "visible":true,
+                         "width":285.802497759327,
+                         "x":1912.69186981638,
+                         "y":-31.0042931544367
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"floor_decal",
+                 "objects":[
+                        {
+                         "height":94.7734972140798,
+                         "id":68,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"floor_decal_01"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":180,
+                         "type":"",
+                         "visible":true,
+                         "width":265.002637078622,
+                         "x":1244.83893476648,
+                         "y":266.152419432224
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"brick_wall_broken",
+                 "objects":[
+                        {
+                         "height":113.440163880746,
+                         "id":67,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"wall_stone_damage_01"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":180,
+                         "type":"",
+                         "visible":true,
+                         "width":265.002637078622,
+                         "x":1208.90431497301,
+                         "y":366.972304712625
+                        }],
+                 "opacity":1,
                  "type":"objectgroup",
                  "visible":true,
                  "x":0,
@@ -355,7 +517,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":65,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

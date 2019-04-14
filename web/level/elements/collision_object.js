@@ -6,6 +6,7 @@ const { Item } = require('./item_model');
 class CollisionItem extends Item {
   constructor(options) {
     super(options.image_name);
+
     collision_container.addChild(this.sprite);
   }
 }

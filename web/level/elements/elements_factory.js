@@ -13,6 +13,7 @@ const { Roof      } = require('./ceiling');
 const { Rock      } = require('./rock');
 // const { Candle    } = require('../../light/types/candle');
 const { CollisionItem } = require('./collision_object');
+const { BackgroundVisualItem } = require('./visual_object');
 
 //TODO This is not a Factory make it one and abstract this
 class Element_Factory {
@@ -32,6 +33,7 @@ class Element_Factory {
       case 'roof':      return new Roof(options);
       case 'rock':      return new Rock(options);
       case 'collision': return new CollisionItem(options);
+      case 'floor_visual': return new BackgroundVisualItem(options);
       // case 'candle':    return new Candle(options);
     }
   }

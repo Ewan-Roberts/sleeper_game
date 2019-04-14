@@ -8,10 +8,7 @@ class Chest extends Item {
   constructor(options) {
     console.log(options);
     super(options.image_name);
-
     this.name = 'chest';
-
-    item_container.addChild(this.sprite);
 
     if(options.shadow) {
       this.shadow = true;
@@ -24,6 +21,8 @@ class Chest extends Item {
       this.state  = 'closed';
       this.state_handling = true;
     }
+
+    item_container.addChild(this.sprite);
   }
 }
 

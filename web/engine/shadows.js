@@ -9,7 +9,7 @@ require('pixi-shadows');
 const app = require('./app');
 
 const world = PIXI.shadows.init(app);
-world.interactive = true;
+// world.interactive = true;
 world.updateLayersOrder = function () {
   world.children.sort(function(a,b) {
     a.zIndex = a.zIndex || 0;

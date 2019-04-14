@@ -47,10 +47,10 @@ class Intro  {
   async start() {
 
     const {walls, background, furnishing, lights} = this.elements;
-    global.set_light_level(0.5);
+    global.set_light_level(0.6);
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -500, y: 100 });
+    this.camera.tween.to({ x: -700, y: 0 });
     this.camera.tween.smooth();
 
     this.player.keyboard.disable();
@@ -84,7 +84,7 @@ class Intro  {
 
     this.ambient.fade_in(0.005, 0.05);
 
-    this.camera.tween.time = 11000;
+    this.camera.tween.time = 2000;
     this.camera.tween.start();
 
     this.lantern.tween.time = 10000;
@@ -93,21 +93,21 @@ class Intro  {
       this.lantern.remove();
     });
 
-    this.player.tween.time = 6000;
+    this.player.tween.time = 2000;
     this.player.tween.start();
 
+    this.player.light.hide();
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
 
+    this.player.keyboard.enable();
     await sleep(6000);
     this.lighter.strike.start();
 
     await sleep(2500);
     this.player.animation.state_to = 'candle';
     await sleep(2500);
-
-    this.player.keyboard.enable();
   }
 }
 
