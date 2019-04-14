@@ -1,6 +1,6 @@
 'use strict';
 
-const { cutscene_container } = require('../../engine/pixi_containers');
+const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');
@@ -14,7 +14,7 @@ class NPC extends Character {
 
     this.add_component(new Tween(this.sprite));
 
-    cutscene_container.addChild(this.sprite);
+    visual_effects_container.addChild(this.sprite);
   }
 }
 

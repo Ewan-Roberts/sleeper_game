@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { gui_container } = require('../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 const { random_number } = require('../utils/math');
 const { Track         } = require('./sound');
 
@@ -36,7 +36,7 @@ class Rain {
       rainNoise.volume = 0.05;
       rainNoise.play();
 
-      gui_container.addChild(animatedDrop);
+      visual_effects_container.addChild(animatedDrop);
     }
   }
 }

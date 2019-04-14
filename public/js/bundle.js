@@ -17707,7 +17707,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":304}],86:[function(require,module,exports){
+},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":300}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21507,7 +21507,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":40,"path":304}],104:[function(require,module,exports){
+},{"../../Shader":40,"path":300}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27345,7 +27345,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":310}],121:[function(require,module,exports){
+},{"url":306}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31919,7 +31919,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":61,"../../core/const":42,"path":304}],139:[function(require,module,exports){
+},{"../../core":61,"../../core/const":42,"path":300}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32003,7 +32003,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":61,"path":304}],140:[function(require,module,exports){
+},{"../../core":61,"path":300}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33166,7 +33166,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":61,"path":304}],147:[function(require,module,exports){
+},{"../../core":61,"path":300}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33274,7 +33274,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":61,"path":304}],148:[function(require,module,exports){
+},{"../../core":61,"path":300}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33328,7 +33328,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":61,"path":304}],149:[function(require,module,exports){
+},{"../../core":61,"path":300}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33504,7 +33504,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":61,"path":304}],151:[function(require,module,exports){
+},{"../../core":61,"path":300}],151:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36171,7 +36171,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":137,"path":304,"resource-loader":190}],159:[function(require,module,exports){
+},{"../extras":137,"path":300,"resource-loader":190}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36534,7 +36534,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":61,"resource-loader":190,"url":310}],162:[function(require,module,exports){
+},{"../core":61,"resource-loader":190,"url":306}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38260,7 +38260,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":61,"../Mesh":163,"path":304,"pixi-gl-core":19}],170:[function(require,module,exports){
+},{"../../core":61,"../Mesh":163,"path":300,"pixi-gl-core":19}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45233,7 +45233,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":297,"pixi.js":151}],199:[function(require,module,exports){
+},{"../../utils/math":293,"pixi.js":151}],199:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45348,7 +45348,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":297,"pixi.js":151}],200:[function(require,module,exports){
+},{"../../utils/math":293,"pixi.js":151}],200:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45466,7 +45466,7 @@ module.exports = {
   Archer,
 };
 
-},{"../../effects/blood":225,"../../engine/ticker":237,"../../utils/math":297,"../attributes/melee":209,"../attributes/ranged":212,"../types/enemy":219,"events":303}],201:[function(require,module,exports){
+},{"../../effects/blood":224,"../../engine/ticker":235,"../../utils/math":293,"../attributes/melee":209,"../attributes/ranged":212,"../types/enemy":218,"events":299}],201:[function(require,module,exports){
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
@@ -45601,7 +45601,7 @@ module.exports = {
   Scripted_NPC,
 };
 
-},{"../../effects/blood":225,"../../engine/pixi_containers":233,"../../engine/ticker":237,"../../engine/tween":238,"../../utils/line_of_sight":296,"../../utils/math":297,"../attributes/influence":204,"../attributes/melee":209,"../attributes/scavenge":214,"../attributes/script":215,"../types/rat":222,"events":303}],202:[function(require,module,exports){
+},{"../../effects/blood":224,"../../engine/pixi_containers":232,"../../engine/ticker":235,"../../engine/tween":236,"../../utils/line_of_sight":292,"../../utils/math":293,"../attributes/influence":204,"../attributes/melee":209,"../attributes/scavenge":213,"../attributes/script":214,"../types/rat":221,"events":299}],202:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -45694,7 +45694,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":225,"../../engine/ticker":237,"../../utils/math":297,"../attributes/melee":209,"../types/rat":222,"events":303}],203:[function(require,module,exports){
+},{"../../effects/blood":224,"../../engine/ticker":235,"../../utils/math":293,"../attributes/melee":209,"../types/rat":221,"events":299}],203:[function(require,module,exports){
 'use strict';
 
 const { timer               } = require('../../engine/ticker');
@@ -45825,7 +45825,7 @@ module.exports = {
   Scavenger,
 };
 
-},{"../../effects/blood":225,"../../engine/pixi_containers":233,"../../engine/ticker":237,"../../engine/tween":238,"../../utils/line_of_sight":296,"../../utils/math":297,"../../utils/time":298,"../attributes/influence":204,"../attributes/melee":209,"../attributes/scavenge":214,"../types/rat":222,"events":303}],204:[function(require,module,exports){
+},{"../../effects/blood":224,"../../engine/pixi_containers":232,"../../engine/ticker":235,"../../engine/tween":236,"../../utils/line_of_sight":292,"../../utils/math":293,"../../utils/time":294,"../attributes/influence":204,"../attributes/melee":209,"../attributes/scavenge":213,"../types/rat":221,"events":299}],204:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45853,7 +45853,7 @@ module.exports = {
   Influence,
 };
 
-},{"../../engine/pixi_containers":233,"pixi.js":151}],205:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"pixi.js":151}],205:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -45927,7 +45927,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":241}],206:[function(require,module,exports){
+},{"../../items/item_manager":239}],206:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46083,7 +46083,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/shadows":236,"../../view/view_player_inventory":301,"pixi.js":151}],207:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../../engine/shadows":234,"../../view/view_player_inventory":297,"pixi.js":151}],207:[function(require,module,exports){
 
 'use strict';
 
@@ -46111,7 +46111,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":289}],208:[function(require,module,exports){
+},{"../../light/types/candle":285}],208:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -46164,7 +46164,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../items/item_manager":241,"../../view/button":299,"../../view/view_inventory":300}],209:[function(require,module,exports){
+},{"../../items/item_manager":239,"../../view/button":295,"../../view/view_inventory":296}],209:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46217,7 +46217,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":230,"../../engine/pixi_containers":233,"pixi.js":151}],210:[function(require,module,exports){
+},{"../../engine/melee":229,"../../engine/pixi_containers":232,"pixi.js":151}],210:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -46285,7 +46285,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":223,"../../engine/pixi_containers":233,"../../engine/ranged":234,"../../engine/shadows":236,"../../utils/math":297}],211:[function(require,module,exports){
+},{"../../effects/aiming_cone":222,"../../engine/pixi_containers":232,"../../engine/ranged":233,"../../engine/shadows":234,"../../utils/math":293}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46329,7 +46329,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":232,"../../engine/pixi_containers":233,"pixi.js":151}],212:[function(require,module,exports){
+},{"../../engine/pathfind.js":231,"../../engine/pixi_containers":232,"pixi.js":151}],212:[function(require,module,exports){
 'use strict';
 
 const { shoot_arrow } = require('../../engine/ranged');
@@ -46369,92 +46369,7 @@ module.exports = {
   Range,
 };
 
-},{"../../effects/aiming_line":224,"../../engine/ranged":234}],213:[function(require,module,exports){
-'use strict';
-const PIXI = require('pixi.js');
-
-const { timer                } = require('../../engine/ticker');
-const { get_intersection     } = require('../../engine/raycasting');
-const { raycasting_container } = require('../../engine/pixi_containers');
-
-class Raycasting {
-  constructor(sprite) {
-    this.name    = 'raycasting';
-
-    this.raycast = new PIXI.Graphics();
-    this.sprite  = sprite;
-  }
-
-  add(level_segments) {
-    const raycast_timer  = timer.createTimer(80);
-    raycast_timer.repeat = 80;
-    raycast_timer.expire = true;
-
-    const points = [];
-    level_segments.forEach(seg => points.push(seg.a,seg.b));
-
-    const light = this.sprite.getChildByName('light');
-    if (light) light.mask = this.raycast;
-
-    raycast_timer.on('repeat', () => {
-      const unique_angles = [];
-      let intersects = [];
-
-      this.raycast.clear();
-      this.raycast.beginFill(0xfffffff, 0.05);
-
-      points.forEach(elem => {
-        const angle = Math.atan2(elem.y - this.sprite.y, elem.x - this.sprite.x);
-        elem.angle = angle;
-        unique_angles.push(angle - 0.00001, angle + 0.00001);
-      });
-
-      unique_angles.forEach(angle => {
-        const dx    = Math.cos(angle);
-        const dy    = Math.sin(angle);
-        const ray   = {
-          a: {x: this.sprite.x,      y: this.sprite.y     },
-          b: {x: this.sprite.x + dx, y: this.sprite.y + dy},
-        };
-
-        let closest_intersect = null;
-        level_segments.forEach(segment => {
-          const intersect = get_intersection(ray, segment);
-          if(!intersect) return;
-          if(!closest_intersect || intersect.param < closest_intersect.param){
-            closest_intersect = intersect;
-          }
-        });
-
-        if(!closest_intersect) return;
-
-        closest_intersect.angle = angle;
-        intersects.push(closest_intersect);
-      });
-
-      intersects = intersects.sort((a,b) => a.angle - b.angle);
-
-      this.raycast.moveTo(intersects[0].x, intersects[0].y)
-        .lineStyle(0.5, 0xffd900, 5);
-      intersects.forEach(itersect => this.raycast.lineTo(itersect.x, itersect.y));
-    });
-
-    raycast_timer.start();
-    raycasting_container.addChild(this.raycast);
-  }
-
-  contains_point(sprite) {
-    const point = sprite.getGlobalPosition();
-
-    return this.raycast.containsPoint(point);
-  }
-}
-
-module.exports = {
-  Raycasting,
-};
-
-},{"../../engine/pixi_containers":233,"../../engine/raycasting":235,"../../engine/ticker":237,"pixi.js":151}],214:[function(require,module,exports){
+},{"../../effects/aiming_line":223,"../../engine/ranged":233}],213:[function(require,module,exports){
 'use strict';
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');
@@ -46527,7 +46442,7 @@ module.exports = {
   Scavenge,
 };
 
-},{"../../engine/pathfind.js":232}],215:[function(require,module,exports){
+},{"../../engine/pathfind.js":231}],214:[function(require,module,exports){
 'use strict';
 
 class Script {
@@ -46560,7 +46475,7 @@ module.exports = {
 };
 
 
-},{}],216:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -46595,7 +46510,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":237,"../../view/view_player_status_meter":302}],217:[function(require,module,exports){
+},{"../../engine/ticker":235,"../../view/view_player_status_meter":298}],216:[function(require,module,exports){
 'use strict';
 
 const event     = require('events');
@@ -46646,7 +46561,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":225,"events":303}],218:[function(require,module,exports){
+},{"../../effects/blood":224,"events":299}],217:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -46669,7 +46584,7 @@ module.exports = {
   Character,
 };
 
-},{}],219:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
@@ -46681,7 +46596,6 @@ const { Inventory  } = require('../attributes/inventory');
 const { Vitals     } = require('../attributes/vitals');
 const { Lootable   } = require('../attributes/lootable');
 const { Pathfind   } = require('../attributes/pathfind');
-const { Raycasting } = require('../attributes/raycasting');
 
 class Enemy extends Character {
   constructor() {
@@ -46693,7 +46607,6 @@ class Enemy extends Character {
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
     this.add_component(new Pathfind(this.sprite));
-    this.add_component(new Raycasting(this.sprite));
 
     enemy_container.addChild(this.sprite);
   }
@@ -46703,10 +46616,10 @@ module.exports = {
   Enemy,
 };
 
-},{"../../engine/pixi_containers":233,"../animations/human":198,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/pathfind":211,"../attributes/raycasting":213,"../attributes/vitals":217,"../character_model":218}],220:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../animations/human":198,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/pathfind":211,"../attributes/vitals":216,"../character_model":217}],219:[function(require,module,exports){
 'use strict';
 
-const { cutscene_container } = require('../../engine/pixi_containers');
+const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');
@@ -46720,7 +46633,7 @@ class NPC extends Character {
 
     this.add_component(new Tween(this.sprite));
 
-    cutscene_container.addChild(this.sprite);
+    visual_effects_container.addChild(this.sprite);
   }
 }
 
@@ -46728,7 +46641,7 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/tween":238,"../animations/human":198,"../character_model":218}],221:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../../engine/tween":236,"../animations/human":198,"../character_model":217}],220:[function(require,module,exports){
 'use strict';
 
 const { player_container } = require('../../engine/pixi_containers');
@@ -46789,7 +46702,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":225,"../../engine/pixi_containers":233,"../../engine/tween":238,"../animations/human":198,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":216,"../attributes/vitals":217,"../character_model":218,"events":303}],222:[function(require,module,exports){
+},{"../../effects/blood":224,"../../engine/pixi_containers":232,"../../engine/tween":236,"../animations/human":198,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":215,"../attributes/vitals":216,"../character_model":217,"events":299}],221:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -46824,7 +46737,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":233,"../animations/rat":199,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/pathfind":211,"../attributes/vitals":217,"../character_model":218}],223:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../animations/rat":199,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/pathfind":211,"../attributes/vitals":216,"../character_model":217}],222:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46872,7 +46785,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":233,"../engine/ticker":237,"pixi.js":151}],224:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"../engine/ticker":235,"pixi.js":151}],223:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46899,7 +46812,7 @@ module.exports = {
   Aiming_Line,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],225:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],224:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46920,7 +46833,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],226:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],225:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46949,7 +46862,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],227:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -46968,7 +46881,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":151}],228:[function(require,module,exports){
+},{"pixi.js":151}],227:[function(require,module,exports){
 'use strict';
 
 const { Dev_Room        } = require('../level/types/dev_room');
@@ -46980,11 +46893,9 @@ const { Items_Room      } = require('../level/types/item_room');
 const { Transition_Room } = require('../level/types/transition_room');
 const { Scavenge_Room   } = require('../level/types/scavenge_room');
 const { Old_Man_Room    } = require('../level/types/old_man_room');
-const { Tiled_Room      } = require('../level/types/tiles_room');
 const { Tiled_Prey      } = require('../level/types/tiled_prey');
 const { Tiled_Prey_Path } = require('../level/types/tiled_prey_path');
 const { Large_Room      } = require('../level/types/large_level');
-const { Tiled_Homestead } = require('../level/types/tiled_homestead_room');
 const { Outside_Map     } = require('../level/types/tiled_outside');
 const { Intro           } = require('../level/types/intro.js');
 const { Player          } = require('../character/types/player.js');
@@ -47032,14 +46943,6 @@ class Level_Loader {
     new Transition_Room(player);
   }
 
-  static _tiled_homestead(player) {
-    new Tiled_Homestead(player);
-  }
-
-  static _tiled_created(player) {
-    new Tiled_Room(player);
-  }
-
   static _tiled_prey(player) {
     new Tiled_Prey(player);
   }
@@ -47064,16 +46967,17 @@ class Level_Loader {
     const player = new Player();
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
-    // this._old_man(player);
+
+    this._intro(player);
     // this._outside(player);
+
+    // this._old_man(player);
     // this._tiled_prey_path(player);
     // this._scavenge(player);
     // this._tiled_created(player);
     // this._tiled_prey(player);
     // this._tiled_large(player);
-    // this._tiled_homestead(player);
     // this._item_room(player);
-    this._intro(player);
     // this._development(player);
     // this._animation();
     // this._projectile(player);
@@ -47088,7 +46992,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":221,"../level/types/archer_room":268,"../level/types/dev_room":269,"../level/types/intro.js":270,"../level/types/item_room":271,"../level/types/large_level":272,"../level/types/old_man_room":273,"../level/types/player_animations":274,"../level/types/projectile_room":275,"../level/types/random_room":276,"../level/types/scavenge_room":277,"../level/types/tiled_homestead_room":278,"../level/types/tiled_outside":279,"../level/types/tiled_prey":280,"../level/types/tiled_prey_path":281,"../level/types/tiles_room":282,"../level/types/transition_room":283}],229:[function(require,module,exports){
+},{"../character/types/player.js":220,"../level/types/archer_room":266,"../level/types/dev_room":267,"../level/types/intro.js":268,"../level/types/item_room":269,"../level/types/large_level":270,"../level/types/old_man_room":271,"../level/types/player_animations":272,"../level/types/projectile_room":273,"../level/types/random_room":274,"../level/types/scavenge_room":275,"../level/types/tiled_outside":276,"../level/types/tiled_prey":277,"../level/types/tiled_prey_path":278,"../level/types/transition_room":279}],228:[function(require,module,exports){
 'use strict';
 
 const { world } = require('./shadows');
@@ -47132,7 +47036,7 @@ module.exports = {
   Camera,
 };
 
-},{"./shadows":236,"./tween":238}],230:[function(require,module,exports){
+},{"./shadows":234,"./tween":236}],229:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -47145,7 +47049,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],231:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47158,7 +47062,7 @@ module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":32,"pixi.js":151}],232:[function(require,module,exports){
+},{"pixi-packer-parser":32,"pixi.js":151}],231:[function(require,module,exports){
 'use strict';
 const { grid_container } = require('./pixi_containers');
 
@@ -47277,7 +47181,7 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":295,"../utils/math":297,"./pixi_containers":233,"./tween":238,"easystarjs":3}],233:[function(require,module,exports){
+},{"../utils/grid":291,"../utils/math":293,"./pixi_containers":232,"./tween":236,"easystarjs":3}],232:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 PIXI.settings.ROUND_PIXELS = true;
@@ -47315,10 +47219,6 @@ const item_container = new PIXI.Container();
 item_container.name = 'non_collision_items';
 item_container.zIndex = low;
 
-const door_container = new PIXI.Container();
-door_container.name = 'door_container';
-door_container.zIndex = low;
-
 const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';
 critter_container.zIndex = low;
@@ -47343,10 +47243,6 @@ const pad_container = new PIXI.Container();
 pad_container.name = 'pad_container';
 pad_container.zIndex = close;
 
-const cutscene_container = new PIXI.Container();
-cutscene_container.name = 'cutscene_container';
-cutscene_container.zIndex = close;
-
 const roof_container = new PIXI.Container();
 roof_container.name = 'roof_container';
 roof_container.zIndex = close;
@@ -47359,11 +47255,13 @@ const dialog_container = new PIXI.Container();
 dialog_container.name = 'dialog_container';
 dialog_container.zIndex = close;
 
-const raycasting_container = new PIXI.Container();
-raycasting_container.name = 'raycasting_container';
-raycasting_container.zIndex = close;
-
-// const grid_particles = new PIXI.ParticleContainer();
+// const grid_particles = new PIXI.ParticleContainer(
+//   scale: true,
+//   position: true,
+//   rotation: true,
+//   uvs: true,
+//   alpha: true,
+// );
 // grid_particles.name = 'grid_particles';
 // grid_particles.zIndex = close;
 
@@ -47374,15 +47272,12 @@ world.addChild(
   grid_container,
   collision_container,
   item_container,
-  door_container,
   critter_container,
   arrow_container,
   enemy_container,
   player_container,
-  cutscene_container,
   gui_container,
   dialog_container,
-  raycasting_container,
   pad_container
   // grid_particles
 );
@@ -47390,7 +47285,6 @@ world.addChild(
 world.updateLayersOrder();
 
 module.exports = {
-  cutscene_container,
   roof_container,
   background_container,
   collision_container,
@@ -47398,9 +47292,7 @@ module.exports = {
   gui_container,
   enemy_container,
   player_container,
-  door_container,
   arrow_container,
-  raycasting_container,
   visual_effects_container,
   grid_container,
   item_container,
@@ -47410,7 +47302,7 @@ module.exports = {
 
 
 
-},{"./shadows":236,"pixi.js":151}],234:[function(require,module,exports){
+},{"./shadows":234,"pixi.js":151}],233:[function(require,module,exports){
 'use strict';
 const PIXI                 = require('pixi.js');
 
@@ -47492,50 +47384,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":297,"./pixi_containers":233,"./tween":238,"pixi.js":151}],235:[function(require,module,exports){
-'use strict';
-
-function get_intersection(ray, segment){
-  // RAY in parametric: Point + Delta*T1
-  const r_px = ray.a.x;
-  const r_py = ray.a.y;
-  const r_dx = ray.b.x-ray.a.x;
-  const r_dy = ray.b.y-ray.a.y;
-
-  // SEGMENT in parametric: Point + Delta*T2
-  const s_px = segment.a.x;
-  const s_py = segment.a.y;
-  const s_dx = segment.b.x-segment.a.x;
-  const s_dy = segment.b.y-segment.a.y;
-
-  // Are they parallel? If so, no intersect
-  const r_mag = Math.sqrt(r_dx*r_dx+r_dy*r_dy);
-  const s_mag = Math.sqrt(s_dx*s_dx+s_dy*s_dy);
-  if(r_dx/r_mag===s_dx/s_mag && r_dy/r_mag===s_dy/s_mag){
-    // Unit vectors are the same.
-    return null;
-  }
-
-  const T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx);
-  const T1 = (s_px+s_dx*T2-r_px)/r_dx;
-
-  // Must be within parametic whatevers for RAY/SEGMENT
-  if(T1<0) return null;
-  if(T2<0 || T2>1) return null;
-
-  // Return the POINT OF INTERSECTION
-  return {
-    x:     r_px+r_dx*T1,
-    y:     r_py+r_dy*T1,
-    param: T1,
-  };
-}
-
-module.exports = {
-  get_intersection,
-};
-
-},{}],236:[function(require,module,exports){
+},{"../utils/math":293,"./pixi_containers":232,"./tween":236,"pixi.js":151}],234:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -47566,7 +47415,7 @@ module.exports = {
 
 
 
-},{"./app":227,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],237:[function(require,module,exports){
+},{"./app":226,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],235:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -47594,7 +47443,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":227,"pixi-keyboard":30,"pixi-timer":34,"pixi-tween":35,"pixi.js":151}],238:[function(require,module,exports){
+},{"./app":226,"pixi-keyboard":30,"pixi-timer":34,"pixi-tween":35,"pixi.js":151}],236:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47707,7 +47556,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":297,"./pixi_containers":233,"pixi.js":151}],239:[function(require,module,exports){
+},{"../utils/math":293,"./pixi_containers":232,"pixi.js":151}],237:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -47725,7 +47574,7 @@ loader.load((res) => {
 
 
 
-},{"./engine/boot_loader.js":228,"./engine/packer":231,"./utils/globals":294}],240:[function(require,module,exports){
+},{"./engine/boot_loader.js":227,"./engine/packer":230,"./utils/globals":290}],238:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -48043,7 +47892,7 @@ module.exports = {
 };
 
 
-},{}],241:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48188,7 +48037,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":227,"../utils/math":297,"./data/item_data":240,"pixi.js":151}],242:[function(require,module,exports){
+},{"../engine/app":226,"../utils/math":293,"./data/item_data":238,"pixi.js":151}],240:[function(require,module,exports){
 'use strict';
 
 const { distance_between } = require('../../utils/math');
@@ -48242,7 +48091,7 @@ module.exports = {
   Item_Pool,
 };
 
-},{"../../utils/math":297}],243:[function(require,module,exports){
+},{"../../utils/math":293}],241:[function(require,module,exports){
 'use strict';
 
 // This is purely an interface for TILED data
@@ -48410,7 +48259,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],244:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -48514,7 +48363,7 @@ module.exports = {
   Randomise,
 };
 
-},{"../../engine/pixi_containers":233,"../../utils/color_picker":292,"../../utils/math":297,"../elements/elements_factory":257,"pixi.js":151}],245:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../../utils/color_picker":288,"../../utils/math":293,"../elements/elements_factory":255,"pixi.js":151}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -48847,9 +48696,9 @@ module.exports={ "height":50,
                          "rotation":-265.398033013144,
                          "type":"",
                          "visible":true,
-                         "width":184.505105952879,
-                         "x":1078.5217175944,
-                         "y":656.636341200268
+                         "width":230.066711607555,
+                         "x":1082.17726846615,
+                         "y":611.221620484885
                         }],
                  "opacity":1,
                  "properties":
@@ -48883,22 +48732,10 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
-        {
-         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-         "encoding":"base64",
-         "height":50,
-         "name":"background",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":50,
-         "x":0,
-         "y":0
-        }, 
         {
          "draworder":"topdown",
          "name":"lights",
@@ -49319,32 +49156,10 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
-        {
-         "data":"AgAAAAMAAAAEAAAABQAAAAYAAAAHAAAACAAAAAkAAAAKAAAACwAAAAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAAcAAAAHQAAAB4AAAAfAAAAIAAAACEAAAAiAAAAIwAAACQAAAAlAAAAJgAAACcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoAAAArAAAALAAAAC0AAAAuAAAALwAAADAAAAAxAAAAMgAAADMAAAA0AAAANQAAADYAAAA3AAAAOAAAADkAAAA6AAAAOwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAAAD8AAABAAAAAQQAAAEIAAABDAAAARAAAAEUAAABGAAAARwAAAEgAAABJAAAASgAAAEsAAABMAAAATQAAAE4AAABPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABSAAAAUwAAAFQAAABVAAAAVgAAAFcAAABYAAAAWQAAAFoAAABbAAAAXAAAAF0AAABeAAAAXwAAAGAAAABhAAAAYgAAAGMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGYAAABnAAAAaAAAAGkAAABqAAAAawAAAGwAAABtAAAAbgAAAG8AAABwAAAAcQAAAHIAAABzAAAAdAAAAHUAAAB2AAAAdwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAegAAAHsAAAB8AAAAfQAAAH4AAAB\/AAAAgAAAAIEAAACCAAAAgwAAAIQAAACFAAAAhgAAAIcAAACIAAAAiQAAAIoAAACLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOAAAAjwAAAJAAAACRAAAAkgAAAJMAAACUAAAAlQAAAJYAAACXAAAAmAAAAJkAAACaAAAAmwAAAJwAAACdAAAAngAAAJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKIAAACjAAAApAAAAKUAAACmAAAApwAAAKgAAACpAAAAqgAAAKsAAACsAAAArQAAAK4AAACvAAAAsAAAALEAAACyAAAAswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtgAAALcAAAC4AAAAuQAAALoAAAC7AAAAvAAAAL0AAAC+AAAAvwAAAMAAAADBAAAAwgAAAMMAAADEAAAAxQAAAMYAAADHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADKAAAAywAAAMwAAADNAAAAzgAAAM8AAADQAAAA0QAAANIAAADTAAAA1AAAANUAAADWAAAA1wAAANgAAADZAAAA2gAAANsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN4AAADfAAAA4AAAAOEAAADiAAAA4wAAAOQAAADlAAAA5gAAAOcAAADoAAAA6QAAAOoAAADrAAAA7AAAAO0AAADuAAAA7wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8gAAAPMAAAD0AAAA9QAAAPYAAAD3AAAA+AAAAPkAAAD6AAAA+wAAAPwAAAD9AAAA\/gAAAP8AAAAAAQAAAQEAAAIBAAADAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAQAABwEAAAgBAAAJAQAACgEAAAsBAAAMAQAADQEAAA4BAAAPAQAAEAEAABEBAAASAQAAEwEAABQBAAAVAQAAFgEAABcBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoBAAAbAQAAHAEAAB0BAAAeAQAAHwEAACABAAAhAQAAIgEAACMBAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAKwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-         "encoding":"base64",
-         "height":50,
-         "name":"tiles",
-         "offsetx":100,
-         "offsety":100,
-         "opacity":1,
-         "properties":
-            {
-             "wall":false
-            },
-         "propertytypes":
-            {
-             "wall":"bool"
-            },
-         "type":"tilelayer",
-         "visible":true,
-         "width":50,
-         "x":0,
-         "y":0
-        }, 
         {
          "color":"#000000",
          "draworder":"topdown",
@@ -50007,7 +49822,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50985,7 +50800,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -51653,7 +51468,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],250:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -51679,7 +51494,7 @@ module.exports = {
   Backpack,
 };
 
-},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":233,"./item_model":260}],251:[function(require,module,exports){
+},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":232,"./item_model":258}],249:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -51737,7 +51552,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":233,"pixi.js":151}],252:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"pixi.js":151}],250:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -51757,7 +51572,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":260}],253:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258}],251:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -51781,7 +51596,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":233,"./item_model":260}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258}],252:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -51815,7 +51630,7 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":233,"./item_model":260}],255:[function(require,module,exports){
+},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":232,"./item_model":258}],253:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -51832,7 +51647,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":260}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258}],254:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -51857,7 +51672,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":233,"./item_model":260}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258}],255:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -51920,7 +51735,7 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./back_pack":250,"./ceiling":252,"./chair":253,"./chest":254,"./collision_object":255,"./dirty_matress":256,"./fire_place":258,"./hay_bale":259,"./note":261,"./rock":263,"./tree":264,"./workbench":266}],258:[function(require,module,exports){
+},{"./back_pack":248,"./ceiling":250,"./chair":251,"./chest":252,"./collision_object":253,"./dirty_matress":254,"./fire_place":256,"./hay_bale":257,"./note":259,"./rock":261,"./tree":262,"./workbench":264}],256:[function(require,module,exports){
 'use strict';
 
 const { Item } = require('./item_model');
@@ -51938,7 +51753,7 @@ module.exports = {
   Campfire,
 };
 
-},{"./item_model":260}],259:[function(require,module,exports){
+},{"./item_model":258}],257:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -51970,7 +51785,7 @@ module.exports = {
   Hay,
 };
 
-},{"../../character/attributes/vitals":217,"../../engine/pixi_containers":233,"./item_model":260}],260:[function(require,module,exports){
+},{"../../character/attributes/vitals":216,"../../engine/pixi_containers":232,"./item_model":258}],258:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -52154,7 +51969,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":233,"pixi.js":151}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"pixi.js":151}],259:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -52193,7 +52008,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./item_model":260,"pixi.js":151}],262:[function(require,module,exports){
+},{"./item_model":258,"pixi.js":151}],260:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -52249,7 +52064,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":233,"../../utils/color_picker":292,"events":303,"pixi.js":151}],263:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../../utils/color_picker":288,"events":299,"pixi.js":151}],261:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -52270,7 +52085,7 @@ module.exports = {
   Rock,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":260}],264:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258}],262:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { roof_container      } = require('../../engine/pixi_containers');
@@ -52302,7 +52117,7 @@ module.exports = {
   Tree,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":260,"pixi.js":151}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258,"pixi.js":151}],263:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -52331,7 +52146,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":233,"./item_model":260,"events":303}],266:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":258,"events":299}],264:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -52358,12 +52173,9 @@ module.exports = {
 
 
 
-},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":233,"./item_model":260}],267:[function(require,module,exports){
+},{"../../character/attributes/lootable":208,"../../engine/pixi_containers":232,"./item_model":258}],265:[function(require,module,exports){
 'use strict';
-const { background_container } = require('../engine/pixi_containers');
-
-const { pathfind_sprite      } = require('../engine/pathfind.js');
-const { Wall                 } = require('./elements/wall.js');
+const { pathfind_sprite } = require('../engine/pathfind.js');
 
 class Level {
   constructor() {
@@ -52378,36 +52190,8 @@ class Level {
     delete this[name];
   }
 
-  set_position({x, y}) {
-    this.sprite.position.set(x, y);
-
-    background_container.addChild(this.sprite);
-  }
-
   create_grid(level_tiles) {
     this.grid = pathfind_sprite.create_level_grid(level_tiles);
-  }
-
-  add_to_segments(item) {
-    this.segments.push(
-      {a:{x:item.x,y:item.y+item.height},             b:{x:item.x,y:item.y}},
-      {a:{x:item.x,y:item.y},                         b:{x:item.x+item.width,y:item.y}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x,y:item.y+item.height}},
-      {a:{x:item.x+item.width,y:item.y+item.height},  b:{x:item.x+item.width,y:item.y}}
-    );
-  }
-
-  render_walls(wall_array) {
-    wall_array.forEach((wall_data) => {
-      const wall = new Wall();
-
-      wall.set_position(wall_data);
-      wall.width  = wall_data.width;
-      wall.height = wall_data.height;
-      wall.anchor = 0;
-
-      this.add_to_segments(wall.sprite);
-    });
   }
 }
 
@@ -52415,7 +52199,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":232,"../engine/pixi_containers":233,"./elements/wall.js":265}],268:[function(require,module,exports){
+},{"../engine/pathfind.js":231}],266:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52464,7 +52248,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/archer":200,"../elements/background":251,"../elements/elements_factory":257,"../level_model":267}],269:[function(require,module,exports){
+},{"../../character/archetypes/archer":200,"../elements/background":249,"../elements/elements_factory":255,"../level_model":265}],267:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52496,7 +52280,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":251,"../level_model":267}],270:[function(require,module,exports){
+},{"../elements/background":249,"../level_model":265}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52616,7 +52400,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":229,"../../light/types/ambient":287,"../../light/types/candle":289,"../../light/types/lantern":290,"../../light/types/lighter":291,"../../utils/time":298,"../attributes/parse_tiled_data":243,"../data/intro_room.json":245,"../elements/background":251,"../elements/elements_factory":257,"../elements/wall":265}],271:[function(require,module,exports){
+},{"../../engine/camera":228,"../../light/types/ambient":283,"../../light/types/candle":285,"../../light/types/lantern":286,"../../light/types/lighter":287,"../../utils/time":294,"../attributes/parse_tiled_data":241,"../data/intro_room.json":243,"../elements/background":249,"../elements/elements_factory":255,"../elements/wall":263}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52693,7 +52477,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/candle":289,"../elements/background":251,"../elements/elements_factory":257,"../elements/wall":265,"../level_model":267}],272:[function(require,module,exports){
+},{"../../light/types/candle":285,"../elements/background":249,"../elements/elements_factory":255,"../elements/wall":263,"../level_model":265}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52758,7 +52542,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":288,"../attributes/parse_tiled_data":243,"../attributes/randomise":244,"../data/large_level.json":246,"../elements/background":251,"../elements/wall":265,"../level_model":267}],273:[function(require,module,exports){
+},{"../../light/types/bright_light":284,"../attributes/parse_tiled_data":241,"../attributes/randomise":242,"../data/large_level.json":244,"../elements/background":249,"../elements/wall":263,"../level_model":265}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52810,13 +52594,15 @@ class Old_Man_Room extends Level {
 
     this.old_man.scavenge.load_pool(this.item_pool);
 
-    this.elements.furnishing.forEach(data => {
+    const {exit_pad, walls, furnishing, lights} = this.elements;
+
+    furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
 
       console.log(data);
     });
 
-    this.elements.walls.forEach(data => {
+    walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;
       wall.height = data.height;
@@ -52825,14 +52611,14 @@ class Old_Man_Room extends Level {
       wall.set_position(data);
     });
 
-    this.elements.lights.forEach(data => {
+    lights.forEach(data => {
       const light  = new Candle();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
     });
 
-    this.elements.exit_pad.forEach(data => {
+    exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
       pad.height = data.height;
       pad.width  = data.width;
@@ -52850,7 +52636,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/neutral":201,"../../light/types/candle":289,"../attributes/parse_tiled_data":243,"../data/old_man_room.json":247,"../elements/background":251,"../elements/elements_factory":257,"../elements/pad":262,"../elements/wall":265,"../level_model":267}],274:[function(require,module,exports){
+},{"../../character/archetypes/neutral":201,"../../light/types/candle":285,"../attributes/parse_tiled_data":241,"../data/old_man_room.json":245,"../elements/background":249,"../elements/elements_factory":255,"../elements/pad":260,"../elements/wall":263,"../level_model":265}],272:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52917,7 +52703,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":220,"../../engine/camera":229,"../elements/background":251,"../level_model":267}],275:[function(require,module,exports){
+},{"../../character/types/npc":219,"../../engine/camera":228,"../elements/background":249,"../level_model":265}],273:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -52963,7 +52749,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":251,"../elements/elements_factory":257,"../level_model":267}],276:[function(require,module,exports){
+},{"../elements/background":249,"../elements/elements_factory":255,"../level_model":265}],274:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53044,7 +52830,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/randomise":244,"../elements/background":251,"../elements/hay_bale":259,"../elements/pad":262,"../level_model":267}],277:[function(require,module,exports){
+},{"../attributes/randomise":242,"../elements/background":249,"../elements/hay_bale":257,"../elements/pad":260,"../level_model":265}],275:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53143,83 +52929,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/scavenger":203,"../../light/types/candle":289,"../attributes/item_pool":242,"../attributes/parse_tiled_data":243,"../data/tiled_room.json":249,"../elements/background":251,"../elements/elements_factory":257,"../elements/pad":262,"../elements/wall":265,"../level_model":267}],278:[function(require,module,exports){
-(function (global){
-'use strict';
-
-const { Level           } = require('../level_model');
-const { Background      } = require('../elements/background');
-const { Tiled_Data      } = require('../attributes/parse_tiled_data');
-const { Randomise       } = require('../attributes/randomise');
-const { Wall            } = require('../elements/wall');
-const { Bright_Light    } = require('../../light/types/bright_light');
-const { Element_Factory } = require('../elements/elements_factory');
-// const level_data       = require('../data/homestead_tiled.json');
-
-class Tiled_Homestead extends Level {
-  constructor(player) {
-    super();
-    this.name       = 'tiled_homestead_room';
-
-    this.player     = player;
-    this.elements   = new Tiled_Data(level_data);
-    this.background = new Background('farmstead');
-
-    this._set_elements();
-  }
-
-  _set_elements() {
-    global.set_light_level(1);
-    const background_data = this.elements.background;
-    console.log(this.elements);
-    console.log(this.player);
-
-    this.background.alpha = 0.2;
-    this.background.sprite.anchor.set(0);
-    this.background.set_position({x: 0, y: 0});
-    this.background.width  = background_data.width;
-    this.background.height = background_data.height;
-
-    this.elements.walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.set_position(data);
-    });
-
-    this.elements.lights.forEach(data => {
-      const light = new Bright_Light();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-    });
-
-    this.elements.item_areas.forEach(data => {
-      const area = new Randomise();
-      // area.anchor = 0;
-      area.height = data.height;
-      area.width  = data.width;
-      area.alpha = 0.02;
-      area.set_position(data);
-      area.random_items(true);
-    });
-
-    this.elements.chairs.forEach(data => {
-      const chair = Element_Factory.generate('chair');
-
-      chair.set_position(data);
-    });
-  }
-}
-
-module.exports = {
-  Tiled_Homestead,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/bright_light":288,"../attributes/parse_tiled_data":243,"../attributes/randomise":244,"../elements/background":251,"../elements/elements_factory":257,"../elements/wall":265,"../level_model":267}],279:[function(require,module,exports){
+},{"../../character/archetypes/scavenger":203,"../../light/types/candle":285,"../attributes/item_pool":240,"../attributes/parse_tiled_data":241,"../data/tiled_room.json":247,"../elements/background":249,"../elements/elements_factory":255,"../elements/pad":260,"../elements/wall":263,"../level_model":265}],276:[function(require,module,exports){
 (function (global){
 'use strict';
 const { Level      } = require('../level_model');
@@ -53282,7 +52992,7 @@ class Outside_Map extends Level {
       light.set_position(data);
     });
 
-    // this.create_grid(background);
+    this.create_grid(background);
   }
 }
 
@@ -53291,7 +53001,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":202,"../../light/types/candle":289,"../attributes/parse_tiled_data":243,"../data/outside_room.json":248,"../elements/background":251,"../elements/elements_factory":257,"../elements/wall":265,"../level_model":267}],280:[function(require,module,exports){
+},{"../../character/archetypes/rat":202,"../../light/types/candle":285,"../attributes/parse_tiled_data":241,"../data/outside_room.json":246,"../elements/background":249,"../elements/elements_factory":255,"../elements/wall":263,"../level_model":265}],277:[function(require,module,exports){
 (function (global){
 'use strict';
 const { Level      } = require('../level_model');
@@ -53353,7 +53063,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":202,"../../light/types/candle":289,"../attributes/parse_tiled_data":243,"../data/tiled_room.json":249,"../elements/background":251,"../elements/wall":265,"../level_model":267}],281:[function(require,module,exports){
+},{"../../character/archetypes/rat":202,"../../light/types/candle":285,"../attributes/parse_tiled_data":241,"../data/tiled_room.json":247,"../elements/background":249,"../elements/wall":263,"../level_model":265}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53385,7 +53095,6 @@ class Tiled_Prey_Path extends Level {
     global.set_light_level(1);
     this.player.light.hide();
 
-    console.log(this.elements);
     this.background.set_position({x: 1100, y: 800});
     this.background.alpha = 0.5;
 
@@ -53472,81 +53181,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/scavenger":203,"../../light/types/candle":289,"../attributes/parse_tiled_data":243,"../data/tiled_room.json":249,"../elements/background":251,"../elements/elements_factory":257,"../elements/pad":262,"../elements/wall":265,"../level_model":267}],282:[function(require,module,exports){
-(function (global){
-
-'use strict';
-
-const { Level       } = require('../level_model');
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Randomise   } = require('../attributes/randomise');
-const { Background  } = require('../elements/background');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
-const { Trigger_Pad } = require('../elements/pad');
-const level_data      = require('../data/tiled_room.json');
-
-class Tiled_Room extends Level {
-  constructor(player) {
-    super();
-    this.name       = 'tiled_room';
-
-    this.player     = player;
-    this.elements   = new Tiled_Data(level_data);
-    this.background = new Background('grid_floor');
-
-    this._set_elements();
-  }
-
-  _set_elements() {
-    global.set_light_level(0.1);
-    this.player.light.hide();
-
-    this.background.set_position({x: 1100, y: 800});
-    this.background.alpha = 0.5;
-
-    this.elements.walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.set_position(data);
-    });
-
-    this.elements.item_areas.forEach(data => {
-      const area = new Randomise();
-      // area.anchor = 0;
-      area.height = data.height;
-      area.width  = data.width;
-      area.alpha = 0.2;
-      area.set_position(data);
-      area.random_items();
-    });
-
-    this.elements.lights.forEach(data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-    });
-
-    this.elements.exit_pad.forEach(data => {
-      const pad = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-    });
-  }
-}
-
-module.exports = {
-  Tiled_Room,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/candle":289,"../attributes/parse_tiled_data":243,"../attributes/randomise":244,"../data/tiled_room.json":249,"../elements/background":251,"../elements/pad":262,"../elements/wall":265,"../level_model":267}],283:[function(require,module,exports){
+},{"../../character/archetypes/scavenger":203,"../../light/types/candle":285,"../attributes/parse_tiled_data":241,"../data/tiled_room.json":247,"../elements/background":249,"../elements/elements_factory":255,"../elements/pad":260,"../elements/wall":263,"../level_model":265}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53605,7 +53240,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../elements/background":251,"../elements/pad":262,"../level_model":267,"./random_room":276}],284:[function(require,module,exports){
+},{"../elements/background":249,"../elements/pad":260,"../level_model":265,"./random_room":274}],280:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -53647,7 +53282,7 @@ module.exports = {
   Flicker,
 };
 
-},{"../../engine/ticker":237}],285:[function(require,module,exports){
+},{"../../engine/ticker":235}],281:[function(require,module,exports){
 'use strict';
 
 const { Track } = require('../../effects/sound');
@@ -53691,7 +53326,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../effects/sound":226,"../../utils/time":298}],286:[function(require,module,exports){
+},{"../../effects/sound":225,"../../utils/time":294}],282:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -53739,7 +53374,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],287:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],283:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -53792,7 +53427,7 @@ module.exports = {
   Ambient,
 };
 
-},{"../../engine/ticker":237,"pixi.js":151}],288:[function(require,module,exports){
+},{"../../engine/ticker":235,"pixi.js":151}],284:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -53816,7 +53451,7 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":233,"../light_model":286}],289:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../light_model":282}],285:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -53872,7 +53507,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":233,"../attributes/flicker":284,"../light_model":286,"pixi.js":151}],290:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../attributes/flicker":280,"../light_model":282,"pixi.js":151}],286:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -53901,7 +53536,7 @@ module.exports = {
   Lantern,
 };
 
-},{"../../engine/pixi_containers":233,"../../engine/tween":238,"../attributes/flicker":284,"../light_model":286}],291:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../../engine/tween":236,"../attributes/flicker":280,"../light_model":282}],287:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -53927,7 +53562,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../engine/pixi_containers":233,"../attributes/strike":285,"../light_model":286}],292:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"../attributes/strike":281,"../light_model":282}],288:[function(require,module,exports){
 'use strict';
 
 class Color_Pick {
@@ -53946,7 +53581,7 @@ module.exports = {
   Color_Pick,
 };
 
-},{}],293:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53989,12 +53624,12 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],294:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
 
-const { gui_container } = require('../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 
 /* ***************************************************************
  *                                                               *
@@ -54022,7 +53657,7 @@ global.place_bunny = ({ x, y }) => {
   shade.parentGroup = PIXI.shadows.casterGroup;
   shade.position.copy(bunny);
 
-  gui_container.addChild(bunny, shade);
+  visual_effects_container.addChild(bunny, shade);
 
   return bunny;
 };
@@ -54034,7 +53669,7 @@ global.place_bunny = ({ x, y }) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":233,"pixi.js":151}],295:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],291:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grid_container      } = require('../engine/pixi_containers');
@@ -54083,7 +53718,7 @@ class Grid {
       const tile = new Tile();
       tile.x = x;
       tile.y = y;
-      tile.alpha = alpha -= 0.05;
+      tile.alpha = alpha -= 0.005;
       //tile.alpha = alpha -= 0.0005;
       tile.anchor.set(0);
 
@@ -54155,7 +53790,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],296:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],292:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -54275,7 +53910,7 @@ module.exports = {
 
 
 
-},{}],297:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54333,7 +53968,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],298:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -54344,7 +53979,7 @@ module.exports = {
   sleep,
 };
 
-},{}],299:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -54380,7 +54015,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],300:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],296:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -54434,7 +54069,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/pixi_containers":233,"pixi.js":151}],301:[function(require,module,exports){
+},{"../engine/pixi_containers":232,"pixi.js":151}],297:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54632,7 +54267,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":241}],302:[function(require,module,exports){
+},{"../items/item_manager":239}],298:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -54669,7 +54304,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":293}],303:[function(require,module,exports){
+},{"../utils/dom":289}],299:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -55194,7 +54829,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],304:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -55500,7 +55135,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":305}],305:[function(require,module,exports){
+},{"_process":301}],301:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -55686,7 +55321,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],306:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -56223,7 +55858,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],307:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -56309,7 +55944,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],308:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -56396,13 +56031,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],309:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":307,"./encode":308}],310:[function(require,module,exports){
+},{"./decode":303,"./encode":304}],306:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57136,7 +56771,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":311,"punycode":306,"querystring":309}],311:[function(require,module,exports){
+},{"./util":307,"punycode":302,"querystring":305}],307:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -57154,4 +56789,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[239]);
+},{}]},{},[237]);

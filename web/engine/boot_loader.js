@@ -9,11 +9,9 @@ const { Items_Room      } = require('../level/types/item_room');
 const { Transition_Room } = require('../level/types/transition_room');
 const { Scavenge_Room   } = require('../level/types/scavenge_room');
 const { Old_Man_Room    } = require('../level/types/old_man_room');
-const { Tiled_Room      } = require('../level/types/tiles_room');
 const { Tiled_Prey      } = require('../level/types/tiled_prey');
 const { Tiled_Prey_Path } = require('../level/types/tiled_prey_path');
 const { Large_Room      } = require('../level/types/large_level');
-const { Tiled_Homestead } = require('../level/types/tiled_homestead_room');
 const { Outside_Map     } = require('../level/types/tiled_outside');
 const { Intro           } = require('../level/types/intro.js');
 const { Player          } = require('../character/types/player.js');
@@ -61,14 +59,6 @@ class Level_Loader {
     new Transition_Room(player);
   }
 
-  static _tiled_homestead(player) {
-    new Tiled_Homestead(player);
-  }
-
-  static _tiled_created(player) {
-    new Tiled_Room(player);
-  }
-
   static _tiled_prey(player) {
     new Tiled_Prey(player);
   }
@@ -93,16 +83,17 @@ class Level_Loader {
     const player = new Player();
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
-    // this._old_man(player);
+
+    this._intro(player);
     // this._outside(player);
+
+    // this._old_man(player);
     // this._tiled_prey_path(player);
     // this._scavenge(player);
     // this._tiled_created(player);
     // this._tiled_prey(player);
     // this._tiled_large(player);
-    // this._tiled_homestead(player);
     // this._item_room(player);
-    this._intro(player);
     // this._development(player);
     // this._animation();
     // this._projectile(player);

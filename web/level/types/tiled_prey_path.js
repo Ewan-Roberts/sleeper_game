@@ -28,7 +28,6 @@ class Tiled_Prey_Path extends Level {
     global.set_light_level(1);
     this.player.light.hide();
 
-    console.log(this.elements);
     this.background.set_position({x: 1100, y: 800});
     this.background.alpha = 0.5;
 

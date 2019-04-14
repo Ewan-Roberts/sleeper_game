@@ -9,7 +9,6 @@ const { Inventory  } = require('../attributes/inventory');
 const { Vitals     } = require('../attributes/vitals');
 const { Lootable   } = require('../attributes/lootable');
 const { Pathfind   } = require('../attributes/pathfind');
-const { Raycasting } = require('../attributes/raycasting');
 
 class Enemy extends Character {
   constructor() {
@@ -21,7 +20,6 @@ class Enemy extends Character {
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
     this.add_component(new Pathfind(this.sprite));
-    this.add_component(new Raycasting(this.sprite));
 
     enemy_container.addChild(this.sprite);
   }

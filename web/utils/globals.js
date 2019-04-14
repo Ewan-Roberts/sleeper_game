@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { gui_container } = require('../engine/pixi_containers');
+const { visual_effects_container } = require('../engine/pixi_containers');
 
 /* ***************************************************************
  *                                                               *
@@ -29,7 +29,7 @@ global.place_bunny = ({ x, y }) => {
   shade.parentGroup = PIXI.shadows.casterGroup;
   shade.position.copy(bunny);
 
-  gui_container.addChild(bunny, shade);
+  visual_effects_container.addChild(bunny, shade);
 
   return bunny;
 };

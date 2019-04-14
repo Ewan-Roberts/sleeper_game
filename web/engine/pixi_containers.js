@@ -35,10 +35,6 @@ const item_container = new PIXI.Container();
 item_container.name = 'non_collision_items';
 item_container.zIndex = low;
 
-const door_container = new PIXI.Container();
-door_container.name = 'door_container';
-door_container.zIndex = low;
-
 const critter_container = new PIXI.Container();
 critter_container.name = 'critter_container';
 critter_container.zIndex = low;
@@ -63,10 +59,6 @@ const pad_container = new PIXI.Container();
 pad_container.name = 'pad_container';
 pad_container.zIndex = close;
 
-const cutscene_container = new PIXI.Container();
-cutscene_container.name = 'cutscene_container';
-cutscene_container.zIndex = close;
-
 const roof_container = new PIXI.Container();
 roof_container.name = 'roof_container';
 roof_container.zIndex = close;
@@ -79,11 +71,13 @@ const dialog_container = new PIXI.Container();
 dialog_container.name = 'dialog_container';
 dialog_container.zIndex = close;
 
-const raycasting_container = new PIXI.Container();
-raycasting_container.name = 'raycasting_container';
-raycasting_container.zIndex = close;
-
-// const grid_particles = new PIXI.ParticleContainer();
+// const grid_particles = new PIXI.ParticleContainer(
+//   scale: true,
+//   position: true,
+//   rotation: true,
+//   uvs: true,
+//   alpha: true,
+// );
 // grid_particles.name = 'grid_particles';
 // grid_particles.zIndex = close;
 
@@ -94,15 +88,12 @@ world.addChild(
   grid_container,
   collision_container,
   item_container,
-  door_container,
   critter_container,
   arrow_container,
   enemy_container,
   player_container,
-  cutscene_container,
   gui_container,
   dialog_container,
-  raycasting_container,
   pad_container
   // grid_particles
 );
@@ -110,7 +101,6 @@ world.addChild(
 world.updateLayersOrder();
 
 module.exports = {
-  cutscene_container,
   roof_container,
   background_container,
   collision_container,
@@ -118,9 +108,7 @@ module.exports = {
   gui_container,
   enemy_container,
   player_container,
-  door_container,
   arrow_container,
-  raycasting_container,
   visual_effects_container,
   grid_container,
   item_container,

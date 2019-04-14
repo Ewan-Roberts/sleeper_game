@@ -48,13 +48,15 @@ class Old_Man_Room extends Level {
 
     this.old_man.scavenge.load_pool(this.item_pool);
 
-    this.elements.furnishing.forEach(data => {
+    const {exit_pad, walls, furnishing, lights} = this.elements;
+
+    furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
 
       console.log(data);
     });
 
-    this.elements.walls.forEach(data => {
+    walls.forEach(data => {
       const wall  = new Wall();
       wall.shadow = true;
       wall.height = data.height;
@@ -63,14 +65,14 @@ class Old_Man_Room extends Level {
       wall.set_position(data);
     });
 
-    this.elements.lights.forEach(data => {
+    lights.forEach(data => {
       const light  = new Candle();
       light.height = data.height;
       light.width  = data.width;
       light.set_position(data);
     });
 
-    this.elements.exit_pad.forEach(data => {
+    exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
       pad.height = data.height;
       pad.width  = data.width;
