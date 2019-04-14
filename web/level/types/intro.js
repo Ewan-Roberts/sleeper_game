@@ -7,7 +7,6 @@ const { Camera      } = require('../../engine/camera');
 const { Wall        } = require('../elements/wall');
 const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
-const { Ambient     } = require('../../light/types/ambient');
 const { Lantern    } = require('../../light/types/lantern');
 const { Element_Factory } = require('../elements/elements_factory');
 const level_data  = require('../data/intro_room.json');
@@ -18,11 +17,9 @@ class Intro  {
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.lighter      = new Lighter();
-    this.ambient      = new Ambient();
 
     this.camera       = new Camera();
     this.lantern      = new Lantern();
-    this.ambient      = new Ambient();
 
     this._set_elements();
   }
@@ -51,7 +48,7 @@ class Intro  {
     global.set_light_level(0);
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -700, y: -200 });
+    this.camera.tween.to({ x: 1000, y: 600 });
     this.camera.tween.smooth();
 
     this.player.keyboard.disable();
@@ -74,7 +71,6 @@ class Intro  {
     });
 
     lights.forEach(async data => {
-      await sleep(2000);
       const light = new Candle();
       light.height = data.height;
       light.width  = data.width;
@@ -83,8 +79,6 @@ class Intro  {
     });
 
     this.lighter.hide();
-
-    this.ambient.fade_in(0.005, 0.05);
 
     this.camera.tween.time = 1000;
     this.camera.tween.start();
@@ -98,16 +92,20 @@ class Intro  {
     this.player.tween.time = 1000;
     this.player.tween.start();
 
+    global.set_light_level(0);
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
 
+    global.set_light_level(0);
     this.player.keyboard.enable();
     this.lighter.strike.start();
+    global.set_light_level(0);
 
     await sleep(2500);
     this.player.animation.state_to = 'candle';
     await sleep(2500);
+    global.set_light_level(0);
   }
 }
 
