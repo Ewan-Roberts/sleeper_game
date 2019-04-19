@@ -52,8 +52,6 @@ class Old_Man_Room extends Level {
 
     furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
-
-      console.log(data);
     });
 
     walls.forEach(data => {

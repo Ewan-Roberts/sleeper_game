@@ -6,13 +6,13 @@
          "name":"background",
          "objects":[
                 {
-                 "height":1895.96167008898,
+                 "height":1438.38591251322,
                  "id":51,
                  "name":"seamless_concrete",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2470.91033538672,
+                 "width":2776.97094144733,
                  "x":-106.060606060606,
                  "y":-448.484848484848
                 }],
@@ -51,7 +51,7 @@
                  "y":265.007575757576
                 }, 
                 {
-                 "height":710.651971689517,
+                 "height":674.651971689517,
                  "id":4,
                  "name":"",
                  "rotation":0,
@@ -68,7 +68,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":342.124223602477,
+                 "width":1162.79089026914,
                  "x":753.617177093226,
                  "y":914.893273360451
                 }, 
@@ -115,17 +115,6 @@
                  "width":32,
                  "x":753.333333333333,
                  "y":266.333166666667
-                }, 
-                {
-                 "height":32,
-                 "id":57,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":211.333333333333,
-                 "x":1236.37170641961,
-                 "y":921.285235560813
                 }, 
                 {
                  "height":22.5471498109172,
@@ -225,15 +214,15 @@
          "name":"exit_pad",
          "objects":[
                 {
-                 "height":76,
+                 "height":182,
                  "id":15,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":242.666666666667,
-                 "x":1051.66666666667,
-                 "y":999.72727272727
+                 "width":638.666666666667,
+                 "x":759.666666666667,
+                 "y":-1460.27272727273
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -243,6 +232,192 @@
         }, 
         {
          "layers":[
+                {
+                 "draworder":"topdown",
+                 "name":"roof",
+                 "objects":[
+                        {
+                         "height":1560.80742846093,
+                         "id":82,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "fade":0.8,
+                             "image_name":"long_broken"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":-89.8028965746292,
+                         "type":"",
+                         "visible":true,
+                         "width":333.436565822732,
+                         "x":1225.88625947144,
+                         "y":-1063.42116112637
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"home_roof",
+                 "objects":[
+                        {
+                         "height":837.281246488164,
+                         "id":89,
+                         "name":"roof",
+                         "properties":
+                            {
+                             "fade":0.1,
+                             "image_name":"roof_00"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1383.76837268766,
+                         "x":618.20247308009,
+                         "y":162.108419578289
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"apartment_roof_bottom_left",
+                 "objects":[
+                        {
+                         "height":837.281246488164,
+                         "id":111,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "fade":0.1,
+                             "image_name":"roof_city_00"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":1383.76837268766,
+                         "x":-628.767223889607,
+                         "y":229.805389275259
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"apartment_roof_top_left",
+                 "objects":[
+                        {
+                         "height":1556.79219856273,
+                         "id":112,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "fade":0.1,
+                             "image_name":"tarp_roof_00"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":90.1113114296442,
+                         "type":"",
+                         "visible":true,
+                         "width":784.99991312787,
+                         "x":3495.30354021356,
+                         "y":170.698322292678
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"street_roof",
+                 "objects":[
+                        {
+                         "height":1176.6751858821,
+                         "id":106,
+                         "name":"roof",
+                         "properties":
+                            {
+                             "fade":0.1,
+                             "image_name":"black_dot"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":2917.10170602099,
+                         "x":-2.76722388960701,
+                         "y":-929.043095573226
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"tree",
+                 "objects":[
+                        {
+                         "height":916.300958021955,
+                         "id":101,
+                         "name":"roof",
+                         "properties":
+                            {
+                             "fade":1,
+                             "image_name":"tree_11"
+                            },
+                         "propertytypes":
+                            {
+                             "fade":"float",
+                             "image_name":"string"
+                            },
+                         "rotation":0,
+                         "type":"",
+                         "visible":true,
+                         "width":969.220740761071,
+                         "x":1762.81215473003,
+                         "y":-348.378079712383
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
                 {
                  "draworder":"topdown",
                  "name":"pit",
@@ -373,7 +548,69 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"shipping_container_00",
+                 "objects":[
+                        {
+                         "height":833.585882814664,
+                         "id":118,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"shipping_container_00",
+                             "shadow":true
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string",
+                             "shadow":"bool"
+                            },
+                         "rotation":-4.22955796919121,
+                         "type":"",
+                         "visible":true,
+                         "width":264.587997880478,
+                         "x":411.975692182255,
+                         "y":-607.517061042126
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"shipping_container_01",
+                 "objects":[
+                        {
+                         "height":833.585882814664,
+                         "id":121,
+                         "name":"collision",
+                         "properties":
+                            {
+                             "image_name":"shipping_container_00",
+                             "shadow":true
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string",
+                             "shadow":"bool"
+                            },
+                         "rotation":5.40890897848597,
+                         "type":"",
+                         "visible":true,
+                         "width":264.587997880478,
+                         "x":490.232259634654,
+                         "y":-1483.02380688469
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -771,99 +1008,6 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"roof",
-                 "objects":[
-                        {
-                         "height":1560.80742846093,
-                         "id":82,
-                         "name":"collision",
-                         "properties":
-                            {
-                             "fade":0.8,
-                             "image_name":"long_broken"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":-0.417604074992674,
-                         "type":"",
-                         "visible":true,
-                         "width":333.436565822732,
-                         "x":1889.85099408139,
-                         "y":-601.83377340187
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"tree",
-                 "objects":[
-                        {
-                         "height":916.300958021955,
-                         "id":101,
-                         "name":"roof",
-                         "properties":
-                            {
-                             "fade":1,
-                             "image_name":"tree_11"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":969.220740761071,
-                         "x":1523.41821533609,
-                         "y":-572.620503954807
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"home_roof",
-                 "objects":[
-                        {
-                         "height":837.281246488164,
-                         "id":89,
-                         "name":"roof",
-                         "properties":
-                            {
-                             "fade":0.1,
-                             "image_name":"roof_00"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1383.76837268766,
-                         "x":618.20247308009,
-                         "y":162.108419578289
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "name":"litter",
                  "objects":[
                         {
@@ -922,7 +1066,7 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"road",
+                 "name":"pavement_middle",
                  "objects":[
                         {
                          "height":1917.65998772394,
@@ -945,7 +1089,36 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"pavement_right",
+                 "objects":[
+                        {
+                         "height":1917.65998772394,
+                         "id":116,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"road_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":90,
+                         "type":"",
+                         "visible":true,
+                         "width":221.29437221659,
+                         "x":3846.24502699291,
+                         "y":32.1704990549667
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -1041,7 +1214,7 @@
                  "name":"street_marks",
                  "objects":[
                         {
-                         "height":936.189934438698,
+                         "height":1237.63759136956,
                          "id":103,
                          "name":"floor_visual",
                          "properties":
@@ -1055,9 +1228,38 @@
                          "rotation":-180,
                          "type":"",
                          "visible":true,
-                         "width":1918.71300547962,
-                         "x":1918.67512584585,
+                         "width":2088.21404886983,
+                         "x":1422.7829823529,
                          "y":32.2546438302819
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":false,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"street_marks_00",
+                 "objects":[
+                        {
+                         "height":1237.63759136956,
+                         "id":113,
+                         "name":"floor_visual",
+                         "properties":
+                            {
+                             "image_name":"concrete_decal_01"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":-180,
+                         "type":"",
+                         "visible":true,
+                         "width":2088.21404886983,
+                         "x":3510.38406184049,
+                         "y":32.1061964515678
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1159,7 +1361,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":106,
+ "nextobjectid":122,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

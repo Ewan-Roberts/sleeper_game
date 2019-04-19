@@ -38,9 +38,9 @@ class Element_Factory {
     }
   }
 
+
   static generate_tiled(data) {
     let generated;
-    console.log(data);
     if(data.properties) {
       generated = this.generate(data.name, data.properties);
     } else {

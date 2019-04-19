@@ -2,17 +2,15 @@
 
 const { Level      } = require('../level_model');
 const { Background  } = require('../elements/background');
-const { Camera      } = require('../../engine/camera');
-
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Wall        } = require('../elements/wall');
 const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
 const { Element_Factory } = require('../elements/elements_factory');
-const { Trigger_Pad  } = require('../elements/pad');
-const level_data  = require('../data/archer_room.json');
+const { Rat        } = require('../../character/archetypes/rat');
+const level_data  = require('../data/school_room.json');
 
-class Archer_Room extends Level {
+class School_Room extends Level  {
   constructor(player) {
     super();
     this.name         = 'school_room';
@@ -20,21 +18,21 @@ class Archer_Room extends Level {
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.lighter      = new Lighter();
-    this.camera       = new Camera();
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {walls, exit_pad, background, furnishing, lights, player} = this.elements;
+  }
 
+  async start() {
+
+    const {prey, walls, background, furnishing, lights} = this.elements;
     global.set_light_level(0.9);
-    console.log(this.elements);
 
     this.background = new Background(background, true);
 
-    this.player.set_position(player);
-    this.camera.set_center(player);
+    this.player.set_position({x: 600, y: 500});
 
     walls.forEach(data => {
       const wall  = new Wall();
@@ -51,6 +49,13 @@ class Archer_Room extends Level {
       Element_Factory.generate_tiled(data);
     });
 
+    prey.forEach(data => {
+      const prey = new Rat();
+      prey.enemy(this.player);
+      prey.logic_start();
+      prey.set_position(data);
+    });
+
     lights.forEach(async data => {
       const light = new Candle();
       light.height = data.height;
@@ -59,19 +64,11 @@ class Archer_Room extends Level {
       light.start_flickering();
     });
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-      pad.area.events.on('trigger', () => {
 
-      });
-    });
+    this.create_grid(background);
   }
 }
 
 module.exports = {
-  Archer_Room,
+  School_Room,
 };

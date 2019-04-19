@@ -1,55 +1,81 @@
 'use strict';
 
-const { Level       } = require('../level_model');
+const { Level      } = require('../level_model');
 const { Background  } = require('../elements/background');
-const { Trigger_Pad } = require('../elements/pad');
-const { Random_Room } = require('./random_room');
+const { Camera      } = require('../../engine/camera');
 
-class Transition_Room extends Level {
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
+const { Lighter     } = require('../../light/types/lighter');
+const { Element_Factory } = require('../elements/elements_factory');
+const { Trigger_Pad  } = require('../elements/pad');
+const level_data  = require('../data/transition_room.json');
+const { Level_Factory } = require('./level_factory');
+
+class Transition_Room extends Level  {
   constructor(player) {
     super();
-    this.name       = 'animations_room';
-    this.background = new Background('grid_floor');
-    this.player     = player;
-    this.pad        = new Trigger_Pad();
+    this.name         = 'school_room';
+
+    this.player       = player;
+    this.elements     = new Tiled_Data(level_data);
+    this.lighter      = new Lighter();
+    this.camera       = new Camera();
+
+    this._set_elements();
   }
 
-  set_elements(offset) {
-    global.set_light_level(1);
+  _set_elements() {
+    const {walls, exit_pad, background, furnishing, lights, player} = this.elements;
 
-    this.background.alpha = 0.2;
-    this.background.sprite.scale.x = 0.5;
-    this.background.sprite.scale.y = 0.5;
-    this.background.set_position({x:1100+offset.x, y:500+offset.y});
+    global.set_light_level(0.9);
+    console.log(this.elements);
 
-    this.pad.set_position({x:1100+offset.x, y:840+offset.y});
-    this.pad.tint   = 'red';
-    this.pad.alpha  = 0.5;
-    this.pad.width  = 400;
-    this.pad.height = 100;
-    this.pad.area.events.on('trigger', () => {
-      this._destroy();
+    this.background = new Background(background, true);
 
-      const new_level = new Random_Room(this.player);
-      new_level.set_elements({x:0,y:this.player.sprite.y});
+    this.player.set_position(player);
+    this.camera.set_center(player);
+
+    walls.forEach(data => {
+      const wall  = new Wall();
+      wall.shadow = true;
+      wall.height = data.height;
+      wall.width  = data.width;
+      wall.anchor = 0;
+      wall.rotation = (data.rotation * (Math.PI/180));
+
+      wall.set_position(data);
     });
-  }
 
-  _destroy() {
-    this.pad.destroy();
+    furnishing.forEach(data => {
+      Element_Factory.generate_tiled(data);
+    });
+
+    lights.forEach(async data => {
+      const light = new Candle();
+      light.height = data.height;
+      light.width  = data.width;
+      light.set_position(data);
+      light.start_flickering();
+    });
+
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+      pad.area.events.on('trigger', () => {
+        console.log('thinf');
+        Level_Factory.clear();
+        Level_Factory.generate('archer', this.player);
+      });
+    });
   }
 }
 
 module.exports = {
   Transition_Room,
 };
-
-
-
-
-
-
-
-
-
 

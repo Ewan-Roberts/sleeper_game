@@ -100,6 +100,26 @@ world.addChild(
 
 world.updateLayersOrder();
 
+function clear_container(container) {
+  for (let i = container.children.length - 1; i >= 0; i--) {
+    container.removeChild(container.children[i]);
+  }
+}
+
+function clear_level_containers(expection) {
+  for (let i = world.children.length - 1; i >= 0; i--) {
+    if(expection) {
+      if(world.children[i].name === expection) continue;
+    }
+
+    clear_container(world.children[i]);
+  }
+}
+
+function clear_non_player_containers() {
+  clear_level_containers('player_container');
+}
+
 module.exports = {
   roof_container,
   background_container,
@@ -113,6 +133,7 @@ module.exports = {
   grid_container,
   item_container,
   pad_container,
+  clear_non_player_containers,
   // grid_particles,
 };
 

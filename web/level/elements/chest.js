@@ -6,7 +6,6 @@ const { Item     } = require('./item_model');
 
 class Chest extends Item {
   constructor(options) {
-    console.log(options);
     super(options.image_name);
     this.name = 'chest';
 

@@ -11,7 +11,7 @@ class Tiled_Data {
 
     if(!found_layer) throw new Error('no found player in level data');
 
-    const player = found_layer.objects;
+    const player = found_layer.objects[0];
 
     return player;
   }
@@ -27,7 +27,6 @@ class Tiled_Data {
   }
 
   get furnishing() {
-    console.log(this);
     const found_layer = this.level_data.layers.find(layer => layer.name === 'furnishing');
     if(!found_layer) throw new Error('no furnishings found in level data');
 
@@ -40,7 +39,6 @@ class Tiled_Data {
   }
 
   get objects() {
-    console.log(this);
     const found_layer = this.level_data.layers.find(layer => layer.name === 'objects');
     if(!found_layer) throw new Error('no objects found in level data');
 

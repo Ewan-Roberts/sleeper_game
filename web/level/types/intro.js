@@ -13,7 +13,7 @@ const level_data  = require('../data/intro_room.json');
 
 class Intro  {
   constructor(player) {
-    this.name         = 'intrp';
+    this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.lighter      = new Lighter();
@@ -45,10 +45,10 @@ class Intro  {
   async start() {
 
     const {walls, background, furnishing, lights} = this.elements;
-    global.set_light_level(0);
+    global.set_light_level(0.9);
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: 1000, y: 600 });
+    this.camera.tween.to({ x: -600, y: 200 });
     this.camera.tween.smooth();
 
     this.player.keyboard.disable();
@@ -92,20 +92,12 @@ class Intro  {
     this.player.tween.time = 1000;
     this.player.tween.start();
 
-    global.set_light_level(0);
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
 
-    global.set_light_level(0);
     this.player.keyboard.enable();
     this.lighter.strike.start();
-    global.set_light_level(0);
-
-    await sleep(2500);
-    this.player.animation.state_to = 'candle';
-    await sleep(2500);
-    global.set_light_level(0);
   }
 }
 

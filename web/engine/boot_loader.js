@@ -14,6 +14,8 @@ const { Tiled_Prey_Path } = require('../level/types/tiled_prey_path');
 const { Large_Room      } = require('../level/types/large_level');
 const { Outside_Map     } = require('../level/types/tiled_outside');
 const { Intro           } = require('../level/types/intro.js');
+const { School_Room     } = require('../level/types/school_room.js');
+
 const { Player          } = require('../character/types/player.js');
 
 // Boot loader for testing
@@ -21,6 +23,11 @@ const { Player          } = require('../character/types/player.js');
 class Level_Loader {
   static _intro(player) {
     const intro_cutscene = new Intro(player);
+    intro_cutscene.start();
+  }
+
+  static _school(player) {
+    const intro_cutscene = new School_Room(player);
     intro_cutscene.start();
   }
 
@@ -53,9 +60,6 @@ class Level_Loader {
   }
 
   static _transition(player) {
-    const new_level = new Transition_Room(player);
-    new_level.set_elements({x:0,y:player.sprite.y});
-
     new Transition_Room(player);
   }
 
@@ -84,7 +88,8 @@ class Level_Loader {
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
 
-    this._intro(player);
+    // this._intro(player);
+    // this._school(player);
     // this._outside(player);
 
     // this._old_man(player);
@@ -100,7 +105,8 @@ class Level_Loader {
     // this._archer(player);
     // this._random(player);
     // this._shadow(player);
-    // this._transition(player);
+    this._transition(player);
+    console.log(Level_Loader);
   }
 }
 
