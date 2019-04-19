@@ -1,6 +1,5 @@
 'use strict';
 
-const { sleep       } = require('../../utils/time');
 const { Background  } = require('../elements/background');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Camera      } = require('../../engine/camera');
@@ -41,8 +40,6 @@ class Intro  {
     this.lantern.range = 700;
 
     this.lighter.set_position({ x: 1115, y: 410 });
-  }
-  async start() {
 
     const {walls, background, furnishing, lights} = this.elements;
     global.set_light_level(0.9);

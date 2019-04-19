@@ -38,6 +38,9 @@ class Element_Factory {
     }
   }
 
+  clear() {
+
+  }
 
   static generate_tiled(data) {
     let generated;

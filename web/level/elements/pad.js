@@ -10,7 +10,7 @@ class Trigger_Pad {
     this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
     this.area.alpha = 0.1;
     this.area.anchor.set(0.5);
-    this.area.events = new event();
+    this.area.events = new event({once: true});
 
     pad_container.addChild(this.area);
   }

@@ -22,13 +22,11 @@ const { Player          } = require('../character/types/player.js');
 // archer.raycasting.add(this.level.segments);
 class Level_Loader {
   static _intro(player) {
-    const intro_cutscene = new Intro(player);
-    intro_cutscene.start();
+    new Intro(player);
   }
 
   static _school(player) {
-    const intro_cutscene = new School_Room(player);
-    intro_cutscene.start();
+    new School_Room(player);
   }
 
   static _development(player) {

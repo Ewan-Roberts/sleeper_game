@@ -37,8 +37,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2972,
-                 "y":2336
+                 "x":4784,
+                 "y":3488
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -80,8 +80,8 @@
                  "type":"",
                  "visible":true,
                  "width":290,
-                 "x":1153,
-                 "y":1999
+                 "x":1161,
+                 "y":2155
                 }, 
                 {
                  "height":32,
@@ -95,15 +95,15 @@
                  "y":1787.0599755202
                 }, 
                 {
-                 "height":1637.35607134136,
+                 "height":1485.35607134136,
                  "id":56,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":1443.33333333333,
-                 "y":1998.33316666667
+                 "width":29.0293572148816,
+                 "x":1444.81865472589,
+                 "y":2150.33316666667
                 }, 
                 {
                  "height":1040.652,
@@ -300,8 +300,8 @@
                  "type":"",
                  "visible":true,
                  "width":100,
-                 "x":1872.67154596083,
-                 "y":1775.05599020808
+                 "x":1988.67154596083,
+                 "y":1771.05599020808
                 }, 
                 {
                  "height":32,
@@ -345,7 +345,19 @@
         {
          "draworder":"topdown",
          "name":"player",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":144,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1612,
+                 "y":1956
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -357,15 +369,15 @@
          "name":"exit_pad",
          "objects":[
                 {
-                 "height":182,
+                 "height":422,
                  "id":15,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":638.666666666667,
-                 "x":523.666666666667,
-                 "y":855.72727272727
+                 "width":250.666666666667,
+                 "x":2491.66666666667,
+                 "y":1799.72727272727
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -418,8 +430,8 @@
                          "type":"",
                          "visible":true,
                          "width":110.662237191037,
-                         "x":1479.64270088272,
-                         "y":238.257379190647
+                         "x":1619.64270088272,
+                         "y":2198.25737919065
                         }],
                  "opacity":1,
                  "properties":
@@ -459,8 +471,8 @@
                          "type":"",
                          "visible":true,
                          "width":323.206183112358,
-                         "x":776.959081592431,
-                         "y":906.135951326912
+                         "x":2580.95908159243,
+                         "y":2958.13595132691
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -517,8 +529,8 @@
                          "type":"",
                          "visible":true,
                          "width":84.7774871089743,
-                         "x":1269.71335279219,
-                         "y":366.006587202568
+                         "x":3073.71335279219,
+                         "y":2418.00658720257
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -542,12 +554,12 @@
                             {
                              "image_name":"string"
                             },
-                         "rotation":93.5381868303353,
+                         "rotation":-88.3844946320749,
                          "type":"",
                          "visible":true,
                          "width":586.805387998021,
-                         "x":1744.3228818262,
-                         "y":298.481994813688
+                         "x":3697.47475765649,
+                         "y":3771.22937684314
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -575,8 +587,8 @@
                          "type":"",
                          "visible":true,
                          "width":258.239160217844,
-                         "x":754.177268466146,
-                         "y":421.221620484885
+                         "x":2558.17726846615,
+                         "y":2473.22162048489
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -589,52 +601,52 @@
                  "name":"floor_decal",
                  "objects":[
                         {
-                         "height":94.7734972140798,
+                         "height":461.440163880747,
                          "id":68,
-                         "name":"floor_visual",
+                         "name":"collision",
                          "properties":
                             {
-                             "image_name":"floor_decal_01"
+                             "image_name":"rubble_00"
                             },
                          "propertytypes":
                             {
                              "image_name":"string"
                             },
-                         "rotation":180,
+                         "rotation":179.499472762734,
                          "type":"",
                          "visible":true,
-                         "width":265.002637078622,
-                         "x":1244.83893476648,
-                         "y":266.152419432224
+                         "width":758.942031018016,
+                         "x":2043.97392828178,
+                         "y":1322.91085424137
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"brick_wall_broken",
+                 "name":"black_cover",
                  "objects":[
                         {
-                         "height":113.440163880746,
+                         "height":1449.44016388075,
                          "id":67,
                          "name":"floor_visual",
                          "properties":
                             {
-                             "image_name":"wall_stone_damage_01"
+                             "image_name":"black_dot"
                             },
                          "propertytypes":
                             {
                              "image_name":"string"
                             },
-                         "rotation":180,
+                         "rotation":0,
                          "type":"",
                          "visible":true,
-                         "width":265.002637078622,
-                         "x":1208.90431497301,
-                         "y":366.972304712625
+                         "width":357.002637078622,
+                         "x":1092.90431497301,
+                         "y":2180.97230471262
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -662,8 +674,8 @@
                          "type":"",
                          "visible":true,
                          "width":257.239160217844,
-                         "x":1568.40918814527,
-                         "y":-104.631854364898
+                         "x":1828.40918814527,
+                         "y":2295.3681456351
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -732,11 +744,11 @@
          "name":"furnishing",
          "opacity":1,
          "type":"group",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":141,
+ "nextobjectid":145,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

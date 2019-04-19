@@ -67,9 +67,8 @@ class Transition_Room extends Level  {
       pad.anchor = 0;
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
-        console.log('thinf');
         Level_Factory.clear();
-        Level_Factory.generate('archer', this.player);
+        Level_Factory.generate(data.properties.level_name, this.player);
       });
     });
   }

@@ -2,7 +2,9 @@
 
 const { Level      } = require('../level_model');
 const { Background  } = require('../elements/background');
+const { Camera      } = require('../../engine/camera');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad  } = require('../elements/pad');
 const { Wall        } = require('../elements/wall');
 const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
@@ -18,21 +20,19 @@ class School_Room extends Level  {
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.lighter      = new Lighter();
+    this.camera       = new Camera();
 
     this._set_elements();
   }
 
   _set_elements() {
-  }
-
-  async start() {
-
-    const {prey, walls, background, furnishing, lights} = this.elements;
+    const {prey, exit_pad, walls, background, furnishing, lights, player} = this.elements;
     global.set_light_level(0.9);
 
     this.background = new Background(background, true);
 
-    this.player.set_position({x: 600, y: 500});
+    this.player.set_position(player);
+    this.camera.set_center(player);
 
     walls.forEach(data => {
       const wall  = new Wall();
@@ -49,13 +49,6 @@ class School_Room extends Level  {
       Element_Factory.generate_tiled(data);
     });
 
-    prey.forEach(data => {
-      const prey = new Rat();
-      prey.enemy(this.player);
-      prey.logic_start();
-      prey.set_position(data);
-    });
-
     lights.forEach(async data => {
       const light = new Candle();
       light.height = data.height;
@@ -64,9 +57,27 @@ class School_Room extends Level  {
       light.start_flickering();
     });
 
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+
+      // Fire once (event) to load in enemies
+      pad.area.events.once('trigger', () => {
+        prey.forEach(data => {
+          const mouse = new Rat();
+          mouse.enemy(this.player);
+          mouse.set_position(data);
+          mouse.logic_start();
+        });
+      });
+    });
 
     this.create_grid(background);
   }
+
 }
 
 module.exports = {

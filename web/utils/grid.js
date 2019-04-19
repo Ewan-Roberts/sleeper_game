@@ -1,15 +1,12 @@
 'use strict';
 const PIXI = require('pixi.js');
+require('pixi-plugin-bump');
+const bump = new PIXI.extras.Bump();
 const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
 
-function check(rect1, rect2) {
-  if (rect1.x < rect2.x + rect2.width &&
-    rect1.x + rect1.width > rect2.x &&
-    rect1.y < rect2.y + rect2.height &&
-    rect1.y + rect1.height > rect2.y) {
-    return true;
-  }
+function check(ab, bb) {
+  return bump.hitTestRectangle(ab, bb);
 }
 
 class Tile {

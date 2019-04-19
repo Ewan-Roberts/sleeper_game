@@ -10,6 +10,7 @@ const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
 const { Element_Factory } = require('../elements/elements_factory');
 const { Trigger_Pad  } = require('../elements/pad');
+const { Level_Factory } = require('./level_factory');
 const level_data  = require('../data/archer_room.json');
 
 class Archer_Room extends Level {
@@ -66,7 +67,8 @@ class Archer_Room extends Level {
       pad.anchor = 0;
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
-
+        Level_Factory.clear();
+        Level_Factory.generate(data.properties.level_name, this.player);
       });
     });
   }
