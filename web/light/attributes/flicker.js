@@ -33,6 +33,7 @@ class Flicker {
 
     flicker_timer.start();
   }
+
 }
 
 module.exports = {

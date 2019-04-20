@@ -9,11 +9,13 @@ class Level_Factory {
   static generate(type, player) {
     const { Archer_Room } = require('./archer_room');
     const { School_Room } = require('./school_room');
+    const { Items_Room  } = require('./item_room');
 
     switch(type) {
       case 'archer': return new Archer_Room(player);
-      case 'intro':  return new Intro(player);
+      case 'intro' : return new Intro(player);
       case 'school': return new School_Room(player);
+      case 'item'  : return new Items_Room(player);
     }
   }
 

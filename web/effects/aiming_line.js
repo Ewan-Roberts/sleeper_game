@@ -8,7 +8,7 @@ class Aiming_Line {
     this.name = 'aiming_line';
 
     this.line = new PIXI.Graphics();
-    this.line.lineStyle(1, 0xffffff);
+    this.line.lineStyle(0.1, 0xffffff);
   }
 
   add_between_sprites(start, end) {

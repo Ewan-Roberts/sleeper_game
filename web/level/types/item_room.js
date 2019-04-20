@@ -1,71 +1,71 @@
 'use strict';
 
-const { Level           } = require('../level_model');
-const { Background      } = require('../elements/background');
-const { Wall            } = require('../elements/wall');
-const { Candle          } = require('../../light/types/candle');
+const { Level      } = require('../level_model');
+const { Background  } = require('../elements/background');
+const { Camera      } = require('../../engine/camera');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad  } = require('../elements/pad');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
+const { Lighter     } = require('../../light/types/lighter');
 const { Element_Factory } = require('../elements/elements_factory');
+const level_data  = require('../data/items_room.json');
 
 class Items_Room extends Level {
   constructor(player) {
     super();
-    this.name        = 'animations_room';
+    this.name         = 'item_room';
 
-    this.player      = player;
-    this.background  = new Background('grid_floor');
-    this.candle      = new Candle();
-    this.wall        = new Wall();
-
-    this.hay_bale    = Element_Factory.generate('hay');
-    this.chair       = Element_Factory.generate('chair');
-    this.matress     = Element_Factory.generate('mattress');
-    this.chest       = Element_Factory.generate('chest');
-    this.backpack    = Element_Factory.generate('backpack');
-    this.workbench   = Element_Factory.generate('workbench');
-    this.tree        = Element_Factory.generate('tree', {image_name:'tree_4', fade: 0.2});
+    this.player       = player;
+    this.elements     = new Tiled_Data(level_data);
+    this.lighter      = new Lighter();
+    this.camera       = new Camera();
 
     this._set_elements();
   }
 
   _set_elements() {
-    global.set_light_level(1);
-    let iterate_x = 300;
-    const iterate_y = 300;
+    const {exit_pad, walls, background, furnishing, lights, player} = this.elements;
+    global.set_light_level(0.4);
 
-    this.background.alpha = 0.5;
-    this.background.set_position({x: 1100, y: 500});
+    this.background = new Background(background, true);
 
-    this.tree.set_position({x: iterate_x, y: iterate_y });
-    this.tree.width = 1000;
-    this.tree.height= 1000;
-    this.tree.trunk = true;
+    this.player.set_position(player);
+    this.camera.set_center(player);
 
-    iterate_x += 200;
+    walls.forEach(data => {
+      const wall  = new Wall();
+      wall.shadow = true;
+      wall.height = data.height;
+      wall.width  = data.width;
+      wall.anchor = 0;
+      wall.rotation = (data.rotation * (Math.PI/180));
 
-    this.workbench.set_position({x: iterate_x, y: iterate_y });
-    iterate_x += 200;
+      wall.set_position(data);
+    });
 
-    this.matress.set_position({x: iterate_x, y: iterate_y });
-    iterate_x += 200;
+    furnishing.forEach(data => {
+      Element_Factory.generate_tiled(data);
+    });
 
-    this.chair.set_position({x: iterate_x, y: iterate_y });
-    iterate_x += 200;
+    lights.forEach(async data => {
+      const light = new Candle();
+      light.height = data.height;
+      light.width  = data.width;
+      light.set_position(data);
+      light.start_flickering();
+    });
 
-    this.hay_bale.set_position({x: iterate_x, y: iterate_y });
-    this.hay_bale.rotation = -2.5;
-    iterate_x += 200;
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
 
-    this.chest.set_position({x: iterate_x, y: iterate_y });
-    iterate_x += 200;
-
-    this.backpack.set_position({x: iterate_x, y: iterate_y });
-    iterate_x += 200;
-
-    this.workbench.set_position({x: iterate_x, y: iterate_y });
-    iterate_x += 300;
-
-    this.wall.set_position({x: iterate_x, y: iterate_y });
+    });
   }
+
 }
 
 module.exports = {

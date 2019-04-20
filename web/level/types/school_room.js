@@ -27,7 +27,7 @@ class School_Room extends Level  {
 
   _set_elements() {
     const {prey, exit_pad, walls, background, furnishing, lights, player} = this.elements;
-    global.set_light_level(0.9);
+    global.set_light_level(0.4);
 
     this.background = new Background(background, true);
 

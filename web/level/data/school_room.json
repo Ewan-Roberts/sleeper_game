@@ -366,6 +366,35 @@
                 }, 
                 {
                  "draworder":"topdown",
+                 "name":"phone",
+                 "objects":[
+                        {
+                         "height":182.268600691124,
+                         "id":210,
+                         "name":"phone",
+                         "properties":
+                            {
+                             "image_name":"phone_00"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string"
+                            },
+                         "rotation":269.62358463251,
+                         "type":"",
+                         "visible":true,
+                         "width":175.98578293225,
+                         "x":697.213925404235,
+                         "y":920.480971160518
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
+                }, 
+                {
+                 "draworder":"topdown",
                  "name":"bookcase",
                  "objects":[
                         {
@@ -824,7 +853,7 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -1085,7 +1114,7 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -1183,7 +1212,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":210,
+ "nextobjectid":211,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

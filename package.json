@@ -15,6 +15,8 @@
   "author": "Ewan Roberts",
   "license": "ISC",
   "dependencies": {
+    "@pixi/filter-glitch": "^2.7.0",
+    "@pixi/filter-pixelate": "^2.7.0",
     "browserify-versionify": "^1.0.6",
     "compression": "^1.7.3",
     "easystarjs": "^0.4.3",

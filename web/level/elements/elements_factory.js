@@ -11,6 +11,7 @@ const { Workbench } = require('./workbench');
 const { Tree      } = require('./tree');
 const { Roof      } = require('./ceiling');
 const { Rock      } = require('./rock');
+const { Phone     } = require('./phone');
 // const { Candle    } = require('../../light/types/candle');
 const { CollisionItem } = require('./collision_object');
 const { BackgroundVisualItem } = require('./visual_object');
@@ -34,6 +35,7 @@ class Element_Factory {
       case 'rock':      return new Rock(options);
       case 'collision': return new CollisionItem(options);
       case 'floor_visual': return new BackgroundVisualItem(options);
+      case 'phone':        return new Phone(options);
       // case 'candle':    return new Candle(options);
     }
   }

@@ -15,16 +15,6 @@ class Tiled_Data {
 
     return player;
   }
-  get center() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'center');
-
-    if(!found_layer) throw new Error('no center found in level data');
-
-    const center = found_layer.objects;
-
-    //There should only ever be one center
-    return center[0];
-  }
 
   get furnishing() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'furnishing');
@@ -33,19 +23,6 @@ class Tiled_Data {
     const group = found_layer.layers.map(thing => ({
       properties: thing.properties,
       ...thing.objects[0],
-    }));
-
-    return group;
-  }
-
-  get objects() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'objects');
-    if(!found_layer) throw new Error('no objects found in level data');
-
-    const group = found_layer.layers.map(thing => ({
-      ...thing,
-      x: thing.offsetx,
-      y: thing.offsety,
     }));
 
     return group;
@@ -67,14 +44,6 @@ class Tiled_Data {
     return pads;
   }
 
-  get chairs() {
-    const chairs = this.level_data.layers.find(layer => layer.name === 'chairs');
-
-    if(!chairs) throw new Error('no elements areas found in level data');
-
-    return chairs.objects;
-  }
-
   get prey() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'prey');
 
@@ -82,40 +51,6 @@ class Tiled_Data {
     const prey = found_layer.objects;
 
     return prey;
-  }
-
-  //TODO rename scavenger
-  get cat() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'cat');
-
-    if(!found_layer) throw new Error('no cats areas found in level data');
-    const exit_point = found_layer.layers.find(object => object.name === 'exit').objects[0];
-
-    const route_layer = found_layer.layers.find(layer => layer.name === 'route');
-
-    const route = route_layer.layers.map(step => {
-      const { objects, properties } = step;
-      const data = objects[0];
-
-      const path = data.polyline.map(line => ({
-        x: line.x+data.x,
-        y: line.y+data.y,
-      }));
-
-      return {
-        path,
-        properties,
-      };
-    });
-
-    route.sort((route_one, route_two) =>
-      route_one.properties.order - route_two.properties.order);
-
-    return {
-      entity: found_layer.layers.find(object => object.name === 'entity'),
-      exit_point,
-      route,
-    };
   }
 
   get background() {

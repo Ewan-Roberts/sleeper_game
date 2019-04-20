@@ -23,7 +23,7 @@ class Item {
   // and this is amazing
   set click(action) {
     this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
+    this.sprite.buttonMode  = true;
 
     if(this.shade) {
       this.shade.interactive = true;
@@ -32,6 +32,11 @@ class Item {
     }
 
     this.sprite.click = action;
+  }
+
+  remove_click() {
+    this.sprite.interactive = false;
+    this.sprite.buttonMode  = false;
   }
 
   //TODO this is to quickly add items

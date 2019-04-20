@@ -23,6 +23,18 @@ class Light {
     this.shadow.position.set(x, y);
   }
 
+  set intensity(value) {
+    this.shadow.intensity = value;
+  }
+
+  set anchor(value) {
+    this.shadow.anchor.set(value);
+  }
+
+  set width(value) {
+    this.shadow.width = value;
+  }
+
   set range(value) {
     this.shadow.range = value;
   }
