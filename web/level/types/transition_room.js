@@ -30,7 +30,6 @@ class Transition_Room extends Level  {
     const {walls, exit_pad, background, furnishing, lights, player} = this.elements;
 
     global.set_light_level(0.9);
-    console.log(this.elements);
 
     this.background = new Background(background, true);
 

@@ -8,12 +8,8 @@ class Background {
   constructor(data, tile_image) {
     if(tile_image) {
       const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
-
-      this.sprite = new PIXI.extras.TilingSprite(
-        texture,
-        5000,
-        5000
-      );
+      this.sprite = new PIXI.extras.TilingSprite(texture);
+      this.sprite.alpha = 0.4;
     } else {
       const image_name = data.name || 'grid_floor';
 
@@ -23,7 +19,6 @@ class Background {
     this.sprite.anchor.set(0);
     this.sprite.width = data.width;
     this.sprite.height = data.height;
-    this.sprite.alpha = 0.5;
 
     this.set_position(data);
   }

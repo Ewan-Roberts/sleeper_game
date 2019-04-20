@@ -37,7 +37,7 @@ class Grid {
     let grid_x = 0;
     let grid_y = 0;
 
-    let alpha = 0.8;
+    let alpha = 0.2;
 
     for(let i=0; i<=this.tile_area; i++){
       const tile = new Tile();
@@ -85,7 +85,7 @@ class Grid {
 
     grid_container.children.forEach((tile, i) => {
       if(!tile.passable) {
-        tile.alpha =0.8;
+        tile.alpha =0.3;
         binary_line.push(1);
       } else {
         binary_line.push(0);

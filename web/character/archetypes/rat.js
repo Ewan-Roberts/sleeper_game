@@ -26,6 +26,7 @@ class Rat extends Animal {
     this._logic.repeat = 20;
     this._logic.expire = true;
     this._logic.dead   = false;
+    this._logic.fired  = false;
   }
 
   _walk_to_enemy() {
@@ -73,6 +74,8 @@ class Rat extends Animal {
 
   logic_start() {
     if(!this.enemy) return new Error('no enemy');
+    if(this._logic.fired) return;
+    this._logic.fired = true;
     this._logic.start();
 
     this._logic.on('repeat', () => {

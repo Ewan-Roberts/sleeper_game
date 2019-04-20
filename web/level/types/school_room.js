@@ -45,6 +45,10 @@ class School_Room extends Level  {
       wall.set_position(data);
     });
 
+    const mouse = new Rat();
+    mouse.enemy(this.player);
+    mouse.set_position(prey[0]);
+
     furnishing.forEach(data => {
       Element_Factory.generate_tiled(data);
     });
@@ -66,15 +70,10 @@ class School_Room extends Level  {
 
       // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
-        prey.forEach(data => {
-          const mouse = new Rat();
-          mouse.enemy(this.player);
-          mouse.set_position(data);
-          mouse.logic_start();
-        });
+        mouse.logic_start();
       });
     });
-
+    console.log(background);
     this.create_grid(background);
   }
 

@@ -3,7 +3,7 @@ const PIXI = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 const { random_number } = require('../utils/math');
-const { Track         } = require('./sound');
+// const { Sound         } = require('../engine/sound');
 
 // TODO Move to using timer function
 class Rain {
@@ -18,7 +18,7 @@ class Rain {
       rainFrames.push(PIXI.Texture.fromFrame(`raindrop_${val}`));
     }
 
-    const rainNoise = new Track('audio/light_rain.wav');
+    // Sound.play('rain_noise');
 
     for (let i = 0; i < 150; i += 1) {
       const animatedDrop = new PIXI.extras.AnimatedSprite(rainFrames);
@@ -32,9 +32,6 @@ class Rain {
 
       setInterval(() => animatedDrop.play(), random_number(200, 1100));
       setInterval(() => animatedDrop.gotoAndStop(11), random_number(100, 1000));
-
-      rainNoise.volume = 0.05;
-      rainNoise.play();
 
       visual_effects_container.addChild(animatedDrop);
     }

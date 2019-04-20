@@ -1,6 +1,6 @@
 'use strict';
 
-const { Track } = require('../../effects/sound');
+const { Sound } = require('../../engine/sound');
 const { sleep } = require('../../utils/time');
 
 class Strike {
@@ -8,12 +8,10 @@ class Strike {
     this.name = 'strike';
 
     this.shadow = shadow;
-    this.sound  = new Track('lighter.wav');
-    this.sound.mute();
   }
 
   async start() {
-    this.sound.play();
+    Sound.play('lighter_strike');
 
     await sleep(300);
     this.shadow.alpha = 0.5;
