@@ -51,6 +51,10 @@ const player_container = new PIXI.Container();
 player_container.name = 'player_container';
 player_container.zIndex = medium;
 
+const shroud_container = new PIXI.Container();
+shroud_container.name = 'shroud_container';
+shroud_container.zIndex = very_close;
+
 const visual_effects_container = new PIXI.Container();
 visual_effects_container.name = 'visual_effects_container';
 visual_effects_container.zIndex = close;
@@ -82,6 +86,7 @@ dialog_container.zIndex = close;
 // grid_particles.zIndex = close;
 
 world.addChild(
+  shroud_container,
   visual_effects_container,
   roof_container,
   background_container,
@@ -121,6 +126,7 @@ function clear_non_player_containers() {
 }
 
 module.exports = {
+  shroud_container,
   roof_container,
   background_container,
   collision_container,

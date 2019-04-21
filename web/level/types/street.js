@@ -5,12 +5,12 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/transition_room.json');
+const level_data = require('../data/street.json');
 
-class Transition_Room extends Level  {
+class Street extends Level  {
   constructor(player) {
     super();
-    this.name     = 'transition_room';
+    this.name     = 'school_room';
 
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
@@ -41,6 +41,5 @@ class Transition_Room extends Level  {
 }
 
 module.exports = {
-  Transition_Room,
+  Street,
 };
-

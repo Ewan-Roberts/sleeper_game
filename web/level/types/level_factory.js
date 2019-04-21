@@ -11,23 +11,24 @@ const { clear_non_player_containers } = require('../../engine/pixi_containers');
 
 //TODO This is not a Factory make it one and abstract this
 class Level_Factory {
-  static create(type, player) {
+  static create(properties, player) {
     const { Archer_Room } = require('./archer_room');
     const { School_Room } = require('./school_room');
     const { Items_Room  } = require('./item_room');
     const { Items_Room_level_2  } = require('./intro_level_02');
+    const { Street } = require('./street');
 
-    switch(type) {
+    switch(properties.level_name) {
       case 'archer': return new Archer_Room(player);
-      case 'intro' : return new Intro(player);
+      case 'intro' : return new Intro(player, properties);
       case 'intro_level_02' : return new Items_Room_level_2(player);
       case 'school': return new School_Room(player);
       case 'item'  : return new Items_Room(player);
-      default      : console.log(`error... missing level ${type}`);
+      case 'street'  : return new Street(player);
     }
   }
 
-  static generate(player_sprite, {walls, item, roof, floor, background, collision, lights, player}) {
+  static generate(player_sprite, {walls, shroud, item, roof, floor, background, collision, lights, player}) {
     try {
       new Background(background, true);
 
@@ -51,6 +52,8 @@ class Level_Factory {
       item.forEach(data => Element_Factory.generate_tiled('item',data));
       floor.forEach(data => Element_Factory.generate_tiled('floor',data));
 
+      // order important
+      shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
       roof.forEach(data => Element_Factory.generate_tiled('roof', data));
       lights.forEach(async data => {
         const light = new Candle();

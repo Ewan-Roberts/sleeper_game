@@ -13,6 +13,10 @@ class CollisionItem extends Item {
       this.shade.anchor.x= 0;
     }
 
+    if(options.hidden) {
+      this.alpha = 0;
+    }
+
     collision_container.addChild(this.sprite);
   }
 }

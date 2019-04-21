@@ -31,7 +31,7 @@ class Archer_Room extends Level {
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
         Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties, this.player);
       });
     });
   }

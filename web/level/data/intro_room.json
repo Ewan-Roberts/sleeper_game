@@ -20,7 +20,7 @@
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -212,8 +212,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1100,
-                 "y":415.151515151515
+                 "x":1072.72727272727,
+                 "y":-1130.30303030303
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -292,148 +292,12 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"roof",
-         "objects":[
-                {
-                 "height":1742.68,
-                 "id":134,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":2917.1,
-                 "x":11.1469696969697,
-                 "y":-1492.55212121212
-                }, 
-                {
-                 "height":837.281,
-                 "id":135,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":747.508939393939,
-                 "y":233.298893939394
-                }, 
-                {
-                 "height":684.675,
-                 "id":136,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":469.102,
-                 "x":1474.53990909091,
-                 "y":251.601893939394
-                }, 
-                {
-                 "height":76.785,
-                 "id":154,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":751.282333333333,
-                 "y":257.6075
-                }, 
-                {
-                 "height":689.528190973065,
-                 "id":159,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":701.755724824072,
-                 "x":766.256328318369,
-                 "y":243.818287430235
-                }, 
-                {
-                 "height":916.301,
-                 "id":160,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "fade":1,
-                     "image_name":"tree_11"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":969.221,
-                 "x":1715.09830854162,
-                 "y":-265.236158820675
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "name":"floor",
          "objects":[
                 {
                  "height":1237.64,
                  "id":139,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"concrete_decal_01"
@@ -446,13 +310,13 @@
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":1422.56166666667,
-                 "y":29.6648484848487
+                 "x":1394.56166666667,
+                 "y":21.6648484848487
                 }, 
                 {
                  "height":1237.64,
                  "id":140,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"concrete_decal_01"
@@ -471,7 +335,7 @@
                 {
                  "height":1917.66,
                  "id":141,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"road_00"
@@ -484,13 +348,13 @@
                  "type":"",
                  "visible":true,
                  "width":221.294,
-                 "x":3856.01966666667,
-                 "y":171.47303030303
+                 "x":3698.44390909091,
+                 "y":26.0184848484849
                 }, 
                 {
                  "height":1088.03,
                  "id":142,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"floor_decal_03"
@@ -509,7 +373,7 @@
                 {
                  "height":319.085,
                  "id":143,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"concrete_decal_00"
@@ -528,7 +392,7 @@
                 {
                  "height":1917.66,
                  "id":144,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"road_00"
@@ -547,7 +411,7 @@
                 {
                  "height":304.459,
                  "id":145,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"litter_00"
@@ -566,7 +430,7 @@
                 {
                  "height":370.546,
                  "id":146,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"ladder_00"
@@ -585,7 +449,7 @@
                 {
                  "height":113.44,
                  "id":148,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"wall_stone_damage_01"
@@ -604,7 +468,7 @@
                 {
                  "height":94.7735,
                  "id":149,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"floor_decal_01"
@@ -621,9 +485,9 @@
                  "y":237.61
                 }, 
                 {
-                 "height":311.657,
+                 "height":203.04005987864,
                  "id":152,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"litter_00"
@@ -635,14 +499,14 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":258.239,
-                 "x":794.21,
-                 "y":496
+                 "width":168.239,
+                 "x":1072.21,
+                 "y":408
                 }, 
                 {
                  "height":262.818,
                  "id":158,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"dirty_matress"
@@ -658,9 +522,354 @@
                  "x":972.461238898326,
                  "y":-300.057386314001
                 }],
-         "opacity":1,
+         "opacity":0.18,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
+                {
+                 "height":1560.80742846093,
+                 "id":82,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.8,
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-89.8028965746292,
+                 "type":"",
+                 "visible":true,
+                 "width":333.436565822732,
+                 "x":1225.88625947144,
+                 "y":-1063.42116112637
+                }, 
+                {
+                 "height":837.281246488164,
+                 "id":111,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.76837268766,
+                 "x":-618.767223889607,
+                 "y":237.805389275259
+                }, 
+                {
+                 "height":1556.79219856273,
+                 "id":112,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.1113114296442,
+                 "type":"",
+                 "visible":true,
+                 "width":784.99991312787,
+                 "x":3495.30354021356,
+                 "y":170.698322292678
+                }, 
+                {
+                 "height":240.629840131126,
+                 "id":79,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"pit_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-834.032043151896,
+                 "type":"",
+                 "visible":true,
+                 "width":228.641026316547,
+                 "x":852.955796008702,
+                 "y":308.71527520373
+                }, 
+                {
+                 "height":385.047417159892,
+                 "id":72,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-682.784671786475,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":930.034151856236,
+                 "y":-132.772073185352
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":118,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-4.22955796919121,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":411.975692182255,
+                 "y":-607.517061042126
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":121,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":5.40890897848597,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":490.232259634654,
+                 "y":-1483.02380688469
+                }, 
+                {
+                 "height":241.941634559114,
+                 "id":102,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dumpster_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-92.8064059825403,
+                 "type":"",
+                 "visible":true,
+                 "width":110.662237191037,
+                 "x":1181.76829923635,
+                 "y":220.652544067175
+                }, 
+                {
+                 "height":326.777495644357,
+                 "id":60,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-87.7288953492821,
+                 "type":"",
+                 "visible":true,
+                 "width":323.206183112358,
+                 "x":779.989384622734,
+                 "y":903.105648296609
+                }, 
+                {
+                 "height":145.819234048688,
+                 "id":59,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398033013144,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333333333333,
+                 "x":960.072265032411,
+                 "y":289.185767185451
+                }, 
+                {
+                 "height":75.6656370829608,
+                 "id":78,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"chair_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044460943984,
+                 "type":"",
+                 "visible":true,
+                 "width":84.7774871089743,
+                 "x":1269.71335279219,
+                 "y":366.006587202568
+                }, 
+                {
+                 "height":120.932661831217,
+                 "id":80,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"stove_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-372.018905767599,
+                 "type":"",
+                 "visible":true,
+                 "width":128.352009424784,
+                 "x":1332.29591218934,
+                 "y":285.417187645687
+                }, 
+                {
+                 "height":392.732378716508,
+                 "id":86,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_table"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-538.94543013693,
+                 "type":"",
+                 "visible":true,
+                 "width":137.679088084613,
+                 "x":1459.09186469011,
+                 "y":934.893125303555
+                }, 
+                {
+                 "height":100.091501533926,
+                 "id":81,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"sink_04"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-720.1430510935,
+                 "type":"",
+                 "visible":true,
+                 "width":85.7470086786222,
+                 "x":1358.85965389004,
+                 "y":805.741923467557
+                }, 
+                {
+                 "height":297.474223081979,
+                 "id":95,
+                 "name":"truck",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":152.332458270991,
+                 "type":"",
+                 "visible":true,
+                 "width":836.373824096281,
+                 "x":2590.32863703624,
+                 "y":-243.83017710036
+                }, 
+                {
+                 "height":555.70380032669,
+                 "id":128,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-278.675692308681,
+                 "type":"",
+                 "visible":true,
+                 "width":296.959557780732,
+                 "x":2162.69863717648,
+                 "y":-942.998422315894
+                }, 
+                {
+                 "height":238.610570826346,
+                 "id":129,
+                 "name":"car",
+                 "properties":
+                    {
+                     "image_name":"car_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-166.544115481598,
+                 "type":"",
+                 "visible":true,
+                 "width":491.644536849573,
+                 "x":1149.64947315211,
+                 "y":-398.439393069659
+                }],
+         "opacity":0.5,
+         "type":"objectgroup",
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -791,37 +1000,16 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"collision",
+         "name":"roof",
          "objects":[
                 {
-                 "height":1560.80742846093,
-                 "id":82,
+                 "height":877.281,
+                 "id":135,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.8,
-                     "image_name":"long_broken"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-89.8028965746292,
-                 "type":"",
-                 "visible":true,
-                 "width":333.436565822732,
-                 "x":1225.88625947144,
-                 "y":-1063.42116112637
-                }, 
-                {
-                 "height":837.281246488164,
-                 "id":111,
-                 "name":"collision",
-                 "properties":
-                    {
                      "fade":0.1,
-                     "image_name":"roof_city_00"
+                     "image_name":"roof_00"
                     },
                  "propertytypes":
                     {
@@ -831,310 +1019,90 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1383.76837268766,
-                 "x":-618.767223889607,
-                 "y":237.805389275259
+                 "width":1445.77,
+                 "x":626.508939393939,
+                 "y":179.298893939394
                 }, 
                 {
-                 "height":1556.79219856273,
-                 "id":112,
+                 "height":76.785,
+                 "id":154,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.1,
-                     "image_name":"tarp_roof_00"
+                     "fade":0.5,
+                     "image_name":"street_light_00"
                     },
                  "propertytypes":
                     {
                      "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":90.1113114296442,
+                 "rotation":-91.6508,
                  "type":"",
                  "visible":true,
-                 "width":784.99991312787,
-                 "x":3495.30354021356,
-                 "y":170.698322292678
+                 "width":284.102,
+                 "x":751.282333333333,
+                 "y":241.6075
                 }, 
                 {
-                 "height":240.629840131126,
-                 "id":79,
-                 "name":"",
+                 "height":916.301,
+                 "id":160,
+                 "name":"tree",
                  "properties":
                     {
-                     "image_name":"pit_00"
+                     "fade":1,
+                     "image_name":"tree_11"
                     },
                  "propertytypes":
                     {
+                     "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":-834.032043151896,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":228.641026316547,
-                 "x":852.955796008702,
-                 "y":308.71527520373
+                 "width":969.221,
+                 "x":1715.09830854162,
+                 "y":-265.236158820675
                 }, 
                 {
-                 "height":385.047417159892,
-                 "id":72,
+                 "height":1742.68,
+                 "id":174,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"car_00",
-                     "shadow":true
+                     "fade":0.1,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-682.784671786475,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":930.034151856236,
-                 "y":-132.772073185352
-                }, 
-                {
-                 "height":833.585882814664,
-                 "id":118,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-4.22955796919121,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":411.975692182255,
-                 "y":-607.517061042126
-                }, 
-                {
-                 "height":833.585882814664,
-                 "id":121,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":5.40890897848597,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":490.232259634654,
-                 "y":-1483.02380688469
-                }, 
-                {
-                 "height":241.941634559114,
-                 "id":102,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
+                     "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":-92.8064059825403,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":110.662237191037,
-                 "x":1103.76829923635,
-                 "y":218.652544067175
-                }, 
-                {
-                 "height":326.777495644357,
-                 "id":60,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-87.7288953492821,
-                 "type":"",
-                 "visible":true,
-                 "width":323.206183112358,
-                 "x":779.989384622734,
-                 "y":903.105648296609
-                }, 
-                {
-                 "height":145.819234048688,
-                 "id":59,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398033013144,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333333333333,
-                 "x":960.072265032411,
-                 "y":289.185767185451
-                }, 
-                {
-                 "height":75.6656370829608,
-                 "id":78,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"chair_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-521.044460943984,
-                 "type":"",
-                 "visible":true,
-                 "width":84.7774871089743,
-                 "x":1269.71335279219,
-                 "y":366.006587202568
-                }, 
-                {
-                 "height":120.932661831217,
-                 "id":80,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"stove_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-372.018905767599,
-                 "type":"",
-                 "visible":true,
-                 "width":128.352009424784,
-                 "x":1332.29591218934,
-                 "y":285.417187645687
-                }, 
-                {
-                 "height":392.732378716508,
-                 "id":86,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"wood_table"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-538.94543013693,
-                 "type":"",
-                 "visible":true,
-                 "width":137.679088084613,
-                 "x":1441.09186469011,
-                 "y":920.893125303555
-                }, 
-                {
-                 "height":100.091501533926,
-                 "id":81,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"sink_04"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-720.1430510935,
-                 "type":"",
-                 "visible":true,
-                 "width":85.7470086786222,
-                 "x":1358.85965389004,
-                 "y":805.741923467557
-                }, 
-                {
-                 "height":297.474223081979,
-                 "id":95,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"truck_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":152.332458270991,
-                 "type":"",
-                 "visible":true,
-                 "width":836.373824096281,
-                 "x":2590.32863703624,
-                 "y":-243.83017710036
-                }, 
-                {
-                 "height":555.70380032669,
-                 "id":128,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"car_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-278.675692308681,
-                 "type":"",
-                 "visible":true,
-                 "width":296.959557780732,
-                 "x":2162.69863717648,
-                 "y":-942.998422315894
-                }, 
-                {
-                 "height":238.610570826346,
-                 "id":129,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"car_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-166.544115481598,
-                 "type":"",
-                 "visible":true,
-                 "width":491.644536849573,
-                 "x":1149.64947315211,
-                 "y":-398.439393069659
+                 "width":2917.1,
+                 "x":252.116666666667,
+                 "y":-1502.00666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":166,
+ "nextobjectid":175,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

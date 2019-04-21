@@ -7551,7 +7551,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":289}],39:[function(require,module,exports){
+},{"timers":293}],39:[function(require,module,exports){
 !function(e){function t(r){if(i[r])return i[r].exports;var n=i[r]={exports:{},id:r,loaded:!1};return e[r].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t,i){e.exports=i(4)},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function s(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}var o=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var u=i(2),l=r(u),h=function(e){function t(){var e=arguments.length<=0||void 0===arguments[0]?1:arguments[0],i=arguments[1];n(this,t);var r=a(this,Object.getPrototypeOf(t).call(this));return r.time=e,i&&r.addTo(i),r.active=!1,r.isEnded=!1,r.isStarted=!1,r.expire=!1,r.delay=0,r.repeat=0,r.loop=!1,r._delayTime=0,r._elapsedTime=0,r._repeat=0,r}return s(t,e),o(t,[{key:"addTo",value:function(e){return this.manager=e,this.manager.addTimer(this),this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTimer(this),this):void 0}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop",this._elapsedTime),this}},{key:"reset",value:function(){return this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this}},{key:"update",value:function(e,t){if(this.active){if(this.delay>this._delayTime)return void(this._delayTime+=t);if(this.isStarted||(this.isStarted=!0,this.emit("start",this._elapsedTime)),this.time>this._elapsedTime){var i=this._elapsedTime+t,r=i>=this.time;if(this._elapsedTime=r?this.time:i,this.emit("update",this._elapsedTime,e),r){if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._elapsedTime,this._repeat),void(this._elapsedTime=0);this.isEnded=!0,this.active=!1,this.emit("end",this._elapsedTime)}}}}}]),t}(l["default"].utils.EventEmitter);t["default"]=h},function(e,t){e.exports=PIXI},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var a=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var s=i(1),o=r(s),u=function(){function e(){n(this,e),this.timers=[],this._timersToDelete=[],this._last=0}return a(e,[{key:"update",value:function(e){var t=void 0;e||0===e?t=1e3*e:(t=this._getDeltaMS(),e=t/1e3);for(var i=0;i<this.timers.length;i++){var r=this.timers[i];r.active&&(r.update(e,t),r.isEnded&&r.expire&&r.remove())}if(this._timersToDelete.length){for(var i=0;i<this._timersToDelete.length;i++)this._remove(this._timersToDelete[i]);this._timersToDelete.length=0}}},{key:"removeTimer",value:function(e){this._timersToDelete.push(e)}},{key:"addTimer",value:function(e){e.manager=this,this.timers.push(e)}},{key:"createTimer",value:function(e){return new o["default"](e,this)}},{key:"_remove",value:function(e){var t=this.timers.indexOf(e);t>0&&this.timers.splice(t,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var e=Date.now(),t=e-this._last;return this._last=e,t}}]),e}();t["default"]=u},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var n=i(2),a=r(n),s=i(3),o=r(s),u=i(1),l=r(u),h={TimerManager:o["default"],Timer:l["default"]};a["default"].timerManager||(a["default"].timerManager=new o["default"],a["default"].timer=h),t["default"]=h}]);
 
 },{}],40:[function(require,module,exports){
@@ -19329,7 +19329,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":71,"../../../../textures/TextureMatrix":117,"../Filter":87,"path":283}],91:[function(require,module,exports){
+},{"../../../../math":71,"../../../../textures/TextureMatrix":117,"../Filter":87,"path":287}],91:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23129,7 +23129,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":45,"path":283}],109:[function(require,module,exports){
+},{"../../Shader":45,"path":287}],109:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28967,7 +28967,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":290}],126:[function(require,module,exports){
+},{"url":294}],126:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33541,7 +33541,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":66,"../../core/const":47,"path":283}],144:[function(require,module,exports){
+},{"../../core":66,"../../core/const":47,"path":287}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33625,7 +33625,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":66,"path":283}],145:[function(require,module,exports){
+},{"../../core":66,"path":287}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34788,7 +34788,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":66,"path":283}],152:[function(require,module,exports){
+},{"../../core":66,"path":287}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34896,7 +34896,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":66,"path":283}],153:[function(require,module,exports){
+},{"../../core":66,"path":287}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34950,7 +34950,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":66,"path":283}],154:[function(require,module,exports){
+},{"../../core":66,"path":287}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35126,7 +35126,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":66,"path":283}],156:[function(require,module,exports){
+},{"../../core":66,"path":287}],156:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37793,7 +37793,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":142,"path":283,"resource-loader":195}],164:[function(require,module,exports){
+},{"../extras":142,"path":287,"resource-loader":195}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38156,7 +38156,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":66,"resource-loader":195,"url":290}],167:[function(require,module,exports){
+},{"../core":66,"resource-loader":195,"url":294}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39882,7 +39882,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":66,"../Mesh":168,"path":283,"pixi-gl-core":21}],175:[function(require,module,exports){
+},{"../../core":66,"../Mesh":168,"path":287,"pixi-gl-core":21}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46666,6 +46666,130 @@ const PIXI = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
+//TODO move to dragon
+class bird_animations {
+  static move_frames() {
+    const moving_frames = [];
+
+    for (let i = 19; i > 0; i--) {
+      moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+    }
+    for (let i = 19; i > 0; i--) {
+      moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===4) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===5) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===6) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===7) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===8) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+      if(i ===9) moving_frames.push(PIXI.Texture.fromFrame(`bird_${i}`));
+    }
+
+
+    return moving_frames;
+  }
+
+  static wait_frames() {
+    const waiting_frames = [
+      PIXI.Texture.fromFrame('rat_36'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_51'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_36'),
+    ];
+
+    return waiting_frames;
+  }
+
+  static dead_frames() {
+    return [ PIXI.Texture.fromFrame('rat_35') ];
+  }
+
+  static eat_frames() {
+    const eating_frames = [
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_41'),
+      PIXI.Texture.fromFrame('rat_40'),
+      PIXI.Texture.fromFrame('rat_39'),
+      PIXI.Texture.fromFrame('rat_38'),
+      PIXI.Texture.fromFrame('rat_37'),
+      PIXI.Texture.fromFrame('rat_36'),
+    ];
+
+    return eating_frames;
+  }
+}
+
+const frames = {
+  move: bird_animations.move_frames(),
+};
+
+class Bird {
+  constructor(entity) {
+    this.name   = 'animation';
+
+    const texture = [PIXI.Texture.fromFrame('bunny')];
+    //TODO Finish migrating animation
+    this.sprite = new PIXI.extras.AnimatedSprite(texture);
+    console.log(this.sprite);
+    this.sprite.animationSpeed = 0.19;
+    this.sprite.width *=2;
+    this.sprite.height *=2;
+
+    this.sprite.anchor.set(0.5);
+    this.sprite.rotation = 1;
+  }
+
+  switch(action) {
+    if (this.state === action) return;
+
+    this.sprite.textures = frames[action];
+    this.sprite.loop = true;
+    this.sprite.play();
+    this.state = action;
+  }
+
+  face_point(point) {
+    this.sprite.rotation = radian(point, this.sprite);
+  }
+
+  attack() {
+    this.switch('eat');
+  }
+
+  walk() {
+    this.switch('move');
+  }
+
+  kill() {
+    this.switch('dead');
+  }
+
+}
+
+module.exports = {
+  Bird,
+};
+
+},{"../../utils/math":280,"pixi.js":156}],204:[function(require,module,exports){
+'use strict';
+const PIXI = require('pixi.js');
+
+const { radian } = require('../../utils/math');
+
 class animation {
   static nothing_idle() {
     const frames = [];
@@ -46857,7 +46981,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":276,"pixi.js":156}],204:[function(require,module,exports){
+},{"../../utils/math":280,"pixi.js":156}],205:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46972,7 +47096,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":276,"pixi.js":156}],205:[function(require,module,exports){
+},{"../../utils/math":280,"pixi.js":156}],206:[function(require,module,exports){
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
@@ -47068,7 +47192,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":220,"../../engine/ticker":231,"../../utils/math":276,"../attributes/melee":210,"../types/rat":218,"events":282}],206:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/ticker":232,"../../utils/math":280,"../attributes/melee":211,"../types/rat":219,"events":286}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47142,12 +47266,13 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":235}],207:[function(require,module,exports){
+},{"../../items/item_manager":236}],208:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
 const { collision_container } = require('../../engine/pixi_containers');
 const { roof_container } = require('../../engine/pixi_containers');
+
 const { pad_container } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -47160,15 +47285,16 @@ function point_collides(position) {
 }
 
 function point_contains(position) {
-  const { children } = roof_container;
-  children.forEach(child => {
+  const roofs = roof_container.children ;
+  roofs.forEach(child => {
     if(child.containsPoint(position)) {
-      child.alpha = child.fade_opacity | 0.6;
+      child.alpha = child.fade_opacity || 0.6;
       return;
     }
 
     child.alpha = 1;
   });
+
 }
 
 function event_pad(position) {
@@ -47309,7 +47435,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../engine/pixi_containers":227,"../../engine/shadows":229,"../../view/view_player_inventory":280,"pixi.js":156}],208:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/shadows":230,"../../view/view_player_inventory":284,"pixi.js":156}],209:[function(require,module,exports){
 
 'use strict';
 
@@ -47337,7 +47463,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":268}],209:[function(require,module,exports){
+},{"../../light/types/candle":272}],210:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -47390,7 +47516,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../items/item_manager":235,"../../view/button":278,"../../view/view_inventory":279}],210:[function(require,module,exports){
+},{"../../items/item_manager":236,"../../view/button":282,"../../view/view_inventory":283}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47443,7 +47569,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":224,"../../engine/pixi_containers":227,"pixi.js":156}],211:[function(require,module,exports){
+},{"../../engine/melee":225,"../../engine/pixi_containers":228,"pixi.js":156}],212:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container, player_container } = require('../../engine/pixi_containers');
@@ -47521,7 +47647,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":219,"../../engine/app":221,"../../engine/pixi_containers":227,"../../engine/ranged":228,"../../utils/math":276}],212:[function(require,module,exports){
+},{"../../effects/aiming_cone":220,"../../engine/app":222,"../../engine/pixi_containers":228,"../../engine/ranged":229,"../../utils/math":280}],213:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47565,7 +47691,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":226,"../../engine/pixi_containers":227,"pixi.js":156}],213:[function(require,module,exports){
+},{"../../engine/pathfind.js":227,"../../engine/pixi_containers":228,"pixi.js":156}],214:[function(require,module,exports){
 'use strict';
 
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -47600,7 +47726,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":231,"../../view/view_player_status_meter":281}],214:[function(require,module,exports){
+},{"../../engine/ticker":232,"../../view/view_player_status_meter":285}],215:[function(require,module,exports){
 'use strict';
 
 const event     = require('events');
@@ -47651,7 +47777,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":220,"events":282}],215:[function(require,module,exports){
+},{"../../effects/blood":221,"events":286}],216:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -47674,7 +47800,7 @@ module.exports = {
   Character,
 };
 
-},{}],216:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -47699,7 +47825,7 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":227,"../../engine/tween":232,"../animations/human":203,"../character_model":215}],217:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/tween":233,"../animations/human":204,"../character_model":216}],218:[function(require,module,exports){
 'use strict';
 
 const { player_container } = require('../../engine/pixi_containers');
@@ -47760,7 +47886,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":220,"../../engine/pixi_containers":227,"../../engine/tween":232,"../animations/human":203,"../attributes/inventory":206,"../attributes/keyboard":207,"../attributes/light":208,"../attributes/mouse":211,"../attributes/status_bar":213,"../attributes/vitals":214,"../character_model":215,"events":282}],218:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/pixi_containers":228,"../../engine/tween":233,"../animations/human":204,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":286}],219:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -47795,7 +47921,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":227,"../animations/rat":204,"../attributes/inventory":206,"../attributes/lootable":209,"../attributes/pathfind":212,"../attributes/vitals":214,"../character_model":215}],219:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../animations/rat":205,"../attributes/inventory":207,"../attributes/lootable":210,"../attributes/pathfind":213,"../attributes/vitals":215,"../character_model":216}],220:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47843,7 +47969,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":227,"../engine/ticker":231,"pixi.js":156}],220:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"../engine/ticker":232,"pixi.js":156}],221:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47864,7 +47990,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":227,"pixi.js":156}],221:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":156}],222:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -47883,7 +48009,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":156}],222:[function(require,module,exports){
+},{"pixi.js":156}],223:[function(require,module,exports){
 'use strict';
 
 const { Animations_Room } = require('../level/types/player_animations');
@@ -47947,7 +48073,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":217,"../level/types/archer_room":256,"../level/types/intro.js":257,"../level/types/item_room":259,"../level/types/player_animations":261,"../level/types/random_room":262,"../level/types/school_room.js":263,"../level/types/transition_room":264}],223:[function(require,module,exports){
+},{"../character/types/player.js":218,"../level/types/archer_room":259,"../level/types/intro.js":260,"../level/types/item_room":262,"../level/types/player_animations":264,"../level/types/random_room":265,"../level/types/school_room.js":266,"../level/types/transition_room":268}],224:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -47989,7 +48115,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./shadows":229,"./tween":232}],224:[function(require,module,exports){
+},{"./shadows":230,"./tween":233}],225:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -48002,7 +48128,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],225:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48015,7 +48141,7 @@ module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":34,"pixi.js":156}],226:[function(require,module,exports){
+},{"pixi-packer-parser":34,"pixi.js":156}],227:[function(require,module,exports){
 'use strict';
 const { grid_container } = require('./pixi_containers');
 
@@ -48134,7 +48260,7 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":275,"../utils/math":276,"./pixi_containers":227,"./tween":232,"easystarjs":5}],227:[function(require,module,exports){
+},{"../utils/grid":279,"../utils/math":280,"./pixi_containers":228,"./tween":233,"easystarjs":5}],228:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 PIXI.settings.ROUND_PIXELS = true;
@@ -48188,6 +48314,10 @@ const player_container = new PIXI.Container();
 player_container.name = 'player_container';
 player_container.zIndex = medium;
 
+const shroud_container = new PIXI.Container();
+shroud_container.name = 'shroud_container';
+shroud_container.zIndex = very_close;
+
 const visual_effects_container = new PIXI.Container();
 visual_effects_container.name = 'visual_effects_container';
 visual_effects_container.zIndex = close;
@@ -48219,6 +48349,7 @@ dialog_container.zIndex = close;
 // grid_particles.zIndex = close;
 
 world.addChild(
+  shroud_container,
   visual_effects_container,
   roof_container,
   background_container,
@@ -48258,6 +48389,7 @@ function clear_non_player_containers() {
 }
 
 module.exports = {
+  shroud_container,
   roof_container,
   background_container,
   collision_container,
@@ -48276,7 +48408,7 @@ module.exports = {
 
 
 
-},{"./shadows":229,"pixi.js":156}],228:[function(require,module,exports){
+},{"./shadows":230,"pixi.js":156}],229:[function(require,module,exports){
 'use strict';
 const PIXI                 = require('pixi.js');
 
@@ -48358,7 +48490,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":276,"./pixi_containers":227,"./tween":232,"pixi.js":156}],229:[function(require,module,exports){
+},{"../utils/math":280,"./pixi_containers":228,"./tween":233,"pixi.js":156}],230:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -48388,7 +48520,7 @@ module.exports = {
 
 
 
-},{"./app":221,"pixi-layers":33,"pixi-shadows":37,"pixi.js":156}],230:[function(require,module,exports){
+},{"./app":222,"pixi-layers":33,"pixi-shadows":37,"pixi.js":156}],231:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -48405,7 +48537,7 @@ const Sound = PIXI.sound.add({
 
 module.exports = Sound;
 
-},{"pixi-sound":38,"pixi.js":156}],231:[function(require,module,exports){
+},{"pixi-sound":38,"pixi.js":156}],232:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -48433,7 +48565,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":221,"pixi-keyboard":32,"pixi-timer":39,"pixi-tween":40,"pixi.js":156}],232:[function(require,module,exports){
+},{"./app":222,"pixi-keyboard":32,"pixi-timer":39,"pixi-tween":40,"pixi.js":156}],233:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48546,7 +48678,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":276,"./pixi_containers":227,"pixi.js":156}],233:[function(require,module,exports){
+},{"../utils/math":280,"./pixi_containers":228,"pixi.js":156}],234:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -48563,7 +48695,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":222,"./engine/packer":225,"./utils/globals":274}],234:[function(require,module,exports){
+},{"./engine/boot_loader.js":223,"./engine/packer":226,"./utils/globals":278}],235:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -48881,7 +49013,7 @@ module.exports = {
 };
 
 
-},{}],235:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -49026,7 +49158,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":221,"../utils/math":276,"./data/item_data":234,"pixi.js":156}],236:[function(require,module,exports){
+},{"../engine/app":222,"../utils/math":280,"./data/item_data":235,"pixi.js":156}],237:[function(require,module,exports){
 'use strict';
 
 // This is purely an interface for TILED data
@@ -49048,13 +49180,23 @@ class Tiled_Data {
   get collision() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'collision');
 
-    if(!found_layer) throw new Error('no collision found in level data');
-
-    return found_layer.objects;
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
   }
 
   get roof() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get shroud() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'shroud');
 
     if(found_layer){
       return found_layer.objects;
@@ -49160,7 +49302,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],237:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -49264,7 +49406,7 @@ module.exports = {
   Randomise,
 };
 
-},{"../../engine/pixi_containers":227,"../../utils/color_picker":272,"../../utils/math":276,"../elements/elements_factory":249,"pixi.js":156}],238:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../utils/color_picker":276,"../../utils/math":280,"../elements/elements_factory":251,"pixi.js":156}],239:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49621,7 +49763,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],239:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49644,7 +49786,7 @@ module.exports={ "height":50,
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -49836,8 +49978,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1100,
-                 "y":415.151515151515
+                 "x":1072.72727272727,
+                 "y":-1130.30303030303
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49916,12 +50058,783 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
+         "name":"floor",
+         "objects":[
+                {
+                 "height":1237.64,
+                 "id":139,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":1394.56166666667,
+                 "y":21.6648484848487
+                }, 
+                {
+                 "height":1237.64,
+                 "id":140,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":3455.895,
+                 "y":23.6042424242425
+                }, 
+                {
+                 "height":1917.66,
+                 "id":141,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":3698.44390909091,
+                 "y":26.0184848484849
+                }, 
+                {
+                 "height":1088.03,
+                 "id":142,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":724.906,
+                 "x":767.850030303031,
+                 "y":246.894090909091
+                }, 
+                {
+                 "height":319.085,
+                 "id":143,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-30.0312,
+                 "type":"",
+                 "visible":true,
+                 "width":1071.7,
+                 "x":565.239090909091,
+                 "y":566.001818181818
+                }, 
+                {
+                 "height":1917.66,
+                 "id":144,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":1787.89845454545,
+                 "y":25.1699999999998
+                }, 
+                {
+                 "height":304.459,
+                 "id":145,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239,
+                 "x":1989.56231818182,
+                 "y":-237.077984848485
+                }, 
+                {
+                 "height":370.546,
+                 "id":146,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.305,
+                 "type":"",
+                 "visible":true,
+                 "width":85.1823,
+                 "x":1672.56036515152,
+                 "y":835.939121212121
+                }, 
+                {
+                 "height":113.44,
+                 "id":148,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wall_stone_damage_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1170.16516666667,
+                 "y":376.613333333333
+                }, 
+                {
+                 "height":94.7735,
+                 "id":149,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1227.83,
+                 "y":237.61
+                }, 
+                {
+                 "height":203.04005987864,
+                 "id":152,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":168.239,
+                 "x":1072.21,
+                 "y":408
+                }, 
+                {
+                 "height":262.818,
+                 "id":158,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dirty_matress"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1055.12,
+                 "type":"",
+                 "visible":true,
+                 "width":163.789,
+                 "x":972.461238898326,
+                 "y":-300.057386314001
+                }],
+         "opacity":0.18,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
+                {
+                 "height":1560.80742846093,
+                 "id":82,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.8,
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-89.8028965746292,
+                 "type":"",
+                 "visible":true,
+                 "width":333.436565822732,
+                 "x":1225.88625947144,
+                 "y":-1063.42116112637
+                }, 
+                {
+                 "height":837.281246488164,
+                 "id":111,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.76837268766,
+                 "x":-618.767223889607,
+                 "y":237.805389275259
+                }, 
+                {
+                 "height":1556.79219856273,
+                 "id":112,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.1113114296442,
+                 "type":"",
+                 "visible":true,
+                 "width":784.99991312787,
+                 "x":3495.30354021356,
+                 "y":170.698322292678
+                }, 
+                {
+                 "height":240.629840131126,
+                 "id":79,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"pit_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-834.032043151896,
+                 "type":"",
+                 "visible":true,
+                 "width":228.641026316547,
+                 "x":852.955796008702,
+                 "y":308.71527520373
+                }, 
+                {
+                 "height":385.047417159892,
+                 "id":72,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-682.784671786475,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":930.034151856236,
+                 "y":-132.772073185352
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":118,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-4.22955796919121,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":411.975692182255,
+                 "y":-607.517061042126
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":121,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":5.40890897848597,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":490.232259634654,
+                 "y":-1483.02380688469
+                }, 
+                {
+                 "height":241.941634559114,
+                 "id":102,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dumpster_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-92.8064059825403,
+                 "type":"",
+                 "visible":true,
+                 "width":110.662237191037,
+                 "x":1181.76829923635,
+                 "y":220.652544067175
+                }, 
+                {
+                 "height":326.777495644357,
+                 "id":60,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-87.7288953492821,
+                 "type":"",
+                 "visible":true,
+                 "width":323.206183112358,
+                 "x":779.989384622734,
+                 "y":903.105648296609
+                }, 
+                {
+                 "height":145.819234048688,
+                 "id":59,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398033013144,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333333333333,
+                 "x":960.072265032411,
+                 "y":289.185767185451
+                }, 
+                {
+                 "height":75.6656370829608,
+                 "id":78,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"chair_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044460943984,
+                 "type":"",
+                 "visible":true,
+                 "width":84.7774871089743,
+                 "x":1269.71335279219,
+                 "y":366.006587202568
+                }, 
+                {
+                 "height":120.932661831217,
+                 "id":80,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"stove_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-372.018905767599,
+                 "type":"",
+                 "visible":true,
+                 "width":128.352009424784,
+                 "x":1332.29591218934,
+                 "y":285.417187645687
+                }, 
+                {
+                 "height":392.732378716508,
+                 "id":86,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_table"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-538.94543013693,
+                 "type":"",
+                 "visible":true,
+                 "width":137.679088084613,
+                 "x":1459.09186469011,
+                 "y":934.893125303555
+                }, 
+                {
+                 "height":100.091501533926,
+                 "id":81,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"sink_04"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-720.1430510935,
+                 "type":"",
+                 "visible":true,
+                 "width":85.7470086786222,
+                 "x":1358.85965389004,
+                 "y":805.741923467557
+                }, 
+                {
+                 "height":297.474223081979,
+                 "id":95,
+                 "name":"truck",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":152.332458270991,
+                 "type":"",
+                 "visible":true,
+                 "width":836.373824096281,
+                 "x":2590.32863703624,
+                 "y":-243.83017710036
+                }, 
+                {
+                 "height":555.70380032669,
+                 "id":128,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-278.675692308681,
+                 "type":"",
+                 "visible":true,
+                 "width":296.959557780732,
+                 "x":2162.69863717648,
+                 "y":-942.998422315894
+                }, 
+                {
+                 "height":238.610570826346,
+                 "id":129,
+                 "name":"car",
+                 "properties":
+                    {
+                     "image_name":"car_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-166.544115481598,
+                 "type":"",
+                 "visible":true,
+                 "width":491.644536849573,
+                 "x":1149.64947315211,
+                 "y":-398.439393069659
+                }],
+         "opacity":0.5,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
+                {
+                 "height":170.052,
+                 "id":161,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"bow_broken_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":75.4565,
+                 "type":"",
+                 "visible":true,
+                 "width":93.6064,
+                 "x":1062.28770909091,
+                 "y":739.216424242424
+                }, 
+                {
+                 "height":46.5834,
+                 "id":162,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-105.649,
+                 "type":"",
+                 "visible":true,
+                 "width":58.7241,
+                 "x":1373.6682530303,
+                 "y":625.193148484849
+                }, 
+                {
+                 "height":72.6667,
+                 "id":163,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-244.835,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":898.181818181818,
+                 "y":484.878771212121
+                }, 
+                {
+                 "height":86.2026,
+                 "id":164,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":83.5293,
+                 "type":"",
+                 "visible":true,
+                 "width":47.451,
+                 "x":894.456318181818,
+                 "y":375.080518181818
+                }, 
+                {
+                 "height":72.6667,
+                 "id":165,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-156.712,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":848,
+                 "y":365.66665
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "name":"roof",
          "objects":[
                 {
+                 "height":877.281,
+                 "id":135,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1445.77,
+                 "x":626.508939393939,
+                 "y":179.298893939394
+                }, 
+                {
+                 "height":76.785,
+                 "id":154,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":751.282333333333,
+                 "y":241.6075
+                }, 
+                {
+                 "height":916.301,
+                 "id":160,
+                 "name":"tree",
+                 "properties":
+                    {
+                     "fade":1,
+                     "image_name":"tree_11"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":969.221,
+                 "x":1715.09830854162,
+                 "y":-265.236158820675
+                }, 
+                {
                  "height":1742.68,
-                 "id":134,
-                 "name":"roof",
+                 "id":174,
+                 "name":"",
                  "properties":
                     {
                      "fade":0.1,
@@ -49936,9 +50849,333 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2917.1,
-                 "x":11.1469696969697,
-                 "y":-1492.55212121212
+                 "x":252.116666666667,
+                 "y":-1502.00666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":175,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.1.6",
+ "tileheight":100,
+ "tilesets":[],
+ "tilewidth":100,
+ "type":"map",
+ "version":1,
+ "width":50
+}
+},{}],241:[function(require,module,exports){
+module.exports={ "height":50,
+ "infinite":false,
+ "layers":[
+        {
+         "draworder":"topdown",
+         "name":"background",
+         "objects":[
+                {
+                 "height":1438.38591251322,
+                 "id":51,
+                 "name":"seamless_concrete",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2776.97094144733,
+                 "x":-106.060606060606,
+                 "y":-448.484848484848
+                }],
+         "offsetx":-74,
+         "offsety":126,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"walls",
+         "objects":[
+                {
+                 "height":258.66666666667,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1158.69696969697,
+                 "y":273.393939393939
                 }, 
+                {
+                 "height":13.0833333333333,
+                 "id":3,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.0769230769231,
+                 "x":1061.4696969697,
+                 "y":265.007575757576
+                }, 
+                {
+                 "height":394.651971689517,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6666666666665,
+                 "x":1448,
+                 "y":242.121212121212
+                }, 
+                {
+                 "height":32,
+                 "id":9,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1162.79089026914,
+                 "x":753.617177093226,
+                 "y":914.893273360451
+                }, 
+                {
+                 "height":32,
+                 "id":53,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":290,
+                 "x":755,
+                 "y":241
+                }, 
+                {
+                 "height":14.6666666666666,
+                 "id":54,
+                 "name":"",
+                 "rotation":7.21332652497806,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1132.23411839358,
+                 "y":239.303527595128
+                }, 
+                {
+                 "height":32,
+                 "id":55,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":604.422838400654,
+                 "x":1159,
+                 "y":242
+                }, 
+                {
+                 "height":298.839547473553,
+                 "id":56,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":753.333333333333,
+                 "y":614.333166666667
+                }, 
+                {
+                 "height":22.5471498109172,
+                 "id":90,
+                 "name":"",
+                 "rotation":47.1948876845693,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29573545256494,
+                 "x":1285.01606978907,
+                 "y":340.559197412138
+                }, 
+                {
+                 "height":131.50656776616,
+                 "id":91,
+                 "name":"",
+                 "rotation":-12.7409524044823,
+                 "type":"",
+                 "visible":true,
+                 "width":108.768833452634,
+                 "x":1340.06175931731,
+                 "y":272.219240972826
+                }, 
+                {
+                 "height":25.7585262715292,
+                 "id":92,
+                 "name":"",
+                 "rotation":47.1948612010685,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29574,
+                 "x":1313.28743671951,
+                 "y":314.737976467664
+                }, 
+                {
+                 "height":30.0431014673411,
+                 "id":93,
+                 "name":"",
+                 "rotation":47.1948612010685,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29574,
+                 "x":1344.13607047791,
+                 "y":285.207879443075
+                }, 
+                {
+                 "height":710.652,
+                 "id":94,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":1907.8469418006,
+                 "y":239.254531698703
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":923.068540782915,
+                 "y":99.721816199179
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"player",
+         "objects":[
+                {
+                 "height":0,
+                 "id":137,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1816,
+                 "y":431.151515151515
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"exit_pad",
+         "objects":[
+                {
+                 "height":182,
+                 "id":15,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"school"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":638.666666666667,
+                 "x":759.666666666667,
+                 "y":-1460.27272727273
+                }, 
+                {
+                 "height":216.926470588235,
+                 "id":130,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"intro_level_02"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":133.078764705883,
+                 "x":1750.45036809269,
+                 "y":683.017379679144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"click_pad",
+         "objects":[
+                {
+                 "height":168,
+                 "id":125,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":239.666666666667,
+                 "x":1033.66666666667,
+                 "y":67.72727272727
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[
                 {
                  "height":837.281,
                  "id":135,
@@ -49957,29 +51194,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1383.77,
-                 "x":747.508939393939,
+                 "x":735.387727272727,
                  "y":233.298893939394
-                }, 
-                {
-                 "height":684.675,
-                 "id":136,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":469.102,
-                 "x":1474.53990909091,
-                 "y":251.601893939394
                 }, 
                 {
                  "height":76.785,
@@ -50001,27 +51217,6 @@ module.exports={ "height":50,
                  "width":284.102,
                  "x":751.282333333333,
                  "y":257.6075
-                }, 
-                {
-                 "height":689.528190973065,
-                 "id":159,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":701.755724824072,
-                 "x":766.256328318369,
-                 "y":243.818287430235
                 }, 
                 {
                  "height":916.301,
@@ -50046,7 +51241,132 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
+                {
+                 "height":170.052,
+                 "id":161,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"bow_broken_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":75.4565,
+                 "type":"",
+                 "visible":true,
+                 "width":93.6064,
+                 "x":1062.28770909091,
+                 "y":739.216424242424
+                }, 
+                {
+                 "height":46.5834,
+                 "id":162,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-105.649,
+                 "type":"",
+                 "visible":true,
+                 "width":58.7241,
+                 "x":1373.6682530303,
+                 "y":625.193148484849
+                }, 
+                {
+                 "height":72.6667,
+                 "id":163,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-244.835,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":898.181818181818,
+                 "y":484.878771212121
+                }, 
+                {
+                 "height":86.2026,
+                 "id":164,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":83.5293,
+                 "type":"",
+                 "visible":true,
+                 "width":47.451,
+                 "x":894.456318181818,
+                 "y":375.080518181818
+                }, 
+                {
+                 "height":72.6667,
+                 "id":165,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-156.712,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":848,
+                 "y":365.66665
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50070,7 +51390,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":1422.56166666667,
+                 "x":1437.71318181819,
                  "y":29.6648484848487
                 }, 
                 {
@@ -50281,142 +51601,7 @@ module.exports={ "height":50,
                  "width":163.789,
                  "x":972.461238898326,
                  "y":-300.057386314001
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"item",
-         "objects":[
-                {
-                 "height":170.052,
-                 "id":161,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"bow_broken_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":75.4565,
-                 "type":"",
-                 "visible":true,
-                 "width":93.6064,
-                 "x":1062.28770909091,
-                 "y":739.216424242424
                 }, 
-                {
-                 "height":46.5834,
-                 "id":162,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-105.649,
-                 "type":"",
-                 "visible":true,
-                 "width":58.7241,
-                 "x":1373.6682530303,
-                 "y":625.193148484849
-                }, 
-                {
-                 "height":72.6667,
-                 "id":163,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-244.835,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":898.181818181818,
-                 "y":484.878771212121
-                }, 
-                {
-                 "height":86.2026,
-                 "id":164,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":83.5293,
-                 "type":"",
-                 "visible":true,
-                 "width":47.451,
-                 "x":894.456318181818,
-                 "y":375.080518181818
-                }, 
-                {
-                 "height":72.6667,
-                 "id":165,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-156.712,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":848,
-                 "y":365.66665
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"collision",
-         "objects":[
                 {
                  "height":1560.80742846093,
                  "id":82,
@@ -50441,7 +51626,7 @@ module.exports={ "height":50,
                 {
                  "height":837.281246488164,
                  "id":111,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "fade":0.1,
@@ -50519,48 +51704,6 @@ module.exports={ "height":50,
                  "width":264.587997880478,
                  "x":930.034151856236,
                  "y":-132.772073185352
-                }, 
-                {
-                 "height":833.585882814664,
-                 "id":118,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-4.22955796919121,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":411.975692182255,
-                 "y":-607.517061042126
-                }, 
-                {
-                 "height":833.585882814664,
-                 "id":121,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":5.40890897848597,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":490.232259634654,
-                 "y":-1483.02380688469
                 }, 
                 {
                  "height":241.941634559114,
@@ -50751,448 +51894,34 @@ module.exports={ "height":50,
                  "width":491.644536849573,
                  "x":1149.64947315211,
                  "y":-398.439393069659
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextobjectid":166,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.1.6",
- "tileheight":100,
- "tilesets":[],
- "tilewidth":100,
- "type":"map",
- "version":1,
- "width":50
-}
-},{}],240:[function(require,module,exports){
-module.exports={ "height":50,
- "infinite":false,
- "layers":[
-        {
-         "draworder":"topdown",
-         "name":"background",
-         "objects":[
-                {
-                 "height":1438.38591251322,
-                 "id":51,
-                 "name":"seamless_concrete",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":2776.97094144733,
-                 "x":-106.060606060606,
-                 "y":-448.484848484848
-                }],
-         "offsetx":-74,
-         "offsety":126,
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"walls",
-         "objects":[
-                {
-                 "height":13.0833333333333,
-                 "id":3,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":12.0769230769231,
-                 "x":1061.4696969697,
-                 "y":265.007575757576
                 }, 
                 {
-                 "height":357.085309489329,
-                 "id":4,
+                 "height":1822.68,
+                 "id":167,
                  "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6666666666665,
-                 "x":1448,
-                 "y":274.27986145794
-                }, 
-                {
-                 "height":32,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1154.75122793496,
-                 "x":753.617177093226,
-                 "y":914.893273360451
-                }, 
-                {
-                 "height":32,
-                 "id":53,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":290,
-                 "x":755,
-                 "y":241
-                }, 
-                {
-                 "height":14.6666666666666,
-                 "id":54,
-                 "name":"",
-                 "rotation":7.21332652497806,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":1132.23411839358,
-                 "y":239.303527595128
-                }, 
-                {
-                 "height":32,
-                 "id":55,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":549.485145783744,
-                 "x":1359.99155835455,
-                 "y":242
-                }, 
-                {
-                 "height":282.374854990637,
-                 "id":56,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":753.333333333333,
-                 "y":273.333166666667
-                }, 
-                {
-                 "height":710.652,
-                 "id":94,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6667,
-                 "x":1907.8469418006,
-                 "y":239.254531698703
-                }, 
-                {
-                 "height":222.077445933271,
-                 "id":139,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":753.127696636741,
-                 "y":694.937426035107
-                }, 
-                {
-                 "height":14.6667,
-                 "id":140,
-                 "name":"",
-                 "rotation":7.21333,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":1196.60940640493,
-                 "y":334.352299202734
-                }, 
-                {
-                 "height":14.6667,
-                 "id":141,
-                 "name":"",
-                 "rotation":7.21333,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":1310.50462280584,
-                 "y":308.893368477824
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"lights",
-         "objects":[
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":923.068540782915,
-                 "y":99.721816199179
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"player",
-         "objects":[
-                {
-                 "height":0,
-                 "id":137,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1816.96368752512,
-                 "y":779.847246415651
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"exit_pad",
-         "objects":[
-                {
-                 "height":182,
-                 "id":15,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"school"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":638.666666666667,
-                 "x":759.666666666667,
-                 "y":-1460.27272727273
-                }, 
-                {
-                 "height":216.926470588235,
-                 "id":130,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro_level_02"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":133.078764705883,
-                 "x":1584.2973465196,
-                 "y":-175.886546355963
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"click_pad",
-         "objects":[
-                {
-                 "height":168,
-                 "id":125,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":239.666666666667,
-                 "x":1033.66666666667,
-                 "y":67.72727272727
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"furnishing",
-         "objects":[
-                {
-                 "height":76.7849971021516,
-                 "id":126,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508449829972,
-                 "type":"",
-                 "visible":true,
-                 "width":284.10170602099,
-                 "x":726.008702597124,
-                 "y":214.485150102631
-                }, 
-                {
-                 "height":1560.80742846093,
-                 "id":82,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "fade":0.8,
-                     "image_name":"long_broken"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-89.8028965746292,
-                 "type":"",
-                 "visible":true,
-                 "width":333.436565822732,
-                 "x":1225.88625947144,
-                 "y":-1063.42116112637
-                }, 
-                {
-                 "height":837.281246488164,
-                 "id":111,
-                 "name":"floor_visual",
                  "properties":
                     {
                      "fade":0.1,
-                     "image_name":"roof_city_00"
+                     "image_name":"black_dot",
+                     "opacity":0.5
                     },
                  "propertytypes":
                     {
                      "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.76837268766,
-                 "x":-618.767223889607,
-                 "y":237.805389275259
-                }, 
-                {
-                 "height":1556.79219856273,
-                 "id":112,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"tarp_roof_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":90.1113114296442,
-                 "type":"",
-                 "visible":true,
-                 "width":784.99991312787,
-                 "x":3495.30354021356,
-                 "y":170.698322292678
-                }, 
-                {
-                 "height":916.300958021955,
-                 "id":101,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":1,
-                     "image_name":"tree_11"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":969.220740761071,
-                 "x":1762.81215473003,
-                 "y":-348.378079712383
-                }, 
-                {
-                 "height":240.629840131126,
-                 "id":79,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"pit_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-834.032043151896,
-                 "type":"",
-                 "visible":true,
-                 "width":228.641026316547,
-                 "x":852.955796008702,
-                 "y":308.71527520373
-                }, 
-                {
-                 "height":385.047417159892,
-                 "id":72,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"car_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
                      "image_name":"string",
-                     "shadow":"bool"
+                     "opacity":"float"
                     },
-                 "rotation":-682.784671786475,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":264.587997880478,
-                 "x":930.034151856236,
-                 "y":-132.772073185352
+                 "width":4111.88787878788,
+                 "x":-618.065151515151,
+                 "y":-1576.49151515152
                 }, 
                 {
-                 "height":833.585882814664,
-                 "id":118,
-                 "name":"collision",
+                 "height":833.586,
+                 "id":168,
+                 "name":"",
                  "properties":
                     {
                      "image_name":"shipping_container_00",
@@ -51203,17 +51932,17 @@ module.exports={ "height":50,
                      "image_name":"string",
                      "shadow":"bool"
                     },
-                 "rotation":-4.22955796919121,
+                 "rotation":5.40891,
                  "type":"",
                  "visible":true,
-                 "width":264.587997880478,
-                 "x":411.975692182255,
-                 "y":-607.517061042126
+                 "width":264.588,
+                 "x":488.918121212121,
+                 "y":-1477.39906060606
                 }, 
                 {
-                 "height":833.585882814664,
-                 "id":121,
-                 "name":"collision",
+                 "height":833.586,
+                 "id":170,
+                 "name":"",
                  "properties":
                     {
                      "image_name":"shipping_container_00",
@@ -51224,418 +51953,156 @@ module.exports={ "height":50,
                      "image_name":"string",
                      "shadow":"bool"
                     },
-                 "rotation":5.40890897848597,
+                 "rotation":-4.22956,
                  "type":"",
                  "visible":true,
-                 "width":264.587997880478,
-                 "x":490.232259634654,
-                 "y":-1483.02380688469
-                }, 
+                 "width":264.588,
+                 "x":404.069636363636,
+                 "y":-553.156636363636
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
                 {
-                 "height":46.5833635695616,
-                 "id":87,
-                 "name":"chest",
+                 "height":960.928303195194,
+                 "id":173,
+                 "name":"",
                  "properties":
                     {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
+                     "hidden":true,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-105.649070726645,
-                 "type":"",
-                 "visible":true,
-                 "width":58.7240724074159,
-                 "x":1386.5964115837,
-                 "y":634.136285119398
-                }, 
-                {
-                 "height":72.6666666666667,
-                 "id":73,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-244.834663811831,
-                 "type":"",
-                 "visible":true,
-                 "width":40.0000000000001,
-                 "x":1616.16608559873,
-                 "y":322.671830669008
-                }, 
-                {
-                 "height":241.941634559114,
-                 "id":102,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
+                     "hidden":"bool",
                      "image_name":"string"
                     },
-                 "rotation":-92.8064059825403,
+                 "rotation":5.71225352117143,
                  "type":"",
                  "visible":true,
-                 "width":110.662237191037,
-                 "x":1103.76829923635,
-                 "y":218.652544067175
+                 "width":54.126,
+                 "x":432.032072481225,
+                 "y":-1510.06159998909
                 }, 
                 {
-                 "height":145.819234048688,
-                 "id":59,
-                 "name":"collision",
+                 "height":960.928,
+                 "id":178,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"table_00"
+                     "hidden":true,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
+                     "hidden":"bool",
                      "image_name":"string"
                     },
-                 "rotation":-265.398033013144,
+                 "rotation":5.71225,
                  "type":"",
                  "visible":true,
-                 "width":249.333333333333,
-                 "x":1663.54271927333,
-                 "y":299.90531696436
+                 "width":54.126,
+                 "x":763.846090909091,
+                 "y":-1531.97915151515
                 }, 
                 {
-                 "height":392.732378716508,
-                 "id":86,
-                 "name":"collision",
+                 "height":833.100461326046,
+                 "id":179,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"wood_table"
+                     "hidden":true,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
+                     "hidden":"bool",
                      "image_name":"string"
                     },
-                 "rotation":-268.114497040928,
+                 "rotation":-4.39970506784064,
                  "type":"",
                  "visible":true,
-                 "width":137.679088084613,
-                 "x":1190.73609117455,
-                 "y":761.305485842095
+                 "width":54.126,
+                 "x":673.050804111824,
+                 "y":-579.694524427454
                 }, 
                 {
-                 "height":100.091501533926,
-                 "id":81,
-                 "name":"collision",
+                 "height":960.928,
+                 "id":180,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"sink_04"
+                     "hidden":true,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
+                     "hidden":"bool",
                      "image_name":"string"
                     },
-                 "rotation":-720.1430510935,
+                 "rotation":90.0490241868857,
                  "type":"",
                  "visible":true,
-                 "width":85.7470086786222,
-                 "x":1358.85965389004,
-                 "y":805.741923467557
+                 "width":54.126,
+                 "x":414.348995744465,
+                 "y":197.898348903872
                 }, 
                 {
-                 "height":297.474223081979,
-                 "id":95,
-                 "name":"collision",
+                 "height":1157.89762493922,
+                 "id":182,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"truck_00"
+                     "hidden":true,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
+                     "hidden":"bool",
                      "image_name":"string"
                     },
-                 "rotation":152.332458270991,
+                 "rotation":90.049,
                  "type":"",
                  "visible":true,
-                 "width":836.373824096281,
-                 "x":2590.32863703624,
-                 "y":-243.83017710036
+                 "width":54.126,
+                 "x":1951.72473472695,
+                 "y":204.55293548355
                 }, 
                 {
-                 "height":555.70380032669,
-                 "id":128,
-                 "name":"collision",
+                 "height":833.1,
+                 "id":183,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"car_01"
+                     "hidden":true,
+                     "image_name":"black_dot"
                     },
                  "propertytypes":
                     {
+                     "hidden":"bool",
                      "image_name":"string"
                     },
-                 "rotation":-278.675692308681,
+                 "rotation":-4.39971,
                  "type":"",
                  "visible":true,
-                 "width":296.959557780732,
-                 "x":2162.69863717648,
-                 "y":-942.998422315894
-                }, 
-                {
-                 "height":238.610570826346,
-                 "id":129,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"car_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-166.544115481598,
-                 "type":"",
-                 "visible":true,
-                 "width":491.644536849573,
-                 "x":1149.64947315211,
-                 "y":-398.439393069659
-                }, 
-                {
-                 "height":311.656667436426,
-                 "id":65,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":258.239160217844,
-                 "x":783.656030358146,
-                 "y":603.453966726343
-                }, 
-                {
-                 "height":699.446378508908,
-                 "id":66,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_03"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1171.10708643161,
-                 "x":755.843935132812,
-                 "y":236.888287151552
-                }, 
-                {
-                 "height":1917.65998772394,
-                 "id":69,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"road_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":221.29437221659,
-                 "x":1927.57836032624,
-                 "y":33.5038323883
-                }, 
-                {
-                 "height":1917.65998772394,
-                 "id":116,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"road_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":221.29437221659,
-                 "x":3846.24502699291,
-                 "y":32.1704990549667
-                }, 
-                {
-                 "height":94.7734972140798,
-                 "id":68,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.002637078622,
-                 "x":1244.83893476648,
-                 "y":266.152419432224
-                }, 
-                {
-                 "height":138.899094605656,
-                 "id":67,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"wall_stone_damage_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":324.47613877768,
-                 "x":1358.97801187774,
-                 "y":399.130954049353
-                }, 
-                {
-                 "height":319.08526801061,
-                 "id":99,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-30.0311689804632,
-                 "type":"",
-                 "visible":true,
-                 "width":1071.70404545243,
-                 "x":842.705587029192,
-                 "y":142.379135248101
-                }, 
-                {
-                 "height":1237.63759136956,
-                 "id":103,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-180,
-                 "type":"",
-                 "visible":true,
-                 "width":2088.21404886983,
-                 "x":1422.7829823529,
-                 "y":32.2546438302819
-                }, 
-                {
-                 "height":1237.63759136956,
-                 "id":113,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-180,
-                 "type":"",
-                 "visible":true,
-                 "width":2088.21404886983,
-                 "x":3510.38406184049,
-                 "y":32.1061964515678
-                }, 
-                {
-                 "height":304.459132157436,
-                 "id":105,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.161054539476,
-                 "type":"",
-                 "visible":true,
-                 "width":257.239160217844,
-                 "x":1735.68859990998,
-                 "y":-117.499501423722
-                }, 
-                {
-                 "height":262.817726059863,
-                 "id":88,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"dirty_matress"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-1055.12132812915,
-                 "type":"",
-                 "visible":true,
-                 "width":163.789402411751,
-                 "x":816.207972977773,
-                 "y":-180.006933607837
+                 "width":54.126,
+                 "x":339.603666666667,
+                 "y":-571.095454545455
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"roof",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
         }],
- "nextobjectid":145,
+ "nextobjectid":184,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -51646,7 +52113,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],241:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -51981,7 +52448,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],242:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -52207,8 +52674,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":539.974643705774,
-                 "y":1445.77881170565
+                 "x":621.974643705774,
+                 "y":1397.77881170565
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -52218,50 +52685,207 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"exit_pad",
+         "name":"floor",
          "objects":[
                 {
-                 "height":182.561758950156,
-                 "id":15,
-                 "name":"",
-                 "rotation":0,
+                 "height":53.712,
+                 "id":211,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-90.8664,
                  "type":"",
                  "visible":true,
-                 "width":217.283450366449,
-                 "x":1366.27950537647,
-                 "y":1593.38406302162
+                 "width":163.969,
+                 "x":278.0155,
+                 "y":1121.144
                 }, 
                 {
-                 "height":182.562,
-                 "id":207,
-                 "name":"",
-                 "rotation":0,
+                 "height":1141.41,
+                 "id":213,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
                  "type":"",
                  "visible":true,
-                 "width":217.283,
-                 "x":1086.68044426983,
-                 "y":2150.86203410694
+                 "width":938.613,
+                 "x":1378.6935,
+                 "y":225.295
                 }, 
                 {
-                 "height":182.562,
-                 "id":208,
-                 "name":"",
+                 "height":148.297,
+                 "id":214,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":166.821,
+                 "type":"",
+                 "visible":true,
+                 "width":164.541,
+                 "x":1201.7295,
+                 "y":491.8515
+                }, 
+                {
+                 "height":279.827,
+                 "id":215,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":217.283,
-                 "x":273.971799167954,
-                 "y":1970.13220792989
+                 "width":231.865,
+                 "x":562.0675,
+                 "y":696.0865
+                }, 
+                {
+                 "height":285.318,
+                 "id":216,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":374.315,
+                 "type":"",
+                 "visible":true,
+                 "width":702.084,
+                 "x":788.958,
+                 "y":1235.341
+                }, 
+                {
+                 "height":257.06,
+                 "id":217,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"trash_can_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044,
+                 "type":"",
+                 "visible":true,
+                 "width":236.13,
+                 "x":1315.935,
+                 "y":1791.47
+                }, 
+                {
+                 "height":462.106,
+                 "id":218,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.305,
+                 "type":"",
+                 "visible":true,
+                 "width":81.2223,
+                 "x":563.38885,
+                 "y":1906.947
+                }, 
+                {
+                 "height":210.751,
+                 "id":219,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"trash_can_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044,
+                 "type":"",
+                 "visible":true,
+                 "width":236.13,
+                 "x":507.935,
+                 "y":1854.6245
+                }, 
+                {
+                 "height":232.099,
+                 "id":220,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":292.335,
+                 "x":979.8325,
+                 "y":1643.9505
+                }, 
+                {
+                 "height":238.08,
+                 "id":221,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":201.155,
+                 "x":1329.4225,
+                 "y":1852.96
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "name":"furnishing",
+         "name":"collision",
          "objects":[
                 {
                  "height":31.9527028261869,
@@ -52281,25 +52905,6 @@ module.exports={ "height":50,
                  "width":411.858860267297,
                  "x":259.055844916854,
                  "y":2291.28198293656
-                }, 
-                {
-                 "height":228.640242803349,
-                 "id":151,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"electric_box_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":269.62358463251,
-                 "type":"",
-                 "visible":true,
-                 "width":395.003562956031,
-                 "x":198.280464763724,
-                 "y":1299.06319844338
                 }, 
                 {
                  "height":102.084456447281,
@@ -52530,25 +53135,6 @@ module.exports={ "height":50,
                  "y":1905.6224216256
                 }, 
                 {
-                 "height":210.750879545898,
-                 "id":154,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"trash_can_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-521.044460943984,
-                 "type":"",
-                 "visible":true,
-                 "width":236.130040831055,
-                 "x":372.935156998964,
-                 "y":1973.14796105069
-                }, 
-                {
                  "height":75.6656370829608,
                  "id":78,
                  "name":"collision",
@@ -52566,82 +53152,6 @@ module.exports={ "height":50,
                  "width":84.7774871089743,
                  "x":336.515890912294,
                  "y":1982.68322728671
-                }, 
-                {
-                 "height":279.82741438234,
-                 "id":65,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":231.865395630487,
-                 "x":569.393216840915,
-                 "y":654.765307761429
-                }, 
-                {
-                 "height":232.099397132568,
-                 "id":179,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":292.334970571601,
-                 "x":955.302525378534,
-                 "y":1758.24369535561
-                }, 
-                {
-                 "height":238.079659046378,
-                 "id":105,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.161054539476,
-                 "type":"",
-                 "visible":true,
-                 "width":201.154785944709,
-                 "x":1419.38828420145,
-                 "y":1809.12061040354
-                }, 
-                {
-                 "height":1141.4099240556,
-                 "id":147,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_03"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":938.612642908822,
-                 "x":1337.73000893177,
-                 "y":225.580000352555
                 }, 
                 {
                  "height":77.2894392067246,
@@ -52739,44 +53249,6 @@ module.exports={ "height":50,
                  "y":341.130094962831
                 }, 
                 {
-                 "height":148.297426162322,
-                 "id":85,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":166.820632679455,
-                 "type":"",
-                 "visible":true,
-                 "width":164.540648760259,
-                 "x":1046.48174678522,
-                 "y":650.185073405019
-                }, 
-                {
-                 "height":53.7119694070249,
-                 "id":203,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-90.8663903286604,
-                 "type":"",
-                 "visible":true,
-                 "width":163.969193765821,
-                 "x":373.822339353784,
-                 "y":1212.37956664931
-                }, 
-                {
                  "height":555.535547711406,
                  "id":184,
                  "name":"roof",
@@ -52815,61 +53287,85 @@ module.exports={ "height":50,
                  "y":389.404367936167
                 }, 
                 {
-                 "height":257.06006807393,
-                 "id":200,
-                 "name":"floor_visual",
+                 "height":228.64,
+                 "id":212,
+                 "name":"collision",
                  "properties":
                     {
-                     "image_name":"trash_can_02"
+                     "image_name":"electric_box_00"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-521.044460943984,
+                 "rotation":269.624,
                  "type":"",
                  "visible":true,
-                 "width":236.130040831055,
-                 "x":1258.36177610947,
-                 "y":1935.86910578269
+                 "width":395.004,
+                 "x":254.498,
+                 "y":1275.68
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"exit_pad",
+         "objects":[
+                {
+                 "height":182.561758950156,
+                 "id":15,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217.283450366449,
+                 "x":1366.27950537647,
+                 "y":1593.38406302162
                 }, 
                 {
-                 "height":462.106455216456,
-                 "id":98,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.304673940448,
+                 "height":182.562,
+                 "id":207,
+                 "name":"",
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":81.2222866741366,
-                 "x":601.883467318994,
-                 "y":2130.24597068892
+                 "width":217.283,
+                 "x":1086.68044426983,
+                 "y":2150.86203410694
                 }, 
                 {
-                 "height":285.318466765434,
-                 "id":205,
-                 "name":"floor_visual",
+                 "height":182.562,
+                 "id":208,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217.283,
+                 "x":273.971799167954,
+                 "y":1970.13220792989
+                }, 
+                {
+                 "height":372.562,
+                 "id":222,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"concrete_decal_00"
+                     "level_name":"intro"
                     },
                  "propertytypes":
                     {
-                     "image_name":"string"
+                     "level_name":"string"
                     },
-                 "rotation":374.31473374216,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":702.084087692557,
-                 "x":748,
-                 "y":1352
+                 "width":127.283,
+                 "x":223.3585,
+                 "y":1196.719
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -52877,7 +53373,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":211,
+ "nextobjectid":223,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -52888,7 +53384,1432 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],243:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
+module.exports={ "height":50,
+ "infinite":false,
+ "layers":[
+        {
+         "draworder":"topdown",
+         "name":"background",
+         "objects":[
+                {
+                 "height":1677.78393939394,
+                 "id":176,
+                 "name":"seamless_concrete",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":3989.09121212121,
+                 "x":-429.212272727273,
+                 "y":-1526.2253030303
+                }],
+         "offsetx":-74,
+         "offsety":126,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"walls",
+         "objects":[
+                {
+                 "height":32,
+                 "id":53,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":290,
+                 "x":755,
+                 "y":241
+                }, 
+                {
+                 "height":14.6666666666666,
+                 "id":54,
+                 "name":"",
+                 "rotation":7.21332652497806,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1132.23411839358,
+                 "y":239.303527595128
+                }, 
+                {
+                 "height":32,
+                 "id":55,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":604.422838400654,
+                 "x":1159,
+                 "y":242
+                }, 
+                {
+                 "height":32,
+                 "id":242,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":604.422838400654,
+                 "x":1159,
+                 "y":242
+                }, 
+                {
+                 "height":32,
+                 "id":243,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":290,
+                 "x":755,
+                 "y":241
+                }, 
+                {
+                 "height":14.6666666666666,
+                 "id":244,
+                 "name":"",
+                 "rotation":7.21332652497806,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1132.23411839358,
+                 "y":239.303527595128
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1131.06854078292,
+                 "y":-108.278183800821
+                }, 
+                {
+                 "height":0,
+                 "id":241,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1131.06854078292,
+                 "y":-108.278183800821
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"exit_pad",
+         "objects":[
+                {
+                 "height":182,
+                 "id":15,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"school"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":638.666666666667,
+                 "x":759.666666666667,
+                 "y":-1460.27272727273
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"click_pad",
+         "objects":[
+                {
+                 "height":168,
+                 "id":125,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":239.666666666667,
+                 "x":2357.66666666667,
+                 "y":3.72727272727001
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"floor",
+         "objects":[
+                {
+                 "height":1237.64,
+                 "id":139,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":1388.50106060606,
+                 "y":18.6345454545457
+                }, 
+                {
+                 "height":1237.64,
+                 "id":140,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":3455.895,
+                 "y":23.6042424242425
+                }, 
+                {
+                 "height":1917.66,
+                 "id":141,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":3698.44390909091,
+                 "y":26.0184848484849
+                }, 
+                {
+                 "height":1917.66,
+                 "id":144,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":1787.89845454545,
+                 "y":25.1699999999998
+                }, 
+                {
+                 "height":304.459,
+                 "id":145,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239,
+                 "x":1989.56231818182,
+                 "y":-237.077984848485
+                }, 
+                {
+                 "height":94.7735,
+                 "id":149,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0.868081831743382,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":84.7722525244677,
+                 "y":-1110.68065115722
+                }, 
+                {
+                 "height":262.818,
+                 "id":158,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dirty_matress"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1055.12,
+                 "type":"",
+                 "visible":true,
+                 "width":163.789,
+                 "x":-169.356942919856,
+                 "y":-987.936174192789
+                }, 
+                {
+                 "height":1917.66,
+                 "id":179,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":-128.828818181818,
+                 "y":19.9578787878787
+                }, 
+                {
+                 "height":1237.64,
+                 "id":180,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":-692.589848484849,
+                 "y":11.4830303030301
+                }, 
+                {
+                 "height":1917.66,
+                 "id":236,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":3698.44390909091,
+                 "y":26.0184848484849
+                }, 
+                {
+                 "height":1917.66,
+                 "id":237,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":1787.89845454545,
+                 "y":25.1699999999998
+                }, 
+                {
+                 "height":1237.64,
+                 "id":238,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":3455.895,
+                 "y":23.6042424242425
+                }, 
+                {
+                 "height":1237.64,
+                 "id":239,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":1388.50106060606,
+                 "y":18.6345454545457
+                }, 
+                {
+                 "height":304.459,
+                 "id":240,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239,
+                 "x":1989.56231818182,
+                 "y":-237.077984848485
+                }],
+         "opacity":0.18,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"player",
+         "objects":[
+                {
+                 "height":0,
+                 "id":137,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-1866.06060606061,
+                 "y":-474.545454545454
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
+                {
+                 "height":1560.80742846093,
+                 "id":82,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.8,
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-89.8028965746292,
+                 "type":"",
+                 "visible":true,
+                 "width":333.436565822732,
+                 "x":510.734744319925,
+                 "y":-1017.96661567182
+                }, 
+                {
+                 "height":837.281246488164,
+                 "id":111,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.76837268766,
+                 "x":558.323685201302,
+                 "y":372.229631699501
+                }, 
+                {
+                 "height":1556.79219856273,
+                 "id":112,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.1113114296442,
+                 "type":"",
+                 "visible":true,
+                 "width":784.99991312787,
+                 "x":3495.30354021356,
+                 "y":170.698322292678
+                }, 
+                {
+                 "height":276.185132730296,
+                 "id":102,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dumpster_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-324.038907607446,
+                 "type":"",
+                 "visible":true,
+                 "width":168.182305195748,
+                 "x":1393.39795981617,
+                 "y":-573.690776292445
+                }, 
+                {
+                 "height":145.819234048688,
+                 "id":59,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398033013144,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333333333333,
+                 "x":1178.25408321423,
+                 "y":-998.693020693337
+                }, 
+                {
+                 "height":297.474223081979,
+                 "id":95,
+                 "name":"truck",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-36.95208073998,
+                 "type":"",
+                 "visible":true,
+                 "width":836.373824096281,
+                 "x":1584.86752021244,
+                 "y":-15.5156114713555
+                }, 
+                {
+                 "height":555.70380032669,
+                 "id":128,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-538.364279478387,
+                 "type":"",
+                 "visible":true,
+                 "width":296.959557780732,
+                 "x":984.244203423673,
+                 "y":-426.874418236785
+                }, 
+                {
+                 "height":238.610570826346,
+                 "id":129,
+                 "name":"car",
+                 "properties":
+                    {
+                     "image_name":"car_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-166.544115481598,
+                 "type":"",
+                 "visible":true,
+                 "width":491.644536849573,
+                 "x":467.831291333928,
+                 "y":77.3181826879167
+                }, 
+                {
+                 "height":837.281,
+                 "id":175,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":-843.885,
+                 "y":181.3595
+                }, 
+                {
+                 "height":837.281,
+                 "id":177,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":-879.763787878788,
+                 "y":-1930.76171212121
+                }, 
+                {
+                 "height":837.281,
+                 "id":178,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":2059.63015151515,
+                 "y":-1897.42837878788
+                }, 
+                {
+                 "height":837.281,
+                 "id":181,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":-2232.8546969697,
+                 "y":230.692833333333
+                }, 
+                {
+                 "height":837.281,
+                 "id":182,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":-2255.885,
+                 "y":-1822.6405
+                }, 
+                {
+                 "height":238.611,
+                 "id":183,
+                 "name":"car",
+                 "properties":
+                    {
+                     "image_name":"car_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-203.070836816175,
+                 "type":"",
+                 "visible":true,
+                 "width":491.645,
+                 "x":-490.281296897125,
+                 "y":-721.529333900765
+                }, 
+                {
+                 "height":837.281246488164,
+                 "id":228,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.76837268766,
+                 "x":558.323685201302,
+                 "y":372.229631699501
+                }, 
+                {
+                 "height":1556.79219856273,
+                 "id":229,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.1113114296442,
+                 "type":"",
+                 "visible":true,
+                 "width":784.99991312787,
+                 "x":3495.30354021356,
+                 "y":170.698322292678
+                }, 
+                {
+                 "height":297.474223081979,
+                 "id":230,
+                 "name":"truck",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-36.95208073998,
+                 "type":"",
+                 "visible":true,
+                 "width":836.373824096281,
+                 "x":1584.86752021244,
+                 "y":-15.5156114713555
+                }, 
+                {
+                 "height":555.70380032669,
+                 "id":231,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-538.364279478387,
+                 "type":"",
+                 "visible":true,
+                 "width":296.959557780732,
+                 "x":984.244203423673,
+                 "y":-426.874418236785
+                }, 
+                {
+                 "height":276.185132730296,
+                 "id":232,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dumpster_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-324.038907607446,
+                 "type":"",
+                 "visible":true,
+                 "width":168.182305195748,
+                 "x":1393.39795981617,
+                 "y":-573.690776292445
+                }, 
+                {
+                 "height":145.819234048688,
+                 "id":233,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398033013144,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333333333333,
+                 "x":1178.25408321423,
+                 "y":-998.693020693337
+                }, 
+                {
+                 "height":1560.80742846093,
+                 "id":234,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.8,
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-89.8028965746292,
+                 "type":"",
+                 "visible":true,
+                 "width":333.436565822732,
+                 "x":510.734744319925,
+                 "y":-1017.96661567182
+                }, 
+                {
+                 "height":837.281,
+                 "id":235,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":2059.63015151515,
+                 "y":-1897.42837878788
+                }],
+         "opacity":0.5,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
+                {
+                 "height":72.6667,
+                 "id":163,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-244.835,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":1370.18181818182,
+                 "y":-515.121228787879
+                }, 
+                {
+                 "height":86.2026,
+                 "id":164,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":83.5293,
+                 "type":"",
+                 "visible":true,
+                 "width":47.451,
+                 "x":1550.45631818182,
+                 "y":-616.919481818182
+                }, 
+                {
+                 "height":72.6667,
+                 "id":165,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-156.712,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":1868,
+                 "y":-466.33335
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[
+                {
+                 "height":76.785,
+                 "id":154,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":1248.30022597747,
+                 "y":234.980594764745
+                }, 
+                {
+                 "height":248.080709525665,
+                 "id":174,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1211.64545454545,
+                 "x":463.510606060606,
+                 "y":-1518.19525498021
+                }, 
+                {
+                 "height":76.785,
+                 "id":184,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":2046.18925543707,
+                 "y":176.108373546599
+                }, 
+                {
+                 "height":76.785,
+                 "id":185,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":3088.36047057052,
+                 "y":168.716361979637
+                }, 
+                {
+                 "height":76.785,
+                 "id":186,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":-99.4881950117473,
+                 "y":186.133073829749
+                }, 
+                {
+                 "height":76.785,
+                 "id":187,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":-1151.2563738177,
+                 "y":231.30446969697
+                }, 
+                {
+                 "height":76.785,
+                 "id":188,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.520558026658,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":-1083.62148905781,
+                 "y":-971.700168335148
+                }, 
+                {
+                 "height":76.785,
+                 "id":189,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":-36.7555002711006,
+                 "y":-1012.5355206639
+                }, 
+                {
+                 "height":76.785,
+                 "id":190,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":1299.30088866799,
+                 "y":-1002.60721172962
+                }, 
+                {
+                 "height":76.785,
+                 "id":191,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":2084.58915904573,
+                 "y":-1012.5475695825
+                }, 
+                {
+                 "height":76.785,
+                 "id":192,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":3134.95363883366,
+                 "y":-1019.17447481776
+                }, 
+                {
+                 "height":76.785,
+                 "id":221,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":1248.30022597747,
+                 "y":234.980594764745
+                }, 
+                {
+                 "height":76.785,
+                 "id":222,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":2046.18925543707,
+                 "y":176.108373546599
+                }, 
+                {
+                 "height":76.785,
+                 "id":223,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":3088.36047057052,
+                 "y":168.716361979637
+                }, 
+                {
+                 "height":76.785,
+                 "id":224,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":1299.30088866799,
+                 "y":-1002.60721172962
+                }, 
+                {
+                 "height":76.785,
+                 "id":225,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":2084.58915904573,
+                 "y":-1012.5475695825
+                }, 
+                {
+                 "height":76.785,
+                 "id":226,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-269.521,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":3134.95363883366,
+                 "y":-1019.17447481776
+                }, 
+                {
+                 "height":248.080709525665,
+                 "id":227,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1211.64545454545,
+                 "x":463.510606060606,
+                 "y":-1518.19525498021
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":245,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.1.6",
+ "tileheight":100,
+ "tilesets":[],
+ "tilewidth":100,
+ "type":"map",
+ "version":1,
+ "width":50
+}
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53233,10 +55154,12 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
+                     "cutscene":true,
                      "level_name":"intro"
                     },
                  "propertytypes":
                     {
+                     "cutscene":"bool",
                      "level_name":"string"
                     },
                  "rotation":0,
@@ -53283,6 +55206,25 @@ module.exports={ "height":50,
                  "width":211,
                  "x":2003.88994071524,
                  "y":1704.69984700708
+                }, 
+                {
+                 "height":164.502529510961,
+                 "id":162,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"street"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":338.384818999438,
+                 "x":2429.17746121416,
+                 "y":2601.84092186622
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53290,7 +55232,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":162,
+ "nextobjectid":163,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53301,7 +55243,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],244:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -53354,7 +55296,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":227,"pixi.js":156}],245:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"pixi.js":156}],247:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -53365,7 +55307,7 @@ class Roof extends Item {
     super(options.image_name);
 
     this.sprite.fade_opacity = options.fade;
-    this.sprite.alpha = 0;
+    this.sprite.alpha = 0.2;
 
     roof_container.addChild(this.sprite);
   }
@@ -53375,7 +55317,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":227,"./item_model":250}],246:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":252}],248:[function(require,module,exports){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
@@ -53419,7 +55361,7 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/lootable":209,"../../engine/pixi_containers":227,"./item_model":250}],247:[function(require,module,exports){
+},{"../../character/attributes/lootable":210,"../../engine/pixi_containers":228,"./item_model":252}],249:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -53481,7 +55423,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":227,"../../utils/color_picker":272,"events":282,"pixi.js":156}],248:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../utils/color_picker":276,"events":286,"pixi.js":156}],250:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53497,6 +55439,10 @@ class CollisionItem extends Item {
       this.shade.anchor.x= 0;
     }
 
+    if(options.hidden) {
+      this.alpha = 0;
+    }
+
     collision_container.addChild(this.sprite);
   }
 }
@@ -53505,12 +55451,12 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":227,"./item_model":250}],249:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":252}],251:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
 const { Roof      } = require('./ceiling');
-const { Phone     } = require('./phone');
+const { Shroud    } = require('./shroud');
 const { CollisionItem } = require('./collision_object');
 const { BackgroundVisualItem } = require('./visual_object');
 
@@ -53518,23 +55464,17 @@ const { BackgroundVisualItem } = require('./visual_object');
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'item':     return new Chest(options);
+      case 'item':      return new Chest(options);
       case 'roof':      return new Roof(options);
       case 'collision': return new CollisionItem(options);
       case 'floor':     return new BackgroundVisualItem(options);
-      case 'phone':     return new Phone(options);
+      case 'shroud':    return new Shroud(options);
     }
   }
 
   static generate_tiled(level, data) {
-    let generated;
-    console.log(data);
+    const generated = this.generate(level, data.properties);
 
-    if(data.properties) {
-      generated = this.generate(level, data.properties);
-    } else {
-      generated = this.generate(level);
-    }
     generated.set_position(data);
     //TODO flip
     generated.width = data.height;
@@ -53552,7 +55492,7 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./ceiling":245,"./chest":246,"./collision_object":248,"./phone":252,"./visual_object":253}],250:[function(require,module,exports){
+},{"./ceiling":247,"./chest":248,"./collision_object":250,"./shroud":255,"./visual_object":256}],252:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -53741,7 +55681,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":227,"pixi.js":156}],251:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"pixi.js":156}],253:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -53797,7 +55737,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":227,"../../utils/color_picker":272,"events":282,"pixi.js":156}],252:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../utils/color_picker":276,"events":286,"pixi.js":156}],254:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -53831,6 +55771,13 @@ class Phone extends Item {
     this.light = new LED();
 
     item_container.addChild(this.sprite);
+
+    this.sprite.on('removed', ()=> {
+      console.log('rthios');
+      console.log(this.effect);
+
+      this.effect.volume = 0;
+    });
   }
 
   async answer() {
@@ -53916,7 +55863,28 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":227,"../../engine/sound":230,"../../engine/ticker":231,"../../light/types/led":270,"./item_model":250,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":156}],253:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/sound":231,"../../engine/ticker":232,"../../light/types/led":274,"./item_model":252,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":156}],255:[function(require,module,exports){
+'use strict';
+const { shroud_container } = require('../../engine/pixi_containers');
+
+const { Item } = require('./item_model');
+
+class Shroud extends Item {
+  constructor(options) {
+    super(options.image_name);
+
+    this.sprite.fade_opacity = options.fade;
+    this.sprite.alpha = 1;
+
+    shroud_container.addChild(this.sprite);
+  }
+}
+
+module.exports = {
+  Shroud,
+};
+
+},{"../../engine/pixi_containers":228,"./item_model":252}],256:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../../engine/pixi_containers');
 
@@ -53926,6 +55894,10 @@ class BackgroundVisualItem extends Item {
   constructor(options) {
     super(options.image_name);
 
+    if(options.opacity) {
+      this.sprite.alpha = options.opacity;
+    }
+
     background_container.addChild(this.sprite);
   }
 }
@@ -53934,7 +55906,7 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":227,"./item_model":250}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":252}],257:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -53963,7 +55935,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":227,"./item_model":250,"events":282}],255:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":252,"events":286}],258:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
@@ -53989,7 +55961,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":226}],256:[function(require,module,exports){
+},{"../engine/pathfind.js":227}],259:[function(require,module,exports){
 'use strict';
 
 const { Level         } = require('../level_model');
@@ -54023,7 +55995,7 @@ class Archer_Room extends Level {
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
         Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties, this.player);
       });
     });
   }
@@ -54033,7 +56005,7 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":236,"../data/archer_room.json":238,"../elements/pad":251,"../level_model":255,"./level_factory":260}],257:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":237,"../data/archer_room.json":239,"../elements/pad":253,"../level_model":258,"./level_factory":263}],260:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
@@ -54042,6 +56014,7 @@ const { Tween } = require('../../engine/tween');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
+const { Bird         } = require('../../character/animations/bird');
 const { Lighter     } = require('../../light/types/lighter');
 const { Lantern     } = require('../../light/types/lantern');
 const { Click_Pad   } = require('../elements/click_pad');
@@ -54049,7 +56022,7 @@ const { Click_Pad   } = require('../elements/click_pad');
 const level_data  = require('../data/intro_room.json');
 
 class Intro  {
-  constructor(player) {
+  constructor(player, options) {
     this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
@@ -54059,13 +56032,11 @@ class Intro  {
     this.lantern      = new Lantern();
 
     this._set_elements();
+    console.log(options);
+    if(options.cutscene) this._cutscene();
   }
 
-  _set_elements() {
-    const { Level_Factory } = require('./level_factory');
-    Level_Factory.generate(this.player, this.elements);
-
-    global.set_light_level(0.9);
+  _cutscene() {
     this.player.tween.from({ x: 1000, y: 400 });
     this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
@@ -54083,7 +56054,17 @@ class Intro  {
 
     this.lighter.set_position({ x: 1115, y: 410 });
 
-    const {exit_pad, click_pad} = this.elements;
+    const bird = new Bird();
+    bird.switch('move');
+    console.log(bird);
+    bird.sprite.tint = 0x352925;
+    collision_container.addChild(bird.sprite);
+    const tween_bird = new Tween(bird.sprite);
+    tween_bird.from({x: 100, y:1000});
+    tween_bird.to({x: 2000, y: 200});
+    tween_bird.time = 8000;
+    tween_bird.start();
+
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
     this.camera.tween.to({ x: -600, y: 0 });
@@ -54091,36 +56072,6 @@ class Intro  {
 
     this.player.keyboard.disable();
 
-    click_pad.forEach(data => {
-      const pad  = new Click_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-      pad.click = () => {
-        const dumpster = collision_container.children.find(item => item.id === 102);
-        const tween_it = new Tween(dumpster);
-        tween_it.from(dumpster);
-        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
-        tween_it.time = 2000;
-        tween_it.start();
-
-      };
-
-    });
-
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-      pad.area.events.on('trigger', () => {
-        const { Level_Factory } = require('./level_factory');
-        Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
-      });
-    });
     this.lighter.hide();
 
     this.camera.tween.time = 1000;
@@ -54142,6 +56093,45 @@ class Intro  {
     this.player.keyboard.enable();
     this.lighter.strike.start();
   }
+
+  _set_elements() {
+    const { Level_Factory } = require('./level_factory');
+    Level_Factory.generate(this.player, this.elements);
+
+    global.set_light_level(0.9);
+
+    const {exit_pad, click_pad} = this.elements;
+
+    click_pad.forEach(data => {
+      const pad  = new Click_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+      pad.click = () => {
+        const dumpster = collision_container.children.find(item => item.id === 102);
+        const tween_it = new Tween(dumpster);
+        tween_it.from(dumpster);
+        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
+        tween_it.time = 2000;
+        tween_it.start();
+
+      };
+    });
+
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+      pad.area.events.on('trigger', () => {
+        const { Level_Factory } = require('./level_factory');
+        Level_Factory.clear();
+        Level_Factory.create(data.properties, this.player);
+      });
+    });
+  }
 }
 
 module.exports = {
@@ -54149,7 +56139,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":223,"../../engine/pixi_containers":227,"../../engine/tween":232,"../../light/types/lantern":269,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/intro_room.json":239,"../elements/click_pad":247,"../elements/pad":251,"./level_factory":260}],258:[function(require,module,exports){
+},{"../../character/animations/bird":203,"../../engine/camera":224,"../../engine/pixi_containers":228,"../../engine/tween":233,"../../light/types/lantern":273,"../../light/types/lighter":275,"../attributes/parse_tiled_data":237,"../data/intro_room.json":240,"../elements/click_pad":249,"../elements/pad":253,"./level_factory":263}],261:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54193,7 +56183,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":236,"../data/intro_room_level_2.json":240,"../elements/pad":251,"./level_factory":260}],259:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":237,"../data/intro_room_level_2.json":241,"../elements/pad":253,"./level_factory":263}],262:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54238,7 +56228,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/items_room.json":241,"../elements/pad":251,"../level_model":255,"./level_factory":260}],260:[function(require,module,exports){
+},{"../../light/types/lighter":275,"../attributes/parse_tiled_data":237,"../data/items_room.json":242,"../elements/pad":253,"../level_model":258,"./level_factory":263}],263:[function(require,module,exports){
 'use strict';
 
 const { Intro       } = require('./intro');
@@ -54252,23 +56242,24 @@ const { clear_non_player_containers } = require('../../engine/pixi_containers');
 
 //TODO This is not a Factory make it one and abstract this
 class Level_Factory {
-  static create(type, player) {
+  static create(properties, player) {
     const { Archer_Room } = require('./archer_room');
     const { School_Room } = require('./school_room');
     const { Items_Room  } = require('./item_room');
     const { Items_Room_level_2  } = require('./intro_level_02');
+    const { Street } = require('./street');
 
-    switch(type) {
+    switch(properties.level_name) {
       case 'archer': return new Archer_Room(player);
-      case 'intro' : return new Intro(player);
+      case 'intro' : return new Intro(player, properties);
       case 'intro_level_02' : return new Items_Room_level_2(player);
       case 'school': return new School_Room(player);
       case 'item'  : return new Items_Room(player);
-      default      : console.log(`error... missing level ${type}`);
+      case 'street'  : return new Street(player);
     }
   }
 
-  static generate(player_sprite, {walls, item, roof, floor, background, collision, lights, player}) {
+  static generate(player_sprite, {walls, shroud, item, roof, floor, background, collision, lights, player}) {
     try {
       new Background(background, true);
 
@@ -54292,6 +56283,8 @@ class Level_Factory {
       item.forEach(data => Element_Factory.generate_tiled('item',data));
       floor.forEach(data => Element_Factory.generate_tiled('floor',data));
 
+      // order important
+      shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
       roof.forEach(data => Element_Factory.generate_tiled('roof', data));
       lights.forEach(async data => {
         const light = new Candle();
@@ -54315,7 +56308,7 @@ module.exports = {
   Level_Factory,
 };
 
-},{"../../engine/camera":223,"../../engine/pixi_containers":227,"../../light/types/candle":268,"../elements/background":244,"../elements/elements_factory":249,"../elements/wall":254,"./archer_room":256,"./intro":257,"./intro_level_02":258,"./item_room":259,"./school_room":263}],261:[function(require,module,exports){
+},{"../../engine/camera":224,"../../engine/pixi_containers":228,"../../light/types/candle":272,"../elements/background":246,"../elements/elements_factory":251,"../elements/wall":257,"./archer_room":259,"./intro":260,"./intro_level_02":261,"./item_room":262,"./school_room":266,"./street":267}],264:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54382,7 +56375,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":216,"../../engine/camera":223,"../elements/background":244,"../level_model":255}],262:[function(require,module,exports){
+},{"../../character/types/npc":217,"../../engine/camera":224,"../elements/background":246,"../level_model":258}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54461,7 +56454,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/randomise":237,"../elements/background":244,"../elements/pad":251,"../level_model":255}],263:[function(require,module,exports){
+},{"../attributes/randomise":238,"../elements/background":246,"../elements/pad":253,"../level_model":258}],266:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54469,6 +56462,7 @@ const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Rat           } = require('../../character/archetypes/rat');
+const { Phone         } = require('../elements/phone');
 const { Level_Factory } = require('./level_factory');
 
 const level_data = require('../data/school_room.json');
@@ -54494,12 +56488,26 @@ class School_Room extends Level  {
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
+    const phone = new Phone({image_name: 'phone_00'});
+    phone.set_position({x: 800, y: 810});
+    phone.width = 200;
+    phone.height= 200;
+
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
       pad.height = data.height;
       pad.width  = data.width;
       pad.anchor = 0;
       pad.set_position(data);
+      console.log(data);
+      if(data.properties) {
+        pad.area.events.once('trigger', () => {
+          Level_Factory.clear();
+
+          Level_Factory.create(data.properties, this.player);
+        });
+        return;
+      }
 
       // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
@@ -54516,7 +56524,56 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":205,"../attributes/parse_tiled_data":236,"../data/school_room.json":242,"../elements/pad":251,"../level_model":255,"./level_factory":260}],264:[function(require,module,exports){
+},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":237,"../data/school_room.json":243,"../elements/pad":253,"../elements/phone":254,"../level_model":258,"./level_factory":263}],267:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const { Level         } = require('../level_model');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
+const { Level_Factory } = require('./level_factory');
+
+const level_data = require('../data/street.json');
+
+class Street extends Level  {
+  constructor(player) {
+    super();
+    this.name     = 'school_room';
+
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
+
+    this._set_elements();
+  }
+
+  _set_elements() {
+    global.set_light_level(0.9);
+    const {exit_pad} = this.elements;
+
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+
+      // Fire once (event) to load in enemies
+      pad.area.events.once('trigger', () => {
+        Level_Factory.clear();
+        Level_Factory.create(data.properties, this.player);
+      });
+    });
+
+    Level_Factory.generate(this.player, this.elements);
+  }
+}
+
+module.exports = {
+  Street,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../attributes/parse_tiled_data":237,"../data/street.json":244,"../elements/pad":253,"../level_model":258,"./level_factory":263}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54552,7 +56609,7 @@ class Transition_Room extends Level  {
       // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
         Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties, this.player);
       });
     });
 
@@ -54566,7 +56623,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":236,"../data/transition_room.json":243,"../elements/pad":251,"../level_model":255,"./level_factory":260}],265:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":237,"../data/transition_room.json":245,"../elements/pad":253,"../level_model":258,"./level_factory":263}],269:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');
@@ -54609,7 +56666,7 @@ module.exports = {
   Flicker,
 };
 
-},{"../../engine/ticker":231}],266:[function(require,module,exports){
+},{"../../engine/ticker":232}],270:[function(require,module,exports){
 'use strict';
 
 const { Sound } = require('../../engine/sound');
@@ -54651,7 +56708,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../engine/sound":230,"../../utils/time":277}],267:[function(require,module,exports){
+},{"../../engine/sound":231,"../../utils/time":281}],271:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -54715,7 +56772,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":227,"pixi.js":156}],268:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":156}],272:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -54771,7 +56828,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":227,"../attributes/flicker":265,"../light_model":267,"pixi.js":156}],269:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/flicker":269,"../light_model":271,"pixi.js":156}],273:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -54800,7 +56857,7 @@ module.exports = {
   Lantern,
 };
 
-},{"../../engine/pixi_containers":227,"../../engine/tween":232,"../attributes/flicker":265,"../light_model":267}],270:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/tween":233,"../attributes/flicker":269,"../light_model":271}],274:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -54827,7 +56884,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":227,"../attributes/flicker":265,"../light_model":267}],271:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/flicker":269,"../light_model":271}],275:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -54853,7 +56910,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../engine/pixi_containers":227,"../attributes/strike":266,"../light_model":267}],272:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/strike":270,"../light_model":271}],276:[function(require,module,exports){
 'use strict';
 
 class Color_Pick {
@@ -54872,7 +56929,7 @@ module.exports = {
   Color_Pick,
 };
 
-},{}],273:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54915,7 +56972,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],274:[function(require,module,exports){
+},{}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -54960,7 +57017,7 @@ global.place_bunny = ({ x, y }) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":227,"pixi.js":156}],275:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":156}],279:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-plugin-bump');
@@ -55078,7 +57135,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":227,"pixi-plugin-bump":36,"pixi.js":156}],276:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi-plugin-bump":36,"pixi.js":156}],280:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55136,7 +57193,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],277:[function(require,module,exports){
+},{}],281:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -55147,7 +57204,7 @@ module.exports = {
   sleep,
 };
 
-},{}],278:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -55183,7 +57240,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":227,"pixi.js":156}],279:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":156}],283:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -55237,7 +57294,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../engine/pixi_containers":227,"pixi.js":156}],280:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":156}],284:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -55435,7 +57492,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":235}],281:[function(require,module,exports){
+},{"../items/item_manager":236}],285:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -55472,7 +57529,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":273}],282:[function(require,module,exports){
+},{"../utils/dom":277}],286:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -55997,7 +58054,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],283:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -56303,7 +58360,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":284}],284:[function(require,module,exports){
+},{"_process":288}],288:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -56489,7 +58546,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],285:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -57026,7 +59083,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],286:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57112,7 +59169,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],287:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -57199,13 +59256,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],288:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":286,"./encode":287}],289:[function(require,module,exports){
+},{"./decode":290,"./encode":291}],293:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -57284,7 +59341,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":284,"timers":289}],290:[function(require,module,exports){
+},{"process/browser.js":288,"timers":293}],294:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58018,7 +60075,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":291,"punycode":285,"querystring":288}],291:[function(require,module,exports){
+},{"./util":295,"punycode":289,"querystring":292}],295:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -58036,4 +60093,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[233]);
+},{}]},{},[234]);

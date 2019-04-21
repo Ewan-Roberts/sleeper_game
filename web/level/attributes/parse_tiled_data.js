@@ -19,13 +19,23 @@ class Tiled_Data {
   get collision() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'collision');
 
-    if(!found_layer) throw new Error('no collision found in level data');
-
-    return found_layer.objects;
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
   }
 
   get roof() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get shroud() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'shroud');
 
     if(found_layer){
       return found_layer.objects;

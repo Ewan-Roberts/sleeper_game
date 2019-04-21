@@ -342,10 +342,12 @@
                  "name":"",
                  "properties":
                     {
+                     "cutscene":true,
                      "level_name":"intro"
                     },
                  "propertytypes":
                     {
+                     "cutscene":"bool",
                      "level_name":"string"
                     },
                  "rotation":0,
@@ -392,6 +394,25 @@
                  "width":211,
                  "x":2003.88994071524,
                  "y":1704.69984700708
+                }, 
+                {
+                 "height":164.502529510961,
+                 "id":162,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"street"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":338.384818999438,
+                 "x":2429.17746121416,
+                 "y":2601.84092186622
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -399,7 +420,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":162,
+ "nextobjectid":163,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

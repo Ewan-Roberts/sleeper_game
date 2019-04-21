@@ -3,6 +3,7 @@
 const PIXI = require('pixi.js');
 const { collision_container } = require('../../engine/pixi_containers');
 const { roof_container } = require('../../engine/pixi_containers');
+
 const { pad_container } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -15,15 +16,16 @@ function point_collides(position) {
 }
 
 function point_contains(position) {
-  const { children } = roof_container;
-  children.forEach(child => {
+  const roofs = roof_container.children ;
+  roofs.forEach(child => {
     if(child.containsPoint(position)) {
-      child.alpha = child.fade_opacity | 0.6;
+      child.alpha = child.fade_opacity || 0.6;
       return;
     }
 
     child.alpha = 1;
   });
+
 }
 
 function event_pad(position) {

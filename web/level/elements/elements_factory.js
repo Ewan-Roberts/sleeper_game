@@ -2,7 +2,7 @@
 
 const { Chest     } = require('./chest');
 const { Roof      } = require('./ceiling');
-const { Phone     } = require('./phone');
+const { Shroud    } = require('./shroud');
 const { CollisionItem } = require('./collision_object');
 const { BackgroundVisualItem } = require('./visual_object');
 
@@ -10,23 +10,17 @@ const { BackgroundVisualItem } = require('./visual_object');
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'item':     return new Chest(options);
+      case 'item':      return new Chest(options);
       case 'roof':      return new Roof(options);
       case 'collision': return new CollisionItem(options);
       case 'floor':     return new BackgroundVisualItem(options);
-      case 'phone':     return new Phone(options);
+      case 'shroud':    return new Shroud(options);
     }
   }
 
   static generate_tiled(level, data) {
-    let generated;
-    console.log(data);
+    const generated = this.generate(level, data.properties);
 
-    if(data.properties) {
-      generated = this.generate(level, data.properties);
-    } else {
-      generated = this.generate(level);
-    }
     generated.set_position(data);
     //TODO flip
     generated.width = data.height;

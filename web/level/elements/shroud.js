@@ -1,19 +1,19 @@
 'use strict';
-const { roof_container } = require('../../engine/pixi_containers');
+const { shroud_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
-class Roof extends Item {
+class Shroud extends Item {
   constructor(options) {
     super(options.image_name);
 
     this.sprite.fade_opacity = options.fade;
-    this.sprite.alpha = 0.2;
+    this.sprite.alpha = 1;
 
-    roof_container.addChild(this.sprite);
+    shroud_container.addChild(this.sprite);
   }
 }
 
 module.exports = {
-  Roof,
+  Shroud,
 };

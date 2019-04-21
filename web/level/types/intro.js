@@ -5,6 +5,7 @@ const { Tween } = require('../../engine/tween');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
+const { Bird         } = require('../../character/animations/bird');
 const { Lighter     } = require('../../light/types/lighter');
 const { Lantern     } = require('../../light/types/lantern');
 const { Click_Pad   } = require('../elements/click_pad');
@@ -12,7 +13,7 @@ const { Click_Pad   } = require('../elements/click_pad');
 const level_data  = require('../data/intro_room.json');
 
 class Intro  {
-  constructor(player) {
+  constructor(player, options) {
     this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
@@ -22,13 +23,11 @@ class Intro  {
     this.lantern      = new Lantern();
 
     this._set_elements();
+    console.log(options);
+    if(options.cutscene) this._cutscene();
   }
 
-  _set_elements() {
-    const { Level_Factory } = require('./level_factory');
-    Level_Factory.generate(this.player, this.elements);
-
-    global.set_light_level(0.9);
+  _cutscene() {
     this.player.tween.from({ x: 1000, y: 400 });
     this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
@@ -46,7 +45,17 @@ class Intro  {
 
     this.lighter.set_position({ x: 1115, y: 410 });
 
-    const {exit_pad, click_pad} = this.elements;
+    const bird = new Bird();
+    bird.switch('move');
+    console.log(bird);
+    bird.sprite.tint = 0x352925;
+    collision_container.addChild(bird.sprite);
+    const tween_bird = new Tween(bird.sprite);
+    tween_bird.from({x: 100, y:1000});
+    tween_bird.to({x: 2000, y: 200});
+    tween_bird.time = 8000;
+    tween_bird.start();
+
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
     this.camera.tween.to({ x: -600, y: 0 });
@@ -54,36 +63,6 @@ class Intro  {
 
     this.player.keyboard.disable();
 
-    click_pad.forEach(data => {
-      const pad  = new Click_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-      pad.click = () => {
-        const dumpster = collision_container.children.find(item => item.id === 102);
-        const tween_it = new Tween(dumpster);
-        tween_it.from(dumpster);
-        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
-        tween_it.time = 2000;
-        tween_it.start();
-
-      };
-
-    });
-
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-      pad.area.events.on('trigger', () => {
-        const { Level_Factory } = require('./level_factory');
-        Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
-      });
-    });
     this.lighter.hide();
 
     this.camera.tween.time = 1000;
@@ -104,6 +83,45 @@ class Intro  {
 
     this.player.keyboard.enable();
     this.lighter.strike.start();
+  }
+
+  _set_elements() {
+    const { Level_Factory } = require('./level_factory');
+    Level_Factory.generate(this.player, this.elements);
+
+    global.set_light_level(0.9);
+
+    const {exit_pad, click_pad} = this.elements;
+
+    click_pad.forEach(data => {
+      const pad  = new Click_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+      pad.click = () => {
+        const dumpster = collision_container.children.find(item => item.id === 102);
+        const tween_it = new Tween(dumpster);
+        tween_it.from(dumpster);
+        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
+        tween_it.time = 2000;
+        tween_it.start();
+
+      };
+    });
+
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+      pad.area.events.on('trigger', () => {
+        const { Level_Factory } = require('./level_factory');
+        Level_Factory.clear();
+        Level_Factory.create(data.properties, this.player);
+      });
+    });
   }
 }
 
