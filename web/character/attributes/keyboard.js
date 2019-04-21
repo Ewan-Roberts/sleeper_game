@@ -53,7 +53,6 @@ class Keyboard {
   save_game() {}
 
   key_down(key) {
-    console.log('fire');
     if(!PIXI.keyboardManager.isEnabled) return;
 
     switch(key) {

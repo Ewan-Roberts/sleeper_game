@@ -10,7 +10,7 @@ const { Scripted_NPC } = require('../../character/archetypes/neutral');
 
 const { Element_Factory } = require('../elements/elements_factory');
 
-const level_data  = require('../data/old_man_room.json');
+const level_data  = require('../data/items_room.json');
 
 class Old_Man_Room extends Level {
   constructor(player) {

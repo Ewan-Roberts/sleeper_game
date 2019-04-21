@@ -27,7 +27,7 @@ class Transition_Room extends Level  {
   }
 
   _set_elements() {
-    const {walls, exit_pad, background, furnishing, lights, player} = this.elements;
+    const {walls, roof, exit_pad, background, furnishing, lights, player} = this.elements;
 
     global.set_light_level(0.9);
 
@@ -48,6 +48,10 @@ class Transition_Room extends Level  {
     });
 
     furnishing.forEach(data => {
+      Element_Factory.generate_tiled(data);
+    });
+
+    roof.forEach(data => {
       Element_Factory.generate_tiled(data);
     });
 

@@ -45,7 +45,7 @@ class Intro  {
 
     this.lighter.set_position({ x: 1115, y: 410 });
 
-    const {walls, exit_pad, background, furnishing, lights, click_pad} = this.elements;
+    const {walls, roof, exit_pad, background, furnishing, lights, click_pad} = this.elements;
     global.set_light_level(0.9);
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
@@ -55,6 +55,10 @@ class Intro  {
     this.player.keyboard.disable();
 
     this.background = new Background(background,true);
+
+    roof.forEach(data => {
+      Element_Factory.generate_tiled(data);
+    });
 
     walls.forEach(data => {
       const wall  = new Wall();
