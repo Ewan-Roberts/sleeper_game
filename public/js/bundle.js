@@ -49045,16 +49045,34 @@ class Tiled_Data {
     return player;
   }
 
-  get furnishing() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'furnishing');
+  get collision() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'collision');
 
-    if(!found_layer) throw new Error('no furnishings found in level data');
+    if(!found_layer) throw new Error('no collision found in level data');
 
     return found_layer.objects;
   }
 
   get roof() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get item() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'item');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get floor() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'floor');
 
     if(found_layer){
       return found_layer.objects;
@@ -49898,776 +49916,6 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"furnishing",
-         "objects":[
-                {
-                 "height":76.7849971021516,
-                 "id":126,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508449829972,
-                 "type":"",
-                 "visible":true,
-                 "width":284.10170602099,
-                 "x":726.008702597124,
-                 "y":214.485150102631
-                }, 
-                {
-                 "height":1560.80742846093,
-                 "id":82,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "fade":0.8,
-                     "image_name":"long_broken"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-89.8028965746292,
-                 "type":"",
-                 "visible":true,
-                 "width":333.436565822732,
-                 "x":1225.88625947144,
-                 "y":-1063.42116112637
-                }, 
-                {
-                 "height":684.6751858821,
-                 "id":123,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":715.10170602099,
-                 "x":747.232776110393,
-                 "y":244.956904426774
-                }, 
-                {
-                 "height":837.281246488164,
-                 "id":111,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.76837268766,
-                 "x":-618.767223889607,
-                 "y":237.805389275259
-                }, 
-                {
-                 "height":1556.79219856273,
-                 "id":112,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"tarp_roof_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":90.1113114296442,
-                 "type":"",
-                 "visible":true,
-                 "width":784.99991312787,
-                 "x":3495.30354021356,
-                 "y":170.698322292678
-                }, 
-                {
-                 "height":916.300958021955,
-                 "id":101,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":1,
-                     "image_name":"tree_11"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":969.220740761071,
-                 "x":1762.81215473003,
-                 "y":-348.378079712383
-                }, 
-                {
-                 "height":240.629840131126,
-                 "id":79,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"pit_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-834.032043151896,
-                 "type":"",
-                 "visible":true,
-                 "width":228.641026316547,
-                 "x":852.955796008702,
-                 "y":308.71527520373
-                }, 
-                {
-                 "height":170.051612058509,
-                 "id":70,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"bow_broken_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":75.4565418448529,
-                 "type":"",
-                 "visible":true,
-                 "width":93.6063919588124,
-                 "x":1059.85109527477,
-                 "y":633.951453774605
-                }, 
-                {
-                 "height":385.047417159892,
-                 "id":72,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"car_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-682.784671786475,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":930.034151856236,
-                 "y":-132.772073185352
-                }, 
-                {
-                 "height":833.585882814664,
-                 "id":118,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-4.22955796919121,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":411.975692182255,
-                 "y":-607.517061042126
-                }, 
-                {
-                 "height":833.585882814664,
-                 "id":121,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":5.40890897848597,
-                 "type":"",
-                 "visible":true,
-                 "width":264.587997880478,
-                 "x":490.232259634654,
-                 "y":-1483.02380688469
-                }, 
-                {
-                 "height":86.2026023836605,
-                 "id":71,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":83.5292932158379,
-                 "type":"",
-                 "visible":true,
-                 "width":47.4509737891709,
-                 "x":919.277924214742,
-                 "y":371.340249653067
-                }, 
-                {
-                 "height":46.5833635695616,
-                 "id":87,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-105.649070726645,
-                 "type":"",
-                 "visible":true,
-                 "width":58.7240724074159,
-                 "x":1386.5964115837,
-                 "y":634.136285119398
-                }, 
-                {
-                 "height":72.6666666666667,
-                 "id":64,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-156.711516565965,
-                 "type":"",
-                 "visible":true,
-                 "width":40.0000000000001,
-                 "x":857.113793147659,
-                 "y":379.482782071434
-                }, 
-                {
-                 "height":72.6666666666667,
-                 "id":73,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-244.834663811831,
-                 "type":"",
-                 "visible":true,
-                 "width":40.0000000000001,
-                 "x":887.236700632898,
-                 "y":479.445246185556
-                }, 
-                {
-                 "height":241.941634559114,
-                 "id":102,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-92.8064059825403,
-                 "type":"",
-                 "visible":true,
-                 "width":110.662237191037,
-                 "x":1103.76829923635,
-                 "y":218.652544067175
-                }, 
-                {
-                 "height":326.777495644357,
-                 "id":60,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-87.7288953492821,
-                 "type":"",
-                 "visible":true,
-                 "width":323.206183112358,
-                 "x":776.959081592431,
-                 "y":906.135951326912
-                }, 
-                {
-                 "height":145.819234048688,
-                 "id":59,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398033013144,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333333333333,
-                 "x":960.072265032411,
-                 "y":289.185767185451
-                }, 
-                {
-                 "height":75.6656370829608,
-                 "id":78,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"chair_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-521.044460943984,
-                 "type":"",
-                 "visible":true,
-                 "width":84.7774871089743,
-                 "x":1269.71335279219,
-                 "y":366.006587202568
-                }, 
-                {
-                 "height":120.932661831217,
-                 "id":80,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"stove_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-372.018905767599,
-                 "type":"",
-                 "visible":true,
-                 "width":128.352009424784,
-                 "x":1332.29591218934,
-                 "y":285.417187645687
-                }, 
-                {
-                 "height":392.732378716508,
-                 "id":86,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"wood_table"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-538.94543013693,
-                 "type":"",
-                 "visible":true,
-                 "width":137.679088084613,
-                 "x":1459.27368287193,
-                 "y":945.135549545979
-                }, 
-                {
-                 "height":100.091501533926,
-                 "id":81,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"sink_04"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-720.1430510935,
-                 "type":"",
-                 "visible":true,
-                 "width":85.7470086786222,
-                 "x":1358.85965389004,
-                 "y":805.741923467557
-                }, 
-                {
-                 "height":297.474223081979,
-                 "id":95,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"truck_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":152.332458270991,
-                 "type":"",
-                 "visible":true,
-                 "width":836.373824096281,
-                 "x":2590.32863703624,
-                 "y":-243.83017710036
-                }, 
-                {
-                 "height":555.70380032669,
-                 "id":128,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"car_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-278.675692308681,
-                 "type":"",
-                 "visible":true,
-                 "width":296.959557780732,
-                 "x":2162.69863717648,
-                 "y":-942.998422315894
-                }, 
-                {
-                 "height":238.610570826346,
-                 "id":129,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"car_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-166.544115481598,
-                 "type":"",
-                 "visible":true,
-                 "width":491.644536849573,
-                 "x":1149.64947315211,
-                 "y":-398.439393069659
-                }, 
-                {
-                 "height":311.656667436426,
-                 "id":65,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":258.239160217844,
-                 "x":754.177268466146,
-                 "y":421.221620484885
-                }, 
-                {
-                 "height":1088.03005799437,
-                 "id":66,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_03"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":724.905826884511,
-                 "x":755.843935132812,
-                 "y":236.888287151552
-                }, 
-                {
-                 "height":1917.65998772394,
-                 "id":69,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"road_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":221.29437221659,
-                 "x":1927.57836032624,
-                 "y":33.5038323883
-                }, 
-                {
-                 "height":1917.65998772394,
-                 "id":116,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"road_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":221.29437221659,
-                 "x":3846.24502699291,
-                 "y":32.1704990549667
-                }, 
-                {
-                 "height":94.7734972140798,
-                 "id":68,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.002637078622,
-                 "x":1244.83893476648,
-                 "y":266.152419432224
-                }, 
-                {
-                 "height":113.440163880746,
-                 "id":67,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"wall_stone_damage_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.002637078622,
-                 "x":1208.90431497301,
-                 "y":366.972304712625
-                }, 
-                {
-                 "height":319.08526801061,
-                 "id":99,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-30.0311689804632,
-                 "type":"",
-                 "visible":true,
-                 "width":1071.70404545243,
-                 "x":842.705587029192,
-                 "y":142.379135248101
-                }, 
-                {
-                 "height":1237.63759136956,
-                 "id":103,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-180,
-                 "type":"",
-                 "visible":true,
-                 "width":2088.21404886983,
-                 "x":1422.7829823529,
-                 "y":32.2546438302819
-                }, 
-                {
-                 "height":1237.63759136956,
-                 "id":113,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-180,
-                 "type":"",
-                 "visible":true,
-                 "width":2088.21404886983,
-                 "x":3510.38406184049,
-                 "y":32.1061964515678
-                }, 
-                {
-                 "height":304.459132157436,
-                 "id":105,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.161054539476,
-                 "type":"",
-                 "visible":true,
-                 "width":257.239160217844,
-                 "x":1735.68859990998,
-                 "y":-117.499501423722
-                }, 
-                {
-                 "height":370.545966119481,
-                 "id":98,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.304673940448,
-                 "type":"",
-                 "visible":true,
-                 "width":85.1822730557842,
-                 "x":1795.66018136539,
-                 "y":821.595016964597
-                }, 
-                {
-                 "height":262.817726059863,
-                 "id":88,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"dirty_matress"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-1055.12132812915,
-                 "type":"",
-                 "visible":true,
-                 "width":163.789402411751,
-                 "x":816.207972977773,
-                 "y":-180.006933607837
-                }, 
-                {
-                 "height":148.297426162322,
-                 "id":85,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":166.820632679455,
-                 "type":"",
-                 "visible":true,
-                 "width":164.540648760259,
-                 "x":1432.11968042507,
-                 "y":386.551482055475
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "name":"roof",
          "objects":[
                 {
@@ -50694,7 +49942,7 @@ module.exports={ "height":50,
                 {
                  "height":837.281,
                  "id":135,
-                 "name":"roof",
+                 "name":"",
                  "properties":
                     {
                      "fade":0.1,
@@ -50709,13 +49957,13 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1383.77,
-                 "x":647.508939393939,
-                 "y":175.298893939394
+                 "x":747.508939393939,
+                 "y":233.298893939394
                 }, 
                 {
                  "height":684.675,
                  "id":136,
-                 "name":"roof",
+                 "name":"",
                  "properties":
                     {
                      "fade":0.1,
@@ -50732,6 +49980,777 @@ module.exports={ "height":50,
                  "width":469.102,
                  "x":1474.53990909091,
                  "y":251.601893939394
+                }, 
+                {
+                 "height":76.785,
+                 "id":154,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508,
+                 "type":"",
+                 "visible":true,
+                 "width":284.102,
+                 "x":751.282333333333,
+                 "y":257.6075
+                }, 
+                {
+                 "height":689.528190973065,
+                 "id":159,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":701.755724824072,
+                 "x":766.256328318369,
+                 "y":243.818287430235
+                }, 
+                {
+                 "height":916.301,
+                 "id":160,
+                 "name":"tree",
+                 "properties":
+                    {
+                     "fade":1,
+                     "image_name":"tree_11"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":969.221,
+                 "x":1715.09830854162,
+                 "y":-265.236158820675
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"floor",
+         "objects":[
+                {
+                 "height":1237.64,
+                 "id":139,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":1422.56166666667,
+                 "y":29.6648484848487
+                }, 
+                {
+                 "height":1237.64,
+                 "id":140,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21,
+                 "x":3455.895,
+                 "y":23.6042424242425
+                }, 
+                {
+                 "height":1917.66,
+                 "id":141,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":3856.01966666667,
+                 "y":171.47303030303
+                }, 
+                {
+                 "height":1088.03,
+                 "id":142,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":724.906,
+                 "x":767.850030303031,
+                 "y":246.894090909091
+                }, 
+                {
+                 "height":319.085,
+                 "id":143,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-30.0312,
+                 "type":"",
+                 "visible":true,
+                 "width":1071.7,
+                 "x":565.239090909091,
+                 "y":566.001818181818
+                }, 
+                {
+                 "height":1917.66,
+                 "id":144,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.294,
+                 "x":1787.89845454545,
+                 "y":25.1699999999998
+                }, 
+                {
+                 "height":304.459,
+                 "id":145,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239,
+                 "x":1989.56231818182,
+                 "y":-237.077984848485
+                }, 
+                {
+                 "height":370.546,
+                 "id":146,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.305,
+                 "type":"",
+                 "visible":true,
+                 "width":85.1823,
+                 "x":1672.56036515152,
+                 "y":835.939121212121
+                }, 
+                {
+                 "height":113.44,
+                 "id":148,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"wall_stone_damage_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1170.16516666667,
+                 "y":376.613333333333
+                }, 
+                {
+                 "height":94.7735,
+                 "id":149,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1227.83,
+                 "y":237.61
+                }, 
+                {
+                 "height":311.657,
+                 "id":152,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":258.239,
+                 "x":794.21,
+                 "y":496
+                }, 
+                {
+                 "height":262.818,
+                 "id":158,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"dirty_matress"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1055.12,
+                 "type":"",
+                 "visible":true,
+                 "width":163.789,
+                 "x":972.461238898326,
+                 "y":-300.057386314001
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
+                {
+                 "height":170.052,
+                 "id":161,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"bow_broken_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":75.4565,
+                 "type":"",
+                 "visible":true,
+                 "width":93.6064,
+                 "x":1062.28770909091,
+                 "y":739.216424242424
+                }, 
+                {
+                 "height":46.5834,
+                 "id":162,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-105.649,
+                 "type":"",
+                 "visible":true,
+                 "width":58.7241,
+                 "x":1373.6682530303,
+                 "y":625.193148484849
+                }, 
+                {
+                 "height":72.6667,
+                 "id":163,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-244.835,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":898.181818181818,
+                 "y":484.878771212121
+                }, 
+                {
+                 "height":86.2026,
+                 "id":164,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":83.5293,
+                 "type":"",
+                 "visible":true,
+                 "width":47.451,
+                 "x":894.456318181818,
+                 "y":375.080518181818
+                }, 
+                {
+                 "height":72.6667,
+                 "id":165,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-156.712,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":848,
+                 "y":365.66665
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
+                {
+                 "height":1560.80742846093,
+                 "id":82,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.8,
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-89.8028965746292,
+                 "type":"",
+                 "visible":true,
+                 "width":333.436565822732,
+                 "x":1225.88625947144,
+                 "y":-1063.42116112637
+                }, 
+                {
+                 "height":837.281246488164,
+                 "id":111,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.76837268766,
+                 "x":-618.767223889607,
+                 "y":237.805389275259
+                }, 
+                {
+                 "height":1556.79219856273,
+                 "id":112,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.1113114296442,
+                 "type":"",
+                 "visible":true,
+                 "width":784.99991312787,
+                 "x":3495.30354021356,
+                 "y":170.698322292678
+                }, 
+                {
+                 "height":240.629840131126,
+                 "id":79,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"pit_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-834.032043151896,
+                 "type":"",
+                 "visible":true,
+                 "width":228.641026316547,
+                 "x":852.955796008702,
+                 "y":308.71527520373
+                }, 
+                {
+                 "height":385.047417159892,
+                 "id":72,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-682.784671786475,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":930.034151856236,
+                 "y":-132.772073185352
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":118,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-4.22955796919121,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":411.975692182255,
+                 "y":-607.517061042126
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":121,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":5.40890897848597,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":490.232259634654,
+                 "y":-1483.02380688469
+                }, 
+                {
+                 "height":241.941634559114,
+                 "id":102,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-92.8064059825403,
+                 "type":"",
+                 "visible":true,
+                 "width":110.662237191037,
+                 "x":1103.76829923635,
+                 "y":218.652544067175
+                }, 
+                {
+                 "height":326.777495644357,
+                 "id":60,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-87.7288953492821,
+                 "type":"",
+                 "visible":true,
+                 "width":323.206183112358,
+                 "x":779.989384622734,
+                 "y":903.105648296609
+                }, 
+                {
+                 "height":145.819234048688,
+                 "id":59,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398033013144,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333333333333,
+                 "x":960.072265032411,
+                 "y":289.185767185451
+                }, 
+                {
+                 "height":75.6656370829608,
+                 "id":78,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"chair_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044460943984,
+                 "type":"",
+                 "visible":true,
+                 "width":84.7774871089743,
+                 "x":1269.71335279219,
+                 "y":366.006587202568
+                }, 
+                {
+                 "height":120.932661831217,
+                 "id":80,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"stove_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-372.018905767599,
+                 "type":"",
+                 "visible":true,
+                 "width":128.352009424784,
+                 "x":1332.29591218934,
+                 "y":285.417187645687
+                }, 
+                {
+                 "height":392.732378716508,
+                 "id":86,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_table"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-538.94543013693,
+                 "type":"",
+                 "visible":true,
+                 "width":137.679088084613,
+                 "x":1441.09186469011,
+                 "y":920.893125303555
+                }, 
+                {
+                 "height":100.091501533926,
+                 "id":81,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"sink_04"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-720.1430510935,
+                 "type":"",
+                 "visible":true,
+                 "width":85.7470086786222,
+                 "x":1358.85965389004,
+                 "y":805.741923467557
+                }, 
+                {
+                 "height":297.474223081979,
+                 "id":95,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":152.332458270991,
+                 "type":"",
+                 "visible":true,
+                 "width":836.373824096281,
+                 "x":2590.32863703624,
+                 "y":-243.83017710036
+                }, 
+                {
+                 "height":555.70380032669,
+                 "id":128,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-278.675692308681,
+                 "type":"",
+                 "visible":true,
+                 "width":296.959557780732,
+                 "x":2162.69863717648,
+                 "y":-942.998422315894
+                }, 
+                {
+                 "height":238.610570826346,
+                 "id":129,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-166.544115481598,
+                 "type":"",
+                 "visible":true,
+                 "width":491.644536849573,
+                 "x":1149.64947315211,
+                 "y":-398.439393069659
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50739,7 +50758,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":138,
+ "nextobjectid":166,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -50782,17 +50801,6 @@ module.exports={ "height":50,
          "name":"walls",
          "objects":[
                 {
-                 "height":258.66666666667,
-                 "id":2,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1158.69696969697,
-                 "y":273.393939393939
-                }, 
-                {
                  "height":13.0833333333333,
                  "id":3,
                  "name":"",
@@ -50804,7 +50812,7 @@ module.exports={ "height":50,
                  "y":265.007575757576
                 }, 
                 {
-                 "height":674.651971689517,
+                 "height":357.085309489329,
                  "id":4,
                  "name":"",
                  "rotation":0,
@@ -50812,7 +50820,7 @@ module.exports={ "height":50,
                  "visible":true,
                  "width":30.6666666666665,
                  "x":1448,
-                 "y":242.121212121212
+                 "y":274.27986145794
                 }, 
                 {
                  "height":32,
@@ -50821,7 +50829,7 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1162.79089026914,
+                 "width":1154.75122793496,
                  "x":753.617177093226,
                  "y":914.893273360451
                 }, 
@@ -50854,12 +50862,12 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":604.422838400654,
-                 "x":1159,
+                 "width":549.485145783744,
+                 "x":1359.99155835455,
                  "y":242
                 }, 
                 {
-                 "height":646.839547473553,
+                 "height":282.374854990637,
                  "id":56,
                  "name":"",
                  "rotation":0,
@@ -50867,51 +50875,7 @@ module.exports={ "height":50,
                  "visible":true,
                  "width":32,
                  "x":753.333333333333,
-                 "y":266.333166666667
-                }, 
-                {
-                 "height":22.5471498109172,
-                 "id":90,
-                 "name":"",
-                 "rotation":47.1948876845693,
-                 "type":"",
-                 "visible":true,
-                 "width":7.29573545256494,
-                 "x":1285.01606978907,
-                 "y":340.559197412138
-                }, 
-                {
-                 "height":131.50656776616,
-                 "id":91,
-                 "name":"",
-                 "rotation":-12.7409524044823,
-                 "type":"",
-                 "visible":true,
-                 "width":108.768833452634,
-                 "x":1340.06175931731,
-                 "y":272.219240972826
-                }, 
-                {
-                 "height":25.7585262715292,
-                 "id":92,
-                 "name":"",
-                 "rotation":47.1948612010685,
-                 "type":"",
-                 "visible":true,
-                 "width":7.29574,
-                 "x":1313.28743671951,
-                 "y":314.737976467664
-                }, 
-                {
-                 "height":30.0431014673411,
-                 "id":93,
-                 "name":"",
-                 "rotation":47.1948612010685,
-                 "type":"",
-                 "visible":true,
-                 "width":7.29574,
-                 "x":1344.13607047791,
-                 "y":285.207879443075
+                 "y":273.333166666667
                 }, 
                 {
                  "height":710.652,
@@ -50923,6 +50887,39 @@ module.exports={ "height":50,
                  "width":30.6667,
                  "x":1907.8469418006,
                  "y":239.254531698703
+                }, 
+                {
+                 "height":222.077445933271,
+                 "id":139,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":753.127696636741,
+                 "y":694.937426035107
+                }, 
+                {
+                 "height":14.6667,
+                 "id":140,
+                 "name":"",
+                 "rotation":7.21333,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1196.60940640493,
+                 "y":334.352299202734
+                }, 
+                {
+                 "height":14.6667,
+                 "id":141,
+                 "name":"",
+                 "rotation":7.21333,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1310.50462280584,
+                 "y":308.893368477824
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50948,17 +50945,29 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "name":"player",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":137,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1816.96368752512,
+                 "y":779.847246415651
+                }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51001,8 +51010,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":133.078764705883,
-                 "x":1750.45036809269,
-                 "y":683.017379679144
+                 "x":1584.2973465196,
+                 "y":-175.886546355963
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51027,7 +51036,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51078,30 +51087,9 @@ module.exports={ "height":50,
                  "y":-1063.42116112637
                 }, 
                 {
-                 "height":684.6751858821,
-                 "id":123,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":715.10170602099,
-                 "x":747.232776110393,
-                 "y":244.956904426774
-                }, 
-                {
                  "height":837.281246488164,
                  "id":111,
-                 "name":"collision",
+                 "name":"floor_visual",
                  "properties":
                     {
                      "fade":0.1,
@@ -51122,7 +51110,7 @@ module.exports={ "height":50,
                 {
                  "height":1556.79219856273,
                  "id":112,
-                 "name":"collision",
+                 "name":"floor_visual",
                  "properties":
                     {
                      "fade":0.1,
@@ -51179,29 +51167,6 @@ module.exports={ "height":50,
                  "width":228.641026316547,
                  "x":852.955796008702,
                  "y":308.71527520373
-                }, 
-                {
-                 "height":170.051612058509,
-                 "id":70,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"bow_broken_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":75.4565418448529,
-                 "type":"",
-                 "visible":true,
-                 "width":93.6063919588124,
-                 "x":1059.85109527477,
-                 "y":633.951453774605
                 }, 
                 {
                  "height":385.047417159892,
@@ -51267,29 +51232,6 @@ module.exports={ "height":50,
                  "y":-1483.02380688469
                 }, 
                 {
-                 "height":86.2026023836605,
-                 "id":71,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":83.5292932158379,
-                 "type":"",
-                 "visible":true,
-                 "width":47.4509737891709,
-                 "x":919.277924214742,
-                 "y":371.340249653067
-                }, 
-                {
                  "height":46.5833635695616,
                  "id":87,
                  "name":"chest",
@@ -51314,29 +51256,6 @@ module.exports={ "height":50,
                 }, 
                 {
                  "height":72.6666666666667,
-                 "id":64,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-156.711516565965,
-                 "type":"",
-                 "visible":true,
-                 "width":40.0000000000001,
-                 "x":857.113793147659,
-                 "y":379.482782071434
-                }, 
-                {
-                 "height":72.6666666666667,
                  "id":73,
                  "name":"chest",
                  "properties":
@@ -51355,8 +51274,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":40.0000000000001,
-                 "x":887.236700632898,
-                 "y":479.445246185556
+                 "x":1616.16608559873,
+                 "y":322.671830669008
                 }, 
                 {
                  "height":241.941634559114,
@@ -51378,25 +51297,6 @@ module.exports={ "height":50,
                  "y":218.652544067175
                 }, 
                 {
-                 "height":326.777495644357,
-                 "id":60,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-87.7288953492821,
-                 "type":"",
-                 "visible":true,
-                 "width":323.206183112358,
-                 "x":776.959081592431,
-                 "y":906.135951326912
-                }, 
-                {
                  "height":145.819234048688,
                  "id":59,
                  "name":"collision",
@@ -51412,46 +51312,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":249.333333333333,
-                 "x":960.072265032411,
-                 "y":289.185767185451
-                }, 
-                {
-                 "height":75.6656370829608,
-                 "id":78,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"chair_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-521.044460943984,
-                 "type":"",
-                 "visible":true,
-                 "width":84.7774871089743,
-                 "x":1269.71335279219,
-                 "y":366.006587202568
-                }, 
-                {
-                 "height":120.932661831217,
-                 "id":80,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"stove_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-372.018905767599,
-                 "type":"",
-                 "visible":true,
-                 "width":128.352009424784,
-                 "x":1332.29591218934,
-                 "y":285.417187645687
+                 "x":1663.54271927333,
+                 "y":299.90531696436
                 }, 
                 {
                  "height":392.732378716508,
@@ -51465,12 +51327,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-538.94543013693,
+                 "rotation":-268.114497040928,
                  "type":"",
                  "visible":true,
                  "width":137.679088084613,
-                 "x":1459.27368287193,
-                 "y":945.135549545979
+                 "x":1190.73609117455,
+                 "y":761.305485842095
                 }, 
                 {
                  "height":100.091501533926,
@@ -51564,11 +51426,11 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":258.239160217844,
-                 "x":754.177268466146,
-                 "y":421.221620484885
+                 "x":783.656030358146,
+                 "y":603.453966726343
                 }, 
                 {
-                 "height":1088.03005799437,
+                 "height":699.446378508908,
                  "id":66,
                  "name":"floor_visual",
                  "properties":
@@ -51582,7 +51444,7 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":724.905826884511,
+                 "width":1171.10708643161,
                  "x":755.843935132812,
                  "y":236.888287151552
                 }, 
@@ -51644,7 +51506,7 @@ module.exports={ "height":50,
                  "y":266.152419432224
                 }, 
                 {
-                 "height":113.440163880746,
+                 "height":138.899094605656,
                  "id":67,
                  "name":"floor_visual",
                  "properties":
@@ -51658,9 +51520,9 @@ module.exports={ "height":50,
                  "rotation":180,
                  "type":"",
                  "visible":true,
-                 "width":265.002637078622,
-                 "x":1208.90431497301,
-                 "y":366.972304712625
+                 "width":324.47613877768,
+                 "x":1358.97801187774,
+                 "y":399.130954049353
                 }, 
                 {
                  "height":319.08526801061,
@@ -51739,25 +51601,6 @@ module.exports={ "height":50,
                  "y":-117.499501423722
                 }, 
                 {
-                 "height":370.545966119481,
-                 "id":98,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.304673940448,
-                 "type":"",
-                 "visible":true,
-                 "width":85.1822730557842,
-                 "x":1795.66018136539,
-                 "y":821.595016964597
-                }, 
-                {
                  "height":262.817726059863,
                  "id":88,
                  "name":"floor_visual",
@@ -51775,25 +51618,6 @@ module.exports={ "height":50,
                  "width":163.789402411751,
                  "x":816.207972977773,
                  "y":-180.006933607837
-                }, 
-                {
-                 "height":148.297426162322,
-                 "id":85,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":166.820632679455,
-                 "type":"",
-                 "visible":true,
-                 "width":164.540648760259,
-                 "x":1432.11968042507,
-                 "y":386.551482055475
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51804,77 +51628,14 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"roof",
-         "objects":[
-                {
-                 "height":1742.68,
-                 "id":134,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":2917.1,
-                 "x":11.1469696969697,
-                 "y":-1492.55212121212
-                }, 
-                {
-                 "height":837.281,
-                 "id":135,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":647.508939393939,
-                 "y":175.298893939394
-                }, 
-                {
-                 "height":684.675,
-                 "id":136,
-                 "name":"roof",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":469.102,
-                 "x":1474.53990909091,
-                 "y":251.601893939394
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":137,
+ "nextobjectid":145,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53287,7 +53048,36 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"furnishing",
+         "name":"floor",
+         "objects":[
+                {
+                 "height":1229.03612559586,
+                 "id":161,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1610.41140590903,
+                 "x":1834.81694002471,
+                 "y":1685.44501232701
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
          "objects":[
                 {
                  "height":323.951005857662,
@@ -53500,7 +53290,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":161,
+ "nextobjectid":162,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53728,20 +53518,22 @@ const { BackgroundVisualItem } = require('./visual_object');
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'chest':     return new Chest(options);
+      case 'item':     return new Chest(options);
       case 'roof':      return new Roof(options);
       case 'collision': return new CollisionItem(options);
-      case 'floor_visual': return new BackgroundVisualItem(options);
-      case 'phone':        return new Phone(options);
+      case 'floor':     return new BackgroundVisualItem(options);
+      case 'phone':     return new Phone(options);
     }
   }
 
-  static generate_tiled(data) {
+  static generate_tiled(level, data) {
     let generated;
+    console.log(data);
+
     if(data.properties) {
-      generated = this.generate(data.name, data.properties);
+      generated = this.generate(level, data.properties);
     } else {
-      generated = this.generate(data.name);
+      generated = this.generate(level);
     }
     generated.set_position(data);
     //TODO flip
@@ -54390,9 +54182,6 @@ class Items_Room_level_2 {
       pad.anchor = 0;
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
-        const { Level_Factory } = require('./level_factory');
-        Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
 
@@ -54479,7 +54268,7 @@ class Level_Factory {
     }
   }
 
-  static generate(player_sprite, {walls, roof, background, furnishing, lights, player}) {
+  static generate(player_sprite, {walls, item, roof, floor, background, collision, lights, player}) {
     try {
       new Background(background, true);
 
@@ -54499,12 +54288,11 @@ class Level_Factory {
         wall.set_position(data);
       });
 
-      furnishing.forEach(data => {
-        Element_Factory.generate_tiled(data);
-      });
+      collision.forEach(data => Element_Factory.generate_tiled('collision', data));
+      item.forEach(data => Element_Factory.generate_tiled('item',data));
+      floor.forEach(data => Element_Factory.generate_tiled('floor',data));
 
-      roof.forEach(data => Element_Factory.generate_tiled(data));
-
+      roof.forEach(data => Element_Factory.generate_tiled('roof', data));
       lights.forEach(async data => {
         const light = new Candle();
         light.height = data.height;

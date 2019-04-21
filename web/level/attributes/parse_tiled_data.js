@@ -16,16 +16,34 @@ class Tiled_Data {
     return player;
   }
 
-  get furnishing() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'furnishing');
+  get collision() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'collision');
 
-    if(!found_layer) throw new Error('no furnishings found in level data');
+    if(!found_layer) throw new Error('no collision found in level data');
 
     return found_layer.objects;
   }
 
   get roof() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get item() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'item');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get floor() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'floor');
 
     if(found_layer){
       return found_layer.objects;

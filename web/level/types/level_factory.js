@@ -27,7 +27,7 @@ class Level_Factory {
     }
   }
 
-  static generate(player_sprite, {walls, roof, background, furnishing, lights, player}) {
+  static generate(player_sprite, {walls, item, roof, floor, background, collision, lights, player}) {
     try {
       new Background(background, true);
 
@@ -47,12 +47,11 @@ class Level_Factory {
         wall.set_position(data);
       });
 
-      furnishing.forEach(data => {
-        Element_Factory.generate_tiled(data);
-      });
+      collision.forEach(data => Element_Factory.generate_tiled('collision', data));
+      item.forEach(data => Element_Factory.generate_tiled('item',data));
+      floor.forEach(data => Element_Factory.generate_tiled('floor',data));
 
-      roof.forEach(data => Element_Factory.generate_tiled(data));
-
+      roof.forEach(data => Element_Factory.generate_tiled('roof', data));
       lights.forEach(async data => {
         const light = new Candle();
         light.height = data.height;

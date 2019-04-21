@@ -10,20 +10,22 @@ const { BackgroundVisualItem } = require('./visual_object');
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'chest':     return new Chest(options);
+      case 'item':     return new Chest(options);
       case 'roof':      return new Roof(options);
       case 'collision': return new CollisionItem(options);
-      case 'floor_visual': return new BackgroundVisualItem(options);
-      case 'phone':        return new Phone(options);
+      case 'floor':     return new BackgroundVisualItem(options);
+      case 'phone':     return new Phone(options);
     }
   }
 
-  static generate_tiled(data) {
+  static generate_tiled(level, data) {
     let generated;
+    console.log(data);
+
     if(data.properties) {
-      generated = this.generate(data.name, data.properties);
+      generated = this.generate(level, data.properties);
     } else {
-      generated = this.generate(data.name);
+      generated = this.generate(level);
     }
     generated.set_position(data);
     //TODO flip

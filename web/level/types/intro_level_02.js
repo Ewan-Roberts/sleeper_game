@@ -29,9 +29,6 @@ class Items_Room_level_2 {
       pad.anchor = 0;
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
-        const { Level_Factory } = require('./level_factory');
-        Level_Factory.clear();
-        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
 

@@ -157,7 +157,36 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"furnishing",
+         "name":"floor",
+         "objects":[
+                {
+                 "height":1229.03612559586,
+                 "id":161,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1610.41140590903,
+                 "x":1834.81694002471,
+                 "y":1685.44501232701
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
          "objects":[
                 {
                  "height":323.951005857662,
@@ -370,7 +399,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":161,
+ "nextobjectid":162,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
