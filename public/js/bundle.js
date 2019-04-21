@@ -49056,9 +49056,10 @@ class Tiled_Data {
   get roof() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
 
-    if(!found_layer) throw new Error('no furnishings found in level data');
-
-    return found_layer.objects;
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
   }
 
   get item_areas() {
@@ -49603,6 +49604,1153 @@ module.exports={ "height":50,
  "width":50
 }
 },{}],239:[function(require,module,exports){
+module.exports={ "height":50,
+ "infinite":false,
+ "layers":[
+        {
+         "draworder":"topdown",
+         "name":"background",
+         "objects":[
+                {
+                 "height":1438.38591251322,
+                 "id":51,
+                 "name":"seamless_concrete",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2776.97094144733,
+                 "x":-106.060606060606,
+                 "y":-448.484848484848
+                }],
+         "offsetx":-74,
+         "offsety":126,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"walls",
+         "objects":[
+                {
+                 "height":258.66666666667,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1158.69696969697,
+                 "y":273.393939393939
+                }, 
+                {
+                 "height":13.0833333333333,
+                 "id":3,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12.0769230769231,
+                 "x":1061.4696969697,
+                 "y":265.007575757576
+                }, 
+                {
+                 "height":674.651971689517,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6666666666665,
+                 "x":1448,
+                 "y":242.121212121212
+                }, 
+                {
+                 "height":32,
+                 "id":9,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1162.79089026914,
+                 "x":753.617177093226,
+                 "y":914.893273360451
+                }, 
+                {
+                 "height":32,
+                 "id":53,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":290,
+                 "x":755,
+                 "y":241
+                }, 
+                {
+                 "height":14.6666666666666,
+                 "id":54,
+                 "name":"",
+                 "rotation":7.21332652497806,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1132.23411839358,
+                 "y":239.303527595128
+                }, 
+                {
+                 "height":32,
+                 "id":55,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":604.422838400654,
+                 "x":1159,
+                 "y":242
+                }, 
+                {
+                 "height":646.839547473553,
+                 "id":56,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":753.333333333333,
+                 "y":266.333166666667
+                }, 
+                {
+                 "height":22.5471498109172,
+                 "id":90,
+                 "name":"",
+                 "rotation":47.1948876845693,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29573545256494,
+                 "x":1285.01606978907,
+                 "y":340.559197412138
+                }, 
+                {
+                 "height":131.50656776616,
+                 "id":91,
+                 "name":"",
+                 "rotation":-12.7409524044823,
+                 "type":"",
+                 "visible":true,
+                 "width":108.768833452634,
+                 "x":1340.06175931731,
+                 "y":272.219240972826
+                }, 
+                {
+                 "height":25.7585262715292,
+                 "id":92,
+                 "name":"",
+                 "rotation":47.1948612010685,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29574,
+                 "x":1313.28743671951,
+                 "y":314.737976467664
+                }, 
+                {
+                 "height":30.0431014673411,
+                 "id":93,
+                 "name":"",
+                 "rotation":47.1948612010685,
+                 "type":"",
+                 "visible":true,
+                 "width":7.29574,
+                 "x":1344.13607047791,
+                 "y":285.207879443075
+                }, 
+                {
+                 "height":710.652,
+                 "id":94,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":1907.8469418006,
+                 "y":239.254531698703
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":923.068540782915,
+                 "y":99.721816199179
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"player",
+         "objects":[
+                {
+                 "height":0,
+                 "id":137,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1100,
+                 "y":415.151515151515
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"exit_pad",
+         "objects":[
+                {
+                 "height":182,
+                 "id":15,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"school"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":638.666666666667,
+                 "x":759.666666666667,
+                 "y":-1460.27272727273
+                }, 
+                {
+                 "height":216.926470588235,
+                 "id":130,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"intro_level_02"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":133.078764705883,
+                 "x":1750.45036809269,
+                 "y":683.017379679144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"click_pad",
+         "objects":[
+                {
+                 "height":168,
+                 "id":125,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":239.666666666667,
+                 "x":1033.66666666667,
+                 "y":67.72727272727
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"furnishing",
+         "objects":[
+                {
+                 "height":76.7849971021516,
+                 "id":126,
+                 "name":"roof",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-91.6508449829972,
+                 "type":"",
+                 "visible":true,
+                 "width":284.10170602099,
+                 "x":726.008702597124,
+                 "y":214.485150102631
+                }, 
+                {
+                 "height":1560.80742846093,
+                 "id":82,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "fade":0.8,
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-89.8028965746292,
+                 "type":"",
+                 "visible":true,
+                 "width":333.436565822732,
+                 "x":1225.88625947144,
+                 "y":-1063.42116112637
+                }, 
+                {
+                 "height":684.6751858821,
+                 "id":123,
+                 "name":"roof",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":715.10170602099,
+                 "x":747.232776110393,
+                 "y":244.956904426774
+                }, 
+                {
+                 "height":837.281246488164,
+                 "id":111,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.76837268766,
+                 "x":-618.767223889607,
+                 "y":237.805389275259
+                }, 
+                {
+                 "height":1556.79219856273,
+                 "id":112,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.1113114296442,
+                 "type":"",
+                 "visible":true,
+                 "width":784.99991312787,
+                 "x":3495.30354021356,
+                 "y":170.698322292678
+                }, 
+                {
+                 "height":916.300958021955,
+                 "id":101,
+                 "name":"roof",
+                 "properties":
+                    {
+                     "fade":1,
+                     "image_name":"tree_11"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":969.220740761071,
+                 "x":1762.81215473003,
+                 "y":-348.378079712383
+                }, 
+                {
+                 "height":240.629840131126,
+                 "id":79,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"pit_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-834.032043151896,
+                 "type":"",
+                 "visible":true,
+                 "width":228.641026316547,
+                 "x":852.955796008702,
+                 "y":308.71527520373
+                }, 
+                {
+                 "height":170.051612058509,
+                 "id":70,
+                 "name":"chest",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"bow_broken_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":75.4565418448529,
+                 "type":"",
+                 "visible":true,
+                 "width":93.6063919588124,
+                 "x":1059.85109527477,
+                 "y":633.951453774605
+                }, 
+                {
+                 "height":385.047417159892,
+                 "id":72,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"car_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-682.784671786475,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":930.034151856236,
+                 "y":-132.772073185352
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":118,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-4.22955796919121,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":411.975692182255,
+                 "y":-607.517061042126
+                }, 
+                {
+                 "height":833.585882814664,
+                 "id":121,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":5.40890897848597,
+                 "type":"",
+                 "visible":true,
+                 "width":264.587997880478,
+                 "x":490.232259634654,
+                 "y":-1483.02380688469
+                }, 
+                {
+                 "height":86.2026023836605,
+                 "id":71,
+                 "name":"chest",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"quiver_00",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":83.5292932158379,
+                 "type":"",
+                 "visible":true,
+                 "width":47.4509737891709,
+                 "x":919.277924214742,
+                 "y":371.340249653067
+                }, 
+                {
+                 "height":46.5833635695616,
+                 "id":87,
+                 "name":"chest",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-105.649070726645,
+                 "type":"",
+                 "visible":true,
+                 "width":58.7240724074159,
+                 "x":1386.5964115837,
+                 "y":634.136285119398
+                }, 
+                {
+                 "height":72.6666666666667,
+                 "id":64,
+                 "name":"chest",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-156.711516565965,
+                 "type":"",
+                 "visible":true,
+                 "width":40.0000000000001,
+                 "x":857.113793147659,
+                 "y":379.482782071434
+                }, 
+                {
+                 "height":72.6666666666667,
+                 "id":73,
+                 "name":"chest",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"back_pack",
+                     "shadow":false
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-244.834663811831,
+                 "type":"",
+                 "visible":true,
+                 "width":40.0000000000001,
+                 "x":887.236700632898,
+                 "y":479.445246185556
+                }, 
+                {
+                 "height":241.941634559114,
+                 "id":102,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-92.8064059825403,
+                 "type":"",
+                 "visible":true,
+                 "width":110.662237191037,
+                 "x":1103.76829923635,
+                 "y":218.652544067175
+                }, 
+                {
+                 "height":326.777495644357,
+                 "id":60,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-87.7288953492821,
+                 "type":"",
+                 "visible":true,
+                 "width":323.206183112358,
+                 "x":776.959081592431,
+                 "y":906.135951326912
+                }, 
+                {
+                 "height":145.819234048688,
+                 "id":59,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398033013144,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333333333333,
+                 "x":960.072265032411,
+                 "y":289.185767185451
+                }, 
+                {
+                 "height":75.6656370829608,
+                 "id":78,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"chair_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044460943984,
+                 "type":"",
+                 "visible":true,
+                 "width":84.7774871089743,
+                 "x":1269.71335279219,
+                 "y":366.006587202568
+                }, 
+                {
+                 "height":120.932661831217,
+                 "id":80,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"stove_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-372.018905767599,
+                 "type":"",
+                 "visible":true,
+                 "width":128.352009424784,
+                 "x":1332.29591218934,
+                 "y":285.417187645687
+                }, 
+                {
+                 "height":392.732378716508,
+                 "id":86,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"wood_table"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-538.94543013693,
+                 "type":"",
+                 "visible":true,
+                 "width":137.679088084613,
+                 "x":1459.27368287193,
+                 "y":945.135549545979
+                }, 
+                {
+                 "height":100.091501533926,
+                 "id":81,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"sink_04"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-720.1430510935,
+                 "type":"",
+                 "visible":true,
+                 "width":85.7470086786222,
+                 "x":1358.85965389004,
+                 "y":805.741923467557
+                }, 
+                {
+                 "height":297.474223081979,
+                 "id":95,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":152.332458270991,
+                 "type":"",
+                 "visible":true,
+                 "width":836.373824096281,
+                 "x":2590.32863703624,
+                 "y":-243.83017710036
+                }, 
+                {
+                 "height":555.70380032669,
+                 "id":128,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-278.675692308681,
+                 "type":"",
+                 "visible":true,
+                 "width":296.959557780732,
+                 "x":2162.69863717648,
+                 "y":-942.998422315894
+                }, 
+                {
+                 "height":238.610570826346,
+                 "id":129,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"car_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-166.544115481598,
+                 "type":"",
+                 "visible":true,
+                 "width":491.644536849573,
+                 "x":1149.64947315211,
+                 "y":-398.439393069659
+                }, 
+                {
+                 "height":311.656667436426,
+                 "id":65,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":258.239160217844,
+                 "x":754.177268466146,
+                 "y":421.221620484885
+                }, 
+                {
+                 "height":1088.03005799437,
+                 "id":66,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":724.905826884511,
+                 "x":755.843935132812,
+                 "y":236.888287151552
+                }, 
+                {
+                 "height":1917.65998772394,
+                 "id":69,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.29437221659,
+                 "x":1927.57836032624,
+                 "y":33.5038323883
+                }, 
+                {
+                 "height":1917.65998772394,
+                 "id":116,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"road_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":221.29437221659,
+                 "x":3846.24502699291,
+                 "y":32.1704990549667
+                }, 
+                {
+                 "height":94.7734972140798,
+                 "id":68,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.002637078622,
+                 "x":1244.83893476648,
+                 "y":266.152419432224
+                }, 
+                {
+                 "height":113.440163880746,
+                 "id":67,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"wall_stone_damage_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.002637078622,
+                 "x":1208.90431497301,
+                 "y":366.972304712625
+                }, 
+                {
+                 "height":319.08526801061,
+                 "id":99,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-30.0311689804632,
+                 "type":"",
+                 "visible":true,
+                 "width":1071.70404545243,
+                 "x":842.705587029192,
+                 "y":142.379135248101
+                }, 
+                {
+                 "height":1237.63759136956,
+                 "id":103,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21404886983,
+                 "x":1422.7829823529,
+                 "y":32.2546438302819
+                }, 
+                {
+                 "height":1237.63759136956,
+                 "id":113,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-180,
+                 "type":"",
+                 "visible":true,
+                 "width":2088.21404886983,
+                 "x":3510.38406184049,
+                 "y":32.1061964515678
+                }, 
+                {
+                 "height":304.459132157436,
+                 "id":105,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.161054539476,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239160217844,
+                 "x":1735.68859990998,
+                 "y":-117.499501423722
+                }, 
+                {
+                 "height":370.545966119481,
+                 "id":98,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.304673940448,
+                 "type":"",
+                 "visible":true,
+                 "width":85.1822730557842,
+                 "x":1795.66018136539,
+                 "y":821.595016964597
+                }, 
+                {
+                 "height":262.817726059863,
+                 "id":88,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"dirty_matress"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1055.12132812915,
+                 "type":"",
+                 "visible":true,
+                 "width":163.789402411751,
+                 "x":816.207972977773,
+                 "y":-180.006933607837
+                }, 
+                {
+                 "height":148.297426162322,
+                 "id":85,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":166.820632679455,
+                 "type":"",
+                 "visible":true,
+                 "width":164.540648760259,
+                 "x":1432.11968042507,
+                 "y":386.551482055475
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[
+                {
+                 "height":1742.68,
+                 "id":134,
+                 "name":"roof",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2917.1,
+                 "x":11.1469696969697,
+                 "y":-1492.55212121212
+                }, 
+                {
+                 "height":837.281,
+                 "id":135,
+                 "name":"roof",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1383.77,
+                 "x":647.508939393939,
+                 "y":175.298893939394
+                }, 
+                {
+                 "height":684.675,
+                 "id":136,
+                 "name":"roof",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":469.102,
+                 "x":1474.53990909091,
+                 "y":251.601893939394
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":138,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.1.6",
+ "tileheight":100,
+ "tilesets":[],
+ "tilewidth":100,
+ "type":"map",
+ "version":1,
+ "width":50
+}
+},{}],240:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50737,9 +51885,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],240:[function(require,module,exports){
-arguments[4][239][0].apply(exports,arguments)
-},{"dup":239}],241:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -52601,7 +53747,7 @@ class Element_Factory {
     //TODO flip
     generated.width = data.height;
     generated.height = data.width;
-    generated.rotation = ((data.rotation +90) * (Math.PI/180));
+    generated.rotation = ((data.rotation+90) * (Math.PI/180));
     generated.sprite.anchor.y = 1;
     generated.sprite.anchor.x = 0;
     generated.sprite.id = data.id;
@@ -53052,67 +54198,30 @@ module.exports = {
 };
 
 },{"../engine/pathfind.js":226}],256:[function(require,module,exports){
-(function (global){
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background  } = require('../elements/background');
-const { Camera      } = require('../../engine/camera');
-
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
-const { Lighter     } = require('../../light/types/lighter');
-const { Element_Factory } = require('../elements/elements_factory');
-const { Trigger_Pad  } = require('../elements/pad');
+const { Level         } = require('../level_model');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
-const level_data  = require('../data/archer_room.json');
+
+const level_data = require('../data/archer_room.json');
 
 class Archer_Room extends Level {
   constructor(player) {
     super();
-    this.name         = 'school_room';
+    this.name     = 'archer_room';
 
-    this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.lighter      = new Lighter();
-    this.camera       = new Camera();
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {walls, exit_pad, background, furnishing, lights, player} = this.elements;
+    Level_Factory.generate(this.player, this.elements);
 
-    global.set_light_level(0.9);
-
-    this.background = new Background(background, true);
-
-    this.player.set_position(player);
-    this.camera.set_center(player);
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
+    const {exit_pad} = this.elements;
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -53122,7 +54231,7 @@ class Archer_Room extends Level {
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
         Level_Factory.clear();
-        Level_Factory.generate(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
   }
@@ -53132,23 +54241,19 @@ module.exports = {
   Archer_Room,
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":223,"../../light/types/candle":268,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/archer_room.json":238,"../elements/background":244,"../elements/elements_factory":249,"../elements/pad":251,"../elements/wall":254,"../level_model":255,"./level_factory":260}],257:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":236,"../data/archer_room.json":238,"../elements/pad":251,"../level_model":255,"./level_factory":260}],257:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 const { Tween } = require('../../engine/tween');
 
-const { Background  } = require('../elements/background');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
-const { Lantern    } = require('../../light/types/lantern');
-const { Element_Factory } = require('../elements/elements_factory');
-const { Trigger_Pad  } = require('../elements/pad');
-const { Click_Pad  } = require('../elements/click_pad');
+const { Lantern     } = require('../../light/types/lantern');
+const { Click_Pad   } = require('../elements/click_pad');
+
 const level_data  = require('../data/intro_room.json');
 
 class Intro  {
@@ -53165,6 +54270,10 @@ class Intro  {
   }
 
   _set_elements() {
+    const { Level_Factory } = require('./level_factory');
+    Level_Factory.generate(this.player, this.elements);
+
+    global.set_light_level(0.9);
     this.player.tween.from({ x: 1000, y: 400 });
     this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
@@ -53182,43 +54291,13 @@ class Intro  {
 
     this.lighter.set_position({ x: 1115, y: 410 });
 
-    const {walls, roof, exit_pad, background, furnishing, lights, click_pad} = this.elements;
-    global.set_light_level(0.9);
+    const {exit_pad, click_pad} = this.elements;
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
     this.camera.tween.to({ x: -600, y: 0 });
     this.camera.tween.smooth();
 
     this.player.keyboard.disable();
-
-    this.background = new Background(background,true);
-
-    roof.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
 
     click_pad.forEach(data => {
       const pad  = new Click_Pad();
@@ -53247,7 +54326,7 @@ class Intro  {
       pad.area.events.on('trigger', () => {
         const { Level_Factory } = require('./level_factory');
         Level_Factory.clear();
-        Level_Factory.generate(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
     this.lighter.hide();
@@ -53278,59 +54357,31 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":223,"../../engine/pixi_containers":227,"../../engine/tween":232,"../../light/types/candle":268,"../../light/types/lantern":269,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/intro_room.json":239,"../elements/background":244,"../elements/click_pad":247,"../elements/elements_factory":249,"../elements/pad":251,"../elements/wall":254,"./level_factory":260}],258:[function(require,module,exports){
+},{"../../engine/camera":223,"../../engine/pixi_containers":227,"../../engine/tween":232,"../../light/types/lantern":269,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/intro_room.json":239,"../elements/click_pad":247,"../elements/pad":251,"./level_factory":260}],258:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Background  } = require('../elements/background');
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Wall        } = require('../elements/wall');
-const { Camera      } = require('../../engine/camera');
-const { Candle      } = require('../../light/types/candle');
-const { Element_Factory } = require('../elements/elements_factory');
-const { Trigger_Pad  } = require('../elements/pad');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
+const { Level_Factory } = require('./level_factory');
+
 const level_data  = require('../data/intro_room_level_2.json');
 
-class Items_Room_level_2  {
+class Items_Room_level_2 {
   constructor(player) {
-    this.name         = 'intro';
-    this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.camera       = new Camera();
+    this.name     = 'intro';
+
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {walls, exit_pad, player,background, furnishing, lights } = this.elements;
+    const {exit_pad} = this.elements;
     global.set_light_level(0.9);
 
-    this.player.set_position(player);
-    this.camera.set_center(player);
-    this.background = new Background(background,true);
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
+    Level_Factory.generate(this.player, this.elements);
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -53341,7 +54392,7 @@ class Items_Room_level_2  {
       pad.area.events.on('trigger', () => {
         const { Level_Factory } = require('./level_factory');
         Level_Factory.clear();
-        Level_Factory.generate(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
 
@@ -53353,65 +54404,35 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":223,"../../light/types/candle":268,"../attributes/parse_tiled_data":236,"../data/intro_room_level_2.json":240,"../elements/background":244,"../elements/elements_factory":249,"../elements/pad":251,"../elements/wall":254,"./level_factory":260}],259:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":236,"../data/intro_room_level_2.json":240,"../elements/pad":251,"./level_factory":260}],259:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background  } = require('../elements/background');
-const { Camera      } = require('../../engine/camera');
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad  } = require('../elements/pad');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
-const { Lighter     } = require('../../light/types/lighter');
-const { Element_Factory } = require('../elements/elements_factory');
+const { Level         } = require('../level_model');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
+const { Lighter       } = require('../../light/types/lighter');
+const { Level_Factory } = require('./level_factory');
+
 const level_data  = require('../data/items_room.json');
 
 class Items_Room extends Level {
   constructor(player) {
     super();
-    this.name         = 'item_room';
+    this.name     = 'item_room';
 
-    this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.lighter      = new Lighter();
-    this.camera       = new Camera();
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
+    this.lighter  = new Lighter();
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {exit_pad, walls, background, furnishing, lights, player} = this.elements;
+    const {exit_pad} = this.elements;
     global.set_light_level(0.4);
 
-    this.background = new Background(background, true);
-
-    this.player.set_position(player);
-    this.camera.set_center(player);
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
+    Level_Factory.generate(this.player, this.elements);
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -53419,10 +54440,8 @@ class Items_Room extends Level {
       pad.width  = data.width;
       pad.anchor = 0;
       pad.set_position(data);
-
     });
   }
-
 }
 
 module.exports = {
@@ -53430,21 +54449,26 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":223,"../../light/types/candle":268,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/items_room.json":241,"../elements/background":244,"../elements/elements_factory":249,"../elements/pad":251,"../elements/wall":254,"../level_model":255}],260:[function(require,module,exports){
+},{"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/items_room.json":241,"../elements/pad":251,"../level_model":255,"./level_factory":260}],260:[function(require,module,exports){
 'use strict';
 
 const { Intro       } = require('./intro');
-const { clear_non_player_containers } = require('../../engine/pixi_containers');
+const { Camera      } = require('../../engine/camera');
+const { Wall        } = require('../elements/wall');
+const { Candle      } = require('../../light/types/candle');
+const { Background  } = require('../elements/background');
+const { Element_Factory } = require('../elements/elements_factory');
 
+const { clear_non_player_containers } = require('../../engine/pixi_containers');
 
 //TODO This is not a Factory make it one and abstract this
 class Level_Factory {
-  static generate(type, player) {
+  static create(type, player) {
     const { Archer_Room } = require('./archer_room');
     const { School_Room } = require('./school_room');
     const { Items_Room  } = require('./item_room');
     const { Items_Room_level_2  } = require('./intro_level_02');
-    console.log(Items_Room_level_2);
+
     switch(type) {
       case 'archer': return new Archer_Room(player);
       case 'intro' : return new Intro(player);
@@ -53455,17 +54479,55 @@ class Level_Factory {
     }
   }
 
+  static generate(player_sprite, {walls, roof, background, furnishing, lights, player}) {
+    try {
+      new Background(background, true);
+
+      player_sprite.set_position(player);
+
+      const camera = new Camera();
+      camera.set_center(player);
+
+      walls.forEach(data => {
+        const wall  = new Wall();
+        wall.shadow = true;
+        wall.height = data.height;
+        wall.width  = data.width;
+        wall.anchor = 0;
+        wall.rotation = (data.rotation * (Math.PI/180));
+
+        wall.set_position(data);
+      });
+
+      furnishing.forEach(data => {
+        Element_Factory.generate_tiled(data);
+      });
+
+      roof.forEach(data => Element_Factory.generate_tiled(data));
+
+      lights.forEach(async data => {
+        const light = new Candle();
+        light.height = data.height;
+        light.width  = data.width;
+        light.set_position(data);
+        light.start_flickering();
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static clear() {
     clear_non_player_containers();
   }
-
 }
 
 module.exports = {
   Level_Factory,
 };
 
-},{"../../engine/pixi_containers":227,"./archer_room":256,"./intro":257,"./intro_level_02":258,"./item_room":259,"./school_room":263}],261:[function(require,module,exports){
+},{"../../engine/camera":223,"../../engine/pixi_containers":227,"../../light/types/candle":268,"../elements/background":244,"../elements/elements_factory":249,"../elements/wall":254,"./archer_room":256,"./intro":257,"./intro_level_02":258,"./item_room":259,"./school_room":263}],261:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -53615,66 +54677,34 @@ module.exports = {
 (function (global){
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background  } = require('../elements/background');
-const { Camera      } = require('../../engine/camera');
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad  } = require('../elements/pad');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
-const { Lighter     } = require('../../light/types/lighter');
-const { Element_Factory } = require('../elements/elements_factory');
-const { Rat        } = require('../../character/archetypes/rat');
-const level_data  = require('../data/school_room.json');
+const { Level         } = require('../level_model');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
+const { Rat           } = require('../../character/archetypes/rat');
+const { Level_Factory } = require('./level_factory');
+
+const level_data = require('../data/school_room.json');
 
 class School_Room extends Level  {
   constructor(player) {
     super();
-    this.name         = 'school_room';
+    this.name     = 'school_room';
 
-    this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.lighter      = new Lighter();
-    this.camera       = new Camera();
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {prey, exit_pad, walls, background, furnishing, lights, player} = this.elements;
+    const {prey, exit_pad, background} = this.elements;
     global.set_light_level(0.4);
 
-    this.background = new Background(background, true);
-
-    this.player.set_position(player);
-    this.camera.set_center(player);
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
+    Level_Factory.generate(this.player, this.elements);
 
     const mouse = new Rat();
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -53688,10 +54718,9 @@ class School_Room extends Level  {
         mouse.logic_start();
       });
     });
-    console.log(background);
+
     this.create_grid(background);
   }
-
 }
 
 module.exports = {
@@ -53699,72 +54728,31 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":205,"../../engine/camera":223,"../../light/types/candle":268,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/school_room.json":242,"../elements/background":244,"../elements/elements_factory":249,"../elements/pad":251,"../elements/wall":254,"../level_model":255}],264:[function(require,module,exports){
+},{"../../character/archetypes/rat":205,"../attributes/parse_tiled_data":236,"../data/school_room.json":242,"../elements/pad":251,"../level_model":255,"./level_factory":260}],264:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Level      } = require('../level_model');
-const { Background  } = require('../elements/background');
-const { Camera      } = require('../../engine/camera');
-
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
-const { Lighter     } = require('../../light/types/lighter');
-const { Element_Factory } = require('../elements/elements_factory');
-const { Trigger_Pad  } = require('../elements/pad');
-const level_data  = require('../data/transition_room.json');
+const { Level         } = require('../level_model');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
+
+const level_data = require('../data/transition_room.json');
 
 class Transition_Room extends Level  {
   constructor(player) {
     super();
-    this.name         = 'school_room';
+    this.name     = 'transition_room';
 
-    this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.lighter      = new Lighter();
-    this.camera       = new Camera();
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {walls, roof, exit_pad, background, furnishing, lights, player} = this.elements;
-
     global.set_light_level(0.9);
-
-    this.background = new Background(background, true);
-
-    this.player.set_position(player);
-    this.camera.set_center(player);
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    roof.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
+    const {exit_pad} = this.elements;
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -53772,11 +54760,15 @@ class Transition_Room extends Level  {
       pad.width  = data.width;
       pad.anchor = 0;
       pad.set_position(data);
-      pad.area.events.on('trigger', () => {
+
+      // Fire once (event) to load in enemies
+      pad.area.events.once('trigger', () => {
         Level_Factory.clear();
-        Level_Factory.generate(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
+
+    Level_Factory.generate(this.player, this.elements);
   }
 }
 
@@ -53786,7 +54778,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":223,"../../light/types/candle":268,"../../light/types/lighter":271,"../attributes/parse_tiled_data":236,"../data/transition_room.json":243,"../elements/background":244,"../elements/elements_factory":249,"../elements/pad":251,"../elements/wall":254,"../level_model":255,"./level_factory":260}],265:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":236,"../data/transition_room.json":243,"../elements/pad":251,"../level_model":255,"./level_factory":260}],265:[function(require,module,exports){
 'use strict';
 
 const { timer } = require('../../engine/ticker');

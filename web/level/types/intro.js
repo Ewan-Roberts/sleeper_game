@@ -2,16 +2,13 @@
 const { collision_container } = require('../../engine/pixi_containers');
 const { Tween } = require('../../engine/tween');
 
-const { Background  } = require('../elements/background');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
-const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
 const { Lighter     } = require('../../light/types/lighter');
-const { Lantern    } = require('../../light/types/lantern');
-const { Element_Factory } = require('../elements/elements_factory');
-const { Trigger_Pad  } = require('../elements/pad');
-const { Click_Pad  } = require('../elements/click_pad');
+const { Lantern     } = require('../../light/types/lantern');
+const { Click_Pad   } = require('../elements/click_pad');
+
 const level_data  = require('../data/intro_room.json');
 
 class Intro  {
@@ -28,6 +25,10 @@ class Intro  {
   }
 
   _set_elements() {
+    const { Level_Factory } = require('./level_factory');
+    Level_Factory.generate(this.player, this.elements);
+
+    global.set_light_level(0.9);
     this.player.tween.from({ x: 1000, y: 400 });
     this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
@@ -45,43 +46,13 @@ class Intro  {
 
     this.lighter.set_position({ x: 1115, y: 410 });
 
-    const {walls, roof, exit_pad, background, furnishing, lights, click_pad} = this.elements;
-    global.set_light_level(0.9);
+    const {exit_pad, click_pad} = this.elements;
     this.camera.tween.from({ x: -120, y: -150 });
     this.camera.tween.to({ x: -100,  y: -120 });
     this.camera.tween.to({ x: -600, y: 0 });
     this.camera.tween.smooth();
 
     this.player.keyboard.disable();
-
-    this.background = new Background(background,true);
-
-    roof.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    walls.forEach(data => {
-      const wall  = new Wall();
-      wall.shadow = true;
-      wall.height = data.height;
-      wall.width  = data.width;
-      wall.anchor = 0;
-      wall.rotation = (data.rotation * (Math.PI/180));
-
-      wall.set_position(data);
-    });
-
-    furnishing.forEach(data => {
-      Element_Factory.generate_tiled(data);
-    });
-
-    lights.forEach(async data => {
-      const light = new Candle();
-      light.height = data.height;
-      light.width  = data.width;
-      light.set_position(data);
-      light.start_flickering();
-    });
 
     click_pad.forEach(data => {
       const pad  = new Click_Pad();
@@ -110,7 +81,7 @@ class Intro  {
       pad.area.events.on('trigger', () => {
         const { Level_Factory } = require('./level_factory');
         Level_Factory.clear();
-        Level_Factory.generate(data.properties.level_name, this.player);
+        Level_Factory.create(data.properties.level_name, this.player);
       });
     });
     this.lighter.hide();

@@ -29,7 +29,7 @@ class Element_Factory {
     //TODO flip
     generated.width = data.height;
     generated.height = data.width;
-    generated.rotation = ((data.rotation +90) * (Math.PI/180));
+    generated.rotation = ((data.rotation+90) * (Math.PI/180));
     generated.sprite.anchor.y = 1;
     generated.sprite.anchor.x = 0;
     generated.sprite.id = data.id;

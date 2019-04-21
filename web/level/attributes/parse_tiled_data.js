@@ -27,9 +27,10 @@ class Tiled_Data {
   get roof() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
 
-    if(!found_layer) throw new Error('no furnishings found in level data');
-
-    return found_layer.objects;
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
   }
 
   get item_areas() {

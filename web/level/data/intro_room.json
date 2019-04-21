@@ -202,7 +202,19 @@
         {
          "draworder":"topdown",
          "name":"player",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":137,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1100,
+                 "y":415.151515151515
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1121,7 +1133,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":137,
+ "nextobjectid":138,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
