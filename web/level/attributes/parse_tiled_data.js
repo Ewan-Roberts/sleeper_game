@@ -83,6 +83,16 @@ class Tiled_Data {
     return pads;
   }
 
+  get click_pad() {
+    const found_layer = this.level_data.layers.find(layer => layer.name ==='click_pad');
+
+    if(!found_layer) throw new Error('no action pads found in level data');
+
+    const pads = found_layer.objects;
+
+    return pads;
+  }
+
   get walls() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='walls');
 

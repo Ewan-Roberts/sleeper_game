@@ -11,14 +11,18 @@ const { View_HUD } = require('../../view/view_player_inventory');
 function point_collides(position) {
   const { children } = collision_container;
 
-  return children.find(child => child.containsPoint(position));
+  return !!children.find(child => child.containsPoint(position));
 }
 
 function point_contains(position) {
   const { children } = roof_container;
   children.forEach(child => {
-    const custom_opacity = child.fade_opacity || 0.6;
-    child.alpha = (child.containsPoint(position))?custom_opacity:1;
+    if(child.containsPoint(position)) {
+      child.alpha = child.fade_opacity | 0.6;
+      return;
+    }
+
+    child.alpha = 1;
   });
 }
 
@@ -36,7 +40,7 @@ class Keyboard {
     this.animation     = animation;
     this.sprite        = sprite;
     this.shift_pressed = false;
-    this.speed         = vitals.speed/2;
+    this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
     this.light         = light;
@@ -44,17 +48,26 @@ class Keyboard {
     PIXI.keyboardManager.on('down', key => this.key_down(key));
     PIXI.keyboardManager.on('released', () => this.key_up());
   }
+
   //TODO
   save_game() {}
 
   key_down(key) {
+    console.log('fire');
     if(!PIXI.keyboardManager.isEnabled) return;
 
     switch(key) {
-      case  87     : this.keyboard_up();          return;//up
-      case  65     : this.keyboard_left();        return;//left
-      case  83     : this.keyboard_down();        return;//down
-      case  68     : this.keyboard_right();       return;//right
+      // wasd
+      case  87     : this.keyboard_up();          return;// w
+      case  83     : this.keyboard_down();        return;// s
+      case  65     : this.keyboard_left();        return;// a
+      case  68     : this.keyboard_right();       return;// d
+      // vim
+      case  75     : this.keyboard_up();          return;// k
+      case  74     : this.keyboard_down();        return;// j
+      case  72     : this.keyboard_left();        return;// h
+      case  76     : this.keyboard_right();       return;// l
+
       case 'n'     : this.save_game();            return;
       case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;
@@ -64,7 +77,6 @@ class Keyboard {
   }
 
   key_up() {
-    //TODO bug player could hold two buttons
     this.shift_pressed = false;
 
     this.animation.idle();
@@ -81,76 +93,71 @@ class Keyboard {
   keyboard_shift() { this.shift_pressed = true; }
 
   keyboard_up() {
-    this.animation.walk();
-    this.animation.face_up();
-
     const point = this.sprite.getGlobalPosition();
     point.y -= this.buffer;
 
-    event_pad(point);
-    const collision = point_collides(point);
+    if(point_collides(point)) return this.animation.idle();
+
     point_contains(point);
+    event_pad(point);
 
-    if(collision) return this.animation.idle();
-
+    this.animation.walk();
+    this.animation.face_up();
     this.animation.move_up_by(this.speed);
+    if(this.light) this.light.set_position(this.sprite);
 
     world.y += this.speed;
-    if(this.light) this.light.set_position(this.sprite);
   }
 
   keyboard_down() {
-    this.animation.walk();
-    this.animation.face_down();
-
     const point = this.sprite.getGlobalPosition();
     point.y += this.buffer;
 
-    event_pad(point);
-    const collision = point_collides(point);
-    point_contains(point);
-    if(collision) return this.animation.idle();
+    if(point_collides(point)) return this.animation.idle();
 
+    point_contains(point);
+    event_pad(point);
+
+    this.animation.walk();
+    this.animation.face_down();
     this.animation.move_down_by(this.speed);
+    if(this.light) this.light.set_position(this.sprite);
 
     world.y -= this.speed;
-    if(this.light) this.light.set_position(this.sprite);
   }
 
   keyboard_left() {
-    this.animation.walk();
-    this.animation.face_left();
-
     const point = this.sprite.getGlobalPosition();
     point.x -= this.buffer;
 
-    event_pad(point);
-    const collision = point_collides(point);
-    point_contains(point);
-    if(collision) return this.animation.idle();
+    if(point_collides(point)) return this.animation.idle();
 
+    point_contains(point);
+    event_pad(point);
+
+    this.animation.walk();
+    this.animation.face_left();
     this.animation.move_left_by(this.speed);
+    if(this.light) this.light.set_position(this.sprite);
 
     world.x += this.speed;
-    if(this.light) this.light.set_position(this.sprite);
   }
 
   keyboard_right() {
-    this.animation.walk();
-    this.animation.face_right();
-
     const point = this.sprite.getGlobalPosition();
     point.x += this.buffer;
 
-    event_pad(point);
-    const collision = point_collides(point);
-    point_contains(point);
-    if(collision) return this.animation.idle();
+    if(point_collides(point)) return this.animation.idle();
 
+    point_contains(point);
+    event_pad(point);
+
+    this.animation.walk();
+    this.animation.face_right();
     this.animation.move_right_by(this.speed);
+    if(this.light) this.light.set_position(this.sprite);
 
     world.x -= this.speed;
-    if(this.light) this.light.set_position(this.sprite);
   }
 }
 

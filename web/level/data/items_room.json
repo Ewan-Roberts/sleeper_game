@@ -32,7 +32,7 @@
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -360,7 +360,7 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"Copy of chest",
+                 "name":"chest",
                  "objects":[
                         {
                          "height":80,
@@ -391,7 +391,7 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"Copy of Copy of chest",
+                 "name":"chest",
                  "objects":[
                         {
                          "height":80,
@@ -419,6 +419,39 @@
                  "visible":true,
                  "x":0,
                  "y":0
+                }, 
+                {
+                 "draworder":"topdown",
+                 "name":"bow",
+                 "objects":[
+                        {
+                         "height":80,
+                         "id":158,
+                         "name":"chest",
+                         "properties":
+                            {
+                             "image_name":"bow_00",
+                             "remove_on_click":true,
+                             "unique_item":"old_bow"
+                            },
+                         "propertytypes":
+                            {
+                             "image_name":"string",
+                             "remove_on_click":"bool",
+                             "unique_item":"string"
+                            },
+                         "rotation":-538.437391787402,
+                         "type":"",
+                         "visible":true,
+                         "width":80,
+                         "x":2476.36193757035,
+                         "y":1599.92793127272
+                        }],
+                 "opacity":1,
+                 "type":"objectgroup",
+                 "visible":true,
+                 "x":0,
+                 "y":0
                 }],
          "name":"furnishing",
          "opacity":1,
@@ -427,7 +460,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":158,
+ "nextobjectid":159,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

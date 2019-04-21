@@ -11,7 +11,7 @@ class Strike {
   }
 
   async start() {
-    Sound.play('lighter_strike');
+    // Sound.play('lighter_strike');
 
     await sleep(300);
     this.shadow.alpha = 0.5;

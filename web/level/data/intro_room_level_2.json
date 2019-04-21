@@ -29,17 +29,6 @@
          "name":"walls",
          "objects":[
                 {
-                 "height":258.66666666667,
-                 "id":2,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1158.69696969697,
-                 "y":273.393939393939
-                }, 
-                {
                  "height":13.0833333333333,
                  "id":3,
                  "name":"",
@@ -47,11 +36,11 @@
                  "type":"",
                  "visible":true,
                  "width":12.0769230769231,
-                 "x":1061.4696969697,
-                 "y":265.007575757576
+                 "x":1301.4696969697,
+                 "y":254.007575757576
                 }, 
                 {
-                 "height":674.651971689517,
+                 "height":500.651971689517,
                  "id":4,
                  "name":"",
                  "rotation":0,
@@ -101,12 +90,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":604.422838400654,
-                 "x":1159,
+                 "width":520.422838400654,
+                 "x":1389,
                  "y":242
                 }, 
                 {
-                 "height":646.839547473553,
+                 "height":413.176181136919,
                  "id":56,
                  "name":"",
                  "rotation":0,
@@ -114,54 +103,10 @@
                  "visible":true,
                  "width":32,
                  "x":753.333333333333,
-                 "y":266.333166666667
+                 "y":501.976731023103
                 }, 
                 {
-                 "height":22.5471498109172,
-                 "id":90,
-                 "name":"",
-                 "rotation":47.1948876845693,
-                 "type":"",
-                 "visible":true,
-                 "width":7.29573545256494,
-                 "x":1285.01606978907,
-                 "y":340.559197412138
-                }, 
-                {
-                 "height":131.50656776616,
-                 "id":91,
-                 "name":"",
-                 "rotation":-12.7409524044823,
-                 "type":"",
-                 "visible":true,
-                 "width":108.768833452634,
-                 "x":1340.06175931731,
-                 "y":272.219240972826
-                }, 
-                {
-                 "height":25.7585262715292,
-                 "id":92,
-                 "name":"",
-                 "rotation":47.1948612010685,
-                 "type":"",
-                 "visible":true,
-                 "width":7.29574,
-                 "x":1313.28743671951,
-                 "y":314.737976467664
-                }, 
-                {
-                 "height":30.0431014673411,
-                 "id":93,
-                 "name":"",
-                 "rotation":47.1948612010685,
-                 "type":"",
-                 "visible":true,
-                 "width":7.29574,
-                 "x":1344.13607047791,
-                 "y":285.207879443075
-                }, 
-                {
-                 "height":710.652,
+                 "height":506.691603960396,
                  "id":94,
                  "name":"",
                  "rotation":0,
@@ -202,7 +147,19 @@
         {
          "draworder":"topdown",
          "name":"player",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":130,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1826.12841284129,
+                 "y":796.142214221422
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -231,25 +188,6 @@
                  "width":638.666666666667,
                  "x":759.666666666667,
                  "y":-1460.27272727273
-                }, 
-                {
-                 "height":216.926470588235,
-                 "id":130,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro_level_02"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":133.078764705883,
-                 "x":1750.45036809269,
-                 "y":683.017379679144
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -313,136 +251,12 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"roof",
-                 "objects":[
-                        {
-                         "height":1560.80742846093,
-                         "id":82,
-                         "name":"collision",
-                         "properties":
-                            {
-                             "fade":0.8,
-                             "image_name":"long_broken"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":-89.8028965746292,
-                         "type":"",
-                         "visible":true,
-                         "width":333.436565822732,
-                         "x":1225.88625947144,
-                         "y":-1063.42116112637
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"garage_roof",
-                 "objects":[
-                        {
-                         "height":684.6751858821,
-                         "id":122,
-                         "name":"roof",
-                         "properties":
-                            {
-                             "fade":0.1,
-                             "image_name":"black_dot"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":469.10170602099,
-                         "x":1461.23277611039,
-                         "y":252.956904426774
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"room_roof",
-                 "objects":[
-                        {
-                         "height":684.6751858821,
-                         "id":123,
-                         "name":"roof",
-                         "properties":
-                            {
-                             "fade":0.1,
-                             "image_name":"black_dot"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":715.10170602099,
-                         "x":747.232776110393,
-                         "y":244.956904426774
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"home_roof",
-                 "objects":[
-                        {
-                         "height":837.281246488164,
-                         "id":89,
-                         "name":"roof",
-                         "properties":
-                            {
-                             "fade":0.1,
-                             "image_name":"roof_00"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":1383.76837268766,
-                         "x":618.20247308009,
-                         "y":162.108419578289
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "name":"apartment_roof_bottom_left",
                  "objects":[
                         {
                          "height":837.281246488164,
                          "id":111,
-                         "name":"collision",
+                         "name":"floor_visual",
                          "properties":
                             {
                              "fade":0.1,
@@ -473,7 +287,7 @@
                         {
                          "height":1556.79219856273,
                          "id":112,
-                         "name":"collision",
+                         "name":"floor_visual",
                          "properties":
                             {
                              "fade":0.1,
@@ -494,37 +308,6 @@
                  "opacity":1,
                  "type":"objectgroup",
                  "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"street_roof",
-                 "objects":[
-                        {
-                         "height":1742.6751858821,
-                         "id":106,
-                         "name":"roof",
-                         "properties":
-                            {
-                             "fade":0.1,
-                             "image_name":"black_dot"
-                            },
-                         "propertytypes":
-                            {
-                             "fade":"float",
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":2917.10170602099,
-                         "x":-2.76722388960701,
-                         "y":-1495.04309557323
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -584,51 +367,6 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"broken_bow",
-                 "objects":[
-                        {
-                         "height":170.051612058509,
-                         "id":70,
-                         "name":"chest",
-                         "properties":
-                            {
-                             "container":true,
-                             "image_name":"bow_broken_00",
-                             "shadow":false
-                            },
-                         "propertytypes":
-                            {
-                             "container":"bool",
-                             "image_name":"string",
-                             "shadow":"bool"
-                            },
-                         "rotation":75.4565418448529,
-                         "type":"",
-                         "visible":true,
-                         "width":93.6063919588124,
-                         "x":1059.85109527477,
-                         "y":633.951453774605
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"bow_broken_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "type":"objectgroup",
                  "visible":true,
                  "x":0,
                  "y":0
@@ -660,7 +398,7 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -671,7 +409,7 @@
                         {
                          "height":833.585882814664,
                          "id":118,
-                         "name":"collision",
+                         "name":"floor_visual",
                          "properties":
                             {
                              "image_name":"shipping_container_00",
@@ -702,7 +440,7 @@
                         {
                          "height":833.585882814664,
                          "id":121,
-                         "name":"collision",
+                         "name":"floor_visual",
                          "properties":
                             {
                              "image_name":"shipping_container_00",
@@ -750,53 +488,8 @@
                          "type":"",
                          "visible":true,
                          "width":47.4509737891709,
-                         "x":919.277924214742,
-                         "y":371.340249653067
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"backpack",
-                 "objects":[
-                        {
-                         "height":46.5833635695616,
-                         "id":87,
-                         "name":"chest",
-                         "properties":
-                            {
-                             "container":true,
-                             "image_name":"back_pack",
-                             "shadow":false
-                            },
-                         "propertytypes":
-                            {
-                             "container":"bool",
-                             "image_name":"string",
-                             "shadow":"bool"
-                            },
-                         "rotation":-105.649070726645,
-                         "type":"",
-                         "visible":true,
-                         "width":58.7240724074159,
-                         "x":1386.5964115837,
-                         "y":634.136285119398
+                         "x":1426.20861728405,
+                         "y":300.053120940196
                         }],
                  "opacity":1,
                  "properties":
@@ -828,41 +521,8 @@
                          "type":"",
                          "visible":true,
                          "width":40.0000000000001,
-                         "x":857.113793147659,
-                         "y":379.482782071434
-                        }],
-                 "opacity":1,
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"chest_full",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"chest",
-                 "objects":[
-                        {
-                         "height":72.6666666666667,
-                         "id":73,
-                         "name":"chest",
-                         "rotation":-244.834663811831,
-                         "type":"",
-                         "visible":true,
-                         "width":40.0000000000001,
-                         "x":887.236700632898,
-                         "y":479.445246185556
+                         "x":852.691448193078,
+                         "y":736.202069168307
                         }],
                  "opacity":1,
                  "properties":
@@ -917,35 +577,6 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"mattress",
-                 "objects":[
-                        {
-                         "height":326.777495644357,
-                         "id":60,
-                         "name":"collision",
-                         "properties":
-                            {
-                             "image_name":"broken_mattress_00"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":-87.7288953492821,
-                         "type":"",
-                         "visible":true,
-                         "width":323.206183112358,
-                         "x":776.959081592431,
-                         "y":906.135951326912
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "name":"table",
                  "objects":[
                         {
@@ -964,66 +595,8 @@
                          "type":"",
                          "visible":true,
                          "width":249.333333333333,
-                         "x":960.072265032411,
-                         "y":289.185767185451
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"chair",
-                 "objects":[
-                        {
-                         "height":75.6656370829608,
-                         "id":78,
-                         "name":"collision",
-                         "properties":
-                            {
-                             "image_name":"chair_00"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":-521.044460943984,
-                         "type":"",
-                         "visible":true,
-                         "width":84.7774871089743,
-                         "x":1269.71335279219,
-                         "y":366.006587202568
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"stove",
-                 "objects":[
-                        {
-                         "height":120.932661831217,
-                         "id":80,
-                         "name":"collision",
-                         "properties":
-                            {
-                             "image_name":"stove_01"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":-372.018905767599,
-                         "type":"",
-                         "visible":true,
-                         "width":128.352009424784,
-                         "x":1332.29591218934,
-                         "y":285.417187645687
+                         "x":964.032661072015,
+                         "y":516.908539462679
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1036,7 +609,7 @@
                  "name":"long_table",
                  "objects":[
                         {
-                         "height":392.732378716508,
+                         "height":490.239508645182,
                          "id":86,
                          "name":"collision",
                          "properties":
@@ -1047,41 +620,12 @@
                             {
                              "image_name":"string"
                             },
-                         "rotation":-538.94543013693,
+                         "rotation":-269.77556680944,
                          "type":"",
                          "visible":true,
-                         "width":137.679088084613,
-                         "x":1459.27368287193,
-                         "y":945.135549545979
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"sink",
-                 "objects":[
-                        {
-                         "height":100.091501533926,
-                         "id":81,
-                         "name":"collision",
-                         "properties":
-                            {
-                             "image_name":"sink_04"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":-720.1430510935,
-                         "type":"",
-                         "visible":true,
-                         "width":85.7470086786222,
-                         "x":1358.85965389004,
-                         "y":805.741923467557
+                         "width":171.861889039811,
+                         "x":1258.25204608293,
+                         "y":763.031216970687
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1178,39 +722,10 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"litter",
-                 "objects":[
-                        {
-                         "height":311.656667436426,
-                         "id":65,
-                         "name":"floor_visual",
-                         "properties":
-                            {
-                             "image_name":"litter_00"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":258.239160217844,
-                         "x":754.177268466146,
-                         "y":421.221620484885
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "name":"dirty_floor",
                  "objects":[
                         {
-                         "height":1088.03005799437,
+                         "height":1168.66011744417,
                          "id":66,
                          "name":"floor_visual",
                          "properties":
@@ -1221,12 +736,12 @@
                             {
                              "image_name":"string"
                             },
-                         "rotation":0,
+                         "rotation":90,
                          "type":"",
                          "visible":true,
-                         "width":724.905826884511,
-                         "x":755.843935132812,
-                         "y":236.888287151552
+                         "width":752.905294575382,
+                         "x":1933.73505271807,
+                         "y":244.941887993319
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -1259,7 +774,7 @@
                         }],
                  "opacity":1,
                  "type":"objectgroup",
-                 "visible":false,
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -1318,35 +833,6 @@
                  "opacity":1,
                  "type":"objectgroup",
                  "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "name":"brick_wall_broken",
-                 "objects":[
-                        {
-                         "height":113.440163880746,
-                         "id":67,
-                         "name":"floor_visual",
-                         "properties":
-                            {
-                             "image_name":"wall_stone_damage_01"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":180,
-                         "type":"",
-                         "visible":true,
-                         "width":265.002637078622,
-                         "x":1208.90431497301,
-                         "y":366.972304712625
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -1468,35 +954,6 @@
                 }, 
                 {
                  "draworder":"topdown",
-                 "name":"ladder",
-                 "objects":[
-                        {
-                         "height":370.545966119481,
-                         "id":98,
-                         "name":"floor_visual",
-                         "properties":
-                            {
-                             "image_name":"ladder_00"
-                            },
-                         "propertytypes":
-                            {
-                             "image_name":"string"
-                            },
-                         "rotation":173.304673940448,
-                         "type":"",
-                         "visible":true,
-                         "width":85.1822730557842,
-                         "x":1795.66018136539,
-                         "y":821.595016964597
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
                  "name":"door_mattress",
                  "objects":[
                         {
@@ -1560,7 +1017,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":131,
+ "nextobjectid":134,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

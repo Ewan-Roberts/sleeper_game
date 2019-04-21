@@ -54,6 +54,7 @@ class Element_Factory {
     generated.rotation = ((data.rotation +90) * (Math.PI/180));
     generated.sprite.anchor.y = 1;
     generated.sprite.anchor.x = 0;
+    generated.sprite.id = data.id;
 
     return generated;
   }

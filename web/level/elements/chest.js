@@ -15,6 +15,18 @@ class Chest extends Item {
       this.shade.anchor.x= 0;
     }
 
+    if(options.unique_item) {
+      this.click = () => {
+        this.sprite.destroy();
+      };
+    }
+
+    if(options.remove_on_click) {
+      this.click = () => {
+        this.sprite.destroy();
+      };
+    }
+
     if(options.container) {
       this.add_component(new Lootable(this));
       this.state  = 'closed';
