@@ -2,7 +2,6 @@
 
 const { Level       } = require('../level_model');
 const { Background  } = require('../elements/background');
-const { Hay         } = require('../elements/hay_bale');
 const { Trigger_Pad } = require('../elements/pad');
 const { Randomise   } = require('../attributes/randomise');
 
@@ -18,7 +17,6 @@ class Random_Room extends Level {
     this.pad         = new Trigger_Pad();
 
     this.background  = new Background('grid_floor');
-    this.hay_bale    = new Hay();
     this.player      = player;
 
   }

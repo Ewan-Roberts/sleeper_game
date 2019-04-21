@@ -90,7 +90,6 @@ class Intro  {
       pad.anchor = 0;
       pad.set_position(data);
       pad.click = () => {
-        console.log('tos');
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
         tween_it.from(dumpster);
