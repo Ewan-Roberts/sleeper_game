@@ -96,6 +96,25 @@ class Tiled_Data {
     return background[0];
   }
 
+  get door() {
+    const found_layer = this.level_data.layers.find(layer => layer.name ==='door');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
+  get grid() {
+    const found_layer = this.level_data.layers.find(layer => layer.name ==='grid');
+
+    if(!found_layer) throw new Error('no grid found in level data');
+    const grid = found_layer.objects;
+
+    //There should only ever be one background
+    return grid[0];
+  }
+
   get lights() {
     const found_layer = this.level_data.layers.find(layer => layer.name ==='lights');
 

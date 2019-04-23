@@ -31,6 +31,10 @@ class Trigger_Pad {
     this.area.anchor.set(value);
   }
 
+  set rotation(value) {
+    this.area.rotation = value;
+  }
+
   set_position({x,y}) {
     this.area.position.set(x,y);
   }

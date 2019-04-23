@@ -3,24 +3,45 @@
  "layers":[
         {
          "draworder":"topdown",
+         "name":"grid",
+         "objects":[
+                {
+                 "height":3608,
+                 "id":223,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2112,
+                 "x":168,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "name":"background",
          "objects":[
                 {
-                 "height":3604.28166433434,
+                 "height":536.28166433434,
                  "id":51,
                  "name":"carpet_floor",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2112.0835271267,
-                 "x":262.341848132192,
-                 "y":181.168310433683
+                 "width":772.0835271267,
+                 "x":-337.658151867808,
+                 "y":1125.16831043368
                 }],
          "offsetx":-95.212121212121,
          "offsety":-40.6666666666666,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -922,7 +943,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":223,
+ "nextobjectid":226,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

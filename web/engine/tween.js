@@ -5,17 +5,52 @@ const { gui_container } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
 
 class Tween {
-  constructor(sprite, light) {
+  constructor(sprite, shadow) {
     this.name     = 'tween';
 
     this.sprite   = sprite;
-    this.light    = light;
+    this.shadow   = shadow;
+
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+
+    if(this.shadow) {
+      this.shadow_movement = PIXI.tweenManager.createTween(this.shadow);
+    }
+
     this.path = new PIXI.tween.TweenPath();
     // this.movement.expire  = true;
     this.path_arc = 15;
     this.show = false;
     this.time = 0;
+  }
+  //TODO change this to default behaviour
+  //change the current from and to with path_to etc
+  no_path_from(data) {
+    this.movement.from(data);
+    if(this.shadow_movement) {
+      this.shadow_movement.from(data);
+    }
+  }
+
+  no_path_start() {
+    this.movement.start();
+    if(this.shadow_movement) {
+      this.shadow_movement.start();
+    }
+  }
+
+  no_path_to(data) {
+    this.movement.to(data);
+    if(this.shadow_movement) {
+      this.shadow_movement.to(data);
+    }
+  }
+
+  set no_path_time(value) {
+    this.movement.time = value;
+    if(this.shadow_movement) {
+      this.shadow_movement.time = value;
+    }
   }
 
   from(start) {

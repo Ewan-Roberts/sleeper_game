@@ -17,6 +17,8 @@ class Level_Factory {
     const { Items_Room  } = require('./item_room');
     const { Items_Room_level_2  } = require('./intro_level_02');
     const { Street } = require('./street');
+    const { Simple } = require('./simple');
+    const { Transition_Room } = require('./transition_room');
 
     switch(properties.level_name) {
       case 'archer': return new Archer_Room(player);
@@ -24,11 +26,13 @@ class Level_Factory {
       case 'intro_level_02' : return new Items_Room_level_2(player);
       case 'school': return new School_Room(player);
       case 'item'  : return new Items_Room(player);
-      case 'street'  : return new Street(player);
+      case 'street': return new Street(player);
+      case 'transition': return new Transition_Room(player);
+      default      : return new Simple(player, properties);
     }
   }
 
-  static generate(player_sprite, {walls, shroud, item, roof, floor, background, collision, lights, player}) {
+  static generate(player_sprite, {walls, door, shroud, item, roof, floor, background, collision, lights, player}) {
     try {
       new Background(background, true);
 
@@ -49,8 +53,9 @@ class Level_Factory {
       });
 
       collision.forEach(data => Element_Factory.generate_tiled('collision', data));
-      item.forEach(data => Element_Factory.generate_tiled('item',data));
-      floor.forEach(data => Element_Factory.generate_tiled('floor',data));
+      item.forEach(data => Element_Factory.generate_tiled('item', data));
+      floor.forEach(data => Element_Factory.generate_tiled('floor', data));
+      door.forEach(data => Element_Factory.generate_tiled('door', data));
 
       // order important
       shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));

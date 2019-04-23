@@ -168,122 +168,29 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"furnishing",
+         "name":"exit_pad",
          "objects":[
                 {
-                 "height":148.297,
-                 "id":146,
-                 "name":"floor_visual",
+                 "height":272,
+                 "id":15,
+                 "name":"",
                  "properties":
                     {
-                     "image_name":"litter_01"
+                     "level_name":"intro"
                     },
                  "propertytypes":
                     {
-                     "image_name":"string"
+                     "level_name":"string"
                     },
-                 "rotation":166.821,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":164.541,
-                 "x":2159.7295,
-                 "y":2675.8515
-                }, 
-                {
-                 "height":145.819,
-                 "id":147,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333,
-                 "x":2091.3335,
-                 "y":2271.0905
-                }, 
-                {
-                 "height":270.498,
-                 "id":148,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"bale_square"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":82.4865,
-                 "type":"",
-                 "visible":true,
-                 "width":153.056,
-                 "x":2445.472,
-                 "y":1890.751
-                }, 
-                {
-                 "height":370.546,
-                 "id":149,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":189.126,
-                 "type":"",
-                 "visible":true,
-                 "width":85.1823,
-                 "x":2721.40885,
-                 "y":2402.727
-                }, 
-                {
-                 "height":326.777,
-                 "id":150,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"broken_mattress_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-100.187,
-                 "type":"",
-                 "visible":true,
-                 "width":282.574,
-                 "x":3008.713,
-                 "y":2646.6115
-                }, 
-                {
-                 "height":145.819,
-                 "id":151,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333,
-                 "x":2147.3335,
-                 "y":1873.0905
+                 "width":298.666666666667,
+                 "x":3253.66666666667,
+                 "y":1809.72727272727
                 }],
+         "offsetx":-26,
+         "offsety":-12,
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -314,36 +221,189 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"exit_pad",
+         "name":"floor",
          "objects":[
                 {
-                 "height":272,
-                 "id":15,
+                 "height":370.546,
+                 "id":152,
                  "name":"",
                  "properties":
                     {
-                     "level_name":"intro"
+                     "image_name":"ladder_00"
                     },
                  "propertytypes":
                     {
-                     "level_name":"string"
+                     "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":189.126,
                  "type":"",
                  "visible":true,
-                 "width":298.666666666667,
-                 "x":3253.66666666667,
-                 "y":1809.72727272727
+                 "width":85.1823,
+                 "x":2791.40885,
+                 "y":2506.727
+                }, 
+                {
+                 "height":148.297,
+                 "id":153,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":166.821,
+                 "type":"",
+                 "visible":true,
+                 "width":164.541,
+                 "x":2265.7295,
+                 "y":2577.8515
                 }],
-         "offsetx":-26,
-         "offsety":-12,
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
+                {
+                 "height":145.819,
+                 "id":147,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-278.501463808118,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333,
+                 "x":2156.33494241965,
+                 "y":2295.4300568583
+                }, 
+                {
+                 "height":270.498,
+                 "id":148,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bale_square"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":82.4865,
+                 "type":"",
+                 "visible":true,
+                 "width":179.61732481666,
+                 "x":2441.99884668411,
+                 "y":1864.41772861074
+                }, 
+                {
+                 "height":326.777,
+                 "id":150,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"broken_mattress_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-100.187,
+                 "type":"",
+                 "visible":true,
+                 "width":282.574,
+                 "x":2154.713,
+                 "y":1930.6115
+                }, 
+                {
+                 "height":145.819,
+                 "id":151,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-265.398,
+                 "type":"",
+                 "visible":true,
+                 "width":249.333,
+                 "x":2147.3335,
+                 "y":1873.0905
+                }, 
+                {
+                 "height":270.498,
+                 "id":156,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bale_square"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":104.065367571675,
+                 "type":"",
+                 "visible":true,
+                 "width":179.617,
+                 "x":2810.86723559316,
+                 "y":1949.22697541265
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[
+                {
+                 "height":916.301,
+                 "id":154,
+                 "name":"tree",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"tree_11"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":969.221,
+                 "x":2325.3895,
+                 "y":1187.8495
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":152,
+ "nextobjectid":157,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

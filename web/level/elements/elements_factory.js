@@ -1,6 +1,7 @@
 'use strict';
 
 const { Chest     } = require('./chest');
+const { Door      } = require('./door');
 const { Roof      } = require('./ceiling');
 const { Shroud    } = require('./shroud');
 const { CollisionItem } = require('./collision_object');
@@ -13,6 +14,7 @@ class Element_Factory {
       case 'item':      return new Chest(options);
       case 'roof':      return new Roof(options);
       case 'collision': return new CollisionItem(options);
+      case 'door':      return new Door(options);
       case 'floor':     return new BackgroundVisualItem(options);
       case 'shroud':    return new Shroud(options);
     }
@@ -20,7 +22,6 @@ class Element_Factory {
 
   static generate_tiled(level, data) {
     const generated = this.generate(level, data.properties);
-
     generated.set_position(data);
     //TODO flip
     generated.width = data.height;

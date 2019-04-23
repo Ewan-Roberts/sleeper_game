@@ -95,15 +95,15 @@
                  "y":843.20521175031
                 }, 
                 {
-                 "height":100,
+                 "height":282.686902754356,
                  "id":138,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":100,
-                 "x":3186.86512352754,
-                 "y":1873.094434351
+                 "width":52.2203485103992,
+                 "x":3080.06354960961,
+                 "y":1951.79033092211
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -158,26 +158,7 @@
         {
          "draworder":"topdown",
          "name":"floor",
-         "objects":[
-                {
-                 "height":1229.03612559586,
-                 "id":161,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1610.41140590903,
-                 "x":1834.81694002471,
-                 "y":1685.44501232701
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -189,32 +170,9 @@
          "name":"collision",
          "objects":[
                 {
-                 "height":323.951005857662,
-                 "id":150,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"dumpster_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-275.049243759782,
-                 "type":"",
-                 "visible":true,
-                 "width":194.268948967944,
-                 "x":2779.12487646496,
-                 "y":1681.50579714848
-                }, 
-                {
                  "height":323.951,
                  "id":152,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "container":true,
@@ -227,35 +185,88 @@
                      "image_name":"string",
                      "shadow":"bool"
                     },
-                 "rotation":-275.049,
+                 "rotation":-520.924128887094,
                  "type":"",
                  "visible":true,
                  "width":194.269,
-                 "x":2205.40900736278,
-                 "y":1463.5743183209
+                 "x":3165.11115701361,
+                 "y":2602.58369246754
                 }, 
                 {
-                 "height":323.951,
-                 "id":153,
-                 "name":"collision",
+                 "height":133.264374511842,
+                 "id":165,
+                 "name":"",
                  "properties":
                     {
-                     "container":true,
-                     "image_name":"dumpster_00",
-                     "shadow":true
+                     "image_name":"bale_square"
                     },
                  "propertytypes":
                     {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
+                     "image_name":"string"
                     },
-                 "rotation":-275.049,
+                 "rotation":-37.2205467860741,
                  "type":"",
                  "visible":true,
-                 "width":194.269,
-                 "x":1937.67139022758,
-                 "y":2094.67013013961
+                 "width":88.4906622477558,
+                 "x":1947.10892059566,
+                 "y":2420.59249715279
+                }, 
+                {
+                 "height":147.511272887095,
+                 "id":167,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":183.610536667205,
+                 "type":"",
+                 "visible":true,
+                 "width":414.740761712524,
+                 "x":2503.49759906052,
+                 "y":2719.38105860829
+                }, 
+                {
+                 "height":113.484883946614,
+                 "id":169,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"desk_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":49.3947727274927,
+                 "type":"",
+                 "visible":true,
+                 "width":345.385699811744,
+                 "x":2980.33207629519,
+                 "y":1616.35804065016
+                }, 
+                {
+                 "height":133.264,
+                 "id":170,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bale_square"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":9.66599683363804,
+                 "type":"",
+                 "visible":true,
+                 "width":88.4907,
+                 "x":1969.07103109434,
+                 "y":2098.46643186017
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -270,7 +281,7 @@
                 {
                  "height":323.951,
                  "id":157,
-                 "name":"roof",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"black_dot"
@@ -289,7 +300,7 @@
                 {
                  "height":916.301,
                  "id":159,
-                 "name":"roof",
+                 "name":"",
                  "properties":
                     {
                      "fade":1,
@@ -304,8 +315,8 @@
                  "type":"",
                  "visible":true,
                  "width":969.221,
-                 "x":2469.93495454545,
-                 "y":832.758590909091
+                 "x":2143.90909732229,
+                 "y":1060.41457741837
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -318,7 +329,7 @@
          "name":"exit_pad",
          "objects":[
                 {
-                 "height":350,
+                 "height":189.797639123103,
                  "id":15,
                  "name":"",
                  "properties":
@@ -333,11 +344,11 @@
                  "type":"",
                  "visible":true,
                  "width":200.666666666667,
-                 "x":2028.66666666667,
-                 "y":2307.72727272727
+                 "x":2014.61382799326,
+                 "y":2285.24273084981
                 }, 
                 {
-                 "height":381,
+                 "height":189.881394041597,
                  "id":145,
                  "name":"",
                  "properties":
@@ -354,11 +365,11 @@
                  "type":"",
                  "visible":true,
                  "width":211,
-                 "x":2879,
-                 "y":2305
+                 "x":2870.56829679595,
+                 "y":2358.40078695897
                 }, 
                 {
-                 "height":381,
+                 "height":192.691961776279,
                  "id":148,
                  "name":"",
                  "properties":
@@ -374,10 +385,10 @@
                  "visible":true,
                  "width":211,
                  "x":2870.21237330273,
-                 "y":1658.8019697839
+                 "y":1878.02625308913
                 }, 
                 {
-                 "height":381,
+                 "height":187.070826306914,
                  "id":149,
                  "name":"",
                  "properties":
@@ -392,8 +403,8 @@
                  "type":"",
                  "visible":true,
                  "width":211,
-                 "x":2003.88994071524,
-                 "y":1704.69984700708
+                 "x":2012.32164391929,
+                 "y":2061.64194931175
                 }, 
                 {
                  "height":164.502529510961,
@@ -401,7 +412,7 @@
                  "name":"",
                  "properties":
                     {
-                     "level_name":"street"
+                     "level_name":"truck"
                     },
                  "propertytypes":
                     {
@@ -410,9 +421,87 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":338.384818999438,
-                 "x":2429.17746121416,
-                 "y":2601.84092186622
+                 "width":223.151541877459,
+                 "x":2246.49055845981,
+                 "y":2430.39629005059
+                }, 
+                {
+                 "height":234.850083754918,
+                 "id":171,
+                 "name":"",
+                 "properties":
+                    {
+                     "cutscene":false,
+                     "level_name":"intro"
+                    },
+                 "propertytypes":
+                    {
+                     "cutscene":"bool",
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":211,
+                 "x":2870.89123102867,
+                 "y":2108.54460399101
+                }, 
+                {
+                 "height":164.503,
+                 "id":172,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"apartment"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":349.627270938729,
+                 "x":2576.73217678471,
+                 "y":2562.49273833614
+                }, 
+                {
+                 "height":187.071,
+                 "id":173,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"light"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":211,
+                 "x":2016.47863968522,
+                 "y":1851.37737240023
+                }, 
+                {
+                 "height":192.692,
+                 "id":174,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"intro_level_02"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":211,
+                 "x":2623.56127037662,
+                 "y":1651.82713097246
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -420,7 +509,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":163,
+ "nextobjectid":176,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

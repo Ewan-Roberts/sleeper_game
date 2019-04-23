@@ -20,7 +20,7 @@
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -173,7 +173,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -195,7 +195,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -217,7 +217,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -226,12 +226,12 @@
          "name":"exit_pad",
          "objects":[
                 {
-                 "height":182,
+                 "height":1251.8058653449,
                  "id":15,
                  "name":"",
                  "properties":
                     {
-                     "level_name":"school"
+                     "level_name":"street"
                     },
                  "propertytypes":
                     {
@@ -240,9 +240,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":638.666666666667,
-                 "x":759.666666666667,
-                 "y":-1460.27272727273
+                 "width":217.353159851301,
+                 "x":3176.02354399009,
+                 "y":-1080.26446622358
                 }, 
                 {
                  "height":216.926470588235,
@@ -262,6 +262,44 @@
                  "width":133.078764705883,
                  "x":1750.45036809269,
                  "y":683.017379679144
+                }, 
+                {
+                 "height":182,
+                 "id":177,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"school"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":638.667,
+                 "x":684.383972118959,
+                 "y":-1470.59520859149
+                }, 
+                {
+                 "height":294.154645441716,
+                 "id":178,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"truck"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":-27.6309024483113,
+                 "type":"",
+                 "visible":true,
+                 "width":49.0790854865986,
+                 "x":2456.10189123637,
+                 "y":-503.69677824506
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -286,7 +324,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -524,7 +562,7 @@
                 }],
          "opacity":0.18,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1088,7 +1126,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1098,11 +1136,11 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
- "nextobjectid":175,
+ "nextobjectid":179,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

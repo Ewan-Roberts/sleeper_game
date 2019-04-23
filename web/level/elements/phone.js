@@ -33,9 +33,6 @@ class Phone extends Item {
     item_container.addChild(this.sprite);
 
     this.sprite.on('removed', ()=> {
-      console.log('rthios');
-      console.log(this.effect);
-
       this.effect.volume = 0;
     });
   }

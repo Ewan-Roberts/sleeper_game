@@ -3,6 +3,7 @@ const { roof_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
+//TODO remove item extend
 class Roof extends Item {
   constructor(options) {
     super(options.image_name);

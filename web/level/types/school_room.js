@@ -21,7 +21,7 @@ class School_Room extends Level  {
   }
 
   _set_elements() {
-    const {prey, exit_pad, background} = this.elements;
+    const {prey, exit_pad, grid} = this.elements;
     global.set_light_level(0.4);
 
     Level_Factory.generate(this.player, this.elements);
@@ -41,7 +41,6 @@ class School_Room extends Level  {
       pad.width  = data.width;
       pad.anchor = 0;
       pad.set_position(data);
-      console.log(data);
       if(data.properties) {
         pad.area.events.once('trigger', () => {
           Level_Factory.clear();
@@ -57,7 +56,7 @@ class School_Room extends Level  {
       });
     });
 
-    this.create_grid(background);
+    this.create_grid(grid);
   }
 }
 

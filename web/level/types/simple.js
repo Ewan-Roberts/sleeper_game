@@ -3,28 +3,37 @@
 const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
-const { Lighter       } = require('../../light/types/lighter');
 const { Level_Factory } = require('./level_factory');
 
-const level_data  = require('../data/items_room.json');
-
-class Items_Room extends Level {
-  constructor(player) {
+class Simple extends Level  {
+  constructor(player, properties) {
     super();
-    this.name     = 'item_room';
+    let level_data;
+
+    global.set_light_level(0.9);
+    // TODO manage this dynamically
+    if(properties.level_name === 'truck') {
+      level_data = require('../data/truck.json');
+    }
+
+    if(properties.level_name === 'apartment') {
+      level_data = require('../data/apartment.json');
+    }
+
+    if(properties.level_name === 'light') {
+      level_data = require('../data/lights_room.json');
+      global.set_light_level(0.5);
+    }
+    this.name     = properties.level_name;
 
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-    this.lighter  = new Lighter();
 
     this._set_elements();
   }
 
   _set_elements() {
     const {exit_pad} = this.elements;
-    global.set_light_level(0.9);
-
-    Level_Factory.generate(this.player, this.elements);
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -36,13 +45,14 @@ class Items_Room extends Level {
       // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
         Level_Factory.clear();
-
         Level_Factory.create(data.properties, this.player);
       });
     });
+
+    Level_Factory.generate(this.player, this.elements);
   }
 }
 
 module.exports = {
-  Items_Room,
+  Simple,
 };

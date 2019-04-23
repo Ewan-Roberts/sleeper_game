@@ -4,6 +4,7 @@ const { collision_container } = require('../../engine/pixi_containers');
 const event    = require('events');
 const { Item } = require('./item_model');
 
+//TODO remove item extend
 class Wall extends Item {
   constructor() {
     super('black_dot');
