@@ -49256,6 +49256,15 @@ class Tiled_Data {
     return [];
   }
 
+  get decal() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'decal');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
   get floor() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'floor');
 
@@ -51091,7 +51100,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51136,8 +51145,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":1394.56166666667,
-                 "y":21.6648484848487
+                 "x":1778.58624423963,
+                 "y":26.7851761858216
                 }, 
                 {
                  "height":1237.64,
@@ -51155,8 +51164,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":3455.895,
-                 "y":23.6042424242425
+                 "x":3865.52121607783,
+                 "y":28.7245701252155
                 }, 
                 {
                  "height":1917.66,
@@ -51197,26 +51206,7 @@ module.exports={ "height":50,
                  "y":246.894090909091
                 }, 
                 {
-                 "height":319.085,
-                 "id":143,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-30.0312,
-                 "type":"",
-                 "visible":true,
-                 "width":1071.7,
-                 "x":565.239090909091,
-                 "y":566.001818181818
-                }, 
-                {
-                 "height":1917.66,
+                 "height":2081.51048643113,
                  "id":144,
                  "name":"",
                  "properties":
@@ -51231,107 +51221,22 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":221.294,
-                 "x":1787.89845454545,
-                 "y":25.1699999999998
-                }, 
-                {
-                 "height":304.459,
-                 "id":145,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.1611,
-                 "type":"",
-                 "visible":true,
-                 "width":257.239,
-                 "x":1989.56231818182,
-                 "y":-237.077984848485
-                }, 
-                {
-                 "height":370.546,
-                 "id":146,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.305,
-                 "type":"",
-                 "visible":true,
-                 "width":85.1823,
-                 "x":1672.56036515152,
-                 "y":835.939121212121
-                }, 
-                {
-                 "height":113.44,
-                 "id":148,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"wall_stone_damage_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.003,
-                 "x":1170.16516666667,
-                 "y":376.613333333333
-                }, 
-                {
-                 "height":94.7735,
-                 "id":149,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.003,
-                 "x":1227.83,
-                 "y":237.61
-                }, 
-                {
-                 "height":203.04005987864,
-                 "id":152,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":168.239,
-                 "x":1072.21,
-                 "y":408
-                }, 
+                 "x":1772.53747144253,
+                 "y":35.4106554019456
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[
                 {
                  "height":262.818,
-                 "id":158,
+                 "id":181,
                  "name":"",
                  "properties":
                     {
@@ -51345,12 +51250,164 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":163.789,
-                 "x":972.461238898326,
-                 "y":-300.057386314001
+                 "x":885.847435483871,
+                 "y":-397.666040450589
+                }, 
+                {
+                 "height":276.27,
+                 "id":182,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-563.482,
+                 "type":"",
+                 "visible":true,
+                 "width":263.754,
+                 "x":3093.9294516129,
+                 "y":-168.856966205837
+                }, 
+                {
+                 "height":304.459,
+                 "id":183,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239,
+                 "x":2359.85976267281,
+                 "y":-408.245885048643
+                }, 
+                {
+                 "height":276.27,
+                 "id":184,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-263.062,
+                 "type":"",
+                 "visible":true,
+                 "width":263.754,
+                 "x":1486.14655350742,
+                 "y":-901.063827444956
+                }, 
+                {
+                 "height":370.546,
+                 "id":185,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.305,
+                 "type":"",
+                 "visible":true,
+                 "width":85.1823,
+                 "x":1785.36583924731,
+                 "y":-1096.69133077317
+                }, 
+                {
+                 "height":203.04,
+                 "id":186,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":193.841,
+                 "x":1900.00730337942,
+                 "y":-178.324915514593
+                }, 
+                {
+                 "height":113.44,
+                 "id":187,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wall_stone_damage_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1274.67156707629,
+                 "y":368.267199180748
+                }, 
+                {
+                 "height":94.7735,
+                 "id":188,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1273.94960087046,
+                 "y":257.629635048643
+                }, 
+                {
+                 "height":319.085,
+                 "id":189,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-30.0312,
+                 "type":"",
+                 "visible":true,
+                 "width":1071.7,
+                 "x":1118.01584741423,
+                 "y":-180.023810803891
                 }],
-         "opacity":0.18,
+         "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51639,7 +51696,7 @@ module.exports={ "height":50,
                 {
                  "height":297.474223081979,
                  "id":95,
-                 "name":"truck",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"truck_00"
@@ -51677,7 +51734,7 @@ module.exports={ "height":50,
                 {
                  "height":238.610570826346,
                  "id":129,
-                 "name":"car",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"car_02"
@@ -51693,9 +51750,9 @@ module.exports={ "height":50,
                  "x":1149.64947315211,
                  "y":-398.439393069659
                 }],
-         "opacity":0.5,
+         "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51820,7 +51877,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51928,7 +51985,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":179,
+ "nextobjectid":190,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53282,7 +53339,7 @@ module.exports={ "height":50,
                 {
                  "height":145.819,
                  "id":159,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -53301,7 +53358,7 @@ module.exports={ "height":50,
                 {
                  "height":145.819,
                  "id":162,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -53320,7 +53377,7 @@ module.exports={ "height":50,
                 {
                  "height":145.819,
                  "id":163,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -53358,7 +53415,7 @@ module.exports={ "height":50,
                 {
                  "height":145.819,
                  "id":165,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -53434,61 +53491,25 @@ module.exports={ "height":50,
          "objects":[
                 {
                  "height":80,
-                 "id":167,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "image_name":"bow_00",
-                     "remove_on_click":true,
-                     "unique_item":"old_bow"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "remove_on_click":"bool",
-                     "unique_item":"string"
-                    },
-                 "rotation":-538.437,
-                 "type":"",
-                 "visible":true,
-                 "width":80,
-                 "x":2408,
-                 "y":1578.66666666667
-                }, 
-                {
-                 "height":80,
-                 "id":168,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"box_06"
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string"
-                    },
-                 "rotation":-538.437,
-                 "type":"",
-                 "visible":true,
-                 "width":80,
-                 "x":2176,
-                 "y":1572
-                }, 
-                {
-                 "height":80,
                  "id":169,
-                 "name":"chest",
+                 "name":"",
                  "properties":
                     {
                      "container":true,
-                     "image_name":"box_06"
+                     "image_name":"box_06",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"Box of shit",
+                     "label_image":"eye_icon"
                     },
                  "propertytypes":
                     {
                      "container":"bool",
-                     "image_name":"string"
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
                     },
                  "rotation":-538.437,
                  "type":"",
@@ -53496,6 +53517,66 @@ module.exports={ "height":50,
                  "width":80,
                  "x":2022.66666666667,
                  "y":1580
+                }, 
+                {
+                 "height":80,
+                 "id":181,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"box_06",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Some other shit",
+                     "label_image":"take_icon"
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
+                    },
+                 "rotation":-525.978769306166,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":2142.04522293038,
+                 "y":1578.73075584604
+                }, 
+                {
+                 "height":96.1591852623835,
+                 "id":182,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bow_00",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Old Bow",
+                     "label_image":"take_icon",
+                     "remove_on_click":true,
+                     "unique_item":"old_bow"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "remove_on_click":"bool",
+                     "unique_item":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":2394.12417970722,
+                 "y":1599.57597173145
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53557,7 +53638,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":181,
+ "nextobjectid":183,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -57225,16 +57306,36 @@ module.exports = {
 };
 
 },{"../../engine/pixi_containers":229,"./item_model":257}],252:[function(require,module,exports){
+(function (global){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
 
 const { Lootable } = require('../../character/attributes/lootable');
+const { Button   } = require('../../view/button');
 const { Item     } = require('./item_model');
 
 class Chest extends Item {
   constructor(options) {
     super(options.image_name);
     this.name = 'chest';
+
+    if(options.label) {
+      this.sprite.interactive = true;
+      this.state = '';
+
+      const thing = new Button(options);
+      thing.visible = false;
+
+      this.sprite.on('mouseover', () => {
+        thing.set_position(this.sprite);
+
+        thing.visible = true;
+      });
+
+      this.sprite.on('mouseout', () => {
+        thing.visible = false;
+      });
+    }
 
     if(options.shadow) {
       this.shadow = true;
@@ -57262,13 +57363,45 @@ class Chest extends Item {
 
     item_container.addChild(this.sprite);
   }
+
+  set state_handling(bool) {
+    if(bool) this._add_state_handling();
+  }
+
+  _add_state_handling() {
+    this.click = () => {
+      switch(this.state) {
+        case 'closed': this._open();  break;
+        case 'full'  : this._empty(); break;
+      }
+    };
+  }
+
+  _open() {
+    if(this.state === 'open') return;
+    this.state = 'open';
+
+    global.set_light_level(1);
+    this.loot.populate();
+    this.loot.show();
+  }
+
+  _empty() {
+    this.state = 'empty';
+  }
+
+  fill() {
+    this.state = 'full';
+  }
+
 }
 
 module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/lootable":211,"../../engine/pixi_containers":229,"./item_model":257}],253:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../character/attributes/lootable":211,"../../engine/pixi_containers":229,"../../view/button":288,"./item_model":257}],253:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -57411,6 +57544,7 @@ class Element_Factory {
       case 'collision': return new CollisionItem(options);
       case 'door':      return new Door(options);
       case 'floor':     return new BackgroundVisualItem(options);
+      case 'decal':     return new BackgroundVisualItem(options);
       case 'shroud':    return new Shroud(options);
     }
   }
@@ -57435,7 +57569,6 @@ module.exports = {
 };
 
 },{"./ceiling":251,"./chest":252,"./collision_object":254,"./door":255,"./shroud":260,"./visual_object":261}],257:[function(require,module,exports){
-(function (global){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -57585,35 +57718,6 @@ class Item {
     collision_container.addChild(this.shade);
   }
 
-  set state_handling(bool) {
-    if(bool) this._add_state_handling();
-  }
-
-  _add_state_handling() {
-    this.click = () => {
-      switch(this.state) {
-        case 'closed': this._open();  break;
-        case 'full'  : this._empty(); break;
-      }
-    };
-  }
-
-  _open() {
-    if(this.state === 'open') return;
-    this.state = 'open';
-
-    global.set_light_level(1);
-    this.loot.populate();
-    this.loot.show();
-  }
-
-  _empty() {
-    this.state = 'empty';
-  }
-
-  fill() {
-    this.state = 'full';
-  }
 
 }
 
@@ -57622,7 +57726,6 @@ module.exports = {
 };
 
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../engine/pixi_containers":229,"pixi.js":156}],258:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
@@ -58192,18 +58295,33 @@ class Level_Factory {
     const { Transition_Room } = require('./transition_room');
 
     switch(properties.level_name) {
-      case 'archer': return new Archer_Room(player);
-      case 'intro' : return new Intro(player, properties);
+      case 'archer'    : return new Archer_Room(player);
+      case 'intro'     : return new Intro(player, properties);
       case 'intro_level_02' : return new Items_Room_level_2(player);
-      case 'school': return new School_Room(player);
-      case 'item'  : return new Items_Room(player);
-      case 'street': return new Street(player);
+      case 'school'    : return new School_Room(player);
+      case 'item'      : return new Items_Room(player);
+      case 'street'    : return new Street(player);
       case 'transition': return new Transition_Room(player);
-      default      : return new Simple(player, properties);
+      default          : return new Simple(player, properties);
     }
   }
 
-  static generate(player_sprite, {walls, door, shroud, item, roof, floor, background, collision, lights, player}) {
+  static generate(
+    player_sprite,
+    {
+      walls,
+      door,
+      shroud,
+      item,
+      roof,
+      floor,
+      decal,
+      background,
+      collision,
+      lights,
+      player,
+    }
+  ) {
     try {
       new Background(background, true);
 
@@ -58228,9 +58346,10 @@ class Level_Factory {
       floor.forEach(data => Element_Factory.generate_tiled('floor', data));
       door.forEach(data => Element_Factory.generate_tiled('door', data));
 
-      // order important
       shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
+      decal.forEach(data => Element_Factory.generate_tiled('decal', data));
       roof.forEach(data => Element_Factory.generate_tiled('roof', data));
+
       lights.forEach(async data => {
         const light = new Candle();
         light.height = data.height;
@@ -59239,29 +59358,82 @@ module.exports = {
 
 },{}],288:[function(require,module,exports){
 'use strict';
-
 const PIXI = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
+//TODO move to seperate file
+class Label {
+  constructor(text) {
+    this.sprite = new PIXI.Text(text, {
+      fontSize: 20,
+      fill: '#D2D8D7',
+      fontVariant: 'small-caps',
+      stroke: '#4a1850',
+      lineJoin: 'round',
+      strokeThickness: 5,
+    });
+
+    this.sprite.anchor.set(0.5);
+    visual_effects_container.addChild(this.sprite);
+  }
+
+  set visible(bool) {
+    this.sprite.visible = bool;
+  }
+
+  set_position({x, y}) {
+    this.sprite.position.set(x, y);
+  }
+
+  remove() {
+    visual_effects_container.removeChild(this.sprite);
+  }
+}
+
+
 class Button {
-  constructor(image) {
+  constructor({label_action, label_description, label_image}) {
     this.name = 'button';
 
-    this.sprite = PIXI.Sprite.fromFrame(image);
+    if(label_action) {
+      this.action_label = new Label(label_action);
+    }
+
+    if(label_description) {
+      this.description_label = new Label(label_description);
+    }
+
+    this.sprite = PIXI.Sprite.fromFrame(label_image);
     this.sprite.anchor.set(0.5);
-    this.sprite.alpha  = 1;
-    this.sprite.height = 50;
-    this.sprite.width  = 50;
+    this.sprite.height = 30;
+    this.sprite.width  = 30;
     this.sprite.interactive = true;
     this.sprite.buttonMode = true;
-    this.sprite.zIndex = -9;
 
     visual_effects_container.addChild(this.sprite);
   }
 
   set_position({x, y}) {
     this.sprite.position.set(x, y);
+
+    if(this.action_label) {
+      this.action_label.set_position({x, y: y+30});
+    }
+    if(this.description_label) {
+      this.description_label.set_position({x, y: y-30});
+    }
+  }
+
+  set visible(bool) {
+    this.sprite.visible = bool;
+
+    if(this.action_label) {
+      this.action_label.visible = bool;
+    }
+    if(this.description_label) {
+      this.description_label.visible = bool;
+    }
   }
 
   remove() {

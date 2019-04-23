@@ -106,7 +106,7 @@
                 {
                  "height":145.819,
                  "id":159,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -125,7 +125,7 @@
                 {
                  "height":145.819,
                  "id":162,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -144,7 +144,7 @@
                 {
                  "height":145.819,
                  "id":163,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -182,7 +182,7 @@
                 {
                  "height":145.819,
                  "id":165,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -258,61 +258,25 @@
          "objects":[
                 {
                  "height":80,
-                 "id":167,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "image_name":"bow_00",
-                     "remove_on_click":true,
-                     "unique_item":"old_bow"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "remove_on_click":"bool",
-                     "unique_item":"string"
-                    },
-                 "rotation":-538.437,
-                 "type":"",
-                 "visible":true,
-                 "width":80,
-                 "x":2408,
-                 "y":1578.66666666667
-                }, 
-                {
-                 "height":80,
-                 "id":168,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"box_06"
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string"
-                    },
-                 "rotation":-538.437,
-                 "type":"",
-                 "visible":true,
-                 "width":80,
-                 "x":2176,
-                 "y":1572
-                }, 
-                {
-                 "height":80,
                  "id":169,
-                 "name":"chest",
+                 "name":"",
                  "properties":
                     {
                      "container":true,
-                     "image_name":"box_06"
+                     "image_name":"box_06",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"Box of shit",
+                     "label_image":"eye_icon"
                     },
                  "propertytypes":
                     {
                      "container":"bool",
-                     "image_name":"string"
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
                     },
                  "rotation":-538.437,
                  "type":"",
@@ -320,6 +284,66 @@
                  "width":80,
                  "x":2022.66666666667,
                  "y":1580
+                }, 
+                {
+                 "height":80,
+                 "id":181,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"box_06",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Some other shit",
+                     "label_image":"take_icon"
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
+                    },
+                 "rotation":-525.978769306166,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":2142.04522293038,
+                 "y":1578.73075584604
+                }, 
+                {
+                 "height":96.1591852623835,
+                 "id":182,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bow_00",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Old Bow",
+                     "label_image":"take_icon",
+                     "remove_on_click":true,
+                     "unique_item":"old_bow"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "remove_on_click":"bool",
+                     "unique_item":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":2394.12417970722,
+                 "y":1599.57597173145
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -381,7 +405,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":181,
+ "nextobjectid":183,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

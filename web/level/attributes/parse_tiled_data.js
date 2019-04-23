@@ -52,6 +52,15 @@ class Tiled_Data {
     return [];
   }
 
+  get decal() {
+    const found_layer = this.level_data.layers.find(layer => layer.name === 'decal');
+
+    if(found_layer){
+      return found_layer.objects;
+    }
+    return [];
+  }
+
   get floor() {
     const found_layer = this.level_data.layers.find(layer => layer.name === 'floor');
 

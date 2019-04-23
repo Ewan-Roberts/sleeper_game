@@ -303,7 +303,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -348,8 +348,8 @@
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":1394.56166666667,
-                 "y":21.6648484848487
+                 "x":1778.58624423963,
+                 "y":26.7851761858216
                 }, 
                 {
                  "height":1237.64,
@@ -367,8 +367,8 @@
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":3455.895,
-                 "y":23.6042424242425
+                 "x":3865.52121607783,
+                 "y":28.7245701252155
                 }, 
                 {
                  "height":1917.66,
@@ -409,26 +409,7 @@
                  "y":246.894090909091
                 }, 
                 {
-                 "height":319.085,
-                 "id":143,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-30.0312,
-                 "type":"",
-                 "visible":true,
-                 "width":1071.7,
-                 "x":565.239090909091,
-                 "y":566.001818181818
-                }, 
-                {
-                 "height":1917.66,
+                 "height":2081.51048643113,
                  "id":144,
                  "name":"",
                  "properties":
@@ -443,107 +424,22 @@
                  "type":"",
                  "visible":true,
                  "width":221.294,
-                 "x":1787.89845454545,
-                 "y":25.1699999999998
-                }, 
-                {
-                 "height":304.459,
-                 "id":145,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.1611,
-                 "type":"",
-                 "visible":true,
-                 "width":257.239,
-                 "x":1989.56231818182,
-                 "y":-237.077984848485
-                }, 
-                {
-                 "height":370.546,
-                 "id":146,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.305,
-                 "type":"",
-                 "visible":true,
-                 "width":85.1823,
-                 "x":1672.56036515152,
-                 "y":835.939121212121
-                }, 
-                {
-                 "height":113.44,
-                 "id":148,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"wall_stone_damage_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.003,
-                 "x":1170.16516666667,
-                 "y":376.613333333333
-                }, 
-                {
-                 "height":94.7735,
-                 "id":149,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":180,
-                 "type":"",
-                 "visible":true,
-                 "width":265.003,
-                 "x":1227.83,
-                 "y":237.61
-                }, 
-                {
-                 "height":203.04005987864,
-                 "id":152,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":168.239,
-                 "x":1072.21,
-                 "y":408
-                }, 
+                 "x":1772.53747144253,
+                 "y":35.4106554019456
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[
                 {
                  "height":262.818,
-                 "id":158,
+                 "id":181,
                  "name":"",
                  "properties":
                     {
@@ -557,12 +453,164 @@
                  "type":"",
                  "visible":true,
                  "width":163.789,
-                 "x":972.461238898326,
-                 "y":-300.057386314001
+                 "x":885.847435483871,
+                 "y":-397.666040450589
+                }, 
+                {
+                 "height":276.27,
+                 "id":182,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-563.482,
+                 "type":"",
+                 "visible":true,
+                 "width":263.754,
+                 "x":3093.9294516129,
+                 "y":-168.856966205837
+                }, 
+                {
+                 "height":304.459,
+                 "id":183,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":257.239,
+                 "x":2359.85976267281,
+                 "y":-408.245885048643
+                }, 
+                {
+                 "height":276.27,
+                 "id":184,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-263.062,
+                 "type":"",
+                 "visible":true,
+                 "width":263.754,
+                 "x":1486.14655350742,
+                 "y":-901.063827444956
+                }, 
+                {
+                 "height":370.546,
+                 "id":185,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.305,
+                 "type":"",
+                 "visible":true,
+                 "width":85.1823,
+                 "x":1785.36583924731,
+                 "y":-1096.69133077317
+                }, 
+                {
+                 "height":203.04,
+                 "id":186,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":193.841,
+                 "x":1900.00730337942,
+                 "y":-178.324915514593
+                }, 
+                {
+                 "height":113.44,
+                 "id":187,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wall_stone_damage_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1274.67156707629,
+                 "y":368.267199180748
+                }, 
+                {
+                 "height":94.7735,
+                 "id":188,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":265.003,
+                 "x":1273.94960087046,
+                 "y":257.629635048643
+                }, 
+                {
+                 "height":319.085,
+                 "id":189,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-30.0312,
+                 "type":"",
+                 "visible":true,
+                 "width":1071.7,
+                 "x":1118.01584741423,
+                 "y":-180.023810803891
                 }],
-         "opacity":0.18,
+         "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -851,7 +899,7 @@
                 {
                  "height":297.474223081979,
                  "id":95,
-                 "name":"truck",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"truck_00"
@@ -889,7 +937,7 @@
                 {
                  "height":238.610570826346,
                  "id":129,
-                 "name":"car",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"car_02"
@@ -905,9 +953,9 @@
                  "x":1149.64947315211,
                  "y":-398.439393069659
                 }],
-         "opacity":0.5,
+         "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1032,7 +1080,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1140,7 +1188,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":179,
+ "nextobjectid":190,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

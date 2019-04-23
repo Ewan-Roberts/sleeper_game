@@ -16,6 +16,7 @@ class Element_Factory {
       case 'collision': return new CollisionItem(options);
       case 'door':      return new Door(options);
       case 'floor':     return new BackgroundVisualItem(options);
+      case 'decal':     return new BackgroundVisualItem(options);
       case 'shroud':    return new Shroud(options);
     }
   }
