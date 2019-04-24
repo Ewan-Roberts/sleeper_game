@@ -1,7 +1,7 @@
 'use strict';
 
+const PIXI = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
-const { timer        } = require('../../engine/ticker');
 
 class Status {
   constructor() {
@@ -13,7 +13,8 @@ class Status {
   }
 
   set_vitals_ticker() {
-    const vitals_timer = timer.createTimer(5000);
+    const vitals_timer = PIXI.tweenManager.createTween();
+    vitals_timer.time   = 5000;
     vitals_timer.expire = true;
     vitals_timer.repeat = 4;
 

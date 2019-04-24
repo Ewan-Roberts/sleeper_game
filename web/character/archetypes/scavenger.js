@@ -1,6 +1,6 @@
 'use strict';
 
-const { timer               } = require('../../engine/ticker');
+const PIXI = require('pixi.js');
 const { sleep               } = require('../../utils/time');
 const { collision_container } = require('../../engine/pixi_containers');
 const { distance_between    } = require('../../utils/math');
@@ -36,7 +36,8 @@ class Scavenger extends Animal {
 
     this.blood = new Blood();
 
-    this._logic        = timer.createTimer(800);
+    this._logic        = PIXI.tweenManager.createTween(this.sprite);
+    this._logic.time   = 800;
     this._logic.repeat = 90;
     this._logic.expire = true;
     this._logic.dead   = false;

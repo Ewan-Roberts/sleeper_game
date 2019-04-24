@@ -3,8 +3,6 @@ const PIXI = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
-const { timer                    } = require('../engine/ticker');
-
 //TODO this needs to be abstracted
 const cone = PIXI.Sprite.fromFrame('yellow_triangle');
 cone.alpha = 0;
@@ -20,7 +18,7 @@ class Aiming_Cone {
     cone.width    = 600;
     cone.alpha    = 0;
 
-    const cone_timer  = timer.createTimer(50);
+    const cone_timer  = PIXI.tweenManager.createTween(cone);
     cone_timer.repeat = 55;
     cone_timer.expire = true;
 
@@ -33,10 +31,6 @@ class Aiming_Cone {
     cone_timer.on('stop', function() {
       this.remove();
       cone.alpha = 0;
-    });
-
-    cone_timer.on('end', function() {
-      this.remove();
     });
 
     return cone_timer;

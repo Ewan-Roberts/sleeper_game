@@ -1,6 +1,6 @@
 'use strict';
 
-const { timer } = require('../../engine/ticker');
+const PIXI = require('pixi.js');
 
 class Flicker {
   constructor(shadow) {
@@ -10,7 +10,8 @@ class Flicker {
   }
 
   start() {
-    const flicker_timer  = timer.createTimer(140);
+    const flicker_timer  = PIXI.tweenManager.createTween();
+    flicker_timer.time   = 140;
     flicker_timer.repeat = 100;
     flicker_timer.expire = true;
 

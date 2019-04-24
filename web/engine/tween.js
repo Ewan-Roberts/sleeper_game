@@ -3,6 +3,7 @@ const PIXI = require('pixi.js');
 
 const { gui_container } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
+require('./ticker');
 
 class Tween {
   constructor(sprite, shadow) {

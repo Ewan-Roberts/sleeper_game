@@ -4,7 +4,6 @@ const PIXI = require('pixi.js');
 const { GlitchFilter   } = require('@pixi/filter-glitch');
 const { PixelateFilter } = require('@pixi/filter-pixelate');
 const { item_container } = require('../../engine/pixi_containers');
-const { timer          } = require('../../engine/ticker');
 const { ringing_phone, answer_phone  } = require('../../engine/sound');
 const { LED            } = require('../../light/types/led');
 const { Item           } = require('./item_model');
@@ -55,7 +54,8 @@ class Phone extends Item {
   }
 
   glitch_phone() {
-    this.glitch_timer = timer.createTimer(100);
+    this.glitch_timer = PIXI.tweenManager.createTween();
+    this.glitch_timer.time = 100;
     this.glitch_timer.repeat = 100;
     this.glitch_timer.expire = true;
 
@@ -85,7 +85,8 @@ class Phone extends Item {
   blink(time = 2000) {
     let light_state    = true;
 
-    this.blink_timer  = timer.createTimer(time);
+    this.blink_timer = PIXI.tweenManager.createTween();
+    this.blink_timer.time = time;
     this.blink_timer.repeat = 10;
     this.blink_timer.expire = true;
 

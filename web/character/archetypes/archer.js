@@ -1,6 +1,6 @@
 'use strict';
 
-const { timer            } = require('../../engine/ticker');
+const PIXI = require('pixi.js');
 const { distance_between } = require('../../utils/math');
 
 const event     = require('events');
@@ -27,7 +27,8 @@ class Archer extends Enemy {
     this.add_component(new Melee(this));
     this.add_component(new Range(this));
 
-    this._logic = timer.createTimer(800);
+    this._logic        = PIXI.tweenManager.createTween(this.sprite);
+    this._logic.time   = 800;
     this._logic.repeat = 20;
     this._logic.expire = true;
     this._logic.dead   = false;

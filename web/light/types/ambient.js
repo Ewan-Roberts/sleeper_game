@@ -1,8 +1,6 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { timer } = require('../../engine/ticker');
-
 // TODO This class is a slight exception
 // It does not extent the Light model
 // it may need to be in effects
@@ -12,7 +10,8 @@ class Ambient {
   }
 
   fade_in(speed = 0.05, limit = 1) {
-    const fade_timer  = timer.createTimer(140);
+    const fade_timer  = PIXI.tweenManager.createTween(this.sprite);
+    fade_timer.time   = 140;
     fade_timer.repeat = 50;
     fade_timer.expire = true;
 
@@ -30,7 +29,8 @@ class Ambient {
   }
 
   fade_out(speed = 0.05, limit = 0) {
-    const fade_timer  = timer.createTimer(100);
+    const fade_timer  = PIXI.tweenManager.createTween(this.sprite);
+    fade_timer.time   = 100;
     fade_timer.repeat = 50;
     fade_timer.expire = true;
 

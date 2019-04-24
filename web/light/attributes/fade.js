@@ -1,6 +1,6 @@
 'use strict';
 
-const { timer } = require('../../engine/ticker');
+const PIXI = require('pixi.js');
 
 class Fade {
   constructor(entity) {
@@ -11,7 +11,8 @@ class Fade {
   }
 
   in(speed = 0.05, limit = 1) {
-    const fade_timer  = timer.createTimer(100);
+    const fade_timer = PIXI.tweenManager.createTween();
+    fade_timer.time   = 100;
     fade_timer.repeat = 50;
     fade_timer.expire = true;
 
@@ -28,7 +29,8 @@ class Fade {
   }
 
   out(speed = 0.05, limit = 0) {
-    const fade_timer  = timer.createTimer(140);
+    const fade_timer = PIXI.tweenManager.createTween();
+    fade_timer.time   = 140;
     fade_timer.expire = true;
     fade_timer.repeat = 50;
 
