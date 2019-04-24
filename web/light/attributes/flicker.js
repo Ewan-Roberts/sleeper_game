@@ -12,6 +12,7 @@ class Flicker {
   start() {
     const flicker_timer  = timer.createTimer(140);
     flicker_timer.repeat = 100;
+    flicker_timer.expire = true;
 
     flicker_timer.on('repeat', () => {
       if(this.shadow.intensity > 0.4) {

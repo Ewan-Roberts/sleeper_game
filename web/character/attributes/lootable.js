@@ -52,11 +52,11 @@ class Lootable {
   }
 
   show() {
-    new Fade(this.inventory.slot_container).in();
+    Fade.in(this.inventory.slot_container);
   }
 
   hide() {
-    new Fade(this.inventory.slot_container).in();
+    Fade.out(this.inventory.slot_container);
   }
 
   clear() {

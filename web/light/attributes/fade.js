@@ -13,6 +13,7 @@ class Fade {
   in(speed = 0.05, limit = 1) {
     const fade_timer  = timer.createTimer(100);
     fade_timer.repeat = 50;
+    fade_timer.expire = true;
 
     fade_timer.on('repeat', () => {
       if(this.shadow.intensity > limit) {
@@ -28,6 +29,7 @@ class Fade {
 
   out(speed = 0.05, limit = 0) {
     const fade_timer  = timer.createTimer(140);
+    fade_timer.expire = true;
     fade_timer.repeat = 50;
 
     fade_timer.on('repeat', () => {

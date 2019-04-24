@@ -21,17 +21,19 @@ function point_collides(position) {
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
   const roofs = roof_container.children ;
+
   roofs.forEach(child => {
+    const tweening = PIXI.tweenManager.getTweensForTarget(child);
+    if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
-      new Fade(child).to(child.fade_opacity || 0.6);
+      Fade.to(child, child.fade_opacity || 0.6);
 
       return;
     }
     if(child.alpha !== 1) {
-      new Fade(child).in();
+      Fade.in(child);
     }
   });
-
 }
 
 function event_pad(position) {

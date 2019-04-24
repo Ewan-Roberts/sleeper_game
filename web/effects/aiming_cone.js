@@ -22,6 +22,7 @@ class Aiming_Cone {
 
     const cone_timer  = timer.createTimer(50);
     cone_timer.repeat = 55;
+    cone_timer.expire = true;
 
     cone_timer.on('repeat', () => {
       cone.width  -= 12;

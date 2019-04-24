@@ -9,10 +9,8 @@ class View_Inventory {
   constructor() {
     this.slot_container = new PIXI.Container();
     this.slot_container.interactive = true;
-
     this.slot_container.on('mouseout', () => {
-      const fade = new Fade(this.slot_container);
-      fade.out();
+      Fade.out(this.slot_container);
     });
   }
 
@@ -49,7 +47,6 @@ class View_Inventory {
       item.interactive = true;
       item.buttonMode  = true;
       item.click = () => {
-        console.log(item);
         player_events.emit('give_item', loot_item);
 
         item.destroy();

@@ -47371,17 +47371,19 @@ function point_collides(position) {
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
   const roofs = roof_container.children ;
+
   roofs.forEach(child => {
+    const tweening = PIXI.tweenManager.getTweensForTarget(child);
+    if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
-      new Fade(child).to(child.fade_opacity || 0.6);
+      Fade.to(child, child.fade_opacity || 0.6);
 
       return;
     }
     if(child.alpha !== 1) {
-      new Fade(child).in();
+      Fade.in(child);
     }
   });
-
 }
 
 function event_pad(position) {
@@ -47605,11 +47607,11 @@ class Lootable {
   }
 
   show() {
-    new Fade(this.inventory.slot_container).in();
+    Fade.in(this.inventory.slot_container);
   }
 
   hide() {
-    new Fade(this.inventory.slot_container).in();
+    Fade.out(this.inventory.slot_container);
   }
 
   clear() {
@@ -47711,7 +47713,7 @@ class Mouse {
       const rotation = radian(mouse_position, sprite);
       sprite.rotation = rotation;
 
-      if(cone) cone.rotation = rotation - 1.57;
+      // if(cone) cone.rotation = rotation - 1.57;
     });
 
     document.addEventListener('mouseup', event => {
@@ -47806,6 +47808,7 @@ class Status {
 
   set_vitals_ticker() {
     const vitals_timer = timer.createTimer(5000);
+    vitals_timer.expire = true;
     vitals_timer.repeat = 4;
 
     vitals_timer.on('repeat', function() {
@@ -48048,6 +48051,7 @@ class Aiming_Cone {
 
     const cone_timer  = timer.createTimer(50);
     cone_timer.repeat = 55;
+    cone_timer.expire = true;
 
     cone_timer.on('repeat', () => {
       cone.width  -= 12;
@@ -48095,48 +48099,46 @@ module.exports = {
 
 },{"../engine/pixi_containers":231,"pixi.js":156}],223:[function(require,module,exports){
 'use strict';
-
 const PIXI = require('pixi.js');
 
+//const tweening = PIXI.tweenManager.getTweensForTarget(sprite);
 //TODO this isnt really a mixin currently consider making it static
 class Fade {
-  constructor(sprite) {
-    this.movement = PIXI.tweenManager.createTween(sprite);
-    this.movement.time = 150;
+  static in(sprite) {
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
 
-    this.sprite = sprite;
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: 1});
+    movement.start();
+    sprite.visible = true;
   }
 
-  in() {
-    if(this.movement.active) return;
-    if(this.sprite.alpha === 1) return;
+  to(sprite, value) {
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
 
-    this.sprite.visible = true;
-    this.movement.from({alpha: this.sprite.alpha});
-    this.movement.to({alpha: 1});
-    this.start();
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: value});
+    movement.start();
   }
 
-  to(value) {
-    if(this.sprite.alpha === 0) return;
-    this.sprite.visible = true;
-    this.movement.from({alpha: this.sprite.alpha});
-    this.movement.to({alpha: value});
-    this.start();
-  }
+  static out(sprite) {
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
 
-  out() {
-    if(this.sprite.alpha === 0) return;
-    this.movement.from({alpha: 1});
-    this.movement.to({alpha: 0});
-    this.start();
-    this.movement.on('end', () => this.sprite.visible = false);
-  }
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: 0});
+    movement.start();
 
-  start() {
-    this.movement.start();
+    movement.on('end', () => sprite.visible = false);
   }
 }
+
+
 
 module.exports = {
   Fade,
@@ -48742,9 +48744,11 @@ class Tween {
     this.shadow   = shadow;
 
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire = true;
 
     if(this.shadow) {
       this.shadow_movement = PIXI.tweenManager.createTween(this.shadow);
+      this.shadow_movement.expire = true;
     }
 
     this.path = new PIXI.tween.TweenPath();
@@ -57966,6 +57970,7 @@ class Phone extends Item {
   glitch_phone() {
     this.glitch_timer = timer.createTimer(100);
     this.glitch_timer.repeat = 100;
+    this.glitch_timer.expire = true;
 
     this.sprite.filters = [
       new GlitchFilter({
@@ -57995,6 +58000,7 @@ class Phone extends Item {
 
     this.blink_timer  = timer.createTimer(time);
     this.blink_timer.repeat = 10;
+    this.blink_timer.expire = true;
 
     this.blink_timer.on('start', () => {
       this.light.set_position(this.sprite);
@@ -58929,6 +58935,7 @@ class Flicker {
   start() {
     const flicker_timer  = timer.createTimer(140);
     flicker_timer.repeat = 100;
+    flicker_timer.expire = true;
 
     flicker_timer.on('repeat', () => {
       if(this.shadow.intensity > 0.4) {
@@ -59591,10 +59598,8 @@ class View_Inventory {
   constructor() {
     this.slot_container = new PIXI.Container();
     this.slot_container.interactive = true;
-
     this.slot_container.on('mouseout', () => {
-      const fade = new Fade(this.slot_container);
-      fade.out();
+      Fade.out(this.slot_container);
     });
   }
 
@@ -59631,7 +59636,6 @@ class View_Inventory {
       item.interactive = true;
       item.buttonMode  = true;
       item.click = () => {
-        console.log(item);
         player_events.emit('give_item', loot_item);
 
         item.destroy();

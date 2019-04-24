@@ -30,7 +30,7 @@ class Mouse {
       const rotation = radian(mouse_position, sprite);
       sprite.rotation = rotation;
 
-      if(cone) cone.rotation = rotation - 1.57;
+      // if(cone) cone.rotation = rotation - 1.57;
     });
 
     document.addEventListener('mouseup', event => {

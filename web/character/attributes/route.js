@@ -30,6 +30,7 @@ class Route {
     new_tween.path = new_path;
     new_tween.time = 3000;
     new_tween.delay = 2000;
+    new_tween.expire = true;
 
     this.tween.movement.chain(new_tween);
   }

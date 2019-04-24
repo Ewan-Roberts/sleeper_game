@@ -57,6 +57,7 @@ class Phone extends Item {
   glitch_phone() {
     this.glitch_timer = timer.createTimer(100);
     this.glitch_timer.repeat = 100;
+    this.glitch_timer.expire = true;
 
     this.sprite.filters = [
       new GlitchFilter({
@@ -86,6 +87,7 @@ class Phone extends Item {
 
     this.blink_timer  = timer.createTimer(time);
     this.blink_timer.repeat = 10;
+    this.blink_timer.expire = true;
 
     this.blink_timer.on('start', () => {
       this.light.set_position(this.sprite);

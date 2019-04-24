@@ -14,6 +14,7 @@ class Status {
 
   set_vitals_ticker() {
     const vitals_timer = timer.createTimer(5000);
+    vitals_timer.expire = true;
     vitals_timer.repeat = 4;
 
     vitals_timer.on('repeat', function() {

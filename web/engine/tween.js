@@ -12,9 +12,11 @@ class Tween {
     this.shadow   = shadow;
 
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire = true;
 
     if(this.shadow) {
       this.shadow_movement = PIXI.tweenManager.createTween(this.shadow);
+      this.shadow_movement.expire = true;
     }
 
     this.path = new PIXI.tween.TweenPath();

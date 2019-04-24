@@ -1,46 +1,44 @@
 'use strict';
-
 const PIXI = require('pixi.js');
 
+//const tweening = PIXI.tweenManager.getTweensForTarget(sprite);
 //TODO this isnt really a mixin currently consider making it static
 class Fade {
-  constructor(sprite) {
-    this.movement = PIXI.tweenManager.createTween(sprite);
-    this.movement.time = 150;
+  static in(sprite) {
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
 
-    this.sprite = sprite;
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: 1});
+    movement.start();
+    sprite.visible = true;
   }
 
-  in() {
-    if(this.movement.active) return;
-    if(this.sprite.alpha === 1) return;
+  to(sprite, value) {
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
 
-    this.sprite.visible = true;
-    this.movement.from({alpha: this.sprite.alpha});
-    this.movement.to({alpha: 1});
-    this.start();
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: value});
+    movement.start();
   }
 
-  to(value) {
-    if(this.sprite.alpha === 0) return;
-    this.sprite.visible = true;
-    this.movement.from({alpha: this.sprite.alpha});
-    this.movement.to({alpha: value});
-    this.start();
-  }
+  static out(sprite) {
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
 
-  out() {
-    if(this.sprite.alpha === 0) return;
-    this.movement.from({alpha: 1});
-    this.movement.to({alpha: 0});
-    this.start();
-    this.movement.on('end', () => this.sprite.visible = false);
-  }
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: 0});
+    movement.start();
 
-  start() {
-    this.movement.start();
+    movement.on('end', () => sprite.visible = false);
   }
 }
+
+
 
 module.exports = {
   Fade,
