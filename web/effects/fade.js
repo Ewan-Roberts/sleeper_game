@@ -15,7 +15,7 @@ class Fade {
     sprite.visible = true;
   }
 
-  to(sprite, value) {
+  static to(sprite, value) {
     const movement = PIXI.tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
@@ -37,8 +37,6 @@ class Fade {
     movement.on('end', () => sprite.visible = false);
   }
 }
-
-
 
 module.exports = {
   Fade,

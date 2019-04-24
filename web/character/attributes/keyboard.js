@@ -49,7 +49,6 @@ class Keyboard {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
-    this.shift_pressed = false;
     this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
@@ -60,7 +59,8 @@ class Keyboard {
   }
 
   //TODO
-  save_game() {}
+  save_game() {
+  }
 
   key_down(key) {
     if(!PIXI.keyboardManager.isEnabled) return;
@@ -78,16 +78,12 @@ class Keyboard {
       case  76     : this.keyboard_right();       return;// l
 
       case 'n'     : this.save_game();            return;
-      case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;
-      case 'Shift' : this.keyboard_shift();       return;
       default      : return;
     }
   }
 
   key_up() {
-    this.shift_pressed = false;
-
     this.animation.idle();
   }
 
@@ -98,8 +94,6 @@ class Keyboard {
   disable() {
     PIXI.keyboardManager.disable();
   }
-
-  keyboard_shift() { this.shift_pressed = true; }
 
   keyboard_up() {
     const point = this.sprite.getGlobalPosition();

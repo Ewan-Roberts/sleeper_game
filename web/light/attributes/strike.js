@@ -1,6 +1,6 @@
 'use strict';
 
-const { Sound } = require('../../engine/sound');
+//const { Sound } = require('../../engine/sound');
 const { sleep } = require('../../utils/time');
 
 class Strike {
@@ -30,8 +30,28 @@ class Strike {
     await sleep(1000);
     this.shadow.alpha = 0.6;
     this.shadow.range = 180;
+  }
 
-    this.shadow.destroy();
+  async fast() {
+    // Sound.play('lighter_strike');
+
+    await sleep(100);
+    this.shadow.alpha = 0.5;
+    this.shadow.range = 110;
+
+    await sleep(20);
+    this.shadow.alpha = 0;
+
+    await sleep(400);
+    this.shadow.alpha = 0.4;
+    this.shadow.range = 140;
+
+    await sleep(30);
+    this.shadow.alpha = 0;
+
+    await sleep(1000);
+    this.shadow.alpha = 0.6;
+    this.shadow.range = 180;
   }
 }
 

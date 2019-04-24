@@ -39,6 +39,10 @@ class Light {
     this.shadow.range = value;
   }
 
+  set alpha(value) {
+    this.shadow.alpha = value;
+  }
+
   hide() {
     this.shadow.alpha = 0;
   }

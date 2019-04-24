@@ -31,6 +31,7 @@ class Element_Factory {
     generated.sprite.anchor.y = 1;
     generated.sprite.anchor.x = 0;
     generated.sprite.id = data.id;
+    generated.id = data.id;
 
     return generated;
   }

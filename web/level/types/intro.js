@@ -54,8 +54,8 @@ class Intro  {
     this.bird.tween.time = 10000;
 
     this.camera.tween.from({ x: -120, y: -150 });
-    this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -600, y: 0 });
+    this.camera.tween.to({   x: -100, y: -120 });
+    this.camera.tween.to({   x: -600, y: 0 });
     this.camera.tween.smooth();
     this.camera.tween.time = 1000;
     this.camera.tween.start();
@@ -94,7 +94,6 @@ class Intro  {
         tween_it.time = 2000;
         tween_it.start();
         this.bird.tween.start();
-
       };
     });
 
@@ -106,7 +105,6 @@ class Intro  {
       pad.anchor = 0;
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
-        const { Level_Factory } = require('./level_factory');
         Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });

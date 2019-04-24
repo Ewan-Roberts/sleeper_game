@@ -15,6 +15,8 @@
 - wake up in room
 - use lighter to turn on candle
 
+- fuel for fire
+
 # Needed for BETA
 - Secure register user
 - Server-side rendered images

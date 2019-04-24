@@ -181,25 +181,6 @@
                 }, 
                 {
                  "height":145.819,
-                 "id":164,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":311.365,
-                 "x":2606.98416666667,
-                 "y":1456.42383333333
-                }, 
-                {
-                 "height":145.819,
                  "id":165,
                  "name":"collision",
                  "properties":
@@ -273,31 +254,29 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"item",
+         "name":"click_pad",
          "objects":[
                 {
-                 "height":80,
-                 "id":167,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "image_name":"bow_00",
-                     "remove_on_click":true,
-                     "unique_item":"old_bow"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "remove_on_click":"bool",
-                     "unique_item":"string"
-                    },
-                 "rotation":-538.437,
+                 "height":61.3333333333333,
+                 "id":181,
+                 "name":"",
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":80,
-                 "x":2408,
-                 "y":1578.66666666667
-                }, 
+                 "width":90.3336666666664,
+                 "x":2362.83316666667,
+                 "y":1582.66666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
                 {
                  "height":80,
                  "id":168,
@@ -371,8 +350,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1800.10095911156,
-                 "y":1890.9641595154
+                 "x":1848.10095911156,
+                 "y":1864.29749284873
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -412,7 +391,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":181,
+ "nextobjectid":182,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

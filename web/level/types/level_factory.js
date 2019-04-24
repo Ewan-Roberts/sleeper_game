@@ -3,7 +3,8 @@
 const { Intro       } = require('./intro');
 const { Camera      } = require('../../engine/camera');
 const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
+//const { Candle      } = require('../../light/types/candle');
+const { Bright_Light } = require('../../light/types/bright_light');
 const { Background  } = require('../elements/background');
 const { Element_Factory } = require('../elements/elements_factory');
 
@@ -65,23 +66,30 @@ class Level_Factory {
         wall.set_position(data);
       });
 
-      collision.forEach(data => Element_Factory.generate_tiled('collision', data));
-      item.forEach(data => Element_Factory.generate_tiled('item', data));
+      const level_collision = collision.map(data => Element_Factory.generate_tiled('collision', data));
+      const level_items = item.map(data => Element_Factory.generate_tiled('item', data));
       floor.forEach(data => Element_Factory.generate_tiled('floor', data));
       door.forEach(data => Element_Factory.generate_tiled('door', data));
-
       shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
       decal.forEach(data => Element_Factory.generate_tiled('decal', data));
       roof.forEach(data => Element_Factory.generate_tiled('roof', data));
 
-      lights.forEach(async data => {
-        const light = new Candle();
-        light.height = data.height;
-        light.width  = data.width;
+      const level_lights = lights.map(function(data) {
+        const light  = new Bright_Light();
         light.set_position(data);
-        light.start_flickering();
+        light.id = data.id;
+
+        const point = global.place_bunny(data);
+        point.height = 20;
+        point.width  = 20;
+        return light;
       });
 
+      return {
+        level_items,
+        level_lights,
+        level_collision,
+      };
     } catch (error) {
       console.log(error);
     }

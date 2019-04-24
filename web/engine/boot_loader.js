@@ -24,7 +24,7 @@ class Level_Loader {
     // new Archer_Room(player);
     // new Random_Room(player);
     new Transition_Room(player);
-    // new Items_Room(player);
+    //new Items_Room(player);
     // new Simple(player, { level_name: 'light' });
   }
 }

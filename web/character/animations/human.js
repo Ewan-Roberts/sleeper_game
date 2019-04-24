@@ -120,17 +120,16 @@ class animation {
 class Human {
   constructor(entity) {
     this.name   = 'animation';
-    this.state  = 'nothing';
-    this.current_action = 'idle';
+    this.state  = 'bow';
     const idle_texture = animation.nothing_idle();
 
     entity.sprite = new PIXI.extras.AnimatedSprite(idle_texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
-    this.sprite.width  /=2;
-    this.sprite.height /=2;
+    this.sprite.width  /=1.5;
+    this.sprite.height /=1.5;
     this.entity = entity;
-    this.prefix = 'bow';
+    this.prefix = 'nothing';
 
     this.animations = {
       nothing_idle : animation.nothing_idle(),
@@ -172,28 +171,23 @@ class Human {
   }
 
   ready_weapon() {
-    //TODO
     this.switch(this.prefix + '_shoot');
     this.sprite.loop = false;
   }
 
   attack() {
-    //TODO
     this.switch(this.prefix + '_walk');
   }
 
   idle() {
-    //TODO
     this.switch(this.prefix + '_idle');
   }
 
   walk() {
-    //TODO
     this.switch(this.prefix + '_walk');
   }
 
   kill() {
-    //TODO
     this.switch('walk');
   }
 

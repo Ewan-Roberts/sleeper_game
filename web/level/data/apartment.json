@@ -36,8 +36,8 @@
                  "type":"",
                  "visible":true,
                  "width":1400.01647365157,
-                 "x":207.347613219094,
-                 "y":-1979.54222766218
+                 "x":-2268.65238678091,
+                 "y":-1687.54222766218
                 }, 
                 {
                  "height":1907.41278457772,
@@ -47,8 +47,8 @@
                  "type":"",
                  "visible":true,
                  "width":32.4242,
-                 "x":523.063149434368,
-                 "y":-1702.37483930492
+                 "x":-860.936850565632,
+                 "y":-1690.37483930492
                 }, 
                 {
                  "height":32,
@@ -58,8 +58,8 @@
                  "type":"",
                  "visible":true,
                  "width":1014.45989106487,
-                 "x":553.051572215422,
-                 "y":170.658506731946
+                 "x":-410.948427784578,
+                 "y":-285.341493268054
                 }, 
                 {
                  "height":2152.20804161567,
@@ -69,8 +69,8 @@
                  "type":"",
                  "visible":true,
                  "width":32.4242,
-                 "x":1569.97517050184,
-                 "y":-1945.13706854345
+                 "x":-434.02482949816,
+                 "y":-1889.13706854345
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -91,8 +91,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1131.06854078292,
-                 "y":-108.278183800821
+                 "x":-1204.93145921708,
+                 "y":-988.278183800821
                 }, 
                 {
                  "height":0,
@@ -103,8 +103,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1131.06854078292,
-                 "y":-108.278183800821
+                 "x":-1472.93145921708,
+                 "y":-196.278183800821
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -155,8 +155,8 @@
                  "type":"",
                  "visible":true,
                  "width":239.666666666667,
-                 "x":1311.15503875969,
-                 "y":-23.8125069544925
+                 "x":-1624.84496124031,
+                 "y":-711.812506954493
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -320,7 +320,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":-1866.06060606061,
+                 "x":-2186.06060606061,
                  "y":-474.545454545454
                 }],
          "opacity":1,
@@ -333,63 +333,6 @@
          "draworder":"topdown",
          "name":"collision",
          "objects":[
-                {
-                 "height":276.185132730296,
-                 "id":102,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dumpster_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-324.038907607446,
-                 "type":"",
-                 "visible":true,
-                 "width":168.182305195748,
-                 "x":-1329.98025315813,
-                 "y":-894.988205913008
-                }, 
-                {
-                 "height":145.819234048688,
-                 "id":59,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398033013144,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333333333333,
-                 "x":-1447.2049131138,
-                 "y":-1047.65262901647
-                }, 
-                {
-                 "height":555.70380032669,
-                 "id":128,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"car_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-538.364279478387,
-                 "type":"",
-                 "visible":true,
-                 "width":296.959557780732,
-                 "x":-891.520790456376,
-                 "y":-573.753243206185
-                }, 
                 {
                  "height":238.610570826346,
                  "id":129,
@@ -406,50 +349,8 @@
                  "type":"",
                  "visible":true,
                  "width":491.644536849573,
-                 "x":1373.5840453119,
-                 "y":-1455.7295529302
-                }, 
-                {
-                 "height":837.281,
-                 "id":175,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":-843.885,
-                 "y":181.3595
-                }, 
-                {
-                 "height":837.281,
-                 "id":177,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":-1179.64138885798,
-                 "y":-1985.84127148474
+                 "x":-1158.4159546881,
+                 "y":-1215.7295529302
                 }, 
                 {
                  "height":837.281,
@@ -473,46 +374,6 @@
                  "y":230.692833333333
                 }, 
                 {
-                 "height":837.281,
-                 "id":182,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":-2571.06247858017,
-                 "y":-1899.1398880049
-                }, 
-                {
-                 "height":238.611,
-                 "id":183,
-                 "name":"car",
-                 "properties":
-                    {
-                     "image_name":"car_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-509.976187306415,
-                 "type":"",
-                 "visible":true,
-                 "width":491.645,
-                 "x":-1818.74387913137,
-                 "y":189.008209275898
-                }, 
-                {
                  "height":560.757710801789,
                  "id":250,
                  "name":"car",
@@ -530,25 +391,6 @@
                  "width":261.348532359708,
                  "x":-1621.9636453143,
                  "y":159.213989291467
-                }, 
-                {
-                 "height":428.240401252442,
-                 "id":251,
-                 "name":"car",
-                 "properties":
-                    {
-                     "image_name":"car_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-181.060059421521,
-                 "type":"",
-                 "visible":true,
-                 "width":390.852923229008,
-                 "x":-1722.56766875128,
-                 "y":-594.620578740337
                 }],
          "opacity":0.5,
          "type":"objectgroup",
@@ -580,8 +422,8 @@
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":1370.18181818182,
-                 "y":-515.121228787879
+                 "x":-1035.87878787879,
+                 "y":-1312.09092575758
                 }, 
                 {
                  "height":86.2026,
@@ -603,8 +445,8 @@
                  "type":"",
                  "visible":true,
                  "width":47.451,
-                 "x":1550.45631818182,
-                 "y":-616.919481818182
+                 "x":-985.907318181816,
+                 "y":-777.525542424243
                 }, 
                 {
                  "height":72.6667,
@@ -628,10 +470,41 @@
                  "width":40,
                  "x":1868,
                  "y":-466.33335
+                }, 
+                {
+                 "height":80,
+                 "id":253,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"box_06",
+                     "items":"[\"old_boots\",\"oil_can\",\"rag\"]",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Some other shit",
+                     "label_image":"take_icon"
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "items":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":-1191.51515151515,
+                 "y":-1021.81818181818
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -639,27 +512,6 @@
          "draworder":"topdown",
          "name":"roof",
          "objects":[
-                {
-                 "height":76.785,
-                 "id":154,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":1248.30022597747,
-                 "y":234.980594764745
-                }, 
                 {
                  "height":2140.08070952567,
                  "id":174,
@@ -678,71 +530,8 @@
                  "type":"",
                  "visible":true,
                  "width":1055.64545454545,
-                 "x":539.510606060606,
-                 "y":-1962.19525498021
-                }, 
-                {
-                 "height":76.785,
-                 "id":184,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":2046.18925543707,
-                 "y":176.108373546599
-                }, 
-                {
-                 "height":76.785,
-                 "id":185,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":3088.36047057052,
-                 "y":168.716361979637
-                }, 
-                {
-                 "height":76.785,
-                 "id":186,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-99.4881950117473,
-                 "y":186.133073829749
+                 "x":1803.51060606061,
+                 "y":-1630.19525498021
                 }, 
                 {
                  "height":76.785,
@@ -764,111 +553,6 @@
                  "width":284.102,
                  "x":-1151.2563738177,
                  "y":231.30446969697
-                }, 
-                {
-                 "height":76.785,
-                 "id":188,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.520558026658,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-1083.62148905781,
-                 "y":-971.700168335148
-                }, 
-                {
-                 "height":76.785,
-                 "id":189,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-36.7555002711006,
-                 "y":-1012.5355206639
-                }, 
-                {
-                 "height":76.785,
-                 "id":190,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":1299.30088866799,
-                 "y":-1002.60721172962
-                }, 
-                {
-                 "height":76.785,
-                 "id":191,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":2084.58915904573,
-                 "y":-1012.5475695825
-                }, 
-                {
-                 "height":76.785,
-                 "id":192,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":3134.95363883366,
-                 "y":-1019.17447481776
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -886,7 +570,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":252,
+ "nextobjectid":254,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

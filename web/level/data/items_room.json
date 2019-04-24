@@ -163,7 +163,7 @@
                 {
                  "height":145.819,
                  "id":164,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -176,8 +176,8 @@
                  "type":"",
                  "visible":true,
                  "width":311.365,
-                 "x":2606.98416666667,
-                 "y":1456.42383333333
+                 "x":2602.94580220428,
+                 "y":1461.47178891132
                 }, 
                 {
                  "height":145.819,
@@ -197,6 +197,67 @@
                  "width":311.365,
                  "x":2265.65083333333,
                  "y":1461.75716666667
+                }, 
+                {
+                 "height":57.767024168849,
+                 "id":197,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"electric_box_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-255.840324154281,
+                 "type":"",
+                 "visible":true,
+                 "width":65.0206110859867,
+                 "x":2355.16100770067,
+                 "y":1867.32384485706
+                }, 
+                {
+                 "height":57.767,
+                 "id":198,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"electric_box_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-255.84,
+                 "type":"",
+                 "visible":true,
+                 "width":65.0206,
+                 "x":2057.34330928824,
+                 "y":1871.16697955578
+                }, 
+                {
+                 "height":114.328569264915,
+                 "id":199,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"dumpster_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-520.924,
+                 "type":"",
+                 "visible":true,
+                 "width":36.016243109141,
+                 "x":2404.48932134199,
+                 "y":1917.55085444283
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -245,6 +306,72 @@
                  "width":134.666666666667,
                  "x":2796,
                  "y":1636
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1831.54145384199,
+                 "y":1664.78587595562
+                }, 
+                {
+                 "height":0,
+                 "id":188,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "off":true
+                    },
+                 "propertytypes":
+                    {
+                     "off":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2257.35982523666,
+                 "y":1830.85405180485
+                }, 
+                {
+                 "height":0,
+                 "id":193,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1933.38200473414,
+                 "y":1808.48971291978
+                }, 
+                {
+                 "height":0,
+                 "id":194,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1933.38200473414,
+                 "y":1808.48971291978
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -384,19 +511,29 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"lights",
+         "name":"click_pad",
          "objects":[
                 {
-                 "height":0,
-                 "id":62,
+                 "height":53.5083291267038,
+                 "id":184,
                  "name":"",
-                 "point":true,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":1831.54145384199,
-                 "y":1664.78587595562
+                 "width":77.7385159010601,
+                 "x":2298.83897021706,
+                 "y":1864.71479050985
+                }, 
+                {
+                 "height":53.5083,
+                 "id":200,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":77.7385,
+                 "x":2011.61030577991,
+                 "y":1812.72086261989
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -417,8 +554,39 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2209.52362596178,
-                 "y":1886.1053340064
+                 "x":2399.89083703012,
+                 "y":1746.71076415308
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[
+                {
+                 "height":57.4925550541311,
+                 "id":187,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-90.3207954905705,
+                 "type":"",
+                 "visible":true,
+                 "width":180.525159914155,
+                 "x":2230.15938359632,
+                 "y":1987.8089940983
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -436,7 +604,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":184,
+ "nextobjectid":201,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

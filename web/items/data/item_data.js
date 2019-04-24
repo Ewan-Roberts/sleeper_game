@@ -287,6 +287,28 @@ const items = [
     image_name: 'femur',
   },
   {
+    name: 'rag',
+    id: 4,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a rag',
+    description: 'an old rag',
+    image_name: 'dirty_rag_1',
+  },
+  {
+    name: 'oil_can',
+    id: 4,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a small oil can',
+    description: 'an oil can',
+    image_name: 'bunny',
+  },
+  {
     name: 'skull_cap_bone',
     id:   5,
     rank: 0,

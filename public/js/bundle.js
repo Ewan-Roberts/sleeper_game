@@ -7551,7 +7551,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":301}],39:[function(require,module,exports){
+},{"timers":302}],39:[function(require,module,exports){
 !function(e){function t(r){if(i[r])return i[r].exports;var n=i[r]={exports:{},id:r,loaded:!1};return e[r].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t,i){e.exports=i(4)},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function s(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}var o=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var u=i(2),l=r(u),h=function(e){function t(){var e=arguments.length<=0||void 0===arguments[0]?1:arguments[0],i=arguments[1];n(this,t);var r=a(this,Object.getPrototypeOf(t).call(this));return r.time=e,i&&r.addTo(i),r.active=!1,r.isEnded=!1,r.isStarted=!1,r.expire=!1,r.delay=0,r.repeat=0,r.loop=!1,r._delayTime=0,r._elapsedTime=0,r._repeat=0,r}return s(t,e),o(t,[{key:"addTo",value:function(e){return this.manager=e,this.manager.addTimer(this),this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTimer(this),this):void 0}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop",this._elapsedTime),this}},{key:"reset",value:function(){return this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this}},{key:"update",value:function(e,t){if(this.active){if(this.delay>this._delayTime)return void(this._delayTime+=t);if(this.isStarted||(this.isStarted=!0,this.emit("start",this._elapsedTime)),this.time>this._elapsedTime){var i=this._elapsedTime+t,r=i>=this.time;if(this._elapsedTime=r?this.time:i,this.emit("update",this._elapsedTime,e),r){if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._elapsedTime,this._repeat),void(this._elapsedTime=0);this.isEnded=!0,this.active=!1,this.emit("end",this._elapsedTime)}}}}}]),t}(l["default"].utils.EventEmitter);t["default"]=h},function(e,t){e.exports=PIXI},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var a=function(){function e(e,t){for(var i=0;i<t.length;i++){var r=t[i];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,i,r){return i&&e(t.prototype,i),r&&e(t,r),t}}();Object.defineProperty(t,"__esModule",{value:!0});var s=i(1),o=r(s),u=function(){function e(){n(this,e),this.timers=[],this._timersToDelete=[],this._last=0}return a(e,[{key:"update",value:function(e){var t=void 0;e||0===e?t=1e3*e:(t=this._getDeltaMS(),e=t/1e3);for(var i=0;i<this.timers.length;i++){var r=this.timers[i];r.active&&(r.update(e,t),r.isEnded&&r.expire&&r.remove())}if(this._timersToDelete.length){for(var i=0;i<this._timersToDelete.length;i++)this._remove(this._timersToDelete[i]);this._timersToDelete.length=0}}},{key:"removeTimer",value:function(e){this._timersToDelete.push(e)}},{key:"addTimer",value:function(e){e.manager=this,this.timers.push(e)}},{key:"createTimer",value:function(e){return new o["default"](e,this)}},{key:"_remove",value:function(e){var t=this.timers.indexOf(e);t>0&&this.timers.splice(t,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var e=Date.now(),t=e-this._last;return this._last=e,t}}]),e}();t["default"]=u},function(e,t,i){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var n=i(2),a=r(n),s=i(3),o=r(s),u=i(1),l=r(u),h={TimerManager:o["default"],Timer:l["default"]};a["default"].timerManager||(a["default"].timerManager=new o["default"],a["default"].timer=h),t["default"]=h}]);
 
 },{}],40:[function(require,module,exports){
@@ -19329,7 +19329,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":71,"../../../../textures/TextureMatrix":117,"../Filter":87,"path":295}],91:[function(require,module,exports){
+},{"../../../../math":71,"../../../../textures/TextureMatrix":117,"../Filter":87,"path":296}],91:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23129,7 +23129,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":45,"path":295}],109:[function(require,module,exports){
+},{"../../Shader":45,"path":296}],109:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28967,7 +28967,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":302}],126:[function(require,module,exports){
+},{"url":303}],126:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33541,7 +33541,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":66,"../../core/const":47,"path":295}],144:[function(require,module,exports){
+},{"../../core":66,"../../core/const":47,"path":296}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33625,7 +33625,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":66,"path":295}],145:[function(require,module,exports){
+},{"../../core":66,"path":296}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34788,7 +34788,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":66,"path":295}],152:[function(require,module,exports){
+},{"../../core":66,"path":296}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34896,7 +34896,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":66,"path":295}],153:[function(require,module,exports){
+},{"../../core":66,"path":296}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34950,7 +34950,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":66,"path":295}],154:[function(require,module,exports){
+},{"../../core":66,"path":296}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35126,7 +35126,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":66,"path":295}],156:[function(require,module,exports){
+},{"../../core":66,"path":296}],156:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37793,7 +37793,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":142,"path":295,"resource-loader":195}],164:[function(require,module,exports){
+},{"../extras":142,"path":296,"resource-loader":195}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38156,7 +38156,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":66,"resource-loader":195,"url":302}],167:[function(require,module,exports){
+},{"../core":66,"resource-loader":195,"url":303}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39882,7 +39882,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":66,"../Mesh":168,"path":295,"pixi-gl-core":21}],175:[function(require,module,exports){
+},{"../../core":66,"../Mesh":168,"path":296,"pixi-gl-core":21}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46787,7 +46787,7 @@ module.exports = {
   Bird,
 };
 
-},{"../../utils/math":288,"pixi.js":156}],204:[function(require,module,exports){
+},{"../../utils/math":289,"pixi.js":156}],204:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46910,17 +46910,16 @@ class animation {
 class Human {
   constructor(entity) {
     this.name   = 'animation';
-    this.state  = 'nothing';
-    this.current_action = 'idle';
+    this.state  = 'bow';
     const idle_texture = animation.nothing_idle();
 
     entity.sprite = new PIXI.extras.AnimatedSprite(idle_texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
-    this.sprite.width  /=2;
-    this.sprite.height /=2;
+    this.sprite.width  /=1.5;
+    this.sprite.height /=1.5;
     this.entity = entity;
-    this.prefix = 'bow';
+    this.prefix = 'nothing';
 
     this.animations = {
       nothing_idle : animation.nothing_idle(),
@@ -46962,28 +46961,23 @@ class Human {
   }
 
   ready_weapon() {
-    //TODO
     this.switch(this.prefix + '_shoot');
     this.sprite.loop = false;
   }
 
   attack() {
-    //TODO
     this.switch(this.prefix + '_walk');
   }
 
   idle() {
-    //TODO
     this.switch(this.prefix + '_idle');
   }
 
   walk() {
-    //TODO
     this.switch(this.prefix + '_walk');
   }
 
   kill() {
-    //TODO
     this.switch('walk');
   }
 
@@ -47022,7 +47016,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":288,"pixi.js":156}],205:[function(require,module,exports){
+},{"../../utils/math":289,"pixi.js":156}],205:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47137,7 +47131,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":288,"pixi.js":156}],206:[function(require,module,exports){
+},{"../../utils/math":289,"pixi.js":156}],206:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -47264,7 +47258,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":222,"../../engine/ticker":235,"../../utils/math":288,"../attributes/melee":212,"../types/rat":220,"events":294}],208:[function(require,module,exports){
+},{"../../effects/blood":222,"../../engine/ticker":235,"../../utils/math":289,"../attributes/melee":212,"../types/rat":220,"events":295}],208:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47399,7 +47393,6 @@ class Keyboard {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
-    this.shift_pressed = false;
     this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
@@ -47410,7 +47403,8 @@ class Keyboard {
   }
 
   //TODO
-  save_game() {}
+  save_game() {
+  }
 
   key_down(key) {
     if(!PIXI.keyboardManager.isEnabled) return;
@@ -47428,16 +47422,12 @@ class Keyboard {
       case  76     : this.keyboard_right();       return;// l
 
       case 'n'     : this.save_game();            return;
-      case 'o'     : this.start_intro();          return;
       case 'i'     : View_HUD.toggle_inventory(); return;
-      case 'Shift' : this.keyboard_shift();       return;
       default      : return;
     }
   }
 
   key_up() {
-    this.shift_pressed = false;
-
     this.animation.idle();
   }
 
@@ -47448,8 +47438,6 @@ class Keyboard {
   disable() {
     PIXI.keyboardManager.disable();
   }
-
-  keyboard_shift() { this.shift_pressed = true; }
 
   keyboard_up() {
     const point = this.sprite.getGlobalPosition();
@@ -47524,7 +47512,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":223,"../../engine/pixi_containers":231,"../../engine/shadows":233,"../../view/view_player_inventory":292,"pixi.js":156}],210:[function(require,module,exports){
+},{"../../effects/fade":223,"../../engine/pixi_containers":231,"../../engine/shadows":233,"../../view/view_player_inventory":293,"pixi.js":156}],210:[function(require,module,exports){
 
 'use strict';
 
@@ -47552,7 +47540,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":280}],211:[function(require,module,exports){
+},{"../../light/types/candle":281}],211:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -47627,7 +47615,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":223,"../../items/item_manager":239,"../../view/button":290,"../../view/view_inventory":291}],212:[function(require,module,exports){
+},{"../../effects/fade":223,"../../items/item_manager":239,"../../view/button":291,"../../view/view_inventory":292}],212:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47747,7 +47735,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":221,"../../engine/app":224,"../../engine/pixi_containers":231,"../../engine/ranged":232,"../../utils/math":288}],214:[function(require,module,exports){
+},{"../../effects/aiming_cone":221,"../../engine/app":224,"../../engine/pixi_containers":231,"../../engine/ranged":232,"../../utils/math":289}],214:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47827,7 +47815,7 @@ module.exports = {
   Status,
 };
 
-},{"../../engine/ticker":235,"../../view/view_player_status_meter":293}],216:[function(require,module,exports){
+},{"../../engine/ticker":235,"../../view/view_player_status_meter":294}],216:[function(require,module,exports){
 'use strict';
 
 const event     = require('events');
@@ -47878,7 +47866,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":222,"events":294}],217:[function(require,module,exports){
+},{"../../effects/blood":222,"events":295}],217:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -47992,7 +47980,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":222,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../engine/tween":236,"../animations/human":204,"../attributes/inventory":208,"../attributes/keyboard":209,"../attributes/light":210,"../attributes/mouse":213,"../attributes/status_bar":215,"../attributes/vitals":216,"../character_model":217,"events":294}],220:[function(require,module,exports){
+},{"../../effects/blood":222,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../engine/tween":236,"../animations/human":204,"../attributes/inventory":208,"../attributes/keyboard":209,"../attributes/light":210,"../attributes/mouse":213,"../attributes/status_bar":215,"../attributes/vitals":216,"../character_model":217,"events":295}],220:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -48115,7 +48103,7 @@ class Fade {
     sprite.visible = true;
   }
 
-  to(sprite, value) {
+  static to(sprite, value) {
     const movement = PIXI.tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
@@ -48137,8 +48125,6 @@ class Fade {
     movement.on('end', () => sprite.visible = false);
   }
 }
-
-
 
 module.exports = {
   Fade,
@@ -48190,7 +48176,7 @@ class Level_Loader {
     // new Archer_Room(player);
     // new Random_Room(player);
     new Transition_Room(player);
-    // new Items_Room(player);
+    //new Items_Room(player);
     // new Simple(player, { level_name: 'light' });
   }
 }
@@ -48271,7 +48257,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":239,"events":294}],228:[function(require,module,exports){
+},{"../items/item_manager":239,"events":295}],228:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -48416,7 +48402,7 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":287,"../utils/math":288,"./pixi_containers":231,"./tween":236,"easystarjs":5}],231:[function(require,module,exports){
+},{"../utils/grid":288,"../utils/math":289,"./pixi_containers":231,"./tween":236,"easystarjs":5}],231:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 PIXI.settings.ROUND_PIXELS = true;
@@ -48654,7 +48640,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":288,"./pixi_containers":231,"./tween":236,"pixi.js":156}],233:[function(require,module,exports){
+},{"../utils/math":289,"./pixi_containers":231,"./tween":236,"pixi.js":156}],233:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -48879,7 +48865,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":288,"./pixi_containers":231,"pixi.js":156}],237:[function(require,module,exports){
+},{"../utils/math":289,"./pixi_containers":231,"pixi.js":156}],237:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -48896,7 +48882,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":225,"./engine/packer":229,"./utils/globals":286}],238:[function(require,module,exports){
+},{"./engine/boot_loader.js":225,"./engine/packer":229,"./utils/globals":287}],238:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -49186,6 +49172,28 @@ const items = [
     image_name: 'femur',
   },
   {
+    name: 'rag',
+    id: 4,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a rag',
+    description: 'an old rag',
+    image_name: 'dirty_rag_1',
+  },
+  {
+    name: 'oil_can',
+    id: 4,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'a small oil can',
+    description: 'an oil can',
+    image_name: 'bunny',
+  },
+  {
     name: 'skull_cap_bone',
     id:   5,
     rank: 0,
@@ -49290,7 +49298,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":224,"../utils/math":288,"./data/item_data":238,"pixi.js":156}],240:[function(require,module,exports){
+},{"../engine/app":224,"../utils/math":289,"./data/item_data":238,"pixi.js":156}],240:[function(require,module,exports){
 'use strict';
 
 // This is purely an interface for TILED data
@@ -49566,7 +49574,7 @@ module.exports = {
   Randomise,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":284,"../../utils/math":288,"../elements/elements_factory":258,"pixi.js":156}],242:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../utils/color_picker":285,"../../utils/math":289,"../elements/elements_factory":258,"pixi.js":156}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49605,8 +49613,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1400.01647365157,
-                 "x":207.347613219094,
-                 "y":-1979.54222766218
+                 "x":-2268.65238678091,
+                 "y":-1687.54222766218
                 }, 
                 {
                  "height":1907.41278457772,
@@ -49616,8 +49624,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":32.4242,
-                 "x":523.063149434368,
-                 "y":-1702.37483930492
+                 "x":-860.936850565632,
+                 "y":-1690.37483930492
                 }, 
                 {
                  "height":32,
@@ -49627,8 +49635,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1014.45989106487,
-                 "x":553.051572215422,
-                 "y":170.658506731946
+                 "x":-410.948427784578,
+                 "y":-285.341493268054
                 }, 
                 {
                  "height":2152.20804161567,
@@ -49638,8 +49646,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":32.4242,
-                 "x":1569.97517050184,
-                 "y":-1945.13706854345
+                 "x":-434.02482949816,
+                 "y":-1889.13706854345
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49660,8 +49668,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1131.06854078292,
-                 "y":-108.278183800821
+                 "x":-1204.93145921708,
+                 "y":-988.278183800821
                 }, 
                 {
                  "height":0,
@@ -49672,8 +49680,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1131.06854078292,
-                 "y":-108.278183800821
+                 "x":-1472.93145921708,
+                 "y":-196.278183800821
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49724,8 +49732,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":239.666666666667,
-                 "x":1311.15503875969,
-                 "y":-23.8125069544925
+                 "x":-1624.84496124031,
+                 "y":-711.812506954493
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49889,7 +49897,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":-1866.06060606061,
+                 "x":-2186.06060606061,
                  "y":-474.545454545454
                 }],
          "opacity":1,
@@ -49902,63 +49910,6 @@ module.exports={ "height":50,
          "draworder":"topdown",
          "name":"collision",
          "objects":[
-                {
-                 "height":276.185132730296,
-                 "id":102,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dumpster_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-324.038907607446,
-                 "type":"",
-                 "visible":true,
-                 "width":168.182305195748,
-                 "x":-1329.98025315813,
-                 "y":-894.988205913008
-                }, 
-                {
-                 "height":145.819234048688,
-                 "id":59,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398033013144,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333333333333,
-                 "x":-1447.2049131138,
-                 "y":-1047.65262901647
-                }, 
-                {
-                 "height":555.70380032669,
-                 "id":128,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"car_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-538.364279478387,
-                 "type":"",
-                 "visible":true,
-                 "width":296.959557780732,
-                 "x":-891.520790456376,
-                 "y":-573.753243206185
-                }, 
                 {
                  "height":238.610570826346,
                  "id":129,
@@ -49975,50 +49926,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":491.644536849573,
-                 "x":1373.5840453119,
-                 "y":-1455.7295529302
-                }, 
-                {
-                 "height":837.281,
-                 "id":175,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":-843.885,
-                 "y":181.3595
-                }, 
-                {
-                 "height":837.281,
-                 "id":177,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":-1179.64138885798,
-                 "y":-1985.84127148474
+                 "x":-1158.4159546881,
+                 "y":-1215.7295529302
                 }, 
                 {
                  "height":837.281,
@@ -50042,46 +49951,6 @@ module.exports={ "height":50,
                  "y":230.692833333333
                 }, 
                 {
-                 "height":837.281,
-                 "id":182,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1383.77,
-                 "x":-2571.06247858017,
-                 "y":-1899.1398880049
-                }, 
-                {
-                 "height":238.611,
-                 "id":183,
-                 "name":"car",
-                 "properties":
-                    {
-                     "image_name":"car_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-509.976187306415,
-                 "type":"",
-                 "visible":true,
-                 "width":491.645,
-                 "x":-1818.74387913137,
-                 "y":189.008209275898
-                }, 
-                {
                  "height":560.757710801789,
                  "id":250,
                  "name":"car",
@@ -50099,25 +49968,6 @@ module.exports={ "height":50,
                  "width":261.348532359708,
                  "x":-1621.9636453143,
                  "y":159.213989291467
-                }, 
-                {
-                 "height":428.240401252442,
-                 "id":251,
-                 "name":"car",
-                 "properties":
-                    {
-                     "image_name":"car_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-181.060059421521,
-                 "type":"",
-                 "visible":true,
-                 "width":390.852923229008,
-                 "x":-1722.56766875128,
-                 "y":-594.620578740337
                 }],
          "opacity":0.5,
          "type":"objectgroup",
@@ -50149,8 +49999,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":1370.18181818182,
-                 "y":-515.121228787879
+                 "x":-1035.87878787879,
+                 "y":-1312.09092575758
                 }, 
                 {
                  "height":86.2026,
@@ -50172,8 +50022,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":47.451,
-                 "x":1550.45631818182,
-                 "y":-616.919481818182
+                 "x":-985.907318181816,
+                 "y":-777.525542424243
                 }, 
                 {
                  "height":72.6667,
@@ -50197,10 +50047,41 @@ module.exports={ "height":50,
                  "width":40,
                  "x":1868,
                  "y":-466.33335
+                }, 
+                {
+                 "height":80,
+                 "id":253,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"box_06",
+                     "items":"[\"old_boots\",\"oil_can\",\"rag\"]",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Some other shit",
+                     "label_image":"take_icon"
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "items":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":-1191.51515151515,
+                 "y":-1021.81818181818
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -50208,27 +50089,6 @@ module.exports={ "height":50,
          "draworder":"topdown",
          "name":"roof",
          "objects":[
-                {
-                 "height":76.785,
-                 "id":154,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":1248.30022597747,
-                 "y":234.980594764745
-                }, 
                 {
                  "height":2140.08070952567,
                  "id":174,
@@ -50247,71 +50107,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1055.64545454545,
-                 "x":539.510606060606,
-                 "y":-1962.19525498021
-                }, 
-                {
-                 "height":76.785,
-                 "id":184,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":2046.18925543707,
-                 "y":176.108373546599
-                }, 
-                {
-                 "height":76.785,
-                 "id":185,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":3088.36047057052,
-                 "y":168.716361979637
-                }, 
-                {
-                 "height":76.785,
-                 "id":186,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-99.4881950117473,
-                 "y":186.133073829749
+                 "x":1803.51060606061,
+                 "y":-1630.19525498021
                 }, 
                 {
                  "height":76.785,
@@ -50333,111 +50130,6 @@ module.exports={ "height":50,
                  "width":284.102,
                  "x":-1151.2563738177,
                  "y":231.30446969697
-                }, 
-                {
-                 "height":76.785,
-                 "id":188,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.520558026658,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-1083.62148905781,
-                 "y":-971.700168335148
-                }, 
-                {
-                 "height":76.785,
-                 "id":189,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-36.7555002711006,
-                 "y":-1012.5355206639
-                }, 
-                {
-                 "height":76.785,
-                 "id":190,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":1299.30088866799,
-                 "y":-1002.60721172962
-                }, 
-                {
-                 "height":76.785,
-                 "id":191,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":2084.58915904573,
-                 "y":-1012.5475695825
-                }, 
-                {
-                 "height":76.785,
-                 "id":192,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.521,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":3134.95363883366,
-                 "y":-1019.17447481776
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50455,7 +50147,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":252,
+ "nextobjectid":254,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -51056,6 +50748,39 @@ module.exports={ "height":50,
                  "width":30.6667,
                  "x":1907.8469418006,
                  "y":239.254531698703
+                }, 
+                {
+                 "height":572.034419243094,
+                 "id":192,
+                 "name":"",
+                 "rotation":55.6623107796069,
+                 "type":"",
+                 "visible":true,
+                 "width":16.2454161843325,
+                 "x":2279.5265095636,
+                 "y":-742.443289215671
+                }, 
+                {
+                 "height":569.17332271984,
+                 "id":193,
+                 "name":"",
+                 "rotation":55.6623,
+                 "type":"",
+                 "visible":true,
+                 "width":18.1992825178925,
+                 "x":2407.64515946838,
+                 "y":-551.965833944427
+                }, 
+                {
+                 "height":212.899489622379,
+                 "id":194,
+                 "name":"",
+                 "rotation":-214.773950218209,
+                 "type":"",
+                 "visible":true,
+                 "width":35.6416101268249,
+                 "x":1966.98368294105,
+                 "y":-252.235525158076
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51167,25 +50892,6 @@ module.exports={ "height":50,
                  "width":638.667,
                  "x":684.383972118959,
                  "y":-1470.59520859149
-                }, 
-                {
-                 "height":294.154645441716,
-                 "id":178,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"truck"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":-27.6309024483113,
-                 "type":"",
-                 "visible":true,
-                 "width":49.0790854865986,
-                 "x":2456.10189123637,
-                 "y":-503.69677824506
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51493,10 +51199,29 @@ module.exports={ "height":50,
                  "width":1071.7,
                  "x":1118.01584741423,
                  "y":-180.023810803891
+                }, 
+                {
+                 "height":239.270403658403,
+                 "id":195,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-34.2621248189573,
+                 "type":"",
+                 "visible":true,
+                 "width":567.71996292207,
+                 "x":1809.26747028569,
+                 "y":-419.439842237533
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51783,25 +51508,6 @@ module.exports={ "height":50,
                  "y":805.741923467557
                 }, 
                 {
-                 "height":297.474223081979,
-                 "id":95,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"truck_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":152.332458270991,
-                 "type":"",
-                 "visible":true,
-                 "width":836.373824096281,
-                 "x":2590.32863703624,
-                 "y":-243.83017710036
-                }, 
-                {
                  "height":555.70380032669,
                  "id":128,
                  "name":"",
@@ -51841,7 +51547,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51966,7 +51672,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -52055,12 +51761,33 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2917.1,
-                 "x":252.116666666667,
-                 "y":-1502.00666666667
+                 "x":620.327246941426,
+                 "y":-1499.40240174971
+                }, 
+                {
+                 "height":280.24585873613,
+                 "id":191,
+                 "name":"tree",
+                 "properties":
+                    {
+                     "fade":0.3,
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-574.401849127966,
+                 "type":"",
+                 "visible":true,
+                 "width":808.164787836799,
+                 "x":2432.03236174201,
+                 "y":-528.280047056527
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -52070,11 +51797,11 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":190,
+ "nextobjectid":196,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53485,7 +53212,7 @@ module.exports={ "height":50,
                 {
                  "height":145.819,
                  "id":164,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"table_00"
@@ -53498,8 +53225,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":311.365,
-                 "x":2606.98416666667,
-                 "y":1456.42383333333
+                 "x":2602.94580220428,
+                 "y":1461.47178891132
                 }, 
                 {
                  "height":145.819,
@@ -53519,6 +53246,67 @@ module.exports={ "height":50,
                  "width":311.365,
                  "x":2265.65083333333,
                  "y":1461.75716666667
+                }, 
+                {
+                 "height":57.767024168849,
+                 "id":197,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"electric_box_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-255.840324154281,
+                 "type":"",
+                 "visible":true,
+                 "width":65.0206110859867,
+                 "x":2355.16100770067,
+                 "y":1867.32384485706
+                }, 
+                {
+                 "height":57.767,
+                 "id":198,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"electric_box_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-255.84,
+                 "type":"",
+                 "visible":true,
+                 "width":65.0206,
+                 "x":2057.34330928824,
+                 "y":1871.16697955578
+                }, 
+                {
+                 "height":114.328569264915,
+                 "id":199,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"dumpster_00",
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "shadow":"bool"
+                    },
+                 "rotation":-520.924,
+                 "type":"",
+                 "visible":true,
+                 "width":36.016243109141,
+                 "x":2404.48932134199,
+                 "y":1917.55085444283
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53567,6 +53355,72 @@ module.exports={ "height":50,
                  "width":134.666666666667,
                  "x":2796,
                  "y":1636
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1831.54145384199,
+                 "y":1664.78587595562
+                }, 
+                {
+                 "height":0,
+                 "id":188,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "off":true
+                    },
+                 "propertytypes":
+                    {
+                     "off":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2257.35982523666,
+                 "y":1830.85405180485
+                }, 
+                {
+                 "height":0,
+                 "id":193,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1933.38200473414,
+                 "y":1808.48971291978
+                }, 
+                {
+                 "height":0,
+                 "id":194,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1933.38200473414,
+                 "y":1808.48971291978
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53706,19 +53560,29 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"lights",
+         "name":"click_pad",
          "objects":[
                 {
-                 "height":0,
-                 "id":62,
+                 "height":53.5083291267038,
+                 "id":184,
                  "name":"",
-                 "point":true,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":1831.54145384199,
-                 "y":1664.78587595562
+                 "width":77.7385159010601,
+                 "x":2298.83897021706,
+                 "y":1864.71479050985
+                }, 
+                {
+                 "height":53.5083,
+                 "id":200,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":77.7385,
+                 "x":2011.61030577991,
+                 "y":1812.72086261989
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53739,8 +53603,39 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2209.52362596178,
-                 "y":1886.1053340064
+                 "x":2399.89083703012,
+                 "y":1746.71076415308
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[
+                {
+                 "height":57.4925550541311,
+                 "id":187,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.5,
+                     "image_name":"street_light_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-90.3207954905705,
+                 "type":"",
+                 "visible":true,
+                 "width":180.525159914155,
+                 "x":2230.15938359632,
+                 "y":1987.8089940983
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53758,7 +53653,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":184,
+ "nextobjectid":201,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53953,25 +53848,6 @@ module.exports={ "height":50,
                 }, 
                 {
                  "height":145.819,
-                 "id":164,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":311.365,
-                 "x":2606.98416666667,
-                 "y":1456.42383333333
-                }, 
-                {
-                 "height":145.819,
                  "id":165,
                  "name":"collision",
                  "properties":
@@ -54045,31 +53921,29 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"item",
+         "name":"click_pad",
          "objects":[
                 {
-                 "height":80,
-                 "id":167,
-                 "name":"chest",
-                 "properties":
-                    {
-                     "image_name":"bow_00",
-                     "remove_on_click":true,
-                     "unique_item":"old_bow"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "remove_on_click":"bool",
-                     "unique_item":"string"
-                    },
-                 "rotation":-538.437,
+                 "height":61.3333333333333,
+                 "id":181,
+                 "name":"",
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":80,
-                 "x":2408,
-                 "y":1578.66666666667
-                }, 
+                 "width":90.3336666666664,
+                 "x":2362.83316666667,
+                 "y":1582.66666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
                 {
                  "height":80,
                  "id":168,
@@ -54143,8 +54017,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1800.10095911156,
-                 "y":1890.9641595154
+                 "x":1848.10095911156,
+                 "y":1864.29749284873
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -54184,7 +54058,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":181,
+ "nextobjectid":182,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -57521,7 +57395,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":211,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../view/button":290,"./item_model":259}],255:[function(require,module,exports){
+},{"../../character/attributes/lootable":211,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../view/button":291,"./item_model":259}],255:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -57583,7 +57457,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":284,"events":294,"pixi.js":156}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../utils/color_picker":285,"events":295,"pixi.js":156}],256:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -57617,7 +57491,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259,"events":294}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":259,"events":295}],257:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -57685,6 +57559,7 @@ class Element_Factory {
     generated.sprite.anchor.y = 1;
     generated.sprite.anchor.x = 0;
     generated.sprite.id = data.id;
+    generated.id = data.id;
 
     return generated;
   }
@@ -57910,7 +57785,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":284,"events":294,"pixi.js":156}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../utils/color_picker":285,"events":295,"pixi.js":156}],261:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58035,7 +57910,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":231,"../../engine/sound":234,"../../engine/ticker":235,"../../light/types/led":282,"./item_model":259,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":156}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/sound":234,"../../engine/ticker":235,"../../light/types/led":283,"./item_model":259,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":156}],262:[function(require,module,exports){
 'use strict';
 const { shroud_container } = require('../../engine/pixi_containers');
 
@@ -58112,7 +57987,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259,"events":294}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":259,"events":295}],265:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
@@ -58240,8 +58115,8 @@ class Intro  {
     this.bird.tween.time = 10000;
 
     this.camera.tween.from({ x: -120, y: -150 });
-    this.camera.tween.to({ x: -100,  y: -120 });
-    this.camera.tween.to({ x: -600, y: 0 });
+    this.camera.tween.to({   x: -100, y: -120 });
+    this.camera.tween.to({   x: -600, y: 0 });
     this.camera.tween.smooth();
     this.camera.tween.time = 1000;
     this.camera.tween.start();
@@ -58280,7 +58155,6 @@ class Intro  {
         tween_it.time = 2000;
         tween_it.start();
         this.bird.tween.start();
-
       };
     });
 
@@ -58292,7 +58166,6 @@ class Intro  {
       pad.anchor = 0;
       pad.set_position(data);
       pad.area.events.on('trigger', () => {
-        const { Level_Factory } = require('./level_factory');
         Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
@@ -58305,7 +58178,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/crow":206,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":281,"../../light/types/lighter":283,"../attributes/parse_tiled_data":240,"../data/intro_room.json":244,"../elements/click_pad":255,"../elements/pad":260,"./level_factory":270}],268:[function(require,module,exports){
+},{"../../character/archetypes/crow":206,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":282,"../../light/types/lighter":284,"../attributes/parse_tiled_data":240,"../data/intro_room.json":244,"../elements/click_pad":255,"../elements/pad":260,"./level_factory":270}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58353,11 +58226,14 @@ module.exports = {
 (function (global){
 'use strict';
 
+const { Tween         } = require('../../engine/tween');
 const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
-const { Lighter       } = require('../../light/types/lighter');
 const { Level_Factory } = require('./level_factory');
+const { Crow        } = require('../../character/archetypes/crow');
+//const { Candle      } = require('../../light/types/candle');
+const { Click_Pad     } = require('../elements/click_pad');
 
 const level_data  = require('../data/items_room.json');
 
@@ -58368,16 +58244,15 @@ class Items_Room extends Level {
 
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-    this.lighter  = new Lighter();
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {exit_pad} = this.elements;
+    const {exit_pad, click_pad} = this.elements;
     global.set_light_level(0.9);
 
-    Level_Factory.generate(this.player, this.elements);
+    const { level_lights, level_collision } = Level_Factory.generate(this.player, this.elements);
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad();
@@ -58393,6 +58268,57 @@ class Items_Room extends Level {
         Level_Factory.create(data.properties, this.player);
       });
     });
+    click_pad.forEach(data => {
+      const pad  = new Click_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+
+
+      console.log('wrwr');
+      console.log(data);
+      if(data.id === 200) {
+        pad.click = () => {
+
+          console.log('ifwfwfwe');
+          const bird = new Crow();
+          bird.animation.move();
+          bird.animation.sprite.play();
+          bird.tween.from({x: 2000, y: 1800});
+          bird.tween.to({x: 3000, y: 1000});
+          bird.tween.time = 10000;
+          bird.tween.start();
+
+        };
+
+      }
+
+      if(data.id === 184) {
+        pad.click = async () => {
+          global.set_light_level(0.3);
+          const lamp_light = level_lights.find(elems => elems.id === 188);
+
+          lamp_light.intensity = 5;
+          await lamp_light.strike.fast();
+          console.log(level_collision);
+          const dumpster = level_collision.find(elems => elems.id === 199);
+          const tween_it = new Tween(dumpster.sprite, dumpster.shade);
+          tween_it.no_path_from(dumpster.sprite);
+          tween_it.no_path_to({
+            x: dumpster.sprite.x - 400,
+            y:dumpster.sprite.y-200,
+            rotation: 2,
+          });
+          tween_it.no_path_time = 944000;
+          tween_it.no_path_start();
+
+        };
+      }
+
+
+    });
+
   }
 }
 
@@ -58401,13 +58327,15 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../light/types/lighter":283,"../attributes/parse_tiled_data":240,"../data/items_room.json":246,"../elements/pad":260,"../level_model":265,"./level_factory":270}],270:[function(require,module,exports){
+},{"../../character/archetypes/crow":206,"../../engine/tween":236,"../attributes/parse_tiled_data":240,"../data/items_room.json":246,"../elements/click_pad":255,"../elements/pad":260,"../level_model":265,"./level_factory":270}],270:[function(require,module,exports){
+(function (global){
 'use strict';
 
 const { Intro       } = require('./intro');
 const { Camera      } = require('../../engine/camera');
 const { Wall        } = require('../elements/wall');
-const { Candle      } = require('../../light/types/candle');
+//const { Candle      } = require('../../light/types/candle');
+const { Bright_Light } = require('../../light/types/bright_light');
 const { Background  } = require('../elements/background');
 const { Element_Factory } = require('../elements/elements_factory');
 
@@ -58469,23 +58397,30 @@ class Level_Factory {
         wall.set_position(data);
       });
 
-      collision.forEach(data => Element_Factory.generate_tiled('collision', data));
-      item.forEach(data => Element_Factory.generate_tiled('item', data));
+      const level_collision = collision.map(data => Element_Factory.generate_tiled('collision', data));
+      const level_items = item.map(data => Element_Factory.generate_tiled('item', data));
       floor.forEach(data => Element_Factory.generate_tiled('floor', data));
       door.forEach(data => Element_Factory.generate_tiled('door', data));
-
       shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
       decal.forEach(data => Element_Factory.generate_tiled('decal', data));
       roof.forEach(data => Element_Factory.generate_tiled('roof', data));
 
-      lights.forEach(async data => {
-        const light = new Candle();
-        light.height = data.height;
-        light.width  = data.width;
+      const level_lights = lights.map(function(data) {
+        const light  = new Bright_Light();
         light.set_position(data);
-        light.start_flickering();
+        light.id = data.id;
+
+        const point = global.place_bunny(data);
+        point.height = 20;
+        point.width  = 20;
+        return light;
       });
 
+      return {
+        level_items,
+        level_lights,
+        level_collision,
+      };
     } catch (error) {
       console.log(error);
     }
@@ -58500,7 +58435,8 @@ module.exports = {
   Level_Factory,
 };
 
-},{"../../engine/camera":226,"../../engine/pixi_containers":231,"../../light/types/candle":280,"../elements/background":252,"../elements/elements_factory":258,"../elements/wall":264,"./archer_room":266,"./intro":267,"./intro_level_02":268,"./item_room":269,"./school_room":273,"./simple":274,"./street":275,"./transition_room":276}],271:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../engine/camera":226,"../../engine/pixi_containers":231,"../../light/types/bright_light":280,"../elements/background":252,"../elements/elements_factory":258,"../elements/wall":264,"./archer_room":266,"./intro":267,"./intro_level_02":268,"./item_room":269,"./school_room":273,"./simple":274,"./street":275,"./transition_room":276}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58967,7 +58903,7 @@ module.exports = {
 },{"../../engine/ticker":235}],278:[function(require,module,exports){
 'use strict';
 
-const { Sound } = require('../../engine/sound');
+//const { Sound } = require('../../engine/sound');
 const { sleep } = require('../../utils/time');
 
 class Strike {
@@ -58997,8 +58933,28 @@ class Strike {
     await sleep(1000);
     this.shadow.alpha = 0.6;
     this.shadow.range = 180;
+  }
 
-    this.shadow.destroy();
+  async fast() {
+    // Sound.play('lighter_strike');
+
+    await sleep(100);
+    this.shadow.alpha = 0.5;
+    this.shadow.range = 110;
+
+    await sleep(20);
+    this.shadow.alpha = 0;
+
+    await sleep(400);
+    this.shadow.alpha = 0.4;
+    this.shadow.range = 140;
+
+    await sleep(30);
+    this.shadow.alpha = 0;
+
+    await sleep(1000);
+    this.shadow.alpha = 0.6;
+    this.shadow.range = 180;
   }
 }
 
@@ -59006,7 +58962,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../engine/sound":234,"../../utils/time":289}],279:[function(require,module,exports){
+},{"../../utils/time":290}],279:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59048,6 +59004,10 @@ class Light {
     this.shadow.range = value;
   }
 
+  set alpha(value) {
+    this.shadow.alpha = value;
+  }
+
   hide() {
     this.shadow.alpha = 0;
   }
@@ -59071,6 +59031,32 @@ module.exports = {
 
 
 },{"../engine/pixi_containers":231,"pixi.js":156}],280:[function(require,module,exports){
+'use strict';
+
+const { visual_effects_container } = require('../../engine/pixi_containers');
+
+const { Light  } = require('../light_model');
+const { Strike } = require('../attributes/strike');
+
+class Bright_Light extends Light {
+  constructor() {
+    super();
+    this.name = 'bright_light';
+
+    this.shadow.pointCount = 1;
+    this.shadow.range      = 200;
+    this.shadow.intensity  = 0.5;
+    this.add_component(new Strike(this));
+
+    visual_effects_container.addChild(this.shadow);
+  }
+}
+
+module.exports = {
+  Bright_Light,
+};
+
+},{"../../engine/pixi_containers":231,"../attributes/strike":278,"../light_model":279}],281:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59124,7 +59110,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/flicker":277,"../light_model":279,"pixi.js":156}],281:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/flicker":277,"../light_model":279,"pixi.js":156}],282:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59153,7 +59139,7 @@ module.exports = {
   Lantern,
 };
 
-},{"../../engine/pixi_containers":231,"../../engine/tween":236,"../attributes/flicker":277,"../light_model":279}],282:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/tween":236,"../attributes/flicker":277,"../light_model":279}],283:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59180,7 +59166,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/flicker":277,"../light_model":279}],283:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/flicker":277,"../light_model":279}],284:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59206,7 +59192,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/strike":278,"../light_model":279}],284:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/strike":278,"../light_model":279}],285:[function(require,module,exports){
 'use strict';
 
 class Color_Pick {
@@ -59225,7 +59211,7 @@ module.exports = {
   Color_Pick,
 };
 
-},{}],285:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59268,7 +59254,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],286:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59288,7 +59274,7 @@ global.set_light_level = amount => {
 };
 
 // QUICK POINT CHECKING
-global.place_bunny = ({ x, y }) => {
+global.place_bunny = ({ x, y }, light) => {
   const texture = PIXI.Texture.fromImage('bunny');
   texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
@@ -59297,11 +59283,15 @@ global.place_bunny = ({ x, y }) => {
   bunny.anchor.set(0.5);
   bunny.width = 200;
   bunny.height = 200;
-  const shade = new PIXI.Sprite(texture);
-  shade.parentGroup = PIXI.shadows.casterGroup;
-  shade.position.copy(bunny);
 
-  visual_effects_container.addChild(bunny, shade);
+  visual_effects_container.addChild(bunny);
+  if(light) {
+    const shade = new PIXI.Sprite(texture);
+    shade.parentGroup = PIXI.shadows.casterGroup;
+    shade.position.copy(bunny);
+    visual_effects_container.addChild(shade);
+  }
+
 
   return bunny;
 };
@@ -59313,7 +59303,7 @@ global.place_bunny = ({ x, y }) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":231,"pixi.js":156}],287:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":156}],288:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-plugin-bump');
@@ -59431,7 +59421,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":231,"pixi-plugin-bump":36,"pixi.js":156}],288:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi-plugin-bump":36,"pixi.js":156}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59489,7 +59479,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],289:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -59500,7 +59490,7 @@ module.exports = {
   sleep,
 };
 
-},{}],290:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59586,7 +59576,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":231,"pixi.js":156}],291:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":156}],292:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -59650,7 +59640,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":223,"../engine/item_handler":227,"../engine/pixi_containers":231,"pixi.js":156}],292:[function(require,module,exports){
+},{"../effects/fade":223,"../engine/item_handler":227,"../engine/pixi_containers":231,"pixi.js":156}],293:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59848,7 +59838,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":239}],293:[function(require,module,exports){
+},{"../items/item_manager":239}],294:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -59885,7 +59875,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":285}],294:[function(require,module,exports){
+},{"../utils/dom":286}],295:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60410,7 +60400,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -60716,7 +60706,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":296}],296:[function(require,module,exports){
+},{"_process":297}],297:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -60902,7 +60892,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],297:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -61439,7 +61429,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],298:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61525,7 +61515,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],299:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61612,13 +61602,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],300:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":298,"./encode":299}],301:[function(require,module,exports){
+},{"./decode":299,"./encode":300}],302:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -61697,7 +61687,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":296,"timers":301}],302:[function(require,module,exports){
+},{"process/browser.js":297,"timers":302}],303:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62431,7 +62421,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":303,"punycode":297,"querystring":300}],303:[function(require,module,exports){
+},{"./util":304,"punycode":298,"querystring":301}],304:[function(require,module,exports){
 'use strict';
 
 module.exports = {
