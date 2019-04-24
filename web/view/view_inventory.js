@@ -1,29 +1,27 @@
 'use strict';
-
 const PIXI = require('pixi.js');
+const { player_events } = require('../engine/item_handler');
+
 const { visual_effects_container } = require('../engine/pixi_containers');
+const { Fade } = require('../effects/fade');
 
 class View_Inventory {
-  static populate(image_name, slot) {
-    const item  = PIXI.Sprite.fromFrame(image_name);
-    item.height = 100;
-    item.width  = 100;
-    item.anchor.set(0.5);
-    item.interactive = true;
-    item.buttonMode  = true;
-    item.click = () => item.destroy();
+  constructor() {
+    this.slot_container = new PIXI.Container();
+    this.slot_container.interactive = true;
 
-    this.slot_container.getChildAt(slot).addChild(item);
+    this.slot_container.on('mouseout', () => {
+      const fade = new Fade(this.slot_container);
+      fade.out();
+    });
   }
 
-  static create_inventory_slots_at(point, slots = 3) {
-    if(!point) throw new Error('needs a point: ' + point);
+  set_position({x, y}) {
+    this.slot_container.position.set(x, y);
+  }
 
-    this.slot_container = new PIXI.Container();
-    this.slot_container.position.set(point.x - 200, point.y);
-
+  create_inventory_slots(slots = 3) {
     for(let i = 0; i <= slots; i++) {
-
       const sprite  = PIXI.Sprite.fromFrame('item_slot');
       sprite.width  = 100;
       sprite.height = 100;
@@ -36,14 +34,29 @@ class View_Inventory {
     visual_effects_container.addChild(this.slot_container);
   }
 
-  static clear_slots() {
+  clear_slots() {
     this.slot_container.removeChildren();
   }
 
-  static create_populated_slots(point, loot) {
-    this.create_inventory_slots_at(point, loot.length);
+  populate_slots(loot) {
+    this.create_inventory_slots(loot.length);
 
-    loot.forEach((item, i) => this.populate(item.image_name, i));
+    loot.forEach((loot_item, slot) => {
+      const item  = PIXI.Sprite.fromFrame(loot_item.image_name);
+      item.height = 100;
+      item.width  = 100;
+      item.anchor.set(0.5);
+      item.interactive = true;
+      item.buttonMode  = true;
+      item.click = () => {
+        console.log(item);
+        player_events.emit('give_item', loot_item);
+
+        item.destroy();
+      };
+
+      this.slot_container.getChildAt(slot).addChild(item);
+    });
   }
 }
 

@@ -17,12 +17,12 @@ class Melee {
   }
 
   equip() {
-    this.inventory.equip_melee_weapon();
+    this.inventory.switch_to_melee_weapon();
 
     this.animation.weapon = this.melee_weapon.animation_name;
   }
 
-  hit_box({x,y}) {
+  hit_box() {
     const box = new PIXI.Sprite.fromFrame('black_dot');
     box.width = 50;
     box.height= 300;

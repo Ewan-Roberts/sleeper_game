@@ -267,7 +267,8 @@
                      "label":true,
                      "label_action":"Examine",
                      "label_description":"Box of shit",
-                     "label_image":"eye_icon"
+                     "label_image":"eye_icon",
+                     "random":true
                     },
                  "propertytypes":
                     {
@@ -276,7 +277,8 @@
                      "label":"bool",
                      "label_action":"string",
                      "label_description":"string",
-                     "label_image":"string"
+                     "label_image":"string",
+                     "random":"bool"
                     },
                  "rotation":-538.437,
                  "type":"",
@@ -293,6 +295,7 @@
                     {
                      "container":true,
                      "image_name":"box_06",
+                     "items":"[\"old_boots\",\"old_helmet\"]",
                      "label":true,
                      "label_action":"Take",
                      "label_description":"Some other shit",
@@ -302,6 +305,7 @@
                     {
                      "container":"bool",
                      "image_name":"string",
+                     "items":"string",
                      "label":"bool",
                      "label_action":"string",
                      "label_description":"string",
@@ -325,8 +329,7 @@
                      "label_action":"Take",
                      "label_description":"Old Bow",
                      "label_image":"take_icon",
-                     "remove_on_click":true,
-                     "unique_item":"old_bow"
+                     "remove_on_click":true
                     },
                  "propertytypes":
                     {
@@ -335,8 +338,7 @@
                      "label_action":"string",
                      "label_description":"string",
                      "label_image":"string",
-                     "remove_on_click":"bool",
-                     "unique_item":"string"
+                     "remove_on_click":"bool"
                     },
                  "rotation":-525.979,
                  "type":"",
@@ -344,6 +346,35 @@
                  "width":80,
                  "x":2394.12417970722,
                  "y":1599.57597173145
+                }, 
+                {
+                 "height":96.1592,
+                 "id":183,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rusty_knife",
+                     "label":true,
+                     "label_action":"jjjjjj",
+                     "label_description":"Rusty Knife",
+                     "label_image":"take_icon",
+                     "remove_on_click":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "remove_on_click":"bool"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":49.8819330136512,
+                 "x":2513.2559313478,
+                 "y":1590.48678061585
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -405,7 +436,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":183,
+ "nextobjectid":184,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

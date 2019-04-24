@@ -49,8 +49,6 @@ class Button {
     this.sprite.anchor.set(0.5);
     this.sprite.height = 30;
     this.sprite.width  = 30;
-    this.sprite.interactive = true;
-    this.sprite.buttonMode = true;
 
     visual_effects_container.addChild(this.sprite);
   }
@@ -65,7 +63,6 @@ class Button {
       this.description_label.set_position({x, y: y-30});
     }
   }
-
   set visible(bool) {
     this.sprite.visible = bool;
 

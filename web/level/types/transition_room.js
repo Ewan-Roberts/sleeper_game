@@ -30,35 +30,39 @@ class Transition_Room extends Level  {
       pad.width  = data.width;
       pad.anchor = 0;
       pad.set_position(data);
-
-      const level_text = new PIXI.Text(data.properties.level_name, {
-        fontSize: 40,
-        fill: 'grey',
-      });
-      level_text.x = data.x + data.width/4;
-      level_text.y = data.y + data.height/2;
-      visual_effects_container.addChild(level_text);
-
-      // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
         Level_Factory.clear();
-
-
         Level_Factory.create(data.properties, this.player);
       });
+
+      const level_names = new PIXI.Text(
+        data.properties.level_name,
+        {
+          fontSize: 40,
+          fill: 'grey',
+        }
+      );
+
+      level_names.x = data.x + data.width/4;
+      level_names.y = data.y + data.height/2;
+
+      visual_effects_container.addChild(level_names);
     });
 
     Level_Factory.generate(this.player, this.elements);
 
-    const level_text = new PIXI.Text('THE HUB', {
-      fontSize: 100,
-      fill:     'grey',
-      fontWeight: 'bold',
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 8,
-      dropShadowDistance: 10,
-    });
+    const level_text = new PIXI.Text(
+      'THE HUB',
+      {
+        fontSize: 100,
+        fill:     'grey',
+        fontWeight: 'bold',
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 8,
+        dropShadowDistance: 10,
+      }
+    );
 
     level_text.x = player.x -150;
     level_text.y = player.y -50;

@@ -37,6 +37,39 @@ class animation {
     return frames;
   }
 
+  static knife_idle() {
+    const frames = [];
+    for (let i = 0; i <= 19; i++) {
+      const name = `survivor-move_knife_${i}`;
+
+      frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return frames;
+  }
+
+  static knife_move() {
+    const frames = [];
+    for (let i = 0; i <= 19; i++) {
+      const name = `survivor-move_knife_${i}`;
+
+      frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return frames;
+  }
+
+  static knife_attack() {
+    const frames = [];
+    for (let i = 0; i <= 14; i++) {
+      const name = `survivor-meleeattack_knife_${i}`;
+
+      frames.push(PIXI.Texture.fromFrame(name));
+    }
+
+    return frames;
+  }
+
   static bow_walk() {
     const frames = [];
     for (let i = 0; i <= 20; i++) {
@@ -97,6 +130,8 @@ class Human {
     this.sprite.width  /=2;
     this.sprite.height /=2;
     this.entity = entity;
+    this.prefix = 'bow';
+
     this.animations = {
       nothing_idle : animation.nothing_idle(),
       nothing_walk : animation.nothing_walk(),
@@ -105,6 +140,9 @@ class Human {
       bow_walk     : animation.bow_walk(),
       bow_idle     : animation.bow_idle(),
       bow_shoot    : animation.bow_shoot(),
+      knife_idle   : animation.knife_idle(),
+      knife_walk   : animation.knife_move(),
+      knife_shoot  : animation.knife_attack(),
     };
   }
 
@@ -135,23 +173,23 @@ class Human {
 
   ready_weapon() {
     //TODO
-    this.switch('bow_shoot');
+    this.switch(this.prefix + '_shoot');
     this.sprite.loop = false;
   }
 
   attack() {
     //TODO
-    this.switch('bow_walk');
+    this.switch(this.prefix + '_walk');
   }
 
   idle() {
     //TODO
-    this.switch('bow_idle');
+    this.switch(this.prefix + '_idle');
   }
 
   walk() {
     //TODO
-    this.switch('bow_walk');
+    this.switch(this.prefix + '_walk');
   }
 
   kill() {

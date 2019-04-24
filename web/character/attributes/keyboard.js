@@ -1,13 +1,15 @@
 'use strict';
-
 const PIXI = require('pixi.js');
-const { collision_container } = require('../../engine/pixi_containers');
-const { roof_container } = require('../../engine/pixi_containers');
 
-const { pad_container } = require('../../engine/pixi_containers');
+const {
+  collision_container,
+  roof_container,
+  pad_container,
+} = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
 const { View_HUD } = require('../../view/view_player_inventory');
+const { Fade     } = require('../../effects/fade');
 
 function point_collides(position) {
   const { children } = collision_container;
@@ -15,15 +17,19 @@ function point_collides(position) {
   return !!children.find(child => child.containsPoint(position));
 }
 
+//TODO this could be more performant using proximity
+//and this logic should be split out or put in ceiling
 function point_contains(position) {
   const roofs = roof_container.children ;
   roofs.forEach(child => {
     if(child.containsPoint(position)) {
-      child.alpha = child.fade_opacity || 0.6;
+      new Fade(child).to(child.fade_opacity || 0.6);
+
       return;
     }
-
-    child.alpha = 1;
+    if(child.alpha !== 1) {
+      new Fade(child).in();
+    }
   });
 
 }

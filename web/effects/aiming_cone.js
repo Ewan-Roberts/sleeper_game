@@ -12,6 +12,7 @@ cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
 visual_effects_container.addChild(cone);
 
+//TODO use tween to and from
 class Aiming_Cone {
   static start_at(point) {
     cone.position.set(point.x, point.y);

@@ -9,6 +9,7 @@ class Inventory {
     this.equipped      = null;
     this.ranged_weapon = null;
     this.melee_weapon  = null;
+    this.items         = [];
   }
 
   equip_weapon_by_name(name) {
@@ -22,16 +23,24 @@ class Inventory {
     this.ranged_weapon = Item_Manager.get_item(name);
   }
 
-  equip_ranged_weapon() {
+  switch_to_ranged_weapon() {
     if(!this.ranged_weapon) throw new Error('no ranged weapon equipped');
 
     this.equipped = this.ranged_weapon;
   }
 
-  equip_melee_weapon() {
+  switch_to_melee_weapon() {
     if(!this.melee_weapon) throw new Error('no melee weapon equipped');
 
     this.equipped = this.melee_weapon;
+  }
+
+  equip_weapon(weapon) {
+    this.equipped = weapon;
+  }
+
+  give_item(item) {
+    this.items.push(item);
   }
 
   add_ranged_weapon_by_name(name) {

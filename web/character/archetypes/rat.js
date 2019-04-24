@@ -18,7 +18,7 @@ class Rat extends Animal {
     this.sprite.id = 2;
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
-    this.inventory.equip_melee_weapon();
+    this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
     this.blood = new Blood();
 

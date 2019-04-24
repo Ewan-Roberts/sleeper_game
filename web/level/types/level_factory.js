@@ -57,11 +57,9 @@ class Level_Factory {
       camera.set_center(player);
 
       walls.forEach(data => {
-        const wall  = new Wall();
-        wall.shadow = true;
+        const wall  = new Wall(data.options);
         wall.height = data.height;
         wall.width  = data.width;
-        wall.anchor = 0;
         wall.rotation = (data.rotation * (Math.PI/180));
 
         wall.set_position(data);

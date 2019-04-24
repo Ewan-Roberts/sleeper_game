@@ -51,7 +51,7 @@ const items = [
 
     visual_name:    'old bow',
     description:    'An old bow still working but not for long...',
-    image_name:     'bunny',
+    image_name:     'bow_00',
   },
   {
     name:           'weak_bow',

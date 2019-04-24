@@ -1,6 +1,7 @@
 'use strict';
 
 const { timer            } = require('../../engine/ticker');
+
 const { distance_between } = require('../../utils/math');
 
 const event      = require('events');

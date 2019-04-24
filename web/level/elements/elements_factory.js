@@ -25,7 +25,7 @@ class Element_Factory {
     const generated = this.generate(level, data.properties);
     generated.set_position(data);
     //TODO flip
-    generated.width = data.height;
+    generated.width  = data.height;
     generated.height = data.width;
     generated.rotation = ((data.rotation+90) * (Math.PI/180));
     generated.sprite.anchor.y = 1;

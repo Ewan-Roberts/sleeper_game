@@ -6,14 +6,18 @@ const { Item } = require('./item_model');
 
 //TODO remove item extend
 class Wall extends Item {
-  constructor() {
+  constructor(options) {
     super('black_dot');
 
-    this.width  = 300;
-    this.height = 20;
-    this.sprite.events = new event();
+    this.shadow = true;
+    this.anchor = 0;
 
+    this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
+
+    if(options && options.hidden) {
+      this.alpha = 0;
+    }
 
     collision_container.addChild(this.sprite);
   }

@@ -43,14 +43,20 @@ function shoot_arrow(speed, damage, origin, point) {
 
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
     if (collision_object) {
-      collision_object.events.emit('damage', damage);
       arrow.tween.stop();
+
+      if(collision_object.events) {
+        collision_object.events.emit('damage', damage);
+      }
+      return;
     }
+
 
     const collision_critter = critters.find(critter => critter.containsPoint(arrow_point));
     if (collision_critter) {
       arrow.tween.stop();
       collision_critter.events.emit('damage', damage);
+      return;
     }
 
     const collision_enemies = enemies.find(enemy => enemy.containsPoint(arrow_point));
@@ -59,6 +65,7 @@ function shoot_arrow(speed, damage, origin, point) {
 
       arrow.tween.stop();
       collision_enemies.events.emit('damage', damage);
+      return;
     }
 
     const collision_players = players.find(player=> player.containsPoint(arrow_point));
@@ -67,6 +74,7 @@ function shoot_arrow(speed, damage, origin, point) {
 
       arrow.tween.stop();
       collision_players.events.emit('damage', damage);
+      return;
     }
 
   });

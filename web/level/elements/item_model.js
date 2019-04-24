@@ -115,7 +115,6 @@ class Item {
     }
   }
 
-
   set rotation(value) {
     this.sprite.rotation = value;
 
@@ -146,7 +145,6 @@ class Item {
 
     collision_container.addChild(this.shade);
   }
-
 
 }
 
