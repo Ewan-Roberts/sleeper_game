@@ -7551,7 +7551,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":302}],39:[function(require,module,exports){
+},{"timers":304}],39:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
 },{}],40:[function(require,module,exports){
@@ -19326,7 +19326,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":296}],90:[function(require,module,exports){
+},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":298}],90:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23126,7 +23126,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":44,"path":296}],108:[function(require,module,exports){
+},{"../../Shader":44,"path":298}],108:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28964,7 +28964,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":303}],125:[function(require,module,exports){
+},{"url":305}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33538,7 +33538,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":65,"../../core/const":46,"path":296}],143:[function(require,module,exports){
+},{"../../core":65,"../../core/const":46,"path":298}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33622,7 +33622,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":65,"path":296}],144:[function(require,module,exports){
+},{"../../core":65,"path":298}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34785,7 +34785,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":65,"path":296}],151:[function(require,module,exports){
+},{"../../core":65,"path":298}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34893,7 +34893,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":65,"path":296}],152:[function(require,module,exports){
+},{"../../core":65,"path":298}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34947,7 +34947,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":65,"path":296}],153:[function(require,module,exports){
+},{"../../core":65,"path":298}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35123,7 +35123,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":65,"path":296}],155:[function(require,module,exports){
+},{"../../core":65,"path":298}],155:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37790,7 +37790,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":141,"path":296,"resource-loader":194}],163:[function(require,module,exports){
+},{"../extras":141,"path":298,"resource-loader":194}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38153,7 +38153,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":65,"resource-loader":194,"url":303}],166:[function(require,module,exports){
+},{"../core":65,"resource-loader":194,"url":305}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39879,7 +39879,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":65,"../Mesh":167,"path":296,"pixi-gl-core":21}],174:[function(require,module,exports){
+},{"../../core":65,"../Mesh":167,"path":298,"pixi-gl-core":21}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46784,7 +46784,7 @@ module.exports = {
   Bird,
 };
 
-},{"../../utils/math":289,"pixi.js":155}],203:[function(require,module,exports){
+},{"../../utils/math":291,"pixi.js":155}],203:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47013,7 +47013,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":289,"pixi.js":155}],204:[function(require,module,exports){
+},{"../../utils/math":291,"pixi.js":155}],204:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47128,7 +47128,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":289,"pixi.js":155}],205:[function(require,module,exports){
+},{"../../utils/math":291,"pixi.js":155}],205:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -47169,6 +47169,7 @@ const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Blood  } = require('../../effects/blood');
+const { pathfind_sprite } = require('../../engine/pathfind');
 
 class Rat extends Animal {
   constructor() {
@@ -47192,10 +47193,11 @@ class Rat extends Animal {
     this._logic.fired  = false;
   }
 
-  _walk_to_enemy() {
+  async _walk_to_enemy() {
     this.animation.walk();
-
-    this.pathfind.go_to_sprite(this.enemy.sprite);
+    const poo = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    console.log(poo);
+    //this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
   _distance_to(point) {
@@ -47256,7 +47258,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":221,"../../utils/math":289,"../attributes/melee":211,"../types/rat":219,"events":295,"pixi.js":155}],207:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/pathfind":230,"../../utils/math":291,"../attributes/melee":211,"../types/rat":219,"events":297,"pixi.js":155}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47363,7 +47365,7 @@ function point_collides(position) {
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
   const roofs = roof_container.children ;
-
+  return;
   roofs.forEach(child => {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
@@ -47510,7 +47512,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":223,"../../engine/pixi_containers":231,"../../engine/shadows":233,"../../view/view_player_inventory":293,"pixi.js":155}],209:[function(require,module,exports){
+},{"../../effects/fade":223,"../../engine/pixi_containers":231,"../../engine/shadows":233,"../../view/view_player_inventory":295,"pixi.js":155}],209:[function(require,module,exports){
 
 'use strict';
 
@@ -47538,7 +47540,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":281}],210:[function(require,module,exports){
+},{"../../light/types/candle":283}],210:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -47613,7 +47615,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":223,"../../items/item_manager":239,"../../view/button":291,"../../view/view_inventory":292}],211:[function(require,module,exports){
+},{"../../effects/fade":223,"../../items/item_manager":239,"../../view/button":293,"../../view/view_inventory":294}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47733,7 +47735,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":220,"../../engine/app":224,"../../engine/pixi_containers":231,"../../engine/ranged":232,"../../utils/math":289}],213:[function(require,module,exports){
+},{"../../effects/aiming_cone":220,"../../engine/app":224,"../../engine/pixi_containers":231,"../../engine/ranged":232,"../../utils/math":291}],213:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47814,7 +47816,7 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":294,"pixi.js":155}],215:[function(require,module,exports){
+},{"../../view/view_player_status_meter":296,"pixi.js":155}],215:[function(require,module,exports){
 'use strict';
 
 const event     = require('events');
@@ -47865,7 +47867,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":221,"events":295}],216:[function(require,module,exports){
+},{"../../effects/blood":221,"events":297}],216:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -47979,7 +47981,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":221,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../engine/tween":236,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":295}],219:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../engine/tween":236,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":297}],219:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -48198,7 +48200,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":218,"../level/types/archer_room":266,"../level/types/intro.js":267,"../level/types/item_room":269,"../level/types/player_animations":271,"../level/types/random_room":272,"../level/types/school_room.js":273,"../level/types/simple.js":274,"../level/types/transition_room":276}],226:[function(require,module,exports){
+},{"../character/types/player.js":218,"../level/types/archer_room":267,"../level/types/intro.js":269,"../level/types/item_room":271,"../level/types/player_animations":273,"../level/types/random_room":274,"../level/types/school_room.js":275,"../level/types/simple.js":276,"../level/types/transition_room":278}],226:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -48270,7 +48272,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":239,"events":295}],228:[function(require,module,exports){
+},{"../items/item_manager":239,"events":297}],228:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -48298,15 +48300,17 @@ module.exports = {
 
 },{"pixi-packer-parser":34,"pixi.js":155}],230:[function(require,module,exports){
 'use strict';
+const PIXI = require('pixi.js');
 const { grid_container } = require('./pixi_containers');
 
 const { Grid   } = require('../utils/grid');
 const { Tween  } = require('./tween');
-const { radian } = require('../utils/math');
+//const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
-easystar.setAcceptableTiles([0]);
+easystar.setAcceptableTiles([0,2]);
+easystar.setTileCost(2, 12); //only if you have to!
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
 
@@ -48321,7 +48325,7 @@ const find_grid = sprite => {
   return found_tile;
 };
 
-const path_between_grids = (one, two) => {
+function path_between_grids (one, two) {
   return new Promise((resolve, reject) => {
     easystar.findPath(one.x, one.y, two.x, two.y, path => {
       if(path) resolve(path);
@@ -48331,7 +48335,8 @@ const path_between_grids = (one, two) => {
 
     easystar.calculate();
   });
-};
+}
+
 
 class pathfind_sprite {
   static create_level_grid(tiled_level_data) {
@@ -48350,9 +48355,11 @@ class pathfind_sprite {
 
   static move_sprite_on_path(sprite, path_array) {
     if(path_array.length < 2) return;
+    const tweens = PIXI.tweenManager.getTweensForTarget(sprite);
+    if(tweens.length > 1) return;
 
     const tween = new Tween(sprite);
-    tween.time  = path_array.length * 300;
+    tween.time  = path_array.length * 500;
     tween.from_path(sprite);
     const foo = path_array.map(path => {
       return {
@@ -48365,7 +48372,7 @@ class pathfind_sprite {
     tween.draw_path();
     tween.start();
 
-    tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
+    //tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
   }
 
   static async grid_around_sprite(target) {
@@ -48397,7 +48404,25 @@ class pathfind_sprite {
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
 
-    this.move_sprite_on_path(from_sprite, path_array);
+    const wall_path = this.shit(path_array);
+    this.move_sprite_on_path(from_sprite, wall_path);
+  }
+
+  static shit(poo) {
+    const arr = [];
+
+    for (let i = 0; i < poo.length; i++) {
+      if(poo[i].door) {
+        console.log(poo[i]);
+        delete poo[i].door;
+        poo[i].shit.visible = false;
+        poo[i].visible = false;
+        return arr;
+      }
+
+      arr.push(poo[i]);
+    }
+    return arr;
   }
 
   static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
@@ -48405,9 +48430,10 @@ class pathfind_sprite {
     const to_point   = find_grid(to_sprite);
 
     const path_data = await path_between_grids(from_point.cell_position, to_point.cell_position);
+    const tile_path = path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
 
     this.highlight_grid_cell_from_path(path_data);
-    return path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
+    return tile_path;
   }
 }
 
@@ -48415,7 +48441,7 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":288,"../utils/math":289,"./pixi_containers":231,"./tween":236,"easystarjs":5}],231:[function(require,module,exports){
+},{"../utils/grid":290,"./pixi_containers":231,"./tween":236,"easystarjs":5,"pixi.js":155}],231:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 PIXI.settings.ROUND_PIXELS = true;
@@ -48650,7 +48676,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":289,"./pixi_containers":231,"./tween":236,"pixi.js":155}],233:[function(require,module,exports){
+},{"../utils/math":291,"./pixi_containers":231,"./tween":236,"pixi.js":155}],233:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -48735,6 +48761,7 @@ class Tween {
   }
 
   from_path(start) {
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.path = new PIXI.tween.TweenPath();
     this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
@@ -48780,7 +48807,7 @@ class Tween {
 
     const random = () => random_number(-20, 20);
 
-    for (let i = 3; i < tween_path.length; i++) {
+    for (let i = 2; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x + random(),
         tween_path[i-1].y + random(),
@@ -48800,10 +48827,13 @@ class Tween {
 
   start() {
     if(this.path && this.path.currentPath) {
+      console.log(this.path);
       this.movement.path = this.path;
     }
+
     this.movement.time = this.time;
     this.movement.start();
+    this.movement.expire = true;
   }
 
   chain() {
@@ -48829,7 +48859,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":289,"./pixi_containers":231,"./ticker":235,"pixi.js":155}],237:[function(require,module,exports){
+},{"../utils/math":291,"./pixi_containers":231,"./ticker":235,"pixi.js":155}],237:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -48846,7 +48876,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":225,"./engine/packer":229,"./utils/globals":287}],238:[function(require,module,exports){
+},{"./engine/boot_loader.js":225,"./engine/packer":229,"./utils/globals":289}],238:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -49262,7 +49292,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":224,"../utils/math":289,"./data/item_data":238,"pixi.js":155}],240:[function(require,module,exports){
+},{"../engine/app":224,"../utils/math":291,"./data/item_data":238,"pixi.js":155}],240:[function(require,module,exports){
 'use strict';
 
 // This is purely an interface for TILED data
@@ -49538,7 +49568,7 @@ module.exports = {
   Randomise,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":285,"../../utils/math":289,"../elements/elements_factory":258,"pixi.js":155}],242:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../utils/color_picker":287,"../../utils/math":291,"../elements/elements_factory":259,"pixi.js":155}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50540,6 +50570,538 @@ module.exports={ "height":50,
  "width":50
 }
 },{}],244:[function(require,module,exports){
+module.exports={ "height":50,
+ "infinite":false,
+ "layers":[
+        {
+         "draworder":"topdown",
+         "name":"grid",
+         "objects":[
+                {
+                 "height":2648,
+                 "id":223,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2787.09727626459,
+                 "x":168,
+                 "y":144
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"background",
+         "objects":[
+                {
+                 "height":2313.15464120732,
+                 "id":51,
+                 "name":"carpet_floor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2451.16780621098,
+                 "x":301.552487342831,
+                 "y":228.557413822783
+                }],
+         "offsetx":-95.212121212121,
+         "offsety":-40.6666666666666,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"prey",
+         "objects":[
+                {
+                 "height":0,
+                 "id":140,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2422.94434067547,
+                 "y":823.17275109959
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"walls",
+         "objects":[
+                {
+                 "height":978.651971689517,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6666666666665,
+                 "x":229.974643705774,
+                 "y":223.900023826861
+                }, 
+                {
+                 "height":32,
+                 "id":9,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1080.16146257729,
+                 "x":617.736400006,
+                 "y":2209.83064743396
+                }, 
+                {
+                 "height":1180.2822016302,
+                 "id":122,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":2048.9245122288,
+                 "y":244.651759036649
+                }, 
+                {
+                 "height":100,
+                 "id":138,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":100,
+                 "x":935.810480217966,
+                 "y":857.750871196365
+                }, 
+                {
+                 "height":32,
+                 "id":226,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1848.16,
+                 "x":235.92,
+                 "y":212
+                }, 
+                {
+                 "height":648.522424242424,
+                 "id":230,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":2057.39392272727,
+                 "y":1565.86
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"lights",
+         "objects":[
+                {
+                 "height":0,
+                 "id":62,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1136.27730156249,
+                 "y":1677.30952920112
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"player",
+         "objects":[
+                {
+                 "height":0,
+                 "id":144,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":621.974643705774,
+                 "y":1397.77881170565
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"floor",
+         "objects":[
+                {
+                 "height":53.712,
+                 "id":211,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-90.8664,
+                 "type":"",
+                 "visible":true,
+                 "width":163.969,
+                 "x":278.0155,
+                 "y":1121.144
+                }, 
+                {
+                 "height":1141.41,
+                 "id":213,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90,
+                 "type":"",
+                 "visible":true,
+                 "width":938.613,
+                 "x":1378.6935,
+                 "y":225.295
+                }, 
+                {
+                 "height":148.297,
+                 "id":214,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":166.821,
+                 "type":"",
+                 "visible":true,
+                 "width":164.541,
+                 "x":1201.7295,
+                 "y":491.8515
+                }, 
+                {
+                 "height":279.827,
+                 "id":215,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":231.865,
+                 "x":562.0675,
+                 "y":696.0865
+                }, 
+                {
+                 "height":285.318,
+                 "id":216,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":374.315,
+                 "type":"",
+                 "visible":true,
+                 "width":702.084,
+                 "x":788.958,
+                 "y":1235.341
+                }, 
+                {
+                 "height":257.06,
+                 "id":217,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"trash_can_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044,
+                 "type":"",
+                 "visible":true,
+                 "width":236.13,
+                 "x":1315.935,
+                 "y":1791.47
+                }, 
+                {
+                 "height":462.106,
+                 "id":218,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"ladder_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":173.305,
+                 "type":"",
+                 "visible":true,
+                 "width":81.2223,
+                 "x":563.38885,
+                 "y":1906.947
+                }, 
+                {
+                 "height":210.751,
+                 "id":219,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"trash_can_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-521.044,
+                 "type":"",
+                 "visible":true,
+                 "width":236.13,
+                 "x":507.935,
+                 "y":1854.6245
+                }, 
+                {
+                 "height":232.099,
+                 "id":220,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":292.335,
+                 "x":979.8325,
+                 "y":1643.9505
+                }, 
+                {
+                 "height":238.08,
+                 "id":221,
+                 "name":"floor_visual",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":33.1611,
+                 "type":"",
+                 "visible":true,
+                 "width":201.155,
+                 "x":1329.4225,
+                 "y":1852.96
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"collision",
+         "objects":[
+                {
+                 "height":77.2894392067246,
+                 "id":175,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"chair_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-96.1570107787249,
+                 "type":"",
+                 "visible":true,
+                 "width":77.2894392067246,
+                 "x":1199.02496632421,
+                 "y":1926.15621544926
+                }, 
+                {
+                 "height":77.2894392067246,
+                 "id":186,
+                 "name":"collision",
+                 "properties":
+                    {
+                     "image_name":"chair_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":64.3523102497039,
+                 "type":"",
+                 "visible":true,
+                 "width":77.2894392067246,
+                 "x":2272.57902426657,
+                 "y":1141.71990328131
+                }, 
+                {
+                 "height":170.652909090909,
+                 "id":229,
+                 "name":"",
+                 "properties":
+                    {
+                     "door":true,
+                     "image_name":"desk_02"
+                    },
+                 "propertytypes":
+                    {
+                     "door":"bool",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":94.8953333333336,
+                 "x":2025.27960606061,
+                 "y":1437.40081818182
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"exit_pad",
+         "objects":[
+                {
+                 "height":182.561758950156,
+                 "id":15,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217.283450366449,
+                 "x":1683.27950537647,
+                 "y":551.38406302162
+                }, 
+                {
+                 "height":182.562,
+                 "id":207,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217.283,
+                 "x":1608.07438366377,
+                 "y":1853.92264016755
+                }, 
+                {
+                 "height":182.562,
+                 "id":208,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217.283,
+                 "x":441.971799167954,
+                 "y":1734.13220792989
+                }, 
+                {
+                 "height":372.562,
+                 "id":222,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"intro"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":127.283,
+                 "x":223.3585,
+                 "y":1196.719
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":231,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.1.6",
+ "tileheight":100,
+ "tilesets":[],
+ "tilewidth":100,
+ "type":"map",
+ "version":1,
+ "width":50
+}
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -51776,7 +52338,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53010,7 +53572,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53045,7 +53607,7 @@ module.exports={ "height":50,
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -53647,7 +54209,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":203,
+ "nextobjectid":204,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53658,7 +54220,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54063,7 +54625,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55020,7 +55582,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56087,7 +56649,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],250:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56592,6 +57154,25 @@ module.exports={ "height":50,
                  "width":211,
                  "x":2623.56127037662,
                  "y":1651.82713097246
+                }, 
+                {
+                 "height":164.503,
+                 "id":176,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"defend"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":245.635993816751,
+                 "x":2301.2966742552,
+                 "y":1758.67036621698
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -56599,7 +57180,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":176,
+ "nextobjectid":177,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -56610,8 +57191,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-
-},{}],251:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -57219,7 +57799,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],252:[function(require,module,exports){
+},{}],253:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -57272,7 +57852,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":231,"pixi.js":155}],253:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"pixi.js":155}],254:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -57294,7 +57874,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":260}],255:[function(require,module,exports){
 (function (global){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
@@ -57389,7 +57969,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":210,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../view/button":291,"./item_model":259}],255:[function(require,module,exports){
+},{"../../character/attributes/lootable":210,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../view/button":293,"./item_model":260}],256:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -57451,7 +58031,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":285,"events":295,"pixi.js":155}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../utils/color_picker":287,"events":297,"pixi.js":155}],257:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -57477,7 +58057,13 @@ class CollisionItem extends Item {
     this.sprite.events.on('damage', () => {
       this.sprite.destroy();
     });
+
     collision_container.addChild(this.sprite);
+    if(options.door) {
+      this.sprite.door = true;
+      console.log(collision_container);
+
+    }
   }
 }
 
@@ -57485,7 +58071,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259,"events":295}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":260,"events":297}],258:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -57524,7 +58110,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/pixi_containers":231,"../../engine/tween":236,"./item_model":259}],258:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/tween":236,"./item_model":260}],259:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -57568,7 +58154,7 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./ceiling":253,"./chest":254,"./collision_object":256,"./door":257,"./shroud":262,"./visual_object":263}],259:[function(require,module,exports){
+},{"./ceiling":254,"./chest":255,"./collision_object":257,"./door":258,"./shroud":263,"./visual_object":264}],260:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -57724,7 +58310,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":231,"pixi.js":155}],260:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"pixi.js":155}],261:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -57784,7 +58370,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":285,"events":295,"pixi.js":155}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../utils/color_picker":287,"events":297,"pixi.js":155}],262:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -57910,7 +58496,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":231,"../../engine/sound":234,"../../light/types/led":283,"./item_model":259,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":155}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/sound":234,"../../light/types/led":285,"./item_model":260,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":155}],263:[function(require,module,exports){
 'use strict';
 const { shroud_container } = require('../../engine/pixi_containers');
 
@@ -57931,7 +58517,7 @@ module.exports = {
   Shroud,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259}],263:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":260}],264:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../../engine/pixi_containers');
 
@@ -57953,7 +58539,7 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259}],264:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":260}],265:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -57987,7 +58573,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":259,"events":295}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":260,"events":297}],266:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
@@ -58013,7 +58599,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":230}],266:[function(require,module,exports){
+},{"../engine/pathfind.js":230}],267:[function(require,module,exports){
 'use strict';
 
 const { Level         } = require('../level_model');
@@ -58057,7 +58643,73 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":240,"../data/archer_room.json":243,"../elements/pad":260,"../level_model":265,"./level_factory":270}],267:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":240,"../data/archer_room.json":243,"../elements/pad":261,"../level_model":266,"./level_factory":272}],268:[function(require,module,exports){
+(function (global){
+'use strict';
+
+const { collision_container } = require('../../engine/pixi_containers');
+const { Level         } = require('../level_model');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
+const { Rat           } = require('../../character/archetypes/rat');
+const { Level_Factory } = require('./level_factory');
+
+const level_data = require('../data/defend_room.json');
+
+class Defend_Room extends Level  {
+  constructor(player) {
+    super();
+    this.name     = 'defend_room';
+
+    this.player   = player;
+    this.elements = new Tiled_Data(level_data);
+
+    this._set_elements();
+  }
+
+  _set_elements() {
+    const {prey, exit_pad, grid} = this.elements;
+    global.set_light_level(1);
+
+    Level_Factory.generate(this.player, this.elements);
+
+    const mouse = new Rat();
+    mouse.enemy(this.player);
+    mouse.set_position(prey[0]);
+
+    exit_pad.forEach(data => {
+      const pad  = new Trigger_Pad();
+      pad.height = data.height;
+      pad.width  = data.width;
+      pad.anchor = 0;
+      pad.set_position(data);
+      if(data.properties) {
+        pad.area.events.once('trigger', () => {
+          Level_Factory.clear();
+
+          Level_Factory.create(data.properties, this.player);
+        });
+        return;
+      }
+
+      // Fire once (event) to load in enemies
+      pad.area.events.once('trigger', () => {
+        console.log(collision_container);
+        mouse.logic_start();
+      });
+    });
+
+    global.set_light_level(1);
+    this.create_grid(grid);
+  }
+}
+
+module.exports = {
+  Defend_Room,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../character/archetypes/rat":206,"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/defend_room.json":244,"../elements/pad":261,"../level_model":266,"./level_factory":272}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
@@ -58175,7 +58827,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":282,"../../light/types/lighter":284,"../attributes/parse_tiled_data":240,"../data/intro_room.json":244,"../elements/click_pad":255,"../elements/pad":260,"./level_factory":270}],268:[function(require,module,exports){
+},{"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":284,"../../light/types/lighter":286,"../attributes/parse_tiled_data":240,"../data/intro_room.json":245,"../elements/click_pad":256,"../elements/pad":261,"./level_factory":272}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58219,7 +58871,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":240,"../data/intro_room_level_2.json":245,"../elements/pad":260,"./level_factory":270}],269:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":240,"../data/intro_room_level_2.json":246,"../elements/pad":261,"./level_factory":272}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58229,7 +58881,6 @@ const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
-//const { Candle      } = require('../../light/types/candle');
 const { Click_Pad     } = require('../elements/click_pad');
 
 const level_data  = require('../data/items_room.json');
@@ -58294,14 +58945,14 @@ class Items_Room extends Level {
           sprite_tween.from(dumpster.sprite);
           shadow_tween.from(dumpster.sprite);
           sprite_tween.to({
-            x: dumpster.sprite.x - 400,
-            y:dumpster.sprite.y-200,
+            x: dumpster.sprite.x-400,
+            y: dumpster.sprite.y-200,
             rotation: 2,
           });
 
           shadow_tween.to({
-            x: dumpster.sprite.x - 400,
-            y:dumpster.sprite.y-200,
+            x: dumpster.sprite.x-400,
+            y: dumpster.sprite.y-200,
             rotation: 2,
           });
 
@@ -58321,7 +58972,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":222,"../../engine/tween":236,"../attributes/parse_tiled_data":240,"../data/items_room.json":246,"../elements/click_pad":255,"../elements/pad":260,"../level_model":265,"./level_factory":270}],270:[function(require,module,exports){
+},{"../../effects/click_events":222,"../../engine/tween":236,"../attributes/parse_tiled_data":240,"../data/items_room.json":247,"../elements/click_pad":256,"../elements/pad":261,"../level_model":266,"./level_factory":272}],272:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58345,6 +58996,7 @@ class Level_Factory {
     const { Street } = require('./street');
     const { Simple } = require('./simple');
     const { Transition_Room } = require('./transition_room');
+    const { Defend_Room } = require('./defend_room');
 
     switch(properties.level_name) {
       case 'archer'    : return new Archer_Room(player);
@@ -58354,6 +59006,7 @@ class Level_Factory {
       case 'item'      : return new Items_Room(player);
       case 'street'    : return new Street(player);
       case 'transition': return new Transition_Room(player);
+      case 'defend'    : return new Defend_Room(player);
       default          : return new Simple(player, properties);
     }
   }
@@ -58430,7 +59083,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":226,"../../engine/pixi_containers":231,"../../light/types/bright_light":280,"../elements/background":252,"../elements/elements_factory":258,"../elements/wall":264,"./archer_room":266,"./intro":267,"./intro_level_02":268,"./item_room":269,"./school_room":273,"./simple":274,"./street":275,"./transition_room":276}],271:[function(require,module,exports){
+},{"../../engine/camera":226,"../../engine/pixi_containers":231,"../../light/types/bright_light":282,"../elements/background":253,"../elements/elements_factory":259,"../elements/wall":265,"./archer_room":267,"./defend_room":268,"./intro":269,"./intro_level_02":270,"./item_room":271,"./school_room":275,"./simple":276,"./street":277,"./transition_room":278}],273:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58497,7 +59150,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":217,"../../engine/camera":226,"../elements/background":252,"../level_model":265}],272:[function(require,module,exports){
+},{"../../character/types/npc":217,"../../engine/camera":226,"../elements/background":253,"../level_model":266}],274:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58576,7 +59229,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/randomise":241,"../elements/background":252,"../elements/pad":260,"../level_model":265}],273:[function(require,module,exports){
+},{"../attributes/randomise":241,"../elements/background":253,"../elements/pad":261,"../level_model":266}],275:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58645,7 +59298,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/school_room.json":248,"../elements/pad":260,"../elements/phone":261,"../level_model":265,"./level_factory":270}],274:[function(require,module,exports){
+},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/school_room.json":249,"../elements/pad":261,"../elements/phone":262,"../level_model":266,"./level_factory":272}],276:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58720,7 +59373,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/apartment.json":242,"../data/lights_room.json":247,"../data/truck.json":251,"../elements/pad":260,"../level_model":265,"./level_factory":270}],275:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/apartment.json":242,"../data/lights_room.json":248,"../data/truck.json":252,"../elements/pad":261,"../level_model":266,"./level_factory":272}],277:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58769,7 +59422,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":240,"../data/street.json":249,"../elements/pad":260,"../level_model":265,"./level_factory":270}],276:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":240,"../data/street.json":250,"../elements/pad":261,"../level_model":266,"./level_factory":272}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -58850,7 +59503,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/transition_room.json":250,"../elements/pad":260,"../level_model":265,"./level_factory":270,"pixi.js":155}],277:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/transition_room.json":251,"../elements/pad":261,"../level_model":266,"./level_factory":272,"pixi.js":155}],279:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58895,7 +59548,7 @@ module.exports = {
   Flicker,
 };
 
-},{"pixi.js":155}],278:[function(require,module,exports){
+},{"pixi.js":155}],280:[function(require,module,exports){
 'use strict';
 
 //const { Sound } = require('../../engine/sound');
@@ -58957,7 +59610,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../utils/time":290}],279:[function(require,module,exports){
+},{"../../utils/time":292}],281:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59025,7 +59678,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":231,"pixi.js":155}],280:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":155}],282:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59051,7 +59704,7 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/strike":278,"../light_model":279}],281:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/strike":280,"../light_model":281}],283:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59105,7 +59758,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/flicker":277,"../light_model":279,"pixi.js":155}],282:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/flicker":279,"../light_model":281,"pixi.js":155}],284:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59134,7 +59787,7 @@ module.exports = {
   Lantern,
 };
 
-},{"../../engine/pixi_containers":231,"../../engine/tween":236,"../attributes/flicker":277,"../light_model":279}],283:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/tween":236,"../attributes/flicker":279,"../light_model":281}],285:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59161,7 +59814,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/flicker":277,"../light_model":279}],284:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/flicker":279,"../light_model":281}],286:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59187,7 +59840,7 @@ module.exports = {
   Lighter,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/strike":278,"../light_model":279}],285:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/strike":280,"../light_model":281}],287:[function(require,module,exports){
 'use strict';
 
 class Color_Pick {
@@ -59206,7 +59859,7 @@ module.exports = {
   Color_Pick,
 };
 
-},{}],286:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59249,7 +59902,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],287:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59298,16 +59951,24 @@ global.place_bunny = ({ x, y }, light) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":231,"pixi.js":155}],288:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":155}],290:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-plugin-bump');
-const bump = new PIXI.extras.Bump();
+//const bump = new PIXI.extras.Bump();
 const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
 
-function check(ab, bb) {
-  return bump.hitTestRectangle(ab, bb);
+function check(rect1, rect2) {
+
+  if (rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y) {
+    return true;
+  }
+
+  //return bump.hitTestRectangle(ab, bb);
 }
 
 class Tile {
@@ -59370,6 +60031,10 @@ class Grid {
       collision_container.children.forEach(object => {
         if(check(tile, object)) {
           tile.passable = false;
+          if(object.door) {
+            tile.door = true;
+            tile.shit = object;
+          }
         }
       });
 
@@ -59386,11 +60051,17 @@ class Grid {
 
     grid_container.children.forEach((tile, i) => {
       if(!tile.passable) {
-        tile.alpha =0.3;
-        binary_line.push(1);
+        tile.alpha = 0.3;
+        if(tile.door) {
+          binary_line.push(2);
+          tile.alpha = 1;
+        } else {
+          binary_line.push(1);
+        }
       } else {
         binary_line.push(0);
       }
+
       sprite_line.push(tile);
 
       if(i % this.tile_width===0) {
@@ -59416,7 +60087,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":231,"pixi-plugin-bump":36,"pixi.js":155}],289:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi-plugin-bump":36,"pixi.js":155}],291:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59474,7 +60145,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],290:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -59485,7 +60156,7 @@ module.exports = {
   sleep,
 };
 
-},{}],291:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59571,7 +60242,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":231,"pixi.js":155}],292:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":155}],294:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -59635,7 +60306,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":223,"../engine/item_handler":227,"../engine/pixi_containers":231,"pixi.js":155}],293:[function(require,module,exports){
+},{"../effects/fade":223,"../engine/item_handler":227,"../engine/pixi_containers":231,"pixi.js":155}],295:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59833,7 +60504,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":239}],294:[function(require,module,exports){
+},{"../items/item_manager":239}],296:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -59870,7 +60541,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":286}],295:[function(require,module,exports){
+},{"../utils/dom":288}],297:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60395,7 +61066,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],296:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -60701,7 +61372,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":297}],297:[function(require,module,exports){
+},{"_process":299}],299:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -60887,7 +61558,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],298:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -61424,7 +62095,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],299:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61510,7 +62181,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],300:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61597,13 +62268,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],301:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":299,"./encode":300}],302:[function(require,module,exports){
+},{"./decode":301,"./encode":302}],304:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -61682,7 +62353,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":297,"timers":302}],303:[function(require,module,exports){
+},{"process/browser.js":299,"timers":304}],305:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62416,7 +63087,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":304,"punycode":298,"querystring":301}],304:[function(require,module,exports){
+},{"./util":306,"punycode":300,"querystring":303}],306:[function(require,module,exports){
 'use strict';
 
 module.exports = {

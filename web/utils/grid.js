@@ -1,12 +1,20 @@
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-plugin-bump');
-const bump = new PIXI.extras.Bump();
+//const bump = new PIXI.extras.Bump();
 const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
 
-function check(ab, bb) {
-  return bump.hitTestRectangle(ab, bb);
+function check(rect1, rect2) {
+
+  if (rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y) {
+    return true;
+  }
+
+  //return bump.hitTestRectangle(ab, bb);
 }
 
 class Tile {
@@ -69,6 +77,10 @@ class Grid {
       collision_container.children.forEach(object => {
         if(check(tile, object)) {
           tile.passable = false;
+          if(object.door) {
+            tile.door = true;
+            tile.shit = object;
+          }
         }
       });
 
@@ -85,11 +97,17 @@ class Grid {
 
     grid_container.children.forEach((tile, i) => {
       if(!tile.passable) {
-        tile.alpha =0.3;
-        binary_line.push(1);
+        tile.alpha = 0.3;
+        if(tile.door) {
+          binary_line.push(2);
+          tile.alpha = 1;
+        } else {
+          binary_line.push(1);
+        }
       } else {
         binary_line.push(0);
       }
+
       sprite_line.push(tile);
 
       if(i % this.tile_width===0) {

@@ -23,7 +23,13 @@ class CollisionItem extends Item {
     this.sprite.events.on('damage', () => {
       this.sprite.destroy();
     });
+
     collision_container.addChild(this.sprite);
+    if(options.door) {
+      this.sprite.door = true;
+      console.log(collision_container);
+
+    }
   }
 }
 

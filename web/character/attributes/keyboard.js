@@ -21,7 +21,7 @@ function point_collides(position) {
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
   const roofs = roof_container.children ;
-
+  return;
   roofs.forEach(child => {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;

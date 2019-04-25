@@ -15,6 +15,7 @@ class Tween {
   }
 
   from_path(start) {
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.path = new PIXI.tween.TweenPath();
     this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
@@ -60,7 +61,7 @@ class Tween {
 
     const random = () => random_number(-20, 20);
 
-    for (let i = 3; i < tween_path.length; i++) {
+    for (let i = 2; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x + random(),
         tween_path[i-1].y + random(),
@@ -80,10 +81,13 @@ class Tween {
 
   start() {
     if(this.path && this.path.currentPath) {
+      console.log(this.path);
       this.movement.path = this.path;
     }
+
     this.movement.time = this.time;
     this.movement.start();
+    this.movement.expire = true;
   }
 
   chain() {

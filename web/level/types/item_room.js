@@ -6,7 +6,6 @@ const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
-//const { Candle      } = require('../../light/types/candle');
 const { Click_Pad     } = require('../elements/click_pad');
 
 const level_data  = require('../data/items_room.json');
@@ -71,14 +70,14 @@ class Items_Room extends Level {
           sprite_tween.from(dumpster.sprite);
           shadow_tween.from(dumpster.sprite);
           sprite_tween.to({
-            x: dumpster.sprite.x - 400,
-            y:dumpster.sprite.y-200,
+            x: dumpster.sprite.x-400,
+            y: dumpster.sprite.y-200,
             rotation: 2,
           });
 
           shadow_tween.to({
-            x: dumpster.sprite.x - 400,
-            y:dumpster.sprite.y-200,
+            x: dumpster.sprite.x-400,
+            y: dumpster.sprite.y-200,
             rotation: 2,
           });
 

@@ -20,6 +20,7 @@ class Level_Factory {
     const { Street } = require('./street');
     const { Simple } = require('./simple');
     const { Transition_Room } = require('./transition_room');
+    const { Defend_Room } = require('./defend_room');
 
     switch(properties.level_name) {
       case 'archer'    : return new Archer_Room(player);
@@ -29,6 +30,7 @@ class Level_Factory {
       case 'item'      : return new Items_Room(player);
       case 'street'    : return new Street(player);
       case 'transition': return new Transition_Room(player);
+      case 'defend'    : return new Defend_Room(player);
       default          : return new Simple(player, properties);
     }
   }

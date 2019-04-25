@@ -7,6 +7,7 @@ const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Blood  } = require('../../effects/blood');
+const { pathfind_sprite } = require('../../engine/pathfind');
 
 class Rat extends Animal {
   constructor() {
@@ -30,10 +31,11 @@ class Rat extends Animal {
     this._logic.fired  = false;
   }
 
-  _walk_to_enemy() {
+  async _walk_to_enemy() {
     this.animation.walk();
-
-    this.pathfind.go_to_sprite(this.enemy.sprite);
+    const poo = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    console.log(poo);
+    //this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
   _distance_to(point) {
