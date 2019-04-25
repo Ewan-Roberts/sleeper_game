@@ -10,11 +10,8 @@ class Tween {
     this.name     = 'tween';
     this.sprite   = sprite;
 
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
-    this.movement.expire = true;
-
     this.show = false;
-    this.time = 0;
+    this.time = 2000;
   }
 
   from_path(start) {
@@ -28,6 +25,8 @@ class Tween {
   }
 
   from(data) {
+    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire = true;
     this.movement.from(data);
   }
 
@@ -57,8 +56,10 @@ class Tween {
   }
 
   add_random_path(tween_path) {
+    this.path = new PIXI.tween.TweenPath();
+
     const random = () => random_number(-20, 20);
-    //TODO big with the sprite move to
+
     for (let i = 3; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x + random(),
@@ -67,10 +68,6 @@ class Tween {
         tween_path[i].y   + random(),
         this.path_arc);
     }
-  }
-
-  set time(amount) {
-    this.movement.time = amount;
   }
 
   set delay(amount) {
@@ -82,13 +79,10 @@ class Tween {
   }
 
   start() {
-    if(!this.movement.time) {
-      throw new Error('time not set for tween');
-    }
-
     if(this.path && this.path.currentPath) {
       this.movement.path = this.path;
     }
+    this.movement.time = this.time;
     this.movement.start();
   }
 
