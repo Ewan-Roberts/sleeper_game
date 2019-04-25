@@ -12,15 +12,20 @@ class Door extends Item {
     this.shade.anchor.y= 1;
     this.shade.anchor.x= 0;
 
-    this.add_component(new Tween(this.sprite, this.shade));
-
+    this.sprite_tween = new Tween(this.sprite);
+    this.shade_tween = new Tween(this.shade);
+    //boobs
     this.click = () => {
       const current_rotation = this.sprite.rotation;
-      this.tween.no_path_from({ rotation: current_rotation });
-      this.tween.no_path_to({ rotation: current_rotation+3 });
-      this.tween.no_path_time = 2000;
-      this.tween.no_path_start();
+      this.sprite_tween.from({ rotation: current_rotation });
+      this.sprite_tween.to({ rotation: current_rotation+3 });
+      this.sprite_tween.time = 2000;
+      this.sprite_tween.start();
 
+      this.shade_tween.from({ rotation: current_rotation });
+      this.shade_tween.to({ rotation: current_rotation+3 });
+      this.shade_tween.time = 2000;
+      this.shade_tween.start();
     };
 
     collision_container.addChild(this.sprite);

@@ -48088,10 +48088,10 @@ function generate_crow({from, to}) {
   bird.animation.move();
   bird.animation.sprite.play();
 
-  bird.tween.no_path_from(from);
-  bird.tween.no_path_to(to);
-  bird.tween.no_path_time = 10000;
-  bird.tween.no_path_start();
+  bird.tween.from(from);
+  bird.tween.to(to);
+  bird.tween.time = 10000;
+  bird.tween.start();
 }
 
 module.exports = {
@@ -48363,7 +48363,7 @@ class pathfind_sprite {
 
     tween.add_random_path(foo);
     tween.draw_path();
-    tween.path_start();
+    tween.start();
 
     tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
   }
@@ -48600,16 +48600,16 @@ class Arrow {
 function shoot_arrow(speed, damage, origin, point) {
   const arrow    = new Arrow();
   arrow.rotation = radian(point, origin);
-  arrow.tween.no_path_from(origin);
-  arrow.tween.no_path_to(point);
-  arrow.tween.no_path_time = speed;
+  arrow.tween.from(origin);
+  arrow.tween.to(point);
+  arrow.tween.time = speed;
 
   arrow.tween.movement.on('update', () => {
     const arrow_point = arrow.sprite.getGlobalPosition();
 
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
     if (collision_object) {
-      arrow.tween.no_path_stop();
+      arrow.tween.stop();
       if(collision_object.events) {
         collision_object.events.emit('damage', damage);
       }
@@ -48618,7 +48618,7 @@ function shoot_arrow(speed, damage, origin, point) {
 
     const collision_critter = critters.find(critter => critter.containsPoint(arrow_point));
     if (collision_critter) {
-      arrow.tween.no_path_stop();
+      arrow.tween.stop();
       collision_critter.events.emit('damage', damage);
       return;
     }
@@ -48627,7 +48627,7 @@ function shoot_arrow(speed, damage, origin, point) {
     if (collision_enemies) {
       if(collision_enemies.id === origin.id) return;
 
-      arrow.tween.no_path_stop();
+      arrow.tween.stop();
       collision_enemies.events.emit('damage', damage);
       return;
     }
@@ -48636,13 +48636,13 @@ function shoot_arrow(speed, damage, origin, point) {
     if (collision_players) {
       if(collision_players.id === origin.id) return;
 
-      arrow.tween.no_path_stop();
+      arrow.tween.stop();
       collision_players.events.emit('damage', damage);
       return;
     }
   });
 
-  arrow.tween.no_path_start();
+  arrow.tween.start();
 }
 
 module.exports = {
@@ -48726,66 +48726,20 @@ const { random_number } = require('../utils/math');
 require('./ticker');
 
 class Tween {
-  constructor(sprite, shadow) {
+  constructor(sprite) {
     this.name     = 'tween';
-
     this.sprite   = sprite;
-    this.shadow   = shadow;
 
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire = true;
 
-    if(this.shadow) {
-      this.shadow_movement = PIXI.tweenManager.createTween(this.shadow);
-      this.shadow_movement.expire = true;
-    }
-
-    this.path = new PIXI.tween.TweenPath();
-    // this.movement.expire  = true;
-    this.path_arc = 15;
     this.show = false;
     this.time = 0;
   }
-  //TODO change this to default behaviour
-  //change the current from and to with path_to etc
-  no_path_from(data) {
-    this.movement.from(data);
-    if(this.shadow_movement) {
-      this.shadow_movement.from(data);
-    }
-  }
-
-  no_path_start() {
-    this.movement.start();
-
-    if(this.shadow_movement) {
-      this.shadow_movement.start();
-    }
-  }
-
-  no_path_stop() {
-    this.movement.stop();
-
-    if(this.shadow_movement) {
-      this.shadow_movement.stop();
-    }
-  }
-
-  no_path_to(data) {
-    this.movement.to(data);
-    if(this.shadow_movement) {
-      this.shadow_movement.to(data);
-    }
-  }
-  //remove
-  set no_path_time(value) {
-    this.movement.time = value;
-    if(this.shadow_movement) {
-      this.shadow_movement.time = value;
-    }
-  }
 
   from_path(start) {
+    this.path = new PIXI.tween.TweenPath();
+    this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
   }
 
@@ -48793,18 +48747,12 @@ class Tween {
     this.path.lineTo(finish.x, finish.y);
   }
 
-  // from(start) {
-  //   this.path.moveTo(start.x, start.y);
-  // }
+  from(data) {
+    this.movement.from(data);
+  }
 
-  // to(finish) {
-  //   this.path.lineTo(finish.x, finish.y);
-  // }
-
-  line_to({ x, y }) {
-    this.path = new PIXI.tween.TweenPath();
-
-    this.path.lineTo(x, y);
+  to(data) {
+    this.movement.to(data);
   }
 
   smooth() {
@@ -48843,10 +48791,6 @@ class Tween {
 
   set time(amount) {
     this.movement.time = amount;
-
-    if(this.shadow_movement) {
-      this.shadow_movement.time = amount;
-    }
   }
 
   set delay(amount) {
@@ -48857,21 +48801,14 @@ class Tween {
     this.movement.stop();
   }
 
-  path_start() {
-    if(!this.movement.time) {
-      throw new Error('time not set for tween');
-    }
-
-    this.movement.path = this.path;
-    this.movement.start();
-  }
-
   start() {
     if(!this.movement.time) {
       throw new Error('time not set for tween');
     }
 
-    this.movement.path = this.path;
+    if(this.path && this.path.currentPath) {
+      this.movement.path = this.path;
+    }
     this.movement.start();
   }
 
@@ -57569,15 +57506,20 @@ class Door extends Item {
     this.shade.anchor.y= 1;
     this.shade.anchor.x= 0;
 
-    this.add_component(new Tween(this.sprite, this.shade));
-
+    this.sprite_tween = new Tween(this.sprite);
+    this.shade_tween = new Tween(this.shade);
+    //boobs
     this.click = () => {
       const current_rotation = this.sprite.rotation;
-      this.tween.no_path_from({ rotation: current_rotation });
-      this.tween.no_path_to({ rotation: current_rotation+3 });
-      this.tween.no_path_time = 2000;
-      this.tween.no_path_start();
+      this.sprite_tween.from({ rotation: current_rotation });
+      this.sprite_tween.to({ rotation: current_rotation+3 });
+      this.sprite_tween.time = 2000;
+      this.sprite_tween.start();
 
+      this.shade_tween.from({ rotation: current_rotation });
+      this.shade_tween.to({ rotation: current_rotation+3 });
+      this.shade_tween.time = 2000;
+      this.shade_tween.start();
     };
 
     collision_container.addChild(this.sprite);
@@ -58131,7 +58073,6 @@ const { generate_crow } = require('../../effects/click_events');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
-const { Crow        } = require('../../character/archetypes/crow');
 const { Lighter     } = require('../../light/types/lighter');
 const { Lantern     } = require('../../light/types/lantern');
 const { Click_Pad   } = require('../elements/click_pad');
@@ -58177,13 +58118,13 @@ class Intro  {
     this.camera.tween.to_path({   x: -600, y: 0 });
     this.camera.tween.smooth();
     this.camera.tween.time = 1000;
-    this.camera.tween.path_start();
+    this.camera.tween.start();
 
-    this.player.tween.no_path_from({ x: 1000, y: 400 });
-    this.player.tween.no_path_to({ x: 1080, y: 410 });
+    this.player.tween.from({ x: 1000, y: 400 });
+    this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
     this.player.tween.time = 1000;
-    this.player.tween.no_path_start();
+    this.player.tween.start();
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
@@ -58208,10 +58149,10 @@ class Intro  {
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
-        tween_it.no_path_from(dumpster);
-        tween_it.no_path_to({x: dumpster.x + 100, y:dumpster.y});
-        tween_it.no_path_time = 2000;
-        tween_it.no_path_start();
+        tween_it.from(dumpster);
+        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
+        tween_it.time = 2000;
+        tween_it.start();
 
         generate_crow({
           from: {x: 400, y: 60},
@@ -58240,7 +58181,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/crow":205,"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":282,"../../light/types/lighter":284,"../attributes/parse_tiled_data":240,"../data/intro_room.json":244,"../elements/click_pad":255,"../elements/pad":260,"./level_factory":270}],268:[function(require,module,exports){
+},{"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":282,"../../light/types/lighter":284,"../attributes/parse_tiled_data":240,"../data/intro_room.json":244,"../elements/click_pad":255,"../elements/pad":260,"./level_factory":270}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58346,28 +58287,38 @@ class Items_Room extends Level {
 
       if(data.id === 184) {
         pad.click = async () => {
+          // TODO Abstract and move to click events
           global.set_light_level(0.3);
           const lamp_light = level_lights.find(elems => elems.id === 188);
-
           lamp_light.intensity = 5;
           await lamp_light.strike.fast();
+
           const dumpster = level_collision.find(elems => elems.id === 199);
-          const tween_it = new Tween(dumpster.sprite, dumpster.shade);
-          tween_it.no_path_from(dumpster.sprite);
-          tween_it.no_path_to({
+
+          const sprite_tween = new Tween(dumpster.sprite);
+          const shadow_tween = new Tween(dumpster.shade);
+          sprite_tween.from(dumpster.sprite);
+          shadow_tween.from(dumpster.sprite);
+          sprite_tween.to({
             x: dumpster.sprite.x - 400,
             y:dumpster.sprite.y-200,
             rotation: 2,
           });
-          tween_it.no_path_time = 944000;
-          tween_it.no_path_start();
+
+          shadow_tween.to({
+            x: dumpster.sprite.x - 400,
+            y:dumpster.sprite.y-200,
+            rotation: 2,
+          });
+
+          sprite_tween.time = 944000;
+          shadow_tween.time = 944000;
+          sprite_tween.start();
+          shadow_tween.start();
 
         };
       }
-
-
     });
-
   }
 }
 

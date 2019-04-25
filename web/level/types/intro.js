@@ -6,7 +6,6 @@ const { generate_crow } = require('../../effects/click_events');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
-const { Crow        } = require('../../character/archetypes/crow');
 const { Lighter     } = require('../../light/types/lighter');
 const { Lantern     } = require('../../light/types/lantern');
 const { Click_Pad   } = require('../elements/click_pad');
@@ -52,13 +51,13 @@ class Intro  {
     this.camera.tween.to_path({   x: -600, y: 0 });
     this.camera.tween.smooth();
     this.camera.tween.time = 1000;
-    this.camera.tween.path_start();
+    this.camera.tween.start();
 
-    this.player.tween.no_path_from({ x: 1000, y: 400 });
-    this.player.tween.no_path_to({ x: 1080, y: 410 });
+    this.player.tween.from({ x: 1000, y: 400 });
+    this.player.tween.to({ x: 1080, y: 410 });
     this.player.tween.smooth();
     this.player.tween.time = 1000;
-    this.player.tween.no_path_start();
+    this.player.tween.start();
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
@@ -83,10 +82,10 @@ class Intro  {
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
-        tween_it.no_path_from(dumpster);
-        tween_it.no_path_to({x: dumpster.x + 100, y:dumpster.y});
-        tween_it.no_path_time = 2000;
-        tween_it.no_path_start();
+        tween_it.from(dumpster);
+        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
+        tween_it.time = 2000;
+        tween_it.start();
 
         generate_crow({
           from: {x: 400, y: 60},

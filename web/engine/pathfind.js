@@ -64,7 +64,7 @@ class pathfind_sprite {
 
     tween.add_random_path(foo);
     tween.draw_path();
-    tween.path_start();
+    tween.start();
 
     tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
   }

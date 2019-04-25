@@ -6,66 +6,20 @@ const { random_number } = require('../utils/math');
 require('./ticker');
 
 class Tween {
-  constructor(sprite, shadow) {
+  constructor(sprite) {
     this.name     = 'tween';
-
     this.sprite   = sprite;
-    this.shadow   = shadow;
 
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire = true;
 
-    if(this.shadow) {
-      this.shadow_movement = PIXI.tweenManager.createTween(this.shadow);
-      this.shadow_movement.expire = true;
-    }
-
-    this.path = new PIXI.tween.TweenPath();
-    // this.movement.expire  = true;
-    this.path_arc = 15;
     this.show = false;
     this.time = 0;
   }
-  //TODO change this to default behaviour
-  //change the current from and to with path_to etc
-  no_path_from(data) {
-    this.movement.from(data);
-    if(this.shadow_movement) {
-      this.shadow_movement.from(data);
-    }
-  }
-
-  no_path_start() {
-    this.movement.start();
-
-    if(this.shadow_movement) {
-      this.shadow_movement.start();
-    }
-  }
-
-  no_path_stop() {
-    this.movement.stop();
-
-    if(this.shadow_movement) {
-      this.shadow_movement.stop();
-    }
-  }
-
-  no_path_to(data) {
-    this.movement.to(data);
-    if(this.shadow_movement) {
-      this.shadow_movement.to(data);
-    }
-  }
-  //remove
-  set no_path_time(value) {
-    this.movement.time = value;
-    if(this.shadow_movement) {
-      this.shadow_movement.time = value;
-    }
-  }
 
   from_path(start) {
+    this.path = new PIXI.tween.TweenPath();
+    this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
   }
 
@@ -73,18 +27,12 @@ class Tween {
     this.path.lineTo(finish.x, finish.y);
   }
 
-  // from(start) {
-  //   this.path.moveTo(start.x, start.y);
-  // }
+  from(data) {
+    this.movement.from(data);
+  }
 
-  // to(finish) {
-  //   this.path.lineTo(finish.x, finish.y);
-  // }
-
-  line_to({ x, y }) {
-    this.path = new PIXI.tween.TweenPath();
-
-    this.path.lineTo(x, y);
+  to(data) {
+    this.movement.to(data);
   }
 
   smooth() {
@@ -123,10 +71,6 @@ class Tween {
 
   set time(amount) {
     this.movement.time = amount;
-
-    if(this.shadow_movement) {
-      this.shadow_movement.time = amount;
-    }
   }
 
   set delay(amount) {
@@ -137,21 +81,14 @@ class Tween {
     this.movement.stop();
   }
 
-  path_start() {
-    if(!this.movement.time) {
-      throw new Error('time not set for tween');
-    }
-
-    this.movement.path = this.path;
-    this.movement.start();
-  }
-
   start() {
     if(!this.movement.time) {
       throw new Error('time not set for tween');
     }
 
-    this.movement.path = this.path;
+    if(this.path && this.path.currentPath) {
+      this.movement.path = this.path;
+    }
     this.movement.start();
   }
 

@@ -58,28 +58,38 @@ class Items_Room extends Level {
 
       if(data.id === 184) {
         pad.click = async () => {
+          // TODO Abstract and move to click events
           global.set_light_level(0.3);
           const lamp_light = level_lights.find(elems => elems.id === 188);
-
           lamp_light.intensity = 5;
           await lamp_light.strike.fast();
+
           const dumpster = level_collision.find(elems => elems.id === 199);
-          const tween_it = new Tween(dumpster.sprite, dumpster.shade);
-          tween_it.no_path_from(dumpster.sprite);
-          tween_it.no_path_to({
+
+          const sprite_tween = new Tween(dumpster.sprite);
+          const shadow_tween = new Tween(dumpster.shade);
+          sprite_tween.from(dumpster.sprite);
+          shadow_tween.from(dumpster.sprite);
+          sprite_tween.to({
             x: dumpster.sprite.x - 400,
             y:dumpster.sprite.y-200,
             rotation: 2,
           });
-          tween_it.no_path_time = 944000;
-          tween_it.no_path_start();
+
+          shadow_tween.to({
+            x: dumpster.sprite.x - 400,
+            y:dumpster.sprite.y-200,
+            rotation: 2,
+          });
+
+          sprite_tween.time = 944000;
+          shadow_tween.time = 944000;
+          sprite_tween.start();
+          shadow_tween.start();
 
         };
       }
-
-
     });
-
   }
 }
 
