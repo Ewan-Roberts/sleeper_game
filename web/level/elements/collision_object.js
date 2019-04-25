@@ -7,7 +7,7 @@ const { Item } = require('./item_model');
 class CollisionItem extends Item {
   constructor(options) {
     super(options.image_name);
-
+    this.health = 100;
     if(options.shadow) {
       this.shadow = true;
       this.shade.anchor.y= 1;
@@ -25,11 +25,6 @@ class CollisionItem extends Item {
     });
 
     collision_container.addChild(this.sprite);
-    if(options.door) {
-      this.sprite.door = true;
-      console.log(collision_container);
-
-    }
   }
 }
 

@@ -6,13 +6,13 @@
          "name":"grid",
          "objects":[
                 {
-                 "height":2648,
+                 "height":2541.47448608077,
                  "id":223,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2787.09727626459,
+                 "width":2674.97606414338,
                  "x":168,
                  "y":144
                 }],
@@ -69,30 +69,18 @@
         }, 
         {
          "draworder":"topdown",
+         "name":"item",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "name":"walls",
          "objects":[
-                {
-                 "height":978.651971689517,
-                 "id":4,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6666666666665,
-                 "x":229.974643705774,
-                 "y":223.900023826861
-                }, 
-                {
-                 "height":32,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1080.16146257729,
-                 "x":617.736400006,
-                 "y":2209.83064743396
-                }, 
                 {
                  "height":1180.2822016302,
                  "id":122,
@@ -112,8 +100,8 @@
                  "type":"",
                  "visible":true,
                  "width":100,
-                 "x":935.810480217966,
-                 "y":857.750871196365
+                 "x":1081.26502567251,
+                 "y":997.144810590304
                 }, 
                 {
                  "height":32,
@@ -122,8 +110,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1848.16,
-                 "x":235.92,
+                 "width":1184.52363636364,
+                 "x":899.556363636364,
                  "y":212
                 }, 
                 {
@@ -178,8 +166,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":621.974643705774,
-                 "y":1397.77881170565
+                 "x":1409.85343158456,
+                 "y":1018.99093291777
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -393,25 +381,6 @@
          "objects":[
                 {
                  "height":77.2894392067246,
-                 "id":175,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"chair_03"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-96.1570107787249,
-                 "type":"",
-                 "visible":true,
-                 "width":77.2894392067246,
-                 "x":1199.02496632421,
-                 "y":1926.15621544926
-                }, 
-                {
-                 "height":77.2894392067246,
                  "id":186,
                  "name":"collision",
                  "properties":
@@ -428,15 +397,25 @@
                  "width":77.2894392067246,
                  "x":2272.57902426657,
                  "y":1141.71990328131
-                }, 
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[
                 {
-                 "height":170.652909090909,
-                 "id":229,
+                 "height":176.094,
+                 "id":231,
                  "name":"",
                  "properties":
                     {
                      "door":true,
-                     "image_name":"desk_02"
+                     "image_name":"door_01"
                     },
                  "propertytypes":
                     {
@@ -446,9 +425,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":94.8953333333336,
-                 "x":2025.27960606061,
-                 "y":1437.40081818182
+                 "width":31.4869,
+                 "x":2053.95351969697,
+                 "y":1327.10451515152
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -481,36 +460,6 @@
                  "width":217.283,
                  "x":1608.07438366377,
                  "y":1853.92264016755
-                }, 
-                {
-                 "height":182.562,
-                 "id":208,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":217.283,
-                 "x":441.971799167954,
-                 "y":1734.13220792989
-                }, 
-                {
-                 "height":372.562,
-                 "id":222,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":127.283,
-                 "x":223.3585,
-                 "y":1196.719
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -518,7 +467,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":231,
+ "nextobjectid":232,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

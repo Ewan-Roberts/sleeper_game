@@ -47170,6 +47170,21 @@ const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Blood  } = require('../../effects/blood');
 const { pathfind_sprite } = require('../../engine/pathfind');
+const { Tween  } = require('../../engine/tween');
+
+function break_at_door(path) {
+  const arr = [];
+
+  for (let i = 0; i < path.length; i++) {
+    if(path[i].door) {
+      arr.push(path[i]);
+      return arr;
+    }
+
+    arr.push(path[i]);
+  }
+  return arr;
+}
 
 class Rat extends Animal {
   constructor() {
@@ -47178,15 +47193,15 @@ class Rat extends Animal {
 
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id = 2;
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
-    this.blood = new Blood();
 
+    this.blood         = new Blood();
+    this.tween         = new Tween(this.sprite);
     this._logic        = PIXI.tweenManager.createTween(this.sprite);
-    this._logic.time   = 800;
+    this._logic.time   = 2000;
     this._logic.repeat = 20;
     this._logic.expire = true;
     this._logic.dead   = false;
@@ -47195,8 +47210,20 @@ class Rat extends Animal {
 
   async _walk_to_enemy() {
     this.animation.walk();
-    const poo = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
-    console.log(poo);
+    const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    console.log(normal_path);
+
+    const to_door = break_at_door(normal_path);
+    const {shit} = to_door[to_door.length - 1];
+
+    shit.events.emit('door');
+
+    this.tween.time = 30000;
+    this.tween.from_path(this.sprite);
+    this.tween.add_path(to_door);
+    this.tween.draw_path();
+    this.tween.start();
+
     //this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
@@ -47258,7 +47285,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":221,"../../engine/pathfind":230,"../../utils/math":291,"../attributes/melee":211,"../types/rat":219,"events":297,"pixi.js":155}],207:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/pathfind":230,"../../engine/tween":236,"../../utils/math":291,"../attributes/melee":211,"../types/rat":219,"events":297,"pixi.js":155}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47991,7 +48018,6 @@ const { Rodent    } = require('../animations/rat');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Lootable  } = require('../attributes/lootable');
-const { Pathfind  } = require('../attributes/pathfind');
 
 //TODO: Animal isnt quite right, more neutral character
 // the logic for it being an animal is in the parent
@@ -48005,7 +48031,6 @@ class Animal extends Character {
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
-    this.add_component(new Pathfind(this.sprite));
 
     critter_container.addChild(this.sprite);
   }
@@ -48015,7 +48040,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":231,"../animations/rat":204,"../attributes/inventory":207,"../attributes/lootable":210,"../attributes/pathfind":213,"../attributes/vitals":215,"../character_model":216}],220:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../animations/rat":204,"../attributes/inventory":207,"../attributes/lootable":210,"../attributes/vitals":215,"../character_model":216}],220:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48310,7 +48335,7 @@ const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0,2]);
-easystar.setTileCost(2, 12); //only if you have to!
+easystar.setTileCost(2, 1); //only if you have to!
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
 
@@ -48404,25 +48429,7 @@ class pathfind_sprite {
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
 
-    const wall_path = this.shit(path_array);
-    this.move_sprite_on_path(from_sprite, wall_path);
-  }
-
-  static shit(poo) {
-    const arr = [];
-
-    for (let i = 0; i < poo.length; i++) {
-      if(poo[i].door) {
-        console.log(poo[i]);
-        delete poo[i].door;
-        poo[i].shit.visible = false;
-        poo[i].visible = false;
-        return arr;
-      }
-
-      arr.push(poo[i]);
-    }
-    return arr;
+    this.move_sprite_on_path(from_sprite, path_array);
   }
 
   static async get_sprite_to_sprite_path(from_sprite, to_sprite) {
@@ -49295,168 +49302,11 @@ module.exports = {
 },{"../engine/app":224,"../utils/math":291,"./data/item_data":238,"pixi.js":155}],240:[function(require,module,exports){
 'use strict';
 
-// This is purely an interface for TILED data
 class Tiled_Data {
   constructor(level_data) {
-    this.level_data = level_data;
-  }
-
-  get player() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'player');
-
-    if(!found_layer) throw new Error('no found player in level data');
-
-    const player = found_layer.objects[0];
-
-    return player;
-  }
-
-  get collision() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'collision');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get roof() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'roof');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get shroud() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'shroud');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get item() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'item');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get decal() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'decal');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get floor() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'floor');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get item_areas() {
-    const item_areas = this.level_data.layers.find(layer => layer.name === 'item_areas');
-
-    if(!item_areas) throw new Error('no item areas found in level data');
-    const pads = [];
-    //TODO this accounts for tiled not anchoring its boxs in the middle
-    item_areas.layers.forEach(item => {
-      const pad = item.objects[0];
-      pad.x += pad.width/2;
-      pad.y += pad.height/2;
-      pads.push(pad);
+    level_data.layers.forEach(layer => {
+      this[layer.name] = layer.objects;
     });
-
-    return pads;
-  }
-
-  get prey() {
-    const found_layer = this.level_data.layers.find(layer => layer.name === 'prey');
-
-    if(!found_layer) throw new Error('no prey areas found in level data');
-    const prey = found_layer.objects;
-
-    return prey;
-  }
-
-  get background() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='background');
-
-    if(!found_layer) throw new Error('no background found in level data');
-    const background = found_layer.objects;
-
-    //There should only ever be one background
-    return background[0];
-  }
-
-  get door() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='door');
-
-    if(found_layer){
-      return found_layer.objects;
-    }
-    return [];
-  }
-
-  get grid() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='grid');
-
-    if(!found_layer) throw new Error('no grid found in level data');
-    const grid = found_layer.objects;
-
-    //There should only ever be one background
-    return grid[0];
-  }
-
-  get lights() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='lights');
-
-    if(!found_layer) throw new Error('no lights found in level data');
-
-    const lights = found_layer.objects;
-
-    return lights;
-  }
-
-  get exit_pad() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='exit_pad');
-
-    if(!found_layer) throw new Error('no pads found in level data');
-
-    const pads = found_layer.objects;
-
-    return pads;
-  }
-
-  get click_pad() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='click_pad');
-
-    if(!found_layer) throw new Error('no action pads found in level data');
-
-    const pads = found_layer.objects;
-
-    return pads;
-  }
-
-  get walls() {
-    const found_layer = this.level_data.layers.find(layer => layer.name ==='walls');
-
-    if(!found_layer) throw new Error('no found walls in level data');
-
-    const walls = found_layer.objects;
-
-    return walls;
   }
 }
 
@@ -50578,13 +50428,13 @@ module.exports={ "height":50,
          "name":"grid",
          "objects":[
                 {
-                 "height":2648,
+                 "height":2541.47448608077,
                  "id":223,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2787.09727626459,
+                 "width":2674.97606414338,
                  "x":168,
                  "y":144
                 }],
@@ -50641,30 +50491,18 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
+         "name":"item",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "name":"walls",
          "objects":[
-                {
-                 "height":978.651971689517,
-                 "id":4,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6666666666665,
-                 "x":229.974643705774,
-                 "y":223.900023826861
-                }, 
-                {
-                 "height":32,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1080.16146257729,
-                 "x":617.736400006,
-                 "y":2209.83064743396
-                }, 
                 {
                  "height":1180.2822016302,
                  "id":122,
@@ -50684,8 +50522,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":100,
-                 "x":935.810480217966,
-                 "y":857.750871196365
+                 "x":1081.26502567251,
+                 "y":997.144810590304
                 }, 
                 {
                  "height":32,
@@ -50694,8 +50532,8 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1848.16,
-                 "x":235.92,
+                 "width":1184.52363636364,
+                 "x":899.556363636364,
                  "y":212
                 }, 
                 {
@@ -50750,8 +50588,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":621.974643705774,
-                 "y":1397.77881170565
+                 "x":1409.85343158456,
+                 "y":1018.99093291777
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50965,25 +50803,6 @@ module.exports={ "height":50,
          "objects":[
                 {
                  "height":77.2894392067246,
-                 "id":175,
-                 "name":"collision",
-                 "properties":
-                    {
-                     "image_name":"chair_03"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-96.1570107787249,
-                 "type":"",
-                 "visible":true,
-                 "width":77.2894392067246,
-                 "x":1199.02496632421,
-                 "y":1926.15621544926
-                }, 
-                {
-                 "height":77.2894392067246,
                  "id":186,
                  "name":"collision",
                  "properties":
@@ -51000,15 +50819,25 @@ module.exports={ "height":50,
                  "width":77.2894392067246,
                  "x":2272.57902426657,
                  "y":1141.71990328131
-                }, 
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[
                 {
-                 "height":170.652909090909,
-                 "id":229,
+                 "height":176.094,
+                 "id":231,
                  "name":"",
                  "properties":
                     {
                      "door":true,
-                     "image_name":"desk_02"
+                     "image_name":"door_01"
                     },
                  "propertytypes":
                     {
@@ -51018,9 +50847,9 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":94.8953333333336,
-                 "x":2025.27960606061,
-                 "y":1437.40081818182
+                 "width":31.4869,
+                 "x":2053.95351969697,
+                 "y":1327.10451515152
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51053,36 +50882,6 @@ module.exports={ "height":50,
                  "width":217.283,
                  "x":1608.07438366377,
                  "y":1853.92264016755
-                }, 
-                {
-                 "height":182.562,
-                 "id":208,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":217.283,
-                 "x":441.971799167954,
-                 "y":1734.13220792989
-                }, 
-                {
-                 "height":372.562,
-                 "id":222,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":127.283,
-                 "x":223.3585,
-                 "y":1196.719
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51090,7 +50889,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":231,
+ "nextobjectid":232,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -57179,6 +56978,46 @@ module.exports={ "height":50,
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
  "nextobjectid":177,
  "orientation":"orthogonal",
@@ -58041,7 +57880,7 @@ const { Item } = require('./item_model');
 class CollisionItem extends Item {
   constructor(options) {
     super(options.image_name);
-
+    this.health = 100;
     if(options.shadow) {
       this.shadow = true;
       this.shade.anchor.y= 1;
@@ -58059,11 +57898,6 @@ class CollisionItem extends Item {
     });
 
     collision_container.addChild(this.sprite);
-    if(options.door) {
-      this.sprite.door = true;
-      console.log(collision_container);
-
-    }
   }
 }
 
@@ -58073,6 +57907,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":231,"./item_model":260,"events":297}],258:[function(require,module,exports){
 'use strict';
+const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
 
 const { Item  } = require('./item_model');
@@ -58082,13 +57917,13 @@ class Door extends Item {
   constructor(options) {
     super(options.image_name);
 
+    this.health = 100;
     this.shadow = true;
     this.shade.anchor.y= 1;
     this.shade.anchor.x= 0;
 
     this.sprite_tween = new Tween(this.sprite);
-    this.shade_tween = new Tween(this.shade);
-    //boobs
+    this.shade_tween  = new Tween(this.shade);
     this.click = () => {
       const current_rotation = this.sprite.rotation;
       this.sprite_tween.from({ rotation: current_rotation });
@@ -58101,6 +57936,18 @@ class Door extends Item {
       this.shade_tween.time = 2000;
       this.shade_tween.start();
     };
+    this.sprite.events = new event();
+    if(options.door) {
+      this.sprite.door = true;
+
+      this.sprite.events.on('door', () => {
+        console.log('hri');
+        if(this.health < 0) {
+          this.sprite.visible = false;
+        }
+        this.health -= 60;
+      });
+    }
 
     collision_container.addChild(this.sprite);
   }
@@ -58110,7 +57957,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/pixi_containers":231,"../../engine/tween":236,"./item_model":260}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/tween":236,"./item_model":260,"events":297}],259:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -58647,7 +58494,6 @@ module.exports = {
 (function (global){
 'use strict';
 
-const { collision_container } = require('../../engine/pixi_containers');
 const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -58694,13 +58540,12 @@ class Defend_Room extends Level  {
 
       // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
-        console.log(collision_container);
         mouse.logic_start();
       });
     });
 
     global.set_light_level(1);
-    this.create_grid(grid);
+    this.create_grid(grid[0]);
   }
 }
 
@@ -58709,7 +58554,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":206,"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/defend_room.json":244,"../elements/pad":261,"../level_model":266,"./level_factory":272}],269:[function(require,module,exports){
+},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/defend_room.json":244,"../elements/pad":261,"../level_model":266,"./level_factory":272}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
@@ -59028,12 +58873,12 @@ class Level_Factory {
     }
   ) {
     try {
-      new Background(background, true);
+      new Background(background[0], true);
 
-      player_sprite.set_position(player);
+      player_sprite.set_position(player[0]);
 
       const camera = new Camera();
-      camera.set_center(player);
+      camera.set_center(player[0]);
 
       walls.forEach(data => {
         const wall  = new Wall(data.options);
@@ -59490,8 +59335,8 @@ class Transition_Room extends Level  {
       }
     );
 
-    level_text.x = player.x -150;
-    level_text.y = player.y -50;
+    level_text.x = player[0].x -150;
+    level_text.y = player[0].y -50;
 
     visual_effects_container.addChild(level_text);
   }

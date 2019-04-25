@@ -64,8 +64,8 @@ class Transition_Room extends Level  {
       }
     );
 
-    level_text.x = player.x -150;
-    level_text.y = player.y -50;
+    level_text.x = player[0].x -150;
+    level_text.y = player[0].y -50;
 
     visual_effects_container.addChild(level_text);
   }

@@ -52,12 +52,12 @@ class Level_Factory {
     }
   ) {
     try {
-      new Background(background, true);
+      new Background(background[0], true);
 
-      player_sprite.set_position(player);
+      player_sprite.set_position(player[0]);
 
       const camera = new Camera();
-      camera.set_center(player);
+      camera.set_center(player[0]);
 
       walls.forEach(data => {
         const wall  = new Wall(data.options);

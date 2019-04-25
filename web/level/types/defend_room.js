@@ -1,6 +1,5 @@
 'use strict';
 
-const { collision_container } = require('../../engine/pixi_containers');
 const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -47,13 +46,12 @@ class Defend_Room extends Level  {
 
       // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
-        console.log(collision_container);
         mouse.logic_start();
       });
     });
 
     global.set_light_level(1);
-    this.create_grid(grid);
+    this.create_grid(grid[0]);
   }
 }
 

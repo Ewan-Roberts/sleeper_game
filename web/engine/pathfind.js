@@ -9,7 +9,7 @@ const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0,2]);
-easystar.setTileCost(2, 12); //only if you have to!
+easystar.setTileCost(2, 1); //only if you have to!
 easystar.enableDiagonals();
 easystar.enableCornerCutting();
 
@@ -103,25 +103,7 @@ class pathfind_sprite {
   static async move_sprite_to_sprite_on_grid(from_sprite, to_sprite) {
     const path_array = await this.get_sprite_to_sprite_path(from_sprite, to_sprite);
 
-    const wall_path = this.shit(path_array);
-    this.move_sprite_on_path(from_sprite, wall_path);
-  }
-
-  static shit(poo) {
-    const arr = [];
-
-    for (let i = 0; i < poo.length; i++) {
-      if(poo[i].door) {
-        console.log(poo[i]);
-        delete poo[i].door;
-        poo[i].shit.visible = false;
-        poo[i].visible = false;
-        return arr;
-      }
-
-      arr.push(poo[i]);
-    }
-    return arr;
+    this.move_sprite_on_path(from_sprite, path_array);
   }
 
   static async get_sprite_to_sprite_path(from_sprite, to_sprite) {

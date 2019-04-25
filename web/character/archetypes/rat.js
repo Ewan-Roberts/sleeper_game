@@ -8,6 +8,21 @@ const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Blood  } = require('../../effects/blood');
 const { pathfind_sprite } = require('../../engine/pathfind');
+const { Tween  } = require('../../engine/tween');
+
+function break_at_door(path) {
+  const arr = [];
+
+  for (let i = 0; i < path.length; i++) {
+    if(path[i].door) {
+      arr.push(path[i]);
+      return arr;
+    }
+
+    arr.push(path[i]);
+  }
+  return arr;
+}
 
 class Rat extends Animal {
   constructor() {
@@ -16,15 +31,15 @@ class Rat extends Animal {
 
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id = 2;
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
-    this.blood = new Blood();
 
+    this.blood         = new Blood();
+    this.tween         = new Tween(this.sprite);
     this._logic        = PIXI.tweenManager.createTween(this.sprite);
-    this._logic.time   = 800;
+    this._logic.time   = 2000;
     this._logic.repeat = 20;
     this._logic.expire = true;
     this._logic.dead   = false;
@@ -33,8 +48,20 @@ class Rat extends Animal {
 
   async _walk_to_enemy() {
     this.animation.walk();
-    const poo = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
-    console.log(poo);
+    const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    console.log(normal_path);
+
+    const to_door = break_at_door(normal_path);
+    const {shit} = to_door[to_door.length - 1];
+
+    shit.events.emit('door');
+
+    this.tween.time = 30000;
+    this.tween.from_path(this.sprite);
+    this.tween.add_path(to_door);
+    this.tween.draw_path();
+    this.tween.start();
+
     //this.pathfind.go_to_sprite(this.enemy.sprite);
   }
 
