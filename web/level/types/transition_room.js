@@ -13,10 +13,8 @@ class Transition_Room extends Level  {
   constructor(player) {
     super();
     this.name     = 'transition_room';
-
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-
     this._set_elements();
   }
 
@@ -24,23 +22,18 @@ class Transition_Room extends Level  {
     global.set_light_level(0.9);
     const {exit_pad, player} = this.elements;
 
+    Level_Factory.generate(this.player, this.elements);
+    this.player.set_position(player[0]);
+
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad = new Trigger_Pad(data);
+      const {properties} = data;
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
-        Level_Factory.create(data.properties, this.player);
+        Level_Factory.create(properties, this.player);
       });
 
       const level_names = new PIXI.Text(
-        data.properties.level_name,
-        {
-          fontSize: 40,
-          fill: 'grey',
-        }
+        properties.level_name,{fontSize: 40, fill: 'grey'}
       );
 
       level_names.x = data.x + data.width/4;
@@ -48,8 +41,6 @@ class Transition_Room extends Level  {
 
       visual_effects_container.addChild(level_names);
     });
-
-    Level_Factory.generate(this.player, this.elements);
 
     const level_text = new PIXI.Text(
       'THE HUB',

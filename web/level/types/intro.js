@@ -6,8 +6,6 @@ const { generate_crow } = require('../../effects/click_events');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
-const { Lighter     } = require('../../light/types/lighter');
-const { Lantern     } = require('../../light/types/lantern');
 const { Click_Pad   } = require('../elements/click_pad');
 
 const level_data  = require('../data/intro_room.json');
@@ -17,10 +15,7 @@ class Intro  {
     this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
-    this.lighter      = new Lighter();
-
     this.camera       = new Camera();
-    this.lantern      = new Lantern();
 
     this._set_elements();
     if(options.cutscene) this._cutscene();
@@ -28,23 +23,6 @@ class Intro  {
 
   _cutscene() {
     this.player.keyboard.disable();
-
-    this.lantern.set_position(800, 100);
-    this.lantern.tween.add_path([
-      {x: 1000, y: 100},
-      {x: 1250, y: 140},
-      {x: 1450, y: 100},
-      {x: 1650, y: 120},
-      {x: 1951, y: 110},
-      {x: 2551, y: 110},
-    ]);
-    this.lantern.range = 700;
-    this.lantern.tween.time = 10000;
-    this.lantern.tween.start();
-    this.lantern.tween.movement.on('end', () => this.lantern.remove());
-
-    this.lighter.set_position({ x: 1115, y: 410 });
-    this.lighter.strike.start();
 
     this.camera.tween.from_path({ x: -120, y: -150 });
     this.camera.tween.to_path({   x: -100, y: -120 });
@@ -71,14 +49,11 @@ class Intro  {
 
     global.set_light_level(1);
 
-    const {exit_pad, click_pad} = this.elements;
+    const {exit_pad, click_pad, player} = this.elements;
+    this.player.set_position(player[0]);
 
     click_pad.forEach(data => {
-      const pad  = new Click_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Click_Pad(data);
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
@@ -95,14 +70,9 @@ class Intro  {
     });
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.rotation = (data.rotation * (Math.PI/180));
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
+      pad.area.rotation = (data.rotation * (Math.PI/180));
       pad.area.events.on('trigger', () => {
-        Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
     });

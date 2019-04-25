@@ -1,26 +1,19 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { collision_container, item_container } = require('../../engine/pixi_containers');
+const { collision_container} = require('../../engine/pixi_containers');
 
 //TODO this needs to be the parent of the elements in this folder
 class Item {
   constructor(name) {
-    this.texture = PIXI.Texture.fromImage(name);
-    this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-
-    this.sprite = new PIXI.Sprite(this.texture);
-    this.sprite.width  = 50;
-    this.sprite.height = 50;
-    this.sprite.anchor.set(0.5);
+    const texture = PIXI.Texture.fromImage(name);
+    this.sprite   = new PIXI.Sprite(texture);
   }
 
   add_component(component) {
     this[component.name] = component;
   }
 
-  // This is passing in a function
-  // and this is amazing
   set click(action) {
     this.sprite.interactive = true;
     this.sprite.buttonMode  = true;
@@ -37,11 +30,6 @@ class Item {
   remove_click() {
     this.sprite.interactive = false;
     this.sprite.buttonMode  = false;
-  }
-
-  //TODO this is to quickly add items
-  add() {
-    item_container.addChild(this.sprite);
   }
 
   set height(value) {
@@ -66,45 +54,6 @@ class Item {
     if(this.shade) {
       this.shade.width = value;
     }
-  }
-  //TODO Refactor
-  set dragable(state) {
-    if(!state) throw 'dragable remove is not implemented';
-
-    this.drag_start = (event) => {
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.on('pointerdown', this.drag_start);
-      if(this.placed) {
-        this.click();
-        return;
-      }
-
-      this.data = event.data;
-      this.alpha = 0.5;
-      this.dragging = true;
-    };
-
-    this.drag_end = () => {
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.on('pointerup', this.drag_end);
-      this.data = null;
-      this.alpha = 1;
-      this.dragging = false;
-      this.placed = true;
-    };
-
-    this.drag_move = () => {
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.on('pointermove', this.drag_move);
-      if(this.dragging) {
-        const new_position = this.data.getLocalPosition(this.parent);
-        this.x = new_position.x;
-        this.y = new_position.y;
-      }
-    };
   }
 
   set alpha(value) {
@@ -145,7 +94,6 @@ class Item {
 
     collision_container.addChild(this.shade);
   }
-
 }
 
 module.exports = {

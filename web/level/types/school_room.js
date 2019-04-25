@@ -13,44 +13,35 @@ class School_Room extends Level  {
   constructor(player) {
     super();
     this.name     = 'school_room';
-
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-
     this._set_elements();
   }
 
   _set_elements() {
-    const {prey, exit_pad, grid} = this.elements;
+    const {prey, exit_pad, grid, player} = this.elements;
     global.set_light_level(0.9);
 
     Level_Factory.generate(this.player, this.elements);
+    this.player.set_position(player[0]);
 
     const mouse = new Rat();
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
     const phone = new Phone({image_name: 'phone_00'});
+    phone.width  = 200;
+    phone.height = 200;
     phone.set_position({x: 800, y: 810});
-    phone.width = 200;
-    phone.height= 200;
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad = new Trigger_Pad(data);
       if(data.properties) {
         pad.area.events.once('trigger', () => {
-          Level_Factory.clear();
-
           Level_Factory.create(data.properties, this.player);
         });
         return;
       }
-
-      // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
         mouse.logic_start();
       });

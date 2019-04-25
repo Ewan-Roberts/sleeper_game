@@ -9,11 +9,11 @@ class Door extends Item {
   constructor(options) {
     super(options.image_name);
 
-    this.health = 100;
     this.shadow = true;
     this.shade.anchor.y= 1;
     this.shade.anchor.x= 0;
 
+    this.sprite.health = 100;
     this.sprite_tween = new Tween(this.sprite);
     this.shade_tween  = new Tween(this.shade);
     this.click = () => {
@@ -32,12 +32,11 @@ class Door extends Item {
     if(options.door) {
       this.sprite.door = true;
 
-      this.sprite.events.on('door', () => {
-        console.log('hri');
-        if(this.health < 0) {
+      this.sprite.events.on('damage', () => {
+        if(this.sprite.health < 50) {
           this.sprite.visible = false;
         }
-        this.health -= 60;
+        this.sprite.health -= 60;
       });
     }
 

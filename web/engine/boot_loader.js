@@ -4,7 +4,6 @@
 
 const { Animations_Room } = require('../level/types/player_animations');
 const { Archer_Room     } = require('../level/types/archer_room');
-const { Random_Room     } = require('../level/types/random_room');
 const { Items_Room      } = require('../level/types/item_room');
 const { Transition_Room } = require('../level/types/transition_room');
 const { Intro           } = require('../level/types/intro.js');

@@ -11,27 +11,19 @@ class Street extends Level  {
   constructor(player) {
     super();
     this.name     = 'school_room';
-
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-
     this._set_elements();
   }
 
   _set_elements() {
     global.set_light_level(0.9);
-    const {exit_pad} = this.elements;
+    const {exit_pad, player} = this.elements;
+    this.player.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
-      // Fire once (event) to load in enemies
+      const pad  = new Trigger_Pad(data);
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
     });

@@ -21,11 +21,8 @@ class Candle extends Light {
     this.shadow.range      = 350;
     this.shadow.intensity  = 0.5;
     visual_effects_container.addChild(this.sprite, this.shadow);
-
-    // this.start_flickering();
   }
 
-  // This overwrites the base class version
   set_position({x, y}) {
     this.shadow.position.set(x, y);
 

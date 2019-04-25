@@ -407,25 +407,6 @@
                  "y":2061.64194931175
                 }, 
                 {
-                 "height":164.502529510961,
-                 "id":162,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"truck"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":223.151541877459,
-                 "x":2246.49055845981,
-                 "y":2430.39629005059
-                }, 
-                {
                  "height":234.850083754918,
                  "id":171,
                  "name":"",

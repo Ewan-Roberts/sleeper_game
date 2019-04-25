@@ -7551,7 +7551,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":304}],39:[function(require,module,exports){
+},{"timers":298}],39:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
 },{}],40:[function(require,module,exports){
@@ -19326,7 +19326,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":298}],90:[function(require,module,exports){
+},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":292}],90:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23126,7 +23126,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":44,"path":298}],108:[function(require,module,exports){
+},{"../../Shader":44,"path":292}],108:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28964,7 +28964,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":305}],125:[function(require,module,exports){
+},{"url":299}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33538,7 +33538,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":65,"../../core/const":46,"path":298}],143:[function(require,module,exports){
+},{"../../core":65,"../../core/const":46,"path":292}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33622,7 +33622,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":65,"path":298}],144:[function(require,module,exports){
+},{"../../core":65,"path":292}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34785,7 +34785,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":65,"path":298}],151:[function(require,module,exports){
+},{"../../core":65,"path":292}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34893,7 +34893,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":65,"path":298}],152:[function(require,module,exports){
+},{"../../core":65,"path":292}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34947,7 +34947,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":65,"path":298}],153:[function(require,module,exports){
+},{"../../core":65,"path":292}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35123,7 +35123,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":65,"path":298}],155:[function(require,module,exports){
+},{"../../core":65,"path":292}],155:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37790,7 +37790,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":141,"path":298,"resource-loader":194}],163:[function(require,module,exports){
+},{"../extras":141,"path":292,"resource-loader":194}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38153,7 +38153,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":65,"resource-loader":194,"url":305}],166:[function(require,module,exports){
+},{"../core":65,"resource-loader":194,"url":299}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39879,7 +39879,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":65,"../Mesh":167,"path":298,"pixi-gl-core":21}],174:[function(require,module,exports){
+},{"../../core":65,"../Mesh":167,"path":292,"pixi-gl-core":21}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46784,7 +46784,7 @@ module.exports = {
   Bird,
 };
 
-},{"../../utils/math":291,"pixi.js":155}],203:[function(require,module,exports){
+},{"../../utils/math":285,"pixi.js":155}],203:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47013,7 +47013,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":291,"pixi.js":155}],204:[function(require,module,exports){
+},{"../../utils/math":285,"pixi.js":155}],204:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47128,7 +47128,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":291,"pixi.js":155}],205:[function(require,module,exports){
+},{"../../utils/math":285,"pixi.js":155}],205:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -47163,7 +47163,8 @@ module.exports = {
 'use strict';
 
 const PIXI = require('pixi.js');
-const { distance_between } = require('../../utils/math');
+const { distance_between    } = require('../../utils/math');
+const { collision_container } = require('../../engine/pixi_containers');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
@@ -47202,7 +47203,7 @@ class Rat extends Animal {
     this.tween         = new Tween(this.sprite);
     this._logic        = PIXI.tweenManager.createTween(this.sprite);
     this._logic.time   = 2000;
-    this._logic.repeat = 20;
+    this._logic.repeat = 2;
     this._logic.expire = true;
     this._logic.dead   = false;
     this._logic.fired  = false;
@@ -47211,12 +47212,12 @@ class Rat extends Animal {
   async _walk_to_enemy() {
     this.animation.walk();
     const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
-    console.log(normal_path);
+    const to_door     = break_at_door(normal_path);
+    const door_tile   = to_door[to_door.length - 1];
 
-    const to_door = break_at_door(normal_path);
-    const {shit} = to_door[to_door.length - 1];
-
-    shit.events.emit('door');
+    const door = collision_container.children.find(child => child.id === door_tile.id);
+    if(door.events) door.events.emit('damage');
+    if(door.health < 100) delete door_tile.door;
 
     this.tween.time = 30000;
     this.tween.from_path(this.sprite);
@@ -47285,7 +47286,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":221,"../../engine/pathfind":230,"../../engine/tween":236,"../../utils/math":291,"../attributes/melee":211,"../types/rat":219,"events":297,"pixi.js":155}],207:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/pathfind":230,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../utils/math":285,"../attributes/melee":211,"../types/rat":219,"events":291,"pixi.js":155}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47539,7 +47540,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":223,"../../engine/pixi_containers":231,"../../engine/shadows":233,"../../view/view_player_inventory":295,"pixi.js":155}],209:[function(require,module,exports){
+},{"../../effects/fade":223,"../../engine/pixi_containers":231,"../../engine/shadows":233,"../../view/view_player_inventory":289,"pixi.js":155}],209:[function(require,module,exports){
 
 'use strict';
 
@@ -47567,7 +47568,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":283}],210:[function(require,module,exports){
+},{"../../light/types/candle":280}],210:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -47642,7 +47643,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":223,"../../items/item_manager":239,"../../view/button":293,"../../view/view_inventory":294}],211:[function(require,module,exports){
+},{"../../effects/fade":223,"../../items/item_manager":239,"../../view/button":287,"../../view/view_inventory":288}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47698,13 +47699,13 @@ module.exports = {
 },{"../../engine/melee":228,"../../engine/pixi_containers":231,"pixi.js":155}],212:[function(require,module,exports){
 'use strict';
 const app = require('../../engine/app');
-const { visual_effects_container } = require('../../engine/pixi_containers');
+//const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
 
-const cone = visual_effects_container.children.find(elem => elem.name === 'aiming_cone');
+//const cone = visual_effects_container.children.find(elem => elem.name === 'aiming_cone');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
@@ -47762,7 +47763,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":220,"../../engine/app":224,"../../engine/pixi_containers":231,"../../engine/ranged":232,"../../utils/math":291}],213:[function(require,module,exports){
+},{"../../effects/aiming_cone":220,"../../engine/app":224,"../../engine/ranged":232,"../../utils/math":285}],213:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47843,18 +47844,18 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":296,"pixi.js":155}],215:[function(require,module,exports){
+},{"../../view/view_player_status_meter":290,"pixi.js":155}],215:[function(require,module,exports){
 'use strict';
 
-const event     = require('events');
-const { Blood } = require('../../effects/blood');
+//const event     = require('events');
+//const { Blood } = require('../../effects/blood');
 
 class Vitals {
   constructor({ sprite }) {
     this.name   ='vitals';
 
     this.sprite = sprite;
-    this.blood = new Blood();
+    //this.blood = new Blood();
 
     //TODO derive from archtype data
     this.power  = 5000;
@@ -47865,8 +47866,8 @@ class Vitals {
     this.heat   = 90;
     this.sleep  = 100;
     this.status = 'alive';
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', damage => this.on_hit(damage));
+    //this.sprite.events = new event();
+    //this.sprite.events.on('damage', damage => this.on_hit(damage));
   }
 
   get alive() {
@@ -47894,7 +47895,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":221,"events":297}],216:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -48008,7 +48009,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":221,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../engine/tween":236,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":297}],219:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../engine/tween":236,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":291}],219:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -48196,7 +48197,6 @@ module.exports = app;
 
 const { Animations_Room } = require('../level/types/player_animations');
 const { Archer_Room     } = require('../level/types/archer_room');
-const { Random_Room     } = require('../level/types/random_room');
 const { Items_Room      } = require('../level/types/item_room');
 const { Transition_Room } = require('../level/types/transition_room');
 const { Intro           } = require('../level/types/intro.js');
@@ -48225,7 +48225,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":218,"../level/types/archer_room":267,"../level/types/intro.js":269,"../level/types/item_room":271,"../level/types/player_animations":273,"../level/types/random_room":274,"../level/types/school_room.js":275,"../level/types/simple.js":276,"../level/types/transition_room":278}],226:[function(require,module,exports){
+},{"../character/types/player.js":218,"../level/types/archer_room":265,"../level/types/intro.js":267,"../level/types/item_room":269,"../level/types/player_animations":271,"../level/types/school_room.js":272,"../level/types/simple.js":273,"../level/types/transition_room":275}],226:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -48297,7 +48297,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":239,"events":297}],228:[function(require,module,exports){
+},{"../items/item_manager":239,"events":291}],228:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -48448,7 +48448,7 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":290,"./pixi_containers":231,"./tween":236,"easystarjs":5,"pixi.js":155}],231:[function(require,module,exports){
+},{"../utils/grid":284,"./pixi_containers":231,"./tween":236,"easystarjs":5,"pixi.js":155}],231:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 PIXI.settings.ROUND_PIXELS = true;
@@ -48683,7 +48683,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":291,"./pixi_containers":231,"./tween":236,"pixi.js":155}],233:[function(require,module,exports){
+},{"../utils/math":285,"./pixi_containers":231,"./tween":236,"pixi.js":155}],233:[function(require,module,exports){
 
 'use strict';
 const PIXI = require('pixi.js');
@@ -48769,6 +48769,7 @@ class Tween {
 
   from_path(start) {
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire = true;
     this.path = new PIXI.tween.TweenPath();
     this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
@@ -48866,7 +48867,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":291,"./pixi_containers":231,"./ticker":235,"pixi.js":155}],237:[function(require,module,exports){
+},{"../utils/math":285,"./pixi_containers":231,"./ticker":235,"pixi.js":155}],237:[function(require,module,exports){
 'use strict';
 
 require('./utils/globals');
@@ -48883,7 +48884,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":225,"./engine/packer":229,"./utils/globals":289}],238:[function(require,module,exports){
+},{"./engine/boot_loader.js":225,"./engine/packer":229,"./utils/globals":283}],238:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -49299,7 +49300,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":224,"../utils/math":291,"./data/item_data":238,"pixi.js":155}],240:[function(require,module,exports){
+},{"../engine/app":224,"../utils/math":285,"./data/item_data":238,"pixi.js":155}],240:[function(require,module,exports){
 'use strict';
 
 class Tiled_Data {
@@ -49315,110 +49316,6 @@ module.exports = {
 };
 
 },{}],241:[function(require,module,exports){
-'use strict';
-const PIXI = require('pixi.js');
-const { visual_effects_container } = require('../../engine/pixi_containers');
-
-const { random_bound    } = require('../../utils/math');
-const { Color_Pick      } = require('../../utils/color_picker');
-const { Element_Factory } = require('../elements/elements_factory');
-
-class Randomise {
-  constructor() {
-    this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
-    this.area.alpha = 0.1;
-    this.area.anchor.set(0.5);
-    this.rotate_items = true;
-    // this.area.tint = 0xff0000;
-    visual_effects_container.addChild(this.area);
-  }
-
-  set height(value) {
-    this.area.height = value;
-  }
-
-  set anchor(value) {
-    this.area.anchor.set(value);
-  }
-
-  set width(value) {
-    this.area.width = value;
-  }
-
-  populate_with_item(name) {
-    const item = Element_Factory.generate(name);
-
-    const point = this.bound_point(item.sprite);
-
-    item.set_position(point);
-  }
-
-  random_items() {
-    //TODO these ae created when invoked
-    const item_array = [
-      Element_Factory.generate('hay'),
-      Element_Factory.generate('chest'),
-      Element_Factory.generate('backpack'),
-      Element_Factory.generate('workbench'),
-      Element_Factory.generate('mattress'),
-      Element_Factory.generate('chair'),
-    ];
-
-    const item = item_array[Math.floor(Math.random()*item_array.length)];
-
-    const point = this.bound_point(item.sprite);
-
-    item.set_position(point);
-  }
-
-  box(value) {
-    this.area.width  = value;
-    this.area.height = value;
-  }
-
-  set alpha(value) {
-    this.area.alpha = value;
-  }
-
-  set tint(name) {
-    this.area = Color_Pick.get_hex_from(name);
-  }
-
-  set_position({x,y}) {
-    this.area.position.set(x,y);
-  }
-
-  bound_point(sprite) {
-    //This always uses the largest of height and width
-    //This is done so you dont have to worry about rotation
-    const bound = (sprite.width > sprite.height)?sprite.width:sprite.height;
-
-    const minX = -this.area.width + bound;
-    const maxX =  this.area.width - bound;
-
-    const minY = -this.area.height + bound;
-    const maxY =  this.area.height - bound;
-
-    const point_x = random_bound(minX, maxX)/2;
-    const point_y = random_bound(minY, maxY)/2;
-
-    //TODO this function shouldnt change the state of sprites
-    if(this.rotate_items) {
-      sprite.rotation = random_bound(-1.57, 1.57);
-    }
-
-    return {
-      x: this.area.x + point_x,
-      y: this.area.y + point_y,
-    };
-  }
-}
-
-module.exports = {
-  Randomise,
-};
-
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":287,"../../utils/math":291,"../elements/elements_factory":259,"pixi.js":155}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50002,7 +49899,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],243:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50419,7 +50316,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],244:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50900,7 +50797,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],245:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -51148,12 +51045,12 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1072.72727272727,
-                 "y":-1130.30303030303
+                 "x":1036.72727272727,
+                 "y":-26.30303030303
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51236,12 +51133,22 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":239.666666666667,
-                 "x":1033.66666666667,
-                 "y":67.72727272727
+                 "x":1289.66666666667,
+                 "y":-212.27272727273
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -52112,7 +52019,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -52137,7 +52044,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53371,7 +53278,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54007,6 +53914,26 @@ module.exports={ "height":50,
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
  "nextobjectid":204,
  "orientation":"orthogonal",
@@ -54019,7 +53946,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54424,7 +54351,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55381,7 +55308,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],250:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55585,6 +55512,26 @@ module.exports={ "height":50,
                  "x":2215.77972514456,
                  "y":-508.285971012048
                 }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -56448,7 +56395,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],251:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56858,25 +56805,6 @@ module.exports={ "height":50,
                  "y":2061.64194931175
                 }, 
                 {
-                 "height":164.502529510961,
-                 "id":162,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"truck"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":223.151541877459,
-                 "x":2246.49055845981,
-                 "y":2430.39629005059
-                }, 
-                {
                  "height":234.850083754918,
                  "id":171,
                  "name":"",
@@ -57030,621 +56958,12 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],252:[function(require,module,exports){
-module.exports={ "height":50,
- "infinite":false,
- "layers":[
-        {
-         "draworder":"topdown",
-         "name":"background",
-         "objects":[
-                {
-                 "height":1677.78393939394,
-                 "id":176,
-                 "name":"seamless_concrete",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":3989.09121212121,
-                 "x":-429.212272727273,
-                 "y":-1526.2253030303
-                }],
-         "offsetx":-74,
-         "offsety":126,
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"walls",
-         "objects":[
-                {
-                 "height":32,
-                 "id":242,
-                 "name":"",
-                 "rotation":-37.5874767573138,
-                 "type":"",
-                 "visible":true,
-                 "width":2239.6432967679,
-                 "x":231.972592672391,
-                 "y":-454.338270875384
-                }, 
-                {
-                 "height":32,
-                 "id":243,
-                 "name":"",
-                 "rotation":53.3494613735499,
-                 "type":"",
-                 "visible":true,
-                 "width":290,
-                 "x":275.372315979887,
-                 "y":-449.246792622651
-                }, 
-                {
-                 "height":32,
-                 "id":246,
-                 "name":"",
-                 "rotation":-37.5875,
-                 "type":"",
-                 "visible":true,
-                 "width":2239.64,
-                 "x":822.604242424242,
-                 "y":344.60606060606
-                }, 
-                {
-                 "height":32,
-                 "id":247,
-                 "name":"",
-                 "rotation":53.3495,
-                 "type":"",
-                 "visible":true,
-                 "width":290,
-                 "x":673.181818181818,
-                 "y":96.1212121212121
-                }, 
-                {
-                 "height":32,
-                 "id":248,
-                 "name":"",
-                 "rotation":53.3495,
-                 "type":"",
-                 "visible":true,
-                 "width":959.425176095707,
-                 "x":2024.69696969697,
-                 "y":-1794.78787878788
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"lights",
-         "objects":[
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1131.06854078292,
-                 "y":-108.278183800821
-                }, 
-                {
-                 "height":0,
-                 "id":241,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1131.06854078292,
-                 "y":-108.278183800821
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"exit_pad",
-         "objects":[
-                {
-                 "height":182,
-                 "id":15,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":53.6524384034328,
-                 "type":"",
-                 "visible":true,
-                 "width":638.666666666667,
-                 "x":563.031615324332,
-                 "y":-392.409532446104
-                }, 
-                {
-                 "height":182,
-                 "id":251,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":53.6524,
-                 "type":"",
-                 "visible":true,
-                 "width":947.303094033021,
-                 "x":2004.90892424242,
-                 "y":-1766.75757575758
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"click_pad",
-         "objects":[
-                {
-                 "height":168,
-                 "id":125,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":239.666666666667,
-                 "x":2357.66666666667,
-                 "y":3.72727272727001
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"floor",
-         "objects":[
-                {
-                 "height":1917.66,
-                 "id":141,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"road_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":90,
-                 "type":"",
-                 "visible":true,
-                 "width":221.294,
-                 "x":3698.44390909091,
-                 "y":26.0184848484849
-                }, 
-                {
-                 "height":304.459,
-                 "id":145,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.1611,
-                 "type":"",
-                 "visible":true,
-                 "width":257.239,
-                 "x":1997.56231818182,
-                 "y":-717.077984848485
-                }, 
-                {
-                 "height":94.7735,
-                 "id":149,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0.868081831743382,
-                 "type":"",
-                 "visible":true,
-                 "width":265.003,
-                 "x":84.7722525244677,
-                 "y":-1110.68065115722
-                }, 
-                {
-                 "height":262.818,
-                 "id":158,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dirty_matress"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-1055.12,
-                 "type":"",
-                 "visible":true,
-                 "width":163.789,
-                 "x":-169.356942919856,
-                 "y":-987.936174192789
-                }, 
-                {
-                 "height":989.513693797454,
-                 "id":180,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-217.946951838282,
-                 "type":"",
-                 "visible":true,
-                 "width":2174.10133529002,
-                 "x":2581.37973006099,
-                 "y":-1005.40080376615
-                }, 
-                {
-                 "height":304.459,
-                 "id":240,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.1611,
-                 "type":"",
-                 "visible":true,
-                 "width":257.239,
-                 "x":1705.56231818182,
-                 "y":-789.077984848485
-                }],
-         "opacity":0.18,
-         "type":"objectgroup",
-         "visible":false,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"player",
-         "objects":[
-                {
-                 "height":0,
-                 "id":137,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1864.24242424242,
-                 "y":-1007.87878787879
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"collision",
-         "objects":[
-                {
-                 "height":609.704650409187,
-                 "id":82,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.8,
-                     "image_name":"dumpster_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-120.12732573906,
-                 "type":"",
-                 "visible":true,
-                 "width":333.436565822732,
-                 "x":1665.58912537657,
-                 "y":-1054.75478876113
-                }, 
-                {
-                 "height":276.185132730296,
-                 "id":102,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dumpster_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-324.038907607446,
-                 "type":"",
-                 "visible":true,
-                 "width":168.182305195748,
-                 "x":1393.39795981617,
-                 "y":-573.690776292445
-                }, 
-                {
-                 "height":145.819234048688,
-                 "id":59,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-265.398033013144,
-                 "type":"",
-                 "visible":true,
-                 "width":249.333333333333,
-                 "x":1078.25408321423,
-                 "y":-835.056657056973
-                }],
-         "opacity":0.5,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"item",
-         "objects":[
-                {
-                 "height":72.6667,
-                 "id":163,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-244.835,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":897.454545454547,
-                 "y":-739.363653030303
-                }, 
-                {
-                 "height":86.2026,
-                 "id":164,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":83.5293,
-                 "type":"",
-                 "visible":true,
-                 "width":47.451,
-                 "x":1241.36540909091,
-                 "y":-1068.43463333333
-                }, 
-                {
-                 "height":72.6667,
-                 "id":165,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-156.712,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1831.63636363636,
-                 "y":-490.575774242424
-                }, 
-                {
-                 "height":86.2026,
-                 "id":250,
-                 "name":"",
-                 "properties":
-                    {
-                     "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":83.5293,
-                 "type":"",
-                 "visible":true,
-                 "width":47.451,
-                 "x":518.698742424242,
-                 "y":-446.131603030303
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"roof",
-         "objects":[
-                {
-                 "height":76.785,
-                 "id":154,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.5,
-                     "image_name":"street_light_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-91.6508,
-                 "type":"",
-                 "visible":true,
-                 "width":284.102,
-                 "x":-443.578561901318,
-                 "y":144.313928098078
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"shroud",
-         "objects":[
-                {
-                 "height":780,
-                 "id":252,
-                 "name":"",
-                 "rotation":-37.7970685827283,
-                 "type":"",
-                 "visible":true,
-                 "width":3722.29323705978,
-                 "x":233.738810887998,
-                 "y":839.809705358939
-                }, 
-                {
-                 "height":780,
-                 "id":255,
-                 "name":"",
-                 "rotation":-37.7971,
-                 "type":"",
-                 "visible":true,
-                 "width":3722.29,
-                 "x":-809.145,
-                 "y":-622
-                }, 
-                {
-                 "height":1090.69750378522,
-                 "id":256,
-                 "name":"",
-                 "rotation":-37.7971,
-                 "type":"",
-                 "visible":true,
-                 "width":720.603313253712,
-                 "x":-349.145,
-                 "y":-26
-                }, 
-                {
-                 "height":1090.7,
-                 "id":257,
-                 "name":"",
-                 "rotation":-37.7971,
-                 "type":"",
-                 "visible":true,
-                 "width":720.603,
-                 "x":1971.6985,
-                 "y":-1829.35
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextobjectid":258,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.1.6",
- "tileheight":100,
- "tilesets":[],
- "tilewidth":100,
- "type":"map",
- "version":1,
- "width":50
-}
-},{}],253:[function(require,module,exports){
+},{}],251:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
 const { background_container } = require('../../engine/pixi_containers');
 
-//TODO sort out the file extensions
 class Background {
   constructor(data, tile_image) {
     if(tile_image) {
@@ -57656,9 +56975,8 @@ class Background {
 
       this.sprite = PIXI.Sprite.fromImage('level/'+image_name+'.png');
     }
-    //fallback to grid
     this.sprite.anchor.set(0);
-    this.sprite.width = data.width;
+    this.sprite.width  = data.width;
     this.sprite.height = data.height;
 
     this.set_position(data);
@@ -57669,29 +56987,13 @@ class Background {
 
     background_container.addChild(this.sprite);
   }
-
-  set width(value) {
-    this.sprite.width = value;
-  }
-
-  set height(value) {
-    this.sprite.height = value;
-  }
-
-  set alpha(amount) {
-    this.sprite.alpha = amount;
-  }
-
-  destroy() {
-    background_container.removeChild(this.sprite);
-  }
 }
 
 module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":231,"pixi.js":155}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"pixi.js":155}],252:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -57713,7 +57015,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":260}],255:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":258}],253:[function(require,module,exports){
 (function (global){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
@@ -57730,10 +57032,8 @@ class Chest extends Item {
 
     if(options.label) {
       this.sprite.interactive = true;
-
       this.button = new Button(options);
       this.button.visible = false;
-
       this.sprite.on('mouseover', () => {
         this.button.set_position(this.sprite);
         this.button.visible = true;
@@ -57808,34 +57108,24 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":210,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../view/button":293,"./item_model":260}],256:[function(require,module,exports){
+},{"../../character/attributes/lootable":210,"../../engine/item_handler":227,"../../engine/pixi_containers":231,"../../view/button":287,"./item_model":258}],254:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
 
 const event          = require('events');
-const { Color_Pick } = require('../../utils/color_picker');
 
 class Click_Pad {
-  constructor() {
+  constructor(data) {
     this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
-    this.area.alpha = 0.1;
-    this.area.anchor.set(0.5);
+    this.area.height = data.height;
+    this.area.width  = data.width;
+    this.area.alpha  = 0.2;
+    this.area.anchor.set(0);
+    this.area.position.set(data.x, data.y);
     this.area.events = new event({once: true});
 
     pad_container.addChild(this.area);
-  }
-
-  set height(value) {
-    this.area.height = value;
-  }
-
-  set width(value) {
-    this.area.width = value;
-  }
-
-  set alpha(value) {
-    this.area.alpha = value;
   }
 
   set click(value) {
@@ -57843,22 +57133,6 @@ class Click_Pad {
     this.area.buttonMode  = true;
 
     this.area.click = value;
-  }
-  set anchor(value) {
-    this.area.anchor.set(value);
-  }
-
-  set_position({x,y}) {
-    this.area.position.set(x,y);
-  }
-
-  box(value) {
-    this.area.width  = value;
-    this.area.height = value;
-  }
-
-  set tint(name) {
-    this.area = Color_Pick.get_hex_from(name);
   }
 
   destroy() {
@@ -57870,7 +57144,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":287,"events":297,"pixi.js":155}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"events":291,"pixi.js":155}],255:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -57905,7 +57179,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":260,"events":297}],258:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":258,"events":291}],256:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -57917,11 +57191,11 @@ class Door extends Item {
   constructor(options) {
     super(options.image_name);
 
-    this.health = 100;
     this.shadow = true;
     this.shade.anchor.y= 1;
     this.shade.anchor.x= 0;
 
+    this.sprite.health = 100;
     this.sprite_tween = new Tween(this.sprite);
     this.shade_tween  = new Tween(this.shade);
     this.click = () => {
@@ -57940,12 +57214,11 @@ class Door extends Item {
     if(options.door) {
       this.sprite.door = true;
 
-      this.sprite.events.on('door', () => {
-        console.log('hri');
-        if(this.health < 0) {
+      this.sprite.events.on('damage', () => {
+        if(this.sprite.health < 50) {
           this.sprite.visible = false;
         }
-        this.health -= 60;
+        this.sprite.health -= 60;
       });
     }
 
@@ -57957,7 +57230,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/pixi_containers":231,"../../engine/tween":236,"./item_model":260,"events":297}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/tween":236,"./item_model":258,"events":291}],257:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -58001,30 +57274,23 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./ceiling":254,"./chest":255,"./collision_object":257,"./door":258,"./shroud":263,"./visual_object":264}],260:[function(require,module,exports){
+},{"./ceiling":252,"./chest":253,"./collision_object":255,"./door":256,"./shroud":261,"./visual_object":262}],258:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
-const { collision_container, item_container } = require('../../engine/pixi_containers');
+const { collision_container} = require('../../engine/pixi_containers');
 
 //TODO this needs to be the parent of the elements in this folder
 class Item {
   constructor(name) {
-    this.texture = PIXI.Texture.fromImage(name);
-    this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-
-    this.sprite = new PIXI.Sprite(this.texture);
-    this.sprite.width  = 50;
-    this.sprite.height = 50;
-    this.sprite.anchor.set(0.5);
+    const texture = PIXI.Texture.fromImage(name);
+    this.sprite   = new PIXI.Sprite(texture);
   }
 
   add_component(component) {
     this[component.name] = component;
   }
 
-  // This is passing in a function
-  // and this is amazing
   set click(action) {
     this.sprite.interactive = true;
     this.sprite.buttonMode  = true;
@@ -58041,11 +57307,6 @@ class Item {
   remove_click() {
     this.sprite.interactive = false;
     this.sprite.buttonMode  = false;
-  }
-
-  //TODO this is to quickly add items
-  add() {
-    item_container.addChild(this.sprite);
   }
 
   set height(value) {
@@ -58070,45 +57331,6 @@ class Item {
     if(this.shade) {
       this.shade.width = value;
     }
-  }
-  //TODO Refactor
-  set dragable(state) {
-    if(!state) throw 'dragable remove is not implemented';
-
-    this.drag_start = (event) => {
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.on('pointerdown', this.drag_start);
-      if(this.placed) {
-        this.click();
-        return;
-      }
-
-      this.data = event.data;
-      this.alpha = 0.5;
-      this.dragging = true;
-    };
-
-    this.drag_end = () => {
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.on('pointerup', this.drag_end);
-      this.data = null;
-      this.alpha = 1;
-      this.dragging = false;
-      this.placed = true;
-    };
-
-    this.drag_move = () => {
-      this.sprite.interactive = true;
-      this.sprite.buttonMode = true;
-      this.sprite.on('pointermove', this.drag_move);
-      if(this.dragging) {
-        const new_position = this.data.getLocalPosition(this.parent);
-        this.x = new_position.x;
-        this.y = new_position.y;
-      }
-    };
   }
 
   set alpha(value) {
@@ -58149,7 +57371,6 @@ class Item {
 
     collision_container.addChild(this.shade);
   }
-
 }
 
 module.exports = {
@@ -58157,55 +57378,23 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":231,"pixi.js":155}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"pixi.js":155}],259:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
-
-const event          = require('events');
-const { Color_Pick } = require('../../utils/color_picker');
+const event = require('events');
 
 class Trigger_Pad {
-  constructor() {
+  constructor(data) {
     this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
-    this.area.alpha = 0.1;
-    this.area.anchor.set(0.5);
+    this.area.height = data.height;
+    this.area.width  = data.width;
+    this.area.alpha  = 0.3;
+    this.area.anchor.set(0);
+    this.area.position.set(data.x, data.y);
     this.area.events = new event({once: true});
 
     pad_container.addChild(this.area);
-  }
-
-  set height(value) {
-    this.area.height = value;
-  }
-
-  set width(value) {
-    this.area.width = value;
-  }
-
-  set alpha(value) {
-    this.area.alpha = value;
-  }
-
-  set anchor(value) {
-    this.area.anchor.set(value);
-  }
-
-  set rotation(value) {
-    this.area.rotation = value;
-  }
-
-  set_position({x,y}) {
-    this.area.position.set(x,y);
-  }
-
-  box(value) {
-    this.area.width  = value;
-    this.area.height = value;
-  }
-
-  set tint(name) {
-    this.area = Color_Pick.get_hex_from(name);
   }
 
   destroy() {
@@ -58217,7 +57406,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":231,"../../utils/color_picker":287,"events":297,"pixi.js":155}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"events":291,"pixi.js":155}],260:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58343,7 +57532,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":231,"../../engine/sound":234,"../../light/types/led":285,"./item_model":260,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":155}],263:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../../engine/sound":234,"../../light/types/led":281,"./item_model":258,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":155}],261:[function(require,module,exports){
 'use strict';
 const { shroud_container } = require('../../engine/pixi_containers');
 
@@ -58364,7 +57553,7 @@ module.exports = {
   Shroud,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":260}],264:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":258}],262:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../../engine/pixi_containers');
 
@@ -58386,25 +57575,26 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":260}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":258}],263:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
 const event    = require('events');
 const { Item } = require('./item_model');
 
-//TODO remove item extend
 class Wall extends Item {
-  constructor(options) {
+  constructor(data) {
     super('black_dot');
 
     this.shadow = true;
     this.anchor = 0;
-
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
 
-    if(options && options.hidden) {
+    this.width = data.width;
+    this.height= data.height;
+    this.set_position(data);
+    if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
 
@@ -58420,7 +57610,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":231,"./item_model":260,"events":297}],266:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"./item_model":258,"events":291}],264:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
@@ -58446,7 +57636,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":230}],267:[function(require,module,exports){
+},{"../engine/pathfind.js":230}],265:[function(require,module,exports){
 'use strict';
 
 const { Level         } = require('../level_model');
@@ -58473,13 +57663,8 @@ class Archer_Room extends Level {
     const {exit_pad} = this.elements;
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
       pad.area.events.on('trigger', () => {
-        Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
     });
@@ -58490,7 +57675,7 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":240,"../data/archer_room.json":243,"../elements/pad":261,"../level_model":266,"./level_factory":272}],268:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":240,"../data/archer_room.json":242,"../elements/pad":259,"../level_model":264,"./level_factory":270}],266:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58514,9 +57699,10 @@ class Defend_Room extends Level  {
   }
 
   _set_elements() {
-    const {prey, exit_pad, grid} = this.elements;
+    const {prey, exit_pad, grid, player} = this.elements;
     global.set_light_level(1);
 
+    this.player.set_position(player[0]);
     Level_Factory.generate(this.player, this.elements);
 
     const mouse = new Rat();
@@ -58524,15 +57710,9 @@ class Defend_Room extends Level  {
     mouse.set_position(prey[0]);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
       if(data.properties) {
         pad.area.events.once('trigger', () => {
-          Level_Factory.clear();
-
           Level_Factory.create(data.properties, this.player);
         });
         return;
@@ -58554,7 +57734,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/defend_room.json":244,"../elements/pad":261,"../level_model":266,"./level_factory":272}],269:[function(require,module,exports){
+},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/defend_room.json":243,"../elements/pad":259,"../level_model":264,"./level_factory":270}],267:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
@@ -58564,8 +57744,6 @@ const { generate_crow } = require('../../effects/click_events');
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
-const { Lighter     } = require('../../light/types/lighter');
-const { Lantern     } = require('../../light/types/lantern');
 const { Click_Pad   } = require('../elements/click_pad');
 
 const level_data  = require('../data/intro_room.json');
@@ -58575,10 +57753,7 @@ class Intro  {
     this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
-    this.lighter      = new Lighter();
-
     this.camera       = new Camera();
-    this.lantern      = new Lantern();
 
     this._set_elements();
     if(options.cutscene) this._cutscene();
@@ -58586,23 +57761,6 @@ class Intro  {
 
   _cutscene() {
     this.player.keyboard.disable();
-
-    this.lantern.set_position(800, 100);
-    this.lantern.tween.add_path([
-      {x: 1000, y: 100},
-      {x: 1250, y: 140},
-      {x: 1450, y: 100},
-      {x: 1650, y: 120},
-      {x: 1951, y: 110},
-      {x: 2551, y: 110},
-    ]);
-    this.lantern.range = 700;
-    this.lantern.tween.time = 10000;
-    this.lantern.tween.start();
-    this.lantern.tween.movement.on('end', () => this.lantern.remove());
-
-    this.lighter.set_position({ x: 1115, y: 410 });
-    this.lighter.strike.start();
 
     this.camera.tween.from_path({ x: -120, y: -150 });
     this.camera.tween.to_path({   x: -100, y: -120 });
@@ -58629,14 +57787,11 @@ class Intro  {
 
     global.set_light_level(1);
 
-    const {exit_pad, click_pad} = this.elements;
+    const {exit_pad, click_pad, player} = this.elements;
+    this.player.set_position(player[0]);
 
     click_pad.forEach(data => {
-      const pad  = new Click_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Click_Pad(data);
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
@@ -58653,14 +57808,9 @@ class Intro  {
     });
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.rotation = (data.rotation * (Math.PI/180));
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
+      pad.area.rotation = (data.rotation * (Math.PI/180));
       pad.area.events.on('trigger', () => {
-        Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
     });
@@ -58672,7 +57822,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../../light/types/lantern":284,"../../light/types/lighter":286,"../attributes/parse_tiled_data":240,"../data/intro_room.json":245,"../elements/click_pad":256,"../elements/pad":261,"./level_factory":272}],270:[function(require,module,exports){
+},{"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":231,"../../engine/tween":236,"../attributes/parse_tiled_data":240,"../data/intro_room.json":244,"../elements/click_pad":254,"../elements/pad":259,"./level_factory":270}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58699,11 +57849,7 @@ class Items_Room_level_2 {
     Level_Factory.generate(this.player, this.elements);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
       pad.area.events.on('trigger', () => {
       });
     });
@@ -58716,7 +57862,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":240,"../data/intro_room_level_2.json":246,"../elements/pad":261,"./level_factory":272}],271:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":240,"../data/intro_room_level_2.json":245,"../elements/pad":259,"./level_factory":270}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58742,32 +57888,20 @@ class Items_Room extends Level {
   }
 
   _set_elements() {
-    const {exit_pad, click_pad} = this.elements;
+    const {exit_pad, click_pad, player} = this.elements;
     global.set_light_level(0.9);
 
     const { level_lights, level_collision } = Level_Factory.generate(this.player, this.elements);
 
+    this.player.set_position(player[0]);
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
-      // Fire once (event) to load in enemies
+      const pad  = new Trigger_Pad(data);
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
-
         Level_Factory.create(data.properties, this.player);
       });
     });
     click_pad.forEach(data => {
-      const pad  = new Click_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
+      const pad  = new Click_Pad(data);
       if(data.id === 200) {
         pad.click = () => generate_crow({
           from: {x: 2000, y: 1800},
@@ -58805,7 +57939,6 @@ class Items_Room extends Level {
           shadow_tween.time = 944000;
           sprite_tween.start();
           shadow_tween.start();
-
         };
       }
     });
@@ -58817,23 +57950,22 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":222,"../../engine/tween":236,"../attributes/parse_tiled_data":240,"../data/items_room.json":247,"../elements/click_pad":256,"../elements/pad":261,"../level_model":266,"./level_factory":272}],272:[function(require,module,exports){
+},{"../../effects/click_events":222,"../../engine/tween":236,"../attributes/parse_tiled_data":240,"../data/items_room.json":246,"../elements/click_pad":254,"../elements/pad":259,"../level_model":264,"./level_factory":270}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Intro       } = require('./intro');
-const { Camera      } = require('../../engine/camera');
-const { Wall        } = require('../elements/wall');
-//const { Candle      } = require('../../light/types/candle');
+const { Intro        } = require('./intro');
+const { Camera       } = require('../../engine/camera');
+const { Wall         } = require('../elements/wall');
 const { Bright_Light } = require('../../light/types/bright_light');
-const { Background  } = require('../elements/background');
+const { Background   } = require('../elements/background');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const { clear_non_player_containers } = require('../../engine/pixi_containers');
 
-//TODO This is not a Factory make it one and abstract this
 class Level_Factory {
   static create(properties, player) {
+    this.clear();
     const { Archer_Room } = require('./archer_room');
     const { School_Room } = require('./school_room');
     const { Items_Room  } = require('./item_room');
@@ -58875,18 +58007,12 @@ class Level_Factory {
     try {
       new Background(background[0], true);
 
-      player_sprite.set_position(player[0]);
-
       const camera = new Camera();
       camera.set_center(player[0]);
 
       walls.forEach(data => {
-        const wall  = new Wall(data.options);
-        wall.height = data.height;
-        wall.width  = data.width;
+        const wall  = new Wall(data);
         wall.rotation = (data.rotation * (Math.PI/180));
-
-        wall.set_position(data);
       });
 
       const level_collision = collision.map(data => Element_Factory.generate_tiled('collision', data));
@@ -58928,7 +58054,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":226,"../../engine/pixi_containers":231,"../../light/types/bright_light":282,"../elements/background":253,"../elements/elements_factory":259,"../elements/wall":265,"./archer_room":267,"./defend_room":268,"./intro":269,"./intro_level_02":270,"./item_room":271,"./school_room":275,"./simple":276,"./street":277,"./transition_room":278}],273:[function(require,module,exports){
+},{"../../engine/camera":226,"../../engine/pixi_containers":231,"../../light/types/bright_light":279,"../elements/background":251,"../elements/elements_factory":257,"../elements/wall":263,"./archer_room":265,"./defend_room":266,"./intro":267,"./intro_level_02":268,"./item_room":269,"./school_room":272,"./simple":273,"./street":274,"./transition_room":275}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58995,86 +58121,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":217,"../../engine/camera":226,"../elements/background":253,"../level_model":266}],274:[function(require,module,exports){
-(function (global){
-'use strict';
-
-const { Level       } = require('../level_model');
-const { Background  } = require('../elements/background');
-const { Trigger_Pad } = require('../elements/pad');
-const { Randomise   } = require('../attributes/randomise');
-
-class Random_Room extends Level {
-  constructor(player) {
-    super();
-    this.name        = 'animations_room';
-
-    this.randomise   = new Randomise();
-    this.randomise_2 = new Randomise();
-    this.randomise_3 = new Randomise();
-    this.randomise_4 = new Randomise();
-    this.pad         = new Trigger_Pad();
-
-    this.background  = new Background('grid_floor');
-    this.player      = player;
-
-  }
-
-  set_elements(offset) {
-    global.set_light_level(1);
-    this.background.alpha = 0.2;
-
-    this.background.set_position({x:1100+offset.x, y:500+offset.y});
-    this.background.sprite.scale.x = 0.5;
-    this.background.sprite.scale.y = 0.5;
-    this.randomise.box(200);
-    this.randomise.set_position({x:700+offset.x, y:250+offset.y});
-    this.randomise.tint = 'green';
-    this.randomise.random_items();
-
-    this.randomise_2.box(300);
-    this.randomise_2.set_position({x:1300+offset.x, y:300+offset.y});
-    this.randomise_2.tint = 'red';
-    this.randomise_2.random_items();
-
-    this.randomise_3.box(300);
-    this.randomise_3.set_position({x:1400+offset.x, y:700+offset.y});
-    this.randomise_3.tint = 'white';
-    this.randomise_3.random_items();
-
-    this.randomise_4.height = 200;
-    this.randomise_4.width = 400;
-    this.randomise_4.set_position({x:800+offset.x, y:750+offset.y});
-    this.randomise_4.tint = 'grey';
-    this.randomise_4.rotate_items = false;
-    this.randomise_4.populate_with_item('workbench');
-
-    this.pad.set_position({x:1100+offset.x, y:840+offset.y});
-    this.pad.tint   = 'red';
-    this.pad.alpha  = 0.5;
-    this.pad.width  = 400;
-    this.pad.height = 100;
-    this.pad.area.events.on('trigger', () => {
-      this._destroy();
-
-      const new_level = new Random_Room(this.player);
-      new_level.set_elements({x:0,y:this.player.sprite.y});
-    });
-    global.set_light_level(1);
-  }
-
-  _destroy() {
-    // this.background.destroy();
-    this.pad.destroy();
-  }
-}
-
-module.exports = {
-  Random_Room,
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/randomise":241,"../elements/background":253,"../elements/pad":261,"../level_model":266}],275:[function(require,module,exports){
+},{"../../character/types/npc":217,"../../engine/camera":226,"../elements/background":251,"../level_model":264}],272:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59091,44 +58138,35 @@ class School_Room extends Level  {
   constructor(player) {
     super();
     this.name     = 'school_room';
-
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-
     this._set_elements();
   }
 
   _set_elements() {
-    const {prey, exit_pad, grid} = this.elements;
+    const {prey, exit_pad, grid, player} = this.elements;
     global.set_light_level(0.9);
 
     Level_Factory.generate(this.player, this.elements);
+    this.player.set_position(player[0]);
 
     const mouse = new Rat();
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
     const phone = new Phone({image_name: 'phone_00'});
+    phone.width  = 200;
+    phone.height = 200;
     phone.set_position({x: 800, y: 810});
-    phone.width = 200;
-    phone.height= 200;
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad = new Trigger_Pad(data);
       if(data.properties) {
         pad.area.events.once('trigger', () => {
-          Level_Factory.clear();
-
           Level_Factory.create(data.properties, this.player);
         });
         return;
       }
-
-      // Fire once (event) to load in enemies
       pad.area.events.once('trigger', () => {
         mouse.logic_start();
       });
@@ -59143,7 +58181,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/school_room.json":249,"../elements/pad":261,"../elements/phone":262,"../level_model":266,"./level_factory":272}],276:[function(require,module,exports){
+},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":240,"../data/school_room.json":248,"../elements/pad":259,"../elements/phone":260,"../level_model":264,"./level_factory":270}],273:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59158,30 +58196,16 @@ class Simple extends Level  {
     super();
     this.name = properties.level_name;
 
-    global.set_light_level(0.9);
-
     let level_data;
     // TODO manage this dynamically
-    if(properties.level_name === 'truck') {
-      level_data = require('../data/truck.json');
-    }
-
     if(properties.level_name === 'apartment') {
       level_data = require('../data/apartment.json');
     }
 
     if(properties.level_name === 'light') {
       level_data = require('../data/lights_room.json');
-
-      player.light.candle.set_position(player);
-      player.light.candle.start_flickering();
-      // TODO wheb you clear a level it removes the light
-      // this is a shit hack to put it back in
-      // think about moving the player light into
-      // the player container
       visual_effects_container.addChild(player.light.candle.sprite);
       visual_effects_container.addChild(player.light.candle.shadow);
-
       global.set_light_level(0.5);
     }
 
@@ -59192,19 +58216,13 @@ class Simple extends Level  {
   }
 
   _set_elements() {
-
-    const {exit_pad} = this.elements;
+    global.set_light_level(0.9);
+    const {exit_pad, player} = this.elements;
+    this.player.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
-      // Fire once (event) to load in enemies
+      const pad  = new Trigger_Pad(data);
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
     });
@@ -59218,7 +58236,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/apartment.json":242,"../data/lights_room.json":248,"../data/truck.json":252,"../elements/pad":261,"../level_model":266,"./level_factory":272}],277:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/apartment.json":241,"../data/lights_room.json":247,"../elements/pad":259,"../level_model":264,"./level_factory":270}],274:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59233,27 +58251,19 @@ class Street extends Level  {
   constructor(player) {
     super();
     this.name     = 'school_room';
-
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-
     this._set_elements();
   }
 
   _set_elements() {
     global.set_light_level(0.9);
-    const {exit_pad} = this.elements;
+    const {exit_pad, player} = this.elements;
+    this.player.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
-      // Fire once (event) to load in enemies
+      const pad  = new Trigger_Pad(data);
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
         Level_Factory.create(data.properties, this.player);
       });
     });
@@ -59267,7 +58277,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":240,"../data/street.json":250,"../elements/pad":261,"../level_model":266,"./level_factory":272}],278:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":240,"../data/street.json":249,"../elements/pad":259,"../level_model":264,"./level_factory":270}],275:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59284,10 +58294,8 @@ class Transition_Room extends Level  {
   constructor(player) {
     super();
     this.name     = 'transition_room';
-
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
-
     this._set_elements();
   }
 
@@ -59295,23 +58303,18 @@ class Transition_Room extends Level  {
     global.set_light_level(0.9);
     const {exit_pad, player} = this.elements;
 
+    Level_Factory.generate(this.player, this.elements);
+    this.player.set_position(player[0]);
+
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad = new Trigger_Pad(data);
+      const {properties} = data;
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
-        Level_Factory.create(data.properties, this.player);
+        Level_Factory.create(properties, this.player);
       });
 
       const level_names = new PIXI.Text(
-        data.properties.level_name,
-        {
-          fontSize: 40,
-          fill: 'grey',
-        }
+        properties.level_name,{fontSize: 40, fill: 'grey'}
       );
 
       level_names.x = data.x + data.width/4;
@@ -59319,8 +58322,6 @@ class Transition_Room extends Level  {
 
       visual_effects_container.addChild(level_names);
     });
-
-    Level_Factory.generate(this.player, this.elements);
 
     const level_text = new PIXI.Text(
       'THE HUB',
@@ -59348,7 +58349,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/transition_room.json":251,"../elements/pad":261,"../level_model":266,"./level_factory":272,"pixi.js":155}],279:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/parse_tiled_data":240,"../data/transition_room.json":250,"../elements/pad":259,"../level_model":264,"./level_factory":270,"pixi.js":155}],276:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -59393,7 +58394,7 @@ module.exports = {
   Flicker,
 };
 
-},{"pixi.js":155}],280:[function(require,module,exports){
+},{"pixi.js":155}],277:[function(require,module,exports){
 'use strict';
 
 //const { Sound } = require('../../engine/sound');
@@ -59455,7 +58456,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../utils/time":292}],281:[function(require,module,exports){
+},{"../../utils/time":286}],278:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59523,7 +58524,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":231,"pixi.js":155}],282:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":155}],279:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59549,7 +58550,7 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/strike":280,"../light_model":281}],283:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/strike":277,"../light_model":278}],280:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59573,11 +58574,8 @@ class Candle extends Light {
     this.shadow.range      = 350;
     this.shadow.intensity  = 0.5;
     visual_effects_container.addChild(this.sprite, this.shadow);
-
-    // this.start_flickering();
   }
 
-  // This overwrites the base class version
   set_position({x, y}) {
     this.shadow.position.set(x, y);
 
@@ -59603,36 +58601,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/flicker":279,"../light_model":281,"pixi.js":155}],284:[function(require,module,exports){
-'use strict';
-
-const { visual_effects_container } = require('../../engine/pixi_containers');
-
-const { Light   } = require('../light_model');
-const { Flicker } = require('../attributes/flicker');
-const { Tween   } = require('../../engine/tween');
-
-class Lantern extends Light {
-  constructor() {
-    super();
-    this.name = 'lantern';
-
-    this.add_component(new Flicker(this.shadow));
-    this.add_component(new Tween(this.shadow));
-
-    this.shadow.pointCount = 1;
-    this.shadow.range      = 500;
-    this.shadow.intensity  = 0.6;
-
-    visual_effects_container.addChild(this.shadow);
-  }
-}
-
-module.exports = {
-  Lantern,
-};
-
-},{"../../engine/pixi_containers":231,"../../engine/tween":236,"../attributes/flicker":279,"../light_model":281}],285:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/flicker":276,"../light_model":278,"pixi.js":155}],281:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59659,52 +58628,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":231,"../attributes/flicker":279,"../light_model":281}],286:[function(require,module,exports){
-'use strict';
-
-const { visual_effects_container } = require('../../engine/pixi_containers');
-
-const { Light  } = require('../light_model');
-const { Strike } = require('../attributes/strike');
-
-class Lighter extends Light {
-  constructor() {
-    super();
-    this.name = 'lighter';
-    this.add_component(new Strike(this.shadow));
-
-    this.shadow.pointCount = 1;
-    this.shadow.range      = 200;
-    this.shadow.intensity  = 0.5;
-
-    visual_effects_container.addChild(this.shadow);
-  }
-}
-
-module.exports = {
-  Lighter,
-};
-
-},{"../../engine/pixi_containers":231,"../attributes/strike":280,"../light_model":281}],287:[function(require,module,exports){
-'use strict';
-
-class Color_Pick {
-  static get_hex_from(name) {
-    switch(name) {
-      case 'red'    : return 0xff0000;
-      case 'yellow' : return 0xbdb76b;
-      case 'white'  : return 0xffffff;
-      case 'green'  : return 0x008000;
-      case 'grey'   : return 0xd3d3d3;
-    }
-  }
-}
-
-module.exports = {
-  Color_Pick,
-};
-
-},{}],288:[function(require,module,exports){
+},{"../../engine/pixi_containers":231,"../attributes/flicker":276,"../light_model":278}],282:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59747,7 +58671,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],289:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59785,7 +58709,6 @@ global.place_bunny = ({ x, y }, light) => {
     visual_effects_container.addChild(shade);
   }
 
-
   return bunny;
 };
 // AUTO-REFRESH WINDOW
@@ -59796,7 +58719,7 @@ global.place_bunny = ({ x, y }, light) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":231,"pixi.js":155}],290:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":155}],284:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-plugin-bump');
@@ -59878,7 +58801,7 @@ class Grid {
           tile.passable = false;
           if(object.door) {
             tile.door = true;
-            tile.shit = object;
+            tile.id   = object.id;
           }
         }
       });
@@ -59932,7 +58855,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":231,"pixi-plugin-bump":36,"pixi.js":155}],291:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi-plugin-bump":36,"pixi.js":155}],285:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59990,7 +58913,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],292:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -60001,7 +58924,7 @@ module.exports = {
   sleep,
 };
 
-},{}],293:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -60087,7 +59010,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":231,"pixi.js":155}],294:[function(require,module,exports){
+},{"../engine/pixi_containers":231,"pixi.js":155}],288:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -60151,7 +59074,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":223,"../engine/item_handler":227,"../engine/pixi_containers":231,"pixi.js":155}],295:[function(require,module,exports){
+},{"../effects/fade":223,"../engine/item_handler":227,"../engine/pixi_containers":231,"pixi.js":155}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -60349,7 +59272,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":239}],296:[function(require,module,exports){
+},{"../items/item_manager":239}],290:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -60386,7 +59309,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":288}],297:[function(require,module,exports){
+},{"../utils/dom":282}],291:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60911,7 +59834,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],298:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -61217,7 +60140,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":299}],299:[function(require,module,exports){
+},{"_process":293}],293:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -61403,7 +60326,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],300:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -61940,7 +60863,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],301:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62026,7 +60949,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],302:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62113,13 +61036,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],303:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":301,"./encode":302}],304:[function(require,module,exports){
+},{"./decode":295,"./encode":296}],298:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -62198,7 +61121,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":299,"timers":304}],305:[function(require,module,exports){
+},{"process/browser.js":293,"timers":298}],299:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62932,7 +61855,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":306,"punycode":300,"querystring":303}],306:[function(require,module,exports){
+},{"./util":300,"punycode":294,"querystring":297}],300:[function(require,module,exports){
 'use strict';
 
 module.exports = {

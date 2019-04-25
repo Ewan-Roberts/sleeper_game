@@ -4,18 +4,19 @@ const { collision_container } = require('../../engine/pixi_containers');
 const event    = require('events');
 const { Item } = require('./item_model');
 
-//TODO remove item extend
 class Wall extends Item {
-  constructor(options) {
+  constructor(data) {
     super('black_dot');
 
     this.shadow = true;
     this.anchor = 0;
-
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
 
-    if(options && options.hidden) {
+    this.width = data.width;
+    this.height= data.height;
+    this.set_position(data);
+    if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
 

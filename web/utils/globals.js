@@ -34,7 +34,6 @@ global.place_bunny = ({ x, y }, light) => {
     visual_effects_container.addChild(shade);
   }
 
-
   return bunny;
 };
 // AUTO-REFRESH WINDOW

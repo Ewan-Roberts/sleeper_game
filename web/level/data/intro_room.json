@@ -245,12 +245,12 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1072.72727272727,
-                 "y":-1130.30303030303
+                 "x":1036.72727272727,
+                 "y":-26.30303030303
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -333,12 +333,22 @@
                  "type":"",
                  "visible":true,
                  "width":239.666666666667,
-                 "x":1033.66666666667,
-                 "y":67.72727272727
+                 "x":1289.66666666667,
+                 "y":-212.27272727273
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1209,7 +1219,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 

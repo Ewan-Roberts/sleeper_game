@@ -20,9 +20,10 @@ class Defend_Room extends Level  {
   }
 
   _set_elements() {
-    const {prey, exit_pad, grid} = this.elements;
+    const {prey, exit_pad, grid, player} = this.elements;
     global.set_light_level(1);
 
+    this.player.set_position(player[0]);
     Level_Factory.generate(this.player, this.elements);
 
     const mouse = new Rat();
@@ -30,15 +31,9 @@ class Defend_Room extends Level  {
     mouse.set_position(prey[0]);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
       if(data.properties) {
         pad.area.events.once('trigger', () => {
-          Level_Factory.clear();
-
           Level_Factory.create(data.properties, this.player);
         });
         return;

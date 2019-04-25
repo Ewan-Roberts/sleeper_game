@@ -16,6 +16,7 @@ class Tween {
 
   from_path(start) {
     this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement.expire = true;
     this.path = new PIXI.tween.TweenPath();
     this.path_arc = 15;
     this.path.moveTo(start.x, start.y);

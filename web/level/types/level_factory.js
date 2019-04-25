@@ -1,18 +1,17 @@
 'use strict';
 
-const { Intro       } = require('./intro');
-const { Camera      } = require('../../engine/camera');
-const { Wall        } = require('../elements/wall');
-//const { Candle      } = require('../../light/types/candle');
+const { Intro        } = require('./intro');
+const { Camera       } = require('../../engine/camera');
+const { Wall         } = require('../elements/wall');
 const { Bright_Light } = require('../../light/types/bright_light');
-const { Background  } = require('../elements/background');
+const { Background   } = require('../elements/background');
 const { Element_Factory } = require('../elements/elements_factory');
 
 const { clear_non_player_containers } = require('../../engine/pixi_containers');
 
-//TODO This is not a Factory make it one and abstract this
 class Level_Factory {
   static create(properties, player) {
+    this.clear();
     const { Archer_Room } = require('./archer_room');
     const { School_Room } = require('./school_room');
     const { Items_Room  } = require('./item_room');
@@ -54,18 +53,12 @@ class Level_Factory {
     try {
       new Background(background[0], true);
 
-      player_sprite.set_position(player[0]);
-
       const camera = new Camera();
       camera.set_center(player[0]);
 
       walls.forEach(data => {
-        const wall  = new Wall(data.options);
-        wall.height = data.height;
-        wall.width  = data.width;
+        const wall  = new Wall(data);
         wall.rotation = (data.rotation * (Math.PI/180));
-
-        wall.set_position(data);
       });
 
       const level_collision = collision.map(data => Element_Factory.generate_tiled('collision', data));

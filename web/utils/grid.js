@@ -79,7 +79,7 @@ class Grid {
           tile.passable = false;
           if(object.door) {
             tile.door = true;
-            tile.shit = object;
+            tile.id   = object.id;
           }
         }
       });

@@ -23,11 +23,7 @@ class Items_Room_level_2 {
     Level_Factory.generate(this.player, this.elements);
 
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
+      const pad  = new Trigger_Pad(data);
       pad.area.events.on('trigger', () => {
       });
     });

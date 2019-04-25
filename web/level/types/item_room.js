@@ -22,32 +22,20 @@ class Items_Room extends Level {
   }
 
   _set_elements() {
-    const {exit_pad, click_pad} = this.elements;
+    const {exit_pad, click_pad, player} = this.elements;
     global.set_light_level(0.9);
 
     const { level_lights, level_collision } = Level_Factory.generate(this.player, this.elements);
 
+    this.player.set_position(player[0]);
     exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
-      // Fire once (event) to load in enemies
+      const pad  = new Trigger_Pad(data);
       pad.area.events.once('trigger', () => {
-        Level_Factory.clear();
-
         Level_Factory.create(data.properties, this.player);
       });
     });
     click_pad.forEach(data => {
-      const pad  = new Click_Pad();
-      pad.height = data.height;
-      pad.width  = data.width;
-      pad.anchor = 0;
-      pad.set_position(data);
-
+      const pad  = new Click_Pad(data);
       if(data.id === 200) {
         pad.click = () => generate_crow({
           from: {x: 2000, y: 1800},
@@ -85,7 +73,6 @@ class Items_Room extends Level {
           shadow_tween.time = 944000;
           sprite_tween.start();
           shadow_tween.start();
-
         };
       }
     });

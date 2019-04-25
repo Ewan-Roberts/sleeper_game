@@ -13,10 +13,8 @@ class Chest extends Item {
 
     if(options.label) {
       this.sprite.interactive = true;
-
       this.button = new Button(options);
       this.button.visible = false;
-
       this.sprite.on('mouseover', () => {
         this.button.set_position(this.sprite);
         this.button.visible = true;
