@@ -1,6 +1,7 @@
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 const { Tween } = require('../../engine/tween');
+const { generate_crow } = require('../../effects/click_events');
 
 const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad } = require('../elements/pad');
@@ -18,7 +19,6 @@ class Intro  {
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.lighter      = new Lighter();
-    this.bird         = new Crow();
 
     this.camera       = new Camera();
     this.lantern      = new Lantern();
@@ -47,24 +47,18 @@ class Intro  {
     this.lighter.set_position({ x: 1115, y: 410 });
     this.lighter.strike.start();
 
-    this.bird.animation.move();
-    this.bird.animation.sprite.play();
-    this.bird.tween.from({x: 400, y: 60});
-    this.bird.tween.to({x: 3000, y: -1000});
-    this.bird.tween.time = 10000;
-
-    this.camera.tween.from({ x: -120, y: -150 });
-    this.camera.tween.to({   x: -100, y: -120 });
-    this.camera.tween.to({   x: -600, y: 0 });
+    this.camera.tween.from_path({ x: -120, y: -150 });
+    this.camera.tween.to_path({   x: -100, y: -120 });
+    this.camera.tween.to_path({   x: -600, y: 0 });
     this.camera.tween.smooth();
     this.camera.tween.time = 1000;
-    this.camera.tween.start();
+    this.camera.tween.path_start();
 
-    this.player.tween.from({ x: 1000, y: 400 });
-    this.player.tween.to({ x: 1080, y: 410 });
+    this.player.tween.no_path_from({ x: 1000, y: 400 });
+    this.player.tween.no_path_to({ x: 1080, y: 410 });
     this.player.tween.smooth();
     this.player.tween.time = 1000;
-    this.player.tween.start();
+    this.player.tween.no_path_start();
     this.player.tween.movement.on('update', () => {
       this.player.light.set_position(this.player.sprite);
     });
@@ -89,11 +83,15 @@ class Intro  {
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
-        tween_it.from(dumpster);
-        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
-        tween_it.time = 2000;
-        tween_it.start();
-        this.bird.tween.start();
+        tween_it.no_path_from(dumpster);
+        tween_it.no_path_to({x: dumpster.x + 100, y:dumpster.y});
+        tween_it.no_path_time = 2000;
+        tween_it.no_path_start();
+
+        generate_crow({
+          from: {x: 400, y: 60},
+          to:   {x: 3000, y: -1000},
+        });
       };
     });
 

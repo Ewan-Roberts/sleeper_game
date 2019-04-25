@@ -1,11 +1,11 @@
 'use strict';
 
 const { Tween         } = require('../../engine/tween');
+const { generate_crow } = require('../../effects/click_events');
 const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
-const { Crow        } = require('../../character/archetypes/crow');
 //const { Candle      } = require('../../light/types/candle');
 const { Click_Pad     } = require('../elements/click_pad');
 
@@ -49,23 +49,11 @@ class Items_Room extends Level {
       pad.anchor = 0;
       pad.set_position(data);
 
-
-      console.log('wrwr');
-      console.log(data);
       if(data.id === 200) {
-        pad.click = () => {
-
-          console.log('ifwfwfwe');
-          const bird = new Crow();
-          bird.animation.move();
-          bird.animation.sprite.play();
-          bird.tween.from({x: 2000, y: 1800});
-          bird.tween.to({x: 3000, y: 1000});
-          bird.tween.time = 10000;
-          bird.tween.start();
-
-        };
-
+        pad.click = () => generate_crow({
+          from: {x: 2000, y: 1800},
+          to:   {x: 3000, y: 1000},
+        });
       }
 
       if(data.id === 184) {
@@ -75,7 +63,6 @@ class Items_Room extends Level {
 
           lamp_light.intensity = 5;
           await lamp_light.strike.fast();
-          console.log(level_collision);
           const dumpster = level_collision.find(elems => elems.id === 199);
           const tween_it = new Tween(dumpster.sprite, dumpster.shade);
           tween_it.no_path_from(dumpster.sprite);

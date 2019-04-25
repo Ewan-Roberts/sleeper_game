@@ -37,8 +37,17 @@ class Tween {
 
   no_path_start() {
     this.movement.start();
+
     if(this.shadow_movement) {
       this.shadow_movement.start();
+    }
+  }
+
+  no_path_stop() {
+    this.movement.stop();
+
+    if(this.shadow_movement) {
+      this.shadow_movement.stop();
     }
   }
 
@@ -48,7 +57,7 @@ class Tween {
       this.shadow_movement.to(data);
     }
   }
-
+  //remove
   set no_path_time(value) {
     this.movement.time = value;
     if(this.shadow_movement) {
@@ -56,13 +65,21 @@ class Tween {
     }
   }
 
-  from(start) {
+  from_path(start) {
     this.path.moveTo(start.x, start.y);
   }
 
-  to(finish) {
+  to_path(finish) {
     this.path.lineTo(finish.x, finish.y);
   }
+
+  // from(start) {
+  //   this.path.moveTo(start.x, start.y);
+  // }
+
+  // to(finish) {
+  //   this.path.lineTo(finish.x, finish.y);
+  // }
 
   line_to({ x, y }) {
     this.path = new PIXI.tween.TweenPath();
@@ -106,6 +123,10 @@ class Tween {
 
   set time(amount) {
     this.movement.time = amount;
+
+    if(this.shadow_movement) {
+      this.shadow_movement.time = amount;
+    }
   }
 
   set delay(amount) {
@@ -114,6 +135,15 @@ class Tween {
 
   stop() {
     this.movement.stop();
+  }
+
+  path_start() {
+    if(!this.movement.time) {
+      throw new Error('time not set for tween');
+    }
+
+    this.movement.path = this.path;
+    this.movement.start();
   }
 
   start() {

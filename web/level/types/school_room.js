@@ -22,7 +22,7 @@ class School_Room extends Level  {
 
   _set_elements() {
     const {prey, exit_pad, grid} = this.elements;
-    global.set_light_level(0.4);
+    global.set_light_level(0.9);
 
     Level_Factory.generate(this.player, this.elements);
 

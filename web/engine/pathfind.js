@@ -54,7 +54,7 @@ class pathfind_sprite {
 
     const tween = new Tween(sprite);
     tween.time  = path_array.length * 300;
-    tween.from(sprite);
+    tween.from_path(sprite);
     const foo = path_array.map(path => {
       return {
         x: path.x + 50,
@@ -64,7 +64,7 @@ class pathfind_sprite {
 
     tween.add_random_path(foo);
     tween.draw_path();
-    tween.start();
+    tween.path_start();
 
     tween.movement.on('update', () => sprite.rotation = radian(sprite, tween.path._tmpPoint));
   }

@@ -10,6 +10,11 @@ const { enemy_container     } = require('./pixi_containers');
 const { critter_container   } = require('./pixi_containers');
 const { player_container    } = require('./pixi_containers');
 
+const objects  = collision_container.children;
+const enemies  = enemy_container.children;
+const critters = critter_container.children;
+const players  = player_container.children;
+
 class Arrow {
   constructor() {
     this.name = 'arrow';
@@ -29,32 +34,25 @@ class Arrow {
 function shoot_arrow(speed, damage, origin, point) {
   const arrow    = new Arrow();
   arrow.rotation = radian(point, origin);
-  arrow.tween.from(origin);
-  arrow.tween.to(point);
-  arrow.tween.time = speed;
-
-  const objects  = collision_container.children;
-  const enemies  = enemy_container.children;
-  const critters = critter_container.children;
-  const players  = player_container.children;
+  arrow.tween.no_path_from(origin);
+  arrow.tween.no_path_to(point);
+  arrow.tween.no_path_time = speed;
 
   arrow.tween.movement.on('update', () => {
     const arrow_point = arrow.sprite.getGlobalPosition();
 
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
     if (collision_object) {
-      arrow.tween.stop();
-
+      arrow.tween.no_path_stop();
       if(collision_object.events) {
         collision_object.events.emit('damage', damage);
       }
       return;
     }
 
-
     const collision_critter = critters.find(critter => critter.containsPoint(arrow_point));
     if (collision_critter) {
-      arrow.tween.stop();
+      arrow.tween.no_path_stop();
       collision_critter.events.emit('damage', damage);
       return;
     }
@@ -63,7 +61,7 @@ function shoot_arrow(speed, damage, origin, point) {
     if (collision_enemies) {
       if(collision_enemies.id === origin.id) return;
 
-      arrow.tween.stop();
+      arrow.tween.no_path_stop();
       collision_enemies.events.emit('damage', damage);
       return;
     }
@@ -72,14 +70,13 @@ function shoot_arrow(speed, damage, origin, point) {
     if (collision_players) {
       if(collision_players.id === origin.id) return;
 
-      arrow.tween.stop();
+      arrow.tween.no_path_stop();
       collision_players.events.emit('damage', damage);
       return;
     }
-
   });
 
-  arrow.tween.start();
+  arrow.tween.no_path_start();
 }
 
 module.exports = {

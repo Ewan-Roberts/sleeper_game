@@ -229,12 +229,12 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":-255.84,
+                 "rotation":-270.06547233807,
                  "type":"",
                  "visible":true,
                  "width":65.0206,
-                 "x":2057.34330928824,
-                 "y":1871.16697955578
+                 "x":1995.71279420627,
+                 "y":1858.03247311083
                 }, 
                 {
                  "height":114.328569264915,
@@ -258,6 +258,25 @@
                  "width":36.016243109141,
                  "x":2404.48932134199,
                  "y":1917.55085444283
+                }, 
+                {
+                 "height":57.767,
+                 "id":201,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"lamp_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-270.065,
+                 "type":"",
+                 "visible":true,
+                 "width":65.0206,
+                 "x":2181.52301650682,
+                 "y":1861.0710683998
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -525,15 +544,26 @@
                  "y":1864.71479050985
                 }, 
                 {
-                 "height":53.5083,
+                 "height":90.8631712771328,
                  "id":200,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":77.7385,
-                 "x":2011.61030577991,
-                 "y":1812.72086261989
+                 "width":74.7097266532055,
+                 "x":1952.04442995962,
+                 "y":1843.00859608784
+                }, 
+                {
+                 "height":90.8632,
+                 "id":202,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":74.7097,
+                 "x":2113.07422622413,
+                 "y":1743.56385683998
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -604,7 +634,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":201,
+ "nextobjectid":203,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
