@@ -18,7 +18,7 @@ class Level_Loader {
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
     // new Defend_Room(player)
-    // new Intro(player);
+    //new Intro(player);
     // new School_Room(player);
     // new Animations_Room();
     // new Archer_Room(player);

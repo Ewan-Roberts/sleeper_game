@@ -13,14 +13,14 @@ class Range {
   }
 
   equip() {
-    this.inventory.equip_ranged_weapon();
+    this.inventory.switch_to_ranged_weapon();
 
     this.animation.weapon = this.inventory.ranged_weapon.animation_name;
   }
 
   attack(target) {
     this.equip();
-    this.animation.ready_weapon();
+    //this.animation.ready_weapon();
     this.animation.face_point(target.sprite);
 
     const ranged_weapon = this.inventory.ranged_weapon;

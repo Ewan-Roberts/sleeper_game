@@ -14,6 +14,7 @@ class Melee {
     this.sprite    = sprite;
 
     this.melee_weapon = inventory.melee_weapon;
+    this.create_hit_box();
   }
 
   equip() {
@@ -22,17 +23,21 @@ class Melee {
     this.animation.weapon = this.melee_weapon.animation_name;
   }
 
-  hit_box() {
-    const box = new PIXI.Sprite.fromFrame('black_dot');
-    box.width = 50;
-    box.height= 300;
-    box.position.set(this.sprite.x,this.sprite.y);
-    box.anchor.y = 1;
-    box.anchor.x = 0.5;
-    box.alpha = 0.5;
-    box.rotation = this.sprite.rotation + 1.57;
+  create_hit_box() {
+    this.box = new PIXI.Sprite.fromFrame('black_dot');
+    this.box.width = 50;
+    this.box.height= 300;
+    this.box.anchor.y = 1;
+    this.box.anchor.x = 0.5;
+    this.box.alpha = 0.5;
 
-    visual_effects_container.addChild(box);
+    visual_effects_container.addChild(this.box);
+  }
+
+  hit_box() {
+    this.box.position.set(this.sprite.x,this.sprite.y);
+
+    this.box.rotation = this.sprite.rotation + 1.57;
   }
 
   attack(target) {

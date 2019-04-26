@@ -23,8 +23,8 @@ global.place_bunny = ({ x, y }, light) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
   bunny.anchor.set(0.5);
-  bunny.width = 200;
-  bunny.height = 200;
+  bunny.width = 100;
+  bunny.height = 100;
 
   visual_effects_container.addChild(bunny);
   if(light) {

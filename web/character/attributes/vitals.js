@@ -8,7 +8,7 @@ class Vitals {
     //TODO derive from archtype data
     this.power  = 5000;
     this.speed  = 20;
-    this.health = 140;
+    this.health = 80;
     this.food   = 40;
     this.water  = 20;
     this.heat   = 90;
@@ -31,6 +31,7 @@ class Vitals {
   }
 
   damage(damage) {
+    console.log('wefefe');
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
 

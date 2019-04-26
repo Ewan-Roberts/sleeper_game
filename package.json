@@ -7,7 +7,7 @@
     "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.js --compress --mangle",
     "start": "nodemon server",
     "rinse": "./scripts/clean_trim_sprite.sh",
-    "spritesheet": "pixi-packer --clean-cache ./scripts/image_compression.js public/images/ "
+    "spritesheet": "pixi-packer  ./scripts/image_compression.js public/images/ --clean-cache"
   },
   "eslint.options": {
     "configFile": "./.eslintrc.json"

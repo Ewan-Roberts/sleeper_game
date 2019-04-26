@@ -8,6 +8,8 @@ class Item {
   constructor(name) {
     const texture = PIXI.Texture.fromImage(name);
     this.sprite   = new PIXI.Sprite(texture);
+    this.sprite.width = 300;
+    this.sprite.height = 20;
   }
 
   add_component(component) {
@@ -84,7 +86,6 @@ class Item {
     if(!state && this.shade) {
       collision_container.removeChild(this.shade);
     }
-
     this.shade = new PIXI.Sprite(this.texture);
     this.shade.parentGroup = PIXI.shadows.casterGroup;
     this.shade.position.copy(this.sprite);

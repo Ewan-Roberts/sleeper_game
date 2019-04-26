@@ -8,18 +8,18 @@ class Wall extends Item {
   constructor(data) {
     super('black_dot');
 
-    this.shadow = true;
     this.anchor = 0;
+    this.width = data.width;
+    this.height= data.height;
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
 
-    this.width = data.width;
-    this.height= data.height;
     this.set_position(data);
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
 
+    this.shadow = true;
     collision_container.addChild(this.sprite);
   }
 

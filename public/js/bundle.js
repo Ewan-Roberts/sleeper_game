@@ -47260,8 +47260,8 @@ class Rat extends Animal {
       if(!this.vitals.alive) this.kill();
 
       if(this._target_far_away) return this._walk_to_enemy();
-
-      this.tween.stop();
+      if(!this.enemy.vitals.alive) throw 'game over';
+      //this.tween.stop();
       return this.melee.attack(this.enemy);
     });
   }
@@ -47646,6 +47646,7 @@ class Melee {
     this.sprite    = sprite;
 
     this.melee_weapon = inventory.melee_weapon;
+    this.create_hit_box();
   }
 
   equip() {
@@ -47654,17 +47655,21 @@ class Melee {
     this.animation.weapon = this.melee_weapon.animation_name;
   }
 
-  hit_box() {
-    const box = new PIXI.Sprite.fromFrame('black_dot');
-    box.width = 50;
-    box.height= 300;
-    box.position.set(this.sprite.x,this.sprite.y);
-    box.anchor.y = 1;
-    box.anchor.x = 0.5;
-    box.alpha = 0.5;
-    box.rotation = this.sprite.rotation + 1.57;
+  create_hit_box() {
+    this.box = new PIXI.Sprite.fromFrame('black_dot');
+    this.box.width = 50;
+    this.box.height= 300;
+    this.box.anchor.y = 1;
+    this.box.anchor.x = 0.5;
+    this.box.alpha = 0.5;
 
-    visual_effects_container.addChild(box);
+    visual_effects_container.addChild(this.box);
+  }
+
+  hit_box() {
+    this.box.position.set(this.sprite.x,this.sprite.y);
+
+    this.box.rotation = this.sprite.rotation + 1.57;
   }
 
   attack(target) {
@@ -47842,7 +47847,7 @@ class Vitals {
     //TODO derive from archtype data
     this.power  = 5000;
     this.speed  = 20;
-    this.health = 140;
+    this.health = 80;
     this.food   = 40;
     this.water  = 20;
     this.heat   = 90;
@@ -47865,6 +47870,7 @@ class Vitals {
   }
 
   damage(damage) {
+    console.log('wefefe');
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
 
@@ -47974,6 +47980,7 @@ class Player extends Character {
   }
 
   on_damage(amount) {
+    console.log('owwwwwwwwwww');
     this.vitals.damage(amount);
 
     if(this.vitals.status === 'dead') {
@@ -48195,7 +48202,7 @@ class Level_Loader {
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
     // new Defend_Room(player)
-    // new Intro(player);
+    //new Intro(player);
     // new School_Room(player);
     // new Animations_Room();
     // new Archer_Room(player);
@@ -48298,7 +48305,7 @@ module.exports = {
 
 function melee_attack(melee_weapon, target) {
   const { damage } = melee_weapon;
-
+  console.log(target);
   target.vitals.damage(damage);
 }
 
@@ -48806,6 +48813,7 @@ class Tween {
         tween_path[i].x,
         tween_path[i].y,
         this.path_arc);
+
     }
   }
 
@@ -50889,15 +50897,15 @@ module.exports={ "height":50,
          "name":"background",
          "objects":[
                 {
-                 "height":1438.38591251322,
+                 "height":1714.38591251322,
                  "id":51,
                  "name":"seamless_concrete",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2776.97094144733,
-                 "x":-106.060606060606,
-                 "y":-448.484848484848
+                 "width":1623.86399597691,
+                 "x":416.492866674603,
+                 "y":115.515151515152
                 }],
          "offsetx":-74,
          "offsety":126,
@@ -50912,15 +50920,15 @@ module.exports={ "height":50,
          "name":"walls",
          "objects":[
                 {
-                 "height":258.66666666667,
+                 "height":200.66666666667,
                  "id":2,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":1158.69696969697,
-                 "y":273.393939393939
+                 "x":1500,
+                 "y":269.393939393939
                 }, 
                 {
                  "height":13.0833333333333,
@@ -50934,26 +50942,15 @@ module.exports={ "height":50,
                  "y":265.007575757576
                 }, 
                 {
-                 "height":674.651971689517,
-                 "id":4,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6666666666665,
-                 "x":1448,
-                 "y":242.121212121212
-                }, 
-                {
                  "height":32,
                  "id":9,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1162.79089026914,
-                 "x":753.617177093226,
-                 "y":914.893273360451
+                 "width":1474.77068824894,
+                 "x":465.637379113428,
+                 "y":1750.89327336045
                 }, 
                 {
                  "height":32,
@@ -50962,8 +50959,8 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":290,
-                 "x":755,
+                 "width":578,
+                 "x":467,
                  "y":241
                 }, 
                 {
@@ -50984,20 +50981,20 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":604.422838400654,
+                 "width":750.422838400654,
                  "x":1159,
                  "y":242
                 }, 
                 {
-                 "height":646.839547473553,
+                 "height":1480.87995151396,
                  "id":56,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":753.333333333333,
-                 "y":266.333166666667
+                 "x":466.333333333333,
+                 "y":272.333166666667
                 }, 
                 {
                  "height":22.5471498109172,
@@ -51044,7 +51041,7 @@ module.exports={ "height":50,
                  "y":285.207879443075
                 }, 
                 {
-                 "height":710.652,
+                 "height":1512.652,
                  "id":94,
                  "name":"",
                  "rotation":0,
@@ -51086,10 +51083,109 @@ module.exports={ "height":50,
                  "width":35.6416101268249,
                  "x":1966.98368294105,
                  "y":-252.235525158076
+                }, 
+                {
+                 "height":32,
+                 "id":197,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":380.79,
+                 "x":1528.605,
+                 "y":714
+                }, 
+                {
+                 "height":32,
+                 "id":198,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":252.79,
+                 "x":1659.605,
+                 "y":1324
+                }, 
+                {
+                 "height":204.652,
+                 "id":199,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":1500,
+                 "y":623.674
+                }, 
+                {
+                 "height":496.652,
+                 "id":200,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":1500,
+                 "y":980.674
+                }, 
+                {
+                 "height":32,
+                 "id":201,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":378.79,
+                 "x":1123.605,
+                 "y":1446
+                }, 
+                {
+                 "height":32,
+                 "id":202,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":116.79,
+                 "x":1082.605,
+                 "y":1120
+                }, 
+                {
+                 "height":294.652,
+                 "id":203,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30.6667,
+                 "x":1124.66665,
+                 "y":1151.674
+                }, 
+                {
+                 "height":32,
+                 "id":204,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":126.810202020202,
+                 "x":1374.605,
+                 "y":1120
+                }, 
+                {
+                 "height":32,
+                 "id":205,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":400.79,
+                 "x":493.605,
+                 "y":1120
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51111,7 +51207,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51128,8 +51224,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1036.72727272727,
-                 "y":-26.30303030303
+                 "x":1093.29292929293,
+                 "y":789.858585858586
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51161,7 +51257,7 @@ module.exports={ "height":50,
                  "y":-1080.26446622358
                 }, 
                 {
-                 "height":216.926470588235,
+                 "height":152.536226685796,
                  "id":130,
                  "name":"",
                  "properties":
@@ -51175,9 +51271,9 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":133.078764705883,
-                 "x":1750.45036809269,
-                 "y":683.017379679144
+                 "width":97.9568134863709,
+                 "x":1400.40158760488,
+                 "y":1153.65152602061
                 }, 
                 {
                  "height":182,
@@ -51200,7 +51296,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51221,7 +51317,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51231,7 +51327,7 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51297,7 +51393,7 @@ module.exports={ "height":50,
                  "y":26.0184848484849
                 }, 
                 {
-                 "height":1088.03,
+                 "height":900.712926829268,
                  "id":142,
                  "name":"",
                  "properties":
@@ -51311,8 +51407,8 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":724.906,
-                 "x":767.850030303031,
+                 "width":1041.00356097561,
+                 "x":471.264664449372,
                  "y":246.894090909091
                 }, 
                 {
@@ -51533,10 +51629,29 @@ module.exports={ "height":50,
                  "width":567.71996292207,
                  "x":1809.26747028569,
                  "y":-419.439842237533
+                }, 
+                {
+                 "height":436.672323232323,
+                 "id":223,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":372.073707070707,
+                 "x":1906.10567730064,
+                 "y":711.931337495559
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51583,8 +51698,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1383.76837268766,
-                 "x":-618.767223889607,
-                 "y":237.805389275259
+                 "x":-1070.76722388961,
+                 "y":229.805389275259
                 }, 
                 {
                  "height":1556.79219856273,
@@ -51720,12 +51835,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-87.7288953492821,
+                 "rotation":-353.739555216925,
                  "type":"",
                  "visible":true,
                  "width":323.206183112358,
-                 "x":779.989384622734,
-                 "y":903.105648296609
+                 "x":540.831641370558,
+                 "y":744.067360841842
                 }, 
                 {
                  "height":145.819234048688,
@@ -51743,7 +51858,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":249.333333333333,
-                 "x":960.072265032411,
+                 "x":664.072265032411,
                  "y":289.185767185451
                 }, 
                 {
@@ -51796,12 +51911,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-538.94543013693,
+                 "rotation":-450.114471466079,
                  "type":"",
                  "visible":true,
                  "width":137.679088084613,
-                 "x":1459.09186469011,
-                 "y":934.893125303555
+                 "x":1139.27776147509,
+                 "y":1602.66144095379
                 }, 
                 {
                  "height":100.091501533926,
@@ -51815,12 +51930,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-720.1430510935,
+                 "rotation":-629.116704558628,
                  "type":"",
                  "visible":true,
                  "width":85.7470086786222,
-                 "x":1358.85965389004,
-                 "y":805.741923467557
+                 "x":1680.85139055686,
+                 "y":622.412829620025
                 }, 
                 {
                  "height":555.70380032669,
@@ -51859,10 +51974,333 @@ module.exports={ "height":50,
                  "width":491.644536849573,
                  "x":1149.64947315211,
                  "y":-398.439393069659
+                }, 
+                {
+                 "height":208.732,
+                 "id":207,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shelf_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":289.679,
+                 "x":472.897873737374,
+                 "y":1137.47238383838
+                }, 
+                {
+                 "height":208.732,
+                 "id":208,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shelf_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659493678606,
+                 "type":"",
+                 "visible":true,
+                 "width":183.636588409382,
+                 "x":1191.34308586067,
+                 "y":1126.00534630651
+                }, 
+                {
+                 "height":208.732,
+                 "id":209,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"stool_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":183.637,
+                 "x":731.449792682927,
+                 "y":1538.41448780488
+                }, 
+                {
+                 "height":321.692518432937,
+                 "id":210,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"electric_box_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":155.46328393082,
+                 "x":870.882760271125,
+                 "y":641.80255596897
+                }, 
+                {
+                 "height":239.263748498599,
+                 "id":211,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"trash_can_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":210.498040468339,
+                 "x":1725.27122400958,
+                 "y":1357.5711936182
+                }, 
+                {
+                 "height":440.922844235225,
+                 "id":212,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shower_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0.00755046406233539,
+                 "type":"",
+                 "visible":true,
+                 "width":169.726435337407,
+                 "x":1736.52601150703,
+                 "y":278.682615079188
+                }, 
+                {
+                 "height":120.441062030607,
+                 "id":213,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"stove_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":122.167992545517,
+                 "x":1780.95244254813,
+                 "y":868.115539700582
+                }, 
+                {
+                 "height":208.732,
+                 "id":214,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"trash_can_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":183.637,
+                 "x":1483.40101219512,
+                 "y":1193.48765853659
+                }, 
+                {
+                 "height":122.351905322858,
+                 "id":215,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fridge_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":268.67969855648,
+                 "type":"",
+                 "visible":true,
+                 "width":107.642033026914,
+                 "x":1562.12161005129,
+                 "y":859.377218790238
+                }, 
+                {
+                 "height":146.350749571608,
+                 "id":217,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"box_05"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":83.9798287815914,
+                 "x":1803.09095474173,
+                 "y":1212.59286870622
+                }, 
+                {
+                 "height":169.767862700626,
+                 "id":218,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"toilet_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":183.637,
+                 "x":1560.16318113874,
+                 "y":453.272059178477
+                }, 
+                {
+                 "height":118.903384541306,
+                 "id":219,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"mirror_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":89.973966744088,
+                 "type":"",
+                 "visible":true,
+                 "width":16.2444751112454,
+                 "x":1688.91489664702,
+                 "y":695.391612008038
+                }, 
+                {
+                 "height":75.6656,
+                 "id":220,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"chair"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-631.808938597704,
+                 "type":"",
+                 "visible":true,
+                 "width":84.7775,
+                 "x":1495.50637956872,
+                 "y":668.274122638425
+                }, 
+                {
+                 "height":392.732,
+                 "id":221,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bookcase"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37.679,
+                 "x":1873.1848902439,
+                 "y":1355.97546341463
+                }, 
+                {
+                 "height":398.907263683965,
+                 "id":222,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"messy_table"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":178.612667387835,
+                 "x":503.235508648812,
+                 "y":1748.51545581319
+                }, 
+                {
+                 "height":116.049442359289,
+                 "id":224,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wall_stone_damage_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":359.89429034808,
+                 "type":"",
+                 "visible":true,
+                 "width":26.950483777413,
+                 "x":1497.74563984993,
+                 "y":333.190187397844
+                }, 
+                {
+                 "height":39.5613,
+                 "id":226,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shelf_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-90.0552,
+                 "type":"",
+                 "visible":true,
+                 "width":509.874,
+                 "x":498.233731707317,
+                 "y":922.658374390244
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51890,8 +52328,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":93.6064,
-                 "x":1062.28770909091,
-                 "y":739.216424242424
+                 "x":738.28770909091,
+                 "y":959.216424242424
                 }, 
                 {
                  "height":46.5834,
@@ -51936,8 +52374,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":898.181818181818,
-                 "y":484.878771212121
+                 "x":608.181818181818,
+                 "y":478.878771212121
                 }, 
                 {
                  "height":86.2026,
@@ -51959,7 +52397,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":47.451,
-                 "x":894.456318181818,
+                 "x":606.456318181818,
                  "y":375.080518181818
                 }, 
                 {
@@ -51982,12 +52420,12 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":848,
-                 "y":365.66665
+                 "x":590,
+                 "y":369.66665
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -52112,11 +52550,11 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":197,
+ "nextobjectid":227,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -57192,7 +57630,6 @@ const { Item } = require('./item_model');
 class CollisionItem extends Item {
   constructor(options) {
     super(options.image_name);
-    this.health = 100;
     if(options.shadow) {
       this.shadow = true;
       this.shade.anchor.y= 1;
@@ -57331,6 +57768,8 @@ class Item {
   constructor(name) {
     const texture = PIXI.Texture.fromImage(name);
     this.sprite   = new PIXI.Sprite(texture);
+    this.sprite.width = 300;
+    this.sprite.height = 20;
   }
 
   add_component(component) {
@@ -57407,7 +57846,6 @@ class Item {
     if(!state && this.shade) {
       collision_container.removeChild(this.shade);
     }
-
     this.shade = new PIXI.Sprite(this.texture);
     this.shade.parentGroup = PIXI.shadows.casterGroup;
     this.shade.position.copy(this.sprite);
@@ -57632,18 +58070,18 @@ class Wall extends Item {
   constructor(data) {
     super('black_dot');
 
-    this.shadow = true;
     this.anchor = 0;
+    this.width = data.width;
+    this.height= data.height;
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
 
-    this.width = data.width;
-    this.height= data.height;
     this.set_position(data);
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
 
+    this.shadow = true;
     collision_container.addChild(this.sprite);
   }
 
@@ -57772,6 +58210,7 @@ module.exports = {
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
+const { visual_effects_container } = require('../../engine/pixi_containers');
 const { Tween } = require('../../engine/tween');
 const { generate_crow } = require('../../effects/click_events');
 
@@ -57789,8 +58228,10 @@ class Intro  {
     this.elements     = new Tiled_Data(level_data);
     this.camera       = new Camera();
 
+    visual_effects_container.addChild(player.light.candle.sprite);
+    visual_effects_container.addChild(player.light.candle.shadow);
     this._set_elements();
-    if(options.cutscene) this._cutscene();
+    if(options && options.cutscene) this._cutscene();
   }
 
   _cutscene() {
@@ -57819,10 +58260,12 @@ class Intro  {
     const { Level_Factory } = require('./level_factory');
     Level_Factory.generate(this.player, this.elements);
 
-    global.set_light_level(1);
+    global.set_light_level(0.3);
 
     const {exit_pad, click_pad, player} = this.elements;
     this.player.set_position(player[0]);
+
+    global.set_light_level(0.5);
 
     click_pad.forEach(data => {
       const pad  = new Click_Pad(data);
@@ -58733,8 +59176,8 @@ global.place_bunny = ({ x, y }, light) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
   bunny.anchor.set(0.5);
-  bunny.width = 200;
-  bunny.height = 200;
+  bunny.width = 100;
+  bunny.height = 100;
 
   visual_effects_container.addChild(bunny);
   if(light) {
