@@ -6,15 +6,15 @@
          "name":"background",
          "objects":[
                 {
-                 "height":4278.38591251322,
+                 "height":1864.10822842103,
                  "id":51,
                  "name":"seamless_concrete",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":5024.97094144733,
-                 "x":1045.93939393939,
-                 "y":351.515151515152
+                 "width":1542.67751817583,
+                 "x":1852.57233379324,
+                 "y":770.28974398283
                 }, 
                 {
                  "height":0,
@@ -32,7 +32,7 @@
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -60,17 +60,6 @@
                  "width":1616,
                  "x":1759,
                  "y":2809
-                }, 
-                {
-                 "height":327.73319889921,
-                 "id":56,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1727.33333333333,
-                 "y":844.33316666667
                 }, 
                 {
                  "height":1612.652,
@@ -124,8 +113,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1698.20047209111,
-                 "y":1461.15232693691
+                 "x":2721.24712751551,
+                 "y":2062.61382215894
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -175,9 +164,9 @@
                  "name":"",
                  "properties":
                     {
-                     "container":true,
+                     "container":false,
                      "image_name":"dumpster_00",
-                     "shadow":true
+                     "shadow":false
                     },
                  "propertytypes":
                     {
@@ -229,44 +218,6 @@
                  "width":414.740761712524,
                  "x":2503.49759906052,
                  "y":2719.38105860829
-                }, 
-                {
-                 "height":113.484883946614,
-                 "id":169,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"desk_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":49.3947727274927,
-                 "type":"",
-                 "visible":true,
-                 "width":345.385699811744,
-                 "x":2980.33207629519,
-                 "y":1616.35804065016
-                }, 
-                {
-                 "height":133.264,
-                 "id":170,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"bale_square"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":9.66599683363804,
-                 "type":"",
-                 "visible":true,
-                 "width":88.4907,
-                 "x":1969.07103109434,
-                 "y":2098.46643186017
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -278,25 +229,6 @@
          "draworder":"topdown",
          "name":"roof",
          "objects":[
-                {
-                 "height":323.951,
-                 "id":157,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-274.678,
-                 "type":"",
-                 "visible":true,
-                 "width":194.269,
-                 "x":2105.89580303031,
-                 "y":934.994196969695
-                }, 
                 {
                  "height":916.301,
                  "id":159,
@@ -315,8 +247,8 @@
                  "type":"",
                  "visible":true,
                  "width":969.221,
-                 "x":2143.90909732229,
-                 "y":1060.41457741837
+                 "x":2326.59600007665,
+                 "y":784.978939419494
                 }],
          "opacity":1,
          "type":"objectgroup",

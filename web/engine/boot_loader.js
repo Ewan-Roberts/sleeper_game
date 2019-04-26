@@ -9,6 +9,7 @@ const { Transition_Room } = require('../level/types/transition_room');
 const { Intro           } = require('../level/types/intro.js');
 const { School_Room     } = require('../level/types/school_room.js');
 const { Simple          } = require('../level/types/simple.js');
+const { Defend_Room     } = require('../level/types/defend_room.js');
 const { Player          } = require('../character/types/player.js');
 
 class Level_Loader {
@@ -16,7 +17,7 @@ class Level_Loader {
     const player = new Player();
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
-
+    // new Defend_Room(player)
     // new Intro(player);
     // new School_Room(player);
     // new Animations_Room();

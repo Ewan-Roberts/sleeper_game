@@ -45,14 +45,11 @@ class Grid {
     let grid_x = 0;
     let grid_y = 0;
 
-    let alpha = 0.2;
-
     for(let i=0; i<=this.tile_area; i++){
       const tile = new Tile();
       tile.x = x;
       tile.y = y;
-      tile.alpha = alpha -= 0.005;
-      //tile.alpha = alpha -= 0.0005;
+      tile.alpha = 0.2;
       tile.anchor.set(0);
 
       // This is for the pathfinder

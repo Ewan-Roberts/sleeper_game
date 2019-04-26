@@ -11,18 +11,18 @@ const { BackgroundVisualItem } = require('./visual_object');
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'item':      return new Chest(options);
-      case 'roof':      return new Roof(options);
-      case 'collision': return new CollisionItem(options);
+      case 'item':      return new Chest(options.properties);
+      case 'roof':      return new Roof(options.properties);
+      case 'collision': return new CollisionItem(options.properties);
       case 'door':      return new Door(options);
-      case 'floor':     return new BackgroundVisualItem(options);
-      case 'decal':     return new BackgroundVisualItem(options);
-      case 'shroud':    return new Shroud(options);
+      case 'floor':     return new BackgroundVisualItem(options.properties);
+      case 'decal':     return new BackgroundVisualItem(options.properties);
+      case 'shroud':    return new Shroud(options.properties);
     }
   }
 
   static generate_tiled(level, data) {
-    const generated = this.generate(level, data.properties);
+    const generated = this.generate(level, data);
     generated.set_position(data);
     //TODO flip
     generated.width  = data.height;

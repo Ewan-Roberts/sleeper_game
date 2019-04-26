@@ -18,7 +18,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -79,6 +79,36 @@
         }, 
         {
          "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "name":"walls",
          "objects":[
                 {
@@ -100,8 +130,8 @@
                  "type":"",
                  "visible":true,
                  "width":100,
-                 "x":1081.26502567251,
-                 "y":997.144810590304
+                 "x":1114.59835900584,
+                 "y":1030.47814392364
                 }, 
                 {
                  "height":32,
@@ -115,7 +145,7 @@
                  "y":212
                 }, 
                 {
-                 "height":648.522424242424,
+                 "height":475.847477256662,
                  "id":230,
                  "name":"",
                  "rotation":0,
@@ -123,7 +153,7 @@
                  "visible":true,
                  "width":30.6667,
                  "x":2057.39392272727,
-                 "y":1565.86
+                 "y":1738.53494698576
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -409,25 +439,50 @@
          "name":"door",
          "objects":[
                 {
-                 "height":176.094,
+                 "height":35.9334958356515,
                  "id":231,
                  "name":"",
                  "properties":
                     {
+                     "clickable":false,
                      "door":true,
                      "image_name":"door_01"
                     },
                  "propertytypes":
                     {
+                     "clickable":"bool",
                      "door":"bool",
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":178.347332691478,
                  "type":"",
                  "visible":true,
-                 "width":31.4869,
-                 "x":2053.95351969697,
-                 "y":1327.10451515152
+                 "width":79.7247416739096,
+                 "x":2056.55586923406,
+                 "y":1522.82172164319
+                }, 
+                {
+                 "height":35.9335,
+                 "id":232,
+                 "name":"",
+                 "properties":
+                    {
+                     "clickable":false,
+                     "door":true,
+                     "image_name":"door_01"
+                    },
+                 "propertytypes":
+                    {
+                     "clickable":"bool",
+                     "door":"bool",
+                     "image_name":"string"
+                    },
+                 "rotation":178.347,
+                 "type":"",
+                 "visible":true,
+                 "width":79.7247,
+                 "x":1932.86492272727,
+                 "y":1494.15446212121
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -467,7 +522,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":232,
+ "nextobjectid":233,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

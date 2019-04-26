@@ -1,8 +1,8 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { distance_between    } = require('../../utils/math');
-const { collision_container } = require('../../engine/pixi_containers');
+const { distance_between } = require('../../utils/math');
+const { damage_events    } = require('../../engine/damage_handler');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
@@ -15,12 +15,9 @@ function break_at_door(path) {
   const arr = [];
 
   for (let i = 0; i < path.length; i++) {
-    if(path[i].door) {
-      arr.push(path[i]);
-      return arr;
-    }
-
     arr.push(path[i]);
+
+    if(path[i].door) return arr;
   }
   return arr;
 }
@@ -41,7 +38,7 @@ class Rat extends Animal {
     this.tween         = new Tween(this.sprite);
     this._logic        = PIXI.tweenManager.createTween(this.sprite);
     this._logic.time   = 2000;
-    this._logic.repeat = 2;
+    this._logic.repeat = 9;
     this._logic.expire = true;
     this._logic.dead   = false;
     this._logic.fired  = false;
@@ -50,20 +47,20 @@ class Rat extends Animal {
   async _walk_to_enemy() {
     this.animation.walk();
     const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
-    const to_door     = break_at_door(normal_path);
-    const door_tile   = to_door[to_door.length - 1];
+    const door_path   = break_at_door(normal_path);
+    const door_tile   = door_path[door_path.length - 1];
 
-    const door = collision_container.children.find(child => child.id === door_tile.id);
-    if(door.events) door.events.emit('damage');
-    if(door.health < 100) delete door_tile.door;
-
-    this.tween.time = 30000;
+    this.tween.time = 2000;
     this.tween.from_path(this.sprite);
-    this.tween.add_path(to_door);
+    this.tween.add_path(door_path);
     this.tween.draw_path();
     this.tween.start();
 
-    //this.pathfind.go_to_sprite(this.enemy.sprite);
+    this.tween.movement.on('end', () => {
+      const { damage } = this.inventory.equipped;
+
+      damage_events.emit('damage', {door_tile, damage});
+    });
   }
 
   _distance_to(point) {

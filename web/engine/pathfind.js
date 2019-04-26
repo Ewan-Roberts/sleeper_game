@@ -10,8 +10,8 @@ const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0,2]);
 easystar.setTileCost(2, 1); //only if you have to!
-easystar.enableDiagonals();
-easystar.enableCornerCutting();
+//easystar.enableDiagonals();
+//easystar.enableCornerCutting();
 
 const find_grid = sprite => {
   const grid  = grid_container.children;
