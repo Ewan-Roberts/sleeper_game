@@ -70,7 +70,36 @@
         {
          "draworder":"topdown",
          "name":"item",
-         "objects":[],
+         "objects":[
+                {
+                 "height":96.1592,
+                 "id":233,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bow_00",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Old Bow",
+                     "label_image":"take_icon",
+                     "remove_on_click":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "remove_on_click":"bool"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":1623.63636363636,
+                 "y":1097.37494545455
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -522,7 +551,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":233,
+ "nextobjectid":234,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

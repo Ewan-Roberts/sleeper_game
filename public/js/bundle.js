@@ -47162,7 +47162,6 @@ module.exports = {
 },{"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/bird":202,"../attributes/pathfind":213,"../character_model":216}],206:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
 const { distance_between } = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 
@@ -47196,51 +47195,40 @@ class Rat extends Animal {
     this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
 
-    this.blood         = new Blood();
-    this.tween         = new Tween(this.sprite);
-    this._logic        = PIXI.tweenManager.createTween(this.sprite);
-    this._logic.time   = 2000;
-    this._logic.repeat = 9;
-    this._logic.expire = true;
-    this._logic.dead   = false;
-    this._logic.fired  = false;
+    this.blood       = new Blood();
+    this.tween       = new Tween(this.sprite);
+    this.tween.time  = 4000;
+    this.tween.fired = false;
   }
 
   async _walk_to_enemy() {
     this.animation.walk();
+
     const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
-
-    this.tween.time = 2000;
+    this.tween.movement.clear();
     this.tween.from_path(this.sprite);
     this.tween.add_path(door_path);
     this.tween.draw_path();
+
+    const { damage } = this.inventory.equipped;
+    damage_events.emit('damage', {door_tile, damage});
+
+    this.tween.movement.repeat = 9;
     this.tween.start();
-
-    this.tween.movement.on('end', () => {
-      const { damage } = this.inventory.equipped;
-
-      damage_events.emit('damage', {door_tile, damage});
-    });
-  }
-
-  _distance_to(point) {
-    return distance_between(point, this.sprite);
   }
 
   get _target_far_away() {
-    const distance = this._distance_to(this.enemy.sprite);
+    const distance = distance_between(this.enemy.sprite, this.sprite);
 
     return distance > 500;
   }
 
   on_damage(amount) {
-    if(this._logic.dead) return;
-
     this.vitals.damage(amount);
 
-    if(this.vitals.status === 'dead') {
+    if(!this.vitals.alive) {
       this.blood.add_at(this.sprite);
       this.kill();
     }
@@ -47248,14 +47236,13 @@ class Rat extends Animal {
 
   kill() {
     if(!this.loot.items.length) this.loot.populate();
-    this.loot.create_icon();
+
+    this.loot.set_position(this.sprite);
+    this.loot.show();
+    this.tween.stop();
 
     this.animation.kill();
-
-    this.pathfind.stop();
-    this._logic.stop();
-    this._logic.remove();
-    this._logic.dead = true;
+    this.vitals.kill();
   }
 
   enemy(character) {
@@ -47264,15 +47251,17 @@ class Rat extends Animal {
 
   logic_start() {
     if(!this.enemy) return new Error('no enemy');
-    if(this._logic.fired) return;
-    this._logic.fired = true;
-    this._logic.start();
+    if(this.tween.fired) return;
+    this.tween.fired = true;
+    this.tween.start();
+    this.tween.movement.repeat = 9;
 
-    this._logic.on('repeat', () => {
+    this.tween.movement.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
 
       if(this._target_far_away) return this._walk_to_enemy();
 
+      this.tween.stop();
       return this.melee.attack(this.enemy);
     });
   }
@@ -47283,7 +47272,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":221,"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/tween":237,"../../utils/math":286,"../attributes/melee":211,"../types/rat":219,"events":292,"pixi.js":155}],207:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/tween":237,"../../utils/math":286,"../attributes/melee":211,"../types/rat":219,"events":292}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47672,6 +47661,7 @@ class Melee {
     box.position.set(this.sprite.x,this.sprite.y);
     box.anchor.y = 1;
     box.anchor.x = 0.5;
+    box.alpha = 0.5;
     box.rotation = this.sprite.rotation + 1.57;
 
     visual_effects_container.addChild(box);
@@ -47844,15 +47834,10 @@ module.exports = {
 },{"../../view/view_player_status_meter":291,"pixi.js":155}],215:[function(require,module,exports){
 'use strict';
 
-//const event     = require('events');
-//const { Blood } = require('../../effects/blood');
-
 class Vitals {
   constructor({ sprite }) {
     this.name   ='vitals';
-
     this.sprite = sprite;
-    //this.blood = new Blood();
 
     //TODO derive from archtype data
     this.power  = 5000;
@@ -47863,12 +47848,14 @@ class Vitals {
     this.heat   = 90;
     this.sleep  = 100;
     this.status = 'alive';
-    //this.sprite.events = new event();
-    //this.sprite.events.on('damage', damage => this.on_hit(damage));
   }
 
   get alive() {
     return (this.status === 'alive');
+  }
+
+  kill() {
+    this.status === 'dead';
   }
 
   _dead(damage) {
@@ -48446,10 +48433,9 @@ class pathfind_sprite {
     const to_point   = find_grid(to_sprite);
 
     const path_data = await path_between_grids(from_point.cell_position, to_point.cell_position);
-    const tile_path = path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
 
     this.highlight_grid_cell_from_path(path_data);
-    return tile_path;
+    return path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
   }
 }
 
@@ -48774,12 +48760,12 @@ class Tween {
 
     this.show = false;
     this.time = 2000;
-  }
-
-  from_path(start) {
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire = true;
     this.path = new PIXI.tween.TweenPath();
+  }
+
+  from_path(start) {
     this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
   }
@@ -48789,8 +48775,6 @@ class Tween {
   }
 
   from(data) {
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
-    this.movement.expire = true;
     this.movement.from(data);
   }
 
@@ -48809,6 +48793,12 @@ class Tween {
   add_path(tween_path) {
     this.path = new PIXI.tween.TweenPath();
 
+    this.path.arcTo(
+      this.sprite.x,
+      this.sprite.y,
+      tween_path[1].x,
+      tween_path[1].y,
+      this.path_arc);
     for (let i = 1; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x,
@@ -50398,7 +50388,36 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"item",
-         "objects":[],
+         "objects":[
+                {
+                 "height":96.1592,
+                 "id":233,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bow_00",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Old Bow",
+                     "label_image":"take_icon",
+                     "remove_on_click":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "remove_on_click":"bool"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":1623.63636363636,
+                 "y":1097.37494545455
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -50850,7 +50869,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":233,
+ "nextobjectid":234,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -57642,18 +57661,6 @@ module.exports = {
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
 class Level {
-  constructor() {
-    this.segments = [];
-  }
-
-  add_component(component) {
-    this[component.name] = component;
-  }
-
-  remove_component(name) {
-    delete this[name];
-  }
-
   create_grid(level_tiles) {
     this.grid = pathfind_sprite.create_level_grid(level_tiles);
   }
@@ -57671,10 +57678,10 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/archer_room.json');
 
 class Archer_Room extends Level {
   constructor(player) {
+    const level_data = require('../data/archer_room.json');
     super();
     this.name     = 'archer_room';
 
@@ -57712,10 +57719,10 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Rat           } = require('../../character/archetypes/rat');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/defend_room.json');
 
 class Defend_Room extends Level  {
   constructor(player) {
+    const level_data = require('../data/defend_room.json');
     super();
     this.name     = 'defend_room';
 
@@ -57773,10 +57780,10 @@ const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
 const { Click_Pad   } = require('../elements/click_pad');
 
-const level_data  = require('../data/intro_room.json');
 
 class Intro  {
   constructor(player, options) {
+    const level_data  = require('../data/intro_room.json');
     this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
@@ -57857,10 +57864,10 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const level_data  = require('../data/intro_room_level_2.json');
-
 class Items_Room_level_2 {
   constructor(player) {
+
+    const level_data  = require('../data/intro_room_level_2.json');
     this.name     = 'intro';
 
     this.player   = player;
@@ -57901,10 +57908,10 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
 
-const level_data  = require('../data/items_room.json');
-
 class Items_Room extends Level {
   constructor(player) {
+    const level_data  = require('../data/items_room.json');
+
     super();
     this.name     = 'item_room';
 
@@ -58159,10 +58166,9 @@ const { Rat           } = require('../../character/archetypes/rat');
 const { Phone         } = require('../elements/phone');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/school_room.json');
-
 class School_Room extends Level  {
   constructor(player) {
+    const level_data = require('../data/school_room.json');
     super();
     this.name     = 'school_room';
     this.player   = player;
@@ -58272,10 +58278,10 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/street.json');
 
 class Street extends Level  {
   constructor(player) {
+    const level_data = require('../data/street.json');
     super();
     this.name     = 'school_room';
     this.player   = player;
@@ -58315,14 +58321,16 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
-const level_data = require('../data/transition_room.json');
 
 class Transition_Room extends Level  {
   constructor(player) {
+    const level_data = require('../data/transition_room.json');
+
     super();
     this.name     = 'transition_room';
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
+
     this._set_elements();
   }
 

@@ -8,10 +8,10 @@ const { Trigger_Pad } = require('../elements/pad');
 const { Camera      } = require('../../engine/camera');
 const { Click_Pad   } = require('../elements/click_pad');
 
-const level_data  = require('../data/intro_room.json');
 
 class Intro  {
   constructor(player, options) {
+    const level_data  = require('../data/intro_room.json');
     this.name         = 'intro';
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);

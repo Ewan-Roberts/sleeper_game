@@ -29,6 +29,7 @@ class Melee {
     box.position.set(this.sprite.x,this.sprite.y);
     box.anchor.y = 1;
     box.anchor.x = 0.5;
+    box.alpha = 0.5;
     box.rotation = this.sprite.rotation + 1.57;
 
     visual_effects_container.addChild(box);

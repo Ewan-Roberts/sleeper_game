@@ -111,10 +111,9 @@ class pathfind_sprite {
     const to_point   = find_grid(to_sprite);
 
     const path_data = await path_between_grids(from_point.cell_position, to_point.cell_position);
-    const tile_path = path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
 
     this.highlight_grid_cell_from_path(path_data);
-    return tile_path;
+    return path_data.map(grid => this.grid.sprite[grid.y][grid.x]);
   }
 }
 

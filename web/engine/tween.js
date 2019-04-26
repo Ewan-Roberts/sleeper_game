@@ -12,12 +12,12 @@ class Tween {
 
     this.show = false;
     this.time = 2000;
-  }
-
-  from_path(start) {
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire = true;
     this.path = new PIXI.tween.TweenPath();
+  }
+
+  from_path(start) {
     this.path_arc = 15;
     this.path.moveTo(start.x, start.y);
   }
@@ -27,8 +27,6 @@ class Tween {
   }
 
   from(data) {
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
-    this.movement.expire = true;
     this.movement.from(data);
   }
 
@@ -47,6 +45,12 @@ class Tween {
   add_path(tween_path) {
     this.path = new PIXI.tween.TweenPath();
 
+    this.path.arcTo(
+      this.sprite.x,
+      this.sprite.y,
+      tween_path[1].x,
+      tween_path[1].y,
+      this.path_arc);
     for (let i = 1; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x,

@@ -6,10 +6,10 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Rat           } = require('../../character/archetypes/rat');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/defend_room.json');
 
 class Defend_Room extends Level  {
   constructor(player) {
+    const level_data = require('../data/defend_room.json');
     super();
     this.name     = 'defend_room';
 

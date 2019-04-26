@@ -7,10 +7,9 @@ const { Rat           } = require('../../character/archetypes/rat');
 const { Phone         } = require('../elements/phone');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/school_room.json');
-
 class School_Room extends Level  {
   constructor(player) {
+    const level_data = require('../data/school_room.json');
     super();
     this.name     = 'school_room';
     this.player   = player;

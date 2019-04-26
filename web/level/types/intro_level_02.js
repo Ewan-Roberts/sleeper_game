@@ -4,10 +4,10 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const level_data  = require('../data/intro_room_level_2.json');
-
 class Items_Room_level_2 {
   constructor(player) {
+
+    const level_data  = require('../data/intro_room_level_2.json');
     this.name     = 'intro';
 
     this.player   = player;

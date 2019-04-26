@@ -8,10 +8,10 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
 
-const level_data  = require('../data/items_room.json');
-
 class Items_Room extends Level {
   constructor(player) {
+    const level_data  = require('../data/items_room.json');
+
     super();
     this.name     = 'item_room';
 

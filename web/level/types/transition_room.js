@@ -7,14 +7,16 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
-const level_data = require('../data/transition_room.json');
 
 class Transition_Room extends Level  {
   constructor(player) {
+    const level_data = require('../data/transition_room.json');
+
     super();
     this.name     = 'transition_room';
     this.player   = player;
     this.elements = new Tiled_Data(level_data);
+
     this._set_elements();
   }
 

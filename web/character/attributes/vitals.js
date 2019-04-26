@@ -1,14 +1,9 @@
 'use strict';
 
-//const event     = require('events');
-//const { Blood } = require('../../effects/blood');
-
 class Vitals {
   constructor({ sprite }) {
     this.name   ='vitals';
-
     this.sprite = sprite;
-    //this.blood = new Blood();
 
     //TODO derive from archtype data
     this.power  = 5000;
@@ -19,12 +14,14 @@ class Vitals {
     this.heat   = 90;
     this.sleep  = 100;
     this.status = 'alive';
-    //this.sprite.events = new event();
-    //this.sprite.events.on('damage', damage => this.on_hit(damage));
   }
 
   get alive() {
     return (this.status === 'alive');
+  }
+
+  kill() {
+    this.status === 'dead';
   }
 
   _dead(damage) {

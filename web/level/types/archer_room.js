@@ -5,10 +5,10 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const level_data = require('../data/archer_room.json');
 
 class Archer_Room extends Level {
   constructor(player) {
+    const level_data = require('../data/archer_room.json');
     super();
     this.name     = 'archer_room';
 
