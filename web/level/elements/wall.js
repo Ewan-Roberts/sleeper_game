@@ -8,6 +8,7 @@ class Wall extends Item {
   constructor(data) {
     super('black_dot');
 
+    this.shadow = true;
     this.anchor = 0;
     this.width = data.width;
     this.height= data.height;
@@ -19,7 +20,6 @@ class Wall extends Item {
       this.alpha = 0;
     }
 
-    this.shadow = true;
     collision_container.addChild(this.sprite);
   }
 

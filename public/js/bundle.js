@@ -7551,7 +7551,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":299}],39:[function(require,module,exports){
+},{"timers":300}],39:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
 },{}],40:[function(require,module,exports){
@@ -19326,7 +19326,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":293}],90:[function(require,module,exports){
+},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":294}],90:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23126,7 +23126,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":44,"path":293}],108:[function(require,module,exports){
+},{"../../Shader":44,"path":294}],108:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28964,7 +28964,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":300}],125:[function(require,module,exports){
+},{"url":301}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33538,7 +33538,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":65,"../../core/const":46,"path":293}],143:[function(require,module,exports){
+},{"../../core":65,"../../core/const":46,"path":294}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33622,7 +33622,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":65,"path":293}],144:[function(require,module,exports){
+},{"../../core":65,"path":294}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34785,7 +34785,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":65,"path":293}],151:[function(require,module,exports){
+},{"../../core":65,"path":294}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34893,7 +34893,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":65,"path":293}],152:[function(require,module,exports){
+},{"../../core":65,"path":294}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34947,7 +34947,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":65,"path":293}],153:[function(require,module,exports){
+},{"../../core":65,"path":294}],153:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35123,7 +35123,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":65,"path":293}],155:[function(require,module,exports){
+},{"../../core":65,"path":294}],155:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -37790,7 +37790,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":141,"path":293,"resource-loader":194}],163:[function(require,module,exports){
+},{"../extras":141,"path":294,"resource-loader":194}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38153,7 +38153,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":65,"resource-loader":194,"url":300}],166:[function(require,module,exports){
+},{"../core":65,"resource-loader":194,"url":301}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39879,7 +39879,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":65,"../Mesh":167,"path":293,"pixi-gl-core":21}],174:[function(require,module,exports){
+},{"../../core":65,"../Mesh":167,"path":294,"pixi-gl-core":21}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -47261,7 +47261,7 @@ class Rat extends Animal {
 
       if(this._target_far_away) return this._walk_to_enemy();
       if(!this.enemy.vitals.alive) throw 'game over';
-      //this.tween.stop();
+      this.tween.stop();
       return this.melee.attack(this.enemy);
     });
   }
@@ -47272,7 +47272,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":221,"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/tween":237,"../../utils/math":286,"../attributes/melee":211,"../types/rat":219,"events":292}],207:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/tween":237,"../../utils/math":286,"../attributes/melee":211,"../types/rat":219,"events":293}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47363,6 +47363,7 @@ const {
   collision_container,
   roof_container,
   pad_container,
+  shroud_container,
 } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -47378,8 +47379,14 @@ function point_collides(position) {
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
-  const roofs = roof_container.children ;
+  const shrouds = shroud_container.children ;
+  const shrouds_to_remove = shrouds.find(child => child.containsPoint(position));
+  if (shrouds_to_remove && shrouds_to_remove.remove_on_enter) {
+    Fade.out_destroy(shrouds_to_remove);
+    delete shrouds_to_remove.remove_on_enter;
+  }
   return;
+  const roofs = roof_container.children ;
   roofs.forEach(child => {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
@@ -47407,7 +47414,7 @@ class Keyboard {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
-    this.speed         = vitals.speed;
+    this.speed         = vitals.speed/2;
     this.buffer        = 50;
     this.can_move      = true;
     this.light         = light;
@@ -47435,6 +47442,7 @@ class Keyboard {
       case  72     : this.keyboard_left();        return;// h
       case  76     : this.keyboard_right();       return;// l
 
+      case  81     : this.speed = 20;             return;// q for speed
       case 'n'     : this.save_game();            return;
       case 'i'     : View_HUD.toggle_inventory(); return;
       default      : return;
@@ -47526,7 +47534,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":223,"../../engine/pixi_containers":232,"../../engine/shadows":234,"../../view/view_player_inventory":290,"pixi.js":155}],209:[function(require,module,exports){
+},{"../../effects/fade":223,"../../engine/pixi_containers":232,"../../engine/shadows":234,"../../view/view_player_inventory":291,"pixi.js":155}],209:[function(require,module,exports){
 
 'use strict';
 
@@ -47629,7 +47637,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":223,"../../items/item_manager":240,"../../view/button":288,"../../view/view_inventory":289}],211:[function(require,module,exports){
+},{"../../effects/fade":223,"../../items/item_manager":240,"../../view/button":288,"../../view/view_inventory":290}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47836,7 +47844,7 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":291,"pixi.js":155}],215:[function(require,module,exports){
+},{"../../view/view_player_status_meter":292,"pixi.js":155}],215:[function(require,module,exports){
 'use strict';
 
 class Vitals {
@@ -48000,7 +48008,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":221,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":292}],219:[function(require,module,exports){
+},{"../../effects/blood":221,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":293}],219:[function(require,module,exports){
 'use strict';
 
 const { critter_container } = require('../../engine/pixi_containers');
@@ -48145,6 +48153,20 @@ class Fade {
     movement.start();
   }
 
+  static out_destroy(sprite) {
+    const tweens = PIXI.tweenManager.getTweensForTarget(sprite);
+
+    console.log(tweens);
+    if(tweens.length > 0) return;
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: 0});
+    movement.on('end', () => sprite.destroy());
+    movement.start();
+  }
+
   static out(sprite) {
     const movement = PIXI.tweenManager.createTween(sprite);
     movement.time = 150;
@@ -48270,7 +48292,7 @@ module.exports = {
   damage_events,
 };
 
-},{"events":292}],228:[function(require,module,exports){
+},{"events":293}],228:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
@@ -48300,7 +48322,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":240,"events":292}],229:[function(require,module,exports){
+},{"../items/item_manager":240,"events":293}],229:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -48813,7 +48835,6 @@ class Tween {
         tween_path[i].x,
         tween_path[i].y,
         this.path_arc);
-
     }
   }
 
@@ -50344,7 +50365,37 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -50396,65 +50447,6 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"item",
-         "objects":[
-                {
-                 "height":96.1592,
-                 "id":233,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"bow_00",
-                     "label":true,
-                     "label_action":"Take",
-                     "label_description":"Old Bow",
-                     "label_image":"take_icon",
-                     "remove_on_click":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "label":"bool",
-                     "label_action":"string",
-                     "label_description":"string",
-                     "label_image":"string",
-                     "remove_on_click":"bool"
-                    },
-                 "rotation":-525.979,
-                 "type":"",
-                 "visible":true,
-                 "width":80,
-                 "x":1623.63636363636,
-                 "y":1097.37494545455
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"shroud",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"decal",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"roof",
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
@@ -50485,8 +50477,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":100,
-                 "x":1114.59835900584,
-                 "y":1030.47814392364
+                 "x":1081.26502567251,
+                 "y":997.144810590304
                 }, 
                 {
                  "height":32,
@@ -50500,7 +50492,7 @@ module.exports={ "height":50,
                  "y":212
                 }, 
                 {
-                 "height":475.847477256662,
+                 "height":648.522424242424,
                  "id":230,
                  "name":"",
                  "rotation":0,
@@ -50508,7 +50500,7 @@ module.exports={ "height":50,
                  "visible":true,
                  "width":30.6667,
                  "x":2057.39392272727,
-                 "y":1738.53494698576
+                 "y":1565.86
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50794,50 +50786,25 @@ module.exports={ "height":50,
          "name":"door",
          "objects":[
                 {
-                 "height":35.9334958356515,
+                 "height":176.094,
                  "id":231,
                  "name":"",
                  "properties":
                     {
-                     "clickable":false,
                      "door":true,
                      "image_name":"door_01"
                     },
                  "propertytypes":
                     {
-                     "clickable":"bool",
                      "door":"bool",
                      "image_name":"string"
                     },
-                 "rotation":178.347332691478,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":79.7247416739096,
-                 "x":2056.55586923406,
-                 "y":1522.82172164319
-                }, 
-                {
-                 "height":35.9335,
-                 "id":232,
-                 "name":"",
-                 "properties":
-                    {
-                     "clickable":false,
-                     "door":true,
-                     "image_name":"door_01"
-                    },
-                 "propertytypes":
-                    {
-                     "clickable":"bool",
-                     "door":"bool",
-                     "image_name":"string"
-                    },
-                 "rotation":178.347,
-                 "type":"",
-                 "visible":true,
-                 "width":79.7247,
-                 "x":1932.86492272727,
-                 "y":1494.15446212121
+                 "width":31.4869,
+                 "x":2053.95351969697,
+                 "y":1327.10451515152
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50877,7 +50844,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":234,
+ "nextobjectid":232,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -50897,18 +50864,38 @@ module.exports={ "height":50,
          "name":"background",
          "objects":[
                 {
-                 "height":1714.38591251322,
+                 "height":1279.55062414567,
                  "id":51,
+                 "name":"wood_floor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1036.25793537085,
+                 "x":474.735290917027,
+                 "y":248.181818181819
+                }, 
+                {
+                 "height":807.55,
+                 "id":245,
                  "name":"seamless_concrete",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1623.86399597691,
-                 "x":416.492866674603,
-                 "y":115.515151515152
+                 "width":405.26,
+                 "x":1512.37,
+                 "y":725.225
+                }, 
+                {
+                 "height":477.55,
+                 "id":251,
+                 "name":"tile_floor",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":231.26,
+                 "x":1511.37,
+                 "y":247.225
                 }],
-         "offsetx":-74,
-         "offsety":126,
          "opacity":1,
          "type":"objectgroup",
          "visible":false,
@@ -50926,8 +50913,8 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":1500,
+                 "width":21.2804502210906,
+                 "x":1510.71954977891,
                  "y":269.393939393939
                 }, 
                 {
@@ -50940,17 +50927,6 @@ module.exports={ "height":50,
                  "width":12.0769230769231,
                  "x":1061.4696969697,
                  "y":265.007575757576
-                }, 
-                {
-                 "height":32,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1474.77068824894,
-                 "x":465.637379113428,
-                 "y":1750.89327336045
                 }, 
                 {
                  "height":32,
@@ -50986,14 +50962,14 @@ module.exports={ "height":50,
                  "y":242
                 }, 
                 {
-                 "height":1480.87995151396,
+                 "height":1265.72843636244,
                  "id":56,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":466.333333333333,
+                 "width":25.3333333333334,
+                 "x":476,
                  "y":272.333166666667
                 }, 
                 {
@@ -51041,13 +51017,13 @@ module.exports={ "height":50,
                  "y":285.207879443075
                 }, 
                 {
-                 "height":1512.652,
+                 "height":1297.50048484848,
                  "id":94,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6667,
+                 "width":24.0000333333332,
                  "x":1907.8469418006,
                  "y":239.254531698703
                 }, 
@@ -51085,7 +51061,7 @@ module.exports={ "height":50,
                  "y":-252.235525158076
                 }, 
                 {
-                 "height":32,
+                 "height":24,
                  "id":197,
                  "name":"",
                  "rotation":0,
@@ -51096,84 +51072,73 @@ module.exports={ "height":50,
                  "y":714
                 }, 
                 {
-                 "height":32,
-                 "id":198,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":252.79,
-                 "x":1659.605,
-                 "y":1324
-                }, 
-                {
-                 "height":204.652,
+                 "height":268.652,
                  "id":199,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6667,
-                 "x":1500,
+                 "width":19.9471502210906,
+                 "x":1510.71954977891,
                  "y":623.674
                 }, 
                 {
-                 "height":496.652,
+                 "height":505.076242424242,
                  "id":200,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6667,
-                 "x":1500,
-                 "y":980.674
+                 "width":18.545487878788,
+                 "x":1512.12121212121,
+                 "y":1014.674
                 }, 
                 {
-                 "height":32,
+                 "height":19.8787878787878,
                  "id":201,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":378.79,
-                 "x":1123.605,
-                 "y":1446
+                 "width":1414.14353535354,
+                 "x":495.32217171717,
+                 "y":1516.70707070707
                 }, 
                 {
-                 "height":32,
+                 "height":19.878787878788,
                  "id":202,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":116.79,
+                 "width":180.79,
                  "x":1082.605,
                  "y":1120
                 }, 
                 {
-                 "height":294.652,
+                 "height":379.500484848485,
                  "id":203,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6667,
+                 "width":16.5252858585859,
                  "x":1124.66665,
-                 "y":1151.674
+                 "y":1139.55278787879
                 }, 
                 {
-                 "height":32,
+                 "height":19.8787878787878,
                  "id":204,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":126.810202020202,
-                 "x":1374.605,
-                 "y":1120
+                 "x":1386.72621212121,
+                 "y":1122.0202020202
                 }, 
                 {
-                 "height":32,
+                 "height":21.3333333333335,
                  "id":205,
                  "name":"",
                  "rotation":0,
@@ -51224,8 +51189,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1093.29292929293,
-                 "y":789.858585858586
+                 "x":1374.62626262626,
+                 "y":1336.52525252525
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51272,8 +51237,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":97.9568134863709,
-                 "x":1400.40158760488,
-                 "y":1153.65152602061
+                 "x":1807.5329007362,
+                 "y":899.873748242833
                 }, 
                 {
                  "height":182,
@@ -51317,14 +51282,45 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "name":"door",
-         "objects":[],
+         "objects":[
+                {
+                 "height":130.541386383946,
+                 "id":230,
+                 "name":"",
+                 "properties":
+                    {
+                     "clickable":true,
+                     "image_name":"door_01",
+                     "label":true,
+                     "label_action":"Open",
+                     "label_description":"Study Door",
+                     "label_image":"take_icon",
+                     "open_rotation":"-1"
+                    },
+                 "propertytypes":
+                    {
+                     "clickable":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "open_rotation":"string"
+                    },
+                 "rotation":-270.008094402747,
+                 "type":"",
+                 "visible":true,
+                 "width":22.6491199051609,
+                 "x":1394.19115184329,
+                 "y":1122.97790952405
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -51393,25 +51389,6 @@ module.exports={ "height":50,
                  "y":26.0184848484849
                 }, 
                 {
-                 "height":900.712926829268,
-                 "id":142,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_03"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1041.00356097561,
-                 "x":471.264664449372,
-                 "y":246.894090909091
-                }, 
-                {
                  "height":2081.51048643113,
                  "id":144,
                  "name":"",
@@ -51429,6 +51406,158 @@ module.exports={ "height":50,
                  "width":221.294,
                  "x":1772.53747144253,
                  "y":35.4106554019456
+                }, 
+                {
+                 "height":151.48,
+                 "id":290,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"box_05"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1.25521,
+                 "type":"",
+                 "visible":true,
+                 "width":72.1489,
+                 "x":1057.25888333333,
+                 "y":1260.92666666667
+                }, 
+                {
+                 "height":186.625,
+                 "id":291,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"trash_can_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-79.1643,
+                 "type":"",
+                 "visible":true,
+                 "width":203.921,
+                 "x":1490.0395,
+                 "y":1196.6875
+                }, 
+                {
+                 "height":142.745,
+                 "id":292,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"trash_can_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":126.723,
+                 "x":1144.6385,
+                 "y":1526.6275
+                }, 
+                {
+                 "height":34.9757253723651,
+                 "id":297,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bottle_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1.25521,
+                 "type":"",
+                 "visible":true,
+                 "width":60.6645448187456,
+                 "x":798.152442558439,
+                 "y":1200.26257345057
+                }, 
+                {
+                 "height":900.713,
+                 "id":298,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1041,
+                 "x":481.001179498177,
+                 "y":244.47515344199
+                }, 
+                {
+                 "height":34.9757,
+                 "id":299,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bottle_04"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":32.0417076936725,
+                 "type":"",
+                 "visible":true,
+                 "width":60.6645,
+                 "x":1163.9422490904,
+                 "y":1144.41519927518
+                }, 
+                {
+                 "height":26.4950915781641,
+                 "id":300,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bottle_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":32.0417,
+                 "type":"",
+                 "visible":true,
+                 "width":60.6645,
+                 "x":1462.50181242108,
+                 "y":1145.70084115088
+                }, 
+                {
+                 "height":26.87728839579,
+                 "id":301,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bottle_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":6.35314954937451,
+                 "type":"",
+                 "visible":true,
+                 "width":60.6645,
+                 "x":814.3276739814,
+                 "y":1074.07340359889
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51608,8 +51737,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1071.7,
-                 "x":1118.01584741423,
-                 "y":-180.023810803891
+                 "x":1041.24817064655,
+                 "y":-299.21572999581
                 }, 
                 {
                  "height":239.270403658403,
@@ -51646,12 +51775,335 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":372.073707070707,
-                 "x":1906.10567730064,
-                 "y":711.931337495559
+                 "x":1705.65113184609,
+                 "y":716.991943556165
+                }, 
+                {
+                 "height":436.672,
+                 "id":227,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":372.074,
+                 "x":869.60430041133,
+                 "y":1119.92352822984
+                }, 
+                {
+                 "height":221.984702494901,
+                 "id":229,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"litter_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-263.062,
+                 "type":"",
+                 "visible":true,
+                 "width":211.928016874218,
+                 "x":1488.98268427423,
+                 "y":1259.34799882729
+                }, 
+                {
+                 "height":161.977501969488,
+                 "id":232,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rug_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-279.587946428757,
+                 "type":"",
+                 "visible":true,
+                 "width":390.21177408043,
+                 "x":774.939257126948,
+                 "y":276.040628873836
+                }, 
+                {
+                 "height":291.371863431965,
+                 "id":233,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rug_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-263.062,
+                 "type":"",
+                 "visible":true,
+                 "width":278.171301094261,
+                 "x":1477.58144103216,
+                 "y":1178.72243573585
+                }, 
+                {
+                 "height":150.775995302288,
+                 "id":249,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"box_05"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":71.8134635765768,
+                 "x":1805.64538196087,
+                 "y":909.852043147309
+                }, 
+                {
+                 "height":69.6236582304358,
+                 "id":252,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-270.957795405348,
+                 "type":"",
+                 "visible":true,
+                 "width":61.0709675999306,
+                 "x":1557.64689921814,
+                 "y":882.487966803622
+                }, 
+                {
+                 "height":119.225271501394,
+                 "id":253,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90.1726384354863,
+                 "type":"",
+                 "visible":true,
+                 "width":170.895795230044,
+                 "x":1630.19290895152,
+                 "y":379.881501107053
+                }, 
+                {
+                 "height":122.34428165907,
+                 "id":254,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_04"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0.0319162141555864,
+                 "type":"",
+                 "visible":true,
+                 "width":234.975412002618,
+                 "x":1530.06199045845,
+                 "y":747.043148889405
+                }, 
+                {
+                 "height":416.73441557252,
+                 "id":255,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_decal_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.718209934069,
+                 "type":"",
+                 "visible":true,
+                 "width":49.688368402716,
+                 "x":1164.83548859159,
+                 "y":1554.05895742562
+                }, 
+                {
+                 "height":236.173414517363,
+                 "id":256,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804496018602,
+                 "type":"",
+                 "visible":true,
+                 "width":236.514840508085,
+                 "x":744.859192282338,
+                 "y":1116.60405119561
+                }, 
+                {
+                 "height":179.342603081655,
+                 "id":257,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_decal_02"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":179.602065259984,
+                 "x":1524.60630092552,
+                 "y":862.187444219388
+                }, 
+                {
+                 "height":179.343,
+                 "id":264,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"wood_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":179.602,
+                 "x":1440.50905302152,
+                 "y":498.640940745813
+                }, 
+                {
+                 "height":419.255364465514,
+                 "id":266,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":402.840780644345,
+                 "x":1853.49162014921,
+                 "y":1122.37474114966
+                }, 
+                {
+                 "height":31.2197952022088,
+                 "id":268,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shadow_line"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":644.477744651091,
+                 "x":1127.42704957368,
+                 "y":1527.44725627719
+                }, 
+                {
+                 "height":419.255,
+                 "id":293,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":402.841,
+                 "x":1546.5795,
+                 "y":1540.3725
+                }, 
+                {
+                 "height":624.159232354181,
+                 "id":294,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":631.529773338075,
+                 "x":1133.38938424006,
+                 "y":1509.52215433618
+                }, 
+                {
+                 "height":624.159,
+                 "id":295,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":631.53,
+                 "x":1127.51186039031,
+                 "y":899.586809242977
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51698,8 +52150,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":1383.76837268766,
-                 "x":-1070.76722388961,
-                 "y":229.805389275259
+                 "x":-902.814241650914,
+                 "y":279.805367846666
                 }, 
                 {
                  "height":1556.79219856273,
@@ -51858,8 +52310,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":249.333333333333,
-                 "x":664.072265032411,
-                 "y":289.185767185451
+                 "x":682.831477145502,
+                 "y":291.865654630178
                 }, 
                 {
                  "height":75.6656370829608,
@@ -51900,7 +52352,7 @@ module.exports={ "height":50,
                  "y":285.417187645687
                 }, 
                 {
-                 "height":392.732378716508,
+                 "height":360.085038580123,
                  "id":86,
                  "name":"",
                  "properties":
@@ -51911,15 +52363,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-450.114471466079,
+                 "rotation":-444.552035581879,
                  "type":"",
                  "visible":true,
-                 "width":137.679088084613,
-                 "x":1139.27776147509,
-                 "y":1602.66144095379
+                 "width":126.234001654369,
+                 "x":479.213489568622,
+                 "y":1484.28465491309
                 }, 
                 {
-                 "height":100.091501533926,
+                 "height":107.680557114012,
                  "id":81,
                  "name":"",
                  "properties":
@@ -51933,9 +52385,9 @@ module.exports={ "height":50,
                  "rotation":-629.116704558628,
                  "type":"",
                  "visible":true,
-                 "width":85.7470086786222,
-                 "x":1680.85139055686,
-                 "y":622.412829620025
+                 "width":92.2484479088807,
+                 "x":1686.95161546369,
+                 "y":615.912162959382
                 }, 
                 {
                  "height":555.70380032669,
@@ -51976,45 +52428,26 @@ module.exports={ "height":50,
                  "y":-398.439393069659
                 }, 
                 {
-                 "height":208.732,
+                 "height":239.046405043949,
                  "id":207,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"shelf_02"
+                     "image_name":"box_02"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":269.721668210596,
                  "type":"",
                  "visible":true,
-                 "width":289.679,
-                 "x":472.897873737374,
-                 "y":1137.47238383838
+                 "width":176.391511814104,
+                 "x":470.469205431632,
+                 "y":1310.16509703922
                 }, 
                 {
-                 "height":208.732,
-                 "id":208,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"shelf_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-89.5659493678606,
-                 "type":"",
-                 "visible":true,
-                 "width":183.636588409382,
-                 "x":1191.34308586067,
-                 "y":1126.00534630651
-                }, 
-                {
-                 "height":208.732,
+                 "height":155.872463966932,
                  "id":209,
                  "name":"",
                  "properties":
@@ -52028,12 +52461,12 @@ module.exports={ "height":50,
                  "rotation":-89.5659,
                  "type":"",
                  "visible":true,
-                 "width":183.637,
-                 "x":731.449792682927,
-                 "y":1538.41448780488
+                 "width":137.132551144508,
+                 "x":585.15764318791,
+                 "y":1392.74462881333
                 }, 
                 {
-                 "height":321.692518432937,
+                 "height":211.771439598753,
                  "id":210,
                  "name":"",
                  "properties":
@@ -52047,31 +52480,12 @@ module.exports={ "height":50,
                  "rotation":-89.5659,
                  "type":"",
                  "visible":true,
-                 "width":155.46328393082,
-                 "x":870.882760271125,
-                 "y":641.80255596897
+                 "width":112.6787626385,
+                 "x":1728.60615691303,
+                 "y":846.411994846862
                 }, 
                 {
-                 "height":239.263748498599,
-                 "id":211,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"trash_can_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-89.5659,
-                 "type":"",
-                 "visible":true,
-                 "width":210.498040468339,
-                 "x":1725.27122400958,
-                 "y":1357.5711936182
-                }, 
-                {
-                 "height":440.922844235225,
+                 "height":443.922975989633,
                  "id":212,
                  "name":"",
                  "properties":
@@ -52086,49 +52500,11 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":169.726435337407,
-                 "x":1736.52601150703,
-                 "y":278.682615079188
+                 "x":1736.52640686577,
+                 "y":275.68248335083
                 }, 
                 {
-                 "height":120.441062030607,
-                 "id":213,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"stove_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-89.5659,
-                 "type":"",
-                 "visible":true,
-                 "width":122.167992545517,
-                 "x":1780.95244254813,
-                 "y":868.115539700582
-                }, 
-                {
-                 "height":208.732,
-                 "id":214,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"trash_can_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-89.5659,
-                 "type":"",
-                 "visible":true,
-                 "width":183.637,
-                 "x":1483.40101219512,
-                 "y":1193.48765853659
-                }, 
-                {
-                 "height":122.351905322858,
+                 "height":100.680328102229,
                  "id":215,
                  "name":"",
                  "properties":
@@ -52142,31 +52518,12 @@ module.exports={ "height":50,
                  "rotation":268.67969855648,
                  "type":"",
                  "visible":true,
-                 "width":107.642033026914,
-                 "x":1562.12161005129,
-                 "y":859.377218790238
+                 "width":88.5759414546366,
+                 "x":1535.68229740635,
+                 "y":838.316189115993
                 }, 
                 {
-                 "height":146.350749571608,
-                 "id":217,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"box_05"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-89.5659,
-                 "type":"",
-                 "visible":true,
-                 "width":83.9798287815914,
-                 "x":1803.09095474173,
-                 "y":1212.59286870622
-                }, 
-                {
-                 "height":169.767862700626,
+                 "height":158.693155881318,
                  "id":218,
                  "name":"",
                  "properties":
@@ -52180,9 +52537,9 @@ module.exports={ "height":50,
                  "rotation":-89.5659,
                  "type":"",
                  "visible":true,
-                 "width":183.637,
-                 "x":1560.16318113874,
-                 "y":453.272059178477
+                 "width":171.657548154255,
+                 "x":1560.25394227924,
+                 "y":441.2929511591
                 }, 
                 {
                  "height":118.903384541306,
@@ -52223,26 +52580,7 @@ module.exports={ "height":50,
                  "y":668.274122638425
                 }, 
                 {
-                 "height":392.732,
-                 "id":221,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"bookcase"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":37.679,
-                 "x":1873.1848902439,
-                 "y":1355.97546341463
-                }, 
-                {
-                 "height":398.907263683965,
+                 "height":332.489556170243,
                  "id":222,
                  "name":"",
                  "properties":
@@ -52253,12 +52591,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.5659,
+                 "rotation":0.826185354159809,
                  "type":"",
                  "visible":true,
-                 "width":178.612667387835,
-                 "x":503.235508648812,
-                 "y":1748.51545581319
+                 "width":168.986392697403,
+                 "x":1130.29292685337,
+                 "y":1181.35585166404
                 }, 
                 {
                  "height":116.049442359289,
@@ -52275,9 +52613,9 @@ module.exports={ "height":50,
                  "rotation":359.89429034808,
                  "type":"",
                  "visible":true,
-                 "width":26.950483777413,
-                 "x":1497.74563984993,
-                 "y":333.190187397844
+                 "width":21.5783571604484,
+                 "x":1511.14507707357,
+                 "y":354.629286955663
                 }, 
                 {
                  "height":39.5613,
@@ -52297,10 +52635,67 @@ module.exports={ "height":50,
                  "width":509.874,
                  "x":498.233731707317,
                  "y":922.658374390244
+                }, 
+                {
+                 "height":75.6656,
+                 "id":228,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"chair"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-640.805537346871,
+                 "type":"",
+                 "visible":true,
+                 "width":84.7775,
+                 "x":1352.55255149736,
+                 "y":1296.393148
+                }, 
+                {
+                 "height":82.6845975392071,
+                 "id":246,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"stove_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":83.8701612680226,
+                 "x":1698.997983136,
+                 "y":830.104865767767
+                }, 
+                {
+                 "height":214.372718001638,
+                 "id":265,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"bookcase_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5659,
+                 "type":"",
+                 "visible":true,
+                 "width":161.79468823461,
+                 "x":927.875364871463,
+                 "y":1518.66982874364
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -52309,119 +52704,186 @@ module.exports={ "height":50,
          "name":"item",
          "objects":[
                 {
-                 "height":170.052,
-                 "id":161,
+                 "height":57.7268413116681,
+                 "id":258,
                  "name":"",
                  "properties":
                     {
                      "container":true,
-                     "image_name":"bow_broken_00",
-                     "shadow":false
+                     "image_name":"box_06",
+                     "items":"[\"old_boots\",\"old_helmet\"]",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Some other shit",
+                     "label_image":"take_icon"
                     },
                  "propertytypes":
                     {
                      "container":"bool",
                      "image_name":"string",
-                     "shadow":"bool"
+                     "items":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
                     },
-                 "rotation":75.4565,
+                 "rotation":-525.979,
                  "type":"",
                  "visible":true,
-                 "width":93.6064,
-                 "x":738.28770909091,
-                 "y":959.216424242424
+                 "width":57.7268413116681,
+                 "x":1891.07273258135,
+                 "y":979.586405603943
                 }, 
                 {
-                 "height":46.5834,
-                 "id":162,
+                 "height":116.424928212827,
+                 "id":260,
                  "name":"",
                  "properties":
                     {
-                     "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
+                     "equip_on_click":true,
+                     "image_name":"bow_00",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Old Bow",
+                     "label_image":"take_icon"
                     },
                  "propertytypes":
                     {
-                     "container":"bool",
+                     "equip_on_click":"bool",
                      "image_name":"string",
-                     "shadow":"bool"
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
                     },
-                 "rotation":-105.649,
+                 "rotation":-525.979,
                  "type":"",
                  "visible":true,
-                 "width":58.7241,
-                 "x":1373.6682530303,
-                 "y":625.193148484849
+                 "width":96.8601471000817,
+                 "x":826.35783260432,
+                 "y":1000.00523447956
                 }, 
                 {
-                 "height":72.6667,
-                 "id":163,
+                 "height":56.3362428519837,
+                 "id":261,
                  "name":"",
                  "properties":
                     {
                      "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
+                     "image_name":"box_06",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"Box of shit",
+                     "label_image":"eye_icon",
+                     "random":true
                     },
                  "propertytypes":
                     {
                      "container":"bool",
                      "image_name":"string",
-                     "shadow":"bool"
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "random":"bool"
                     },
-                 "rotation":-244.835,
+                 "rotation":-549.280894855743,
                  "type":"",
                  "visible":true,
-                 "width":40,
-                 "x":608.181818181818,
-                 "y":478.878771212121
+                 "width":56.3362428519837,
+                 "x":608.629352083267,
+                 "y":345.613065784017
                 }, 
                 {
-                 "height":86.2026,
-                 "id":164,
+                 "height":67.6153656089186,
+                 "id":262,
                  "name":"",
                  "properties":
                     {
                      "container":true,
-                     "image_name":"quiver_00",
-                     "shadow":false
+                     "image_name":"chest_01",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"Box of shit",
+                     "label_image":"eye_icon",
+                     "random":true
                     },
                  "propertytypes":
                     {
                      "container":"bool",
                      "image_name":"string",
-                     "shadow":"bool"
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "random":"bool"
                     },
-                 "rotation":83.5293,
+                 "rotation":-520.881593379708,
                  "type":"",
                  "visible":true,
-                 "width":47.451,
-                 "x":606.456318181818,
-                 "y":375.080518181818
+                 "width":30.97512597226,
+                 "x":573.888826109736,
+                 "y":460.64603681044
                 }, 
                 {
-                 "height":72.6667,
-                 "id":165,
+                 "height":346.579747100574,
+                 "id":263,
                  "name":"",
                  "properties":
                     {
                      "container":true,
-                     "image_name":"back_pack",
-                     "shadow":false
+                     "image_name":"bookcase",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"bookcase",
+                     "label_image":"eye_icon",
+                     "random":true
                     },
                  "propertytypes":
                     {
                      "container":"bool",
                      "image_name":"string",
-                     "shadow":"bool"
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "random":"bool"
                     },
-                 "rotation":-156.712,
+                 "rotation":-809.305953006417,
                  "type":"",
                  "visible":true,
-                 "width":40,
-                 "x":590,
-                 "y":369.66665
+                 "width":39.9859053033335,
+                 "x":685.932584254895,
+                 "y":306.528649647696
+                }, 
+                {
+                 "height":46.8887454629984,
+                 "id":302,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"full-note-written-small",
+                     "image_on_click":"note",
+                     "label":true,
+                     "label_action":"Read",
+                     "label_description":"Note",
+                     "label_image":"eye_icon"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "image_on_click":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"fff",
+                 "visible":true,
+                 "width":39.0092211674518,
+                 "x":727.932343939467,
+                 "y":1481.54805461347
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -52434,25 +52896,27 @@ module.exports={ "height":50,
          "name":"roof",
          "objects":[
                 {
-                 "height":877.281,
+                 "height":1286.37190909091,
                  "id":135,
                  "name":"",
                  "properties":
                     {
+                     "alpha":0.1,
                      "fade":0.1,
                      "image_name":"roof_00"
                     },
                  "propertytypes":
                     {
+                     "alpha":"float",
                      "fade":"float",
                      "image_name":"string"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1445.77,
-                 "x":626.508939393939,
-                 "y":179.298893939394
+                 "width":1470.01242424242,
+                 "x":460.060672945673,
+                 "y":252.189966830467
                 }, 
                 {
                  "height":76.785,
@@ -52537,6 +53001,279 @@ module.exports={ "height":50,
                  "width":808.164787836799,
                  "x":2432.03236174201,
                  "y":-528.280047056527
+                }, 
+                {
+                 "height":238.999422606866,
+                 "id":275,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":0.6,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":359.492886568885,
+                 "type":"",
+                 "visible":true,
+                 "width":239.344918845865,
+                 "x":1365.38870978057,
+                 "y":966.923579587454
+                }, 
+                {
+                 "height":298.839,
+                 "id":278,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":88.764,
+                 "type":"",
+                 "visible":true,
+                 "width":299.271,
+                 "x":700.785936658699,
+                 "y":929.961554220657
+                }, 
+                {
+                 "height":298.839,
+                 "id":279,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.080393091281,
+                 "type":"",
+                 "visible":true,
+                 "width":299.271,
+                 "x":691.343348530379,
+                 "y":471.011940479504
+                }, 
+                {
+                 "height":238.999,
+                 "id":280,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":0.6,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":629.079672769124,
+                 "type":"",
+                 "visible":true,
+                 "width":239.345,
+                 "x":1365.44520052342,
+                 "y":1285.42708035618
+                }, 
+                {
+                 "height":238.999,
+                 "id":281,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":0.6,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-360.958182890677,
+                 "type":"",
+                 "visible":true,
+                 "width":239.345,
+                 "x":1362.8050812343,
+                 "y":1360.40846196726
+                }, 
+                {
+                 "height":222.642937936017,
+                 "id":282,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":90.5236023478299,
+                 "type":"",
+                 "visible":true,
+                 "width":244.290117176234,
+                 "x":1266.82470128689,
+                 "y":1365.10922591874
+                }, 
+                {
+                 "height":238.999,
+                 "id":283,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":0.6,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-539.602720238191,
+                 "type":"",
+                 "visible":true,
+                 "width":239.345,
+                 "x":1277.51255132181,
+                 "y":1301.3243296123
+                }, 
+                {
+                 "height":298.839,
+                 "id":284,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.08,
+                 "type":"",
+                 "visible":true,
+                 "width":336.642337548328,
+                 "x":713.46278000972,
+                 "y":1326.28123784971
+                }, 
+                {
+                 "height":298.839,
+                 "id":285,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":89.0239031258737,
+                 "type":"",
+                 "visible":true,
+                 "width":299.271,
+                 "x":688.548280032212,
+                 "y":1333.24495267346
+                }, 
+                {
+                 "height":298.839,
+                 "id":286,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0.271772528273885,
+                 "type":"",
+                 "visible":true,
+                 "width":299.271,
+                 "x":938.925820123315,
+                 "y":1318.91983508463
+                }, 
+                {
+                 "height":298.839,
+                 "id":287,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-90.4891878925788,
+                 "type":"",
+                 "visible":true,
+                 "width":299.271,
+                 "x":1323.99486731028,
+                 "y":461.68
+                }, 
+                {
+                 "height":238.999,
+                 "id":288,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":0.6,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":629.08,
+                 "type":"",
+                 "visible":true,
+                 "width":239.345,
+                 "x":1762.60978228228,
+                 "y":893.113112612613
+                }, 
+                {
+                 "height":238.999,
+                 "id":289,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":0.6,
+                     "image_name":"shadow_small_corner"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-539.603,
+                 "type":"",
+                 "visible":true,
+                 "width":239.345,
+                 "x":1680.93410660661,
+                 "y":889.509509009009
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -52547,14 +53284,140 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"shroud",
-         "objects":[],
+         "objects":[
+                {
+                 "height":866.666666666667,
+                 "id":234,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot",
+                     "remove_on_enter":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "remove_on_enter":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1033.33333333333,
+                 "x":484.848484848485,
+                 "y":269.69696969697
+                }, 
+                {
+                 "height":390.909424242424,
+                 "id":237,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot",
+                     "remove_on_enter":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "remove_on_enter":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":648.481515151515,
+                 "x":480.304696969697,
+                 "y":1133.33316666667
+                }, 
+                {
+                 "height":806.061090909091,
+                 "id":238,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot",
+                     "remove_on_enter":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "remove_on_enter":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":403.027454545455,
+                 "x":1521.21354545455,
+                 "y":725.757333333333
+                }, 
+                {
+                 "height":457.572424242424,
+                 "id":239,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot",
+                     "remove_on_enter":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "remove_on_enter":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":409.088,
+                 "x":1516.66812121212,
+                 "y":268.183484848485
+                }, 
+                {
+                 "height":948.485181818182,
+                 "id":243,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot",
+                     "remove_on_enter":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "remove_on_enter":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1033.33,
+                 "x":-553.028636363636,
+                 "y":206.060439393939
+                }, 
+                {
+                 "height":948.485,
+                 "id":244,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"black_dot",
+                     "remove_on_enter":true
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "remove_on_enter":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1033.33,
+                 "x":575.404892473118,
+                 "y":-685.936048387097
+                }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
- "nextobjectid":227,
+ "nextobjectid":303,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -54566,15 +55429,26 @@ module.exports={ "height":50,
                  "y":1426.00016666667
                 }, 
                 {
-                 "height":240,
+                 "height":55.0163220892275,
                  "id":175,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":26.6667,
-                 "x":1887.99998333333,
-                 "y":1820
+                 "width":34.8277446137106,
+                 "x":1995.45373741385,
+                 "y":1697.58433079434
+                }, 
+                {
+                 "height":0,
+                 "id":182,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1898.80304678999,
+                 "y":1717.89989118607
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -54659,11 +55533,13 @@ module.exports={ "height":50,
                  "name":"collision",
                  "properties":
                     {
-                     "image_name":"table_00"
+                     "image_name":"table_00",
+                     "shadow":true
                     },
                  "propertytypes":
                     {
-                     "image_name":"string"
+                     "image_name":"string",
+                     "shadow":"bool"
                     },
                  "rotation":0,
                  "type":"",
@@ -54691,6 +55567,36 @@ module.exports={ "height":50,
                  "x":2265.65083333333,
                  "y":1461.75716666667
                 }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -54884,7 +55790,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":182,
+ "nextobjectid":183,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -57441,16 +58347,24 @@ const PIXI = require('pixi.js');
 const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
-  constructor(data, tile_image) {
-    if(tile_image) {
-      const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
-      this.sprite = new PIXI.extras.TilingSprite(texture);
-      this.sprite.alpha = 0.4;
-    } else {
-      const image_name = data.name || 'grid_floor';
-
-      this.sprite = PIXI.Sprite.fromImage('level/'+image_name+'.png');
+  constructor(data) {
+    const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
+    this.sprite = new PIXI.extras.TilingSprite(texture);
+    if(data.name === 'tile_floor') {
+      this.sprite.tileScale.x = 0.15;
+      this.sprite.tileScale.y = 0.15;
     }
+
+    if(data.name === 'wood_floor') {
+      this.sprite.tileScale.x = 0.6;
+      this.sprite.tileScale.y = 0.6;
+    }
+    if(data.name === 'tile_concrete') {
+      this.sprite.tileScale.x = 0.1;
+      this.sprite.tileScale.y = 0.1;
+    }
+
+    this.sprite.alpha = 0.4;
     this.sprite.anchor.set(0);
     this.sprite.width  = data.width;
     this.sprite.height = data.height;
@@ -57479,9 +58393,11 @@ const { Item } = require('./item_model');
 class Roof extends Item {
   constructor(options) {
     super(options.image_name);
-
     this.sprite.fade_opacity = options.fade;
     this.sprite.alpha = 0.2;
+    if(options.alpha) {
+      this.sprite.alpha = options.alpha;
+    }
 
     roof_container.addChild(this.sprite);
   }
@@ -57494,15 +58410,19 @@ module.exports = {
 },{"../../engine/pixi_containers":232,"./item_model":259}],254:[function(require,module,exports){
 (function (global){
 'use strict';
+const PIXI = require('pixi.js');
 const { item_container } = require('../../engine/pixi_containers');
-const { player_events  } = require('../../engine/item_handler');
+const { player_events } = require('../../engine/item_handler');
+const { world         } = require('../../engine/shadows');
 
 const { Lootable } = require('../../character/attributes/lootable');
 const { Button   } = require('../../view/button');
+const { Note     } = require('../../view/overlay_object');
 const { Item     } = require('./item_model');
 
 class Chest extends Item {
   constructor(options) {
+    console.log(options);
     super(options.image_name);
     this.name = 'chest';
 
@@ -57514,7 +58434,6 @@ class Chest extends Item {
         this.button.set_position(this.sprite);
         this.button.visible = true;
       });
-
       this.sprite.on('mouseout', () => {
         this.button.visible = false;
       });
@@ -57526,13 +58445,24 @@ class Chest extends Item {
       this.shade.anchor.x = 0;
     }
 
+    if(options.equip_on_click) {
+      this.click = () => {
+        this.sprite.destroy();
+        player_events.emit('equip_weapon', options);
+        if(this.button) this.button.visible = false;
+      };
+    }
+
     if(options.remove_on_click) {
       this.click = () => {
         this.sprite.destroy();
+      };
+    }
 
-        player_events.emit('equip_weapon', options);
-
-        if(this.button) this.button.visible = false;
+    if(options.image_on_click) {
+      this.click = () => {
+        console.log('thlidfhewl');
+        new Note({image_name: options.image_on_click});
       };
     }
 
@@ -57540,12 +58470,9 @@ class Chest extends Item {
       this.add_component(new Lootable(this));
       this.state = 'closed';
       this.state_handling = true;
-
       if(options.random) this.loot.populate();
-
       if(!options.random && options.items) {
         const items_array = JSON.parse(options.items);
-
         this.loot.populate_with(items_array);
       }
     }
@@ -57584,7 +58511,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":210,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../view/button":288,"./item_model":259}],255:[function(require,module,exports){
+},{"../../character/attributes/lootable":210,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../engine/shadows":234,"../../view/button":288,"../../view/overlay_object":289,"./item_model":259,"pixi.js":155}],255:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -57620,7 +58547,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":232,"events":292,"pixi.js":155}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"events":293,"pixi.js":155}],256:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -57654,12 +58581,13 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":232,"./item_model":259,"events":292}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":259,"events":293}],257:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
-const { Item  } = require('./item_model');
-const { Tween } = require('../../engine/tween');
+const { Item   } = require('./item_model');
+const { Tween  } = require('../../engine/tween');
+const { Button } = require('../../view/button');
 const { damage_events } = require('../../engine/damage_handler');
 
 class Door extends Item {
@@ -57674,19 +58602,34 @@ class Door extends Item {
       this.shade.anchor.y= 1;
       this.shade.anchor.x= 0;
 
+      if(options.properties.label) {
+        this.sprite.interactive = true;
+        this.button = new Button(options.properties);
+        this.button.visible = false;
+        this.sprite.on('mouseover', () => {
+          this.button.set_position(this.sprite);
+          this.button.visible = true;
+        });
+
+        this.sprite.on('mouseout', () => {
+          this.button.visible = false;
+        });
+      }
+
       this.sprite_tween = new Tween(this.sprite);
-      this.shade_tween  = new Tween(this.shade);
       this.click = () => {
         const current_rotation = this.sprite.rotation;
         this.sprite_tween.from({ rotation: current_rotation });
-        this.sprite_tween.to({ rotation: current_rotation+3 });
-        this.sprite_tween.time = 2000;
+        this.sprite_tween.to({ rotation: current_rotation+2 });
+        this.sprite_tween.smooth();
+        this.sprite_tween.time = 1000;
         this.sprite_tween.start();
-
-        this.shade_tween.from({ rotation: current_rotation });
-        this.shade_tween.to({ rotation: current_rotation+3 });
-        this.shade_tween.time = 2000;
-        this.shade_tween.start();
+        if(this.button) this.button.remove();
+        //this.shade_tween  = new Tween(this.shade);
+        //this.shade_tween.from({ rotation: current_rotation });
+        //this.shade_tween.to({ rotation: current_rotation+3 });
+        //this.shade_tween.time = 2000;
+        //this.shade_tween.start();
       };
     }
 
@@ -57713,7 +58656,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":227,"../../engine/pixi_containers":232,"../../engine/tween":237,"./item_model":259}],258:[function(require,module,exports){
+},{"../../engine/damage_handler":227,"../../engine/pixi_containers":232,"../../engine/tween":237,"../../view/button":288,"./item_model":259}],258:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -57766,10 +58709,10 @@ const { collision_container} = require('../../engine/pixi_containers');
 //TODO this needs to be the parent of the elements in this folder
 class Item {
   constructor(name) {
-    const texture = PIXI.Texture.fromImage(name);
-    this.sprite   = new PIXI.Sprite(texture);
-    this.sprite.width = 300;
-    this.sprite.height = 20;
+    this.texture = PIXI.Texture.fromImage(name);
+    //this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+    this.sprite = new PIXI.Sprite(this.texture);
   }
 
   add_component(component) {
@@ -57847,13 +58790,14 @@ class Item {
       collision_container.removeChild(this.shade);
     }
     this.shade = new PIXI.Sprite(this.texture);
-    this.shade.parentGroup = PIXI.shadows.casterGroup;
-    this.shade.position.copy(this.sprite);
-    this.shade.width = 300;
-    this.shade.height = 20;
-    this.shade.anchor.set(0.5);
+    // TODO here for shadows
+    //this.shade.parentGroup = PIXI.shadows.casterGroup;
+    //this.shade.position.copy(this.sprite);
+    //this.shade.width = 300;
+    //this.shade.height = 20;
+    //this.shade.anchor.set(0.5);
 
-    collision_container.addChild(this.shade);
+    //collision_container.addChild(this.shade);
   }
 }
 
@@ -57890,7 +58834,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":232,"events":292,"pixi.js":155}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"events":293,"pixi.js":155}],261:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58028,6 +58972,7 @@ class Shroud extends Item {
 
     this.sprite.fade_opacity = options.fade;
     this.sprite.alpha = 1;
+    this.sprite.remove_on_enter = options.remove_on_enter;
 
     shroud_container.addChild(this.sprite);
   }
@@ -58070,6 +59015,7 @@ class Wall extends Item {
   constructor(data) {
     super('black_dot');
 
+    this.shadow = true;
     this.anchor = 0;
     this.width = data.width;
     this.height= data.height;
@@ -58081,7 +59027,6 @@ class Wall extends Item {
       this.alpha = 0;
     }
 
-    this.shadow = true;
     collision_container.addChild(this.sprite);
   }
 
@@ -58094,7 +59039,7 @@ module.exports = {
   Wall,
 };
 
-},{"../../engine/pixi_containers":232,"./item_model":259,"events":292}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":232,"./item_model":259,"events":293}],265:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
@@ -58259,8 +59204,6 @@ class Intro  {
   _set_elements() {
     const { Level_Factory } = require('./level_factory');
     Level_Factory.generate(this.player, this.elements);
-
-    global.set_light_level(0.3);
 
     const {exit_pad, click_pad, player} = this.elements;
     this.player.set_position(player[0]);
@@ -58482,7 +59425,10 @@ class Level_Factory {
     }
   ) {
     try {
-      new Background(background[0], true);
+      background.forEach(elem => {
+        console.log(elem);
+        new Background(elem, true);
+      });
 
       const camera = new Camera();
       camera.set_center(player[0]);
@@ -58672,6 +59618,7 @@ class Simple extends Level  {
     super();
     this.name = properties.level_name;
 
+    global.set_light_level(0.9);
     let level_data;
     // TODO manage this dynamically
     if(properties.level_name === 'apartment') {
@@ -58692,7 +59639,6 @@ class Simple extends Level  {
   }
 
   _set_elements() {
-    global.set_light_level(0.9);
     const {exit_pad, player} = this.elements;
     this.player.set_position(player[0]);
 
@@ -59478,6 +60424,15 @@ class Button {
 
   remove() {
     visual_effects_container.removeChild(this.sprite);
+
+    if(this.action_label) {
+      this.action_label.remove();
+    }
+
+    if(this.description_label) {
+      this.description_label.remove();
+    }
+
   }
 }
 
@@ -59486,6 +60441,59 @@ module.exports = {
 };
 
 },{"../engine/pixi_containers":232,"pixi.js":155}],289:[function(require,module,exports){
+(function (global){
+'use strict';
+const PIXI = require('pixi.js');
+const { gui_container} = require('../engine/pixi_containers');
+
+const { Item   } = require('../level/elements/item_model');
+const { world  } = require('../engine/shadows');
+
+class Note extends Item {
+  constructor(options) {
+    console.log(options);
+    super(options.image_name);
+    this.name = 'note';
+
+    if(options.remove_on_click) {
+      this.click = () => {
+        this.sprite.destroy();
+      };
+    }
+
+    this.sprite.width = 300;
+    this.sprite.height= 200;
+    this.sprite.position.set(-world.x + global.window.innerWidth/2, -world.y+ global.window.innerHeight/2);
+    this.sprite.anchor.set(0.5);
+    const level_text = new PIXI.Text(
+      'Be careful of the night, dont trust, hurt people...',
+      {
+        fontSize: 15,
+        fill:     'grey',
+        align:    'center',
+        wordWrap: true,
+        wordWrapWidth: 300,
+      }
+    );
+    level_text.anchor.set(0.5);
+    level_text.rotation = 0.09;
+    level_text.position.copy(this.sprite);
+
+    gui_container.addChild(this.sprite, level_text);
+    this.click = () => {
+      console.log(options);
+    };
+  }
+
+}
+
+
+module.exports = {
+  Note,
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../engine/pixi_containers":232,"../engine/shadows":234,"../level/elements/item_model":259,"pixi.js":155}],290:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -59549,7 +60557,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":223,"../engine/item_handler":228,"../engine/pixi_containers":232,"pixi.js":155}],290:[function(require,module,exports){
+},{"../effects/fade":223,"../engine/item_handler":228,"../engine/pixi_containers":232,"pixi.js":155}],291:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59747,7 +60755,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":240}],291:[function(require,module,exports){
+},{"../items/item_manager":240}],292:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -59784,7 +60792,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":283}],292:[function(require,module,exports){
+},{"../utils/dom":283}],293:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60309,7 +61317,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],293:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -60615,7 +61623,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":294}],294:[function(require,module,exports){
+},{"_process":295}],295:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -60801,7 +61809,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -61338,7 +62346,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],296:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61424,7 +62432,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],297:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61511,13 +62519,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],298:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":296,"./encode":297}],299:[function(require,module,exports){
+},{"./decode":297,"./encode":298}],300:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -61596,7 +62604,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":294,"timers":299}],300:[function(require,module,exports){
+},{"process/browser.js":295,"timers":300}],301:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62330,7 +63338,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":301,"punycode":295,"querystring":298}],301:[function(require,module,exports){
+},{"./util":302,"punycode":296,"querystring":299}],302:[function(require,module,exports){
 'use strict';
 
 module.exports = {

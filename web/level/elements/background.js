@@ -4,16 +4,24 @@ const PIXI = require('pixi.js');
 const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
-  constructor(data, tile_image) {
-    if(tile_image) {
-      const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
-      this.sprite = new PIXI.extras.TilingSprite(texture);
-      this.sprite.alpha = 0.4;
-    } else {
-      const image_name = data.name || 'grid_floor';
-
-      this.sprite = PIXI.Sprite.fromImage('level/'+image_name+'.png');
+  constructor(data) {
+    const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
+    this.sprite = new PIXI.extras.TilingSprite(texture);
+    if(data.name === 'tile_floor') {
+      this.sprite.tileScale.x = 0.15;
+      this.sprite.tileScale.y = 0.15;
     }
+
+    if(data.name === 'wood_floor') {
+      this.sprite.tileScale.x = 0.6;
+      this.sprite.tileScale.y = 0.6;
+    }
+    if(data.name === 'tile_concrete') {
+      this.sprite.tileScale.x = 0.1;
+      this.sprite.tileScale.y = 0.1;
+    }
+
+    this.sprite.alpha = 0.4;
     this.sprite.anchor.set(0);
     this.sprite.width  = data.width;
     this.sprite.height = data.height;

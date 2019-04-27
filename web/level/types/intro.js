@@ -50,8 +50,6 @@ class Intro  {
     const { Level_Factory } = require('./level_factory');
     Level_Factory.generate(this.player, this.elements);
 
-    global.set_light_level(0.3);
-
     const {exit_pad, click_pad, player} = this.elements;
     this.player.set_position(player[0]);
 

@@ -51,7 +51,10 @@ class Level_Factory {
     }
   ) {
     try {
-      new Background(background[0], true);
+      background.forEach(elem => {
+        console.log(elem);
+        new Background(elem, true);
+      });
 
       const camera = new Camera();
       camera.set_center(player[0]);

@@ -1,13 +1,17 @@
 'use strict';
+const PIXI = require('pixi.js');
 const { item_container } = require('../../engine/pixi_containers');
-const { player_events  } = require('../../engine/item_handler');
+const { player_events } = require('../../engine/item_handler');
+const { world         } = require('../../engine/shadows');
 
 const { Lootable } = require('../../character/attributes/lootable');
 const { Button   } = require('../../view/button');
+const { Note     } = require('../../view/overlay_object');
 const { Item     } = require('./item_model');
 
 class Chest extends Item {
   constructor(options) {
+    console.log(options);
     super(options.image_name);
     this.name = 'chest';
 
@@ -19,7 +23,6 @@ class Chest extends Item {
         this.button.set_position(this.sprite);
         this.button.visible = true;
       });
-
       this.sprite.on('mouseout', () => {
         this.button.visible = false;
       });
@@ -31,13 +34,24 @@ class Chest extends Item {
       this.shade.anchor.x = 0;
     }
 
+    if(options.equip_on_click) {
+      this.click = () => {
+        this.sprite.destroy();
+        player_events.emit('equip_weapon', options);
+        if(this.button) this.button.visible = false;
+      };
+    }
+
     if(options.remove_on_click) {
       this.click = () => {
         this.sprite.destroy();
+      };
+    }
 
-        player_events.emit('equip_weapon', options);
-
-        if(this.button) this.button.visible = false;
+    if(options.image_on_click) {
+      this.click = () => {
+        console.log('thlidfhewl');
+        new Note({image_name: options.image_on_click});
       };
     }
 
@@ -45,12 +59,9 @@ class Chest extends Item {
       this.add_component(new Lootable(this));
       this.state = 'closed';
       this.state_handling = true;
-
       if(options.random) this.loot.populate();
-
       if(!options.random && options.items) {
         const items_array = JSON.parse(options.items);
-
         this.loot.populate_with(items_array);
       }
     }

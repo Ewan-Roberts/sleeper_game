@@ -99,7 +99,7 @@ class Rat extends Animal {
 
       if(this._target_far_away) return this._walk_to_enemy();
       if(!this.enemy.vitals.alive) throw 'game over';
-      //this.tween.stop();
+      this.tween.stop();
       return this.melee.attack(this.enemy);
     });
   }

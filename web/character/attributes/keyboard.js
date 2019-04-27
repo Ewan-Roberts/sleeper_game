@@ -5,6 +5,7 @@ const {
   collision_container,
   roof_container,
   pad_container,
+  shroud_container,
 } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -20,8 +21,14 @@ function point_collides(position) {
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
-  const roofs = roof_container.children ;
+  const shrouds = shroud_container.children ;
+  const shrouds_to_remove = shrouds.find(child => child.containsPoint(position));
+  if (shrouds_to_remove && shrouds_to_remove.remove_on_enter) {
+    Fade.out_destroy(shrouds_to_remove);
+    delete shrouds_to_remove.remove_on_enter;
+  }
   return;
+  const roofs = roof_container.children ;
   roofs.forEach(child => {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
@@ -49,7 +56,7 @@ class Keyboard {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
-    this.speed         = vitals.speed;
+    this.speed         = vitals.speed/2;
     this.buffer        = 50;
     this.can_move      = true;
     this.light         = light;
@@ -77,6 +84,7 @@ class Keyboard {
       case  72     : this.keyboard_left();        return;// h
       case  76     : this.keyboard_right();       return;// l
 
+      case  81     : this.speed = 20;             return;// q for speed
       case 'n'     : this.save_game();            return;
       case 'i'     : View_HUD.toggle_inventory(); return;
       default      : return;

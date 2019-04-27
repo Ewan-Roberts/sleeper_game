@@ -76,6 +76,15 @@ class Button {
 
   remove() {
     visual_effects_container.removeChild(this.sprite);
+
+    if(this.action_label) {
+      this.action_label.remove();
+    }
+
+    if(this.description_label) {
+      this.description_label.remove();
+    }
+
   }
 }
 

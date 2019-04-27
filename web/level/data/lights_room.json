@@ -73,15 +73,26 @@
                  "y":1426.00016666667
                 }, 
                 {
-                 "height":240,
+                 "height":55.0163220892275,
                  "id":175,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":26.6667,
-                 "x":1887.99998333333,
-                 "y":1820
+                 "width":34.8277446137106,
+                 "x":1995.45373741385,
+                 "y":1697.58433079434
+                }, 
+                {
+                 "height":0,
+                 "id":182,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1898.80304678999,
+                 "y":1717.89989118607
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -166,11 +177,13 @@
                  "name":"collision",
                  "properties":
                     {
-                     "image_name":"table_00"
+                     "image_name":"table_00",
+                     "shadow":true
                     },
                  "propertytypes":
                     {
-                     "image_name":"string"
+                     "image_name":"string",
+                     "shadow":"bool"
                     },
                  "rotation":0,
                  "type":"",
@@ -198,6 +211,36 @@
                  "x":2265.65083333333,
                  "y":1461.75716666667
                 }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"roof",
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -391,7 +434,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":182,
+ "nextobjectid":183,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

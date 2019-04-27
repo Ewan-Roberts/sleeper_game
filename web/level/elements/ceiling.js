@@ -7,9 +7,11 @@ const { Item } = require('./item_model');
 class Roof extends Item {
   constructor(options) {
     super(options.image_name);
-
     this.sprite.fade_opacity = options.fade;
     this.sprite.alpha = 0.2;
+    if(options.alpha) {
+      this.sprite.alpha = options.alpha;
+    }
 
     roof_container.addChild(this.sprite);
   }

@@ -11,6 +11,7 @@ class Simple extends Level  {
     super();
     this.name = properties.level_name;
 
+    global.set_light_level(0.9);
     let level_data;
     // TODO manage this dynamically
     if(properties.level_name === 'apartment') {
@@ -31,7 +32,6 @@ class Simple extends Level  {
   }
 
   _set_elements() {
-    global.set_light_level(0.9);
     const {exit_pad, player} = this.elements;
     this.player.set_position(player[0]);
 

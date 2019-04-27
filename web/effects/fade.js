@@ -25,6 +25,20 @@ class Fade {
     movement.start();
   }
 
+  static out_destroy(sprite) {
+    const tweens = PIXI.tweenManager.getTweensForTarget(sprite);
+
+    console.log(tweens);
+    if(tweens.length > 0) return;
+    const movement = PIXI.tweenManager.createTween(sprite);
+    movement.time = 150;
+    movement.expire = true;
+    movement.from({alpha: sprite.alpha});
+    movement.to({alpha: 0});
+    movement.on('end', () => sprite.destroy());
+    movement.start();
+  }
+
   static out(sprite) {
     const movement = PIXI.tweenManager.createTween(sprite);
     movement.time = 150;

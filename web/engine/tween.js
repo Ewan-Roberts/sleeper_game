@@ -58,7 +58,6 @@ class Tween {
         tween_path[i].x,
         tween_path[i].y,
         this.path_arc);
-
     }
   }
 
