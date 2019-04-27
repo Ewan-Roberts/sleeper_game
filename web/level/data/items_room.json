@@ -493,21 +493,21 @@
                  "name":"",
                  "properties":
                     {
+                     "equip_on_click":true,
                      "image_name":"bow_00",
                      "label":true,
                      "label_action":"Take",
                      "label_description":"Old Bow",
-                     "label_image":"take_icon",
-                     "remove_on_click":true
+                     "label_image":"take_icon"
                     },
                  "propertytypes":
                     {
+                     "equip_on_click":"bool",
                      "image_name":"string",
                      "label":"bool",
                      "label_action":"string",
                      "label_description":"string",
-                     "label_image":"string",
-                     "remove_on_click":"bool"
+                     "label_image":"string"
                     },
                  "rotation":-525.979,
                  "type":"",
@@ -522,21 +522,21 @@
                  "name":"",
                  "properties":
                     {
+                     "equip_on_click":true,
                      "image_name":"rusty_knife",
                      "label":true,
                      "label_action":"jjjjjj",
                      "label_description":"Rusty Knife",
-                     "label_image":"take_icon",
-                     "remove_on_click":true
+                     "label_image":"take_icon"
                     },
                  "propertytypes":
                     {
+                     "equip_on_click":"bool",
                      "image_name":"string",
                      "label":"bool",
                      "label_action":"string",
                      "label_description":"string",
-                     "label_image":"string",
-                     "remove_on_click":"bool"
+                     "label_image":"string"
                     },
                  "rotation":-525.979,
                  "type":"",
@@ -544,6 +544,39 @@
                  "width":49.8819330136512,
                  "x":2513.2559313478,
                  "y":1590.48678061585
+                }, 
+                {
+                 "height":46.8887,
+                 "id":207,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"full-note-written-small",
+                     "image_on_click":"note",
+                     "label":true,
+                     "label_action":"Read",
+                     "label_description":"Note",
+                     "label_image":"eye_icon",
+                     "post_open_dialog":"So i opened this note and now i am talking about that I have ... ",
+                     "text":"Be careful of the night, trust, lorium ipsum people..."
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "image_on_click":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "post_open_dialog":"string",
+                     "text":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"note",
+                 "visible":true,
+                 "width":39.0092,
+                 "x":2210.60903636364,
+                 "y":1583.69850714286
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -576,17 +609,6 @@
                  "width":74.7097266532055,
                  "x":1952.04442995962,
                  "y":1843.00859608784
-                }, 
-                {
-                 "height":90.8632,
-                 "id":202,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":74.7097,
-                 "x":2113.07422622413,
-                 "y":1743.56385683998
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -677,7 +699,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":206,
+ "nextobjectid":208,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

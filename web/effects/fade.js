@@ -31,7 +31,7 @@ class Fade {
     console.log(tweens);
     if(tweens.length > 0) return;
     const movement = PIXI.tweenManager.createTween(sprite);
-    movement.time = 150;
+    movement.time = 250;
     movement.expire = true;
     movement.from({alpha: sprite.alpha});
     movement.to({alpha: 0});

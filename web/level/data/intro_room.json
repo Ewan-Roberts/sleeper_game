@@ -1206,7 +1206,7 @@
                  "y":1540.3725
                 }, 
                 {
-                 "height":624.159232354181,
+                 "height":500.169419243235,
                  "id":294,
                  "name":"",
                  "properties":
@@ -1220,12 +1220,12 @@
                  "rotation":-179.804,
                  "type":"",
                  "visible":true,
-                 "width":631.529773338075,
-                 "x":1133.38938424006,
-                 "y":1509.52215433618
+                 "width":506.075795392663,
+                 "x":1007.93614033662,
+                 "y":1373.63952184203
                 }, 
                 {
-                 "height":624.159,
+                 "height":480.661542309622,
                  "id":295,
                  "name":"",
                  "properties":
@@ -1239,13 +1239,13 @@
                  "rotation":-179.804,
                  "type":"",
                  "visible":true,
-                 "width":631.53,
-                 "x":1127.51186039031,
-                 "y":899.586809242977
+                 "width":486.337910395902,
+                 "x":990.663877312276,
+                 "y":759.519700126754
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1722,25 +1722,6 @@
                  "y":668.274122638425
                 }, 
                 {
-                 "height":332.489556170243,
-                 "id":222,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"messy_table"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0.826185354159809,
-                 "type":"",
-                 "visible":true,
-                 "width":168.986392697403,
-                 "x":1130.29292685337,
-                 "y":1181.35585166404
-                }, 
-                {
                  "height":116.049442359289,
                  "id":224,
                  "name":"",
@@ -1793,7 +1774,7 @@
                  "rotation":-640.805537346871,
                  "type":"",
                  "visible":true,
-                 "width":84.7775,
+                 "width":75.3596863951966,
                  "x":1352.55255149736,
                  "y":1296.393148
                 }, 
@@ -1837,7 +1818,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1999,12 +1980,12 @@
                  "y":306.528649647696
                 }, 
                 {
-                 "height":46.8887454629984,
-                 "id":302,
+                 "height":334.75418118547,
+                 "id":303,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"full-note-written-small",
+                     "image_name":"messy_table",
                      "image_on_click":"note",
                      "label":true,
                      "label_action":"Read",
@@ -2020,12 +2001,45 @@
                      "label_description":"string",
                      "label_image":"string"
                     },
-                 "rotation":-525.979,
-                 "type":"fff",
+                 "rotation":-360.57597273096,
+                 "type":"note",
                  "visible":true,
-                 "width":39.0092211674518,
-                 "x":727.932343939467,
-                 "y":1481.54805461347
+                 "width":165.082010830674,
+                 "x":1129.69922124532,
+                 "y":1189.87869102102
+                }, 
+                {
+                 "height":46.8887,
+                 "id":304,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"full-note-written-small",
+                     "image_on_click":"note",
+                     "label":true,
+                     "label_action":"Read",
+                     "label_description":"Note",
+                     "label_image":"eye_icon",
+                     "post_open_dialog":"So i opened this note and now i am talking about that I have ... ",
+                     "text":"Be careful of the night, trust, lorium ipsum people..."
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "image_on_click":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "post_open_dialog":"string",
+                     "text":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"note",
+                 "visible":true,
+                 "width":39.0092,
+                 "x":784.4954,
+                 "y":1485.88898333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2428,12 +2442,12 @@
          "name":"shroud",
          "objects":[
                 {
-                 "height":866.666666666667,
+                 "height":593.333333333334,
                  "id":234,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"black_dot",
+                     "image_name":"shadow_square",
                      "remove_on_enter":true
                     },
                  "propertytypes":
@@ -2444,17 +2458,17 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1033.33333333333,
-                 "x":484.848484848485,
-                 "y":269.69696969697
+                 "width":1050.97543859649,
+                 "x":480.848484848485,
+                 "y":547.030303030303
                 }, 
                 {
-                 "height":390.909424242424,
+                 "height":417.906390862346,
                  "id":237,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"black_dot",
+                     "image_name":"shadow_square",
                      "remove_on_enter":true
                     },
                  "propertytypes":
@@ -2465,17 +2479,17 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":648.481515151515,
-                 "x":480.304696969697,
-                 "y":1133.33316666667
+                 "width":675.148181818182,
+                 "x":477.63803030303,
+                 "y":1119.99983333334
                 }, 
                 {
-                 "height":806.061090909091,
+                 "height":822.061090909091,
                  "id":238,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"black_dot",
+                     "image_name":"shadow_square",
                      "remove_on_enter":true
                     },
                  "propertytypes":
@@ -2486,17 +2500,17 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":403.027454545455,
-                 "x":1521.21354545455,
-                 "y":725.757333333333
+                 "width":424.360726525442,
+                 "x":1513.2136068079,
+                 "y":724.424
                 }, 
                 {
-                 "height":457.572424242424,
+                 "height":493.572424242424,
                  "id":239,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"black_dot",
+                     "image_name":"shadow_square",
                      "remove_on_enter":true
                     },
                  "propertytypes":
@@ -2507,9 +2521,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":409.088,
-                 "x":1516.66812121212,
-                 "y":268.183484848485
+                 "width":421.088,
+                 "x":1511.33478787879,
+                 "y":242.850151515152
                 }, 
                 {
                  "height":948.485181818182,
@@ -2559,7 +2573,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":303,
+ "nextobjectid":305,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

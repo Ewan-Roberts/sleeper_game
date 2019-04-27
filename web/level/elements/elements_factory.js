@@ -11,7 +11,7 @@ const { BackgroundVisualItem } = require('./visual_object');
 class Element_Factory {
   static generate(type, options) {
     switch(type) {
-      case 'item':      return new Chest(options.properties);
+      case 'item':      return new Chest(options);
       case 'roof':      return new Roof(options.properties);
       case 'collision': return new CollisionItem(options.properties);
       case 'door':      return new Door(options);

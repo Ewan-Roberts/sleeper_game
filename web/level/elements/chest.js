@@ -1,8 +1,6 @@
 'use strict';
-const PIXI = require('pixi.js');
 const { item_container } = require('../../engine/pixi_containers');
-const { player_events } = require('../../engine/item_handler');
-const { world         } = require('../../engine/shadows');
+const { player_events  } = require('../../engine/item_handler');
 
 const { Lootable } = require('../../character/attributes/lootable');
 const { Button   } = require('../../view/button');
@@ -12,12 +10,18 @@ const { Item     } = require('./item_model');
 class Chest extends Item {
   constructor(options) {
     console.log(options);
-    super(options.image_name);
+    super(options.properties.image_name);
     this.name = 'chest';
 
-    if(options.label) {
+    if(options.type === 'note') {
+      this.click = () => {
+        new Note(options.properties);
+      };
+    }
+
+    if(options.properties.label) {
       this.sprite.interactive = true;
-      this.button = new Button(options);
+      this.button = new Button(options.properties);
       this.button.visible = false;
       this.sprite.on('mouseover', () => {
         this.button.set_position(this.sprite);
@@ -28,40 +32,33 @@ class Chest extends Item {
       });
     }
 
-    if(options.shadow) {
+    if(options.properties.shadow) {
       this.shadow = true;
       this.shade.anchor.y = 1;
       this.shade.anchor.x = 0;
     }
 
-    if(options.equip_on_click) {
+    if(options.properties.equip_on_click) {
       this.click = () => {
         this.sprite.destroy();
-        player_events.emit('equip_weapon', options);
+        player_events.emit('equip_weapon', options.properties);
         if(this.button) this.button.visible = false;
       };
     }
 
-    if(options.remove_on_click) {
+    if(options.properties.remove_on_click) {
       this.click = () => {
         this.sprite.destroy();
       };
     }
 
-    if(options.image_on_click) {
-      this.click = () => {
-        console.log('thlidfhewl');
-        new Note({image_name: options.image_on_click});
-      };
-    }
-
-    if(options.container) {
+    if(options.properties.container) {
       this.add_component(new Lootable(this));
       this.state = 'closed';
       this.state_handling = true;
-      if(options.random) this.loot.populate();
-      if(!options.random && options.items) {
-        const items_array = JSON.parse(options.items);
+      if(options.properties.random) this.loot.populate();
+      if(!options.properties.random && options.properties.items) {
+        const items_array = JSON.parse(options.properties.items);
         this.loot.populate_with(items_array);
       }
     }

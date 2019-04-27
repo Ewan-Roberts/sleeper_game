@@ -42,7 +42,6 @@ class Player extends Character {
   }
 
   on_damage(amount) {
-    console.log('owwwwwwwwwww');
     this.vitals.damage(amount);
 
     if(this.vitals.status === 'dead') {
