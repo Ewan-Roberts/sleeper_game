@@ -50956,7 +50956,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":750.422838400654,
-                 "x":1159,
+                 "x":1163,
                  "y":242
                 }, 
                 {
@@ -51155,19 +51155,7 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"lights",
-         "objects":[
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":923.068540782915,
-                 "y":99.721816199179
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -51345,8 +51333,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":1778.58624423963,
-                 "y":26.7851761858216
+                 "x":1776.56399954802,
+                 "y":44.9853784102908
                 }, 
                 {
                  "height":1237.64,
@@ -51364,8 +51352,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":2088.21,
-                 "x":3865.52121607783,
-                 "y":28.7245701252155
+                 "x":3861.49897138622,
+                 "y":44.902527658077
                 }, 
                 {
                  "height":1917.66,
@@ -51383,8 +51371,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":221.294,
-                 "x":3698.44390909091,
-                 "y":26.0184848484849
+                 "x":3687.35493032448,
+                 "y":36.1297083065233
                 }, 
                 {
                  "height":2081.51048643113,
@@ -51487,11 +51475,13 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"floor_decal_03"
+                     "image_name":"floor_decal_03",
+                     "opacity":0.2
                     },
                  "propertytypes":
                     {
-                     "image_name":"string"
+                     "image_name":"string",
+                     "opacity":"float"
                     },
                  "rotation":0,
                  "type":"",
@@ -51682,7 +51672,7 @@ module.exports={ "height":50,
                  "y":-178.324915514593
                 }, 
                 {
-                 "height":113.44,
+                 "height":93.2175530839231,
                  "id":187,
                  "name":"",
                  "properties":
@@ -51696,9 +51686,9 @@ module.exports={ "height":50,
                  "rotation":180,
                  "type":"",
                  "visible":true,
-                 "width":265.003,
-                 "x":1274.67156707629,
-                 "y":368.267199180748
+                 "width":180.068722952477,
+                 "x":1189.73729002877,
+                 "y":348.044752264671
                 }, 
                 {
                  "height":94.7735,
@@ -52001,8 +51991,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":179.602,
-                 "x":1440.50905302152,
-                 "y":498.640940745813
+                 "x":1371.50905302152,
+                 "y":439.640940745813
                 }, 
                 {
                  "height":419.255364465514,
@@ -52101,7 +52091,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -52169,7 +52159,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":784.99991312787,
-                 "x":3495.30354021356,
+                 "x":3490.30354021356,
                  "y":170.698322292678
                 }, 
                 {
@@ -52383,9 +52373,9 @@ module.exports={ "height":50,
                  "rotation":-629.116704558628,
                  "type":"",
                  "visible":true,
-                 "width":92.2484479088807,
-                 "x":1686.95161546369,
-                 "y":615.912162959382
+                 "width":78.0320681469622,
+                 "x":1686.73245855294,
+                 "y":630.126853381039
                 }, 
                 {
                  "height":555.70380032669,
@@ -52460,8 +52450,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":137.132551144508,
-                 "x":585.15764318791,
-                 "y":1392.74462881333
+                 "x":712.559058759194,
+                 "y":1287.58790484973
                 }, 
                 {
                  "height":211.771439598753,
@@ -52521,7 +52511,7 @@ module.exports={ "height":50,
                  "y":838.316189115993
                 }, 
                 {
-                 "height":158.693155881318,
+                 "height":140.069361645861,
                  "id":218,
                  "name":"",
                  "properties":
@@ -52535,9 +52525,9 @@ module.exports={ "height":50,
                  "rotation":-89.5659,
                  "type":"",
                  "visible":true,
-                 "width":171.657548154255,
-                 "x":1560.25394227924,
-                 "y":441.2929511591
+                 "width":151.512288341168,
+                 "x":1564.45106024512,
+                 "y":421.148269542045
                 }, 
                 {
                  "height":118.903384541306,
@@ -52559,7 +52549,7 @@ module.exports={ "height":50,
                  "y":695.391612008038
                 }, 
                 {
-                 "height":75.6656,
+                 "height":68.2623157643797,
                  "id":220,
                  "name":"",
                  "properties":
@@ -52573,9 +52563,9 @@ module.exports={ "height":50,
                  "rotation":-631.808938597704,
                  "type":"",
                  "visible":true,
-                 "width":84.7775,
-                 "x":1495.50637956872,
-                 "y":668.274122638425
+                 "width":76.4826879680423,
+                 "x":1504.76821932605,
+                 "y":676.564800933172
                 }, 
                 {
                  "height":116.049442359289,
@@ -52616,7 +52606,7 @@ module.exports={ "height":50,
                  "y":922.658374390244
                 }, 
                 {
-                 "height":75.6656,
+                 "height":70.0855572027064,
                  "id":228,
                  "name":"",
                  "properties":
@@ -52630,9 +52620,9 @@ module.exports={ "height":50,
                  "rotation":-640.805537346871,
                  "type":"",
                  "visible":true,
-                 "width":75.3596863951966,
-                 "x":1352.55255149736,
-                 "y":1296.393148
+                 "width":72.2359293131346,
+                 "x":1347.07144767619,
+                 "y":1297.43927348061
                 }, 
                 {
                  "height":82.6845975392071,
@@ -52714,7 +52704,7 @@ module.exports={ "height":50,
                  "y":979.586405603943
                 }, 
                 {
-                 "height":116.424928212827,
+                 "height":79.0950603759479,
                  "id":260,
                  "name":"",
                  "properties":
@@ -52738,9 +52728,9 @@ module.exports={ "height":50,
                  "rotation":-525.979,
                  "type":"",
                  "visible":true,
-                 "width":96.8601471000817,
-                 "x":826.35783260432,
-                 "y":1000.00523447956
+                 "width":65.8034262980125,
+                 "x":791.104896230984,
+                 "y":1033.453488307
                 }, 
                 {
                  "height":56.3362428519837,
@@ -52754,7 +52744,8 @@ module.exports={ "height":50,
                      "label_action":"Examine",
                      "label_description":"Box of shit",
                      "label_image":"eye_icon",
-                     "random":true
+                     "random":true,
+                     "shadow":true
                     },
                  "propertytypes":
                     {
@@ -52764,17 +52755,18 @@ module.exports={ "height":50,
                      "label_action":"string",
                      "label_description":"string",
                      "label_image":"string",
-                     "random":"bool"
+                     "random":"bool",
+                     "shadow":"bool"
                     },
                  "rotation":-549.280894855743,
                  "type":"",
                  "visible":true,
                  "width":56.3362428519837,
-                 "x":608.629352083267,
-                 "y":345.613065784017
+                 "x":1060.01824097216,
+                 "y":343.570582123886
                 }, 
                 {
-                 "height":67.6153656089186,
+                 "height":31.9013311270645,
                  "id":262,
                  "name":"",
                  "properties":
@@ -52783,7 +52775,7 @@ module.exports={ "height":50,
                      "image_name":"chest_01",
                      "label":true,
                      "label_action":"Examine",
-                     "label_description":"Box of shit",
+                     "label_description":"box of supplies",
                      "label_image":"eye_icon",
                      "random":true
                     },
@@ -52800,9 +52792,9 @@ module.exports={ "height":50,
                  "rotation":-520.881593379708,
                  "type":"",
                  "visible":true,
-                 "width":30.97512597226,
-                 "x":573.888826109736,
-                 "y":460.64603681044
+                 "width":47.1597501743922,
+                 "x":1027.75696443735,
+                 "y":332.120967089721
                 }, 
                 {
                  "height":346.579747100574,
@@ -52816,7 +52808,8 @@ module.exports={ "height":50,
                      "label_action":"Examine",
                      "label_description":"bookcase",
                      "label_image":"eye_icon",
-                     "random":true
+                     "random":true,
+                     "shadow":true
                     },
                  "propertytypes":
                     {
@@ -52826,14 +52819,15 @@ module.exports={ "height":50,
                      "label_action":"string",
                      "label_description":"string",
                      "label_image":"string",
-                     "random":"bool"
+                     "random":"bool",
+                     "shadow":"bool"
                     },
-                 "rotation":-809.305953006417,
+                 "rotation":-792.530834983949,
                  "type":"",
                  "visible":true,
-                 "width":39.9859053033335,
-                 "x":685.932584254895,
-                 "y":306.528649647696
+                 "width":31.7918292343414,
+                 "x":682.687106956501,
+                 "y":306.913986083492
                 }, 
                 {
                  "height":334.75418118547,
@@ -52841,15 +52835,17 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
+                     "dialog_on_click":"I cant figure out why it keeps happening ... ",
                      "image_name":"messy_table",
                      "image_on_click":"note",
                      "label":true,
                      "label_action":"Read",
-                     "label_description":"Note",
+                     "label_description":"Desk",
                      "label_image":"eye_icon"
                     },
                  "propertytypes":
                     {
+                     "dialog_on_click":"string",
                      "image_name":"string",
                      "image_on_click":"string",
                      "label":"bool",
@@ -52865,7 +52861,7 @@ module.exports={ "height":50,
                  "y":1189.87869102102
                 }, 
                 {
-                 "height":46.8887,
+                 "height":31.6848951898985,
                  "id":304,
                  "name":"",
                  "properties":
@@ -52894,8 +52890,8 @@ module.exports={ "height":50,
                  "type":"note",
                  "visible":true,
                  "width":39.0092,
-                 "x":784.4954,
-                 "y":1485.88898333333
+                 "x":788.178939991686,
+                 "y":1471.13814560006
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -52957,20 +52953,22 @@ module.exports={ "height":50,
                  "name":"tree",
                  "properties":
                     {
+                     "alpha":1,
                      "fade":1,
                      "image_name":"tree_11"
                     },
                  "propertytypes":
                     {
+                     "alpha":"float",
                      "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":179.691770843059,
                  "type":"",
                  "visible":true,
                  "width":969.221,
-                 "x":1715.09830854162,
-                 "y":-265.236158820675
+                 "x":915.290607128025,
+                 "y":248.04675808268
                 }, 
                 {
                  "height":1742.68,
@@ -52978,7 +52976,7 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.1,
+                     "fade":0.6,
                      "image_name":"black_dot"
                     },
                  "propertytypes":
@@ -53125,7 +53123,7 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
-                     "alpha":1,
+                     "alpha":0.6,
                      "image_name":"shadow_small_corner"
                     },
                  "propertytypes":
@@ -53242,8 +53240,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":299.271,
-                 "x":1323.99486731028,
-                 "y":461.68
+                 "x":1304.36392895143,
+                 "y":459.716906164115
                 }, 
                 {
                  "height":238.999,
@@ -53251,7 +53249,7 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
-                     "alpha":0.6,
+                     "alpha":1,
                      "image_name":"shadow_small_corner"
                     },
                  "propertytypes":
@@ -53272,7 +53270,7 @@ module.exports={ "height":50,
                  "name":"",
                  "properties":
                     {
-                     "alpha":0.6,
+                     "alpha":1,
                      "image_name":"shadow_small_corner"
                     },
                  "propertytypes":
@@ -53284,7 +53282,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":239.345,
-                 "x":1680.93410660661,
+                 "x":1676.93410660661,
                  "y":889.509509009009
                 }],
          "opacity":1,
@@ -53356,7 +53354,7 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":424.360726525442,
+                 "width":455.770227899608,
                  "x":1513.2136068079,
                  "y":724.424
                 }, 
@@ -53377,8 +53375,8 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":421.088,
-                 "x":1511.33478787879,
+                 "width":446.608219866509,
+                 "x":1523.1133508941,
                  "y":242.850151515152
                 }, 
                 {
@@ -53403,12 +53401,12 @@ module.exports={ "height":50,
                  "y":206.060439393939
                 }, 
                 {
-                 "height":948.485,
+                 "height":1112.96652092349,
                  "id":244,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"black_dot",
+                     "image_name":"shadow_square",
                      "remove_on_enter":true
                     },
                  "propertytypes":
@@ -53419,9 +53417,9 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1033.33,
-                 "x":575.404892473118,
-                 "y":-685.936048387097
+                 "width":1642.02565217391,
+                 "x":247.801252432673,
+                 "y":-807.950430786826
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -58426,12 +58424,9 @@ const { Item } = require('./item_model');
 //TODO remove item extend
 class Roof extends Item {
   constructor(options) {
-    super(options.image_name);
-    this.sprite.fade_opacity = options.fade;
-    this.sprite.alpha = 0.2;
-    if(options.alpha) {
-      this.sprite.alpha = options.alpha;
-    }
+    super(options.properties.image_name);
+    this.sprite.fade_opacity = options.properties.fade;
+    this.sprite.alpha = options.properties.alpha || 0.2;
 
     roof_container.addChild(this.sprite);
   }
@@ -58450,6 +58445,7 @@ const { player_events  } = require('../../engine/item_handler');
 const { Lootable } = require('../../character/attributes/lootable');
 const { Button   } = require('../../view/button');
 const { Note     } = require('../../view/overlay_object');
+const { Caption_Dialog } = require('../../view/caption');
 const { Item     } = require('./item_model');
 
 class Chest extends Item {
@@ -58488,6 +58484,14 @@ class Chest extends Item {
         this.sprite.destroy();
         player_events.emit('equip_weapon', options.properties);
         if(this.button) this.button.visible = false;
+      };
+    }
+
+    if(options.properties.dialog_on_click) {
+      this.click = () => {
+        const dialog = new Caption_Dialog();
+        dialog.show();
+        dialog.render_text(options.properties.dialog_on_click);
       };
     }
 
@@ -58542,7 +58546,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":210,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../view/button":288,"../../view/overlay_object":290,"./item_model":259}],255:[function(require,module,exports){
+},{"../../character/attributes/lootable":210,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../view/button":288,"../../view/caption":289,"../../view/overlay_object":290,"./item_model":259}],255:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -58587,8 +58591,8 @@ const { Item } = require('./item_model');
 
 class CollisionItem extends Item {
   constructor(options) {
-    super(options.image_name);
-    if(options.shadow) {
+    super(options.properties.image_name);
+    if(options.properties.shadow) {
       this.shadow = true;
       this.shade.anchor.y= 1;
       this.shade.anchor.x= 0;
@@ -58623,30 +58627,27 @@ const { damage_events } = require('../../engine/damage_handler');
 
 class Door extends Item {
   constructor(options) {
-    console.log(options);
     super(options.properties.image_name);
     this.id = options.id;
     this.sprite.id = options.id;
 
-    if(options.properties.clickable) {
-      this.shadow = true;
-      this.shade.anchor.y= 1;
-      this.shade.anchor.x= 0;
-
-      if(options.properties.label) {
-        this.sprite.interactive = true;
-        this.button = new Button(options.properties);
+    if(options.properties.label) {
+      this.sprite.interactive = true;
+      this.button = new Button(options.properties);
+      this.button.visible = false;
+      this.sprite.on('mouseover', () => {
+        this.button.set_position(this.sprite);
+        this.button.visible = true;
+      });
+      this.sprite.on('mouseout', () => {
         this.button.visible = false;
-        this.sprite.on('mouseover', () => {
-          this.button.set_position(this.sprite);
-          this.button.visible = true;
-        });
+      });
+    }
 
-        this.sprite.on('mouseout', () => {
-          this.button.visible = false;
-        });
-      }
-
+    if(options.properties.clickable) {
+      // this.shadow = true;
+      // this.shade.anchor.y= 1;
+      // this.shade.anchor.x= 0;
       this.sprite_tween = new Tween(this.sprite);
       this.click = () => {
         const current_rotation = this.sprite.rotation;
@@ -58656,17 +58657,11 @@ class Door extends Item {
         this.sprite_tween.time = 1000;
         this.sprite_tween.start();
         if(this.button) this.button.remove();
-        //this.shade_tween  = new Tween(this.shade);
-        //this.shade_tween.from({ rotation: current_rotation });
-        //this.shade_tween.to({ rotation: current_rotation+3 });
-        //this.shade_tween.time = 2000;
-        //this.shade_tween.start();
       };
     }
 
     this.sprite.door = true;
     this.health = 50;
-
     damage_events.on('damage', ({door_tile, damage}) => {
       door_tile.alpha = 1;
       if(door_tile.id === this.id) {
@@ -58675,7 +58670,6 @@ class Door extends Item {
           delete door_tile.door;
           this.sprite.visible = false;
         }
-        console.log(this.id);
       }
     });
 
@@ -58702,12 +58696,12 @@ class Element_Factory {
   static generate(type, options) {
     switch(type) {
       case 'item':      return new Chest(options);
-      case 'roof':      return new Roof(options.properties);
-      case 'collision': return new CollisionItem(options.properties);
+      case 'roof':      return new Roof(options);
+      case 'collision': return new CollisionItem(options);
       case 'door':      return new Door(options);
-      case 'floor':     return new BackgroundVisualItem(options.properties);
-      case 'decal':     return new BackgroundVisualItem(options.properties);
-      case 'shroud':    return new Shroud(options.properties);
+      case 'floor':     return new BackgroundVisualItem(options);
+      case 'decal':     return new BackgroundVisualItem(options);
+      case 'shroud':    return new Shroud(options);
     }
   }
 
@@ -58741,7 +58735,7 @@ const { collision_container} = require('../../engine/pixi_containers');
 class Item {
   constructor(name) {
     this.texture = PIXI.Texture.fromImage(name);
-    //this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+    this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
     this.sprite = new PIXI.Sprite(this.texture);
   }
@@ -58822,13 +58816,13 @@ class Item {
     }
     this.shade = new PIXI.Sprite(this.texture);
     // TODO here for shadows
-    //this.shade.parentGroup = PIXI.shadows.casterGroup;
-    //this.shade.position.copy(this.sprite);
-    //this.shade.width = 300;
-    //this.shade.height = 20;
-    //this.shade.anchor.set(0.5);
+    this.shade.parentGroup = PIXI.shadows.casterGroup;
+    this.shade.position.copy(this.sprite);
+    this.shade.width = 300;
+    this.shade.height = 20;
+    this.shade.anchor.set(0.5);
 
-    //collision_container.addChild(this.shade);
+    collision_container.addChild(this.shade);
   }
 }
 
@@ -58999,11 +58993,11 @@ const { Item } = require('./item_model');
 
 class Shroud extends Item {
   constructor(options) {
-    super(options.image_name);
+    super(options.properties.image_name);
 
-    this.sprite.fade_opacity = options.fade;
+    this.sprite.fade_opacity = options.properties.fade;
     this.sprite.alpha = 1;
-    this.sprite.remove_on_enter = options.remove_on_enter;
+    this.sprite.remove_on_enter = options.properties.remove_on_enter;
 
     shroud_container.addChild(this.sprite);
   }
@@ -59021,10 +59015,10 @@ const { Item } = require('./item_model');
 
 class BackgroundVisualItem extends Item {
   constructor(options) {
-    super(options.image_name);
+    super(options.properties.image_name);
 
-    if(options.opacity) {
-      this.sprite.alpha = options.opacity;
+    if(options.properties.opacity) {
+      this.sprite.alpha = options.properties.opacity;
     }
 
     background_container.addChild(this.sprite);
@@ -59052,8 +59046,8 @@ class Wall extends Item {
     this.height= data.height;
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
-
     this.set_position(data);
+
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
@@ -59203,7 +59197,8 @@ class Intro  {
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.camera       = new Camera();
-
+    player.light.candle.sprite.alpha = 0;
+    player.light.candle.shadow.instensity = 0.8;
     visual_effects_container.addChild(player.light.candle.sprite);
     visual_effects_container.addChild(player.light.candle.shadow);
     this._set_elements();
@@ -59239,7 +59234,7 @@ class Intro  {
     const {exit_pad, click_pad, player} = this.elements;
     this.player.set_position(player[0]);
 
-    global.set_light_level(0.5);
+    global.set_light_level(0.3);
 
     click_pad.forEach(data => {
       const pad  = new Click_Pad(data);
@@ -59304,7 +59299,6 @@ class Items_Room_level_2 {
       pad.area.events.on('trigger', () => {
       });
     });
-
   }
 }
 
@@ -59327,9 +59321,8 @@ const { Click_Pad     } = require('../elements/click_pad');
 
 class Items_Room extends Level {
   constructor(player) {
-    const level_data  = require('../data/items_room.json');
-
     super();
+    const level_data  = require('../data/items_room.json');
     this.name     = 'item_room';
 
     this.player   = player;
@@ -59351,6 +59344,7 @@ class Items_Room extends Level {
         Level_Factory.create(data.properties, this.player);
       });
     });
+
     click_pad.forEach(data => {
       const pad  = new Click_Pad(data);
       if(data.id === 200) {
@@ -59362,7 +59356,6 @@ class Items_Room extends Level {
 
       if(data.id === 184) {
         pad.click = async () => {
-          // TODO Abstract and move to click events
           global.set_light_level(0.3);
           const lamp_light = level_lights.find(elems => elems.id === 188);
           lamp_light.intensity = 5;
@@ -59697,7 +59690,6 @@ const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
-
 
 class Street extends Level  {
   constructor(player) {
@@ -60525,6 +60517,7 @@ class Caption_Dialog {
   }
 
   render_text(text) {
+    console.log(text);
     const sentence_array = this.split_sentence_string(text);
 
     this.create_text_timeout(sentence_array);

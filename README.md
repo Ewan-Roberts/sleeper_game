@@ -1,11 +1,17 @@
 # sleeper_game
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_1.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_16.png)
 
 - [UPCOMING](../documentation/TODO.md)
 - [COMPLETE](../documentation/DONE.md)
 
 # Updates
+
+## 28.05.19:
+- :tada: Level factory
+- :tada: Overlays for item hover
+- :tada: Complete refactor
+- :tada: Pathfinding with enemy able to destroy doors
 
 ## 02-08.03.19:
 ![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_12.png)

@@ -14,8 +14,8 @@ class Wall extends Item {
     this.height= data.height;
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
-
     this.set_position(data);
+
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }

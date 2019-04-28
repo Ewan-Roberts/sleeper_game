@@ -12,12 +12,12 @@ class Element_Factory {
   static generate(type, options) {
     switch(type) {
       case 'item':      return new Chest(options);
-      case 'roof':      return new Roof(options.properties);
-      case 'collision': return new CollisionItem(options.properties);
+      case 'roof':      return new Roof(options);
+      case 'collision': return new CollisionItem(options);
       case 'door':      return new Door(options);
-      case 'floor':     return new BackgroundVisualItem(options.properties);
-      case 'decal':     return new BackgroundVisualItem(options.properties);
-      case 'shroud':    return new Shroud(options.properties);
+      case 'floor':     return new BackgroundVisualItem(options);
+      case 'decal':     return new BackgroundVisualItem(options);
+      case 'shroud':    return new Shroud(options);
     }
   }
 

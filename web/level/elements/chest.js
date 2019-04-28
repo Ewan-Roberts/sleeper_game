@@ -5,6 +5,7 @@ const { player_events  } = require('../../engine/item_handler');
 const { Lootable } = require('../../character/attributes/lootable');
 const { Button   } = require('../../view/button');
 const { Note     } = require('../../view/overlay_object');
+const { Caption_Dialog } = require('../../view/caption');
 const { Item     } = require('./item_model');
 
 class Chest extends Item {
@@ -43,6 +44,14 @@ class Chest extends Item {
         this.sprite.destroy();
         player_events.emit('equip_weapon', options.properties);
         if(this.button) this.button.visible = false;
+      };
+    }
+
+    if(options.properties.dialog_on_click) {
+      this.click = () => {
+        const dialog = new Caption_Dialog();
+        dialog.show();
+        dialog.render_text(options.properties.dialog_on_click);
       };
     }
 

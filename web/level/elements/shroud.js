@@ -5,11 +5,11 @@ const { Item } = require('./item_model');
 
 class Shroud extends Item {
   constructor(options) {
-    super(options.image_name);
+    super(options.properties.image_name);
 
-    this.sprite.fade_opacity = options.fade;
+    this.sprite.fade_opacity = options.properties.fade;
     this.sprite.alpha = 1;
-    this.sprite.remove_on_enter = options.remove_on_enter;
+    this.sprite.remove_on_enter = options.properties.remove_on_enter;
 
     shroud_container.addChild(this.sprite);
   }

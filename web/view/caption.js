@@ -50,6 +50,7 @@ class Caption_Dialog {
   }
 
   render_text(text) {
+    console.log(text);
     const sentence_array = this.split_sentence_string(text);
 
     this.create_text_timeout(sentence_array);

@@ -10,9 +10,8 @@ const { Click_Pad     } = require('../elements/click_pad');
 
 class Items_Room extends Level {
   constructor(player) {
-    const level_data  = require('../data/items_room.json');
-
     super();
+    const level_data  = require('../data/items_room.json');
     this.name     = 'item_room';
 
     this.player   = player;
@@ -34,6 +33,7 @@ class Items_Room extends Level {
         Level_Factory.create(data.properties, this.player);
       });
     });
+
     click_pad.forEach(data => {
       const pad  = new Click_Pad(data);
       if(data.id === 200) {
@@ -45,7 +45,6 @@ class Items_Room extends Level {
 
       if(data.id === 184) {
         pad.click = async () => {
-          // TODO Abstract and move to click events
           global.set_light_level(0.3);
           const lamp_light = level_lights.find(elems => elems.id === 188);
           lamp_light.intensity = 5;

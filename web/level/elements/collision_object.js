@@ -6,8 +6,8 @@ const { Item } = require('./item_model');
 
 class CollisionItem extends Item {
   constructor(options) {
-    super(options.image_name);
-    if(options.shadow) {
+    super(options.properties.image_name);
+    if(options.properties.shadow) {
       this.shadow = true;
       this.shade.anchor.y= 1;
       this.shade.anchor.x= 0;

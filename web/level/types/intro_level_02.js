@@ -27,7 +27,6 @@ class Items_Room_level_2 {
       pad.area.events.on('trigger', () => {
       });
     });
-
   }
 }
 

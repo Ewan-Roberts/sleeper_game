@@ -5,10 +5,10 @@ const { Item } = require('./item_model');
 
 class BackgroundVisualItem extends Item {
   constructor(options) {
-    super(options.image_name);
+    super(options.properties.image_name);
 
-    if(options.opacity) {
-      this.sprite.alpha = options.opacity;
+    if(options.properties.opacity) {
+      this.sprite.alpha = options.properties.opacity;
     }
 
     background_container.addChild(this.sprite);
