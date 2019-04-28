@@ -1,7 +1,9 @@
 'use strict';
 
 const { distance_between } = require('../../utils/math');
+const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
+const { collision_container} = require('../../engine/pixi_containers');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
@@ -35,11 +37,11 @@ class Rat extends Animal {
 
     this.blood       = new Blood();
     this.tween       = new Tween(this.sprite);
-    this.tween.time  = 4000;
+    this.tween.time  = 1000;
     this.tween.fired = false;
   }
 
-  async _walk_to_enemy() {
+  async _path_to_enemy() {
     this.animation.walk();
 
     const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
@@ -55,6 +57,18 @@ class Rat extends Animal {
 
     this.tween.movement.repeat = 9;
     this.tween.start();
+  }
+
+  async _walk_to_enemy() {
+    this.animation.walk();
+
+    this.tween.movement.clear();
+    this.tween.from_path(this.sprite);
+    this.tween.add_path([this.sprite,this.sprite, this.sprite,this.enemy.sprite]);
+    this.tween.draw_path();
+    this.tween.movement.path = this.tween.path;
+    //this.tween.movement.repeat = 9;
+    //this.tween.start();
   }
 
   get _target_far_away() {
@@ -96,8 +110,13 @@ class Rat extends Animal {
 
     this.tween.movement.on('repeat', () => {
       if(!this.vitals.alive) this.kill();
+      console.log('i see you');
+      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {
+        console.log('i see you');
+        return this._walk_to_enemy();
+      }
 
-      if(this._target_far_away) return this._walk_to_enemy();
+      if(this._target_far_away) return this._path_to_enemy();
       if(!this.enemy.vitals.alive) throw 'game over';
       this.tween.stop();
       return this.melee.attack(this.enemy);

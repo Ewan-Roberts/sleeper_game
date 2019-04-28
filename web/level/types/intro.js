@@ -1,6 +1,6 @@
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
-const { visual_effects_container } = require('../../engine/pixi_containers');
+//const { visual_effects_container } = require('../../engine/pixi_containers');
 const { Tween } = require('../../engine/tween');
 const { generate_crow } = require('../../effects/click_events');
 
@@ -17,10 +17,10 @@ class Intro  {
     this.player       = player;
     this.elements     = new Tiled_Data(level_data);
     this.camera       = new Camera();
-    player.light.candle.sprite.alpha = 0;
-    player.light.candle.shadow.instensity = 0.8;
-    visual_effects_container.addChild(player.light.candle.sprite);
-    visual_effects_container.addChild(player.light.candle.shadow);
+    // player.light.candle.sprite.alpha = 0;
+    // player.light.candle.shadow.instensity = 0.8;
+    // visual_effects_container.addChild(player.light.candle.sprite);
+    // visual_effects_container.addChild(player.light.candle.shadow);
     this._set_elements();
     if(options && options.cutscene) this._cutscene();
   }
@@ -54,7 +54,7 @@ class Intro  {
     const {exit_pad, click_pad, player} = this.elements;
     this.player.set_position(player[0]);
 
-    global.set_light_level(0.3);
+    global.set_light_level(0.9);
 
     click_pad.forEach(data => {
       const pad  = new Click_Pad(data);

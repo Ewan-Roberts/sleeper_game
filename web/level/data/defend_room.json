@@ -18,7 +18,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -145,15 +145,26 @@
                  "y":212
                 }, 
                 {
-                 "height":648.522424242424,
+                 "height":584.88606060606,
                  "id":230,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":30.6667,
-                 "x":2057.39392272727,
-                 "y":1565.86
+                 "x":2054.24034341475,
+                 "y":1758.79311544967
+                }, 
+                {
+                 "height":33.3333333333333,
+                 "id":233,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":224.242424242424,
+                 "x":1825.75757575758,
+                 "y":1389.39393939394
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -439,7 +450,7 @@
          "name":"door",
          "objects":[
                 {
-                 "height":176.094,
+                 "height":16.84727554196,
                  "id":231,
                  "name":"",
                  "properties":
@@ -452,12 +463,33 @@
                      "door":"bool",
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":93.0852718209639,
                  "type":"",
                  "visible":true,
-                 "width":31.4869,
-                 "x":2053.95351969697,
-                 "y":1327.10451515152
+                 "width":18.637457234875,
+                 "x":2066.79795678765,
+                 "y":1534.1211508733
+                }, 
+                {
+                 "height":16.8473,
+                 "id":232,
+                 "name":"",
+                 "properties":
+                    {
+                     "door":true,
+                     "image_name":"door_01"
+                    },
+                 "propertytypes":
+                    {
+                     "door":"bool",
+                     "image_name":"string"
+                    },
+                 "rotation":93.0853,
+                 "type":"",
+                 "visible":true,
+                 "width":18.6375,
+                 "x":2065.51466875961,
+                 "y":1649.18783129165
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -497,7 +529,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":232,
+ "nextobjectid":234,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

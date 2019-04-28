@@ -1,13 +1,13 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { collision_container} = require('../../engine/pixi_containers');
+const { collision_container } = require('../../engine/pixi_containers');
 
 //TODO this needs to be the parent of the elements in this folder
 class Item {
   constructor(name) {
     this.texture = PIXI.Texture.fromImage(name);
-    this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+    //this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
     this.sprite = new PIXI.Sprite(this.texture);
   }
@@ -88,13 +88,13 @@ class Item {
     }
     this.shade = new PIXI.Sprite(this.texture);
     // TODO here for shadows
-    this.shade.parentGroup = PIXI.shadows.casterGroup;
-    this.shade.position.copy(this.sprite);
-    this.shade.width = 300;
-    this.shade.height = 20;
-    this.shade.anchor.set(0.5);
+    //this.shade.parentGroup = PIXI.shadows.casterGroup;
+    //this.shade.position.copy(this.sprite);
+    //this.shade.width = 300;
+    //this.shade.height = 20;
+    //this.shade.anchor.set(0.5);
 
-    collision_container.addChild(this.shade);
+    //collision_container.addChild(this.shade);
   }
 }
 
