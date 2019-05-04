@@ -452,7 +452,7 @@
                     {
                      "container":true,
                      "image_name":"box_06",
-                     "items":"[\"old_boots\",\"old_helmet\"]",
+                     "items":"[\"old_boots\",\"old_helmet\",\"old_boots\"]",
                      "label":true,
                      "label_action":"Take",
                      "label_description":"Some other shit",

@@ -43,7 +43,7 @@ class Note {
       }
     );
     level_text.anchor.set(0.5);
-    level_text.rotation = 0.08;
+    level_text.rotation = 0.01;
     level_text.position.copy(this.sprite);
 
     this.sprite.visible = true;

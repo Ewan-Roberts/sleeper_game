@@ -39,6 +39,20 @@ class View_Inventory {
   populate_slots(loot) {
     this.create_inventory_slots(loot.length);
 
+    const level_text = new PIXI.Text('',{fontSize: 30, fill: 'grey'});
+    level_text.anchor.set(0);
+    level_text.y += 50;
+    level_text.x -= 50;
+
+    const description = new PIXI.Sprite(PIXI.Texture.WHITE);
+    description.tint = 0x29241F;
+    description.width = this.slot_container.width;
+    description.height = level_text.height;
+    description.anchor.set(0);
+    description.height = 35;
+    description.y += 50;
+    description.x -= 50;
+
     loot.forEach((loot_item, slot) => {
       const item  = PIXI.Sprite.fromFrame(loot_item.image_name);
       item.height = 100;
@@ -46,14 +60,22 @@ class View_Inventory {
       item.anchor.set(0.5);
       item.interactive = true;
       item.buttonMode  = true;
+      item.info = loot_item;
+
       item.click = () => {
         player_events.emit('give_item', loot_item);
 
         item.destroy();
       };
 
+      item.on('mouseover', () => {
+        level_text.text = ' '+item.info.visual_name;
+      });
+
       this.slot_container.getChildAt(slot).addChild(item);
     });
+
+    this.slot_container.addChild(description, level_text);
   }
 }
 

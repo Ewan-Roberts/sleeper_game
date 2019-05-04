@@ -1,8 +1,8 @@
 'use strict';
-const PIXI                 = require('pixi.js');
+const PIXI = require('pixi.js');
 
-const { radian              } = require('../utils/math');
-const { Tween               } = require('./tween');
+const { radian } = require('../utils/math');
+const { Tween  } = require('./tween');
 
 const { arrow_container     } = require('./pixi_containers');
 const { collision_container } = require('./pixi_containers');

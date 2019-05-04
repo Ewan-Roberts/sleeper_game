@@ -7,6 +7,7 @@ class Shroud extends Item {
   constructor(options) {
     super(options.properties.image_name);
 
+    this.sprite.interactive = true;
     this.sprite.fade_opacity = options.properties.fade;
     this.sprite.alpha = 1;
     this.sprite.remove_on_enter = options.properties.remove_on_enter;
