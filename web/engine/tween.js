@@ -1,16 +1,14 @@
 'use strict';
+require('./ticker');
 const PIXI = require('pixi.js');
-
 const { gui_container } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
-require('./ticker');
 
 class Tween {
   constructor(sprite) {
     this.name     = 'tween';
     this.sprite   = sprite;
 
-    this.show = false;
     this.time = 2000;
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire = true;
@@ -90,8 +88,6 @@ class Tween {
   }
 
   chain() {
-    if(this.show) this.draw_path();
-
     const chain_tween = PIXI.tweenManager.createTween(this.sprite);
     chain_tween.path = this.path;
 

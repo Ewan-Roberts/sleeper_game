@@ -4,7 +4,7 @@ const PIXI = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
-const { item_container     } = require('./pixi_containers');
+const { item_container      } = require('./pixi_containers');
 const { collision_container } = require('./pixi_containers');
 const { enemy_container     } = require('./pixi_containers');
 const { player_container    } = require('./pixi_containers');
@@ -16,11 +16,10 @@ const players  = player_container.children;
 class Arrow {
   constructor() {
     this.name = 'arrow';
-
     this.sprite = new PIXI.Sprite.fromFrame('arrow');
     this.sprite.anchor.set(0.65);
-    this.tween  = new Tween(this.sprite);
 
+    this.tween = new Tween(this.sprite);
     item_container.addChild(this.sprite);
   }
 

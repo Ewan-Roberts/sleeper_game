@@ -1,7 +1,5 @@
 'use strict';
 const PIXI = require('pixi.js');
-
-//TODO move these the vendor folder and make a loader
 require('pixi-layers');
 require('pixi-shadows');
 
@@ -15,9 +13,6 @@ world.updateLayersOrder = function () {
     return b.zIndex - a.zIndex;
   });
 };
-
-console.log(world);
-
 
 module.exports = {
   world,

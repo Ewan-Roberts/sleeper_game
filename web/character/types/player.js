@@ -24,7 +24,6 @@ class Player extends Character {
     this.add_component(new Human(this));
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id   = 3;
     this.sprite.name = 'player';
     this.blood       = new Blood();
 

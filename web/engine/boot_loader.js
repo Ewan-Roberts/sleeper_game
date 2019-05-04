@@ -1,5 +1,4 @@
 /* eslint-disable*/
-
 'use strict';
 
 const { Animations_Room } = require('../level/types/player_animations');
@@ -17,14 +16,16 @@ class Level_Loader {
     const player = new Player();
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
+
+    new Transition_Room(player);
+
     // new Defend_Room(player)
-    //new Intro(player);
+    // new Intro(player);
     // new School_Room(player);
     // new Animations_Room();
     // new Archer_Room(player);
     // new Random_Room(player);
-    new Transition_Room(player);
-    //new Items_Room(player);
+    // new Items_Room(player);
     // new Simple(player, { level_name: 'light' });
   }
 }

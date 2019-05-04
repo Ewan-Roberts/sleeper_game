@@ -8,8 +8,6 @@ const button      = new Selector('.login_register_button');
 const overlay     = new Selector('.game_overlay');
 
 button.event('click', async () => {
-  console.log('thing1');
-
   overlay.hide();
 
   await register_click();

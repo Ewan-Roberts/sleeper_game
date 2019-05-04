@@ -46419,7 +46419,6 @@ class Player extends Character {
     this.add_component(new Human(this));
     this.sprite.events = new event();
     this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id   = 3;
     this.sprite.name = 'player';
     this.blood       = new Blood();
 
@@ -46641,17 +46640,14 @@ PIXI.settings.ROUND_PIXELS = true;
 PIXI.settings.RENDER_OPTIONS.roundPixels = true;
 PIXI.settings.RESOLUTION = 0.5;
 PIXI.settings.TARGET_FPMS = 0.03;
-PIXI.settings.TARGET_FPMS = 0.03;
 PIXI.settings.UPLOADS_PER_FRAME = 1;
 
 const app = new PIXI.Application({
-  width          : global.window.innerWidth,
-  height         : global.window.innerHeight,
-  antialias      : false,
-  autoResize     : false,
-  powerPreference: 'low-performance',
-  backgroundColor: 0x000000,
-  roundPixels    : true,
+  width           : global.window.innerWidth,
+  height          : global.window.innerHeight,
+  powerPreference : 'low-performance',
+  backgroundColor : 0x000000,
+  roundPixels     : true,
 });
 
 global.document.body.appendChild(app.view);
@@ -46662,7 +46658,6 @@ module.exports = app;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"pixi.js":153}],223:[function(require,module,exports){
 /* eslint-disable*/
-
 'use strict';
 
 const { Animations_Room } = require('../level/types/player_animations');
@@ -46680,14 +46675,16 @@ class Level_Loader {
     const player = new Player();
     player.set_position({x:1000, y:700});
     player.inventory.arm_ranged('old_bow');
+
+    new Transition_Room(player);
+
     // new Defend_Room(player)
-    //new Intro(player);
+    // new Intro(player);
     // new School_Room(player);
     // new Animations_Room();
     // new Archer_Room(player);
     // new Random_Room(player);
-    new Transition_Room(player);
-    //new Items_Room(player);
+    // new Items_Room(player);
     // new Simple(player, { level_name: 'light' });
   }
 }
@@ -46706,9 +46703,7 @@ const { Tween } = require('./tween');
 class Camera {
   constructor() {
     this.name = 'camera';
-
     this.sprite = world;
-
     this.add_component(new Tween(this.sprite));
   }
 
@@ -46725,11 +46720,10 @@ class Camera {
   }
 
   set_center({ x, y }) {
-    this.sprite.position.set(-x + global.window.innerWidth/2, -y+ global.window.innerHeight/2);
-  }
-
-  reset() {
-    this.set_position({x:0,y:0});
+    this.sprite.position.set(
+      -x + global.window.innerWidth/2,
+      -y + global.window.innerHeight/2
+    );
   }
 }
 
@@ -46740,7 +46734,6 @@ module.exports = {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./shadows":232,"./tween":235}],225:[function(require,module,exports){
 'use strict';
-
 const event = require('events');
 
 const damage_events = new event();
@@ -46784,7 +46777,7 @@ module.exports = {
 
 function melee_attack(melee_weapon, target) {
   const { damage } = melee_weapon;
-  console.log(target);
+
   target.vitals.damage(damage);
 }
 
@@ -46794,11 +46787,10 @@ module.exports = {
 
 },{}],228:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
-
+const PIXI   = require('pixi.js');
 const packer = require('pixi-packer-parser');
-
 const loader = new PIXI.loaders.Loader();
+
 loader.use(packer(PIXI));
 
 module.exports = {
@@ -46809,10 +46801,8 @@ module.exports = {
 'use strict';
 const PIXI = require('pixi.js');
 const { grid_container } = require('./pixi_containers');
-
 const { Grid   } = require('../utils/grid');
 const { Tween  } = require('./tween');
-//const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
@@ -46824,7 +46814,6 @@ easystar.setTileCost(2, 1); // only go through these tiles if you have to
 const find_grid = sprite => {
   const grid  = grid_container.children;
   const point = sprite.getGlobalPosition();
-  console.log(point);
   const found_tile = grid.find(tile => tile.containsPoint(point));
 
   if(!found_tile) throw `${sprite.name} was not found`;
@@ -46843,7 +46832,6 @@ function path_between_grids (one, two) {
     easystar.calculate();
   });
 }
-
 
 class pathfind_sprite {
   static create_level_grid(tiled_level_data) {
@@ -46994,10 +46982,6 @@ const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
 
-//const dialog_container = new PIXI.Container();
-//dialog_container.name = 'dialog_container';
-//dialog_container.zIndex = close;
-
 // const grid_particles = new PIXI.ParticleContainer(
 //   scale: true,
 //   position: true,
@@ -47016,13 +47000,10 @@ world.addChild(
   grid_container,
   collision_container,
   item_container,
-  //  critter_container,
   enemy_container,
   player_container,
   gui_container,
-  //  dialog_container,
   pad_container
-  // grid_particles
 );
 
 world.updateLayersOrder();
@@ -47052,7 +47033,6 @@ module.exports = {
   roof_container,
   background_container,
   collision_container,
-  // critter_container,
   gui_container,
   enemy_container,
   player_container,
@@ -47061,7 +47041,6 @@ module.exports = {
   item_container,
   pad_container,
   clear_non_player_containers,
-  // grid_particles,
 };
 
 
@@ -47073,7 +47052,7 @@ const PIXI = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
-const { item_container     } = require('./pixi_containers');
+const { item_container      } = require('./pixi_containers');
 const { collision_container } = require('./pixi_containers');
 const { enemy_container     } = require('./pixi_containers');
 const { player_container    } = require('./pixi_containers');
@@ -47085,11 +47064,10 @@ const players  = player_container.children;
 class Arrow {
   constructor() {
     this.name = 'arrow';
-
     this.sprite = new PIXI.Sprite.fromFrame('arrow');
     this.sprite.anchor.set(0.65);
-    this.tween  = new Tween(this.sprite);
 
+    this.tween = new Tween(this.sprite);
     item_container.addChild(this.sprite);
   }
 
@@ -47147,8 +47125,6 @@ module.exports = {
 },{"../utils/math":285,"./pixi_containers":230,"./tween":235,"pixi.js":153}],232:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-
-//TODO move these the vendor folder and make a loader
 require('pixi-layers');
 require('pixi-shadows');
 
@@ -47163,9 +47139,6 @@ world.updateLayersOrder = function () {
   });
 };
 
-console.log(world);
-
-
 module.exports = {
   world,
 };
@@ -47178,9 +47151,7 @@ module.exports = {
 
 },{"./app":222,"pixi-layers":33,"pixi-shadows":35,"pixi.js":153}],233:[function(require,module,exports){
 'use strict';
-
 const PIXI = require('pixi.js');
-
 require('pixi-sound');
 
 const Sound = PIXI.sound.add({
@@ -47201,17 +47172,14 @@ module.exports = Sound;
 'use strict';
 const PIXI = require('pixi.js');
 const app  = require('./app');
-
-//Needed for utils
 global.window.PIXI.default = PIXI;
 
 require('pixi-tween');
 require('pixi-keyboard');
 
-//app.ticker.deltaTime = 2;
 const fpsDelta = 60/30;
-let elapsedTime = 0;
 
+let elapsedTime = 0;
 app.ticker.add(delta => {
   elapsedTime += delta;
 
@@ -47226,18 +47194,16 @@ app.ticker.add(delta => {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./app":222,"pixi-keyboard":32,"pixi-tween":37,"pixi.js":153}],235:[function(require,module,exports){
 'use strict';
+require('./ticker');
 const PIXI = require('pixi.js');
-
 const { gui_container } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
-require('./ticker');
 
 class Tween {
   constructor(sprite) {
     this.name     = 'tween';
     this.sprite   = sprite;
 
-    this.show = false;
     this.time = 2000;
     this.movement = PIXI.tweenManager.createTween(this.sprite);
     this.movement.expire = true;
@@ -47317,8 +47283,6 @@ class Tween {
   }
 
   chain() {
-    if(this.show) this.draw_path();
-
     const chain_tween = PIXI.tweenManager.createTween(this.sprite);
     chain_tween.path = this.path;
 
@@ -51790,7 +51754,7 @@ module.exports={ "height":50,
                  "visible":true,
                  "width":1050.97543859649,
                  "x":480.848484848485,
-                 "y":547.030303030303
+                 "y":530.56746201431
                 }, 
                 {
                  "height":417.906390862346,
@@ -51899,7 +51863,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
@@ -56811,7 +56775,7 @@ const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
   constructor(data) {
-    const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
+    const texture = PIXI.Texture.fromImage(data.name);
     this.sprite = new PIXI.extras.TilingSprite(texture);
     if(data.name === 'tile_floor') {
       this.sprite.tileScale.x = 0.15;
@@ -58596,9 +58560,9 @@ global.set_light_level = amount => {
 };
 
 // QUICK POINT CHECKING
-global.place_bunny = ({ x, y }, light) => {
-  const texture = PIXI.Texture.fromImage('bunny');
-  texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+global.place_bunny = ({ x, y } /*light*/) => {
+  //const texture = PIXI.Texture.fromImage('bunny');
+  //texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
@@ -58607,12 +58571,12 @@ global.place_bunny = ({ x, y }, light) => {
   bunny.height = 100;
 
   visual_effects_container.addChild(bunny);
-  if(light) {
-    const shade = new PIXI.Sprite(texture);
-    shade.parentGroup = PIXI.shadows.casterGroup;
-    shade.position.copy(bunny);
-    visual_effects_container.addChild(shade);
-  }
+  //if(light) {
+  //  const shade = new PIXI.Sprite(texture);
+  //  shade.parentGroup = PIXI.shadows.casterGroup;
+  //  shade.position.copy(bunny);
+  //  visual_effects_container.addChild(shade);
+  //}
 
   return bunny;
 };

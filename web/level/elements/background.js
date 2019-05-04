@@ -5,7 +5,7 @@ const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
   constructor(data) {
-    const texture = PIXI.Texture.fromImage('level/'+data.name+'.jpg');
+    const texture = PIXI.Texture.fromImage(data.name);
     this.sprite = new PIXI.extras.TilingSprite(texture);
     if(data.name === 'tile_floor') {
       this.sprite.tileScale.x = 0.15;

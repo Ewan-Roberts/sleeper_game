@@ -6,9 +6,7 @@ const { Tween } = require('./tween');
 class Camera {
   constructor() {
     this.name = 'camera';
-
     this.sprite = world;
-
     this.add_component(new Tween(this.sprite));
   }
 
@@ -25,11 +23,10 @@ class Camera {
   }
 
   set_center({ x, y }) {
-    this.sprite.position.set(-x + global.window.innerWidth/2, -y+ global.window.innerHeight/2);
-  }
-
-  reset() {
-    this.set_position({x:0,y:0});
+    this.sprite.position.set(
+      -x + global.window.innerWidth/2,
+      -y + global.window.innerHeight/2
+    );
   }
 }
 

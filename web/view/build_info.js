@@ -10,7 +10,6 @@ async function update_build_version() {
   build_info.innerHTML = version;
 }
 
-
 module.exports = {
   update_build_version,
 };

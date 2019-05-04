@@ -16,9 +16,9 @@ global.set_light_level = amount => {
 };
 
 // QUICK POINT CHECKING
-global.place_bunny = ({ x, y }, light) => {
-  const texture = PIXI.Texture.fromImage('bunny');
-  texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+global.place_bunny = ({ x, y } /*light*/) => {
+  //const texture = PIXI.Texture.fromImage('bunny');
+  //texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
@@ -27,12 +27,12 @@ global.place_bunny = ({ x, y }, light) => {
   bunny.height = 100;
 
   visual_effects_container.addChild(bunny);
-  if(light) {
-    const shade = new PIXI.Sprite(texture);
-    shade.parentGroup = PIXI.shadows.casterGroup;
-    shade.position.copy(bunny);
-    visual_effects_container.addChild(shade);
-  }
+  //if(light) {
+  //  const shade = new PIXI.Sprite(texture);
+  //  shade.parentGroup = PIXI.shadows.casterGroup;
+  //  shade.position.copy(bunny);
+  //  visual_effects_container.addChild(shade);
+  //}
 
   return bunny;
 };

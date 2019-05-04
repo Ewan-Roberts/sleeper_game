@@ -62,10 +62,6 @@ const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
 
-//const dialog_container = new PIXI.Container();
-//dialog_container.name = 'dialog_container';
-//dialog_container.zIndex = close;
-
 // const grid_particles = new PIXI.ParticleContainer(
 //   scale: true,
 //   position: true,
@@ -84,13 +80,10 @@ world.addChild(
   grid_container,
   collision_container,
   item_container,
-  //  critter_container,
   enemy_container,
   player_container,
   gui_container,
-  //  dialog_container,
   pad_container
-  // grid_particles
 );
 
 world.updateLayersOrder();
@@ -120,7 +113,6 @@ module.exports = {
   roof_container,
   background_container,
   collision_container,
-  // critter_container,
   gui_container,
   enemy_container,
   player_container,
@@ -129,7 +121,6 @@ module.exports = {
   item_container,
   pad_container,
   clear_non_player_containers,
-  // grid_particles,
 };
 
 

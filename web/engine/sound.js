@@ -1,7 +1,5 @@
 'use strict';
-
 const PIXI = require('pixi.js');
-
 require('pixi-sound');
 
 const Sound = PIXI.sound.add({

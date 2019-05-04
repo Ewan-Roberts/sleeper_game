@@ -1,10 +1,8 @@
 'use strict';
 const PIXI = require('pixi.js');
 const { grid_container } = require('./pixi_containers');
-
 const { Grid   } = require('../utils/grid');
 const { Tween  } = require('./tween');
-//const { radian } = require('../utils/math');
 const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
@@ -16,7 +14,6 @@ easystar.setTileCost(2, 1); // only go through these tiles if you have to
 const find_grid = sprite => {
   const grid  = grid_container.children;
   const point = sprite.getGlobalPosition();
-  console.log(point);
   const found_tile = grid.find(tile => tile.containsPoint(point));
 
   if(!found_tile) throw `${sprite.name} was not found`;
@@ -35,7 +32,6 @@ function path_between_grids (one, two) {
     easystar.calculate();
   });
 }
-
 
 class pathfind_sprite {
   static create_level_grid(tiled_level_data) {
