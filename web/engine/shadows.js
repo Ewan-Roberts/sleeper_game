@@ -16,6 +16,9 @@ world.updateLayersOrder = function () {
   });
 };
 
+console.log(world);
+
+
 module.exports = {
   world,
 };

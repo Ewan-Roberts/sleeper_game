@@ -179,7 +179,7 @@ const items = [
     cost: 20,
 
     visual_name: 'old helmet',
-    description: 'A rusty old helmet that looks to be a WW2 replica',
+    description: 'A rusty old helmet that looks a WW2 replica',
     image_name: 'old_helmet',
   },
 

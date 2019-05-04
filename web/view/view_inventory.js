@@ -39,19 +39,34 @@ class View_Inventory {
   populate_slots(loot) {
     this.create_inventory_slots(loot.length);
 
-    const level_text = new PIXI.Text('',{fontSize: 30, fill: 'grey'});
-    level_text.anchor.set(0);
-    level_text.y += 50;
-    level_text.x -= 50;
+    const item_title = new PIXI.Text('',{fontSize: 20, fill: 'grey'});
+    item_title.y += 60;
+    item_title.x -= 40;
 
-    const description = new PIXI.Sprite(PIXI.Texture.WHITE);
-    description.tint = 0x29241F;
-    description.width = this.slot_container.width;
-    description.height = level_text.height;
-    description.anchor.set(0);
-    description.height = 35;
-    description.y += 50;
-    description.x -= 50;
+    const item_title_background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    item_title_background.tint  = 0x29241F;
+    item_title_background.width = this.slot_container.width;
+    item_title_background.height = 35;
+    item_title_background.y += 55;
+    item_title_background.x -= 50;
+    item_title_background.visible = false;
+
+    const description = new PIXI.Text('',{
+      wordWrap: true,
+      wordWrapWidth: this.slot_container.width - 20,
+      fontSize: 18,
+    });
+    description.y += 95;
+    description.x -= 40;
+
+    const description_background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    description_background.width = this.slot_container.width;
+    description_background.y += 90;
+    description_background.x -= 50;
+    description_background.visible = false;
+
+    const item_worth = new PIXI.Text('',{fontSize: 15, fill: 'white'});
+    item_worth.x -= 40;
 
     loot.forEach((loot_item, slot) => {
       const item  = PIXI.Sprite.fromFrame(loot_item.image_name);
@@ -60,22 +75,40 @@ class View_Inventory {
       item.anchor.set(0.5);
       item.interactive = true;
       item.buttonMode  = true;
-      item.info = loot_item;
 
       item.click = () => {
         player_events.emit('give_item', loot_item);
+        item_title.text  = '';
+        description.text = '';
+        item_worth.text  = '';
 
+        item_title_background.visible  = false;
+        description_background.visible = false;
         item.destroy();
       };
 
       item.on('mouseover', () => {
-        level_text.text = ' '+item.info.visual_name;
+        item_title_background.visible  = true;
+        description_background.visible = true;
+
+        item_title.text  = loot_item.visual_name;
+        description.text = loot_item.description;
+        description_background.height = description.height + 10;
+
+        item_worth.text = 'Value: '+loot_item.cost;
+        item_worth.y = description.height + 105;
       });
 
       this.slot_container.getChildAt(slot).addChild(item);
     });
 
-    this.slot_container.addChild(description, level_text);
+    this.slot_container.addChild(
+      item_title_background,
+      description_background,
+      item_title,
+      description,
+      item_worth
+    );
   }
 }
 

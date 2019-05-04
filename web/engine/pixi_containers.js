@@ -1,6 +1,5 @@
 'use strict';
 const PIXI = require('pixi.js');
-PIXI.settings.ROUND_PIXELS = true;
 const { world } = require('./shadows');
 
 const zIndex_layer = {
@@ -35,14 +34,6 @@ const item_container = new PIXI.Container();
 item_container.name = 'non_collision_items';
 item_container.zIndex = low;
 
-const critter_container = new PIXI.Container();
-critter_container.name = 'critter_container';
-critter_container.zIndex = low;
-
-const arrow_container = new PIXI.Container();
-arrow_container.name = 'arrow_container';
-arrow_container.zIndex = medium;
-
 const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
 enemy_container.zIndex = medium;
@@ -71,9 +62,9 @@ const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
 
-const dialog_container = new PIXI.Container();
-dialog_container.name = 'dialog_container';
-dialog_container.zIndex = close;
+//const dialog_container = new PIXI.Container();
+//dialog_container.name = 'dialog_container';
+//dialog_container.zIndex = close;
 
 // const grid_particles = new PIXI.ParticleContainer(
 //   scale: true,
@@ -93,12 +84,11 @@ world.addChild(
   grid_container,
   collision_container,
   item_container,
-  critter_container,
-  arrow_container,
+  //  critter_container,
   enemy_container,
   player_container,
   gui_container,
-  dialog_container,
+  //  dialog_container,
   pad_container
   // grid_particles
 );
@@ -130,11 +120,10 @@ module.exports = {
   roof_container,
   background_container,
   collision_container,
-  critter_container,
+  // critter_container,
   gui_container,
   enemy_container,
   player_container,
-  arrow_container,
   visual_effects_container,
   grid_container,
   item_container,

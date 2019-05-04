@@ -1,6 +1,6 @@
 'use strict';
 
-const { critter_container } = require('../../engine/pixi_containers');
+const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');
@@ -20,7 +20,7 @@ class Crow extends Character{
     this.add_component(new Tween(this.sprite));
     this.add_component(new Pathfind(this.sprite));
 
-    critter_container.addChild(this.sprite);
+    enemy_container.addChild(this.sprite);
   }
 }
 

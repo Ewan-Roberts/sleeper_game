@@ -9,7 +9,7 @@
 !function(e,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],i):i((e=e||self).__filters={},e.PIXI)}(this,function(e,i){"use strict";var t="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="// precision highp float;\n\nvarying vec2 vTextureCoord;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\nuniform vec4 filterClamp;\nuniform vec2 dimensions;\nuniform float aspect;\n\nuniform sampler2D displacementMap;\nuniform float offset;\nuniform float sinDir;\nuniform float cosDir;\nuniform int fillMode;\n\nuniform float seed;\nuniform vec2 red;\nuniform vec2 green;\nuniform vec2 blue;\n\nconst int TRANSPARENT = 0;\nconst int ORIGINAL = 1;\nconst int LOOP = 2;\nconst int CLAMP = 3;\nconst int MIRROR = 4;\n\nvoid main(void)\n{\n    vec2 coord = (vTextureCoord * filterArea.xy) / dimensions;\n\n    if (coord.x > 1.0 || coord.y > 1.0) {\n        return;\n    }\n\n    float cx = coord.x - 0.5;\n    float cy = (coord.y - 0.5) * aspect;\n    float ny = (-sinDir * cx + cosDir * cy) / aspect + 0.5;\n\n    // displacementMap: repeat\n    // ny = ny > 1.0 ? ny - 1.0 : (ny < 0.0 ? 1.0 + ny : ny);\n\n    // displacementMap: mirror\n    ny = ny > 1.0 ? 2.0 - ny : (ny < 0.0 ? -ny : ny);\n\n    vec4 dc = texture2D(displacementMap, vec2(0.5, ny));\n\n    float displacement = (dc.r - dc.g) * (offset / filterArea.x);\n\n    coord = vTextureCoord + vec2(cosDir * displacement, sinDir * displacement * aspect);\n\n    if (fillMode == CLAMP) {\n        coord = clamp(coord, filterClamp.xy, filterClamp.zw);\n    } else {\n        if( coord.x > filterClamp.z ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x -= filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x = filterClamp.z * 2.0 - coord.x;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.x < filterClamp.x ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.x += filterClamp.z;\n            } else if (fillMode == MIRROR) {\n                coord.x *= -filterClamp.z;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n\n        if( coord.y > filterClamp.w ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y -= filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y = filterClamp.w * 2.0 - coord.y;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        } else if( coord.y < filterClamp.y ) {\n            if (fillMode == ORIGINAL) {\n                gl_FragColor = texture2D(uSampler, vTextureCoord);\n                return;\n            } else if (fillMode == LOOP) {\n                coord.y += filterClamp.w;\n            } else if (fillMode == MIRROR) {\n                coord.y *= -filterClamp.w;\n            } else {\n                gl_FragColor = vec4(0., 0., 0., 0.);\n                return;\n            }\n        }\n    }\n\n    gl_FragColor.r = texture2D(uSampler, coord + red * (1.0 - seed * 0.4) / filterArea.xy).r;\n    gl_FragColor.g = texture2D(uSampler, coord + green * (1.0 - seed * 0.3) / filterArea.xy).g;\n    gl_FragColor.b = texture2D(uSampler, coord + blue * (1.0 - seed * 0.2) / filterArea.xy).b;\n    gl_FragColor.a = texture2D(uSampler, coord).a;\n}\n",r=function(e){function r(r){void 0===r&&(r={}),e.call(this,t,n),this.uniforms.dimensions=new Float32Array(2),r=Object.assign({slices:5,offset:100,direction:0,fillMode:0,average:!1,seed:0,red:[0,0],green:[0,0],blue:[0,0],minSize:8,sampleSize:512},r),this.direction=r.direction,this.red=r.red,this.green=r.green,this.blue=r.blue,this.offset=r.offset,this.fillMode=r.fillMode,this.average=r.average,this.seed=r.seed,this.minSize=r.minSize,this.sampleSize=r.sampleSize,this._canvas=document.createElement("canvas"),this._canvas.width=4,this._canvas.height=this.sampleSize,this.texture=i.Texture.fromCanvas(this._canvas,i.SCALE_MODES.NEAREST),this._slices=0,this.slices=r.slices}e&&(r.__proto__=e),r.prototype=Object.create(e&&e.prototype),r.prototype.constructor=r;var s={sizes:{configurable:!0},offsets:{configurable:!0},slices:{configurable:!0},direction:{configurable:!0},red:{configurable:!0},green:{configurable:!0},blue:{configurable:!0}};return r.prototype.apply=function(e,i,t,n){var r=i.sourceFrame.width,s=i.sourceFrame.height;this.uniforms.dimensions[0]=r,this.uniforms.dimensions[1]=s,this.uniforms.aspect=s/r,this.uniforms.seed=this.seed,this.uniforms.offset=this.offset,this.uniforms.fillMode=this.fillMode,e.applyFilter(this,i,t,n)},r.prototype._randomizeSizes=function(){var e=this._sizes,i=this._slices-1,t=this.sampleSize,n=Math.min(this.minSize/t,.9/this._slices);if(this.average){for(var r=this._slices,s=1,o=0;o<i;o++){var l=s/(r-o),f=Math.max(l*(1-.6*Math.random()),n);e[o]=f,s-=f}e[i]=s}else{for(var a=1,c=Math.sqrt(1/this._slices),u=0;u<i;u++){var d=Math.max(c*a*Math.random(),n);e[u]=d,a-=d}e[i]=a}this.shuffle()},r.prototype.shuffle=function(){for(var e=this._sizes,i=this._slices-1;i>0;i--){var t=Math.random()*i>>0,n=e[i];e[i]=e[t],e[t]=n}},r.prototype._randomizeOffsets=function(){for(var e=0;e<this._slices;e++)this._offsets[e]=Math.random()*(Math.random()<.5?-1:1)},r.prototype.refresh=function(){this._randomizeSizes(),this._randomizeOffsets(),this.redraw()},r.prototype.redraw=function(){var e,i=this.sampleSize,t=this.texture,n=this._canvas.getContext("2d");n.clearRect(0,0,8,i);for(var r=0,s=0;s<this._slices;s++){e=Math.floor(256*this._offsets[s]);var o=this._sizes[s]*i,l=e>0?e:0,f=e<0?-e:0;n.fillStyle="rgba("+l+", "+f+", 0, 1)",n.fillRect(0,r>>0,i,o+1>>0),r+=o}t.baseTexture.update(),this.uniforms.displacementMap=t},s.sizes.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._sizes[t]=e[t]},s.sizes.get=function(){return this._sizes},s.offsets.set=function(e){for(var i=Math.min(this._slices,e.length),t=0;t<i;t++)this._offsets[t]=e[t]},s.offsets.get=function(){return this._offsets},s.slices.get=function(){return this._slices},s.slices.set=function(e){this._slices!==e&&(this._slices=e,this.uniforms.slices=e,this._sizes=this.uniforms.slicesWidth=new Float32Array(e),this._offsets=this.uniforms.slicesOffset=new Float32Array(e),this.refresh())},s.direction.get=function(){return this._direction},s.direction.set=function(e){if(this._direction!==e){this._direction=e;var t=e*i.DEG_TO_RAD;this.uniforms.sinDir=Math.sin(t),this.uniforms.cosDir=Math.cos(t)}},s.red.get=function(){return this.uniforms.red},s.red.set=function(e){this.uniforms.red=e},s.green.get=function(){return this.uniforms.green},s.green.set=function(e){this.uniforms.green=e},s.blue.get=function(){return this.uniforms.blue},s.blue.set=function(e){this.uniforms.blue=e},r.prototype.destroy=function(){this.texture.destroy(!0),this.texture=null,this._canvas=null,this.red=null,this.green=null,this.blue=null,this._sizes=null,this._offsets=null},Object.defineProperties(r.prototype,s),r}(i.Filter);r.TRANSPARENT=0,r.ORIGINAL=1,r.LOOP=2,r.CLAMP=3,r.MIRROR=4,e.GlitchFilter=r,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":155}],2:[function(require,module,exports){
+},{"pixi.js":153}],2:[function(require,module,exports){
 /*!
  * @pixi/filter-pixelate - v2.7.0
  * Compiled Sun, 13 Jan 2019 22:51:52 UTC
@@ -20,7 +20,7 @@
 !function(e,o){"object"==typeof exports&&"undefined"!=typeof module?o(exports,require("pixi.js")):"function"==typeof define&&define.amd?define(["exports","pixi.js"],o):o((e=e||self).__filters={},e.PIXI)}(this,function(e,o){"use strict";var r="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}",n="precision mediump float;\n\nvarying vec2 vTextureCoord;\n\nuniform vec2 size;\nuniform sampler2D uSampler;\n\nuniform vec4 filterArea;\n\nvec2 mapCoord( vec2 coord )\n{\n    coord *= filterArea.xy;\n    coord += filterArea.zw;\n\n    return coord;\n}\n\nvec2 unmapCoord( vec2 coord )\n{\n    coord -= filterArea.zw;\n    coord /= filterArea.xy;\n\n    return coord;\n}\n\nvec2 pixelate(vec2 coord, vec2 size)\n{\n\treturn floor( coord / size ) * size;\n}\n\nvoid main(void)\n{\n    vec2 coord = mapCoord(vTextureCoord);\n\n    coord = pixelate(coord, size);\n\n    coord = unmapCoord(coord);\n\n    gl_FragColor = texture2D(uSampler, coord);\n}\n",t=function(e){function o(o){void 0===o&&(o=10),e.call(this,r,n),this.size=o}e&&(o.__proto__=e),o.prototype=Object.create(e&&e.prototype),o.prototype.constructor=o;var t={size:{configurable:!0}};return t.size.get=function(){return this.uniforms.size},t.size.set=function(e){"number"==typeof e&&(e=[e,e]),this.uniforms.size=e},Object.defineProperties(o.prototype,t),o}(o.Filter);e.PixelateFilter=t,Object.defineProperty(e,"__esModule",{value:!0})}),Object.assign(PIXI.filters,this?this.__filters:__filters);
 
 
-},{"pixi.js":155}],3:[function(require,module,exports){
+},{"pixi.js":153}],3:[function(require,module,exports){
 /**
  * Bit twiddling hacks for JavaScript.
  *
@@ -4953,1593 +4953,7 @@ module.exports = function (PIXI)
     };
 };
 
-},{"resource-loader":201}],35:[function(require,module,exports){
-/**
- * Renderer that clamps the texture so neighbour frames wont bleed on it
- * immitates context2d drawImage behaviour
- *
- * @class
- * @memberof PIXI.extras
- * @extends PIXI.DisplayObject
- */
-function Bump() {
-  this.rendererType = "pixi";
-}
-
-Bump.prototype = new Bump();
-
-//`addCollisionProperties` adds extra properties to sprites to help
-//simplify the collision code. It won't add these properties if they
-//already exist on the sprite. After these properties have been
-//added, this methods adds a Boolean property to the sprite called `_bumpPropertiesAdded`
-//and sets it to `true` to flag that the sprite has these
-//new properties
-Bump.prototype.addCollisionProperties = function(sprite) {
-  //Add properties to Pixi sprites
-  if (this.rendererType === "pixi") {
-    //gx
-    if (sprite.gx === undefined) {
-      Object.defineProperty(sprite, "gx", {
-        get: function() {
-          return sprite.getGlobalPosition().x;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //gy
-    if (sprite.gy === undefined) {
-      Object.defineProperty(sprite, "gy", {
-        get: function() {
-          return sprite.getGlobalPosition().y;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //centerX
-    if (sprite.centerX === undefined) {
-      Object.defineProperty(sprite, "centerX", {
-        get: function() {
-          return sprite.x + sprite.width / 2;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //centerY
-    if (sprite.centerY === undefined) {
-      Object.defineProperty(sprite, "centerY", {
-        get: function() {
-          return sprite.y + sprite.height / 2;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //halfWidth
-    if (sprite.halfWidth === undefined) {
-      Object.defineProperty(sprite, "halfWidth", {
-        get: function() {
-          return sprite.width / 2;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //halfHeight
-    if (sprite.halfHeight === undefined) {
-      Object.defineProperty(sprite, "halfHeight", {
-        get: function() {
-          return sprite.height / 2;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //xAnchorOffset
-    if (sprite.xAnchorOffset === undefined) {
-      Object.defineProperty(sprite, "xAnchorOffset", {
-        get: function() {
-          if (sprite.anchor !== undefined) {
-            return sprite.width * sprite.anchor.x;
-          } else {
-            return 0;
-          }
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //yAnchorOffset
-    if (sprite.yAnchorOffset === undefined) {
-      Object.defineProperty(sprite, "yAnchorOffset", {
-        get: function() {
-          if (sprite.anchor !== undefined) {
-            return sprite.height * sprite.anchor.y;
-          } else {
-            return 0;
-          }
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    if (sprite.circular && sprite.radius === undefined) {
-      Object.defineProperty(sprite, "radius", {
-        get: function() {
-          return sprite.width / 2;
-        },
-        enumerable: true,
-        configurable: true,
-      });
-    }
-
-    //Earlier code - not needed now.
-    /*
-    Object.defineProperties(sprite, {
-      "gx": {
-        get: function(){return sprite.getGlobalPosition().x},
-        enumerable: true, configurable: true
-      },
-      "gy": {
-        get: function(){return sprite.getGlobalPosition().y},
-        enumerable: true, configurable: true
-      },
-      "centerX": {
-        get: function(){return sprite.x + sprite.width / 2},
-        enumerable: true, configurable: true
-      },
-      "centerY": {
-        get: function(){return sprite.y + sprite.height / 2},
-        enumerable: true, configurable: true
-      },
-      "halfWidth": {
-        get: function(){return sprite.width / 2},
-        enumerable: true, configurable: true
-      },
-      "halfHeight": {
-        get: function(){return sprite.height / 2},
-        enumerable: true, configurable: true
-      },
-      "xAnchorOffset": {
-        get: function(){
-          if (sprite.anchor !== undefined) {
-            return sprite.height * sprite.anchor.x;
-          } else {
-            return 0;
-          }
-        },
-        enumerable: true, configurable: true
-      },
-      "yAnchorOffset": {
-        get: function(){
-          if (sprite.anchor !== undefined) {
-            return sprite.width * sprite.anchor.y;
-          } else {
-            return 0;
-          }
-        },
-        enumerable: true, configurable: true
-      }
-    });
-    */
-  }
-
-  //Add a Boolean `_bumpPropertiesAdded` property to the sprite to flag it
-  //as having these new properties
-  sprite._bumpPropertiesAdded = true;
-};
-
-/*
-hitTestPoint
-------------
-
-Use it to find out if a point is touching a circlular or rectangular sprite.
-Parameters: 
-a. An object with `x` and `y` properties.
-b. A sprite object with `x`, `y`, `centerX` and `centerY` properties.
-If the sprite has a `radius` property, the function will interpret
-the shape as a circle.
-*/
-Bump.prototype.hitTestPoint = function(point, sprite) {
-  //Add collision properties
-  if (!sprite._bumpPropertiesAdded) this.addCollisionProperties(sprite);
-
-  var shape, left, right, top, bottom, vx, vy, magnitude, hit;
-
-  //Find out if the sprite is rectangular or circular depending
-  //on whether it has a `radius` property
-  if (sprite.radius) {
-    shape = "circle";
-  } else {
-    shape = "rectangle";
-  }
-
-  //Rectangle
-  if (shape === "rectangle") {
-    //Get the position of the sprite's edges
-    left = sprite.x - sprite.xAnchorOffset;
-    right = sprite.x + sprite.width - sprite.xAnchorOffset;
-    top = sprite.y - sprite.yAnchorOffset;
-    bottom = sprite.y + sprite.height - sprite.yAnchorOffset;
-
-    //Find out if the point is intersecting the rectangle
-    hit = point.x > left && point.x < right && point.y > top && point.y < bottom;
-  }
-
-  //Circle
-  if (shape === "circle") {
-    //Find the distance between the point and the
-    //center of the circle
-    vx = point.x - sprite.x - sprite.width / 2 + sprite.xAnchorOffset;
-    vy = point.y - sprite.y - sprite.height / 2 + sprite.yAnchorOffset;
-    magnitude = Math.sqrt(vx * vx + vy * vy);
-
-    //The point is intersecting the circle if the magnitude
-    //(distance) is less than the circle's radius
-    hit = magnitude < sprite.radius;
-  }
-
-  //`hit` will be either `true` or `false`
-  return hit;
-};
-
-/*
-hitTestCircle
--------------
-
-Use it to find out if two circular sprites are touching.
-Parameters: 
-a. A sprite object with `centerX`, `centerY` and `radius` properties.
-b. A sprite object with `centerX`, `centerY` and `radius`.
-*/
-Bump.prototype.hitTestCircle = function(c1, c2, global) {
-  //Add collision properties
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-  if (!c2._bumpPropertiesAdded) this.addCollisionProperties(c2);
-
-  var vx, vy, magnitude, combinedRadii, hit;
-
-  //Calculate the vector between the circles’ center points
-  if (global) {
-    //Use global coordinates
-    vx = c2.gx + c2.width / 2 - c2.xAnchorOffset - (c1.gx + c1.width / 2 - c1.xAnchorOffset);
-    vy = c2.gy + c2.width / 2 - c2.yAnchorOffset - (c1.gy + c1.width / 2 - c1.yAnchorOffset);
-  } else {
-    //Use local coordinates
-    vx = c2.x + c2.width / 2 - c2.xAnchorOffset - (c1.x + c1.width / 2 - c1.xAnchorOffset);
-    vy = c2.y + c2.width / 2 - c2.yAnchorOffset - (c1.y + c1.width / 2 - c1.yAnchorOffset);
-  }
-
-  //Find the distance between the circles by calculating
-  //the vector's magnitude (how long the vector is)
-  magnitude = Math.sqrt(vx * vx + vy * vy);
-
-  //Add together the circles' total radii
-  combinedRadii = c1.radius + c2.radius;
-
-  //Set `hit` to `true` if the distance between the circles is
-  //less than their `combinedRadii`
-  hit = magnitude < combinedRadii;
-
-  //`hit` will be either `true` or `false`
-  return hit;
-};
-
-/*
-circleCollision
----------------
-
-Use it to prevent a moving circular sprite from overlapping and optionally
-bouncing off a non-moving circular sprite.
-Parameters: 
-a. A sprite object with `x`, `y` `centerX`, `centerY` and `radius` properties.
-b. A sprite object with `x`, `y` `centerX`, `centerY` and `radius` properties.
-c. Optional: true or false to indicate whether or not the first sprite
-should bounce off the second sprite.
-The sprites can contain an optional mass property that should be greater than 1.
-
-*/
-Bump.prototype.circleCollision = function(c1, c2, bounce, global) {
-  //Add collision properties
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-  if (!c2._bumpPropertiesAdded) this.addCollisionProperties(c2);
-
-  var magnitude,
-    combinedRadii,
-    overlap,
-    vx,
-    vy,
-    dx,
-    dy,
-    s = {},
-    hit = false;
-
-  //Calculate the vector between the circles’ center points
-
-  if (global) {
-    //Use global coordinates
-    vx = c2.gx + c2.width / 2 - c2.xAnchorOffset - (c1.gx + c1.width / 2 - c1.xAnchorOffset);
-    vy = c2.gy + c2.width / 2 - c2.yAnchorOffset - (c1.gy + c1.width / 2 - c1.yAnchorOffset);
-  } else {
-    //Use local coordinates
-    vx = c2.x + c2.width / 2 - c2.xAnchorOffset - (c1.x + c1.width / 2 - c1.xAnchorOffset);
-    vy = c2.y + c2.width / 2 - c2.yAnchorOffset - (c1.y + c1.width / 2 - c1.yAnchorOffset);
-  }
-
-  //Find the distance between the circles by calculating
-  //the vector's magnitude (how long the vector is)
-  magnitude = Math.sqrt(vx * vx + vy * vy);
-
-  //Add together the circles' combined half-widths
-  combinedRadii = c1.radius + c2.radius;
-
-  //Figure out if there's a collision
-  if (magnitude < combinedRadii) {
-    //Yes, a collision is happening
-    hit = true;
-
-    //Find the amount of overlap between the circles
-    overlap = combinedRadii - magnitude;
-
-    //Add some "quantum padding". This adds a tiny amount of space
-    //between the circles to reduce their surface tension and make
-    //them more slippery. "0.3" is a good place to start but you might
-    //need to modify this slightly depending on the exact behaviour
-    //you want. Too little and the balls will feel sticky, too much
-    //and they could start to jitter if they're jammed together
-    var quantumPadding = 0.3;
-    overlap += quantumPadding;
-
-    //Normalize the vector
-    //These numbers tell us the direction of the collision
-    dx = vx / magnitude;
-    dy = vy / magnitude;
-
-    //Move circle 1 out of the collision by multiplying
-    //the overlap with the normalized vector and subtract it from
-    //circle 1's position
-    c1.x -= overlap * dx;
-    c1.y -= overlap * dy;
-
-    //Bounce
-    if (bounce) {
-      //Create a collision vector object, `s` to represent the bounce "surface".
-      //Find the bounce surface's x and y properties
-      //(This represents the normal of the distance vector between the circles)
-      s.x = vy;
-      s.y = -vx;
-
-      //Bounce c1 off the surface
-      this.bounceOffSurface(c1, s);
-    }
-  }
-  return hit;
-};
-
-/*
-movingCircleCollision
----------------------
-
-Use it to make two moving circles bounce off each other.
-Parameters: 
-a. A sprite object with `x`, `y` `centerX`, `centerY` and `radius` properties.
-b. A sprite object with `x`, `y` `centerX`, `centerY` and `radius` properties.
-The sprites can contain an optional mass property that should be greater than 1.
-
-*/
-Bump.prototype.movingCircleCollision = function(c1, c2, global) {
-  //Add collision properties
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-  if (!c2._bumpPropertiesAdded) this.addCollisionProperties(c2);
-
-  var combinedRadii,
-    overlap,
-    xSide,
-    ySide,
-    //`s` refers to the distance vector between the circles
-    s = {},
-    p1A = {},
-    p1B = {},
-    p2A = {},
-    p2B = {},
-    hit = false;
-
-  //Apply mass, if the circles have mass properties
-  c1.mass = c1.mass || 1;
-  c2.mass = c2.mass || 1;
-
-  //Calculate the vector between the circles’ center points
-  if (global) {
-    //Use global coordinates
-    s.vx = c2.gx + c2.radius - c2.xAnchorOffset - (c1.gx + c1.radius - c1.xAnchorOffset);
-    s.vy = c2.gy + c2.radius - c2.yAnchorOffset - (c1.gy + c1.radius - c1.yAnchorOffset);
-  } else {
-    //Use local coordinates
-    s.vx = c2.x + c2.radius - c2.xAnchorOffset - (c1.x + c1.radius - c1.xAnchorOffset);
-    s.vy = c2.y + c2.radius - c2.yAnchorOffset - (c1.y + c1.radius - c1.yAnchorOffset);
-  }
-
-  //Find the distance between the circles by calculating
-  //the vector's magnitude (how long the vector is)
-  s.magnitude = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-
-  //Add together the circles' combined half-widths
-  combinedRadii = c1.radius + c2.radius;
-
-  //Figure out if there's a collision
-  if (s.magnitude < combinedRadii) {
-    //Yes, a collision is happening
-    hit = true;
-
-    //Find the amount of overlap between the circles
-    overlap = combinedRadii - s.magnitude;
-
-    //Add some "quantum padding" to the overlap
-    overlap += 0.3;
-
-    //Normalize the vector.
-    //These numbers tell us the direction of the collision
-    s.dx = s.vx / s.magnitude;
-    s.dy = s.vy / s.magnitude;
-
-    //Find the collision vector.
-    //Divide it in half to share between the circles, and make it absolute
-    s.vxHalf = Math.abs((s.dx * overlap) / 2);
-    s.vyHalf = Math.abs((s.dy * overlap) / 2);
-
-    //Find the side that the collision is occurring on
-    xSide = c1.x > c2.x ? 1 : -1;
-    ySide = c1.y > c2.y ? 1 : -1;
-
-    //Move c1 out of the collision by multiplying
-    //the overlap with the normalized vector and adding it to
-    //the circles' positions
-    c1.x = c1.x + s.vxHalf * xSide;
-    c1.y = c1.y + s.vyHalf * ySide;
-
-    //Move c2 out of the collision
-    c2.x = c2.x + s.vxHalf * -xSide;
-    c2.y = c2.y + s.vyHalf * -ySide;
-
-    //1. Calculate the collision surface's properties
-
-    //Find the surface vector's left normal
-    s.lx = s.vy;
-    s.ly = -s.vx;
-
-    //2. Bounce c1 off the surface (s)
-
-    //Find the dot product between c1 and the surface
-    var dp1 = c1.vx * s.dx + c1.vy * s.dy;
-
-    //Project c1's velocity onto the collision surface
-    p1A.x = dp1 * s.dx;
-    p1A.y = dp1 * s.dy;
-
-    //Find the dot product of c1 and the surface's left normal (s.lx and s.ly)
-    var dp2 = c1.vx * (s.lx / s.magnitude) + c1.vy * (s.ly / s.magnitude);
-
-    //Project the c1's velocity onto the surface's left normal
-    p1B.x = dp2 * (s.lx / s.magnitude);
-    p1B.y = dp2 * (s.ly / s.magnitude);
-
-    //3. Bounce c2 off the surface (s)
-
-    //Find the dot product between c2 and the surface
-    var dp3 = c2.vx * s.dx + c2.vy * s.dy;
-
-    //Project c2's velocity onto the collision surface
-    p2A.x = dp3 * s.dx;
-    p2A.y = dp3 * s.dy;
-
-    //Find the dot product of c2 and the surface's left normal (s.lx and s.ly)
-    var dp4 = c2.vx * (s.lx / s.magnitude) + c2.vy * (s.ly / s.magnitude);
-
-    //Project c2's velocity onto the surface's left normal
-    p2B.x = dp4 * (s.lx / s.magnitude);
-    p2B.y = dp4 * (s.ly / s.magnitude);
-
-    //4. Calculate the bounce vectors
-
-    //Bounce c1
-    //using p1B and p2A
-    c1.bounce = {};
-    c1.bounce.x = p1B.x + p2A.x;
-    c1.bounce.y = p1B.y + p2A.y;
-
-    //Bounce c2
-    //using p1A and p2B
-    c2.bounce = {};
-    c2.bounce.x = p1A.x + p2B.x;
-    c2.bounce.y = p1A.y + p2B.y;
-
-    //Add the bounce vector to the circles' velocity
-    //and add mass if the circle has a mass property
-    c1.vx = c1.bounce.x / c1.mass;
-    c1.vy = c1.bounce.y / c1.mass;
-    c2.vx = c2.bounce.x / c2.mass;
-    c2.vy = c2.bounce.y / c2.mass;
-  }
-  return hit;
-};
-
-/*
-multipleCircleCollision
------------------------
-
-Checks all the circles in an array for a collision against
-all the other circles in an array, using `movingCircleCollision` (above)
-*/
-Bump.prototype.multipleCircleCollision = function(arrayOfCircles, global) {
-  for (var i = 0; i < arrayOfCircles.length; i++) {
-    //The first circle to use in the collision check
-    var c1 = arrayOfCircles[i];
-    for (var j = i + 1; j < arrayOfCircles.length; j++) {
-      //The second circle to use in the collision check
-      var c2 = arrayOfCircles[j];
-
-      //Check for a collision and bounce the circles apart if
-      //they collide. Use an optional `mass` property on the sprite
-      //to affect the bounciness of each marble
-      this.movingCircleCollision(c1, c2, global);
-    }
-  }
-};
-
-/*
-checkMultipleCollision
------------------------
-
-*/
-Bump.prototype.checkMultipleCollision = function(displayObject, bounce, global) {
-  for (var i = 0; i < displayObject.length; i++) {
-    var rect1 = displayObjects[i];
-
-    for (var j = i + 1; j < displayObject.length; j++) {
-      var rect2 = displayObject[j];
-
-      if (!bounce) {
-        return hitTestRectangle(rect1, rect2, global);
-      } else {
-        return rectangleCollision(rect1, rect2, bounce, global);
-      }
-    }
-  }
-};
-
-/*
-rectangleCollision
-------------------
-
-Use it to prevent two rectangular sprites from overlapping.
-Optionally, make the first rectangle bounce off the second rectangle.
-Parameters:
-a. A sprite object with `x`, `y` `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-b. A sprite object with `x`, `y` `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-c. Optional: true or false to indicate whether or not the first sprite
-should bounce off the second sprite.
-*/
-Bump.prototype.rectangleCollision = function(r1, r2, bounce, global) {
-  if (global !== false) global = true;
-  //Add collision properties
-  if (!r1._bumpPropertiesAdded) this.addCollisionProperties(r1);
-  if (!r2._bumpPropertiesAdded) this.addCollisionProperties(r2);
-
-  var collision, combinedHalfWidths, combinedHalfHeights, overlapX, overlapY, vx, vy;
-
-  //Calculate the distance vector
-  if (global) {
-    vx = r1.gx + Math.abs(r1.halfWidth) - r1.xAnchorOffset - (r2.gx + Math.abs(r2.halfWidth) - r2.xAnchorOffset);
-    vy = r1.gy + Math.abs(r1.halfHeight) - r1.yAnchorOffset - (r2.gy + Math.abs(r2.halfHeight) - r2.yAnchorOffset);
-  } else {
-    //vx = r1.centerX - r2.centerX;
-    //vy = r1.centerY - r2.centerY;
-    vx = r1.x + Math.abs(r1.halfWidth) - r1.xAnchorOffset - (r2.x + Math.abs(r2.halfWidth) - r2.xAnchorOffset);
-    vy = r1.y + Math.abs(r1.halfHeight) - r1.yAnchorOffset - (r2.y + Math.abs(r2.halfHeight) - r2.yAnchorOffset);
-  }
-
-  //Figure out the combined half-widths and half-heights
-  combinedHalfWidths = Math.abs(r1.halfWidth) + Math.abs(r2.halfWidth);
-  combinedHalfHeights = Math.abs(r1.halfHeight) + Math.abs(r2.halfHeight);
-
-  //Check whether vx is less than the combined half widths
-  if (Math.abs(vx) < combinedHalfWidths) {
-    //A collision might be occurring!
-    //Check whether vy is less than the combined half heights
-    if (Math.abs(vy) < combinedHalfHeights) {
-      //A collision has occurred! This is good!
-      //Find out the size of the overlap on both the X and Y axes
-      overlapX = combinedHalfWidths - Math.abs(vx);
-      overlapY = combinedHalfHeights - Math.abs(vy);
-
-      //The collision has occurred on the axis with the
-      //*smallest* amount of overlap. var's figure out which
-      //axis that is
-
-      if (overlapX >= overlapY) {
-        //The collision is happening on the X axis
-        //But on which side? vy can tell us
-
-        if (vy > 0) {
-          collision = "top";
-          //Move the rectangle out of the collision
-          r1.y = r1.y + overlapY;
-        } else {
-          collision = "bottom";
-          //Move the rectangle out of the collision
-          r1.y = r1.y - overlapY;
-        }
-
-        //Bounce
-        if (bounce) {
-          r1.vy *= -1;
-
-          /*Alternative
-            //Find the bounce surface's vx and vy properties
-            var s = {};
-            s.vx = r2.x - r2.x + r2.width;
-            s.vy = 0;
-
-            //Bounce r1 off the surface
-            //this.bounceOffSurface(r1, s);
-            */
-        }
-      } else {
-        //The collision is happening on the Y axis
-        //But on which side? vx can tell us
-
-        if (vx > 0) {
-          collision = "left";
-          //Move the rectangle out of the collision
-          r1.x = r1.x + overlapX;
-        } else {
-          collision = "right";
-          //Move the rectangle out of the collision
-          r1.x = r1.x - overlapX;
-        }
-
-        //Bounce
-        if (bounce) {
-          r1.vx *= -1;
-
-          /*Alternative
-            //Find the bounce surface's vx and vy properties
-            var s = {};
-            s.vx = 0;
-            s.vy = r2.y - r2.y + r2.height;
-
-            //Bounce r1 off the surface
-            this.bounceOffSurface(r1, s);
-            */
-        }
-      }
-    } else {
-      //No collision
-    }
-  } else {
-    //No collision
-  }
-
-  //Return the collision string. it will be either "top", "right",
-  //"bottom", or "left" depending on which side of r1 is touching r2.
-  return collision;
-};
-
-/*
-hitTestRectangle
-----------------
-
-Use it to find out if two rectangular sprites are touching.
-Parameters: 
-a. A sprite object with `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-b. A sprite object with `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-
-*/
-Bump.prototype.hitTestRectangle = function(r1, r2, global) {
-  //Add collision properties
-  if (!r1._bumpPropertiesAdded) this.addCollisionProperties(r1);
-  if (!r2._bumpPropertiesAdded) this.addCollisionProperties(r2);
-
-  var hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-
-  //A variable to determine whether there's a collision
-  hit = false;
-
-  //Calculate the distance vector
-  if (global) {
-    vx = r1.gx + Math.abs(r1.halfWidth) - r1.xAnchorOffset - (r2.gx + Math.abs(r2.halfWidth) - r2.xAnchorOffset);
-    vy = r1.gy + Math.abs(r1.halfHeight) - r1.yAnchorOffset - (r2.gy + Math.abs(r2.halfHeight) - r2.yAnchorOffset);
-  } else {
-    vx = r1.x + Math.abs(r1.halfWidth) - r1.xAnchorOffset - (r2.x + Math.abs(r2.halfWidth) - r2.xAnchorOffset);
-    vy = r1.y + Math.abs(r1.halfHeight) - r1.yAnchorOffset - (r2.y + Math.abs(r2.halfHeight) - r2.yAnchorOffset);
-  }
-
-  //Figure out the combined half-widths and half-heights
-  combinedHalfWidths = Math.abs(r1.halfWidth) + Math.abs(r2.halfWidth);
-  combinedHalfHeights = Math.abs(r1.halfHeight) + Math.abs(r2.halfHeight);
-
-  //Check for a collision on the x axis
-  if (Math.abs(vx) < combinedHalfWidths) {
-    //A collision might be occuring. Check for a collision on the y axis
-    if (Math.abs(vy) < combinedHalfHeights) {
-      //There's definitely a collision happening
-      hit = true;
-    } else {
-      //There's no collision on the y axis
-      hit = false;
-    }
-  } else {
-    //There's no collision on the x axis
-    hit = false;
-  }
-
-  //`hit` will be either `true` or `false`
-  return hit;
-};
-
-/*
-hitTestCircleRectangle
-----------------
-
-Use it to find out if a circular shape is touching a rectangular shape
-Parameters: 
-a. A sprite object with `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-b. A sprite object with `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-
-*/
-Bump.prototype.hitTestCircleRectangle = function(c1, r1, global) {
-  //Add collision properties
-  if (!r1._bumpPropertiesAdded) this.addCollisionProperties(r1);
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-
-  var region, collision, c1x, c1y, r1x, r1y;
-
-  //Use either global or local coordinates
-  if (global) {
-    c1x = c1.gx;
-    c1y = c1.gy;
-    r1x = r1.gx;
-    r1y = r1.gy;
-  } else {
-    c1x = c1.x;
-    c1y = c1.y;
-    r1x = r1.x;
-    r1y = r1.y;
-  }
-
-  //Is the circle above the rectangle's top edge?
-  if (c1y - c1.yAnchorOffset < r1y - Math.abs(r1.halfHeight) - r1.yAnchorOffset) {
-    //If it is, we need to check whether it's in the
-    //top left, top center or top right
-    if (c1x - c1.xAnchorOffset < r1x - 1 - Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "topLeft";
-    } else if (c1x - c1.xAnchorOffset > r1x + 1 + Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "topRight";
-    } else {
-      region = "topMiddle";
-    }
-  } else if (c1y - c1.yAnchorOffset > r1y + Math.abs(r1.halfHeight) - r1.yAnchorOffset) {
-    //The circle isn't above the top edge, so it might be
-    //below the bottom edge
-    //If it is, we need to check whether it's in the bottom left,
-    //bottom center, or bottom right
-    if (c1x - c1.xAnchorOffset < r1x - 1 - Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "bottomLeft";
-    } else if (c1x - c1.xAnchorOffset > r1x + 1 + Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "bottomRight";
-    } else {
-      region = "bottomMiddle";
-    }
-  } else {
-    //The circle isn't above the top edge or below the bottom edge,
-    //so it must be on the left or right side
-    if (c1x - c1.xAnchorOffset < r1x - Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "leftMiddle";
-    } else {
-      region = "rightMiddle";
-    }
-  }
-
-  //Is this the circle touching the flat sides
-  //of the rectangle?
-  if (region === "topMiddle" || region === "bottomMiddle" || region === "leftMiddle" || region === "rightMiddle") {
-    //Yes, it is, so do a standard rectangle vs. rectangle collision test
-    collision = this.hitTestRectangle(c1, r1, global);
-  } else {
-    //The circle is touching one of the corners, so do a
-    //circle vs. point collision test
-    var point = {};
-
-    switch (region) {
-      case "topLeft":
-        point.x = r1x - r1.xAnchorOffset;
-        point.y = r1y - r1.yAnchorOffset;
-        break;
-
-      case "topRight":
-        point.x = r1x + r1.width - r1.xAnchorOffset;
-        point.y = r1y - r1.yAnchorOffset;
-        break;
-
-      case "bottomLeft":
-        point.x = r1x - r1.xAnchorOffset;
-        point.y = r1y + r1.height - r1.yAnchorOffset;
-        break;
-
-      case "bottomRight":
-        point.x = r1x + r1.width - r1.xAnchorOffset;
-        point.y = r1y + r1.height - r1.yAnchorOffset;
-    }
-
-    //Check for a collision between the circle and the point
-    collision = this.hitTestCirclePoint(c1, point, global);
-  }
-
-  //Return the result of the collision.
-  //The return value will be `undefined` if there's no collision
-  if (collision) {
-    return region;
-  } else {
-    return collision;
-  }
-};
-
-/*
-hitTestCirclePoint
-------------------
-
-Use it to find out if a circular shape is touching a point
-Parameters: 
-a. A sprite object with `centerX`, `centerY`, and `radius` properties.
-b. A point object with `x` and `y` properties.
-
-*/
-Bump.prototype.hitTestCirclePoint = function(c1, point, global) {
-  //Add collision properties
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-
-  //A point is just a circle with a diameter of
-  //1 pixel, so we can cheat. All we need to do is an ordinary circle vs. circle
-  //Collision test. Just supply the point with the properties
-  //it needs
-  point.diameter = 1;
-  point.width = point.diameter;
-  point.radius = 0.5;
-  point.centerX = point.x;
-  point.centerY = point.y;
-  point.gx = point.x;
-  point.gy = point.y;
-  point.xAnchorOffset = 0;
-  point.yAnchorOffset = 0;
-  point._bumpPropertiesAdded = true;
-  return this.hitTestCircle(c1, point, global);
-};
-
-/*
-  circleRectangleCollision
-  ------------------------
-
-  Use it to bounce a circular shape off a rectangular shape
-  Parameters: 
-  a. A sprite object with `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-  b. A sprite object with `centerX`, `centerY`, `halfWidth` and `halfHeight` properties.
-
-  */
-Bump.prototype.circleRectangleCollision = function(c1, r1, bounce, global) {
-  //Add collision properties
-  if (!r1._bumpPropertiesAdded) this.addCollisionProperties(r1);
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-
-  var region, collision, c1x, c1y, r1x, r1y;
-
-  //Use either the global or local coordinates
-  if (global) {
-    c1x = c1.gx;
-    c1y = c1.gy;
-    r1x = r1.gx;
-    r1y = r1.gy;
-  } else {
-    c1x = c1.x;
-    c1y = c1.y;
-    r1x = r1.x;
-    r1y = r1.y;
-  }
-
-  //Is the circle above the rectangle's top edge?
-  if (c1y - c1.yAnchorOffset < r1y - Math.abs(r1.halfHeight) - r1.yAnchorOffset) {
-    //If it is, we need to check whether it's in the
-    //top left, top center or top right
-    if (c1x - c1.xAnchorOffset < r1x - 1 - Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "topLeft";
-    } else if (c1x - c1.xAnchorOffset > r1x + 1 + Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "topRight";
-    } else {
-      region = "topMiddle";
-    }
-  } else if (c1y - c1.yAnchorOffset > r1y + Math.abs(r1.halfHeight) - r1.yAnchorOffset) {
-    //The circle isn't above the top edge, so it might be
-    //below the bottom edge
-    //If it is, we need to check whether it's in the bottom left,
-    //bottom center, or bottom right
-    if (c1x - c1.xAnchorOffset < r1x - 1 - Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "bottomLeft";
-    } else if (c1x - c1.xAnchorOffset > r1x + 1 + Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "bottomRight";
-    } else {
-      region = "bottomMiddle";
-    }
-  } else {
-    //The circle isn't above the top edge or below the bottom edge,
-    //so it must be on the left or right side
-    if (c1x - c1.xAnchorOffset < r1x - Math.abs(r1.halfWidth) - r1.xAnchorOffset) {
-      region = "leftMiddle";
-    } else {
-      region = "rightMiddle";
-    }
-  }
-
-  //Is this the circle touching the flat sides
-  //of the rectangle?
-  if (region === "topMiddle" || region === "bottomMiddle" || region === "leftMiddle" || region === "rightMiddle") {
-    //Yes, it is, so do a standard rectangle vs. rectangle collision test
-    collision = this.rectangleCollision(c1, r1, bounce, global);
-  } else {
-    //The circle is touching one of the corners, so do a
-    //circle vs. point collision test
-    var point = {};
-
-    switch (region) {
-      case "topLeft":
-        point.x = r1x - r1.xAnchorOffset;
-        point.y = r1y - r1.yAnchorOffset;
-        break;
-
-      case "topRight":
-        point.x = r1x + r1.width - r1.xAnchorOffset;
-        point.y = r1y - r1.yAnchorOffset;
-        break;
-
-      case "bottomLeft":
-        point.x = r1x - r1.xAnchorOffset;
-        point.y = r1y + r1.height - r1.yAnchorOffset;
-        break;
-
-      case "bottomRight":
-        point.x = r1x + r1.width - r1.xAnchorOffset;
-        point.y = r1y + r1.height - r1.yAnchorOffset;
-    }
-
-    //Check for a collision between the circle and the point
-    collision = this.circlePointCollision(c1, point, bounce, global);
-  }
-
-  if (collision) {
-    return region;
-  } else {
-    return collision;
-  }
-};
-
-/*
-  circlePointCollision
-  --------------------
-
-  Use it to boucnce a circle off a point.
-  Parameters: 
-  a. A sprite object with `centerX`, `centerY`, and `radius` properties.
-  b. A point object with `x` and `y` properties.
-
-  */
-
-Bump.prototype.circlePointCollision = function(c1, point, bounce, global) {
-  //Add collision properties
-  if (!c1._bumpPropertiesAdded) this.addCollisionProperties(c1);
-
-  //A point is just a circle with a diameter of
-  //1 pixel, so we can cheat. All we need to do is an ordinary circle vs. circle
-  //Collision test. Just supply the point with the properties
-  //it needs
-  point.diameter = 1;
-  point.width = point.diameter;
-  point.radius = 0.5;
-  point.centerX = point.x;
-  point.centerY = point.y;
-  point.gx = point.x;
-  point.gy = point.y;
-  point.xAnchorOffset = 0;
-  point.yAnchorOffset = 0;
-  point._bumpPropertiesAdded = true;
-  return this.circleCollision(c1, point, bounce, global);
-};
-
-/*
-  bounceOffSurface
-  ----------------
-
-  Use this to bounce an object off another object.
-  Parameters: 
-  a. An object with `v.x` and `v.y` properties. This represents the object that is colliding
-  with a surface.
-  b. An object with `x` and `y` properties. This represents the surface that the object
-  is colliding into.
-  The first object can optionally have a mass property that's greater than 1. The mass will
-  be used to dampen the bounce effect.
-  */
-
-Bump.prototype.bounceOffSurface = function(o, s) {
-  //Add collision properties
-  if (!o._bumpPropertiesAdded) this.addCollisionProperties(o);
-
-  var dp1,
-    dp2,
-    p1 = {},
-    p2 = {},
-    bounce = {},
-    mass = o.mass || 1;
-
-  //1. Calculate the collision surface's properties
-  //Find the surface vector's left normal
-  s.lx = s.y;
-  s.ly = -s.x;
-
-  //Find its magnitude
-  s.magnitude = Math.sqrt(s.x * s.x + s.y * s.y);
-
-  //Find its normalized values
-  s.dx = s.x / s.magnitude;
-  s.dy = s.y / s.magnitude;
-
-  //2. Bounce the object (o) off the surface (s)
-
-  //Find the dot product between the object and the surface
-  dp1 = o.vx * s.dx + o.vy * s.dy;
-
-  //Project the object's velocity onto the collision surface
-  p1.vx = dp1 * s.dx;
-  p1.vy = dp1 * s.dy;
-
-  //Find the dot product of the object and the surface's left normal (s.lx and s.ly)
-  dp2 = o.vx * (s.lx / s.magnitude) + o.vy * (s.ly / s.magnitude);
-
-  //Project the object's velocity onto the surface's left normal
-  p2.vx = dp2 * (s.lx / s.magnitude);
-  p2.vy = dp2 * (s.ly / s.magnitude);
-
-  //Reverse the projection on the surface's left normal
-  p2.vx *= -1;
-  p2.vy *= -1;
-
-  //Add up the projections to create a new bounce vector
-  bounce.x = p1.vx + p2.vx;
-  bounce.y = p1.vy + p2.vy;
-
-  //Assign the bounce vector to the object's velocity
-  //with optional mass to dampen the effect
-  o.vx = bounce.x / mass;
-  o.vy = bounce.y / mass;
-};
-
-/*
-  contain
-  -------
-  `contain` can be used to contain a sprite with `x` and
-  `y` properties inside a rectangular area.
-
-  The `contain` function takes four arguments: a sprite with `x` and `y`
-  properties, an object literal with `x`, `y`, `width` and `height` properties. The 
-  third argument is a Boolean (true/false) value that determines if the sprite
-  should bounce when it hits the edge of the container. The fourth argument
-  is an extra user-defined callback function that you can call when the
-  sprite hits the container
-  ```js
-  contain(anySprite, {x: 0, y: 0, width: 512, height: 512}, true, callbackFunction);
-  ```
-  The code above will contain the sprite's position inside the 512 by
-  512 pixel area defined by the object. If the sprite hits the edges of
-  the container, it will bounce. The `callBackFunction` will run if 
-  there's a collision.
-
-  An additional feature of the `contain` method is that if the sprite
-  has a `mass` property, it will be used to dampen the sprite's bounce
-  in a natural looking way.
-
-  If the sprite bumps into any of the containing object's boundaries,
-  the `contain` function will return a value that tells you which side
-  the sprite bumped into: “left”, “top”, “right” or “bottom”. Here's how
-  you could keep the sprite contained and also find out which boundary
-  it hit:
-  ```js
-  //Contain the sprite and find the collision value
-  var collision = contain(anySprite, {x: 0, y: 0, width: 512, height: 512});
-
-  //If there's a collision, display the boundary that the collision happened on
-  if(collision) {
-    if collision.has("left") console.log("The sprite hit the left");  
-    if collision.has("top") console.log("The sprite hit the top");  
-    if collision.has("right") console.log("The sprite hit the right");  
-    if collision.has("bottom") console.log("The sprite hit the bottom");  
-  }
-  ```
-  If the sprite doesn't hit a boundary, the value of
-  `collision` will be `undefined`. 
-  */
-
-/*
-  contain(sprite, container, bounce, extra = undefined) {
-
-    //Helper methods that compensate for any possible shift the the
-    //sprites' anchor points
-    var nudgeAnchor = (o, value, axis) => {
-      if (o.anchor !== undefined) {
-        if (o.anchor[axis] !== 0) {
-          return value * ((1 - o.anchor[axis]) - o.anchor[axis]);
-        } else {
-          return value;
-        }
-      } else {
-        return value; 
-      }
-    };
-
-    var compensateForAnchor = (o, value, axis) => {
-      if (o.anchor !== undefined) {
-        if (o.anchor[axis] !== 0) {
-          return value * o.anchor[axis];
-        } else {
-          return 0;
-        }
-      } else {
-        return 0; 
-      }
-    };
-
-    var compensateForAnchors = (a, b, property1, property2) => {
-        return compensateForAnchor(a, a[property1], property2) + compensateForAnchor(b, b[property1], property2)
-    };    
-    //Create a set called `collision` to keep track of the
-    //boundaries with which the sprite is colliding
-    var collision = new Set();
-
-    //Left
-    if (sprite.x - compensateForAnchor(sprite, sprite.width, "x") < container.x - sprite.parent.gx - compensateForAnchor(container, container.width, "x")) {
-      //Bounce the sprite if `bounce` is true
-      if (bounce) sprite.vx *= -1;
-
-      //If the sprite has `mass`, var the mass
-      //affect the sprite's velocity
-      if(sprite.mass) sprite.vx /= sprite.mass;
-
-      //Keep the sprite inside the container
-      sprite.x = container.x - sprite.parent.gx + compensateForAnchor(sprite, sprite.width, "x") - compensateForAnchor(container, container.width, "x");
-
-      //Add "left" to the collision set
-      collision.add("left");
-    }
-
-    //Top
-    if (sprite.y - compensateForAnchor(sprite, sprite.height, "y") < container.y - sprite.parent.gy - compensateForAnchor(container, container.height, "y")) {
-      if (bounce) sprite.vy *= -1;
-      if(sprite.mass) sprite.vy /= sprite.mass;
-      sprite.y = container.x - sprite.parent.gy + compensateForAnchor(sprite, sprite.height, "y") - compensateForAnchor(container, container.height, "y");
-      collision.add("top");
-    }
-
-    //Right
-    if (sprite.x - compensateForAnchor(sprite, sprite.width, "x") + sprite.width > container.width - compensateForAnchor(container, container.width, "x")) {
-      if (bounce) sprite.vx *= -1;
-      if(sprite.mass) sprite.vx /= sprite.mass;
-      sprite.x = container.width - sprite.width + compensateForAnchor(sprite, sprite.width, "x") - compensateForAnchor(container, container.width, "x");
-      collision.add("right");
-    }
-
-    //Bottom
-    if (sprite.y - compensateForAnchor(sprite, sprite.height, "y") + sprite.height > container.height - compensateForAnchor(container, container.height, "y")) {
-      if (bounce) sprite.vy *= -1;
-      if(sprite.mass) sprite.vy /= sprite.mass;
-      sprite.y = container.height - sprite.height + compensateForAnchor(sprite, sprite.height, "y") - compensateForAnchor(container, container.height, "y");
-      collision.add("bottom");
-    }
-
-    //If there were no collisions, set `collision` to `undefined`
-    if (collision.size === 0) collision = undefined;
-
-    //The `extra` function runs if there was a collision
-    //and `extra` has been defined
-    if (collision && extra) extra(collision);
-
-    //Return the `collision` value
-    return collision;
-  }
-  */
-Bump.prototype.contain = function(sprite, container, bounce, extra) {
-  if (!extra) extra = undefined;
-  //Add collision properties
-  if (!sprite._bumpPropertiesAdded) this.addCollisionProperties(sprite);
-
-  //Give the container x and y anchor offset values, if it doesn't
-  //have any
-  if (container.xAnchorOffset === undefined) container.xAnchorOffset = 0;
-  if (container.yAnchorOffset === undefined) container.yAnchorOffset = 0;
-  if (sprite.parent.gx === undefined) sprite.parent.gx = 0;
-  if (sprite.parent.gy === undefined) sprite.parent.gy = 0;
-
-  //Create a Set called `collision` to keep track of the
-  //boundaries with which the sprite is colliding
-  var collision = new Set();
-
-  //Left
-  if (sprite.x - sprite.xAnchorOffset < container.x - sprite.parent.gx - container.xAnchorOffset) {
-    //Bounce the sprite if `bounce` is true
-    if (bounce) sprite.vx *= -1;
-
-    //If the sprite has `mass`, var the mass
-    //affect the sprite's velocity
-    if (sprite.mass) sprite.vx /= sprite.mass;
-
-    //Reposition the sprite inside the container
-    sprite.x = container.x - sprite.parent.gx - container.xAnchorOffset + sprite.xAnchorOffset;
-
-    //Make a record of the side which the container hit
-    collision.add("left");
-  }
-
-  //Top
-  if (sprite.y - sprite.yAnchorOffset < container.y - sprite.parent.gy - container.yAnchorOffset) {
-    if (bounce) sprite.vy *= -1;
-    if (sprite.mass) sprite.vy /= sprite.mass;
-    sprite.y = container.y - sprite.parent.gy - container.yAnchorOffset + sprite.yAnchorOffset;
-    collision.add("top");
-  }
-
-  //Right
-  if (sprite.x - sprite.xAnchorOffset + sprite.width > container.width - container.xAnchorOffset) {
-    if (bounce) sprite.vx *= -1;
-    if (sprite.mass) sprite.vx /= sprite.mass;
-    sprite.x = container.width - sprite.width - container.xAnchorOffset + sprite.xAnchorOffset;
-    collision.add("right");
-  }
-
-  //Bottom
-  if (sprite.y - sprite.yAnchorOffset + sprite.height > container.height - container.yAnchorOffset) {
-    if (bounce) sprite.vy *= -1;
-    if (sprite.mass) sprite.vy /= sprite.mass;
-    sprite.y = container.height - sprite.height - container.yAnchorOffset + sprite.yAnchorOffset;
-    collision.add("bottom");
-  }
-
-  //If there were no collisions, set `collision` to `undefined`
-  if (collision.size === 0) collision = undefined;
-
-  //The `extra` function runs if there was a collision
-  //and `extra` has been defined
-  if (collision && extra) extra(collision);
-
-  //Return the `collision` value
-  return collision;
-};
-
-//`outsideBounds` checks whether a sprite is outide the boundary of
-//another object. It returns an object called `collision`. `collision` will be `undefined` if there's no
-//collision. But if there is a collision, `collision` will be
-//returned as a Set containg strings that tell you which boundary
-//side was crossed: "left", "right", "top" or "bottom"
-Bump.prototype.outsideBounds = function(s, bounds, extra) {
-  var x = bounds.x,
-    y = bounds.y,
-    width = bounds.width,
-    height = bounds.height;
-
-  //The `collision` object is used to store which
-  //side of the containing rectangle the sprite hits
-  var collision = new Set();
-
-  //Left
-  if (s.x < x - s.width) {
-    collision.add("left");
-  }
-  //Top
-  if (s.y < y - s.height) {
-    collision.add("top");
-  }
-  //Right
-  if (s.x > width + s.width) {
-    collision.add("right");
-  }
-  //Bottom
-  if (s.y > height + s.height) {
-    collision.add("bottom");
-  }
-
-  //If there were no collisions, set `collision` to `undefined`
-  if (collision.size === 0) collision = undefined;
-
-  //The `extra` function runs if there was a collision
-  //and `extra` has been defined
-  if (collision && extra) extra(collision);
-
-  //Return the `collision` object
-  return collision;
-};
-
-/*
-  _getCenter
-  ----------
-
-  A utility that finds the center point of the sprite. If it's anchor point is the
-  sprite's top left corner, then the center is calculated from that point.
-  If the anchor point has been shifted, then the anchor x/y point is used as the sprite's center
-  */
-
-Bump.prototype._getCenter = function(o, dimension, axis) {
-  if (o.anchor !== undefined) {
-    if (o.anchor[axis] !== 0) {
-      return 0;
-    } else {
-      //console.log(o.anchor[axis])
-      return dimension / 2;
-    }
-  } else {
-    return dimension;
-  }
-};
-
-Bump.prototype.hit = function(a, b, react, bounce, global, extra) {
-  //Local references to bump's collision methods
-  var hitTestPoint = this.hitTestPoint.bind(this),
-    hitTestRectangle = this.hitTestRectangle.bind(this),
-    hitTestCircle = this.hitTestCircle.bind(this),
-    movingCircleCollision = this.movingCircleCollision.bind(this),
-    circleCollision = this.circleCollision.bind(this),
-    hitTestCircleRectangle = this.hitTestCircleRectangle.bind(this),
-    rectangleCollision = this.rectangleCollision.bind(this),
-    circleRectangleCollision = this.circleRectangleCollision.bind(this);
-
-  var collision,
-    aIsASprite = a.parent !== undefined,
-    bIsASprite = b.parent !== undefined;
-
-  //Check to make sure one of the arguments isn't an array
-  if ((aIsASprite && b instanceof Array) || (bIsASprite && a instanceof Array)) {
-    //If it is, check for a collision between a sprite and an array
-    spriteVsArray();
-  } else {
-    //If one of the arguments isn't an array, find out what type of
-    //collision check to run
-    collision = findCollisionType(a, b);
-  }
-
-  //Return the result of the collision.
-  //It will be `undefined` if there's no collision and `true` if
-  //there is a collision. `rectangleCollision` sets `collsision` to
-  //"top", "bottom", "left" or "right" depeneding on which side the
-  //collision is occuring on
-  return collision;
-
-  function findCollisionType(a, b) {
-    //Are `a` and `b` both sprites?
-    //(We have to check again if this function was called from
-    //`spriteVsArray`)
-    var aIsASprite = a.parent !== undefined;
-    var bIsASprite = b.parent !== undefined;
-
-    if (aIsASprite && bIsASprite) {
-      //Yes, but what kind of sprites?
-      if (a.diameter && b.diameter) {
-        //They're circles
-        return circleVsCircle(a, b);
-      } else if (a.diameter && !b.diameter) {
-        //The first one is a circle and the second is a rectangle
-        return circleVsRectangle(a, b);
-      } else {
-        //They're rectangles
-        return rectangleVsRectangle(a, b);
-      }
-    } else if (bIsASprite && a.x !== undefined && a.y !== undefined) {
-      //They're not both sprites, so what are they?
-      //Is `a` not a sprite and does it have x and y properties?
-      //Yes, so this is a point vs. sprite collision test
-      return hitTestPoint(a, b);
-    } else {
-      //The user is trying to test some incompatible objects
-      throw new Error("I'm sorry, " + a + " and " + b + " cannot be use together in a collision test.'");
-    }
-  }
-
-  function spriteVsArray() {
-    //If `a` happens to be the array, flip it around so that it becomes `b`
-    if (a instanceof Array) {
-      var tmpb = b;
-      b = a;
-      a = tmpb;
-    }
-    //Loop through the array in reverse
-    for (var i = b.length - 1; i >= 0; i--) {
-      var sprite = b[i];
-      collision = findCollisionType(a, sprite);
-      if (collision && extra) extra(collision, sprite);
-    }
-  }
-
-  function circleVsCircle(a, b) {
-    //If the circles shouldn't react to the collision,
-    //just test to see if they're touching
-    if (!react) {
-      return hitTestCircle(a, b);
-    } else {
-      //Yes, the circles should react to the collision
-      //Are they both moving?
-      if (a.vx + a.vy !== 0 && b.vx + b.vy !== 0) {
-        //Yes, they are both moving
-        //(moving circle collisions always bounce apart so there's
-        //no need for the third, `bounce`, argument)
-        return movingCircleCollision(a, b, global);
-      } else {
-        //No, they're not both moving
-        return circleCollision(a, b, bounce, global);
-      }
-    }
-  }
-
-  function rectangleVsRectangle(a, b) {
-    //If the rectangles shouldn't react to the collision, just
-    //test to see if they're touching
-    if (!react) {
-      return hitTestRectangle(a, b, global);
-    } else {
-      return rectangleCollision(a, b, bounce, global);
-    }
-  }
-
-  function circleVsRectangle(a, b) {
-    //If the rectangles shouldn't react to the collision, just
-    //test to see if they're touching
-    if (!react) {
-      return hitTestCircleRectangle(a, b, global);
-    } else {
-      return circleRectangleCollision(a, b, bounce, global);
-    }
-  }
-};
-
-/*
-hitTest
------------------------
-// Test each directions and return true for each if hitTest is verified
-
-// var rect1 = displayObject.getGlobalPosition();
-// rect1.width = displayObject.width;
-// rect1.height = displayObject.height;
-// var rect2 = displayObject2.getGlobalPosition();
-// rect2.width = displayObject2.width;
-// rect2.height = displayObject2.height;
-
-// if (rect1.x < rect2.x + rect2.width &&
-//   rect1.x + rect1.width > rect2.x &&
-//   rect1.y < rect2.y + rect2.height &&
-//   rect1.height + rect1.y > rect2.y) {
-//   return true;
-// }
-*/
-Bump.prototype.hitTest = function(displayObject, displayObjects) {
-  var hitDirections = {
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
-  };
-
-  for (var i = displayObjects.length - 1; i >= 0; i--) {
-    var displayObject2 = displayObjects[i];
-
-    if (displayObject.x < displayObject2.x + displayObject2.width) {
-      hitDirections.left = true;
-    }
-    if (displayObject.x + displayObject.width > displayObject2.x) {
-      hitDirections.right = true;
-    }
-    if (displayObject.y < displayObject2.y + displayObject2.height) {
-      hitDirections.top = true;
-    }
-    if (displayObject.height + displayObject.y > displayObject2.y) {
-      hitDirections.bottom = true;
-    }
-  }
-
-  return hitDirections;
-};
-
-// Only hitTest defines directions of the object
-// for ex, directions = ['top', 'bottom'];
-Bump.prototype.hitTestDirections = function(displayObject, displayObjects, directions) {
-  var hitDirections = this.hitTest(displayObject, displayObjects);
-  for (var i in hitDirections) {
-    if (directions.indexOf(i) === -1) {
-      hitDirections[i] = false;
-    }
-  }
-  return hitDirections;
-};
-
-// Only hitTest left side of the object
-Bump.prototype.hitTestLeft = function(displayObject, displayObjects) {
-  for (var i = displayObjects.length - 1; i >= 0; i--) {
-    var displayObject2 = displayObjects[i];
-    if (
-      displayObject.height + displayObject.y > displayObject2.y &&
-      displayObject.y < displayObject2.y + displayObject2.height &&
-      displayObject.x < displayObject2.x + displayObject2.width
-    ) {
-      return true;
-    }
-  }
-};
-
-// Only hitTest right side of the object
-Bump.prototype.hitTestRight = function(displayObject, displayObjects) {
-  for (var i = displayObjects.length - 1; i >= 0; i--) {
-    var displayObject2 = displayObjects[i];
-    if (
-      displayObject.height + displayObject.y > displayObject2.y &&
-      displayObject.y < displayObject2.y + displayObject2.height &&
-      displayObject.x + displayObject.width > displayObject2.x
-    ) {
-      return true;
-    }
-  }
-};
-
-// Only hitTest top side of the object
-Bump.prototype.hitTestTop = function(displayObject, displayObjects) {
-  for (var i = displayObjects.length - 1; i >= 0; i--) {
-    var displayObject2 = displayObjects[i];
-    if (
-      displayObject.x + displayObject.width > displayObject2.x &&
-      displayObject.x < displayObject2.x + displayObject2.width &&
-      displayObject.y < displayObject2.y + displayObject2.height
-    ) {
-      return true;
-    }
-  }
-};
-
-// Only hitTest bottom side of the object
-Bump.prototype.hitTestBottom = function(displayObject, displayObjects) {
-  for (var i = displayObjects.length - 1; i >= 0; i--) {
-    var displayObject2 = displayObjects[i];
-    if (
-      displayObject.x + displayObject.width > displayObject2.x &&
-      displayObject.x < displayObject2.x + displayObject2.width &&
-      displayObject.height + displayObject.y > displayObject2.y
-    ) {
-      return true;
-    }
-  }
-};
-
-module.exports = Bump;
-
-},{}],36:[function(require,module,exports){
-var Bump = {
-  Bump: require("./Bump"),
-};
-
-//dump everything into extras
-
-Object.assign(PIXI.extras, Bump);
-
-module.exports = Bump;
-
-},{"./Bump":35}],37:[function(require,module,exports){
+},{"resource-loader":199}],35:[function(require,module,exports){
 (function (global){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -7537,7 +5951,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],38:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (setImmediate){
 /*!
  * pixi-sound - v2.1.0
@@ -7551,10 +5965,10 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":302}],39:[function(require,module,exports){
+},{"timers":300}],37:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
-},{}],40:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8083,7 +6497,7 @@ exports.default = AccessibilityManager;
 core.WebGLRenderer.registerPlugin('accessibility', AccessibilityManager);
 core.CanvasRenderer.registerPlugin('accessibility', AccessibilityManager);
 
-},{"../core":65,"./accessibleTarget":41,"ismobilejs":11}],41:[function(require,module,exports){
+},{"../core":63,"./accessibleTarget":39,"ismobilejs":11}],39:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -8141,7 +6555,7 @@ exports.default = {
   _accessibleDiv: false
 };
 
-},{}],42:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8166,7 +6580,7 @@ Object.defineProperty(exports, 'AccessibilityManager', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./AccessibilityManager":40,"./accessibleTarget":41}],43:[function(require,module,exports){
+},{"./AccessibilityManager":38,"./accessibleTarget":39}],41:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8398,7 +6812,7 @@ var Application = function () {
 
 exports.default = Application;
 
-},{"./autoDetectRenderer":45,"./const":46,"./display/Container":48,"./settings":101,"./ticker":121}],44:[function(require,module,exports){
+},{"./autoDetectRenderer":43,"./const":44,"./display/Container":46,"./settings":99,"./ticker":119}],42:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8465,7 +6879,7 @@ var Shader = function (_GLShader) {
 
 exports.default = Shader;
 
-},{"./settings":101,"pixi-gl-core":21}],45:[function(require,module,exports){
+},{"./settings":99,"pixi-gl-core":21}],43:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8534,7 +6948,7 @@ function autoDetectRenderer(options, arg1, arg2, arg3) {
     return new _CanvasRenderer2.default(options, arg1, arg2);
 }
 
-},{"./renderers/canvas/CanvasRenderer":77,"./renderers/webgl/WebGLRenderer":84,"./utils":125}],46:[function(require,module,exports){
+},{"./renderers/canvas/CanvasRenderer":75,"./renderers/webgl/WebGLRenderer":82,"./utils":123}],44:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8877,7 +7291,7 @@ var UPDATE_PRIORITY = exports.UPDATE_PRIORITY = {
   UTILITY: -50
 };
 
-},{}],47:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -9220,7 +7634,7 @@ var Bounds = function () {
 
 exports.default = Bounds;
 
-},{"../math":70}],48:[function(require,module,exports){
+},{"../math":68}],46:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -9838,7 +8252,7 @@ var Container = function (_DisplayObject) {
 exports.default = Container;
 Container.prototype.containerUpdateTransform = Container.prototype.updateTransform;
 
-},{"../utils":125,"./DisplayObject":49}],49:[function(require,module,exports){
+},{"../utils":123,"./DisplayObject":47}],47:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -10532,7 +8946,7 @@ var DisplayObject = function (_EventEmitter) {
 exports.default = DisplayObject;
 DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 
-},{"../const":46,"../math":70,"../settings":101,"./Bounds":47,"./Transform":50,"./TransformStatic":52,"eventemitter3":8}],50:[function(require,module,exports){
+},{"../const":44,"../math":68,"../settings":99,"./Bounds":45,"./Transform":48,"./TransformStatic":50,"eventemitter3":8}],48:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -10713,7 +9127,7 @@ var Transform = function (_TransformBase) {
 
 exports.default = Transform;
 
-},{"../math":70,"./TransformBase":51}],51:[function(require,module,exports){
+},{"../math":68,"./TransformBase":49}],49:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -10800,7 +9214,7 @@ TransformBase.prototype.updateWorldTransform = TransformBase.prototype.updateTra
 
 TransformBase.IDENTITY = new TransformBase();
 
-},{"../math":70}],52:[function(require,module,exports){
+},{"../math":68}],50:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11012,7 +9426,7 @@ var TransformStatic = function (_TransformBase) {
 
 exports.default = TransformStatic;
 
-},{"../math":70,"./TransformBase":51}],53:[function(require,module,exports){
+},{"../math":68,"./TransformBase":49}],51:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12392,7 +10806,7 @@ Graphics.CURVES = {
     maxSegments: 2048
 };
 
-},{"../const":46,"../display/Bounds":47,"../display/Container":48,"../math":70,"../renderers/canvas/CanvasRenderer":77,"../sprites/Sprite":102,"../textures/RenderTexture":113,"../textures/Texture":115,"../utils":125,"./GraphicsData":54,"./utils/bezierCurveTo":56}],54:[function(require,module,exports){
+},{"../const":44,"../display/Bounds":45,"../display/Container":46,"../math":68,"../renderers/canvas/CanvasRenderer":75,"../sprites/Sprite":100,"../textures/RenderTexture":111,"../textures/Texture":113,"../utils":123,"./GraphicsData":52,"./utils/bezierCurveTo":54}],52:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -12537,7 +10951,7 @@ var GraphicsData = function () {
 
 exports.default = GraphicsData;
 
-},{}],55:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12844,7 +11258,7 @@ exports.default = CanvasGraphicsRenderer;
 
 _CanvasRenderer2.default.registerPlugin('graphics', CanvasGraphicsRenderer);
 
-},{"../../const":46,"../../renderers/canvas/CanvasRenderer":77}],56:[function(require,module,exports){
+},{"../../const":44,"../../renderers/canvas/CanvasRenderer":75}],54:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -12894,7 +11308,7 @@ function bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n) {
     return path;
 }
 
-},{}],57:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13159,7 +11573,7 @@ exports.default = GraphicsRenderer;
 
 _WebGLRenderer2.default.registerPlugin('graphics', GraphicsRenderer);
 
-},{"../../const":46,"../../renderers/webgl/WebGLRenderer":84,"../../renderers/webgl/utils/ObjectRenderer":94,"../../utils":125,"./WebGLGraphicsData":58,"./shaders/PrimitiveShader":59,"./utils/buildCircle":60,"./utils/buildPoly":62,"./utils/buildRectangle":63,"./utils/buildRoundedRectangle":64}],58:[function(require,module,exports){
+},{"../../const":44,"../../renderers/webgl/WebGLRenderer":82,"../../renderers/webgl/utils/ObjectRenderer":92,"../../utils":123,"./WebGLGraphicsData":56,"./shaders/PrimitiveShader":57,"./utils/buildCircle":58,"./utils/buildPoly":60,"./utils/buildRectangle":61,"./utils/buildRoundedRectangle":62}],56:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13302,7 +11716,7 @@ var WebGLGraphicsData = function () {
 
 exports.default = WebGLGraphicsData;
 
-},{"pixi-gl-core":21}],59:[function(require,module,exports){
+},{"pixi-gl-core":21}],57:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13347,7 +11761,7 @@ var PrimitiveShader = function (_Shader) {
 
 exports.default = PrimitiveShader;
 
-},{"../../../Shader":44}],60:[function(require,module,exports){
+},{"../../../Shader":42}],58:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13442,7 +11856,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../const":46,"../../../utils":125,"./buildLine":61}],61:[function(require,module,exports){
+},{"../../../const":44,"../../../utils":123,"./buildLine":59}],59:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13716,7 +12130,7 @@ function buildNativeLine(graphicsData, webGLData) {
     }
 }
 
-},{"../../../math":70,"../../../utils":125}],62:[function(require,module,exports){
+},{"../../../math":68,"../../../utils":123}],60:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13802,7 +12216,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":125,"./buildLine":61,"earcut":4}],63:[function(require,module,exports){
+},{"../../../utils":123,"./buildLine":59,"earcut":4}],61:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13878,7 +12292,7 @@ function buildRectangle(graphicsData, webGLData, webGLDataNativeLines) {
     }
 }
 
-},{"../../../utils":125,"./buildLine":61}],64:[function(require,module,exports){
+},{"../../../utils":123,"./buildLine":59}],62:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -14034,7 +12448,7 @@ function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
     return points;
 }
 
-},{"../../../utils":125,"./buildLine":61,"earcut":4}],65:[function(require,module,exports){
+},{"../../../utils":123,"./buildLine":59,"earcut":4}],63:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -14420,7 +12834,7 @@ exports.WebGLRenderer = _WebGLRenderer2.default; /**
                                                   * @namespace PIXI
                                                   */
 
-},{"./Application":43,"./Shader":44,"./autoDetectRenderer":45,"./const":46,"./display/Bounds":47,"./display/Container":48,"./display/DisplayObject":49,"./display/Transform":50,"./display/TransformBase":51,"./display/TransformStatic":52,"./graphics/Graphics":53,"./graphics/GraphicsData":54,"./graphics/canvas/CanvasGraphicsRenderer":55,"./graphics/webgl/GraphicsRenderer":57,"./math":70,"./renderers/canvas/CanvasRenderer":77,"./renderers/canvas/utils/CanvasRenderTarget":79,"./renderers/webgl/WebGLRenderer":84,"./renderers/webgl/filters/Filter":86,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":89,"./renderers/webgl/managers/WebGLManager":93,"./renderers/webgl/utils/ObjectRenderer":94,"./renderers/webgl/utils/Quad":95,"./renderers/webgl/utils/RenderTarget":96,"./settings":101,"./sprites/Sprite":102,"./sprites/canvas/CanvasSpriteRenderer":103,"./sprites/canvas/CanvasTinter":104,"./sprites/webgl/SpriteRenderer":106,"./text/Text":108,"./text/TextMetrics":109,"./text/TextStyle":110,"./textures/BaseRenderTexture":111,"./textures/BaseTexture":112,"./textures/RenderTexture":113,"./textures/Spritesheet":114,"./textures/Texture":115,"./textures/TextureMatrix":116,"./textures/TextureUvs":117,"./textures/VideoBaseTexture":118,"./ticker":121,"./utils":125,"pixi-gl-core":21}],66:[function(require,module,exports){
+},{"./Application":41,"./Shader":42,"./autoDetectRenderer":43,"./const":44,"./display/Bounds":45,"./display/Container":46,"./display/DisplayObject":47,"./display/Transform":48,"./display/TransformBase":49,"./display/TransformStatic":50,"./graphics/Graphics":51,"./graphics/GraphicsData":52,"./graphics/canvas/CanvasGraphicsRenderer":53,"./graphics/webgl/GraphicsRenderer":55,"./math":68,"./renderers/canvas/CanvasRenderer":75,"./renderers/canvas/utils/CanvasRenderTarget":77,"./renderers/webgl/WebGLRenderer":82,"./renderers/webgl/filters/Filter":84,"./renderers/webgl/filters/spriteMask/SpriteMaskFilter":87,"./renderers/webgl/managers/WebGLManager":91,"./renderers/webgl/utils/ObjectRenderer":92,"./renderers/webgl/utils/Quad":93,"./renderers/webgl/utils/RenderTarget":94,"./settings":99,"./sprites/Sprite":100,"./sprites/canvas/CanvasSpriteRenderer":101,"./sprites/canvas/CanvasTinter":102,"./sprites/webgl/SpriteRenderer":104,"./text/Text":106,"./text/TextMetrics":107,"./text/TextStyle":108,"./textures/BaseRenderTexture":109,"./textures/BaseTexture":110,"./textures/RenderTexture":111,"./textures/Spritesheet":112,"./textures/Texture":113,"./textures/TextureMatrix":114,"./textures/TextureUvs":115,"./textures/VideoBaseTexture":116,"./ticker":119,"./utils":123,"pixi-gl-core":21}],64:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -14613,7 +13027,7 @@ var GroupD8 = {
 
 exports.default = GroupD8;
 
-},{"./Matrix":67}],67:[function(require,module,exports){
+},{"./Matrix":65}],65:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15135,7 +13549,7 @@ var Matrix = function () {
 
 exports.default = Matrix;
 
-},{"../const":46,"./Point":69}],68:[function(require,module,exports){
+},{"../const":44,"./Point":67}],66:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -15286,7 +13700,7 @@ var ObservablePoint = function () {
 
 exports.default = ObservablePoint;
 
-},{}],69:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -15377,7 +13791,7 @@ var Point = function () {
 
 exports.default = Point;
 
-},{}],70:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15465,7 +13879,7 @@ Object.defineProperty(exports, 'RoundedRectangle', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./GroupD8":66,"./Matrix":67,"./ObservablePoint":68,"./Point":69,"./shapes/Circle":71,"./shapes/Ellipse":72,"./shapes/Polygon":73,"./shapes/Rectangle":74,"./shapes/RoundedRectangle":75}],71:[function(require,module,exports){
+},{"./GroupD8":64,"./Matrix":65,"./ObservablePoint":66,"./Point":67,"./shapes/Circle":69,"./shapes/Ellipse":70,"./shapes/Polygon":71,"./shapes/Rectangle":72,"./shapes/RoundedRectangle":73}],69:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15579,7 +13993,7 @@ var Circle = function () {
 
 exports.default = Circle;
 
-},{"../../const":46,"./Rectangle":74}],72:[function(require,module,exports){
+},{"../../const":44,"./Rectangle":72}],70:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15701,7 +14115,7 @@ var Ellipse = function () {
 
 exports.default = Ellipse;
 
-},{"../../const":46,"./Rectangle":74}],73:[function(require,module,exports){
+},{"../../const":44,"./Rectangle":72}],71:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -15832,7 +14246,7 @@ var Polygon = function () {
 
 exports.default = Polygon;
 
-},{"../../const":46,"../Point":69}],74:[function(require,module,exports){
+},{"../../const":44,"../Point":67}],72:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16117,7 +14531,7 @@ var Rectangle = function () {
 
 exports.default = Rectangle;
 
-},{"../../const":46}],75:[function(require,module,exports){
+},{"../../const":44}],73:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16250,7 +14664,7 @@ var RoundedRectangle = function () {
 
 exports.default = RoundedRectangle;
 
-},{"../../const":46}],76:[function(require,module,exports){
+},{"../../const":44}],74:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16615,7 +15029,7 @@ var SystemRenderer = function (_EventEmitter) {
 
 exports.default = SystemRenderer;
 
-},{"../const":46,"../display/Container":48,"../math":70,"../settings":101,"../textures/RenderTexture":113,"../utils":125,"eventemitter3":8}],77:[function(require,module,exports){
+},{"../const":44,"../display/Container":46,"../math":68,"../settings":99,"../textures/RenderTexture":111,"../utils":123,"eventemitter3":8}],75:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -16980,7 +15394,7 @@ var CanvasRenderer = function (_SystemRenderer) {
 exports.default = CanvasRenderer;
 _utils.pluginTarget.mixin(CanvasRenderer);
 
-},{"../../const":46,"../../settings":101,"../../utils":125,"../SystemRenderer":76,"./utils/CanvasMaskManager":78,"./utils/CanvasRenderTarget":79,"./utils/mapCanvasBlendModesToPixi":81}],78:[function(require,module,exports){
+},{"../../const":44,"../../settings":99,"../../utils":123,"../SystemRenderer":74,"./utils/CanvasMaskManager":76,"./utils/CanvasRenderTarget":77,"./utils/mapCanvasBlendModesToPixi":79}],76:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17180,7 +15594,7 @@ var CanvasMaskManager = function () {
 
 exports.default = CanvasMaskManager;
 
-},{"../../../const":46}],79:[function(require,module,exports){
+},{"../../../const":44}],77:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17304,7 +15718,7 @@ var CanvasRenderTarget = function () {
 
 exports.default = CanvasRenderTarget;
 
-},{"../../../settings":101}],80:[function(require,module,exports){
+},{"../../../settings":99}],78:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17365,7 +15779,7 @@ function canUseNewCanvasBlendModes() {
     return data[0] === 255 && data[1] === 0 && data[2] === 0;
 }
 
-},{}],81:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17437,7 +15851,7 @@ function mapCanvasBlendModesToPixi() {
     return array;
 }
 
-},{"../../../const":46,"./canUseNewCanvasBlendModes":80}],82:[function(require,module,exports){
+},{"../../../const":44,"./canUseNewCanvasBlendModes":78}],80:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17557,7 +15971,7 @@ var TextureGarbageCollector = function () {
 
 exports.default = TextureGarbageCollector;
 
-},{"../../const":46,"../../settings":101}],83:[function(require,module,exports){
+},{"../../const":44,"../../settings":99}],81:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -17823,7 +16237,7 @@ var TextureManager = function () {
 
 exports.default = TextureManager;
 
-},{"../../const":46,"../../utils":125,"./utils/RenderTarget":96,"pixi-gl-core":21}],84:[function(require,module,exports){
+},{"../../const":44,"../../utils":123,"./utils/RenderTarget":94,"pixi-gl-core":21}],82:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18640,7 +17054,7 @@ var WebGLRenderer = function (_SystemRenderer) {
 exports.default = WebGLRenderer;
 _utils.pluginTarget.mixin(WebGLRenderer);
 
-},{"../../const":46,"../../textures/BaseTexture":112,"../../utils":125,"../SystemRenderer":76,"./TextureGarbageCollector":82,"./TextureManager":83,"./WebGLState":85,"./managers/FilterManager":90,"./managers/MaskManager":91,"./managers/StencilManager":92,"./utils/ObjectRenderer":94,"./utils/RenderTarget":96,"./utils/mapWebGLDrawModesToPixi":99,"./utils/validateContext":100,"pixi-gl-core":21}],85:[function(require,module,exports){
+},{"../../const":44,"../../textures/BaseTexture":110,"../../utils":123,"../SystemRenderer":74,"./TextureGarbageCollector":80,"./TextureManager":81,"./WebGLState":83,"./managers/FilterManager":88,"./managers/MaskManager":89,"./managers/StencilManager":90,"./utils/ObjectRenderer":92,"./utils/RenderTarget":94,"./utils/mapWebGLDrawModesToPixi":97,"./utils/validateContext":98,"pixi-gl-core":21}],83:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -18920,7 +17334,7 @@ var WebGLState = function () {
 
 exports.default = WebGLState;
 
-},{"./utils/mapWebGLBlendModesToPixi":98}],86:[function(require,module,exports){
+},{"./utils/mapWebGLBlendModesToPixi":96}],84:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19116,7 +17530,7 @@ var Filter = function () {
 
 exports.default = Filter;
 
-},{"../../../const":46,"../../../settings":101,"../../../utils":125,"./extractUniformsFromSrc":87}],87:[function(require,module,exports){
+},{"../../../const":44,"../../../settings":99,"../../../utils":123,"./extractUniformsFromSrc":85}],85:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19178,7 +17592,7 @@ function extractUniformsFromString(string) {
     return uniforms;
 }
 
-},{"pixi-gl-core":21}],88:[function(require,module,exports){
+},{"pixi-gl-core":21}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19238,7 +17652,7 @@ function calculateSpriteMatrix(outputMatrix, filterArea, textureSize, sprite) {
     return mappedMatrix;
 }
 
-},{"../../../math":70}],89:[function(require,module,exports){
+},{"../../../math":68}],87:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19326,7 +17740,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":70,"../../../../textures/TextureMatrix":116,"../Filter":86,"path":296}],90:[function(require,module,exports){
+},{"../../../../math":68,"../../../../textures/TextureMatrix":114,"../Filter":84,"path":294}],88:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -19980,7 +18394,7 @@ var FilterManager = function (_WebGLManager) {
 
 exports.default = FilterManager;
 
-},{"../../../Shader":44,"../../../math":70,"../filters/filterTransforms":88,"../utils/Quad":95,"../utils/RenderTarget":96,"./WebGLManager":93,"bit-twiddle":3}],91:[function(require,module,exports){
+},{"../../../Shader":42,"../../../math":68,"../filters/filterTransforms":86,"../utils/Quad":93,"../utils/RenderTarget":94,"./WebGLManager":91,"bit-twiddle":3}],89:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20190,7 +18604,7 @@ var MaskManager = function (_WebGLManager) {
 
 exports.default = MaskManager;
 
-},{"../filters/spriteMask/SpriteMaskFilter":89,"./WebGLManager":93}],92:[function(require,module,exports){
+},{"../filters/spriteMask/SpriteMaskFilter":87,"./WebGLManager":91}],90:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20343,7 +18757,7 @@ var StencilManager = function (_WebGLManager) {
 
 exports.default = StencilManager;
 
-},{"./WebGLManager":93}],93:[function(require,module,exports){
+},{"./WebGLManager":91}],91:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20398,7 +18812,7 @@ var WebGLManager = function () {
 
 exports.default = WebGLManager;
 
-},{}],94:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20476,7 +18890,7 @@ var ObjectRenderer = function (_WebGLManager) {
 
 exports.default = ObjectRenderer;
 
-},{"../managers/WebGLManager":93}],95:[function(require,module,exports){
+},{"../managers/WebGLManager":91}],93:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20657,7 +19071,7 @@ var Quad = function () {
 
 exports.default = Quad;
 
-},{"../../../utils/createIndicesForQuads":123,"pixi-gl-core":21}],96:[function(require,module,exports){
+},{"../../../utils/createIndicesForQuads":121,"pixi-gl-core":21}],94:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -20995,7 +19409,7 @@ var RenderTarget = function () {
 
 exports.default = RenderTarget;
 
-},{"../../../const":46,"../../../math":70,"../../../settings":101,"pixi-gl-core":21}],97:[function(require,module,exports){
+},{"../../../const":44,"../../../math":68,"../../../settings":99,"pixi-gl-core":21}],95:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21070,7 +19484,7 @@ function generateIfTestSrc(maxIfs) {
     return src;
 }
 
-},{"pixi-gl-core":21}],98:[function(require,module,exports){
+},{"pixi-gl-core":21}],96:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21119,7 +19533,7 @@ function mapWebGLBlendModesToPixi(gl) {
     return array;
 }
 
-},{"../../../const":46}],99:[function(require,module,exports){
+},{"../../../const":44}],97:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21151,7 +19565,7 @@ function mapWebGLDrawModesToPixi(gl) {
   return object;
 }
 
-},{"../../../const":46}],100:[function(require,module,exports){
+},{"../../../const":44}],98:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21167,7 +19581,7 @@ function validateContext(gl) {
     }
 }
 
-},{}],101:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21412,7 +19826,7 @@ exports.default = {
   MESH_CANVAS_PADDING: 0
 };
 
-},{"./utils/canUploadSameBuffer":122,"./utils/maxRecommendedTextures":127}],102:[function(require,module,exports){
+},{"./utils/canUploadSameBuffer":120,"./utils/maxRecommendedTextures":125}],100:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22053,7 +20467,7 @@ var Sprite = function (_Container) {
 
 exports.default = Sprite;
 
-},{"../const":46,"../display/Container":48,"../math":70,"../textures/Texture":115,"../utils":125}],103:[function(require,module,exports){
+},{"../const":44,"../display/Container":46,"../math":68,"../textures/Texture":113,"../utils":123}],101:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22206,7 +20620,7 @@ exports.default = CanvasSpriteRenderer;
 
 _CanvasRenderer2.default.registerPlugin('sprite', CanvasSpriteRenderer);
 
-},{"../../const":46,"../../math":70,"../../renderers/canvas/CanvasRenderer":77,"./CanvasTinter":104}],104:[function(require,module,exports){
+},{"../../const":44,"../../math":68,"../../renderers/canvas/CanvasRenderer":75,"./CanvasTinter":102}],102:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -22457,7 +20871,7 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 
-},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":80,"../../utils":125}],105:[function(require,module,exports){
+},{"../../renderers/canvas/utils/canUseNewCanvasBlendModes":78,"../../utils":123}],103:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -22510,7 +20924,7 @@ var Buffer = function () {
 
 exports.default = Buffer;
 
-},{}],106:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23063,7 +21477,7 @@ exports.default = SpriteRenderer;
 
 _WebGLRenderer2.default.registerPlugin('sprite', SpriteRenderer);
 
-},{"../../renderers/webgl/WebGLRenderer":84,"../../renderers/webgl/utils/ObjectRenderer":94,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":97,"../../settings":101,"../../utils":125,"../../utils/createIndicesForQuads":123,"./BatchBuffer":105,"./generateMultiTextureShader":107,"bit-twiddle":3,"pixi-gl-core":21}],107:[function(require,module,exports){
+},{"../../renderers/webgl/WebGLRenderer":82,"../../renderers/webgl/utils/ObjectRenderer":92,"../../renderers/webgl/utils/checkMaxIfStatmentsInShader":95,"../../settings":99,"../../utils":123,"../../utils/createIndicesForQuads":121,"./BatchBuffer":103,"./generateMultiTextureShader":105,"bit-twiddle":3,"pixi-gl-core":21}],105:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23126,7 +21540,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":44,"path":296}],108:[function(require,module,exports){
+},{"../../Shader":42,"path":294}],106:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -23784,7 +22198,7 @@ var Text = function (_Sprite) {
 
 exports.default = Text;
 
-},{"../const":46,"../math":70,"../settings":101,"../sprites/Sprite":102,"../textures/Texture":115,"../utils":125,"../utils/trimCanvas":130,"./TextMetrics":109,"./TextStyle":110}],109:[function(require,module,exports){
+},{"../const":44,"../math":68,"../settings":99,"../sprites/Sprite":100,"../textures/Texture":113,"../utils":123,"../utils/trimCanvas":128,"./TextMetrics":107,"./TextStyle":108}],107:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -24484,7 +22898,7 @@ TextMetrics._breakingSpaces = [0x0009, // character tabulation
 0x205F, // medium mathematical space
 0x3000];
 
-},{}],110:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25318,7 +23732,7 @@ function deepCopyProperties(target, source, propertyObj) {
     }
 }
 
-},{"../const":46,"../utils":125}],111:[function(require,module,exports){
+},{"../const":44,"../utils":123}],109:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -25481,7 +23895,7 @@ var BaseRenderTexture = function (_BaseTexture) {
 
 exports.default = BaseRenderTexture;
 
-},{"../settings":101,"./BaseTexture":112}],112:[function(require,module,exports){
+},{"../settings":99,"./BaseTexture":110}],110:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26327,7 +24741,7 @@ var BaseTexture = function (_EventEmitter) {
 
 exports.default = BaseTexture;
 
-},{"../settings":101,"../utils":125,"../utils/determineCrossOrigin":124,"bit-twiddle":3,"eventemitter3":8}],113:[function(require,module,exports){
+},{"../settings":99,"../utils":123,"../utils/determineCrossOrigin":122,"bit-twiddle":3,"eventemitter3":8}],111:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26481,7 +24895,7 @@ var RenderTexture = function (_Texture) {
 
 exports.default = RenderTexture;
 
-},{"./BaseRenderTexture":111,"./Texture":115}],114:[function(require,module,exports){
+},{"./BaseRenderTexture":109,"./Texture":113}],112:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -26810,7 +25224,7 @@ var Spritesheet = function () {
 
 exports.default = Spritesheet;
 
-},{"../":65,"../utils":125}],115:[function(require,module,exports){
+},{"../":63,"../utils":123}],113:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27515,7 +25929,7 @@ Texture.WHITE = createWhiteTexture();
 removeAllHandlers(Texture.WHITE);
 removeAllHandlers(Texture.WHITE.baseTexture);
 
-},{"../math":70,"../settings":101,"../utils":125,"./BaseTexture":112,"./TextureUvs":117,"./VideoBaseTexture":118,"eventemitter3":8}],116:[function(require,module,exports){
+},{"../math":68,"../settings":99,"../utils":123,"./BaseTexture":110,"./TextureUvs":115,"./VideoBaseTexture":116,"eventemitter3":8}],114:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27679,7 +26093,7 @@ var TextureMatrix = function () {
 
 exports.default = TextureMatrix;
 
-},{"../math/Matrix":67}],117:[function(require,module,exports){
+},{"../math/Matrix":65}],115:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27784,7 +26198,7 @@ var TextureUvs = function () {
 
 exports.default = TextureUvs;
 
-},{"../math/GroupD8":66}],118:[function(require,module,exports){
+},{"../math/GroupD8":64}],116:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28133,7 +26547,7 @@ function createSource(path, type) {
     return source;
 }
 
-},{"../const":46,"../ticker":121,"../utils":125,"../utils/determineCrossOrigin":124,"./BaseTexture":112}],119:[function(require,module,exports){
+},{"../const":44,"../ticker":119,"../utils":123,"../utils/determineCrossOrigin":122,"./BaseTexture":110}],117:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28606,7 +27020,7 @@ var Ticker = function () {
 
 exports.default = Ticker;
 
-},{"../const":46,"../settings":101,"./TickerListener":120}],120:[function(require,module,exports){
+},{"../const":44,"../settings":99,"./TickerListener":118}],118:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28780,7 +27194,7 @@ var TickerListener = function () {
 
 exports.default = TickerListener;
 
-},{}],121:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28860,7 +27274,7 @@ shared.destroy = function () {
 exports.shared = shared;
 exports.Ticker = _Ticker2.default;
 
-},{"./Ticker":119}],122:[function(require,module,exports){
+},{"./Ticker":117}],120:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28874,7 +27288,7 @@ function canUploadSameBuffer() {
 	return !ios;
 }
 
-},{}],123:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28908,7 +27322,7 @@ function createIndicesForQuads(size) {
     return indices;
 }
 
-},{}],124:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -28964,7 +27378,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":303}],125:[function(require,module,exports){
+},{"url":301}],123:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29447,7 +27861,7 @@ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     return out;
 }
 
-},{"../const":46,"../settings":101,"./mapPremultipliedBlendModes":126,"./mixin":128,"./pluginTarget":129,"earcut":4,"eventemitter3":8,"ismobilejs":11,"remove-array-items":196}],126:[function(require,module,exports){
+},{"../const":44,"../settings":99,"./mapPremultipliedBlendModes":124,"./mixin":126,"./pluginTarget":127,"earcut":4,"eventemitter3":8,"ismobilejs":11,"remove-array-items":194}],124:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29490,7 +27904,7 @@ function mapPremultipliedBlendModes() {
     return array;
 }
 
-},{"../const":46}],127:[function(require,module,exports){
+},{"../const":44}],125:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29512,7 +27926,7 @@ function maxRecommendedTextures(max) {
     return max;
 }
 
-},{"ismobilejs":11}],128:[function(require,module,exports){
+},{"ismobilejs":11}],126:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -29574,7 +27988,7 @@ function performMixins() {
     mixins.length = 0;
 }
 
-},{}],129:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -29640,7 +28054,7 @@ exports.default = {
     }
 };
 
-},{}],130:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -29718,7 +28132,7 @@ function trimCanvas(canvas) {
     };
 }
 
-},{}],131:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30874,7 +29288,7 @@ function deprecation(core) {
     }
 }
 
-},{}],132:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31054,7 +29468,7 @@ exports.default = CanvasExtract;
 
 core.CanvasRenderer.registerPlugin('extract', CanvasExtract);
 
-},{"../../core":65}],133:[function(require,module,exports){
+},{"../../core":63}],131:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31079,7 +29493,7 @@ Object.defineProperty(exports, 'canvas', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./canvas/CanvasExtract":132,"./webgl/WebGLExtract":134}],134:[function(require,module,exports){
+},{"./canvas/CanvasExtract":130,"./webgl/WebGLExtract":132}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31314,7 +29728,7 @@ exports.default = WebGLExtract;
 
 core.WebGLRenderer.registerPlugin('extract', WebGLExtract);
 
-},{"../../core":65}],135:[function(require,module,exports){
+},{"../../core":63}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31736,7 +30150,7 @@ var AnimatedSprite = function (_core$Sprite) {
 
 exports.default = AnimatedSprite;
 
-},{"../core":65}],136:[function(require,module,exports){
+},{"../core":63}],134:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32381,7 +30795,7 @@ exports.default = BitmapText;
 
 BitmapText.fonts = {};
 
-},{"../core":65,"../core/math/ObservablePoint":68,"../core/settings":101,"../core/utils":125}],137:[function(require,module,exports){
+},{"../core":63,"../core/math/ObservablePoint":66,"../core/settings":99,"../core/utils":123}],135:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32845,7 +31259,7 @@ var TilingSprite = function (_core$Sprite) {
 
 exports.default = TilingSprite;
 
-},{"../core":65,"../core/sprites/canvas/CanvasTinter":104}],138:[function(require,module,exports){
+},{"../core":63,"../core/sprites/canvas/CanvasTinter":102}],136:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -33255,7 +31669,7 @@ DisplayObject.prototype._cacheAsBitmapDestroy = function _cacheAsBitmapDestroy(o
     this.destroy(options);
 };
 
-},{"../core":65,"../core/textures/BaseTexture":112,"../core/textures/Texture":115,"../core/utils":125}],139:[function(require,module,exports){
+},{"../core":63,"../core/textures/BaseTexture":110,"../core/textures/Texture":113,"../core/utils":123}],137:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -33290,7 +31704,7 @@ core.Container.prototype.getChildByName = function getChildByName(name) {
     return null;
 };
 
-},{"../core":65}],140:[function(require,module,exports){
+},{"../core":63}],138:[function(require,module,exports){
 'use strict';
 
 var _core = require('../core');
@@ -33324,7 +31738,7 @@ core.DisplayObject.prototype.getGlobalPosition = function getGlobalPosition() {
     return point;
 };
 
-},{"../core":65}],141:[function(require,module,exports){
+},{"../core":63}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33376,7 +31790,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // imported for side effect of extending the prototype only, contains no exports
 
-},{"./AnimatedSprite":135,"./BitmapText":136,"./TilingSprite":137,"./cacheAsBitmap":138,"./getChildByName":139,"./getGlobalPosition":140,"./webgl/TilingSpriteRenderer":142}],142:[function(require,module,exports){
+},{"./AnimatedSprite":133,"./BitmapText":134,"./TilingSprite":135,"./cacheAsBitmap":136,"./getChildByName":137,"./getGlobalPosition":138,"./webgl/TilingSpriteRenderer":140}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33538,7 +31952,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":65,"../../core/const":46,"path":296}],143:[function(require,module,exports){
+},{"../../core":63,"../../core/const":44,"path":294}],141:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33622,7 +32036,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":65,"path":296}],144:[function(require,module,exports){
+},{"../../core":63,"path":294}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33796,7 +32210,7 @@ var BlurFilter = function (_core$Filter) {
 
 exports.default = BlurFilter;
 
-},{"../../core":65,"./BlurXFilter":145,"./BlurYFilter":146}],145:[function(require,module,exports){
+},{"../../core":63,"./BlurXFilter":143,"./BlurYFilter":144}],143:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33962,7 +32376,7 @@ var BlurXFilter = function (_core$Filter) {
 
 exports.default = BlurXFilter;
 
-},{"../../core":65,"./generateBlurFragSource":147,"./generateBlurVertSource":148,"./getMaxBlurKernelSize":149}],146:[function(require,module,exports){
+},{"../../core":63,"./generateBlurFragSource":145,"./generateBlurVertSource":146,"./getMaxBlurKernelSize":147}],144:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34127,7 +32541,7 @@ var BlurYFilter = function (_core$Filter) {
 
 exports.default = BlurYFilter;
 
-},{"../../core":65,"./generateBlurFragSource":147,"./generateBlurVertSource":148,"./getMaxBlurKernelSize":149}],147:[function(require,module,exports){
+},{"../../core":63,"./generateBlurFragSource":145,"./generateBlurVertSource":146,"./getMaxBlurKernelSize":147}],145:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34174,7 +32588,7 @@ function generateFragBlurSource(kernelSize) {
     return fragSource;
 }
 
-},{}],148:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34218,7 +32632,7 @@ function generateVertBlurSource(kernelSize, x) {
     return vertSource;
 }
 
-},{}],149:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -34234,7 +32648,7 @@ function getMaxKernelSize(gl) {
     return kernelSize;
 }
 
-},{}],150:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34785,7 +33199,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":65,"path":296}],151:[function(require,module,exports){
+},{"../../core":63,"path":294}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34893,7 +33307,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":65,"path":296}],152:[function(require,module,exports){
+},{"../../core":63,"path":294}],150:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34947,7 +33361,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":65,"path":296}],153:[function(require,module,exports){
+},{"../../core":63,"path":294}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35026,7 +33440,7 @@ Object.defineProperty(exports, 'AlphaFilter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alpha/AlphaFilter":143,"./blur/BlurFilter":144,"./blur/BlurXFilter":145,"./blur/BlurYFilter":146,"./colormatrix/ColorMatrixFilter":150,"./displacement/DisplacementFilter":151,"./fxaa/FXAAFilter":152,"./noise/NoiseFilter":154}],154:[function(require,module,exports){
+},{"./alpha/AlphaFilter":141,"./blur/BlurFilter":142,"./blur/BlurXFilter":143,"./blur/BlurYFilter":144,"./colormatrix/ColorMatrixFilter":148,"./displacement/DisplacementFilter":149,"./fxaa/FXAAFilter":150,"./noise/NoiseFilter":152}],152:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35123,7 +33537,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":65,"path":296}],155:[function(require,module,exports){
+},{"../../core":63,"path":294}],153:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -35237,7 +33651,7 @@ if (typeof _deprecation2.default === 'function') {
 global.PIXI = exports; // eslint-disable-line
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./accessibility":42,"./core":65,"./deprecation":131,"./extract":133,"./extras":141,"./filters":153,"./interaction":160,"./loaders":163,"./mesh":172,"./particles":175,"./polyfill":182,"./prepare":186}],156:[function(require,module,exports){
+},{"./accessibility":40,"./core":63,"./deprecation":129,"./extract":131,"./extras":139,"./filters":151,"./interaction":158,"./loaders":161,"./mesh":170,"./particles":173,"./polyfill":180,"./prepare":184}],154:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -35460,7 +33874,7 @@ var InteractionData = function () {
 
 exports.default = InteractionData;
 
-},{"../core":65}],157:[function(require,module,exports){
+},{"../core":63}],155:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -35543,7 +33957,7 @@ var InteractionEvent = function () {
 
 exports.default = InteractionEvent;
 
-},{}],158:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37325,7 +35739,7 @@ exports.default = InteractionManager;
 core.WebGLRenderer.registerPlugin('interaction', InteractionManager);
 core.CanvasRenderer.registerPlugin('interaction', InteractionManager);
 
-},{"../core":65,"./InteractionData":156,"./InteractionEvent":157,"./InteractionTrackingData":159,"./interactiveTarget":161,"eventemitter3":8}],159:[function(require,module,exports){
+},{"../core":63,"./InteractionData":154,"./InteractionEvent":155,"./InteractionTrackingData":157,"./interactiveTarget":159,"eventemitter3":8}],157:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -37501,7 +35915,7 @@ InteractionTrackingData.FLAGS = Object.freeze({
     RIGHT_DOWN: 1 << 2
 });
 
-},{}],160:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37553,7 +35967,7 @@ Object.defineProperty(exports, 'InteractionEvent', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./InteractionData":156,"./InteractionEvent":157,"./InteractionManager":158,"./InteractionTrackingData":159,"./interactiveTarget":161}],161:[function(require,module,exports){
+},{"./InteractionData":154,"./InteractionEvent":155,"./InteractionManager":156,"./InteractionTrackingData":157,"./interactiveTarget":159}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37670,7 +36084,7 @@ exports.default = {
   _trackedPointers: undefined
 };
 
-},{}],162:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37790,7 +36204,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":141,"path":296,"resource-loader":194}],163:[function(require,module,exports){
+},{"../extras":139,"path":294,"resource-loader":192}],161:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -37918,7 +36332,7 @@ AppPrototype.destroy = function destroy(removeView, stageOptions) {
     this._parentDestroy(removeView, stageOptions);
 };
 
-},{"../core/Application":43,"./bitmapFontParser":162,"./loader":164,"./spritesheetParser":165,"./textureParser":166,"resource-loader":194}],164:[function(require,module,exports){
+},{"../core/Application":41,"./bitmapFontParser":160,"./loader":162,"./spritesheetParser":163,"./textureParser":164,"resource-loader":192}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38089,7 +36503,7 @@ var Resource = _resourceLoader2.default.Resource;
 
 Resource.setExtensionXhrType('fnt', Resource.XHR_RESPONSE_TYPE.DOCUMENT);
 
-},{"./bitmapFontParser":162,"./spritesheetParser":165,"./textureParser":166,"eventemitter3":8,"resource-loader":194,"resource-loader/lib/middlewares/parsing/blob":195}],165:[function(require,module,exports){
+},{"./bitmapFontParser":160,"./spritesheetParser":163,"./textureParser":164,"eventemitter3":8,"resource-loader":192,"resource-loader/lib/middlewares/parsing/blob":193}],163:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38153,7 +36567,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":65,"resource-loader":194,"url":303}],166:[function(require,module,exports){
+},{"../core":63,"resource-loader":192,"url":301}],164:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38176,7 +36590,7 @@ var _Texture2 = _interopRequireDefault(_Texture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../core/textures/Texture":115,"resource-loader":194}],167:[function(require,module,exports){
+},{"../core/textures/Texture":113,"resource-loader":192}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38607,7 +37021,7 @@ Mesh.DRAW_MODES = {
     TRIANGLES: 1
 };
 
-},{"../core":65,"../core/textures/Texture":115}],168:[function(require,module,exports){
+},{"../core":63,"../core/textures/Texture":113}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39000,7 +37414,7 @@ var NineSlicePlane = function (_Plane) {
 
 exports.default = NineSlicePlane;
 
-},{"./Plane":169}],169:[function(require,module,exports){
+},{"./Plane":167}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39141,7 +37555,7 @@ var Plane = function (_Mesh) {
 
 exports.default = Plane;
 
-},{"./Mesh":167}],170:[function(require,module,exports){
+},{"./Mesh":165}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39377,7 +37791,7 @@ var Rope = function (_Mesh) {
 
 exports.default = Rope;
 
-},{"./Mesh":167}],171:[function(require,module,exports){
+},{"./Mesh":165}],169:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39663,7 +38077,7 @@ exports.default = MeshSpriteRenderer;
 
 core.CanvasRenderer.registerPlugin('mesh', MeshSpriteRenderer);
 
-},{"../../core":65,"../Mesh":167}],172:[function(require,module,exports){
+},{"../../core":63,"../Mesh":165}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39724,7 +38138,7 @@ Object.defineProperty(exports, 'Rope', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./Mesh":167,"./NineSlicePlane":168,"./Plane":169,"./Rope":170,"./canvas/CanvasMeshRenderer":171,"./webgl/MeshRenderer":173}],173:[function(require,module,exports){
+},{"./Mesh":165,"./NineSlicePlane":166,"./Plane":167,"./Rope":168,"./canvas/CanvasMeshRenderer":169,"./webgl/MeshRenderer":171}],171:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -39879,7 +38293,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":65,"../Mesh":167,"path":296,"pixi-gl-core":21}],174:[function(require,module,exports){
+},{"../../core":63,"../Mesh":165,"path":294,"pixi-gl-core":21}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40269,7 +38683,7 @@ var ParticleContainer = function (_core$Container) {
 
 exports.default = ParticleContainer;
 
-},{"../core":65,"../core/utils":125}],175:[function(require,module,exports){
+},{"../core":63,"../core/utils":123}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40294,7 +38708,7 @@ Object.defineProperty(exports, 'ParticleRenderer', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./ParticleContainer":174,"./webgl/ParticleRenderer":177}],176:[function(require,module,exports){
+},{"./ParticleContainer":172,"./webgl/ParticleRenderer":175}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -40543,7 +38957,7 @@ var ParticleBuffer = function () {
 
 exports.default = ParticleBuffer;
 
-},{"../../core/utils/createIndicesForQuads":123,"pixi-gl-core":21}],177:[function(require,module,exports){
+},{"../../core/utils/createIndicesForQuads":121,"pixi-gl-core":21}],175:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41024,7 +39438,7 @@ exports.default = ParticleRenderer;
 
 core.WebGLRenderer.registerPlugin('particle', ParticleRenderer);
 
-},{"../../core":65,"../../core/utils":125,"./ParticleBuffer":176,"./ParticleShader":178}],178:[function(require,module,exports){
+},{"../../core":63,"../../core/utils":123,"./ParticleBuffer":174,"./ParticleShader":176}],176:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41067,7 +39481,7 @@ var ParticleShader = function (_Shader) {
 
 exports.default = ParticleShader;
 
-},{"../../core/Shader":44}],179:[function(require,module,exports){
+},{"../../core/Shader":42}],177:[function(require,module,exports){
 "use strict";
 
 // References:
@@ -41085,7 +39499,7 @@ if (!Math.sign) {
     };
 }
 
-},{}],180:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 'use strict';
 
 // References:
@@ -41097,7 +39511,7 @@ if (!Number.isInteger) {
     };
 }
 
-},{}],181:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 'use strict';
 
 var _objectAssign = require('object-assign');
@@ -41112,7 +39526,7 @@ if (!Object.assign) {
 // https://github.com/sindresorhus/object-assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 
-},{"object-assign":13}],182:[function(require,module,exports){
+},{"object-assign":13}],180:[function(require,module,exports){
 'use strict';
 
 require('./Object.assign');
@@ -41139,7 +39553,7 @@ if (!window.Uint16Array) {
     window.Uint16Array = Array;
 }
 
-},{"./Math.sign":179,"./Number.isInteger":180,"./Object.assign":181,"./requestAnimationFrame":183}],183:[function(require,module,exports){
+},{"./Math.sign":177,"./Number.isInteger":178,"./Object.assign":179,"./requestAnimationFrame":181}],181:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -41216,7 +39630,7 @@ if (!global.cancelAnimationFrame) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],184:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41704,7 +40118,7 @@ function findTextStyle(item, queue) {
     return false;
 }
 
-},{"../core":65,"./limiters/CountLimiter":187}],185:[function(require,module,exports){
+},{"../core":63,"./limiters/CountLimiter":185}],183:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41824,7 +40238,7 @@ function uploadBaseTextures(prepare, item) {
 
 core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
-},{"../../core":65,"../BasePrepare":184}],186:[function(require,module,exports){
+},{"../../core":63,"../BasePrepare":182}],184:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -41876,7 +40290,7 @@ Object.defineProperty(exports, 'TimeLimiter', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./BasePrepare":184,"./canvas/CanvasPrepare":185,"./limiters/CountLimiter":187,"./limiters/TimeLimiter":188,"./webgl/WebGLPrepare":189}],187:[function(require,module,exports){
+},{"./BasePrepare":182,"./canvas/CanvasPrepare":183,"./limiters/CountLimiter":185,"./limiters/TimeLimiter":186,"./webgl/WebGLPrepare":187}],185:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41934,7 +40348,7 @@ var CountLimiter = function () {
 
 exports.default = CountLimiter;
 
-},{}],188:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -41992,7 +40406,7 @@ var TimeLimiter = function () {
 
 exports.default = TimeLimiter;
 
-},{}],189:[function(require,module,exports){
+},{}],187:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42114,7 +40528,7 @@ function findGraphics(item, queue) {
 
 core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
-},{"../../core":65,"../BasePrepare":184}],190:[function(require,module,exports){
+},{"../../core":63,"../BasePrepare":182}],188:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -42838,7 +41252,7 @@ Loader.use = function LoaderUseStatic(fn) {
     return Loader;
 };
 
-},{"./Resource":191,"./async":192,"mini-signals":12,"parse-uri":14}],191:[function(require,module,exports){
+},{"./Resource":189,"./async":190,"mini-signals":12,"parse-uri":14}],189:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44087,7 +42501,7 @@ if (typeof module !== 'undefined') {
     module.exports.default = Resource; // eslint-disable-line no-undef
 }
 
-},{"mini-signals":12,"parse-uri":14}],192:[function(require,module,exports){
+},{"mini-signals":12,"parse-uri":14}],190:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44309,7 +42723,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],193:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44388,7 +42802,7 @@ if (typeof module !== 'undefined') {
     module.exports.default = encodeBinary; // eslint-disable-line no-undef
 }
 
-},{}],194:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -44445,7 +42859,7 @@ module.exports = Loader;
 module.exports.Loader = Loader;
 module.exports.default = Loader;
 
-},{"./Loader":190,"./Resource":191,"./async":192,"./b64":193}],195:[function(require,module,exports){
+},{"./Loader":188,"./Resource":189,"./async":190,"./b64":191}],193:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -44518,7 +42932,7 @@ function blobMiddlewareFactory() {
     };
 }
 
-},{"../../Resource":191,"../../b64":193}],196:[function(require,module,exports){
+},{"../../Resource":189,"../../b64":191}],194:[function(require,module,exports){
 'use strict'
 
 /**
@@ -44547,7 +42961,7 @@ module.exports = function removeItems (arr, startIdx, removeCount) {
   arr.length = len
 }
 
-},{}],197:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45200,7 +43614,7 @@ var Loader = function () {
 
 exports.default = Loader;
 
-},{"./Resource":198,"./async":199,"mini-signals":12,"parse-uri":14}],198:[function(require,module,exports){
+},{"./Resource":196,"./async":197,"mini-signals":12,"parse-uri":14}],196:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46356,7 +44770,7 @@ function reqType(xhr) {
     return xhr.toString().replace('object ', '');
 }
 
-},{"mini-signals":12,"parse-uri":14}],199:[function(require,module,exports){
+},{"mini-signals":12,"parse-uri":14}],197:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46565,7 +44979,7 @@ function queue(worker, concurrency) {
     return q;
 }
 
-},{}],200:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -46633,7 +45047,7 @@ function encodeBinary(input) {
     return output;
 }
 
-},{}],201:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 'use strict';
 
 // import Loader from './Loader';
@@ -46657,7 +45071,7 @@ module.exports = Loader;
 // export default Loader;
 module.exports.default = Loader;
 
-},{"./Loader":197,"./Resource":198,"./async":199,"./b64":200}],202:[function(require,module,exports){
+},{"./Loader":195,"./Resource":196,"./async":197,"./b64":198}],200:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46784,7 +45198,7 @@ module.exports = {
   Bird,
 };
 
-},{"../../utils/math":287,"pixi.js":155}],203:[function(require,module,exports){
+},{"../../utils/math":285,"pixi.js":153}],201:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47013,7 +45427,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":287,"pixi.js":155}],204:[function(require,module,exports){
+},{"../../utils/math":285,"pixi.js":153}],202:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47128,10 +45542,10 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":287,"pixi.js":155}],205:[function(require,module,exports){
+},{"../../utils/math":285,"pixi.js":153}],203:[function(require,module,exports){
 'use strict';
 
-const { critter_container } = require('../../engine/pixi_containers');
+const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');
@@ -47151,7 +45565,7 @@ class Crow extends Character{
     this.add_component(new Tween(this.sprite));
     this.add_component(new Pathfind(this.sprite));
 
-    critter_container.addChild(this.sprite);
+    enemy_container.addChild(this.sprite);
   }
 }
 
@@ -47159,7 +45573,7 @@ module.exports = {
   Crow,
 };
 
-},{"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/bird":202,"../attributes/pathfind":213,"../character_model":216}],206:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/bird":200,"../attributes/pathfind":211,"../character_model":214}],204:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47301,7 +45715,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/pixi_containers":232,"../../utils/line_of_sight":286,"../../utils/math":287,"../attributes/melee":211,"../types/rat":219,"events":295,"pixi.js":155}],207:[function(require,module,exports){
+},{"../../engine/damage_handler":225,"../../engine/pathfind":229,"../../engine/pixi_containers":230,"../../utils/line_of_sight":284,"../../utils/math":285,"../attributes/melee":209,"../types/rat":217,"events":293,"pixi.js":153}],205:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47384,7 +45798,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":240}],208:[function(require,module,exports){
+},{"../../items/item_manager":238}],206:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47563,7 +45977,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":223,"../../engine/pixi_containers":232,"../../engine/shadows":234,"../../view/view_player_inventory":293,"pixi.js":155}],209:[function(require,module,exports){
+},{"../../effects/fade":221,"../../engine/pixi_containers":230,"../../engine/shadows":232,"../../view/view_player_inventory":291,"pixi.js":153}],207:[function(require,module,exports){
 
 'use strict';
 
@@ -47591,7 +46005,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":281}],210:[function(require,module,exports){
+},{"../../light/types/candle":279}],208:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -47666,7 +46080,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":223,"../../items/item_manager":240,"../../view/button":289,"../../view/view_inventory":292}],211:[function(require,module,exports){
+},{"../../effects/fade":221,"../../items/item_manager":238,"../../view/button":287,"../../view/view_inventory":290}],209:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47725,7 +46139,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":229,"../../engine/pixi_containers":232,"pixi.js":155}],212:[function(require,module,exports){
+},{"../../engine/melee":227,"../../engine/pixi_containers":230,"pixi.js":153}],210:[function(require,module,exports){
 'use strict';
 const app = require('../../engine/app');
 //const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -47792,7 +46206,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":220,"../../engine/app":224,"../../engine/ranged":233,"../../utils/math":287}],213:[function(require,module,exports){
+},{"../../effects/aiming_cone":218,"../../engine/app":222,"../../engine/ranged":231,"../../utils/math":285}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47836,7 +46250,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":231,"../../engine/pixi_containers":232,"pixi.js":155}],214:[function(require,module,exports){
+},{"../../engine/pathfind.js":229,"../../engine/pixi_containers":230,"pixi.js":153}],212:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -47873,7 +46287,7 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":294,"pixi.js":155}],215:[function(require,module,exports){
+},{"../../view/view_player_status_meter":292,"pixi.js":153}],213:[function(require,module,exports){
 'use strict';
 
 const { Blood  } = require('../../effects/blood');
@@ -47928,7 +46342,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":221}],216:[function(require,module,exports){
+},{"../../effects/blood":219}],214:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -47951,7 +46365,7 @@ module.exports = {
   Character,
 };
 
-},{}],217:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -47978,7 +46392,7 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/human":203,"../attributes/pathfind":213,"../character_model":216}],218:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/human":201,"../attributes/pathfind":211,"../character_model":214}],216:[function(require,module,exports){
 'use strict';
 
 const { player_container } = require('../../engine/pixi_containers');
@@ -48042,10 +46456,10 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":221,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/human":203,"../attributes/inventory":207,"../attributes/keyboard":208,"../attributes/light":209,"../attributes/mouse":212,"../attributes/status_bar":214,"../attributes/vitals":215,"../character_model":216,"events":295}],219:[function(require,module,exports){
+},{"../../effects/blood":219,"../../engine/item_handler":226,"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/human":201,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":212,"../attributes/vitals":213,"../character_model":214,"events":293}],217:[function(require,module,exports){
 'use strict';
 
-const { critter_container } = require('../../engine/pixi_containers');
+const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');
@@ -48066,7 +46480,7 @@ class Animal extends Character {
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
 
-    critter_container.addChild(this.sprite);
+    enemy_container.addChild(this.sprite);
   }
 }
 
@@ -48074,7 +46488,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":232,"../animations/rat":204,"../attributes/inventory":207,"../attributes/lootable":210,"../attributes/vitals":215,"../character_model":216}],220:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../animations/rat":202,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/vitals":213,"../character_model":214}],218:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48118,7 +46532,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":232,"pixi.js":155}],221:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":153}],219:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48139,7 +46553,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":232,"pixi.js":155}],222:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":153}],220:[function(require,module,exports){
 'use strict';
 
 const { Crow } = require('../character/archetypes/crow');
@@ -48159,7 +46573,7 @@ module.exports = {
   generate_crow,
 };
 
-},{"../character/archetypes/crow":205}],223:[function(require,module,exports){
+},{"../character/archetypes/crow":203}],221:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48218,17 +46632,26 @@ module.exports = {
   Fade,
 };
 
-},{"pixi.js":155}],224:[function(require,module,exports){
+},{"pixi.js":153}],222:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
+
+PIXI.settings.ROUND_PIXELS = true;
+PIXI.settings.RENDER_OPTIONS.roundPixels = true;
+PIXI.settings.RESOLUTION = 0.5;
+PIXI.settings.TARGET_FPMS = 0.03;
+PIXI.settings.TARGET_FPMS = 0.03;
+PIXI.settings.UPLOADS_PER_FRAME = 1;
 
 const app = new PIXI.Application({
   width          : global.window.innerWidth,
   height         : global.window.innerHeight,
   antialias      : false,
-  autoResize     : true,
+  autoResize     : false,
+  powerPreference: 'low-performance',
   backgroundColor: 0x000000,
+  roundPixels    : true,
 });
 
 global.document.body.appendChild(app.view);
@@ -48237,7 +46660,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":155}],225:[function(require,module,exports){
+},{"pixi.js":153}],223:[function(require,module,exports){
 /* eslint-disable*/
 
 'use strict';
@@ -48273,7 +46696,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":218,"../level/types/archer_room":266,"../level/types/defend_room.js":267,"../level/types/intro.js":268,"../level/types/item_room":270,"../level/types/player_animations":272,"../level/types/school_room.js":273,"../level/types/simple.js":274,"../level/types/transition_room":276}],226:[function(require,module,exports){
+},{"../character/types/player.js":216,"../level/types/archer_room":264,"../level/types/defend_room.js":265,"../level/types/intro.js":266,"../level/types/item_room":268,"../level/types/player_animations":270,"../level/types/school_room.js":271,"../level/types/simple.js":272,"../level/types/transition_room":274}],224:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -48315,7 +46738,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./shadows":234,"./tween":237}],227:[function(require,module,exports){
+},{"./shadows":232,"./tween":235}],225:[function(require,module,exports){
 'use strict';
 
 const event = require('events');
@@ -48326,7 +46749,7 @@ module.exports = {
   damage_events,
 };
 
-},{"events":295}],228:[function(require,module,exports){
+},{"events":293}],226:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
@@ -48356,7 +46779,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":240,"events":295}],229:[function(require,module,exports){
+},{"../items/item_manager":238,"events":293}],227:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -48369,7 +46792,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],230:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48382,7 +46805,7 @@ module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":34,"pixi.js":155}],231:[function(require,module,exports){
+},{"pixi-packer-parser":34,"pixi.js":153}],229:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grid_container } = require('./pixi_containers');
@@ -48506,10 +46929,9 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":285,"./pixi_containers":232,"./tween":237,"easystarjs":5,"pixi.js":155}],232:[function(require,module,exports){
+},{"../utils/grid":283,"./pixi_containers":230,"./tween":235,"easystarjs":5,"pixi.js":153}],230:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-PIXI.settings.ROUND_PIXELS = true;
 const { world } = require('./shadows');
 
 const zIndex_layer = {
@@ -48544,14 +46966,6 @@ const item_container = new PIXI.Container();
 item_container.name = 'non_collision_items';
 item_container.zIndex = low;
 
-const critter_container = new PIXI.Container();
-critter_container.name = 'critter_container';
-critter_container.zIndex = low;
-
-const arrow_container = new PIXI.Container();
-arrow_container.name = 'arrow_container';
-arrow_container.zIndex = medium;
-
 const enemy_container = new PIXI.Container();
 enemy_container.name = 'enemy_container';
 enemy_container.zIndex = medium;
@@ -48580,9 +46994,9 @@ const gui_container = new PIXI.Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
 
-const dialog_container = new PIXI.Container();
-dialog_container.name = 'dialog_container';
-dialog_container.zIndex = close;
+//const dialog_container = new PIXI.Container();
+//dialog_container.name = 'dialog_container';
+//dialog_container.zIndex = close;
 
 // const grid_particles = new PIXI.ParticleContainer(
 //   scale: true,
@@ -48602,12 +47016,11 @@ world.addChild(
   grid_container,
   collision_container,
   item_container,
-  critter_container,
-  arrow_container,
+  //  critter_container,
   enemy_container,
   player_container,
   gui_container,
-  dialog_container,
+  //  dialog_container,
   pad_container
   // grid_particles
 );
@@ -48639,11 +47052,10 @@ module.exports = {
   roof_container,
   background_container,
   collision_container,
-  critter_container,
+  // critter_container,
   gui_container,
   enemy_container,
   player_container,
-  arrow_container,
   visual_effects_container,
   grid_container,
   item_container,
@@ -48654,22 +47066,20 @@ module.exports = {
 
 
 
-},{"./shadows":234,"pixi.js":155}],233:[function(require,module,exports){
+},{"./shadows":232,"pixi.js":153}],231:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
-const { arrow_container     } = require('./pixi_containers');
+const { item_container     } = require('./pixi_containers');
 const { collision_container } = require('./pixi_containers');
 const { enemy_container     } = require('./pixi_containers');
-const { critter_container   } = require('./pixi_containers');
 const { player_container    } = require('./pixi_containers');
 
 const objects  = collision_container.children;
 const enemies  = enemy_container.children;
-const critters = critter_container.children;
 const players  = player_container.children;
 
 class Arrow {
@@ -48680,7 +47090,7 @@ class Arrow {
     this.sprite.anchor.set(0.65);
     this.tween  = new Tween(this.sprite);
 
-    arrow_container.addChild(this.sprite);
+    item_container.addChild(this.sprite);
   }
 
   set rotation(value) {
@@ -48704,13 +47114,6 @@ function shoot_arrow(speed, damage, origin, point) {
       if(collision_object.events) {
         collision_object.events.emit('damage', damage);
       }
-      return;
-    }
-
-    const collision_critter = critters.find(critter => critter.containsPoint(arrow_point));
-    if (collision_critter) {
-      arrow.tween.stop();
-      collision_critter.events.emit('damage', damage);
       return;
     }
 
@@ -48741,7 +47144,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":287,"./pixi_containers":232,"./tween":237,"pixi.js":155}],234:[function(require,module,exports){
+},{"../utils/math":285,"./pixi_containers":230,"./tween":235,"pixi.js":153}],232:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48760,6 +47163,9 @@ world.updateLayersOrder = function () {
   });
 };
 
+console.log(world);
+
+
 module.exports = {
   world,
 };
@@ -48770,7 +47176,7 @@ module.exports = {
 
 
 
-},{"./app":224,"pixi-layers":33,"pixi-shadows":37,"pixi.js":155}],235:[function(require,module,exports){
+},{"./app":222,"pixi-layers":33,"pixi-shadows":35,"pixi.js":153}],233:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -48790,27 +47196,35 @@ const Sound = PIXI.sound.add({
 
 module.exports = Sound;
 
-},{"pixi-sound":38,"pixi.js":155}],236:[function(require,module,exports){
+},{"pixi-sound":36,"pixi.js":153}],234:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
 const app  = require('./app');
 
 //Needed for utils
-global.window.PIXI = PIXI;
 global.window.PIXI.default = PIXI;
 
 require('pixi-tween');
 require('pixi-keyboard');
 
-app.ticker.add(() => {
-  PIXI.tweenManager.update();
-  PIXI.keyboardManager.update();
+//app.ticker.deltaTime = 2;
+const fpsDelta = 60/30;
+let elapsedTime = 0;
+
+app.ticker.add(delta => {
+  elapsedTime += delta;
+
+  if(elapsedTime >= fpsDelta) {
+    PIXI.tweenManager.update();
+    PIXI.keyboardManager.update();
+    elapsedTime = 0;
+  }
 });
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":224,"pixi-keyboard":32,"pixi-tween":39,"pixi.js":155}],237:[function(require,module,exports){
+},{"./app":222,"pixi-keyboard":32,"pixi-tween":37,"pixi.js":153}],235:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -48925,8 +47339,9 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":287,"./pixi_containers":232,"./ticker":236,"pixi.js":155}],238:[function(require,module,exports){
+},{"../utils/math":285,"./pixi_containers":230,"./ticker":234,"pixi.js":153}],236:[function(require,module,exports){
 'use strict';
+const PIXI = require('pixi.js');
 
 require('./utils/globals');
 
@@ -48942,7 +47357,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":225,"./engine/packer":230,"./utils/globals":284}],239:[function(require,module,exports){
+},{"./engine/boot_loader.js":223,"./engine/packer":228,"./utils/globals":282,"pixi.js":153}],237:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -49124,7 +47539,7 @@ const items = [
     cost: 20,
 
     visual_name: 'old helmet',
-    description: 'A rusty old helmet that looks to be a WW2 replica',
+    description: 'A rusty old helmet that looks a WW2 replica',
     image_name: 'old_helmet',
   },
 
@@ -49282,7 +47697,7 @@ module.exports = {
 };
 
 
-},{}],240:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -49358,7 +47773,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":224,"../utils/math":287,"./data/item_data":239,"pixi.js":155}],241:[function(require,module,exports){
+},{"../engine/app":222,"../utils/math":285,"./data/item_data":237,"pixi.js":153}],239:[function(require,module,exports){
 'use strict';
 
 class Tiled_Data {
@@ -49373,7 +47788,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],242:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49957,7 +48372,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],243:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50374,7 +48789,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],244:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -50774,7 +49189,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],245:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53499,7 +51914,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54733,7 +53148,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55434,7 +53849,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55859,7 +54274,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56816,7 +55231,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],250:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -57903,7 +56318,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],251:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -58388,7 +56803,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],252:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58431,7 +56846,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":232,"pixi.js":155}],253:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"pixi.js":153}],251:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -58452,7 +56867,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":232,"./item_model":259}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"./item_model":257}],252:[function(require,module,exports){
 (function (global){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
@@ -58562,7 +56977,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":210,"../../engine/item_handler":228,"../../engine/pixi_containers":232,"../../view/button":289,"../../view/caption":290,"../../view/overlay_object":291,"./item_model":259}],255:[function(require,module,exports){
+},{"../../character/attributes/lootable":208,"../../engine/item_handler":226,"../../engine/pixi_containers":230,"../../view/button":287,"../../view/caption":288,"../../view/overlay_object":289,"./item_model":257}],253:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -58598,7 +57013,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":232,"events":295,"pixi.js":155}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"events":293,"pixi.js":153}],254:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -58632,7 +57047,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":232,"./item_model":259,"events":295}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"./item_model":257,"events":293}],255:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -58713,7 +57128,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":227,"../../engine/pixi_containers":232,"../../engine/sound":235,"../../engine/tween":237,"../../view/button":289,"./item_model":259,"./visual_object":263}],258:[function(require,module,exports){
+},{"../../engine/damage_handler":225,"../../engine/pixi_containers":230,"../../engine/sound":233,"../../engine/tween":235,"../../view/button":287,"./item_model":257,"./visual_object":261}],256:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -58757,7 +57172,7 @@ module.exports = {
   Element_Factory,
 };
 
-},{"./ceiling":253,"./chest":254,"./collision_object":256,"./door":257,"./shroud":262,"./visual_object":263}],259:[function(require,module,exports){
+},{"./ceiling":251,"./chest":252,"./collision_object":254,"./door":255,"./shroud":260,"./visual_object":261}],257:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58863,7 +57278,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":232,"pixi.js":155}],260:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"pixi.js":153}],258:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
@@ -58891,7 +57306,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":232,"events":295,"pixi.js":155}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"events":293,"pixi.js":153}],259:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -59017,7 +57432,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":232,"../../engine/sound":235,"../../light/types/led":282,"./item_model":259,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":155}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../engine/sound":233,"../../light/types/led":280,"./item_model":257,"@pixi/filter-glitch":1,"@pixi/filter-pixelate":2,"pixi.js":153}],260:[function(require,module,exports){
 'use strict';
 const { shroud_container } = require('../../engine/pixi_containers');
 
@@ -59040,7 +57455,7 @@ module.exports = {
   Shroud,
 };
 
-},{"../../engine/pixi_containers":232,"./item_model":259}],263:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"./item_model":257}],261:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../../engine/pixi_containers');
 
@@ -59062,7 +57477,7 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":232,"./item_model":259}],264:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"./item_model":257}],262:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -59099,7 +57514,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":232,"./item_model":259,"events":295}],265:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"./item_model":257,"events":293}],263:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
 
@@ -59113,7 +57528,7 @@ module.exports = {
   Level,
 };
 
-},{"../engine/pathfind.js":231}],266:[function(require,module,exports){
+},{"../engine/pathfind.js":229}],264:[function(require,module,exports){
 'use strict';
 
 const { Level         } = require('../level_model');
@@ -59152,7 +57567,7 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":241,"../data/archer_room.json":243,"../elements/pad":260,"../level_model":265,"./level_factory":271}],267:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":239,"../data/archer_room.json":241,"../elements/pad":258,"../level_model":263,"./level_factory":269}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59219,7 +57634,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":241,"../data/defend_room.json":244,"../elements/pad":260,"../level_model":265,"./level_factory":271}],268:[function(require,module,exports){
+},{"../../character/archetypes/rat":204,"../attributes/parse_tiled_data":239,"../data/defend_room.json":242,"../elements/pad":258,"../level_model":263,"./level_factory":269}],266:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
@@ -59311,7 +57726,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":222,"../../engine/camera":226,"../../engine/pixi_containers":232,"../../engine/tween":237,"../attributes/parse_tiled_data":241,"../data/intro_room.json":245,"../elements/click_pad":255,"../elements/pad":260,"./level_factory":271}],269:[function(require,module,exports){
+},{"../../effects/click_events":220,"../../engine/camera":224,"../../engine/pixi_containers":230,"../../engine/tween":235,"../attributes/parse_tiled_data":239,"../data/intro_room.json":243,"../elements/click_pad":253,"../elements/pad":258,"./level_factory":269}],267:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59350,7 +57765,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":241,"../data/intro_room_level_2.json":246,"../elements/pad":260,"./level_factory":271}],270:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":239,"../data/intro_room_level_2.json":244,"../elements/pad":258,"./level_factory":269}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59437,7 +57852,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":222,"../../engine/tween":237,"../attributes/parse_tiled_data":241,"../data/items_room.json":247,"../elements/click_pad":255,"../elements/pad":260,"../level_model":265,"./level_factory":271}],271:[function(require,module,exports){
+},{"../../effects/click_events":220,"../../engine/tween":235,"../attributes/parse_tiled_data":239,"../data/items_room.json":245,"../elements/click_pad":253,"../elements/pad":258,"../level_model":263,"./level_factory":269}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59544,7 +57959,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":226,"../../engine/pixi_containers":232,"../../light/types/bright_light":280,"../elements/background":252,"../elements/elements_factory":258,"../elements/wall":264,"./archer_room":266,"./defend_room":267,"./intro":268,"./intro_level_02":269,"./item_room":270,"./school_room":273,"./simple":274,"./street":275,"./transition_room":276}],272:[function(require,module,exports){
+},{"../../engine/camera":224,"../../engine/pixi_containers":230,"../../light/types/bright_light":278,"../elements/background":250,"../elements/elements_factory":256,"../elements/wall":262,"./archer_room":264,"./defend_room":265,"./intro":266,"./intro_level_02":267,"./item_room":268,"./school_room":271,"./simple":272,"./street":273,"./transition_room":274}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59611,7 +58026,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":217,"../../engine/camera":226,"../elements/background":252,"../level_model":265}],273:[function(require,module,exports){
+},{"../../character/types/npc":215,"../../engine/camera":224,"../elements/background":250,"../level_model":263}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59670,7 +58085,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":206,"../attributes/parse_tiled_data":241,"../data/school_room.json":249,"../elements/pad":260,"../elements/phone":261,"../level_model":265,"./level_factory":271}],274:[function(require,module,exports){
+},{"../../character/archetypes/rat":204,"../attributes/parse_tiled_data":239,"../data/school_room.json":247,"../elements/pad":258,"../elements/phone":259,"../level_model":263,"./level_factory":269}],272:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -59725,7 +58140,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":232,"../attributes/parse_tiled_data":241,"../data/apartment.json":242,"../data/lights_room.json":248,"../elements/pad":260,"../level_model":265,"./level_factory":271}],275:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../attributes/parse_tiled_data":239,"../data/apartment.json":240,"../data/lights_room.json":246,"../elements/pad":258,"../level_model":263,"./level_factory":269}],273:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59765,7 +58180,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":241,"../data/street.json":250,"../elements/pad":260,"../level_model":265,"./level_factory":271}],276:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":239,"../data/street.json":248,"../elements/pad":258,"../level_model":263,"./level_factory":269}],274:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59839,7 +58254,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":232,"../attributes/parse_tiled_data":241,"../data/transition_room.json":251,"../elements/pad":260,"../level_model":265,"./level_factory":271,"pixi.js":155}],277:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../attributes/parse_tiled_data":239,"../data/transition_room.json":249,"../elements/pad":258,"../level_model":263,"./level_factory":269,"pixi.js":153}],275:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -59884,7 +58299,7 @@ module.exports = {
   Flicker,
 };
 
-},{"pixi.js":155}],278:[function(require,module,exports){
+},{"pixi.js":153}],276:[function(require,module,exports){
 'use strict';
 
 //const { Sound } = require('../../engine/sound');
@@ -59946,7 +58361,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../utils/time":288}],279:[function(require,module,exports){
+},{"../../utils/time":286}],277:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -60014,7 +58429,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":232,"pixi.js":155}],280:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":153}],278:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -60040,7 +58455,7 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":232,"../attributes/strike":278,"../light_model":279}],281:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../attributes/strike":276,"../light_model":277}],279:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -60091,7 +58506,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":232,"../attributes/flicker":277,"../light_model":279,"pixi.js":155}],282:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../attributes/flicker":275,"../light_model":277,"pixi.js":153}],280:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -60118,7 +58533,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":232,"../attributes/flicker":277,"../light_model":279}],283:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../attributes/flicker":275,"../light_model":277}],281:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -60161,7 +58576,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],284:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -60209,11 +58624,9 @@ global.place_bunny = ({ x, y }, light) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":232,"pixi.js":155}],285:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":153}],283:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-require('pixi-plugin-bump');
-//const bump = new PIXI.extras.Bump();
 const { grid_container      } = require('../engine/pixi_containers');
 const { collision_container } = require('../engine/pixi_containers');
 
@@ -60225,8 +58638,6 @@ function check(rect1, rect2) {
     rect1.y + rect1.height > rect2.y) {
     return true;
   }
-
-  //return bump.hitTestRectangle(ab, bb);
 }
 
 class Tile {
@@ -60342,7 +58753,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":232,"pixi-plugin-bump":36,"pixi.js":155}],286:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":153}],284:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -60462,7 +58873,7 @@ module.exports = {
 
 
 
-},{}],287:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -60520,7 +58931,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],288:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -60531,7 +58942,7 @@ module.exports = {
   sleep,
 };
 
-},{}],289:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -60626,7 +59037,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":232,"pixi.js":155}],290:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"pixi.js":153}],288:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -60696,7 +59107,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],291:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -60783,7 +59194,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":232,"../engine/shadows":234,"./caption":290,"pixi.js":155}],292:[function(require,module,exports){
+},{"../engine/pixi_containers":230,"../engine/shadows":232,"./caption":288,"pixi.js":153}],290:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -60825,19 +59236,34 @@ class View_Inventory {
   populate_slots(loot) {
     this.create_inventory_slots(loot.length);
 
-    const level_text = new PIXI.Text('',{fontSize: 30, fill: 'grey'});
-    level_text.anchor.set(0);
-    level_text.y += 50;
-    level_text.x -= 50;
+    const item_title = new PIXI.Text('',{fontSize: 20, fill: 'grey'});
+    item_title.y += 60;
+    item_title.x -= 40;
 
-    const description = new PIXI.Sprite(PIXI.Texture.WHITE);
-    description.tint = 0x29241F;
-    description.width = this.slot_container.width;
-    description.height = level_text.height;
-    description.anchor.set(0);
-    description.height = 35;
-    description.y += 50;
-    description.x -= 50;
+    const item_title_background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    item_title_background.tint  = 0x29241F;
+    item_title_background.width = this.slot_container.width;
+    item_title_background.height = 35;
+    item_title_background.y += 55;
+    item_title_background.x -= 50;
+    item_title_background.visible = false;
+
+    const description = new PIXI.Text('',{
+      wordWrap: true,
+      wordWrapWidth: this.slot_container.width - 20,
+      fontSize: 18,
+    });
+    description.y += 95;
+    description.x -= 40;
+
+    const description_background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    description_background.width = this.slot_container.width;
+    description_background.y += 90;
+    description_background.x -= 50;
+    description_background.visible = false;
+
+    const item_worth = new PIXI.Text('',{fontSize: 15, fill: 'white'});
+    item_worth.x -= 40;
 
     loot.forEach((loot_item, slot) => {
       const item  = PIXI.Sprite.fromFrame(loot_item.image_name);
@@ -60846,22 +59272,40 @@ class View_Inventory {
       item.anchor.set(0.5);
       item.interactive = true;
       item.buttonMode  = true;
-      item.info = loot_item;
 
       item.click = () => {
         player_events.emit('give_item', loot_item);
+        item_title.text  = '';
+        description.text = '';
+        item_worth.text  = '';
 
+        item_title_background.visible  = false;
+        description_background.visible = false;
         item.destroy();
       };
 
       item.on('mouseover', () => {
-        level_text.text = ' '+item.info.visual_name;
+        item_title_background.visible  = true;
+        description_background.visible = true;
+
+        item_title.text  = loot_item.visual_name;
+        description.text = loot_item.description;
+        description_background.height = description.height + 10;
+
+        item_worth.text = 'Value: '+loot_item.cost;
+        item_worth.y = description.height + 105;
       });
 
       this.slot_container.getChildAt(slot).addChild(item);
     });
 
-    this.slot_container.addChild(description, level_text);
+    this.slot_container.addChild(
+      item_title_background,
+      description_background,
+      item_title,
+      description,
+      item_worth
+    );
   }
 }
 
@@ -60869,7 +59313,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":223,"../engine/item_handler":228,"../engine/pixi_containers":232,"pixi.js":155}],293:[function(require,module,exports){
+},{"../effects/fade":221,"../engine/item_handler":226,"../engine/pixi_containers":230,"pixi.js":153}],291:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -61067,7 +59511,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":240}],294:[function(require,module,exports){
+},{"../items/item_manager":238}],292:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -61104,7 +59548,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":283}],295:[function(require,module,exports){
+},{"../utils/dom":281}],293:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61629,7 +60073,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],296:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -61935,7 +60379,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":297}],297:[function(require,module,exports){
+},{"_process":295}],295:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -62121,7 +60565,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],298:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -62658,7 +61102,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],299:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62744,7 +61188,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],300:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62831,13 +61275,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],301:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":299,"./encode":300}],302:[function(require,module,exports){
+},{"./decode":297,"./encode":298}],300:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -62916,7 +61360,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":297,"timers":302}],303:[function(require,module,exports){
+},{"process/browser.js":295,"timers":300}],301:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63650,7 +62094,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":304,"punycode":298,"querystring":301}],304:[function(require,module,exports){
+},{"./util":302,"punycode":296,"querystring":299}],302:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -63668,4 +62112,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[238]);
+},{}]},{},[236]);
