@@ -10,6 +10,9 @@ const Sound = PIXI.sound.add({
   rain_noise:     'audio/light_rain.wav',
   ringing_phone:  'audio/ringing_phone_00.mp3',
   answer_phone:   'audio/answer_phone_00.wav',
+  page_turn:      'audio/page_turn.wav',
+  wood_split:     'audio/wood_split.wav',
+  wood_thump:     'audio/wood_thump.wav',
 });
 
 module.exports = Sound;

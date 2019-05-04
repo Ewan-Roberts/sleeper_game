@@ -50,6 +50,7 @@ class Scavenger extends Animal {
   }
 
   _distance_to(point) {
+    // consider PIXI.tween.TweenPath.distanceBetween
     return distance_between(point, this.sprite);
   }
 

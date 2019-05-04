@@ -30,6 +30,10 @@ class Defend_Room extends Level  {
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
+    const mouse2 = new Rat();
+    mouse2.enemy(this.player);
+    mouse2.set_position({x: prey[0].x +200, y: prey[0].y +100});
+
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad(data);
       if(data.properties) {
@@ -39,13 +43,17 @@ class Defend_Room extends Level  {
         return;
       }
 
-      // Fire once (event) to load in enemies
-      pad.area.events.once('trigger', () => {
-        mouse.logic_start();
-      });
+      if(data.id === 236) {
+        pad.area.events.once('trigger', () => {
+          mouse2.logic_start();
+        });
+      } else {
+        pad.area.events.once('trigger', () => {
+          mouse.logic_start();
+        });
+      }
     });
 
-    global.set_light_level(1);
     this.create_grid(grid[0]);
   }
 }

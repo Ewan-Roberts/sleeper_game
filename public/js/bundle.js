@@ -47161,18 +47161,18 @@ module.exports = {
 
 },{"../../engine/pixi_containers":232,"../../engine/tween":237,"../animations/bird":202,"../attributes/pathfind":213,"../character_model":216}],206:[function(require,module,exports){
 'use strict';
+const PIXI = require('pixi.js');
 
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
-const { collision_container} = require('../../engine/pixi_containers');
+const { collision_container, gui_container} = require('../../engine/pixi_containers');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
-const { Blood  } = require('../../effects/blood');
 const { pathfind_sprite } = require('../../engine/pathfind');
-const { Tween  } = require('../../engine/tween');
+//const { Tween  } = require('../../engine/tween');
 
 function break_at_door(path) {
   const arr = [];
@@ -47197,55 +47197,20 @@ class Rat extends Animal {
     this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
 
-    this.blood       = new Blood();
-    this.tween       = new Tween(this.sprite);
-    this.tween.time  = 1000;
-    this.tween.fired = false;
-  }
-
-  async _path_to_enemy() {
-    this.animation.walk();
-
-    const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
-    const door_path   = break_at_door(normal_path);
-    const door_tile   = door_path[door_path.length - 1];
-    this.tween.movement.clear();
-    this.tween.from_path(this.sprite);
-    this.tween.add_path(door_path);
-    this.tween.draw_path();
-
-    const { damage } = this.inventory.equipped;
-    damage_events.emit('damage', {door_tile, damage});
-
-    this.tween.movement.repeat = 9;
-    this.tween.start();
-  }
-
-  async _walk_to_enemy() {
-    this.animation.walk();
-
-    this.tween.movement.clear();
-    this.tween.from_path(this.sprite);
-    this.tween.add_path([this.sprite,this.sprite, this.sprite,this.enemy.sprite]);
-    this.tween.draw_path();
-    this.tween.movement.path = this.tween.path;
-    //this.tween.movement.repeat = 9;
-    //this.tween.start();
   }
 
   get _target_far_away() {
     const distance = distance_between(this.enemy.sprite, this.sprite);
 
-    return distance > 500;
+    return distance > 200;
   }
 
   on_damage(amount) {
-    this.vitals.damage(amount);
-
-    if(!this.vitals.alive) {
-      this.blood.add_at(this.sprite);
-      this.kill();
+    if(this.vitals.alive) {
+      return this.vitals.damage(amount);
     }
+
+    this.kill();
   }
 
   kill() {
@@ -47256,32 +47221,77 @@ class Rat extends Animal {
     this.tween.stop();
 
     this.animation.kill();
-    this.vitals.kill();
   }
 
   enemy(character) {
     this.enemy = character;
   }
 
-  logic_start() {
-    if(!this.enemy) return new Error('no enemy');
-    if(this.tween.fired) return;
-    this.tween.fired = true;
-    this.tween.start();
-    this.tween.movement.repeat = 9;
+  _show_path(path) {
+    const graphical_path = new PIXI.Graphics();
+    graphical_path.lineStyle(3, 0xffffff, 0.5);
+    graphical_path.drawPath(path);
 
-    this.tween.movement.on('repeat', () => {
-      if(!this.vitals.alive) this.kill();
-      console.log('i see you');
-      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {
-        console.log('i see you');
-        return this._walk_to_enemy();
+    gui_container.addChild(graphical_path);
+  }
+
+  async _pathfind() {
+    const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const door_path   = break_at_door(normal_path);
+    const door_tile   = door_path[door_path.length - 1];
+
+    const { damage } = this.inventory.equipped;
+    damage_events.emit('damage', {door_tile, damage});
+
+    this.tween.path.lineTo(
+      door_path[0].x,
+      door_path[0].y
+    );
+    for (let i = 1; i < door_path.length; i++) {
+      this.tween.path.arcTo(
+        door_path[i-1].x,
+        door_path[i-1].y,
+        door_path[i].x,
+        door_path[i].y,
+        2);
+    }
+  }
+
+  // NOTE: Keep this verbose and dumb
+  logic_start() {
+    this.tween = PIXI.tweenManager.createTween(this.sprite);
+    this.tween.time = 2000;
+    this.tween.expire = true;
+    this.tween.start();
+
+    this.tween.on('end', async () => {
+      this.tween.clear();
+      this.tween.expire = true;
+
+      if(!this.enemy.vitals.alive) throw 'game over';
+
+      if(!this._target_far_away) {
+        this.tween.time = 2000;
+        this.tween.start();
+
+        return this.melee.attack(this.enemy);
       }
 
-      if(this._target_far_away) return this._path_to_enemy();
-      if(!this.enemy.vitals.alive) throw 'game over';
-      this.tween.stop();
-      return this.melee.attack(this.enemy);
+      this.tween.path = new PIXI.tween.TweenPath();
+      this.tween.path.moveTo(this.sprite.x, this.sprite.y);
+
+      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {
+        this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+      } else {
+        await this._pathfind();
+      }
+
+      this.tween.time = this.tween.path.length
+        ?this.tween.path.length*1000
+        :2000;
+
+      this._show_path(this.tween.path);
+      this.tween.start();
     });
   }
 }
@@ -47291,7 +47301,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../effects/blood":221,"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/pixi_containers":232,"../../engine/tween":237,"../../utils/line_of_sight":286,"../../utils/math":287,"../attributes/melee":211,"../types/rat":219,"events":295}],207:[function(require,module,exports){
+},{"../../engine/damage_handler":227,"../../engine/pathfind":231,"../../engine/pixi_containers":232,"../../utils/line_of_sight":286,"../../utils/math":287,"../attributes/melee":211,"../types/rat":219,"events":295,"pixi.js":155}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -47866,10 +47876,13 @@ module.exports = {
 },{"../../view/view_player_status_meter":294,"pixi.js":155}],215:[function(require,module,exports){
 'use strict';
 
+const { Blood  } = require('../../effects/blood');
+
 class Vitals {
   constructor({ sprite }) {
     this.name   ='vitals';
     this.sprite = sprite;
+    this.blood = new Blood();
 
     //TODO derive from archtype data
     this.power  = 5000;
@@ -47886,8 +47899,12 @@ class Vitals {
     return (this.status === 'alive');
   }
 
-  kill() {
-    this.status === 'dead';
+  _kill() {
+    if (this.status === 'dead') return;
+
+    this.status = 'dead';
+
+    this.blood.add_at(this.sprite);
   }
 
   _dead(damage) {
@@ -47897,13 +47914,12 @@ class Vitals {
   }
 
   damage(damage) {
-    console.log('wefefe');
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
 
     this.health -= damage;
 
-    if(this.health < 0) this.status = 'dead';
+    if(this.health < 0) this._kill();
   }
 }
 
@@ -47912,7 +47928,7 @@ module.exports = {
 };
 
 
-},{}],216:[function(require,module,exports){
+},{"../../effects/blood":221}],216:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -48378,14 +48394,14 @@ const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0,2]);
-easystar.setTileCost(2, 1); //only if you have to!
+easystar.setTileCost(2, 1); // only go through these tiles if you have to
 //easystar.enableDiagonals();
 //easystar.enableCornerCutting();
 
 const find_grid = sprite => {
   const grid  = grid_container.children;
   const point = sprite.getGlobalPosition();
-
+  console.log(point);
   const found_tile = grid.find(tile => tile.containsPoint(point));
 
   if(!found_tile) throw `${sprite.name} was not found`;
@@ -48418,7 +48434,7 @@ class pathfind_sprite {
   static highlight_grid_cell_from_path(path) {
     const { sprite } = this.grid;
 
-    path.forEach(({x,y}) => sprite[y][x].alpha = 0.2);
+    path.forEach(({x,y}) => sprite[y][x].alpha = 0.4);
   }
 
   static move_sprite_on_path(sprite, path_array) {
@@ -48767,6 +48783,9 @@ const Sound = PIXI.sound.add({
   rain_noise:     'audio/light_rain.wav',
   ringing_phone:  'audio/ringing_phone_00.mp3',
   answer_phone:   'audio/answer_phone_00.wav',
+  page_turn:      'audio/page_turn.wav',
+  wood_split:     'audio/wood_split.wav',
+  wood_thump:     'audio/wood_thump.wav',
 });
 
 module.exports = Sound;
@@ -48839,13 +48858,6 @@ class Tween {
 
   add_path(tween_path) {
     this.path = new PIXI.tween.TweenPath();
-    console.log(tween_path);
-    // this.path.arcTo(
-    //   this.sprite.x,
-    //   this.sprite.y,
-    //   tween_path[1].x,
-    //   tween_path[1].y,
-    //   this.path_arc);
     for (let i = 1; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x,
@@ -50393,7 +50405,7 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50403,7 +50415,7 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50413,7 +50425,7 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50428,15 +50440,15 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2451.16780621098,
-                 "x":301.552487342831,
-                 "y":228.557413822783
+                 "width":1504.03124233433,
+                 "x":991.714014508763,
+                 "y":253.031226842852
                 }],
          "offsetx":-95.212121212121,
          "offsety":-40.6666666666666,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -50453,22 +50465,51 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2422.94434067547,
-                 "y":823.17275109959
+                 "x":2241.83812432696,
+                 "y":769.330362455439
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
          "name":"item",
-         "objects":[],
+         "objects":[
+                {
+                 "height":96.1592,
+                 "id":235,
+                 "name":"",
+                 "properties":
+                    {
+                     "equip_on_click":true,
+                     "image_name":"bow_00",
+                     "label":true,
+                     "label_action":"Take",
+                     "label_description":"Old Bow",
+                     "label_image":"take_icon"
+                    },
+                 "propertytypes":
+                    {
+                     "equip_on_click":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string"
+                    },
+                 "rotation":-525.979,
+                 "type":"",
+                 "visible":true,
+                 "width":80,
+                 "x":1472.48164464023,
+                 "y":906.399107782672
+                }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50495,8 +50536,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":100,
-                 "x":1081.26502567251,
-                 "y":997.144810590304
+                 "x":1258.21143618818,
+                 "y":1148.81316246088
                 }, 
                 {
                  "height":32,
@@ -50510,15 +50551,15 @@ module.exports={ "height":50,
                  "y":212
                 }, 
                 {
-                 "height":584.88606060606,
+                 "height":783.123946068616,
                  "id":230,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":30.6667,
-                 "x":2054.24034341475,
-                 "y":1758.79311544967
+                 "x":2059.13510601876,
+                 "y":1614.39761863127
                 }, 
                 {
                  "height":33.3333333333333,
@@ -50540,22 +50581,10 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"lights",
-         "objects":[
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1136.27730156249,
-                 "y":1677.30952920112
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50572,12 +50601,12 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1409.85343158456,
-                 "y":1018.99093291777
+                 "x":1652.67815458549,
+                 "y":905.561484246031
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50586,28 +50615,9 @@ module.exports={ "height":50,
          "name":"floor",
          "objects":[
                 {
-                 "height":53.712,
-                 "id":211,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"floor_decal_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-90.8664,
-                 "type":"",
-                 "visible":true,
-                 "width":163.969,
-                 "x":278.0155,
-                 "y":1121.144
-                }, 
-                {
-                 "height":1141.41,
+                 "height":575.182104245256,
                  "id":213,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"floor_decal_03"
@@ -50616,36 +50626,17 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":90,
+                 "rotation":180.084644605564,
                  "type":"",
                  "visible":true,
                  "width":938.613,
-                 "x":1378.6935,
-                 "y":225.295
+                 "x":2060.90769172362,
+                 "y":810.995376338278
                 }, 
                 {
-                 "height":148.297,
-                 "id":214,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_01"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":166.821,
-                 "type":"",
-                 "visible":true,
-                 "width":164.541,
-                 "x":1201.7295,
-                 "y":491.8515
-                }, 
-                {
-                 "height":279.827,
+                 "height":178.714765419616,
                  "id":215,
-                 "name":"floor_visual",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"litter_00"
@@ -50657,127 +50648,13 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":231.865,
-                 "x":562.0675,
-                 "y":696.0865
-                }, 
-                {
-                 "height":285.318,
-                 "id":216,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"concrete_decal_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":374.315,
-                 "type":"",
-                 "visible":true,
-                 "width":702.084,
-                 "x":788.958,
-                 "y":1235.341
-                }, 
-                {
-                 "height":257.06,
-                 "id":217,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"trash_can_02"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-521.044,
-                 "type":"",
-                 "visible":true,
-                 "width":236.13,
-                 "x":1315.935,
-                 "y":1791.47
-                }, 
-                {
-                 "height":462.106,
-                 "id":218,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.305,
-                 "type":"",
-                 "visible":true,
-                 "width":81.2223,
-                 "x":563.38885,
-                 "y":1906.947
-                }, 
-                {
-                 "height":210.751,
-                 "id":219,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"trash_can_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-521.044,
-                 "type":"",
-                 "visible":true,
-                 "width":236.13,
-                 "x":507.935,
-                 "y":1854.6245
-                }, 
-                {
-                 "height":232.099,
-                 "id":220,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":292.335,
-                 "x":979.8325,
-                 "y":1643.9505
-                }, 
-                {
-                 "height":238.08,
-                 "id":221,
-                 "name":"floor_visual",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.1611,
-                 "type":"",
-                 "visible":true,
-                 "width":201.155,
-                 "x":1329.4225,
-                 "y":1852.96
+                 "width":148.083276753205,
+                 "x":1760.24747977755,
+                 "y":1317.92674266936
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -50788,7 +50665,7 @@ module.exports={ "height":50,
                 {
                  "height":77.2894392067246,
                  "id":186,
-                 "name":"collision",
+                 "name":"",
                  "properties":
                     {
                      "image_name":"chair_03"
@@ -50801,8 +50678,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":77.2894392067246,
-                 "x":2272.57902426657,
-                 "y":1141.71990328131
+                 "x":2297.85708291167,
+                 "y":1131.60867982327
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50815,46 +50692,27 @@ module.exports={ "height":50,
          "name":"door",
          "objects":[
                 {
-                 "height":16.84727554196,
+                 "height":53.7514795929319,
                  "id":231,
                  "name":"",
                  "properties":
                     {
                      "door":true,
+                     "health":50,
                      "image_name":"door_01"
                     },
                  "propertytypes":
                     {
                      "door":"bool",
+                     "health":"int",
                      "image_name":"string"
                     },
-                 "rotation":93.0852718209639,
+                 "rotation":-0.554141302071258,
                  "type":"",
                  "visible":true,
-                 "width":18.637457234875,
-                 "x":2066.79795678765,
-                 "y":1534.1211508733
-                }, 
-                {
-                 "height":16.8473,
-                 "id":232,
-                 "name":"",
-                 "properties":
-                    {
-                     "door":true,
-                     "image_name":"door_01"
-                    },
-                 "propertytypes":
-                    {
-                     "door":"bool",
-                     "image_name":"string"
-                    },
-                 "rotation":93.0853,
-                 "type":"",
-                 "visible":true,
-                 "width":18.6375,
-                 "x":2065.51466875961,
-                 "y":1649.18783129165
+                 "width":20.7938473026925,
+                 "x":2060.41769908701,
+                 "y":1509.78232238571
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50887,14 +50745,25 @@ module.exports={ "height":50,
                  "width":217.283,
                  "x":1608.07438366377,
                  "y":1853.92264016755
+                }, 
+                {
+                 "height":133.614373959863,
+                 "id":236,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":141.414179637787,
+                 "x":1707.31542608908,
+                 "y":1129.96226970142
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
- "nextobjectid":234,
+ "nextobjectid":238,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -50932,7 +50801,7 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":405.26,
-                 "x":1512.37,
+                 "x":1510.37,
                  "y":725.225
                 }, 
                 {
@@ -50942,13 +50811,13 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":231.26,
+                 "width":407.348971269694,
                  "x":1511.37,
                  "y":247.225
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51210,7 +51079,7 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51232,7 +51101,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51260,7 +51129,7 @@ module.exports={ "height":50,
                  "y":-1080.26446622358
                 }, 
                 {
-                 "height":152.536226685796,
+                 "height":83.2727845118233,
                  "id":130,
                  "name":"",
                  "properties":
@@ -51271,12 +51140,12 @@ module.exports={ "height":50,
                     {
                      "level_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":90.2440327249116,
                  "type":"",
                  "visible":true,
-                 "width":97.9568134863709,
-                 "x":1807.5329007362,
-                 "y":899.873748242833
+                 "width":159.662368975426,
+                 "x":1913.98733600182,
+                 "y":844.488737313777
                 }, 
                 {
                  "height":182,
@@ -51299,7 +51168,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51329,7 +51198,7 @@ module.exports={ "height":50,
          "name":"door",
          "objects":[
                 {
-                 "height":130.541386383946,
+                 "height":16.5072365109683,
                  "id":230,
                  "name":"",
                  "properties":
@@ -51352,12 +51221,12 @@ module.exports={ "height":50,
                      "label_image":"string",
                      "open_rotation":"string"
                     },
-                 "rotation":-270.008094402747,
+                 "rotation":-180.824209043441,
                  "type":"",
                  "visible":true,
-                 "width":22.6491199051609,
-                 "x":1394.19115184329,
-                 "y":1122.97790952405
+                 "width":115.232555290929,
+                 "x":1383.25524974392,
+                 "y":1128.22157794236
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51598,6 +51467,25 @@ module.exports={ "height":50,
                  "width":60.6645,
                  "x":814.3276739814,
                  "y":1074.07340359889
+                }, 
+                {
+                 "height":419.255,
+                 "id":305,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.804,
+                 "type":"",
+                 "visible":true,
+                 "width":402.841,
+                 "x":1528.5795,
+                 "y":1530.3725
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51857,7 +51745,7 @@ module.exports={ "height":50,
                  "y":1259.34799882729
                 }, 
                 {
-                 "height":161.977501969488,
+                 "height":274.399794004549,
                  "id":232,
                  "name":"",
                  "properties":
@@ -51868,12 +51756,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-279.587946428757,
+                 "rotation":-196.22602392628,
                  "type":"",
                  "visible":true,
-                 "width":390.21177408043,
-                 "x":774.939257126948,
-                 "y":276.040628873836
+                 "width":132.395009662797,
+                 "x":815.819918980422,
+                 "y":590.600088809843
                 }, 
                 {
                  "height":291.371863431965,
@@ -51971,7 +51859,7 @@ module.exports={ "height":50,
                  "y":747.043148889405
                 }, 
                 {
-                 "height":416.73441557252,
+                 "height":41.5538799890005,
                  "id":255,
                  "name":"",
                  "properties":
@@ -51982,12 +51870,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-179.718209934069,
+                 "rotation":-89.6320206000876,
                  "type":"",
                  "visible":true,
-                 "width":49.688368402716,
-                 "x":1164.83548859159,
-                 "y":1554.05895742562
+                 "width":255.615119148949,
+                 "x":1112.42041172704,
+                 "y":1536.17935147311
                 }, 
                 {
                  "height":236.173414517363,
@@ -52066,7 +51954,7 @@ module.exports={ "height":50,
                  "y":1122.37474114966
                 }, 
                 {
-                 "height":31.2197952022088,
+                 "height":636.577449896338,
                  "id":268,
                  "name":"",
                  "properties":
@@ -52077,31 +51965,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-179.804,
+                 "rotation":-89.8815995361324,
                  "type":"",
                  "visible":true,
-                 "width":644.477744651091,
-                 "x":1127.42704957368,
-                 "y":1527.44725627719
-                }, 
-                {
-                 "height":419.255,
-                 "id":293,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"fog_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-179.804,
-                 "type":"",
-                 "visible":true,
-                 "width":402.841,
-                 "x":1546.5795,
-                 "y":1540.3725
+                 "width":65.4980805208354,
+                 "x":493.419771483274,
+                 "y":1525.32642318647
                 }, 
                 {
                  "height":500.169419243235,
@@ -52335,7 +52204,7 @@ module.exports={ "height":50,
                  "y":744.067360841842
                 }, 
                 {
-                 "height":145.819234048688,
+                 "height":280.782323364931,
                  "id":59,
                  "name":"",
                  "properties":
@@ -52346,12 +52215,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-265.398033013144,
+                 "rotation":-526.955165291463,
                  "type":"",
                  "visible":true,
-                 "width":249.333333333333,
-                 "x":682.831477145502,
-                 "y":291.865654630178
+                 "width":146.421595505027,
+                 "x":641.830325032498,
+                 "y":582.97709044351
                 }, 
                 {
                  "height":75.6656370829608,
@@ -52365,12 +52234,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-521.044460943984,
+                 "rotation":-415.915725821459,
                  "type":"",
                  "visible":true,
-                 "width":84.7774871089743,
-                 "x":1269.71335279219,
-                 "y":366.006587202568
+                 "width":61.591206926058,
+                 "x":1186.82388567039,
+                 "y":330.361092022734
                 }, 
                 {
                  "height":120.932661831217,
@@ -52392,7 +52261,7 @@ module.exports={ "height":50,
                  "y":285.417187645687
                 }, 
                 {
-                 "height":360.085038580123,
+                 "height":116.956975895951,
                  "id":86,
                  "name":"",
                  "properties":
@@ -52403,15 +52272,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-444.552035581879,
+                 "rotation":-707.274705826681,
                  "type":"",
                  "visible":true,
-                 "width":126.234001654369,
-                 "x":479.213489568622,
-                 "y":1484.28465491309
+                 "width":318.847034616042,
+                 "x":507.318528103279,
+                 "y":1338.63726644602
                 }, 
                 {
-                 "height":107.680557114012,
+                 "height":74.9662934936605,
                  "id":81,
                  "name":"",
                  "properties":
@@ -52422,12 +52291,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-629.116704558628,
+                 "rotation":-900.096981110095,
                  "type":"",
                  "visible":true,
-                 "width":78.0320681469622,
-                 "x":1686.73245855294,
-                 "y":630.126853381039
+                 "width":98.4015604934809,
+                 "x":1679.51878590535,
+                 "y":711.835524905026
                 }, 
                 {
                  "height":555.70380032669,
@@ -52468,7 +52337,7 @@ module.exports={ "height":50,
                  "y":-398.439393069659
                 }, 
                 {
-                 "height":239.046405043949,
+                 "height":163.330191208109,
                  "id":207,
                  "name":"",
                  "properties":
@@ -52479,12 +52348,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":269.721668210596,
+                 "rotation":718.416028514133,
                  "type":"",
                  "visible":true,
-                 "width":176.391511814104,
-                 "x":470.469205431632,
-                 "y":1310.16509703922
+                 "width":214.916364839834,
+                 "x":492.37661604925,
+                 "y":1147.83244102804
                 }, 
                 {
                  "height":155.872463966932,
@@ -52506,7 +52375,7 @@ module.exports={ "height":50,
                  "y":1287.58790484973
                 }, 
                 {
-                 "height":211.771439598753,
+                 "height":106.708213887654,
                  "id":210,
                  "name":"",
                  "properties":
@@ -52517,15 +52386,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.5659,
+                 "rotation":0.479118805810828,
                  "type":"",
                  "visible":true,
-                 "width":112.6787626385,
-                 "x":1728.60615691303,
-                 "y":846.411994846862
+                 "width":176.626352387457,
+                 "x":1731.51834928237,
+                 "y":737.988593516757
                 }, 
                 {
-                 "height":443.922975989633,
+                 "height":127.693300129375,
                  "id":212,
                  "name":"",
                  "properties":
@@ -52536,12 +52405,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":0.00755046406233539,
+                 "rotation":89.8674211423201,
                  "type":"",
                  "visible":true,
-                 "width":169.726435337407,
-                 "x":1736.52640686577,
-                 "y":275.68248335083
+                 "width":325.839396467736,
+                 "x":1907.12489936753,
+                 "y":273.27855768389
                 }, 
                 {
                  "height":100.680328102229,
@@ -52555,12 +52424,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":268.67969855648,
+                 "rotation":364.036411985129,
                  "type":"",
                  "visible":true,
                  "width":88.5759414546366,
-                 "x":1535.68229740635,
-                 "y":838.316189115993
+                 "x":1544.35398235861,
+                 "y":739.547315122694
                 }, 
                 {
                  "height":140.069361645861,
@@ -52574,15 +52443,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.5659,
+                 "rotation":-0.187016831982888,
                  "type":"",
                  "visible":true,
                  "width":151.512288341168,
-                 "x":1564.45106024512,
-                 "y":421.148269542045
+                 "x":1559.07335239312,
+                 "y":276.137874931813
                 }, 
                 {
-                 "height":118.903384541306,
+                 "height":15.4326731092131,
                  "id":219,
                  "name":"",
                  "properties":
@@ -52593,12 +52462,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":89.973966744088,
+                 "rotation":179.586695458654,
                  "type":"",
                  "visible":true,
-                 "width":16.2444751112454,
-                 "x":1688.91489664702,
-                 "y":695.391612008038
+                 "width":110.97780265458,
+                 "x":1686.00226050667,
+                 "y":710.781042889095
                 }, 
                 {
                  "height":68.2623157643797,
@@ -52612,15 +52481,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-631.808938597704,
+                 "rotation":-539.061799670387,
                  "type":"",
                  "visible":true,
                  "width":76.4826879680423,
-                 "x":1504.76821932605,
-                 "y":676.564800933172
+                 "x":1509.53857870768,
+                 "y":750.617239087671
                 }, 
                 {
-                 "height":116.049442359289,
+                 "height":20.704449337536,
                  "id":224,
                  "name":"",
                  "properties":
@@ -52631,15 +52500,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":359.89429034808,
+                 "rotation":89.7082752500341,
                  "type":"",
                  "visible":true,
-                 "width":21.5783571604484,
-                 "x":1511.14507707357,
-                 "y":354.629286955663
+                 "width":88.5469394973888,
+                 "x":1530.66657018266,
+                 "y":372.034982308882
                 }, 
                 {
-                 "height":39.5613,
+                 "height":375.851495670776,
                  "id":226,
                  "name":"",
                  "properties":
@@ -52650,12 +52519,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-90.0552,
+                 "rotation":-360.586372416774,
                  "type":"",
                  "visible":true,
-                 "width":509.874,
-                 "x":498.233731707317,
-                 "y":922.658374390244
+                 "width":38.6789889022416,
+                 "x":496.698232677756,
+                 "y":542.280200170921
                 }, 
                 {
                  "height":70.0855572027064,
@@ -52669,12 +52538,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-640.805537346871,
+                 "rotation":-891.684956958872,
                  "type":"",
                  "visible":true,
                  "width":72.2359293131346,
-                 "x":1347.07144767619,
-                 "y":1297.43927348061
+                 "x":1350.09180924129,
+                 "y":1379.3841633085
                 }, 
                 {
                  "height":82.6845975392071,
@@ -52688,15 +52557,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.5659,
+                 "rotation":0.499215510368799,
                  "type":"",
                  "visible":true,
                  "width":83.8701612680226,
-                 "x":1698.997983136,
-                 "y":830.104865767767
+                 "x":1699.08353246871,
+                 "y":746.77811125673
                 }, 
                 {
-                 "height":214.372718001638,
+                 "height":136.26639199179,
                  "id":265,
                  "name":"",
                  "properties":
@@ -52707,12 +52576,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.5659,
+                 "rotation":-0.122043493393136,
                  "type":"",
                  "visible":true,
-                 "width":161.79468823461,
-                 "x":927.875364871463,
-                 "y":1518.66982874364
+                 "width":211.628430189669,
+                 "x":909.712455476592,
+                 "y":1378.67924252168
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -52849,7 +52718,7 @@ module.exports={ "height":50,
                  "y":332.120967089721
                 }, 
                 {
-                 "height":346.579747100574,
+                 "height":34.9898035316172,
                  "id":263,
                  "name":"",
                  "properties":
@@ -52874,15 +52743,15 @@ module.exports={ "height":50,
                      "random":"bool",
                      "shadow":"bool"
                     },
-                 "rotation":-792.530834983949,
+                 "rotation":-694.250478335837,
                  "type":"",
                  "visible":true,
-                 "width":31.7918292343414,
-                 "x":682.687106956501,
-                 "y":306.913986083492
+                 "width":266.079821313188,
+                 "x":740.111520384078,
+                 "y":276.779965946737
                 }, 
                 {
-                 "height":334.75418118547,
+                 "height":152.865395799457,
                  "id":303,
                  "name":"",
                  "properties":
@@ -52905,12 +52774,12 @@ module.exports={ "height":50,
                      "label_description":"string",
                      "label_image":"string"
                     },
-                 "rotation":-360.57597273096,
+                 "rotation":90.3190218501159,
                  "type":"note",
                  "visible":true,
-                 "width":165.082010830674,
-                 "x":1129.69922124532,
-                 "y":1189.87869102102
+                 "width":298.375198050928,
+                 "x":1306.77419282182,
+                 "y":1221.39307824604
                 }, 
                 {
                  "height":31.6848951898985,
@@ -52947,7 +52816,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -53267,12 +53136,12 @@ module.exports={ "height":50,
                      "alpha":"float",
                      "image_name":"string"
                     },
-                 "rotation":0.271772528273885,
+                 "rotation":-268.909301821245,
                  "type":"",
                  "visible":true,
                  "width":299.271,
-                 "x":938.925820123315,
-                 "y":1318.91983508463
+                 "x":1240.09165204815,
+                 "y":1322.28325182167
                 }, 
                 {
                  "height":298.839,
@@ -53479,7 +53348,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":305,
+ "nextobjectid":306,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -54742,18 +54611,6 @@ module.exports={ "height":50,
                  "width":2432.97094144733,
                  "x":1106.54545454545,
                  "y":806.060606060607
-                }, 
-                {
-                 "height":0,
-                 "id":141,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3954,
-                 "y":-182
                 }],
          "offsetx":-74,
          "offsety":126,
@@ -55455,24 +55312,12 @@ module.exports={ "height":50,
                  "width":2432.97094144733,
                  "x":1106.54545454545,
                  "y":806.060606060607
-                }, 
-                {
-                 "height":0,
-                 "id":141,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3954,
-                 "y":-182
                 }],
          "offsetx":-74,
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -55522,17 +55367,6 @@ module.exports={ "height":50,
                  "width":34.8277446137106,
                  "x":1995.45373741385,
                  "y":1697.58433079434
-                }, 
-                {
-                 "height":0,
-                 "id":182,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1898.80304678999,
-                 "y":1717.89989118607
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -57947,18 +57781,6 @@ module.exports={ "height":50,
                  "width":1542.67751817583,
                  "x":1852.57233379324,
                  "y":770.28974398283
-                }, 
-                {
-                 "height":0,
-                 "id":141,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3954,
-                 "y":-182
                 }],
          "offsetx":-74,
          "offsety":126,
@@ -58091,7 +57913,7 @@ module.exports={ "height":50,
          "name":"collision",
          "objects":[
                 {
-                 "height":323.951,
+                 "height":103.132964801358,
                  "id":152,
                  "name":"",
                  "properties":
@@ -58106,15 +57928,15 @@ module.exports={ "height":50,
                      "image_name":"string",
                      "shadow":"bool"
                     },
-                 "rotation":-520.924128887094,
+                 "rotation":-422.207991311383,
                  "type":"",
                  "visible":true,
-                 "width":194.269,
-                 "x":3165.11115701361,
-                 "y":2602.58369246754
+                 "width":200.128958629907,
+                 "x":2977.09246394411,
+                 "y":2599.17123244512
                 }, 
                 {
-                 "height":133.264374511842,
+                 "height":97.2746663089947,
                  "id":165,
                  "name":"",
                  "properties":
@@ -58125,15 +57947,15 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-37.2205467860741,
+                 "rotation":50.5857091070179,
                  "type":"",
                  "visible":true,
-                 "width":88.4906622477558,
-                 "x":1947.10892059566,
-                 "y":2420.59249715279
+                 "width":157.287969434019,
+                 "x":2015.11659103145,
+                 "y":2361.96837904467
                 }, 
                 {
-                 "height":147.511272887095,
+                 "height":380.042609765565,
                  "id":167,
                  "name":"",
                  "properties":
@@ -58144,12 +57966,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":183.610536667205,
+                 "rotation":-84.9902667189244,
                  "type":"",
                  "visible":true,
-                 "width":414.740761712524,
-                 "x":2503.49759906052,
-                 "y":2719.38105860829
+                 "width":149.93868707707,
+                 "x":2111.87043343498,
+                 "y":2689.91426712845
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -58162,25 +57984,27 @@ module.exports={ "height":50,
          "name":"roof",
          "objects":[
                 {
-                 "height":916.301,
+                 "height":744.856368184373,
                  "id":159,
                  "name":"",
                  "properties":
                     {
+                     "alpha":1,
                      "fade":1,
                      "image_name":"tree_11"
                     },
                  "propertytypes":
                     {
+                     "alpha":"float",
                      "fade":"float",
                      "image_name":"string"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":969.221,
-                 "x":2326.59600007665,
-                 "y":784.978939419494
+                 "width":787.874763890934,
+                 "x":2208.55215521999,
+                 "y":1144.73160945884
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -58207,9 +58031,9 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":200.666666666667,
-                 "x":2014.61382799326,
-                 "y":2285.24273084981
+                 "width":209.098369870714,
+                 "x":2011.80326025858,
+                 "y":2268.37932444172
                 }, 
                 {
                  "height":189.881394041597,
@@ -58249,7 +58073,7 @@ module.exports={ "height":50,
                  "visible":true,
                  "width":211,
                  "x":2870.21237330273,
-                 "y":1878.02625308913
+                 "y":1892.07909176254
                 }, 
                 {
                  "height":187.070826306914,
@@ -58325,7 +58149,7 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":211,
+                 "width":205.378864530635,
                  "x":2016.47863968522,
                  "y":1851.37737240023
                 }, 
@@ -58345,8 +58169,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":211,
-                 "x":2623.56127037662,
-                 "y":1651.82713097246
+                 "x":2640.42467678471,
+                 "y":1775.49211129849
                 }, 
                 {
                  "height":164.503,
@@ -58364,8 +58188,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":245.635993816751,
-                 "x":2301.2966742552,
-                 "y":1758.67036621698
+                 "x":2231.03248088814,
+                 "y":1761.48093395166
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -58676,6 +58500,8 @@ const { Item   } = require('./item_model');
 const { Tween  } = require('../../engine/tween');
 const { Button } = require('../../view/button');
 const { damage_events } = require('../../engine/damage_handler');
+const { wood_thump } = require('../../engine/sound');
+const { BackgroundVisualItem } = require('./visual_object');
 
 class Door extends Item {
   constructor(options) {
@@ -58712,18 +58538,32 @@ class Door extends Item {
       };
     }
 
-    this.sprite.door = true;
-    this.health = 50;
-    damage_events.on('damage', ({door_tile, damage}) => {
-      door_tile.alpha = 1;
-      if(door_tile.id === this.id) {
-        this.health -= damage;
-        if(this.health < 30) {
-          delete door_tile.door;
-          this.sprite.visible = false;
+    if(options.properties.door) {
+      this.sprite.door = true;
+      this.health = options.properties.health || 50;
+
+      damage_events.on('damage', ({door_tile, damage}) => {
+        door_tile.alpha = 1;
+        if(door_tile.id === this.id) {
+          if(this.health < 30) {
+            delete door_tile.door;
+            this.sprite.visible = false;
+            const broken_door = new BackgroundVisualItem({
+              properties: {
+                image_name: 'door_broken',
+              },
+            });
+            wood_thump.volume = 0.3;
+            wood_thump.speed = 5;
+            wood_thump.play();
+
+            broken_door.set_position(this.sprite);
+          }
+          this.health -= damage;
         }
-      }
-    });
+      });
+    }
+
 
     collision_container.addChild(this.sprite);
   }
@@ -58733,7 +58573,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":227,"../../engine/pixi_containers":232,"../../engine/tween":237,"../../view/button":289,"./item_model":259}],258:[function(require,module,exports){
+},{"../../engine/damage_handler":227,"../../engine/pixi_containers":232,"../../engine/sound":235,"../../engine/tween":237,"../../view/button":289,"./item_model":259,"./visual_object":263}],258:[function(require,module,exports){
 'use strict';
 
 const { Chest     } = require('./chest');
@@ -58761,10 +58601,10 @@ class Element_Factory {
     const generated = this.generate(level, data);
     generated.set_position(data);
     //TODO flip
-    generated.width  = data.height;
-    generated.height = data.width;
-    generated.rotation = ((data.rotation+90) * (Math.PI/180));
-    generated.sprite.anchor.y = 1;
+    generated.width  = data.width;
+    generated.height = data.height;
+    generated.rotation = (data.rotation * (Math.PI/180));
+    generated.sprite.anchor.y = 0;
     generated.sprite.anchor.x = 0;
     generated.sprite.id = data.id;
     generated.id = data.id;
@@ -59116,6 +58956,8 @@ module.exports = {
   Wall,
 };
 
+
+
 },{"../../engine/pixi_containers":232,"./item_model":259,"events":295}],265:[function(require,module,exports){
 'use strict';
 const { pathfind_sprite } = require('../engine/pathfind.js');
@@ -59203,6 +59045,10 @@ class Defend_Room extends Level  {
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
+    const mouse2 = new Rat();
+    mouse2.enemy(this.player);
+    mouse2.set_position({x: prey[0].x +200, y: prey[0].y +100});
+
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad(data);
       if(data.properties) {
@@ -59212,13 +59058,17 @@ class Defend_Room extends Level  {
         return;
       }
 
-      // Fire once (event) to load in enemies
-      pad.area.events.once('trigger', () => {
-        mouse.logic_start();
-      });
+      if(data.id === 236) {
+        pad.area.events.once('trigger', () => {
+          mouse2.logic_start();
+        });
+      } else {
+        pad.area.events.once('trigger', () => {
+          mouse.logic_start();
+        });
+      }
     });
 
-    global.set_light_level(1);
     this.create_grid(grid[0]);
   }
 }

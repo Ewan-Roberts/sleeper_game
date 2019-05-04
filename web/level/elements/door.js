@@ -5,6 +5,8 @@ const { Item   } = require('./item_model');
 const { Tween  } = require('../../engine/tween');
 const { Button } = require('../../view/button');
 const { damage_events } = require('../../engine/damage_handler');
+const { wood_thump } = require('../../engine/sound');
+const { BackgroundVisualItem } = require('./visual_object');
 
 class Door extends Item {
   constructor(options) {
@@ -41,18 +43,32 @@ class Door extends Item {
       };
     }
 
-    this.sprite.door = true;
-    this.health = 50;
-    damage_events.on('damage', ({door_tile, damage}) => {
-      door_tile.alpha = 1;
-      if(door_tile.id === this.id) {
-        this.health -= damage;
-        if(this.health < 30) {
-          delete door_tile.door;
-          this.sprite.visible = false;
+    if(options.properties.door) {
+      this.sprite.door = true;
+      this.health = options.properties.health || 50;
+
+      damage_events.on('damage', ({door_tile, damage}) => {
+        door_tile.alpha = 1;
+        if(door_tile.id === this.id) {
+          if(this.health < 30) {
+            delete door_tile.door;
+            this.sprite.visible = false;
+            const broken_door = new BackgroundVisualItem({
+              properties: {
+                image_name: 'door_broken',
+              },
+            });
+            wood_thump.volume = 0.3;
+            wood_thump.speed = 5;
+            wood_thump.play();
+
+            broken_door.set_position(this.sprite);
+          }
+          this.health -= damage;
         }
-      }
-    });
+      });
+    }
+
 
     collision_container.addChild(this.sprite);
   }

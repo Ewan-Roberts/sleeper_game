@@ -1,9 +1,12 @@
 'use strict';
 
+const { Blood  } = require('../../effects/blood');
+
 class Vitals {
   constructor({ sprite }) {
     this.name   ='vitals';
     this.sprite = sprite;
+    this.blood = new Blood();
 
     //TODO derive from archtype data
     this.power  = 5000;
@@ -20,8 +23,12 @@ class Vitals {
     return (this.status === 'alive');
   }
 
-  kill() {
-    this.status === 'dead';
+  _kill() {
+    if (this.status === 'dead') return;
+
+    this.status = 'dead';
+
+    this.blood.add_at(this.sprite);
   }
 
   _dead(damage) {
@@ -31,13 +38,12 @@ class Vitals {
   }
 
   damage(damage) {
-    console.log('wefefe');
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
 
     this.health -= damage;
 
-    if(this.health < 0) this.status = 'dead';
+    if(this.health < 0) this._kill();
   }
 }
 

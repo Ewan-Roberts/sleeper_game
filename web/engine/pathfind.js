@@ -9,14 +9,14 @@ const easystarjs = require('easystarjs');
 const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0,2]);
-easystar.setTileCost(2, 1); //only if you have to!
+easystar.setTileCost(2, 1); // only go through these tiles if you have to
 //easystar.enableDiagonals();
 //easystar.enableCornerCutting();
 
 const find_grid = sprite => {
   const grid  = grid_container.children;
   const point = sprite.getGlobalPosition();
-
+  console.log(point);
   const found_tile = grid.find(tile => tile.containsPoint(point));
 
   if(!found_tile) throw `${sprite.name} was not found`;
@@ -49,7 +49,7 @@ class pathfind_sprite {
   static highlight_grid_cell_from_path(path) {
     const { sprite } = this.grid;
 
-    path.forEach(({x,y}) => sprite[y][x].alpha = 0.2);
+    path.forEach(({x,y}) => sprite[y][x].alpha = 0.4);
   }
 
   static move_sprite_on_path(sprite, path_array) {
