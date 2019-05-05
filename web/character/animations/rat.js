@@ -71,7 +71,7 @@ const frames = {
 
 class Rodent {
   constructor(entity) {
-    this.name   = 'animation';
+    this.name = 'animation';
 
     const texture = [PIXI.Texture.fromFrame('bunny')];
     //TODO Finish migrating animation

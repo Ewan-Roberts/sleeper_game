@@ -86,8 +86,8 @@ class Bird {
     entity.sprite = new PIXI.extras.AnimatedSprite(frames.move);
 
     this.sprite = entity.sprite;
-    this.sprite.width  *=2;
-    this.sprite.height *=2;
+    this.sprite.width  /=2;
+    this.sprite.height /=2;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation = 1;
     this.sprite.animationSpeed = 0.19;

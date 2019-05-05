@@ -20,7 +20,7 @@
          "offsety":126,
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -82,7 +82,7 @@
          "name":"door",
          "objects":[
                 {
-                 "height":168.717358013067,
+                 "height":27.3790746969391,
                  "id":205,
                  "name":"",
                  "properties":
@@ -97,12 +97,12 @@
                      "door":"bool",
                      "image_name":"string"
                     },
-                 "rotation":178.347,
+                 "rotation":-268.710193369547,
                  "type":"",
                  "visible":true,
-                 "width":79.7247,
-                 "x":1950.84328723868,
-                 "y":1825.00920105226
+                 "width":147.725572649984,
+                 "x":1904.27386121162,
+                 "y":1668.52205129976
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -115,7 +115,7 @@
          "name":"collision",
          "objects":[
                 {
-                 "height":145.819,
+                 "height":300.215096123529,
                  "id":159,
                  "name":"",
                  "properties":
@@ -126,107 +126,12 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":-268.158897621788,
                  "type":"",
                  "visible":true,
-                 "width":311.365,
-                 "x":1923.67001556453,
-                 "y":1440.87949545684
-                }, 
-                {
-                 "height":145.819,
-                 "id":162,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":311.365,
-                 "x":2274.98416666667,
-                 "y":1848.42383333333
-                }, 
-                {
-                 "height":145.819,
-                 "id":163,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":311.365,
-                 "x":1914.98416666667,
-                 "y":1848.42383333334
-                }, 
-                {
-                 "height":145.819,
-                 "id":164,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":311.365,
-                 "x":2602.94580220428,
-                 "y":1461.47178891132
-                }, 
-                {
-                 "height":145.819,
-                 "id":165,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"table_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":311.365,
-                 "x":2265.65083333333,
-                 "y":1461.75716666667
-                }, 
-                {
-                 "height":57.767024168849,
-                 "id":197,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"electric_box_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-255.840324154281,
-                 "type":"",
-                 "visible":true,
-                 "width":65.0206110859867,
-                 "x":2355.16100770067,
-                 "y":1867.32384485706
+                 "width":150.259005203134,
+                 "x":2239.51368955707,
+                 "y":1466.67301554621
                 }, 
                 {
                  "height":57.767,
@@ -248,8 +153,84 @@
                  "y":1858.03247311083
                 }, 
                 {
-                 "height":114.328569264915,
-                 "id":199,
+                 "height":57.3890493307974,
+                 "id":201,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"lamp_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-181.147987516506,
+                 "type":"",
+                 "visible":true,
+                 "width":46.159697734444,
+                 "x":2166.89417850611,
+                 "y":1921.84047929539
+                }, 
+                {
+                 "height":300.215,
+                 "id":208,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-268.159,
+                 "type":"",
+                 "visible":true,
+                 "width":150.259,
+                 "x":2591.65149811353,
+                 "y":1472.25573100669
+                }, 
+                {
+                 "height":300.215,
+                 "id":209,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-268.159,
+                 "type":"",
+                 "visible":true,
+                 "width":150.259,
+                 "x":2222.93258197565,
+                 "y":1835.82973203567
+                }, 
+                {
+                 "height":300.215,
+                 "id":210,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"table_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-268.159,
+                 "type":"",
+                 "visible":true,
+                 "width":150.259,
+                 "x":2591.65149811353,
+                 "y":1846.11956225347
+                }, 
+                {
+                 "height":59.1632,
+                 "id":213,
                  "name":"",
                  "properties":
                     {
@@ -263,31 +244,12 @@
                      "image_name":"string",
                      "shadow":"bool"
                     },
-                 "rotation":-520.924,
+                 "rotation":-430.996,
                  "type":"",
                  "visible":true,
-                 "width":36.016243109141,
-                 "x":2404.48932134199,
-                 "y":1917.55085444283
-                }, 
-                {
-                 "height":57.767,
-                 "id":201,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"lamp_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-270.065,
-                 "type":"",
-                 "visible":true,
-                 "width":65.0206,
-                 "x":2181.52301650682,
-                 "y":1861.0710683998
+                 "width":74.7167,
+                 "x":2379.03677948036,
+                 "y":1879.18190540216
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -505,7 +467,7 @@
                  "y":1599.57597173145
                 }, 
                 {
-                 "height":96.1592,
+                 "height":28.1656873393003,
                  "id":183,
                  "name":"",
                  "properties":
@@ -513,7 +475,7 @@
                      "equip_on_click":true,
                      "image_name":"rusty_knife",
                      "label":true,
-                     "label_action":"jjjjjj",
+                     "label_action":"Pick up",
                      "label_description":"Rusty Knife",
                      "label_image":"take_icon"
                     },
@@ -526,12 +488,12 @@
                      "label_description":"string",
                      "label_image":"string"
                     },
-                 "rotation":-525.979,
+                 "rotation":-413.579464708446,
                  "type":"",
                  "visible":true,
-                 "width":49.8819330136512,
-                 "x":2513.2559313478,
-                 "y":1590.48678061585
+                 "width":77.3527670008444,
+                 "x":2427.85679236595,
+                 "y":1581.86486514846
                 }, 
                 {
                  "height":46.8887,
@@ -565,6 +527,25 @@
                  "width":39.0092,
                  "x":2210.60903636364,
                  "y":1583.69850714286
+                }, 
+                {
+                 "height":57.767,
+                 "id":212,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"electric_box_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-255.84,
+                 "type":"",
+                 "visible":true,
+                 "width":65.0206,
+                 "x":2375.30997096553,
+                 "y":1862.73028837249
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -584,19 +565,30 @@
                  "type":"",
                  "visible":true,
                  "width":77.7385159010601,
-                 "x":2298.83897021706,
-                 "y":1864.71479050985
+                 "x":2303.98388532596,
+                 "y":1832.13032815348
                 }, 
                 {
-                 "height":90.8631712771328,
+                 "height":59.4102491992107,
                  "id":200,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":74.7097266532055,
-                 "x":1952.04442995962,
-                 "y":1843.00859608784
+                 "width":65.5782331467119,
+                 "x":1941.89832606352,
+                 "y":1840.97937530862
+                }, 
+                {
+                 "height":62.454109090909,
+                 "id":214,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":76.7389207792207,
+                 "x":2025.34807207792,
+                 "y":1838.69989350649
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -631,7 +623,7 @@
          "name":"roof",
          "objects":[
                 {
-                 "height":57.4925550541311,
+                 "height":188.319681485672,
                  "id":187,
                  "name":"",
                  "properties":
@@ -644,12 +636,12 @@
                      "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":-90.3207954905705,
+                 "rotation":360.859265301083,
                  "type":"",
                  "visible":true,
-                 "width":180.525159914155,
-                 "x":2230.15938359632,
-                 "y":1987.8089940983
+                 "width":62.6618173800381,
+                 "x":2226.74813967322,
+                 "y":1797.8283115158
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -687,7 +679,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":208,
+ "nextobjectid":215,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

@@ -9,8 +9,7 @@ const { Vitals    } = require('../attributes/vitals');
 const { Lootable  } = require('../attributes/lootable');
 
 //TODO: Animal isnt quite right, more neutral character
-// the logic for it being an animal is in the parent
-// ArcheTyoe
+// the logic for it being an animal is in the parent ArcheType
 class Animal extends Character {
   constructor() {
     super();

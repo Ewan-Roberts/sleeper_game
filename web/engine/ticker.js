@@ -6,7 +6,8 @@ global.window.PIXI.default = PIXI;
 require('pixi-tween');
 require('pixi-keyboard');
 
-const fpsDelta = 60/30;
+// 60/30 for 30 fps
+const fpsDelta = 60/60;
 
 let elapsedTime = 0;
 app.ticker.add(delta => {

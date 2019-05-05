@@ -126,8 +126,8 @@ class Human {
     entity.sprite = new PIXI.extras.AnimatedSprite(idle_texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
-    this.sprite.width  /= 2;
-    this.sprite.height /= 2;
+    this.sprite.width  /= 6;
+    this.sprite.height /= 6;
     this.entity = entity;
     this.prefix = 'nothing';
 

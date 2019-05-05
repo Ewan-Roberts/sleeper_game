@@ -70,8 +70,9 @@ class View_Inventory {
 
     loot.forEach((loot_item, slot) => {
       const item  = PIXI.Sprite.fromFrame(loot_item.image_name);
-      item.height = 100;
-      item.width  = 100;
+      // set to 100 when out of dev
+      item.height = 500;
+      item.width  = 500;
       item.anchor.set(0.5);
       item.interactive = true;
       item.buttonMode  = true;

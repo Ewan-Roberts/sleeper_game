@@ -1,7 +1,7 @@
 'use strict';
 
 const { Tween         } = require('../../engine/tween');
-const { generate_crow } = require('../../effects/click_events');
+const { generate_crow, generate_zombie} = require('../../effects/click_events');
 const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -43,6 +43,13 @@ class Items_Room extends Level {
         });
       }
 
+      if(data.id === 214) {
+        pad.click = () => generate_zombie({
+          from: {x: 2000, y: 1800},
+          to:   {x: 3000, y: 1000},
+        });
+      }
+
       if(data.id === 184) {
         pad.click = async () => {
           global.set_light_level(0.3);
@@ -50,7 +57,7 @@ class Items_Room extends Level {
           lamp_light.intensity = 5;
           await lamp_light.strike.fast();
 
-          const dumpster = level_collision.find(elems => elems.id === 199);
+          const dumpster = level_collision.find(elems => elems.id === 213);
 
           const sprite_tween = new Tween(dumpster.sprite);
           const shadow_tween = new Tween(dumpster.shade);

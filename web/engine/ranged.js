@@ -17,6 +17,8 @@ class Arrow {
   constructor() {
     this.name = 'arrow';
     this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    this.sprite.width  /= 6;
+    this.sprite.height /= 6;
     this.sprite.anchor.set(0.65);
 
     this.tween = new Tween(this.sprite);

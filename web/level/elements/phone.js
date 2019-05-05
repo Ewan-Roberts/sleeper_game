@@ -1,8 +1,8 @@
 'use strict';
 
 const PIXI = require('pixi.js');
-const { GlitchFilter   } = require('@pixi/filter-glitch');
-const { PixelateFilter } = require('@pixi/filter-pixelate');
+//const { GlitchFilter   } = require('@pixi/filter-glitch');
+//const { PixelateFilter } = require('@pixi/filter-pixelate');
 const { item_container } = require('../../engine/pixi_containers');
 const { ringing_phone, answer_phone  } = require('../../engine/sound');
 const { LED            } = require('../../light/types/led');
