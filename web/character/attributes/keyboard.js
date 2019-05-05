@@ -33,7 +33,7 @@ function point_contains(position) {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
-      Fade.to(child, child.fade_opacity || 0.6);
+      Fade.to(child, child.fade_opacity | 0.6);
 
       return;
     }

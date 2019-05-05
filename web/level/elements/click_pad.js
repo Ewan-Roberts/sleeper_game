@@ -2,7 +2,7 @@
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
 
-const event          = require('events');
+const event = require('events');
 
 class Click_Pad {
   constructor(data) {

@@ -1,13 +1,19 @@
 'use strict';
-
-const { Intro        } = require('./intro');
-const { Camera       } = require('../../engine/camera');
-const { Wall         } = require('../elements/wall');
-const { Bright_Light } = require('../../light/types/bright_light');
-const { Background   } = require('../elements/background');
-const { Element_Factory } = require('../elements/elements_factory');
-
 const { clear_non_player_containers } = require('../../engine/pixi_containers');
+
+const { Intro         } = require('./intro');
+const { Camera        } = require('../../engine/camera');
+const { Bright_Light  } = require('../../light/types/bright_light');
+const { Wall          } = require('../elements/wall');
+const { Background    } = require('../elements/background');
+const { Chest         } = require('../elements/chest');
+const { Door          } = require('../elements/door');
+const { Roof          } = require('../elements/ceiling');
+const { Shroud        } = require('../elements/shroud');
+const { CollisionItem } = require('../elements/collision_object');
+const { BackgroundVisualItem } = require('../elements/visual_object');
+
+const camera = new Camera();
 
 class Level_Factory {
   static create(properties, player) {
@@ -34,60 +40,38 @@ class Level_Factory {
     }
   }
 
-  static generate(
-    player_sprite,
-    {
-      walls,
-      door,
-      shroud,
-      item,
-      roof,
-      floor,
-      decal,
-      background,
-      collision,
-      lights,
-      player,
-    }
+  static generate({
+    walls,
+    door,
+    shroud,
+    item,
+    roof,
+    floor,
+    decal,
+    background,
+    collision,
+    lights,
+    player,
+  }
   ) {
     try {
-      background.forEach(elem => {
-        console.log(elem);
-        new Background(elem, true);
-      });
-
-      const camera = new Camera();
       camera.set_center(player[0]);
 
+      background.forEach(elem => new Background(elem, true));
+      floor.forEach(data => new BackgroundVisualItem(data));
+      decal.forEach(data => new BackgroundVisualItem(data));
       walls.forEach(data => {
-        const wall  = new Wall(data);
-        wall.rotation = (data.rotation * (Math.PI/180));
+        data.properties = {};
+        data.properties.image_name = 'black_dot';
+        new Wall(data);
       });
+      collision.forEach(data => new CollisionItem(data));
+      item.forEach(data => new Chest(data));
+      door.forEach(data => new Door(data));
+      shroud.forEach(data => new Shroud(data));
+      roof.forEach(data => new Roof(data));
+      lights.forEach(data => new Bright_Light(data));
 
-      const level_collision = collision.map(data => Element_Factory.generate_tiled('collision', data));
-      const level_items = item.map(data => Element_Factory.generate_tiled('item', data));
-      floor.forEach(data => Element_Factory.generate_tiled('floor', data));
-      door.forEach(data => Element_Factory.generate_tiled('door', data));
-      shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
-      decal.forEach(data => Element_Factory.generate_tiled('decal', data));
-      roof.forEach(data => Element_Factory.generate_tiled('roof', data));
-
-      const level_lights = lights.map(function(data) {
-        const light  = new Bright_Light();
-        light.set_position(data);
-        light.id = data.id;
-
-        const point = global.place_bunny(data);
-        point.height = 20;
-        point.width  = 20;
-        return light;
-      });
-
-      return {
-        level_items,
-        level_lights,
-        level_collision,
-      };
     } catch (error) {
       console.log(error);
     }

@@ -6,27 +6,22 @@ const { Level_Factory } = require('./level_factory');
 
 class Items_Room_level_2 {
   constructor(player) {
-
-    const level_data  = require('../data/intro_room_level_2.json');
-    this.name     = 'intro';
-
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'intro';
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {exit_pad} = this.elements;
     global.set_light_level(0.9);
 
-    Level_Factory.generate(this.player, this.elements);
+    const level_data = require('../data/intro_room_level_2.json');
+    const elements   = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.on('trigger', () => {
-      });
-    });
+    const { exit_pad } = elements;
+
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 

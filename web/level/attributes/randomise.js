@@ -4,7 +4,7 @@ const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { random_bound    } = require('../../utils/math');
 const { Color_Pick      } = require('../../utils/color_picker');
-const { Element_Factory } = require('../elements/elements_factory');
+//const { Element_Factory } = require('../elements/elements_factory');
 
 class Randomise {
   constructor() {

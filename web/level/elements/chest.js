@@ -10,8 +10,7 @@ const { Item     } = require('./item_model');
 
 class Chest extends Item {
   constructor(options) {
-    console.log(options);
-    super(options.properties.image_name);
+    super(options);
     this.name = 'chest';
 
     if(options.type === 'note') {
@@ -56,9 +55,7 @@ class Chest extends Item {
     }
 
     if(options.properties.remove_on_click) {
-      this.click = () => {
-        this.sprite.destroy();
-      };
+      this.click = () => this.sprite.destroy();
     }
 
     if(options.properties.container) {
@@ -86,9 +83,7 @@ class Chest extends Item {
 
   _open() {
     global.set_light_level(1);
-
     this.loot.set_position(this.sprite);
-
     this.loot.show();
   }
 

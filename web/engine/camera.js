@@ -7,7 +7,7 @@ class Camera {
   constructor() {
     this.name = 'camera';
     this.sprite = world;
-    this.add_component(new Tween(this.sprite));
+    //this.add_component(new Tween(this.sprite));
   }
 
   add_component(component) {

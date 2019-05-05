@@ -15,7 +15,7 @@ class Influence {
     this.sprite.width  = width;
     this.sprite.height = height;
     this.sprite.anchor.set(0.5);
-    this.sprite.alpha= 0.3;
+    this.sprite.alpha = 0.3;
     enemy_container.addChild(this.sprite);
   }
 

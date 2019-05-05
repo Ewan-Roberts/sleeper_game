@@ -1,13 +1,11 @@
 'use strict';
 
-const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
 const { Camera     } = require('../../engine/camera');
 const { NPC        } = require('../../character/types/npc');
 
-class Animations_Room extends Level {
+class Animations_Room {
   constructor() {
-    super();
     this.name            = 'animations_room';
 
     this.background      = new Background('grid_floor');

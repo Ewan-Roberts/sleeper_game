@@ -56,12 +56,7 @@ class pathfind_sprite {
     const tween = new Tween(sprite);
     tween.time  = path_array.length * 500;
     tween.from_path(sprite);
-    const foo = path_array.map(path => {
-      return {
-        x: path.x + 50,
-        y: path.y + 50,
-      };
-    });
+    const foo = path_array.map(({x,y}) => ({x:x+50, y:y+50}));
 
     tween.add_random_path(foo);
     tween.draw_path();

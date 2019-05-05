@@ -4,12 +4,11 @@ const { background_container } = require('../../engine/pixi_containers');
 const { Item } = require('./item_model');
 
 class BackgroundVisualItem extends Item {
-  constructor(options) {
-    super(options.properties.image_name);
+  constructor(data) {
+    super(data);
 
-    if(options.properties.opacity) {
-      this.sprite.alpha = options.properties.opacity;
-    }
+    this.alpha = data.properties.opacity | 1;
+    this.anchor = 0;
 
     background_container.addChild(this.sprite);
   }

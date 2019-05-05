@@ -1,31 +1,24 @@
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
-//const { visual_effects_container } = require('../../engine/pixi_containers');
-const { Tween } = require('../../engine/tween');
-const { generate_crow } = require('../../effects/click_events');
 
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad } = require('../elements/pad');
+const { Tween       } = require('../../engine/tween');
 const { Camera      } = require('../../engine/camera');
+const { Lurcher     } = require('../../character/archetypes/zombie');
+const { Crow        } = require('../../character/archetypes/crow');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Click_Pad   } = require('../elements/click_pad');
-
 
 class Intro  {
   constructor(player, options) {
-    const level_data  = require('../data/intro_room.json');
     this.name         = 'intro';
     this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.camera       = new Camera();
-    // player.light.candle.sprite.alpha = 0;
-    // player.light.candle.shadow.instensity = 0.8;
-    // visual_effects_container.addChild(player.light.candle.sprite);
-    // visual_effects_container.addChild(player.light.candle.shadow);
     this._set_elements();
+
     if(options && options.cutscene) this._cutscene();
   }
 
   _cutscene() {
+    this.camera = new Camera();
     this.player.keyboard.disable();
 
     this.camera.tween.from_path({ x: -120, y: -150 });
@@ -48,16 +41,30 @@ class Intro  {
   }
 
   _set_elements() {
-    const { Level_Factory } = require('./level_factory');
-    Level_Factory.generate(this.player, this.elements);
+    global.set_light_level(0.8);
+    const level_data = require('../data/intro_room.json');
 
-    const {exit_pad, click_pad, player} = this.elements;
+    const { Level_Factory } = require('./level_factory');
+    const elements   = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
+
+    const { Trigger_Pad   } = require('../elements/pad');
+    const { exit_pad, click_pad, player, prey } = elements;
+
     this.player.set_position(player[0]);
 
-    global.set_light_level(0.9);
+    const characters = prey.map(npc => {
+      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
+
+      if(npc.name === 'zombie') {
+        return new Lurcher({ path, time: 20000, turn: true});
+      }
+
+      return new Crow({path});
+    });
 
     click_pad.forEach(data => {
-      const pad  = new Click_Pad(data);
+      const pad = new Click_Pad(data);
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
@@ -66,20 +73,11 @@ class Intro  {
         tween_it.time = 2000;
         tween_it.start();
 
-        generate_crow({
-          from: {x: 400, y: 60},
-          to:   {x: 3000, y: -1000},
-        });
+        characters.forEach(({tween}) => tween.start());
       };
     });
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.rotation = (data.rotation * (Math.PI/180));
-      pad.area.events.on('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
-    });
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 

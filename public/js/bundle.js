@@ -5943,7 +5943,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":300}],35:[function(require,module,exports){
+},{"timers":297}],35:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
 },{}],36:[function(require,module,exports){
@@ -17718,7 +17718,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":294}],86:[function(require,module,exports){
+},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":291}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21518,7 +21518,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":40,"path":294}],104:[function(require,module,exports){
+},{"../../Shader":40,"path":291}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27356,7 +27356,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":301}],121:[function(require,module,exports){
+},{"url":298}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31930,7 +31930,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":61,"../../core/const":42,"path":294}],139:[function(require,module,exports){
+},{"../../core":61,"../../core/const":42,"path":291}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32014,7 +32014,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":61,"path":294}],140:[function(require,module,exports){
+},{"../../core":61,"path":291}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33177,7 +33177,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":61,"path":294}],147:[function(require,module,exports){
+},{"../../core":61,"path":291}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33285,7 +33285,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":61,"path":294}],148:[function(require,module,exports){
+},{"../../core":61,"path":291}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33339,7 +33339,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":61,"path":294}],149:[function(require,module,exports){
+},{"../../core":61,"path":291}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33515,7 +33515,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":61,"path":294}],151:[function(require,module,exports){
+},{"../../core":61,"path":291}],151:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36182,7 +36182,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":137,"path":294,"resource-loader":190}],159:[function(require,module,exports){
+},{"../extras":137,"path":291,"resource-loader":190}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36545,7 +36545,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":61,"resource-loader":190,"url":301}],162:[function(require,module,exports){
+},{"../core":61,"resource-loader":190,"url":298}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38271,7 +38271,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":61,"../Mesh":163,"path":294,"pixi-gl-core":19}],170:[function(require,module,exports){
+},{"../../core":61,"../Mesh":163,"path":291,"pixi-gl-core":19}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45176,7 +45176,7 @@ module.exports = {
   Bird,
 };
 
-},{"../../utils/math":285,"pixi.js":151}],199:[function(require,module,exports){
+},{"../../utils/math":282,"pixi.js":151}],199:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45405,7 +45405,7 @@ module.exports = {
 };
 
 
-},{"../../utils/math":285,"pixi.js":151}],200:[function(require,module,exports){
+},{"../../utils/math":282,"pixi.js":151}],200:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45520,7 +45520,7 @@ module.exports = {
   Rodent,
 };
 
-},{"../../utils/math":285,"pixi.js":151}],201:[function(require,module,exports){
+},{"../../utils/math":282,"pixi.js":151}],201:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45591,28 +45591,39 @@ module.exports = {
   Zombie,
 };
 
-},{"../../utils/math":285,"pixi.js":151}],202:[function(require,module,exports){
+},{"../../utils/math":282,"pixi.js":151}],202:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
+const { radian    } = require('../../utils/math');
 const { Character } = require('../character_model');
 const { Bird      } = require('../animations/bird');
-const { Pathfind  } = require('../attributes/pathfind');
 
 // this should extend a character type
 class Crow extends Character{
-  constructor() {
+  constructor({ path, time, smooth, draw, turn } = {}) {
     super();
     this.name = 'crow';
 
-    // dark brown
     this.add_component(new Bird(this));
     this.sprite.tint = 0x352925;
     this.sprite.play();
-    this.add_component(new Tween(this.sprite));
-    this.add_component(new Pathfind(this.sprite));
+
+    if(path) {
+      this.add_component(new Tween(this.sprite));
+      this.tween.add_path(path);
+      this.tween.time = time | 10000;
+      this.tween.path_smoothness = smooth | 100;
+      if(draw) this.tween.draw_path();
+      if(turn) {
+        this.tween.movement.on('update', () => {
+          this.sprite.rotation =
+            radian(this.sprite, this.tween.movement.path._tmpPoint);
+        });
+      }
+    }
 
     enemy_container.addChild(this.sprite);
   }
@@ -45622,7 +45633,7 @@ module.exports = {
   Crow,
 };
 
-},{"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/bird":198,"../attributes/pathfind":211,"../character_model":214}],203:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/bird":198,"../character_model":214}],203:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45764,28 +45775,38 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/damage_handler":225,"../../engine/pathfind":229,"../../engine/pixi_containers":230,"../../utils/line_of_sight":284,"../../utils/math":285,"../attributes/melee":209,"../types/rat":217,"events":293,"pixi.js":151}],204:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pathfind":228,"../../engine/pixi_containers":229,"../../utils/line_of_sight":281,"../../utils/math":282,"../attributes/melee":209,"../types/rat":217,"events":290,"pixi.js":151}],204:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
+const { radian    } = require('../../utils/math');
 const { Character } = require('../character_model');
 const { Zombie    } = require('../animations/zombie');
-const { Pathfind  } = require('../attributes/pathfind');
 
 // this should extend a character type
 class Lurcher extends Character{
-  constructor() {
+  constructor({ path, time, smooth, draw, turn } = {}) {
     super();
-    this.name = 'crow';
+    this.name = 'lurcher';
 
-    // dark brown
     this.add_component(new Zombie(this));
-    this.sprite.tint = 0x352925;
     this.sprite.play();
-    this.add_component(new Tween(this.sprite));
-    this.add_component(new Pathfind(this.sprite));
+
+    if(path) {
+      this.add_component(new Tween(this.sprite));
+      this.tween.add_path(path);
+      this.tween.time = time | 10000;
+      this.tween.path_smoothness = smooth | 100;
+      if(draw) this.tween.draw_path();
+      if(turn) {
+        this.tween.movement.on('update', () => {
+          this.sprite.rotation =
+            radian(this.sprite, this.tween.movement.path._tmpPoint);
+        });
+      }
+    }
 
     enemy_container.addChild(this.sprite);
   }
@@ -45795,7 +45816,7 @@ module.exports = {
   Lurcher,
 };
 
-},{"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/zombie":201,"../attributes/pathfind":211,"../character_model":214}],205:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/zombie":201,"../character_model":214}],205:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager } = require('../../items/item_manager');
@@ -45878,7 +45899,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":238}],206:[function(require,module,exports){
+},{"../../items/item_manager":237}],206:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -45914,7 +45935,7 @@ function point_contains(position) {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
-      Fade.to(child, child.fade_opacity || 0.6);
+      Fade.to(child, child.fade_opacity | 0.6);
 
       return;
     }
@@ -46057,7 +46078,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":221,"../../engine/pixi_containers":230,"../../engine/shadows":232,"../../view/view_player_inventory":291,"pixi.js":151}],207:[function(require,module,exports){
+},{"../../effects/fade":220,"../../engine/pixi_containers":229,"../../engine/shadows":231,"../../view/view_player_inventory":288,"pixi.js":151}],207:[function(require,module,exports){
 
 'use strict';
 
@@ -46085,7 +46106,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":279}],208:[function(require,module,exports){
+},{"../../light/types/candle":276}],208:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -46160,7 +46181,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":221,"../../items/item_manager":238,"../../view/button":287,"../../view/view_inventory":290}],209:[function(require,module,exports){
+},{"../../effects/fade":220,"../../items/item_manager":237,"../../view/button":284,"../../view/view_inventory":287}],209:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46219,7 +46240,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":227,"../../engine/pixi_containers":230,"pixi.js":151}],210:[function(require,module,exports){
+},{"../../engine/melee":226,"../../engine/pixi_containers":229,"pixi.js":151}],210:[function(require,module,exports){
 'use strict';
 const app = require('../../engine/app');
 //const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -46286,7 +46307,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":218,"../../engine/app":222,"../../engine/ranged":231,"../../utils/math":285}],211:[function(require,module,exports){
+},{"../../effects/aiming_cone":218,"../../engine/app":221,"../../engine/ranged":230,"../../utils/math":282}],211:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46330,7 +46351,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":229,"../../engine/pixi_containers":230,"pixi.js":151}],212:[function(require,module,exports){
+},{"../../engine/pathfind.js":228,"../../engine/pixi_containers":229,"pixi.js":151}],212:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -46367,7 +46388,7 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":292,"pixi.js":151}],213:[function(require,module,exports){
+},{"../../view/view_player_status_meter":289,"pixi.js":151}],213:[function(require,module,exports){
 'use strict';
 
 const { Blood  } = require('../../effects/blood');
@@ -46472,7 +46493,7 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/human":199,"../attributes/pathfind":211,"../character_model":214}],216:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/pathfind":211,"../character_model":214}],216:[function(require,module,exports){
 'use strict';
 
 const { player_container } = require('../../engine/pixi_containers');
@@ -46535,7 +46556,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":219,"../../engine/item_handler":226,"../../engine/pixi_containers":230,"../../engine/tween":235,"../animations/human":199,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":212,"../attributes/vitals":213,"../character_model":214,"events":293}],217:[function(require,module,exports){
+},{"../../effects/blood":219,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":212,"../attributes/vitals":213,"../character_model":214,"events":290}],217:[function(require,module,exports){
 'use strict';
 
 const { enemy_container } = require('../../engine/pixi_containers');
@@ -46566,7 +46587,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":230,"../animations/rat":200,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/vitals":213,"../character_model":214}],218:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../animations/rat":200,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/vitals":213,"../character_model":214}],218:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46610,7 +46631,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],219:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],219:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46631,40 +46652,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],220:[function(require,module,exports){
-'use strict';
-
-const { Crow   } = require('../character/archetypes/crow');
-const { Lurcher } = require('../character/archetypes/zombie');
-
-function generate_crow({from, to}) {
-  const bird = new Crow();
-  bird.animation.move();
-  bird.animation.sprite.play();
-
-  bird.tween.from(from);
-  bird.tween.to(to);
-  bird.tween.time = 10000;
-  bird.tween.start();
-}
-
-function generate_zombie({from, to}) {
-  const zombie = new Lurcher();
-  zombie.animation.move();
-  zombie.animation.sprite.play();
-
-  zombie.tween.from(from);
-  zombie.tween.to(to);
-  zombie.tween.time = 20000;
-  zombie.tween.start();
-}
-
-module.exports = {
-  generate_crow,
-  generate_zombie,
-};
-
-},{"../character/archetypes/crow":202,"../character/archetypes/zombie":204}],221:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],220:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -46723,7 +46711,7 @@ module.exports = {
   Fade,
 };
 
-},{"pixi.js":151}],222:[function(require,module,exports){
+},{"pixi.js":151}],221:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -46748,7 +46736,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":151}],223:[function(require,module,exports){
+},{"pixi.js":151}],222:[function(require,module,exports){
 /* eslint-disable*/
 'use strict';
 
@@ -46785,7 +46773,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":216,"../level/types/archer_room":264,"../level/types/defend_room.js":265,"../level/types/intro.js":266,"../level/types/item_room":268,"../level/types/player_animations":270,"../level/types/school_room.js":271,"../level/types/simple.js":272,"../level/types/transition_room":274}],224:[function(require,module,exports){
+},{"../character/types/player.js":216,"../level/types/archer_room":261,"../level/types/defend_room.js":262,"../level/types/intro.js":263,"../level/types/item_room":265,"../level/types/player_animations":267,"../level/types/school_room.js":268,"../level/types/simple.js":269,"../level/types/transition_room":271}],223:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46796,7 +46784,7 @@ class Camera {
   constructor() {
     this.name = 'camera';
     this.sprite = world;
-    this.add_component(new Tween(this.sprite));
+    //this.add_component(new Tween(this.sprite));
   }
 
   add_component(component) {
@@ -46824,7 +46812,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./shadows":232,"./tween":235}],225:[function(require,module,exports){
+},{"./shadows":231,"./tween":234}],224:[function(require,module,exports){
 'use strict';
 const event = require('events');
 
@@ -46834,7 +46822,7 @@ module.exports = {
   damage_events,
 };
 
-},{"events":293}],226:[function(require,module,exports){
+},{"events":290}],225:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
@@ -46864,7 +46852,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":238,"events":293}],227:[function(require,module,exports){
+},{"../items/item_manager":237,"events":290}],226:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -46877,7 +46865,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],228:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 'use strict';
 const PIXI   = require('pixi.js');
 const packer = require('pixi-packer-parser');
@@ -46889,7 +46877,7 @@ module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":32,"pixi.js":151}],229:[function(require,module,exports){
+},{"pixi-packer-parser":32,"pixi.js":151}],228:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grid_container } = require('./pixi_containers');
@@ -46948,12 +46936,7 @@ class pathfind_sprite {
     const tween = new Tween(sprite);
     tween.time  = path_array.length * 500;
     tween.from_path(sprite);
-    const foo = path_array.map(path => {
-      return {
-        x: path.x + 50,
-        y: path.y + 50,
-      };
-    });
+    const foo = path_array.map(({x,y}) => ({x:x+50, y:y+50}));
 
     tween.add_random_path(foo);
     tween.draw_path();
@@ -47009,7 +46992,7 @@ module.exports = {
   pathfind_sprite,
 };
 
-},{"../utils/grid":283,"./pixi_containers":230,"./tween":235,"easystarjs":3,"pixi.js":151}],230:[function(require,module,exports){
+},{"../utils/grid":280,"./pixi_containers":229,"./tween":234,"easystarjs":3,"pixi.js":151}],229:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { world } = require('./shadows');
@@ -47137,7 +47120,7 @@ module.exports = {
 
 
 
-},{"./shadows":232,"pixi.js":151}],231:[function(require,module,exports){
+},{"./shadows":231,"pixi.js":151}],230:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47216,15 +47199,15 @@ module.exports = {
 };
 
 
-},{"../utils/math":285,"./pixi_containers":230,"./tween":235,"pixi.js":151}],232:[function(require,module,exports){
+},{"../utils/math":282,"./pixi_containers":229,"./tween":234,"pixi.js":151}],231:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-layers');
 require('pixi-shadows');
 
 const app = require('./app');
-
 const world = PIXI.shadows.init(app);
+world.name = 'world';
 world.updateLayersOrder = function () {
   world.children.sort(function(a,b) {
     a.zIndex = a.zIndex || 0;
@@ -47243,7 +47226,7 @@ module.exports = {
 
 
 
-},{"./app":222,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],233:[function(require,module,exports){
+},{"./app":221,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],232:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-sound');
@@ -47261,7 +47244,7 @@ const Sound = PIXI.sound.add({
 
 module.exports = Sound;
 
-},{"pixi-sound":34,"pixi.js":151}],234:[function(require,module,exports){
+},{"pixi-sound":34,"pixi.js":151}],233:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -47287,7 +47270,7 @@ app.ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":222,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],235:[function(require,module,exports){
+},{"./app":221,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],234:[function(require,module,exports){
 'use strict';
 require('./ticker');
 const PIXI = require('pixi.js');
@@ -47398,7 +47381,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":285,"./pixi_containers":230,"./ticker":234,"pixi.js":151}],236:[function(require,module,exports){
+},{"../utils/math":282,"./pixi_containers":229,"./ticker":233,"pixi.js":151}],235:[function(require,module,exports){
 'use strict';
 require('./utils/globals');
 
@@ -47415,7 +47398,7 @@ loader.load(() => {
 
 
 
-},{"./engine/boot_loader.js":223,"./engine/packer":228,"./utils/globals":282}],237:[function(require,module,exports){
+},{"./engine/boot_loader.js":222,"./engine/packer":227,"./utils/globals":279}],236:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -47755,7 +47738,7 @@ module.exports = {
 };
 
 
-},{}],238:[function(require,module,exports){
+},{}],237:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -47831,7 +47814,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":222,"../utils/math":285,"./data/item_data":237,"pixi.js":151}],239:[function(require,module,exports){
+},{"../engine/app":221,"../utils/math":282,"./data/item_data":236,"pixi.js":151}],238:[function(require,module,exports){
 'use strict';
 
 class Tiled_Data {
@@ -47846,7 +47829,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],240:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -48430,7 +48413,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],241:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -48847,7 +48830,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],242:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49247,7 +49230,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],243:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49940,6 +49923,248 @@ module.exports={ "height":50,
                  "width":2091.54,
                  "x":3864.86029162747,
                  "y":250.484333490122
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"prey",
+         "objects":[
+                {
+                 "height":0,
+                 "id":335,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-191.026210573079,
+                         "y":306.530430919591
+                        }, 
+                        {
+                         "x":-484.229231452688,
+                         "y":444.247001332741
+                        }, 
+                        {
+                         "x":-897.378942692137,
+                         "y":586.406041759218
+                        }, 
+                        {
+                         "x":-1283.87383385162,
+                         "y":661.928031985784
+                        }, 
+                        {
+                         "x":-1359.39582407819,
+                         "y":697.467792092403
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2594.40248778321,
+                 "y":-484.229231452688
+                }, 
+                {
+                 "height":0,
+                 "id":336,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-155.486450466459,
+                         "y":111.061750333185
+                        }, 
+                        {
+                         "x":-328.742780986228,
+                         "y":279.875610839627
+                        }, 
+                        {
+                         "x":-457.574411372723,
+                         "y":453.131941359396
+                        }, 
+                        {
+                         "x":-581.963571745891,
+                         "y":635.27321190582
+                        }, 
+                        {
+                         "x":-693.025322079076,
+                         "y":817.414482452244
+                        }, 
+                        {
+                         "x":-812.972012438916,
+                         "y":924.033762772101
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2087.96090626388,
+                 "y":-759.662372278987
+                }, 
+                {
+                 "height":0,
+                 "id":337,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":284.318080852954,
+                         "y":297.645490892936
+                        }, 
+                        {
+                         "x":453.131941359396,
+                         "y":608.618391825855
+                        }, 
+                        {
+                         "x":199.911150599733,
+                         "y":990.670812972013
+                        }, 
+                        {
+                         "x":66.6370501999113,
+                         "y":1310.52865393159
+                        }, 
+                        {
+                         "x":204.353620613061,
+                         "y":1492.66992447801
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1057.30786317192,
+                 "y":-1319.41359395824
+                }, 
+                {
+                 "height":0,
+                 "id":339,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-359.84007107952,
+                         "y":-8.88494002665493
+                        }, 
+                        {
+                         "x":-795.202132385607,
+                         "y":71.0795202132385
+                        }, 
+                        {
+                         "x":-1235.00666370502,
+                         "y":191.026210573079
+                        }, 
+                        {
+                         "x":-1403.82052421146,
+                         "y":573.078631719236
+                        }, 
+                        {
+                         "x":-1368.28076410484,
+                         "y":812.972012438916
+                        }, 
+                        {
+                         "x":-1190.58196357175,
+                         "y":946.246112838738
+                        }, 
+                        {
+                         "x":-1026.21057307863,
+                         "y":1203.90937361173
+                        }, 
+                        {
+                         "x":-1128.38738338516,
+                         "y":1337.18347401155
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2456.68591737006,
+                 "y":-1168.36961350511
+                }, 
+                {
+                 "height":0,
+                 "id":340,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-319.857840959574,
+                         "y":-302.087960906264
+                        }, 
+                        {
+                         "x":-555.308751665927,
+                         "y":-333.185250999556
+                        }, 
+                        {
+                         "x":-848.511772545536,
+                         "y":-239.89338071968
+                        }, 
+                        {
+                         "x":-1150.5997334518,
+                         "y":8.88494002665482
+                        }, 
+                        {
+                         "x":-1337.18347401155,
+                         "y":137.71657041315
+                        }, 
+                        {
+                         "x":-1665.92625499778,
+                         "y":133.274100399822
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2949.8000888494,
+                 "y":35.5397601066193
+                }, 
+                {
+                 "height":0,
+                 "id":342,
+                 "name":"crow",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":488.671701466015,
+                         "y":-599.7334517992
+                        }, 
+                        {
+                         "x":1203.90937361173,
+                         "y":-1057.30786317192
+                        }, 
+                        {
+                         "x":2061.30608618392,
+                         "y":-1523.7672145713
+                        }, 
+                        {
+                         "x":2621.05730786317,
+                         "y":-2021.32385606397
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-146.601510439805,
+                 "y":599.7334517992
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51001,7 +51226,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51942,7 +52167,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":333,
+ "nextobjectid":343,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -51953,7 +52178,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],244:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53187,7 +53412,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],245:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53217,7 +53442,79 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"prey",
-         "objects":[],
+         "objects":[
+                {
+                 "height":0,
+                 "id":215,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-30.9853336087585,
+                         "y":-121.875645527783
+                        }, 
+                        {
+                         "x":-12.3941334435033,
+                         "y":-431.728981615369
+                        }, 
+                        {
+                         "x":92.9560008262756,
+                         "y":-576.327205122908
+                        }, 
+                        {
+                         "x":658.954761412931,
+                         "y":-638.297872340426
+                        }, 
+                        {
+                         "x":793.224540384218,
+                         "y":-320.181780623838
+                        }, 
+                        {
+                         "x":720.925428630449,
+                         "y":-64.0363561247675
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1991.32410658955,
+                 "y":1821.937616195
+                }, 
+                {
+                 "height":0,
+                 "id":216,
+                 "name":"crow",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-177.649246023549,
+                         "y":-175.583557116298
+                        }, 
+                        {
+                         "x":-425.531914893617,
+                         "y":-204.503201817806
+                        }, 
+                        {
+                         "x":-712.662673001446,
+                         "y":-541.210493699649
+                        }, 
+                        {
+                         "x":-964.676719686015,
+                         "y":-615.575294360669
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2685.39557942574,
+                 "y":1916.95930592853
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -53799,8 +54096,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2399.89083703012,
-                 "y":1746.71076415308
+                 "x":2190.66428926816,
+                 "y":1806.73477375692
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -53869,7 +54166,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":215,
+ "nextobjectid":217,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -53880,7 +54177,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54305,7 +54602,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55262,7 +55559,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56349,7 +56646,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56834,16 +57131,16 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],250:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { background_container } = require('../../engine/pixi_containers');
 
 class Background {
   constructor(data) {
-    const texture = PIXI.Texture.fromImage(data.name);
-    this.sprite = new PIXI.extras.TilingSprite(texture);
+    const texture = Texture.fromImage(data.name);
+    this.sprite = new extras.TilingSprite(texture);
     if(data.name === 'tile_floor') {
       this.sprite.tileScale.x = 0.15;
       this.sprite.tileScale.y = 0.15;
@@ -56877,7 +57174,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":230,"pixi.js":151}],251:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"pixi.js":151}],250:[function(require,module,exports){
 'use strict';
 const { roof_container } = require('../../engine/pixi_containers');
 
@@ -56886,9 +57183,9 @@ const { Item } = require('./item_model');
 //TODO remove item extend
 class Roof extends Item {
   constructor(options) {
-    super(options.properties.image_name);
+    super(options);
     this.sprite.fade_opacity = options.properties.fade;
-    this.sprite.alpha = options.properties.alpha || 0.2;
+    this.alpha = options.properties.alpha | 0.2;
 
     roof_container.addChild(this.sprite);
   }
@@ -56898,7 +57195,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":230,"./item_model":257}],252:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255}],251:[function(require,module,exports){
 (function (global){
 'use strict';
 const { item_container } = require('../../engine/pixi_containers');
@@ -56912,8 +57209,7 @@ const { Item     } = require('./item_model');
 
 class Chest extends Item {
   constructor(options) {
-    console.log(options);
-    super(options.properties.image_name);
+    super(options);
     this.name = 'chest';
 
     if(options.type === 'note') {
@@ -56958,9 +57254,7 @@ class Chest extends Item {
     }
 
     if(options.properties.remove_on_click) {
-      this.click = () => {
-        this.sprite.destroy();
-      };
+      this.click = () => this.sprite.destroy();
     }
 
     if(options.properties.container) {
@@ -56988,9 +57282,7 @@ class Chest extends Item {
 
   _open() {
     global.set_light_level(1);
-
     this.loot.set_position(this.sprite);
-
     this.loot.show();
   }
 
@@ -57008,12 +57300,12 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":208,"../../engine/item_handler":226,"../../engine/pixi_containers":230,"../../view/button":287,"../../view/caption":288,"../../view/overlay_object":289,"./item_model":257}],253:[function(require,module,exports){
+},{"../../character/attributes/lootable":208,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":286,"./item_model":255}],252:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
 
-const event          = require('events');
+const event = require('events');
 
 class Click_Pad {
   constructor(data) {
@@ -57044,7 +57336,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":230,"events":293,"pixi.js":151}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"events":290,"pixi.js":151}],253:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { collision_container } = require('../../engine/pixi_containers');
@@ -57053,11 +57345,11 @@ const { Item } = require('./item_model');
 
 class CollisionItem extends Item {
   constructor(options) {
-    super(options.properties.image_name);
+    super(options);
     if(options.properties.shadow) {
       this.shadow = true;
-      this.shade.anchor.y= 1;
-      this.shade.anchor.x= 0;
+      this.shade.anchor.y = 1;
+      this.shade.anchor.x = 0;
       this.shade.events = new event();
       this.shade.events.on('damage', () => {
         this.shade.destroy();
@@ -57066,9 +57358,7 @@ class CollisionItem extends Item {
     }
 
     this.sprite.events = new event();
-    this.sprite.events.on('damage', () => {
-      this.sprite.destroy();
-    });
+    this.sprite.events.on('damage', () => this.sprite.destroy());
 
     collision_container.addChild(this.sprite);
   }
@@ -57078,7 +57368,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":230,"./item_model":257,"events":293}],255:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255,"events":290}],254:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -57091,9 +57381,7 @@ const { BackgroundVisualItem } = require('./visual_object');
 
 class Door extends Item {
   constructor(options) {
-    super(options.properties.image_name);
-    this.id = options.id;
-    this.sprite.id = options.id;
+    super(options);
 
     if(options.properties.label) {
       this.sprite.interactive = true;
@@ -57150,7 +57438,6 @@ class Door extends Item {
       });
     }
 
-
     collision_container.addChild(this.sprite);
   }
 }
@@ -57159,63 +57446,23 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":225,"../../engine/pixi_containers":230,"../../engine/sound":233,"../../engine/tween":235,"../../view/button":287,"./item_model":257,"./visual_object":261}],256:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"../../engine/sound":232,"../../engine/tween":234,"../../view/button":284,"./item_model":255,"./visual_object":259}],255:[function(require,module,exports){
 'use strict';
-
-const { Chest     } = require('./chest');
-const { Door      } = require('./door');
-const { Roof      } = require('./ceiling');
-const { Shroud    } = require('./shroud');
-const { CollisionItem } = require('./collision_object');
-const { BackgroundVisualItem } = require('./visual_object');
-
-//TODO This is not a Factory make it one and abstract this
-class Element_Factory {
-  static generate(type, options) {
-    switch(type) {
-      case 'item':      return new Chest(options);
-      case 'roof':      return new Roof(options);
-      case 'collision': return new CollisionItem(options);
-      case 'door':      return new Door(options);
-      case 'floor':     return new BackgroundVisualItem(options);
-      case 'decal':     return new BackgroundVisualItem(options);
-      case 'shroud':    return new Shroud(options);
-    }
-  }
-
-  static generate_tiled(level, data) {
-    const generated = this.generate(level, data);
-    generated.set_position(data);
-    //TODO flip
-    generated.width  = data.width;
-    generated.height = data.height;
-    generated.rotation = (data.rotation * (Math.PI/180));
-    generated.sprite.anchor.y = 0;
-    generated.sprite.anchor.x = 0;
-    generated.sprite.id = data.id;
-    generated.id = data.id;
-
-    return generated;
-  }
-}
-
-module.exports = {
-  Element_Factory,
-};
-
-},{"./ceiling":251,"./chest":252,"./collision_object":254,"./door":255,"./shroud":260,"./visual_object":261}],257:[function(require,module,exports){
-'use strict';
-const PIXI = require('pixi.js');
-
+const { Sprite } = require('pixi.js');
 const { collision_container } = require('../../engine/pixi_containers');
 
-//TODO this needs to be the parent of the elements in this folder
 class Item {
-  constructor(name) {
-    this.texture = PIXI.Texture.fromImage(name);
+  constructor(data) {
+    // this texture ... for shadow
     //this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 
-    this.sprite = new PIXI.Sprite(this.texture);
+    this.sprite = new Sprite.fromFrame(data.properties.image_name);
+    this.set_position(data);
+    this.width     = data.width;
+    this.height    = data.height;
+    this.rotation  = data.rotation * (Math.PI/180);
+    this.id        = data.id;
+    this.sprite.id = data.id;
   }
 
   add_component(component) {
@@ -57292,7 +57539,7 @@ class Item {
     if(!state && this.shade) {
       collision_container.removeChild(this.shade);
     }
-    this.shade = new PIXI.Sprite(this.texture);
+    this.shade = new Sprite(this.texture);
     // TODO here for shadows
     //this.shade.parentGroup = PIXI.shadows.casterGroup;
     //this.shade.position.copy(this.sprite);
@@ -57309,21 +57556,29 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":230,"pixi.js":151}],258:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"pixi.js":151}],256:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, Texture } = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
+const { Level_Factory } = require('../types/level_factory');
 const event = require('events');
 
 class Trigger_Pad {
-  constructor(data) {
-    this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
+  constructor(data, player) {
+    this.area = new Sprite(Texture.WHITE);
     this.area.height = data.height;
     this.area.width  = data.width;
     this.area.alpha  = 0.3;
     this.area.anchor.set(0);
     this.area.position.set(data.x, data.y);
     this.area.events = new event({once: true});
+    this.area.rotation = data.rotation * (Math.PI/180);
+
+    if(data.properties && data.properties.level_name) {
+      this.area.events.once('trigger', () => {
+        Level_Factory.create(data.properties, player);
+      });
+    }
 
     pad_container.addChild(this.area);
   }
@@ -57337,7 +57592,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":230,"events":293,"pixi.js":151}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../types/level_factory":266,"events":290,"pixi.js":151}],257:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -57463,7 +57718,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":230,"../../engine/sound":233,"../../light/types/led":280,"./item_model":257,"pixi.js":151}],260:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/sound":232,"../../light/types/led":277,"./item_model":255,"pixi.js":151}],258:[function(require,module,exports){
 'use strict';
 const { shroud_container } = require('../../engine/pixi_containers');
 
@@ -57471,12 +57726,12 @@ const { Item } = require('./item_model');
 
 class Shroud extends Item {
   constructor(options) {
-    super(options.properties.image_name);
+    super(options);
 
     this.sprite.interactive = true;
     this.sprite.fade_opacity = options.properties.fade;
-    this.sprite.alpha = 1;
     this.sprite.remove_on_enter = options.properties.remove_on_enter;
+    this.anchor = 0;
 
     shroud_container.addChild(this.sprite);
   }
@@ -57486,19 +57741,18 @@ module.exports = {
   Shroud,
 };
 
-},{"../../engine/pixi_containers":230,"./item_model":257}],261:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255}],259:[function(require,module,exports){
 'use strict';
 const { background_container } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
 class BackgroundVisualItem extends Item {
-  constructor(options) {
-    super(options.properties.image_name);
+  constructor(data) {
+    super(data);
 
-    if(options.properties.opacity) {
-      this.sprite.alpha = options.properties.opacity;
-    }
+    this.alpha = data.properties.opacity | 1;
+    this.anchor = 0;
 
     background_container.addChild(this.sprite);
   }
@@ -57508,7 +57762,7 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":230,"./item_model":257}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255}],260:[function(require,module,exports){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
 
@@ -57517,16 +57771,12 @@ const { Item } = require('./item_model');
 
 class Wall extends Item {
   constructor(data) {
-    super('black_dot');
+    super(data);
 
     this.shadow = true;
     this.anchor = 0;
-    this.width = data.width;
-    this.height= data.height;
     this.sprite.events = new event();
     this.sprite.events.on('damage', damage => this.on_hit(damage));
-    this.set_position(data);
-
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
@@ -57545,52 +57795,30 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":230,"./item_model":257,"events":293}],263:[function(require,module,exports){
-'use strict';
-const { pathfind_sprite } = require('../engine/pathfind.js');
-
-class Level {
-  create_grid(level_tiles) {
-    this.grid = pathfind_sprite.create_level_grid(level_tiles);
-  }
-}
-
-module.exports = {
-  Level,
-};
-
-},{"../engine/pathfind.js":229}],264:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255,"events":290}],261:[function(require,module,exports){
 'use strict';
 
-const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-
-class Archer_Room extends Level {
+class Archer_Room {
   constructor(player) {
-    const level_data = require('../data/archer_room.json');
-    super();
-    this.name     = 'archer_room';
-
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'archer_room';
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    Level_Factory.generate(this.player, this.elements);
+    const level_data = require('../data/archer_room.json');
+    const elements = new Tiled_Data(level_data);
 
-    const {exit_pad} = this.elements;
+    Level_Factory.generate(elements);
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.on('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
-    });
+    const { exit_pad } = elements;
+
+    exit_pad.forEach(data => new Trigger_Pad(data));
   }
 }
 
@@ -57598,35 +57826,33 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":239,"../data/archer_room.json":241,"../elements/pad":258,"../level_model":263,"./level_factory":269}],265:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":238,"../data/archer_room.json":240,"../elements/pad":256,"./level_factory":266}],262:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Level         } = require('../level_model');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad   } = require('../elements/pad');
-const { Rat           } = require('../../character/archetypes/rat');
-const { Level_Factory } = require('./level_factory');
+const { pathfind_sprite } = require('../../engine/pathfind.js');
+const { Tiled_Data      } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad     } = require('../elements/pad');
+const { Rat             } = require('../../character/archetypes/rat');
+const { Level_Factory   } = require('./level_factory');
 
-
-class Defend_Room extends Level  {
+class Defend_Room  {
   constructor(player) {
-    const level_data = require('../data/defend_room.json');
-    super();
     this.name     = 'defend_room';
-
     this.player   = player;
-    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {prey, exit_pad, grid, player} = this.elements;
     global.set_light_level(1);
+    const level_data = require('../data/defend_room.json');
+    const elements = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
+
+    const { prey, exit_pad, grid, player } = elements;
 
     this.player.set_position(player[0]);
-    Level_Factory.generate(this.player, this.elements);
 
     const mouse = new Rat();
     mouse.enemy(this.player);
@@ -57638,12 +57864,6 @@ class Defend_Room extends Level  {
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad(data);
-      if(data.properties) {
-        pad.area.events.once('trigger', () => {
-          Level_Factory.create(data.properties, this.player);
-        });
-        return;
-      }
 
       if(data.id === 236) {
         pad.area.events.once('trigger', () => {
@@ -57656,7 +57876,7 @@ class Defend_Room extends Level  {
       }
     });
 
-    this.create_grid(grid[0]);
+    this.grid = pathfind_sprite.create_level_grid(grid[0]);
   }
 }
 
@@ -57665,36 +57885,29 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":203,"../attributes/parse_tiled_data":239,"../data/defend_room.json":242,"../elements/pad":258,"../level_model":263,"./level_factory":269}],266:[function(require,module,exports){
+},{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/defend_room.json":241,"../elements/pad":256,"./level_factory":266}],263:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collision_container } = require('../../engine/pixi_containers');
-//const { visual_effects_container } = require('../../engine/pixi_containers');
-const { Tween } = require('../../engine/tween');
-const { generate_crow } = require('../../effects/click_events');
 
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad } = require('../elements/pad');
+const { Tween       } = require('../../engine/tween');
 const { Camera      } = require('../../engine/camera');
+const { Lurcher     } = require('../../character/archetypes/zombie');
+const { Crow        } = require('../../character/archetypes/crow');
+const { Tiled_Data  } = require('../attributes/parse_tiled_data');
 const { Click_Pad   } = require('../elements/click_pad');
-
 
 class Intro  {
   constructor(player, options) {
-    const level_data  = require('../data/intro_room.json');
     this.name         = 'intro';
     this.player       = player;
-    this.elements     = new Tiled_Data(level_data);
-    this.camera       = new Camera();
-    // player.light.candle.sprite.alpha = 0;
-    // player.light.candle.shadow.instensity = 0.8;
-    // visual_effects_container.addChild(player.light.candle.sprite);
-    // visual_effects_container.addChild(player.light.candle.shadow);
     this._set_elements();
+
     if(options && options.cutscene) this._cutscene();
   }
 
   _cutscene() {
+    this.camera = new Camera();
     this.player.keyboard.disable();
 
     this.camera.tween.from_path({ x: -120, y: -150 });
@@ -57717,16 +57930,30 @@ class Intro  {
   }
 
   _set_elements() {
-    const { Level_Factory } = require('./level_factory');
-    Level_Factory.generate(this.player, this.elements);
+    global.set_light_level(0.8);
+    const level_data = require('../data/intro_room.json');
 
-    const {exit_pad, click_pad, player} = this.elements;
+    const { Level_Factory } = require('./level_factory');
+    const elements   = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
+
+    const { Trigger_Pad   } = require('../elements/pad');
+    const { exit_pad, click_pad, player, prey } = elements;
+
     this.player.set_position(player[0]);
 
-    global.set_light_level(0.9);
+    const characters = prey.map(npc => {
+      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
+
+      if(npc.name === 'zombie') {
+        return new Lurcher({ path, time: 20000, turn: true});
+      }
+
+      return new Crow({path});
+    });
 
     click_pad.forEach(data => {
-      const pad  = new Click_Pad(data);
+      const pad = new Click_Pad(data);
       pad.click = () => {
         const dumpster = collision_container.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
@@ -57735,20 +57962,11 @@ class Intro  {
         tween_it.time = 2000;
         tween_it.start();
 
-        generate_crow({
-          from: {x: 400, y: 60},
-          to:   {x: 3000, y: -1000},
-        });
+        characters.forEach(({tween}) => tween.start());
       };
     });
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.rotation = (data.rotation * (Math.PI/180));
-      pad.area.events.on('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
-    });
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 
@@ -57757,7 +57975,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":220,"../../engine/camera":224,"../../engine/pixi_containers":230,"../../engine/tween":235,"../attributes/parse_tiled_data":239,"../data/intro_room.json":243,"../elements/click_pad":253,"../elements/pad":258,"./level_factory":269}],267:[function(require,module,exports){
+},{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":204,"../../engine/camera":223,"../../engine/pixi_containers":229,"../../engine/tween":234,"../attributes/parse_tiled_data":238,"../data/intro_room.json":242,"../elements/click_pad":252,"../elements/pad":256,"./level_factory":266}],264:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57767,27 +57985,22 @@ const { Level_Factory } = require('./level_factory');
 
 class Items_Room_level_2 {
   constructor(player) {
-
-    const level_data  = require('../data/intro_room_level_2.json');
-    this.name     = 'intro';
-
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'intro';
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {exit_pad} = this.elements;
     global.set_light_level(0.9);
 
-    Level_Factory.generate(this.player, this.elements);
+    const level_data = require('../data/intro_room_level_2.json');
+    const elements   = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.on('trigger', () => {
-      });
-    });
+    const { exit_pad } = elements;
+
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 
@@ -57796,89 +58009,59 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":239,"../data/intro_room_level_2.json":244,"../elements/pad":258,"./level_factory":269}],268:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":238,"../data/intro_room_level_2.json":243,"../elements/pad":256,"./level_factory":266}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Tween         } = require('../../engine/tween');
-const { generate_crow, generate_zombie} = require('../../effects/click_events');
-const { Level         } = require('../level_model');
+const { Lurcher       } = require('../../character/archetypes/zombie');
+const { Crow          } = require('../../character/archetypes/crow');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
 
-class Items_Room extends Level {
+class Items_Room {
   constructor(player) {
-    super();
-    const level_data  = require('../data/items_room.json');
-    this.name     = 'item_room';
-
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'item_room';
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {exit_pad, click_pad, player} = this.elements;
-    global.set_light_level(0.9);
+    global.set_light_level(1);
+    const level_data = require('../data/items_room.json');
+    const elements = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
 
-    const { level_lights, level_collision } = Level_Factory.generate(this.player, this.elements);
+    const { prey, exit_pad, click_pad, player } = elements;
 
     this.player.set_position(player[0]);
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.once('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
+
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
+
+    const characters = prey.map(npc => {
+      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
+
+      if(npc.name === 'zombie') {
+        return new Lurcher({ path, time: 20000, turn: true});
+      }
+
+      return new Crow({path});
     });
 
     click_pad.forEach(data => {
       const pad  = new Click_Pad(data);
-      if(data.id === 200) {
-        pad.click = () => generate_crow({
-          from: {x: 2000, y: 1800},
-          to:   {x: 3000, y: 1000},
-        });
-      }
 
-      if(data.id === 214) {
-        pad.click = () => generate_zombie({
-          from: {x: 2000, y: 1800},
-          to:   {x: 3000, y: 1000},
-        });
+      if(data.id === 200) {
+        pad.click = () => characters.forEach(({tween}) => tween.start());
       }
 
       if(data.id === 184) {
         pad.click = async () => {
-          global.set_light_level(0.3);
-          const lamp_light = level_lights.find(elems => elems.id === 188);
-          lamp_light.intensity = 5;
-          await lamp_light.strike.fast();
-
-          const dumpster = level_collision.find(elems => elems.id === 213);
-
-          const sprite_tween = new Tween(dumpster.sprite);
-          const shadow_tween = new Tween(dumpster.shade);
-          sprite_tween.from(dumpster.sprite);
-          shadow_tween.from(dumpster.sprite);
-          sprite_tween.to({
-            x: dumpster.sprite.x-400,
-            y: dumpster.sprite.y-200,
-            rotation: 2,
-          });
-
-          shadow_tween.to({
-            x: dumpster.sprite.x-400,
-            y: dumpster.sprite.y-200,
-            rotation: 2,
-          });
-
-          sprite_tween.time = 944000;
-          shadow_tween.time = 944000;
-          sprite_tween.start();
-          shadow_tween.start();
+          //const lamp_light = level_lights.find(elems => elems.id === 188);
+          //lamp_light.intensity = 5;
+          //await lamp_light.strike.fast();
         };
       }
     });
@@ -57890,18 +58073,23 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../effects/click_events":220,"../../engine/tween":235,"../attributes/parse_tiled_data":239,"../data/items_room.json":245,"../elements/click_pad":253,"../elements/pad":258,"../level_model":263,"./level_factory":269}],269:[function(require,module,exports){
-(function (global){
+},{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":204,"../attributes/parse_tiled_data":238,"../data/items_room.json":244,"../elements/click_pad":252,"../elements/pad":256,"./level_factory":266}],266:[function(require,module,exports){
 'use strict';
-
-const { Intro        } = require('./intro');
-const { Camera       } = require('../../engine/camera');
-const { Wall         } = require('../elements/wall');
-const { Bright_Light } = require('../../light/types/bright_light');
-const { Background   } = require('../elements/background');
-const { Element_Factory } = require('../elements/elements_factory');
-
 const { clear_non_player_containers } = require('../../engine/pixi_containers');
+
+const { Intro         } = require('./intro');
+const { Camera        } = require('../../engine/camera');
+const { Bright_Light  } = require('../../light/types/bright_light');
+const { Wall          } = require('../elements/wall');
+const { Background    } = require('../elements/background');
+const { Chest         } = require('../elements/chest');
+const { Door          } = require('../elements/door');
+const { Roof          } = require('../elements/ceiling');
+const { Shroud        } = require('../elements/shroud');
+const { CollisionItem } = require('../elements/collision_object');
+const { BackgroundVisualItem } = require('../elements/visual_object');
+
+const camera = new Camera();
 
 class Level_Factory {
   static create(properties, player) {
@@ -57928,60 +58116,38 @@ class Level_Factory {
     }
   }
 
-  static generate(
-    player_sprite,
-    {
-      walls,
-      door,
-      shroud,
-      item,
-      roof,
-      floor,
-      decal,
-      background,
-      collision,
-      lights,
-      player,
-    }
+  static generate({
+    walls,
+    door,
+    shroud,
+    item,
+    roof,
+    floor,
+    decal,
+    background,
+    collision,
+    lights,
+    player,
+  }
   ) {
     try {
-      background.forEach(elem => {
-        console.log(elem);
-        new Background(elem, true);
-      });
-
-      const camera = new Camera();
       camera.set_center(player[0]);
 
+      background.forEach(elem => new Background(elem, true));
+      floor.forEach(data => new BackgroundVisualItem(data));
+      decal.forEach(data => new BackgroundVisualItem(data));
       walls.forEach(data => {
-        const wall  = new Wall(data);
-        wall.rotation = (data.rotation * (Math.PI/180));
+        data.properties = {};
+        data.properties.image_name = 'black_dot';
+        new Wall(data);
       });
+      collision.forEach(data => new CollisionItem(data));
+      item.forEach(data => new Chest(data));
+      door.forEach(data => new Door(data));
+      shroud.forEach(data => new Shroud(data));
+      roof.forEach(data => new Roof(data));
+      lights.forEach(data => new Bright_Light(data));
 
-      const level_collision = collision.map(data => Element_Factory.generate_tiled('collision', data));
-      const level_items = item.map(data => Element_Factory.generate_tiled('item', data));
-      floor.forEach(data => Element_Factory.generate_tiled('floor', data));
-      door.forEach(data => Element_Factory.generate_tiled('door', data));
-      shroud.forEach(data => Element_Factory.generate_tiled('shroud', data));
-      decal.forEach(data => Element_Factory.generate_tiled('decal', data));
-      roof.forEach(data => Element_Factory.generate_tiled('roof', data));
-
-      const level_lights = lights.map(function(data) {
-        const light  = new Bright_Light();
-        light.set_position(data);
-        light.id = data.id;
-
-        const point = global.place_bunny(data);
-        point.height = 20;
-        point.width  = 20;
-        return light;
-      });
-
-      return {
-        level_items,
-        level_lights,
-        level_collision,
-      };
     } catch (error) {
       console.log(error);
     }
@@ -57996,19 +58162,16 @@ module.exports = {
   Level_Factory,
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/camera":224,"../../engine/pixi_containers":230,"../../light/types/bright_light":278,"../elements/background":250,"../elements/elements_factory":256,"../elements/wall":262,"./archer_room":264,"./defend_room":265,"./intro":266,"./intro_level_02":267,"./item_room":268,"./school_room":271,"./simple":272,"./street":273,"./transition_room":274}],270:[function(require,module,exports){
+},{"../../engine/camera":223,"../../engine/pixi_containers":229,"../../light/types/bright_light":275,"../elements/background":249,"../elements/ceiling":250,"../elements/chest":251,"../elements/collision_object":253,"../elements/door":254,"../elements/shroud":258,"../elements/visual_object":259,"../elements/wall":260,"./archer_room":261,"./defend_room":262,"./intro":263,"./intro_level_02":264,"./item_room":265,"./school_room":268,"./simple":269,"./street":270,"./transition_room":271}],267:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Level      } = require('../level_model');
 const { Background } = require('../elements/background');
 const { Camera     } = require('../../engine/camera');
 const { NPC        } = require('../../character/types/npc');
 
-class Animations_Room extends Level {
+class Animations_Room {
   constructor() {
-    super();
     this.name            = 'animations_room';
 
     this.background      = new Background('grid_floor');
@@ -58064,32 +58227,33 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":215,"../../engine/camera":224,"../elements/background":250,"../level_model":263}],271:[function(require,module,exports){
+},{"../../character/types/npc":215,"../../engine/camera":223,"../elements/background":249}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Level         } = require('../level_model');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad   } = require('../elements/pad');
-const { Rat           } = require('../../character/archetypes/rat');
-const { Phone         } = require('../elements/phone');
-const { Level_Factory } = require('./level_factory');
+const { pathfind_sprite } = require('../../engine/pathfind.js');
+const { Tiled_Data      } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad     } = require('../elements/pad');
+const { Rat             } = require('../../character/archetypes/rat');
+const { Phone           } = require('../elements/phone');
+const { Level_Factory   } = require('./level_factory');
 
-class School_Room extends Level  {
+class School_Room {
   constructor(player) {
-    const level_data = require('../data/school_room.json');
-    super();
     this.name     = 'school_room';
     this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+
     this._set_elements();
   }
 
   _set_elements() {
-    const {prey, exit_pad, grid, player} = this.elements;
+    const level_data = require('../data/school_room.json');
+    const elements = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
+
+    const { prey, exit_pad, grid, player } = elements;
     global.set_light_level(0.9);
 
-    Level_Factory.generate(this.player, this.elements);
     this.player.set_position(player[0]);
 
     const mouse = new Rat();
@@ -58102,19 +58266,11 @@ class School_Room extends Level  {
     phone.set_position({x: 800, y: 810});
 
     exit_pad.forEach(data => {
-      const pad = new Trigger_Pad(data);
-      if(data.properties) {
-        pad.area.events.once('trigger', () => {
-          Level_Factory.create(data.properties, this.player);
-        });
-        return;
-      }
-      pad.area.events.once('trigger', () => {
-        mouse.logic_start();
-      });
+      const { area } = new Trigger_Pad(data, this.player);
+      area.events.once('trigger', () => mouse.logic_start());
     });
 
-    this.create_grid(grid);
+    this.grid = pathfind_sprite.create_level_grid(grid[0]);
   }
 }
 
@@ -58123,53 +58279,45 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":203,"../attributes/parse_tiled_data":239,"../data/school_room.json":247,"../elements/pad":258,"../elements/phone":259,"../level_model":263,"./level_factory":269}],272:[function(require,module,exports){
+},{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/school_room.json":246,"../elements/pad":256,"../elements/phone":257,"./level_factory":266}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visual_effects_container } = require('../../engine/pixi_containers');
 
-const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-class Simple extends Level  {
+class Simple {
   constructor(player, properties) {
-    super();
     this.name = properties.level_name;
 
     global.set_light_level(0.9);
-    let level_data;
-    // TODO manage this dynamically
+    this.level_data;
     if(properties.level_name === 'apartment') {
-      level_data = require('../data/apartment.json');
+      this.level_data = require('../data/apartment.json');
     }
 
     if(properties.level_name === 'light') {
-      level_data = require('../data/lights_room.json');
+      this.level_data = require('../data/lights_room.json');
       visual_effects_container.addChild(player.light.candle.sprite);
       visual_effects_container.addChild(player.light.candle.shadow);
       global.set_light_level(0.5);
     }
-
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    const {exit_pad, player} = this.elements;
+    const elements = new Tiled_Data(this.level_data);
+    const { exit_pad, player } = elements;
+
     this.player.set_position(player[0]);
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.once('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
-    });
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
 
-    Level_Factory.generate(this.player, this.elements);
+    Level_Factory.generate(elements);
   }
 }
 
@@ -58178,38 +58326,32 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":230,"../attributes/parse_tiled_data":239,"../data/apartment.json":240,"../data/lights_room.json":246,"../elements/pad":258,"../level_model":263,"./level_factory":269}],273:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/parse_tiled_data":238,"../data/apartment.json":239,"../data/lights_room.json":245,"../elements/pad":256,"./level_factory":266}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-class Street extends Level  {
+class Street {
   constructor(player) {
-    const level_data = require('../data/street.json');
-    super();
-    this.name     = 'school_room';
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'school_room';
+    this.player = player;
+
     this._set_elements();
   }
 
   _set_elements() {
     global.set_light_level(0.9);
-    const {exit_pad, player} = this.elements;
+    const level_data = require('../data/street.json');
+    const elements = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
+
+    const { exit_pad, player } = elements;
     this.player.set_position(player[0]);
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.once('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
-    });
-
-    Level_Factory.generate(this.player, this.elements);
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 
@@ -58218,55 +58360,47 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":239,"../data/street.json":248,"../elements/pad":258,"../level_model":263,"./level_factory":269}],274:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":238,"../data/street.json":247,"../elements/pad":256,"./level_factory":266}],271:[function(require,module,exports){
 (function (global){
 'use strict';
-const PIXI = require('pixi.js');
-
-const { Level         } = require('../level_model');
+const { visual_effects_container } = require('../../engine/pixi_containers');
+const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
-
-class Transition_Room extends Level  {
+class Transition_Room {
   constructor(player) {
-    const level_data = require('../data/transition_room.json');
-
-    super();
-    this.name     = 'transition_room';
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'transition_room';
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    global.set_light_level(0.9);
-    const {exit_pad, player} = this.elements;
+    global.set_light_level(0.8);
+    const level_data = require('../data/transition_room.json');
+    const elements   = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
 
-    Level_Factory.generate(this.player, this.elements);
+    const { exit_pad, player } = elements;
     this.player.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      const pad = new Trigger_Pad(data);
-      const {properties} = data;
-      pad.area.events.once('trigger', () => {
-        Level_Factory.create(properties, this.player);
-      });
+      new Trigger_Pad(data, this.player);
+      const {properties, x, y, width, height} = data;
 
-      const level_names = new PIXI.Text(
+      const level_names = new Text(
         properties.level_name,{fontSize: 40, fill: 'grey'}
       );
 
-      level_names.x = data.x + data.width/4;
-      level_names.y = data.y + data.height/2;
+      level_names.x = x + width/4;
+      level_names.y = y + height/2;
 
       visual_effects_container.addChild(level_names);
     });
 
-    const level_text = new PIXI.Text(
+    const level_text = new Text(
       'THE HUB',
       {
         fontSize: 100,
@@ -58292,7 +58426,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":230,"../attributes/parse_tiled_data":239,"../data/transition_room.json":249,"../elements/pad":258,"../level_model":263,"./level_factory":269,"pixi.js":151}],275:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/parse_tiled_data":238,"../data/transition_room.json":248,"../elements/pad":256,"./level_factory":266,"pixi.js":151}],272:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58337,7 +58471,7 @@ module.exports = {
   Flicker,
 };
 
-},{"pixi.js":151}],276:[function(require,module,exports){
+},{"pixi.js":151}],273:[function(require,module,exports){
 'use strict';
 
 //const { Sound } = require('../../engine/sound');
@@ -58399,7 +58533,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../utils/time":286}],277:[function(require,module,exports){
+},{"../../utils/time":283}],274:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58467,7 +58601,8 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],278:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],275:[function(require,module,exports){
+(function (global){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58476,7 +58611,7 @@ const { Light  } = require('../light_model');
 const { Strike } = require('../attributes/strike');
 
 class Bright_Light extends Light {
-  constructor() {
+  constructor(options) {
     super();
     this.name = 'bright_light';
 
@@ -58484,6 +58619,15 @@ class Bright_Light extends Light {
     this.shadow.range      = 200;
     this.shadow.intensity  = 0.5;
     this.add_component(new Strike(this));
+    this.set_position(options);
+    this.width    = options.width;
+    this.height   = options.height;
+    this.anchor   = 0;
+    this.id       = options.id;
+
+    const point = global.place_bunny(options);
+    point.height = 20;
+    point.width  = 20;
 
     visual_effects_container.addChild(this.shadow);
   }
@@ -58493,7 +58637,8 @@ module.exports = {
   Bright_Light,
 };
 
-},{"../../engine/pixi_containers":230,"../attributes/strike":276,"../light_model":277}],279:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../engine/pixi_containers":229,"../attributes/strike":273,"../light_model":274}],276:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58544,7 +58689,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":230,"../attributes/flicker":275,"../light_model":277,"pixi.js":151}],280:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/flicker":272,"../light_model":274,"pixi.js":151}],277:[function(require,module,exports){
 'use strict';
 
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -58571,7 +58716,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":230,"../attributes/flicker":275,"../light_model":277}],281:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/flicker":272,"../light_model":274}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58614,7 +58759,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],282:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -58662,7 +58807,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":230,"pixi.js":151}],283:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],280:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grid_container      } = require('../engine/pixi_containers');
@@ -58791,7 +58936,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],284:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],281:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -58911,7 +59056,7 @@ module.exports = {
 
 
 
-},{}],285:[function(require,module,exports){
+},{}],282:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58969,7 +59114,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],286:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -58980,7 +59125,7 @@ module.exports = {
   sleep,
 };
 
-},{}],287:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59075,7 +59220,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":230,"pixi.js":151}],288:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],285:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59145,7 +59290,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],289:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59232,7 +59377,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":230,"../engine/shadows":232,"./caption":288,"pixi.js":151}],290:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"../engine/shadows":231,"./caption":285,"pixi.js":151}],287:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -59352,7 +59497,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":221,"../engine/item_handler":226,"../engine/pixi_containers":230,"pixi.js":151}],291:[function(require,module,exports){
+},{"../effects/fade":220,"../engine/item_handler":225,"../engine/pixi_containers":229,"pixi.js":151}],288:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59550,7 +59695,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":238}],292:[function(require,module,exports){
+},{"../items/item_manager":237}],289:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -59587,7 +59732,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":281}],293:[function(require,module,exports){
+},{"../utils/dom":278}],290:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60112,7 +60257,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],294:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -60418,7 +60563,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":295}],295:[function(require,module,exports){
+},{"_process":292}],292:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -60604,7 +60749,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],296:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -61141,7 +61286,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],297:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61227,7 +61372,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],298:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61314,13 +61459,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],299:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":297,"./encode":298}],300:[function(require,module,exports){
+},{"./decode":294,"./encode":295}],297:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -61399,7 +61544,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":295,"timers":300}],301:[function(require,module,exports){
+},{"process/browser.js":292,"timers":297}],298:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62133,7 +62278,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":302,"punycode":296,"querystring":299}],302:[function(require,module,exports){
+},{"./util":299,"punycode":293,"querystring":296}],299:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -62151,4 +62296,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[236]);
+},{}]},{},[235]);

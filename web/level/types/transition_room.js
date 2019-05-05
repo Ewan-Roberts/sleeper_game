@@ -1,50 +1,42 @@
 'use strict';
-const PIXI = require('pixi.js');
-
-const { Level         } = require('../level_model');
+const { visual_effects_container } = require('../../engine/pixi_containers');
+const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
-
-class Transition_Room extends Level  {
+class Transition_Room {
   constructor(player) {
-    const level_data = require('../data/transition_room.json');
-
-    super();
-    this.name     = 'transition_room';
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'transition_room';
+    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    global.set_light_level(0.9);
-    const {exit_pad, player} = this.elements;
+    global.set_light_level(0.8);
+    const level_data = require('../data/transition_room.json');
+    const elements   = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
 
-    Level_Factory.generate(this.player, this.elements);
+    const { exit_pad, player } = elements;
     this.player.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      const pad = new Trigger_Pad(data);
-      const {properties} = data;
-      pad.area.events.once('trigger', () => {
-        Level_Factory.create(properties, this.player);
-      });
+      new Trigger_Pad(data, this.player);
+      const {properties, x, y, width, height} = data;
 
-      const level_names = new PIXI.Text(
+      const level_names = new Text(
         properties.level_name,{fontSize: 40, fill: 'grey'}
       );
 
-      level_names.x = data.x + data.width/4;
-      level_names.y = data.y + data.height/2;
+      level_names.x = x + width/4;
+      level_names.y = y + height/2;
 
       visual_effects_container.addChild(level_names);
     });
 
-    const level_text = new PIXI.Text(
+    const level_text = new Text(
       'THE HUB',
       {
         fontSize: 100,

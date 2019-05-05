@@ -10,9 +10,7 @@ const { BackgroundVisualItem } = require('./visual_object');
 
 class Door extends Item {
   constructor(options) {
-    super(options.properties.image_name);
-    this.id = options.id;
-    this.sprite.id = options.id;
+    super(options);
 
     if(options.properties.label) {
       this.sprite.interactive = true;
@@ -68,7 +66,6 @@ class Door extends Item {
         }
       });
     }
-
 
     collision_container.addChild(this.sprite);
   }

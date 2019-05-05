@@ -6,7 +6,7 @@ const { Light  } = require('../light_model');
 const { Strike } = require('../attributes/strike');
 
 class Bright_Light extends Light {
-  constructor() {
+  constructor(options) {
     super();
     this.name = 'bright_light';
 
@@ -14,6 +14,15 @@ class Bright_Light extends Light {
     this.shadow.range      = 200;
     this.shadow.intensity  = 0.5;
     this.add_component(new Strike(this));
+    this.set_position(options);
+    this.width    = options.width;
+    this.height   = options.height;
+    this.anchor   = 0;
+    this.id       = options.id;
+
+    const point = global.place_bunny(options);
+    point.height = 20;
+    point.width  = 20;
 
     visual_effects_container.addChild(this.shadow);
   }

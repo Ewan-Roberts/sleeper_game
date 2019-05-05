@@ -6,11 +6,11 @@ const { Item } = require('./item_model');
 
 class CollisionItem extends Item {
   constructor(options) {
-    super(options.properties.image_name);
+    super(options);
     if(options.properties.shadow) {
       this.shadow = true;
-      this.shade.anchor.y= 1;
-      this.shade.anchor.x= 0;
+      this.shade.anchor.y = 1;
+      this.shade.anchor.x = 0;
       this.shade.events = new event();
       this.shade.events.on('damage', () => {
         this.shade.destroy();
@@ -19,9 +19,7 @@ class CollisionItem extends Item {
     }
 
     this.sprite.events = new event();
-    this.sprite.events.on('damage', () => {
-      this.sprite.destroy();
-    });
+    this.sprite.events.on('damage', () => this.sprite.destroy());
 
     collision_container.addChild(this.sprite);
   }

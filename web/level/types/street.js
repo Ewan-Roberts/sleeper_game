@@ -1,33 +1,27 @@
 'use strict';
 
-const { Level         } = require('../level_model');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 
-class Street extends Level  {
+class Street {
   constructor(player) {
-    const level_data = require('../data/street.json');
-    super();
-    this.name     = 'school_room';
-    this.player   = player;
-    this.elements = new Tiled_Data(level_data);
+    this.name   = 'school_room';
+    this.player = player;
+
     this._set_elements();
   }
 
   _set_elements() {
     global.set_light_level(0.9);
-    const {exit_pad, player} = this.elements;
+    const level_data = require('../data/street.json');
+    const elements = new Tiled_Data(level_data);
+    Level_Factory.generate(elements);
+
+    const { exit_pad, player } = elements;
     this.player.set_position(player[0]);
 
-    exit_pad.forEach(data => {
-      const pad  = new Trigger_Pad(data);
-      pad.area.events.once('trigger', () => {
-        Level_Factory.create(data.properties, this.player);
-      });
-    });
-
-    Level_Factory.generate(this.player, this.elements);
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 
