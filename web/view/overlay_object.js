@@ -70,9 +70,7 @@ class Note {
     });
 
     gui_container.addChild(this.sprite, level_text, black_background);
-    this.sprite.click = () => {
-      console.log(options);
-    };
+    this.sprite.click = () => console.log(options);
   }
 
 }

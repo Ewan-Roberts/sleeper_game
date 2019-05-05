@@ -1,8 +1,8 @@
 'use strict';
-const PIXI = require('pixi.js');
 require('pixi-sound');
+const { sound } = require('pixi.js');
 
-const Sound = PIXI.sound.add({
+const Sound = sound.add({
   arrow_hit_00:   'audio/arrow_hit_00.wav',
   lighter_strike: 'audio/lighter.wav',
   rain_noise:     'audio/light_rain.wav',

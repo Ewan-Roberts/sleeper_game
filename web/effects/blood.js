@@ -1,11 +1,11 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite } = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
 class Blood {
   add_at(point) {
-    const blood_splatter = PIXI.Sprite.fromFrame('round_floor_stain');
+    const blood_splatter = new Sprite.fromFrame('round_floor_stain');
     blood_splatter.anchor.set(0.5);
     blood_splatter.alpha = 0.3;
     blood_splatter.position.set(point.x, point.y);

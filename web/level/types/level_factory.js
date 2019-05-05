@@ -57,7 +57,7 @@ class Level_Factory {
     try {
       camera.set_center(player[0]);
 
-      background.forEach(elem => new Background(elem, true));
+      background.forEach(data => new Background(data, true));
       floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
       walls.forEach(data => {
@@ -73,7 +73,7 @@ class Level_Factory {
       lights.forEach(data => new Bright_Light(data));
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

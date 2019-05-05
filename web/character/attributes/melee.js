@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite } = require('pixi.js');
 
 const { melee_attack } = require('../../engine/melee');
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -24,7 +24,7 @@ class Melee {
   }
 
   create_hit_box() {
-    this.box = new PIXI.Sprite.fromFrame('black_dot');
+    this.box = new Sprite.fromFrame('black_dot');
     this.box.width = 50;
     this.box.height= 300;
     this.box.anchor.y = 1;

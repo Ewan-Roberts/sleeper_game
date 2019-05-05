@@ -1,6 +1,6 @@
 'use strict';
 
-const { Blood  } = require('../../effects/blood');
+const { Blood } = require('../../effects/blood');
 
 class Vitals {
   constructor({ sprite }) {

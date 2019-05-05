@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { tween, tweenManager } = require('pixi.js');
 
 // const { sleep } = require('../../utils/time');
 
@@ -16,8 +16,8 @@ class Route {
   }
 
   async route_path(path) {
-    const new_tween = PIXI.tweenManager.createTween(this.sprite);
-    const new_path = new PIXI.tween.TweenPath();
+    const new_tween = tweenManager.createTween(this.sprite);
+    const new_path = new tween.TweenPath();
     for (let i = 1; i < path.length; i++) {
       new_path.arcTo(
         path[i-1].x,
@@ -36,7 +36,7 @@ class Route {
   }
 
   stop() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
+    const tweens = tweenManager.getTweensForTarget(this.sprite);
 
     tweens.forEach(tween => tween.stop());
   }

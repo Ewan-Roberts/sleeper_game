@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -9,7 +9,7 @@ class animation {
     for (let i = 0; i <= 36; i++) {
       const name = (i<10)?`Armature_nothing_idle_0${i}`:`Armature_nothing_idle_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -20,7 +20,7 @@ class animation {
     for (let i = 0; i <= 48; i++) {
       const name = (i<10)?`Armature_nothing_walk_0${i}`:`Armature_nothing_walk_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -31,7 +31,7 @@ class animation {
     for (let i = 0; i <= 36; i++) {
       const name = (i<10)?`Armature_candle_idle_0${i}`:`Armature_candle_idle_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -42,7 +42,7 @@ class animation {
     for (let i = 0; i <= 19; i++) {
       const name = `survivor-move_knife_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -53,7 +53,7 @@ class animation {
     for (let i = 0; i <= 19; i++) {
       const name = `survivor-move_knife_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -64,7 +64,7 @@ class animation {
     for (let i = 0; i <= 14; i++) {
       const name = `survivor-meleeattack_knife_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -75,7 +75,7 @@ class animation {
     for (let i = 0; i <= 20; i++) {
       const name = (i<10)?`survivor-walk_bow_0${i}`:`survivor-walk_bow_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -87,7 +87,7 @@ class animation {
     for (let i = 0; i <= 21; i++) {
       const name = (i<10)?`survivor-bow-idle-0${i}`:`survivor-bow-idle-${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -98,7 +98,7 @@ class animation {
     for (let i = 0; i <= 38; i++) {
       const name = (i<10)?`survivor-bow-pull-0${i}`:`survivor-bow-pull-${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -109,7 +109,7 @@ class animation {
     for (let i = 0; i <= 48; i++) {
       const name = (i<10)?`Armature_candle_walk_0${i}`:`Armature_candle_walk_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -123,7 +123,7 @@ class Human {
     this.state  = 'bow';
     const idle_texture = animation.nothing_idle();
 
-    entity.sprite = new PIXI.extras.AnimatedSprite(idle_texture);
+    entity.sprite = new extras.AnimatedSprite(idle_texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.width  /= 6;

@@ -1,7 +1,7 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite } = require('pixi.js');
 
-const app               = require('../engine/app');
+const { renderer }      = require('../engine/app');
 const { random_number } = require('../utils/math');
 const { items         } = require('./data/item_data');
 
@@ -18,9 +18,7 @@ class Item_Manager {
   }
 
   static get_item(name) {
-    let found_item = items.find(item => item.name === name);
-
-    if(!found_item) found_item = items.find(item => item.item_name === name);
+    const found_item = items.find(item => (item.name === name || item.image_name === name));
 
     if(!found_item) throw new Error('No item found for ' + JSON.stringify( name ));
 
@@ -53,16 +51,16 @@ class Item_Manager {
 
     if(!image_name) throw new Error('Can not find ' + name);
 
-    const found_sprite = PIXI.Sprite.fromFrame(image_name);
-    const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+    const found_sprite = new Sprite.fromFrame(image_name);
+    const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;
   }
 
   static extract_image_by_item_object(item) {
-    const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
+    const found_sprite = new Sprite.fromFrame(item.image_name);
 
-    const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+    const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;
   }

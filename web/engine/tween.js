@@ -1,6 +1,6 @@
 'use strict';
 require('./ticker');
-const PIXI = require('pixi.js');
+const { tween, tweenManager, Graphics} = require('pixi.js');
 const { gui_container } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
 
@@ -10,9 +10,9 @@ class Tween {
     this.sprite   = sprite;
 
     this.time = 2000;
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement = tweenManager.createTween(this.sprite);
     this.movement.expire = true;
-    this.path = new PIXI.tween.TweenPath();
+    this.path = new tween.TweenPath();
     this.path_arc = 15;
   }
 
@@ -34,7 +34,7 @@ class Tween {
   }
 
   smooth() {
-    this.movement.easing = PIXI.tween.Easing.inOutQuad();
+    this.movement.easing = tween.Easing.inOutQuad();
   }
 
   set path_smoothness(value) {
@@ -42,7 +42,7 @@ class Tween {
   }
 
   add_path(tween_path) {
-    this.path = new PIXI.tween.TweenPath();
+    this.path = new tween.TweenPath();
     for (let i = 1; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x,
@@ -54,7 +54,7 @@ class Tween {
   }
 
   add_random_path(tween_path) {
-    this.path = new PIXI.tween.TweenPath();
+    this.path = new tween.TweenPath();
 
     const random = () => random_number(-20, 20);
 
@@ -78,7 +78,6 @@ class Tween {
 
   start() {
     if(this.path && this.path.currentPath) {
-      console.log(this.path);
       this.movement.path = this.path;
     }
 
@@ -88,7 +87,7 @@ class Tween {
   }
 
   chain() {
-    const chain_tween = PIXI.tweenManager.createTween(this.sprite);
+    const chain_tween = tweenManager.createTween(this.sprite);
     chain_tween.path = this.path;
 
     this.movement.chain(chain_tween);
@@ -96,7 +95,7 @@ class Tween {
   }
 
   draw_path() {
-    const graphical_path = new PIXI.Graphics();
+    const graphical_path = new Graphics();
     graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
 

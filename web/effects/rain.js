@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { extras, Texture} = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 const { random_number } = require('../utils/math');
@@ -15,13 +15,13 @@ class Rain {
     for (let i = 1; i < 13; i += 1) {
       const val = i < 10 ? `0${i}` : i;
 
-      rainFrames.push(PIXI.Texture.fromFrame(`raindrop_${val}`));
+      rainFrames.push(Texture.fromFrame(`raindrop_${val}`));
     }
 
     // Sound.play('rain_noise');
 
     for (let i = 0; i < 150; i += 1) {
-      const animatedDrop = new PIXI.extras.AnimatedSprite(rainFrames);
+      const animatedDrop = new extras.AnimatedSprite(rainFrames);
       animatedDrop.x = random_number(x1, x2);
       animatedDrop.y = random_number(y1, y2);
       animatedDrop.width /= 2.5;

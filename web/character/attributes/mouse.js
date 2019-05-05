@@ -1,5 +1,5 @@
 'use strict';
-const app = require('../../engine/app');
+const { screen } = require('../../engine/app');
 //const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { shoot_arrow } = require('../../engine/ranged');
@@ -10,8 +10,8 @@ const { radian      } = require('../../utils/math');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
-    x: (mouse_point.x - app.screen.width/2)  + sprite.x,
-    y: (mouse_point.y - app.screen.height/2) + sprite.y,
+    x: (mouse_point.x - screen.width/2)  + sprite.x,
+    y: (mouse_point.y - screen.height/2) + sprite.y,
   };
 }
 

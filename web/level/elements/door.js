@@ -26,9 +26,6 @@ class Door extends Item {
     }
 
     if(options.properties.clickable) {
-      // this.shadow = true;
-      // this.shade.anchor.y = 1;
-      // this.shade.anchor.x = 0;
       this.sprite_tween = new Tween(this.sprite);
       this.click = () => {
         const current_rotation = this.sprite.rotation;

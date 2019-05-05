@@ -14,9 +14,7 @@ class Chest extends Item {
     this.name = 'chest';
 
     if(options.type === 'note') {
-      this.click = () => {
-        new Note(options.properties);
-      };
+      this.click = () => new Note(options.properties);
     }
 
     if(options.properties.label) {

@@ -1,16 +1,16 @@
 'use strict';
 const PIXI = require('pixi.js');
-const app  = require('./app');
+const { ticker }  = require('./app');
 global.window.PIXI.default = PIXI;
 
 require('pixi-tween');
 require('pixi-keyboard');
 
 // 60/30 for 30 fps
-const fpsDelta = 60/60;
+const fpsDelta = 60/55;
 
 let elapsedTime = 0;
-app.ticker.add(delta => {
+ticker.add(delta => {
   elapsedTime += delta;
 
   if(elapsedTime >= fpsDelta) {

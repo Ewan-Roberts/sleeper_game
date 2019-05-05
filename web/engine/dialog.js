@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, Text } = require('pixi.js');
 
 const { dialog_container } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
@@ -8,7 +8,7 @@ const { world } = require('../engine/shadows');
 //This is far too complicated break into attributes
 class Dialog {
   create_background() {
-    this.background = new PIXI.Sprite.fromFrame('black_dot');
+    this.background = new Sprite.fromFrame('black_dot');
 
     this.background.zIndex = -10;
     this.background.alpha = 0.5;
@@ -25,7 +25,7 @@ class Dialog {
   }
 
   add_portrait(point, image_name) {
-    this.portrait = new PIXI.Sprite.fromFrame(image_name);
+    this.portrait = new Sprite.fromFrame(image_name);
 
     this.portrait.zIndex = -11;
     this.portrait.position.set(point.x - 800, point.y);
@@ -97,7 +97,7 @@ class Dialog {
   static speak_above_sprite(sprite, text) {
     if(sprite.pluginName !== 'sprite') throw new Error('Needs to be a Sprite');
 
-    const render_text = new PIXI.Text(text);
+    const render_text = new Text(text);
     render_text.x = sprite.x - 100;
     render_text.y = sprite.y - 80;
     render_text.alpha = 1;
@@ -113,7 +113,7 @@ class Dialog {
   }
 
   render_choice_two(x, y, text) {
-    const choice_text = new PIXI.Text(text, {
+    const choice_text = new Text(text, {
       fontFamily : 'Arial',
       fontSize: 30,
       fill : 0xC0C0C0,
@@ -125,7 +125,7 @@ class Dialog {
   }
 
   render_choice_one(x, y, text) {
-    const choice_text = new PIXI.Text(text, {
+    const choice_text = new Text(text, {
       fontFamily : 'Arial',
       fontSize: 30,
       fill : 0xC0C0C0,
@@ -137,7 +137,7 @@ class Dialog {
   }
 
   render_actor(x, y, text) {
-    const actor_text = new PIXI.Text(text, {
+    const actor_text = new Text(text, {
       fontFamily : 'Arial',
       fontSize: 30,
       fill : 0xC0C0C0,
@@ -150,7 +150,7 @@ class Dialog {
   }
 
   render_action(x, y, text) {
-    const button_text = new PIXI.Text(text, {
+    const button_text = new Text(text, {
       fontFamily : 'Arial',
       fontSize: 30,
       fill : 0x0000ff,
@@ -165,7 +165,7 @@ class Dialog {
   }
 
   render_text(x, y, text, font_size) {
-    const render_text = new PIXI.Text(text, {
+    const render_text = new Text(text, {
       fontFamily : 'Arial',
       fontSize: font_size || 35,
       fill : 0xffffff,

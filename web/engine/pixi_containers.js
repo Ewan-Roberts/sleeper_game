@@ -1,6 +1,6 @@
 'use strict';
-const PIXI = require('pixi.js');
-const { world } = require('./shadows');
+const { Container } = require('pixi.js');
+const { world     } = require('./shadows');
 
 const zIndex_layer = {
   background: 12,
@@ -18,59 +18,49 @@ const {
   very_close,
 } = zIndex_layer;
 
-const background_container = new PIXI.Container();
+const background_container = new Container();
 background_container.name = 'background_image';
 background_container.zIndex = background;
 
-const grid_container = new PIXI.Container();
+const grid_container = new Container();
 grid_container.name = 'grid_container';
 grid_container.zIndex = background;
 
-const collision_container = new PIXI.Container();
+const collision_container = new Container();
 collision_container.name = 'collision_items';
 collision_container.zIndex = low;
 
-const item_container = new PIXI.Container();
+const item_container = new Container();
 item_container.name = 'non_collision_items';
 item_container.zIndex = low;
 
-const enemy_container = new PIXI.Container();
+const enemy_container = new Container();
 enemy_container.name = 'enemy_container';
 enemy_container.zIndex = medium;
 
-const player_container = new PIXI.Container();
+const player_container = new Container();
 player_container.name = 'player_container';
 player_container.zIndex = medium;
 
-const shroud_container = new PIXI.Container();
+const shroud_container = new Container();
 shroud_container.name = 'shroud_container';
 shroud_container.zIndex = very_close;
 
-const visual_effects_container = new PIXI.Container();
+const visual_effects_container = new Container();
 visual_effects_container.name = 'visual_effects_container';
 visual_effects_container.zIndex = close;
 
-const pad_container = new PIXI.Container();
+const pad_container = new Container();
 pad_container.name = 'pad_container';
 pad_container.zIndex = close;
 
-const roof_container = new PIXI.Container();
+const roof_container = new Container();
 roof_container.name = 'roof_container';
 roof_container.zIndex = close;
 
-const gui_container = new PIXI.Container();
+const gui_container = new Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
-
-// const grid_particles = new PIXI.ParticleContainer(
-//   scale: true,
-//   position: true,
-//   rotation: true,
-//   uvs: true,
-//   alpha: true,
-// );
-// grid_particles.name = 'grid_particles';
-// grid_particles.zIndex = close;
 
 world.addChild(
   shroud_container,

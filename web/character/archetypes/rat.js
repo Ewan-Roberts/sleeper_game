@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Graphics, tween, tweenManager }= require('pixi.js');
 
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -66,7 +66,7 @@ class Rat extends Animal {
   }
 
   _show_path(path) {
-    const graphical_path = new PIXI.Graphics();
+    const graphical_path = new Graphics();
     graphical_path.lineStyle(3, 0xffffff, 0.5);
     graphical_path.drawPath(path);
 
@@ -97,7 +97,7 @@ class Rat extends Animal {
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
-    this.tween = PIXI.tweenManager.createTween(this.sprite);
+    this.tween = tweenManager.createTween(this.sprite);
     this.tween.time = 2000;
     this.tween.expire = true;
     this.tween.start();
@@ -115,7 +115,7 @@ class Rat extends Animal {
         return this.melee.attack(this.enemy);
       }
 
-      this.tween.path = new PIXI.tween.TweenPath();
+      this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
       if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {

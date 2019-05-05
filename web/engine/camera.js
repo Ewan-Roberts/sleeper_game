@@ -1,7 +1,6 @@
 'use strict';
 
 const { world } = require('./shadows');
-const { Tween } = require('./tween');
 
 class Camera {
   constructor() {

@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Graphics } = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
@@ -7,7 +7,7 @@ class Aiming_Line {
   constructor() {
     this.name = 'aiming_line';
 
-    this.line = new PIXI.Graphics();
+    this.line = new Graphics();
     this.line.lineStyle(0.1, 0xffffff);
   }
 

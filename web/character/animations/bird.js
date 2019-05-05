@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -7,69 +7,69 @@ class bird_animations {
   static move_frames() {
     const moving_frames = [];
 
-    moving_frames.push(PIXI.Texture.fromFrame('bird_0'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_6'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_0'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_6'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
 
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_0'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_0'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
 
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_6'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_0'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_6'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_0'));
 
     return moving_frames;
   }
 
   static wait_frames() {
     const waiting_frames = [
-      PIXI.Texture.fromFrame('bird_5'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_7'),
+      Texture.fromFrame('bird_5'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_7'),
     ];
 
     return waiting_frames;
   }
 
   static dead_frames() {
-    return [ PIXI.Texture.fromFrame('bird_8') ];
+    return [ Texture.fromFrame('bird_8') ];
   }
 }
 
@@ -83,7 +83,7 @@ class Bird {
   constructor(entity) {
     this.name = 'animation';
 
-    entity.sprite = new PIXI.extras.AnimatedSprite(frames.move);
+    entity.sprite = new extras.AnimatedSprite(frames.move);
 
     this.sprite = entity.sprite;
     this.sprite.width  /=2;

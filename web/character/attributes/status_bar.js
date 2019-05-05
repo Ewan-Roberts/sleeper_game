@@ -1,6 +1,6 @@
 'use strict';
 
-const PIXI = require('pixi.js');
+const { tweenManager } = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
 
 class Status {
@@ -13,7 +13,7 @@ class Status {
   }
 
   set_vitals_ticker() {
-    const vitals_timer = PIXI.tweenManager.createTween();
+    const vitals_timer = tweenManager.createTween();
     vitals_timer.time   = 5000;
     vitals_timer.expire = true;
     vitals_timer.repeat = 4;

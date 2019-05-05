@@ -1,10 +1,10 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, tweenManager } = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
 //TODO this needs to be abstracted
-const cone = PIXI.Sprite.fromFrame('yellow_triangle');
+const cone = new Sprite.fromFrame('yellow_triangle');
 cone.alpha = 0;
 cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
@@ -18,7 +18,7 @@ class Aiming_Cone {
     cone.width    = 600;
     cone.alpha    = 0;
 
-    const cone_timer  = PIXI.tweenManager.createTween(cone);
+    const cone_timer  = tweenManager.createTween(cone);
     cone_timer.repeat = 55;
     cone_timer.expire = true;
 

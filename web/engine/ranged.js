@@ -1,6 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
-
+const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
@@ -16,7 +15,7 @@ const players  = player_container.children;
 class Arrow {
   constructor() {
     this.name = 'arrow';
-    this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    this.sprite = new Sprite.fromFrame('arrow');
     this.sprite.width  /= 6;
     this.sprite.height /= 6;
     this.sprite.anchor.set(0.65);

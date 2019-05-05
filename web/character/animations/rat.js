@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -9,53 +9,53 @@ class rat_animations {
     const moving_frames = [];
 
     for (let i = 2; i < 15; i++) {
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
+      moving_frames.push(Texture.fromFrame(`rat_${i}`));
     }
 
     for (let i = 15; i > 1; i--) {
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
+      moving_frames.push(Texture.fromFrame(`rat_${i}`));
     }
 
-    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
+    moving_frames.push(Texture.fromFrame('rat_48'));
+    moving_frames.push(Texture.fromFrame('rat_49'));
+    moving_frames.push(Texture.fromFrame('rat_50'));
+    moving_frames.push(Texture.fromFrame('rat_49'));
+    moving_frames.push(Texture.fromFrame('rat_48'));
 
     return moving_frames;
   }
 
   static wait_frames() {
     const waiting_frames = [
-      PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_51'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_51'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
     ];
 
     return waiting_frames;
   }
 
   static dead_frames() {
-    return [ PIXI.Texture.fromFrame('rat_35') ];
+    return [ Texture.fromFrame('rat_35') ];
   }
 
   static eat_frames() {
     const eating_frames = [
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_41'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_41'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
     ];
 
     return eating_frames;
@@ -73,9 +73,9 @@ class Rodent {
   constructor(entity) {
     this.name = 'animation';
 
-    const texture = [PIXI.Texture.fromFrame('bunny')];
+    const texture = [Texture.fromFrame('bunny')];
     //TODO Finish migrating animation
-    entity.sprite = new PIXI.extras.AnimatedSprite(texture);
+    entity.sprite = new extras.AnimatedSprite(texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;

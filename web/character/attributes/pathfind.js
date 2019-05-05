@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, tweenManager } = require('pixi.js');
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');
 const { item_container } = require('../../engine/pixi_containers');
@@ -10,7 +10,7 @@ class Pathfind {
 
     this.sprite = sprite;
     //TODO create utils containter for level anshor points
-    this.anchor_sprite = new PIXI.Sprite.fromFrame('bunny');
+    this.anchor_sprite = new Sprite.fromFrame('bunny');
     this.anchor_sprite.alpha = 1;
 
     item_container.addChild(this.anchor_sprite);
@@ -31,7 +31,7 @@ class Pathfind {
   }
 
   stop() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
+    const tweens = tweenManager.getTweensForTarget(this.sprite);
 
     tweens.forEach(tween => tween.stop());
   }

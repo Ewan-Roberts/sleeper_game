@@ -1,11 +1,11 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { tweenManager } = require('pixi.js');
 
 //const tweening = PIXI.tweenManager.getTweensForTarget(sprite);
 //TODO this isnt really a mixin currently consider making it static
 class Fade {
   static in(sprite) {
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
 
@@ -16,7 +16,7 @@ class Fade {
   }
 
   static to(sprite, value) {
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
 
@@ -26,11 +26,10 @@ class Fade {
   }
 
   static out_destroy(sprite) {
-    const tweens = PIXI.tweenManager.getTweensForTarget(sprite);
+    const tweens = tweenManager.getTweensForTarget(sprite);
 
-    console.log(tweens);
     if(tweens.length > 0) return;
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 250;
     movement.expire = true;
     movement.from({alpha: sprite.alpha});
@@ -40,7 +39,7 @@ class Fade {
   }
 
   static out(sprite) {
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
 

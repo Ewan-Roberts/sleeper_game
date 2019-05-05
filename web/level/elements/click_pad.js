@@ -1,12 +1,12 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, Texture} = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
 
 const event = require('events');
 
 class Click_Pad {
   constructor(data) {
-    this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
+    this.area = new Sprite(Texture.WHITE);
     this.area.height = data.height;
     this.area.width  = data.width;
     this.area.alpha  = 0.2;

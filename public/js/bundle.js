@@ -45051,7 +45051,7 @@ module.exports.default = Loader;
 
 },{"./Loader":193,"./Resource":194,"./async":195,"./b64":196}],198:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -45059,69 +45059,69 @@ class bird_animations {
   static move_frames() {
     const moving_frames = [];
 
-    moving_frames.push(PIXI.Texture.fromFrame('bird_0'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_6'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_0'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_6'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
 
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_0'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_4'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_0'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_4'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
 
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_6'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_5'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_10'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_9'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_3'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_2'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_1'));
-    moving_frames.push(PIXI.Texture.fromFrame('bird_0'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_6'));
+    moving_frames.push(Texture.fromFrame('bird_5'));
+    moving_frames.push(Texture.fromFrame('bird_10'));
+    moving_frames.push(Texture.fromFrame('bird_9'));
+    moving_frames.push(Texture.fromFrame('bird_3'));
+    moving_frames.push(Texture.fromFrame('bird_2'));
+    moving_frames.push(Texture.fromFrame('bird_1'));
+    moving_frames.push(Texture.fromFrame('bird_0'));
 
     return moving_frames;
   }
 
   static wait_frames() {
     const waiting_frames = [
-      PIXI.Texture.fromFrame('bird_5'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_6'),
-      PIXI.Texture.fromFrame('bird_7'),
+      Texture.fromFrame('bird_5'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_6'),
+      Texture.fromFrame('bird_7'),
     ];
 
     return waiting_frames;
   }
 
   static dead_frames() {
-    return [ PIXI.Texture.fromFrame('bird_8') ];
+    return [ Texture.fromFrame('bird_8') ];
   }
 }
 
@@ -45135,7 +45135,7 @@ class Bird {
   constructor(entity) {
     this.name = 'animation';
 
-    entity.sprite = new PIXI.extras.AnimatedSprite(frames.move);
+    entity.sprite = new extras.AnimatedSprite(frames.move);
 
     this.sprite = entity.sprite;
     this.sprite.width  /=2;
@@ -45178,7 +45178,7 @@ module.exports = {
 
 },{"../../utils/math":282,"pixi.js":151}],199:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -45188,7 +45188,7 @@ class animation {
     for (let i = 0; i <= 36; i++) {
       const name = (i<10)?`Armature_nothing_idle_0${i}`:`Armature_nothing_idle_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45199,7 +45199,7 @@ class animation {
     for (let i = 0; i <= 48; i++) {
       const name = (i<10)?`Armature_nothing_walk_0${i}`:`Armature_nothing_walk_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45210,7 +45210,7 @@ class animation {
     for (let i = 0; i <= 36; i++) {
       const name = (i<10)?`Armature_candle_idle_0${i}`:`Armature_candle_idle_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45221,7 +45221,7 @@ class animation {
     for (let i = 0; i <= 19; i++) {
       const name = `survivor-move_knife_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45232,7 +45232,7 @@ class animation {
     for (let i = 0; i <= 19; i++) {
       const name = `survivor-move_knife_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45243,7 +45243,7 @@ class animation {
     for (let i = 0; i <= 14; i++) {
       const name = `survivor-meleeattack_knife_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45254,7 +45254,7 @@ class animation {
     for (let i = 0; i <= 20; i++) {
       const name = (i<10)?`survivor-walk_bow_0${i}`:`survivor-walk_bow_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45266,7 +45266,7 @@ class animation {
     for (let i = 0; i <= 21; i++) {
       const name = (i<10)?`survivor-bow-idle-0${i}`:`survivor-bow-idle-${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45277,7 +45277,7 @@ class animation {
     for (let i = 0; i <= 38; i++) {
       const name = (i<10)?`survivor-bow-pull-0${i}`:`survivor-bow-pull-${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45288,7 +45288,7 @@ class animation {
     for (let i = 0; i <= 48; i++) {
       const name = (i<10)?`Armature_candle_walk_0${i}`:`Armature_candle_walk_${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45302,7 +45302,7 @@ class Human {
     this.state  = 'bow';
     const idle_texture = animation.nothing_idle();
 
-    entity.sprite = new PIXI.extras.AnimatedSprite(idle_texture);
+    entity.sprite = new extras.AnimatedSprite(idle_texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.width  /= 6;
@@ -45407,7 +45407,7 @@ module.exports = {
 
 },{"../../utils/math":282,"pixi.js":151}],200:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -45417,53 +45417,53 @@ class rat_animations {
     const moving_frames = [];
 
     for (let i = 2; i < 15; i++) {
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
+      moving_frames.push(Texture.fromFrame(`rat_${i}`));
     }
 
     for (let i = 15; i > 1; i--) {
-      moving_frames.push(PIXI.Texture.fromFrame(`rat_${i}`));
+      moving_frames.push(Texture.fromFrame(`rat_${i}`));
     }
 
-    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_50'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_49'));
-    moving_frames.push(PIXI.Texture.fromFrame('rat_48'));
+    moving_frames.push(Texture.fromFrame('rat_48'));
+    moving_frames.push(Texture.fromFrame('rat_49'));
+    moving_frames.push(Texture.fromFrame('rat_50'));
+    moving_frames.push(Texture.fromFrame('rat_49'));
+    moving_frames.push(Texture.fromFrame('rat_48'));
 
     return moving_frames;
   }
 
   static wait_frames() {
     const waiting_frames = [
-      PIXI.Texture.fromFrame('rat_36'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_51'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_51'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
     ];
 
     return waiting_frames;
   }
 
   static dead_frames() {
-    return [ PIXI.Texture.fromFrame('rat_35') ];
+    return [ Texture.fromFrame('rat_35') ];
   }
 
   static eat_frames() {
     const eating_frames = [
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_41'),
-      PIXI.Texture.fromFrame('rat_40'),
-      PIXI.Texture.fromFrame('rat_39'),
-      PIXI.Texture.fromFrame('rat_38'),
-      PIXI.Texture.fromFrame('rat_37'),
-      PIXI.Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_41'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
     ];
 
     return eating_frames;
@@ -45481,9 +45481,9 @@ class Rodent {
   constructor(entity) {
     this.name = 'animation';
 
-    const texture = [PIXI.Texture.fromFrame('bunny')];
+    const texture = [Texture.fromFrame('bunny')];
     //TODO Finish migrating animation
-    entity.sprite = new PIXI.extras.AnimatedSprite(texture);
+    entity.sprite = new extras.AnimatedSprite(texture);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;
@@ -45522,10 +45522,9 @@ module.exports = {
 
 },{"../../utils/math":282,"pixi.js":151}],201:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
-
 
 class zombie_animations {
   static move_frames() {
@@ -45533,7 +45532,7 @@ class zombie_animations {
     for (let i = 0; i <= 31; i++) {
       const name = (i<10)?`walk000${i}`:`walk00${i}`;
 
-      frames.push(PIXI.Texture.fromFrame(name));
+      frames.push(Texture.fromFrame(name));
     }
 
     return frames;
@@ -45549,7 +45548,7 @@ class Zombie {
   constructor(entity) {
     this.name = 'animation';
 
-    entity.sprite = new PIXI.extras.AnimatedSprite(frames.move);
+    entity.sprite = new extras.AnimatedSprite(frames.move);
 
     this.sprite = entity.sprite;
     this.sprite.width  /=2;
@@ -45635,7 +45634,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/bird":198,"../character_model":214}],203:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Graphics, tween, tweenManager }= require('pixi.js');
 
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -45702,7 +45701,7 @@ class Rat extends Animal {
   }
 
   _show_path(path) {
-    const graphical_path = new PIXI.Graphics();
+    const graphical_path = new Graphics();
     graphical_path.lineStyle(3, 0xffffff, 0.5);
     graphical_path.drawPath(path);
 
@@ -45733,7 +45732,7 @@ class Rat extends Animal {
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
-    this.tween = PIXI.tweenManager.createTween(this.sprite);
+    this.tween = tweenManager.createTween(this.sprite);
     this.tween.time = 2000;
     this.tween.expire = true;
     this.tween.start();
@@ -45751,7 +45750,7 @@ class Rat extends Animal {
         return this.melee.attack(this.enemy);
       }
 
-      this.tween.path = new PIXI.tween.TweenPath();
+      this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
       if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {
@@ -46183,7 +46182,7 @@ module.exports = {
 
 },{"../../effects/fade":220,"../../items/item_manager":237,"../../view/button":284,"../../view/view_inventory":287}],209:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite } = require('pixi.js');
 
 const { melee_attack } = require('../../engine/melee');
 const { visual_effects_container } = require('../../engine/pixi_containers');
@@ -46208,7 +46207,7 @@ class Melee {
   }
 
   create_hit_box() {
-    this.box = new PIXI.Sprite.fromFrame('black_dot');
+    this.box = new Sprite.fromFrame('black_dot');
     this.box.width = 50;
     this.box.height= 300;
     this.box.anchor.y = 1;
@@ -46242,7 +46241,7 @@ module.exports = {
 
 },{"../../engine/melee":226,"../../engine/pixi_containers":229,"pixi.js":151}],210:[function(require,module,exports){
 'use strict';
-const app = require('../../engine/app');
+const { screen } = require('../../engine/app');
 //const { visual_effects_container } = require('../../engine/pixi_containers');
 
 const { shoot_arrow } = require('../../engine/ranged');
@@ -46253,8 +46252,8 @@ const { radian      } = require('../../utils/math');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
-    x: (mouse_point.x - app.screen.width/2)  + sprite.x,
-    y: (mouse_point.y - app.screen.height/2) + sprite.y,
+    x: (mouse_point.x - screen.width/2)  + sprite.x,
+    y: (mouse_point.y - screen.height/2) + sprite.y,
   };
 }
 
@@ -46309,7 +46308,7 @@ module.exports = {
 
 },{"../../effects/aiming_cone":218,"../../engine/app":221,"../../engine/ranged":230,"../../utils/math":282}],211:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, tweenManager } = require('pixi.js');
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');
 const { item_container } = require('../../engine/pixi_containers');
@@ -46320,7 +46319,7 @@ class Pathfind {
 
     this.sprite = sprite;
     //TODO create utils containter for level anshor points
-    this.anchor_sprite = new PIXI.Sprite.fromFrame('bunny');
+    this.anchor_sprite = new Sprite.fromFrame('bunny');
     this.anchor_sprite.alpha = 1;
 
     item_container.addChild(this.anchor_sprite);
@@ -46341,7 +46340,7 @@ class Pathfind {
   }
 
   stop() {
-    const tweens = PIXI.tweenManager.getTweensForTarget(this.sprite);
+    const tweens = tweenManager.getTweensForTarget(this.sprite);
 
     tweens.forEach(tween => tween.stop());
   }
@@ -46354,7 +46353,7 @@ module.exports = {
 },{"../../engine/pathfind.js":228,"../../engine/pixi_containers":229,"pixi.js":151}],212:[function(require,module,exports){
 'use strict';
 
-const PIXI = require('pixi.js');
+const { tweenManager } = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
 
 class Status {
@@ -46367,7 +46366,7 @@ class Status {
   }
 
   set_vitals_ticker() {
-    const vitals_timer = PIXI.tweenManager.createTween();
+    const vitals_timer = tweenManager.createTween();
     vitals_timer.time   = 5000;
     vitals_timer.expire = true;
     vitals_timer.repeat = 4;
@@ -46391,7 +46390,7 @@ module.exports = {
 },{"../../view/view_player_status_meter":289,"pixi.js":151}],213:[function(require,module,exports){
 'use strict';
 
-const { Blood  } = require('../../effects/blood');
+const { Blood } = require('../../effects/blood');
 
 class Vitals {
   constructor({ sprite }) {
@@ -46589,12 +46588,12 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"../animations/rat":200,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/vitals":213,"../character_model":214}],218:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, tweenManager } = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
 //TODO this needs to be abstracted
-const cone = PIXI.Sprite.fromFrame('yellow_triangle');
+const cone = new Sprite.fromFrame('yellow_triangle');
 cone.alpha = 0;
 cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
@@ -46608,7 +46607,7 @@ class Aiming_Cone {
     cone.width    = 600;
     cone.alpha    = 0;
 
-    const cone_timer  = PIXI.tweenManager.createTween(cone);
+    const cone_timer  = tweenManager.createTween(cone);
     cone_timer.repeat = 55;
     cone_timer.expire = true;
 
@@ -46633,13 +46632,13 @@ module.exports = {
 
 },{"../engine/pixi_containers":229,"pixi.js":151}],219:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite } = require('pixi.js');
 
 const { visual_effects_container } = require('../engine/pixi_containers');
 
 class Blood {
   add_at(point) {
-    const blood_splatter = PIXI.Sprite.fromFrame('round_floor_stain');
+    const blood_splatter = new Sprite.fromFrame('round_floor_stain');
     blood_splatter.anchor.set(0.5);
     blood_splatter.alpha = 0.3;
     blood_splatter.position.set(point.x, point.y);
@@ -46654,13 +46653,13 @@ module.exports = {
 
 },{"../engine/pixi_containers":229,"pixi.js":151}],220:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { tweenManager } = require('pixi.js');
 
 //const tweening = PIXI.tweenManager.getTweensForTarget(sprite);
 //TODO this isnt really a mixin currently consider making it static
 class Fade {
   static in(sprite) {
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
 
@@ -46671,7 +46670,7 @@ class Fade {
   }
 
   static to(sprite, value) {
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
 
@@ -46681,11 +46680,10 @@ class Fade {
   }
 
   static out_destroy(sprite) {
-    const tweens = PIXI.tweenManager.getTweensForTarget(sprite);
+    const tweens = tweenManager.getTweensForTarget(sprite);
 
-    console.log(tweens);
     if(tweens.length > 0) return;
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 250;
     movement.expire = true;
     movement.from({alpha: sprite.alpha});
@@ -46695,7 +46693,7 @@ class Fade {
   }
 
   static out(sprite) {
-    const movement = PIXI.tweenManager.createTween(sprite);
+    const movement = tweenManager.createTween(sprite);
     movement.time = 150;
     movement.expire = true;
 
@@ -46714,15 +46712,15 @@ module.exports = {
 },{"pixi.js":151}],221:[function(require,module,exports){
 (function (global){
 'use strict';
-const PIXI = require('pixi.js');
+const { settings, Application } = require('pixi.js');
 
-PIXI.settings.ROUND_PIXELS = true;
-PIXI.settings.RENDER_OPTIONS.roundPixels = true;
+settings.ROUND_PIXELS = true;
+settings.RENDER_OPTIONS.roundPixels = true;
 //PIXI.settings.RESOLUTION = 0.5;
 //PIXI.settings.TARGET_FPMS = 0.03;
 //PIXI.settings.UPLOADS_PER_FRAME = 1;
 
-const app = new PIXI.Application({
+const app = new Application({
   width           : global.window.innerWidth,
   height          : global.window.innerHeight,
   powerPreference : 'low-performance',
@@ -46778,7 +46776,6 @@ module.exports = {
 'use strict';
 
 const { world } = require('./shadows');
-const { Tween } = require('./tween');
 
 class Camera {
   constructor() {
@@ -46812,7 +46809,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./shadows":231,"./tween":234}],224:[function(require,module,exports){
+},{"./shadows":231}],224:[function(require,module,exports){
 'use strict';
 const event = require('events');
 
@@ -46994,8 +46991,8 @@ module.exports = {
 
 },{"../utils/grid":280,"./pixi_containers":229,"./tween":234,"easystarjs":3,"pixi.js":151}],229:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
-const { world } = require('./shadows');
+const { Container } = require('pixi.js');
+const { world     } = require('./shadows');
 
 const zIndex_layer = {
   background: 12,
@@ -47013,59 +47010,49 @@ const {
   very_close,
 } = zIndex_layer;
 
-const background_container = new PIXI.Container();
+const background_container = new Container();
 background_container.name = 'background_image';
 background_container.zIndex = background;
 
-const grid_container = new PIXI.Container();
+const grid_container = new Container();
 grid_container.name = 'grid_container';
 grid_container.zIndex = background;
 
-const collision_container = new PIXI.Container();
+const collision_container = new Container();
 collision_container.name = 'collision_items';
 collision_container.zIndex = low;
 
-const item_container = new PIXI.Container();
+const item_container = new Container();
 item_container.name = 'non_collision_items';
 item_container.zIndex = low;
 
-const enemy_container = new PIXI.Container();
+const enemy_container = new Container();
 enemy_container.name = 'enemy_container';
 enemy_container.zIndex = medium;
 
-const player_container = new PIXI.Container();
+const player_container = new Container();
 player_container.name = 'player_container';
 player_container.zIndex = medium;
 
-const shroud_container = new PIXI.Container();
+const shroud_container = new Container();
 shroud_container.name = 'shroud_container';
 shroud_container.zIndex = very_close;
 
-const visual_effects_container = new PIXI.Container();
+const visual_effects_container = new Container();
 visual_effects_container.name = 'visual_effects_container';
 visual_effects_container.zIndex = close;
 
-const pad_container = new PIXI.Container();
+const pad_container = new Container();
 pad_container.name = 'pad_container';
 pad_container.zIndex = close;
 
-const roof_container = new PIXI.Container();
+const roof_container = new Container();
 roof_container.name = 'roof_container';
 roof_container.zIndex = close;
 
-const gui_container = new PIXI.Container();
+const gui_container = new Container();
 gui_container.name = 'gui_container';
 gui_container.zIndex = very_close;
-
-// const grid_particles = new PIXI.ParticleContainer(
-//   scale: true,
-//   position: true,
-//   rotation: true,
-//   uvs: true,
-//   alpha: true,
-// );
-// grid_particles.name = 'grid_particles';
-// grid_particles.zIndex = close;
 
 world.addChild(
   shroud_container,
@@ -47122,8 +47109,7 @@ module.exports = {
 
 },{"./shadows":231,"pixi.js":151}],230:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
-
+const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
@@ -47139,7 +47125,7 @@ const players  = player_container.children;
 class Arrow {
   constructor() {
     this.name = 'arrow';
-    this.sprite = new PIXI.Sprite.fromFrame('arrow');
+    this.sprite = new Sprite.fromFrame('arrow');
     this.sprite.width  /= 6;
     this.sprite.height /= 6;
     this.sprite.anchor.set(0.65);
@@ -47228,10 +47214,10 @@ module.exports = {
 
 },{"./app":221,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],232:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
 require('pixi-sound');
+const { sound } = require('pixi.js');
 
-const Sound = PIXI.sound.add({
+const Sound = sound.add({
   arrow_hit_00:   'audio/arrow_hit_00.wav',
   lighter_strike: 'audio/lighter.wav',
   rain_noise:     'audio/light_rain.wav',
@@ -47248,17 +47234,17 @@ module.exports = Sound;
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
-const app  = require('./app');
+const { ticker }  = require('./app');
 global.window.PIXI.default = PIXI;
 
 require('pixi-tween');
 require('pixi-keyboard');
 
 // 60/30 for 30 fps
-const fpsDelta = 60/60;
+const fpsDelta = 60/55;
 
 let elapsedTime = 0;
-app.ticker.add(delta => {
+ticker.add(delta => {
   elapsedTime += delta;
 
   if(elapsedTime >= fpsDelta) {
@@ -47273,7 +47259,7 @@ app.ticker.add(delta => {
 },{"./app":221,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],234:[function(require,module,exports){
 'use strict';
 require('./ticker');
-const PIXI = require('pixi.js');
+const { tween, tweenManager, Graphics} = require('pixi.js');
 const { gui_container } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
 
@@ -47283,9 +47269,9 @@ class Tween {
     this.sprite   = sprite;
 
     this.time = 2000;
-    this.movement = PIXI.tweenManager.createTween(this.sprite);
+    this.movement = tweenManager.createTween(this.sprite);
     this.movement.expire = true;
-    this.path = new PIXI.tween.TweenPath();
+    this.path = new tween.TweenPath();
     this.path_arc = 15;
   }
 
@@ -47307,7 +47293,7 @@ class Tween {
   }
 
   smooth() {
-    this.movement.easing = PIXI.tween.Easing.inOutQuad();
+    this.movement.easing = tween.Easing.inOutQuad();
   }
 
   set path_smoothness(value) {
@@ -47315,7 +47301,7 @@ class Tween {
   }
 
   add_path(tween_path) {
-    this.path = new PIXI.tween.TweenPath();
+    this.path = new tween.TweenPath();
     for (let i = 1; i < tween_path.length; i++) {
       this.path.arcTo(
         tween_path[i-1].x,
@@ -47327,7 +47313,7 @@ class Tween {
   }
 
   add_random_path(tween_path) {
-    this.path = new PIXI.tween.TweenPath();
+    this.path = new tween.TweenPath();
 
     const random = () => random_number(-20, 20);
 
@@ -47351,7 +47337,6 @@ class Tween {
 
   start() {
     if(this.path && this.path.currentPath) {
-      console.log(this.path);
       this.movement.path = this.path;
     }
 
@@ -47361,7 +47346,7 @@ class Tween {
   }
 
   chain() {
-    const chain_tween = PIXI.tweenManager.createTween(this.sprite);
+    const chain_tween = tweenManager.createTween(this.sprite);
     chain_tween.path = this.path;
 
     this.movement.chain(chain_tween);
@@ -47369,7 +47354,7 @@ class Tween {
   }
 
   draw_path() {
-    const graphical_path = new PIXI.Graphics();
+    const graphical_path = new Graphics();
     graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
 
@@ -47387,10 +47372,8 @@ require('./utils/globals');
 
 const { loader } = require('./engine/packer');
 loader.add('../../images/bedroom_EN_web.json');
-loader.on('progress', (p) => console.log('progress', p.progress));
 loader.load(() => {
   const { Level_Loader } = require('./engine/boot_loader.js');
-
 
   Level_Loader.boot();
 });
@@ -47740,9 +47723,9 @@ module.exports = {
 
 },{}],237:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite } = require('pixi.js');
 
-const app               = require('../engine/app');
+const { renderer }      = require('../engine/app');
 const { random_number } = require('../utils/math');
 const { items         } = require('./data/item_data');
 
@@ -47759,9 +47742,7 @@ class Item_Manager {
   }
 
   static get_item(name) {
-    let found_item = items.find(item => item.name === name);
-
-    if(!found_item) found_item = items.find(item => item.item_name === name);
+    const found_item = items.find(item => (item.name === name || item.image_name === name));
 
     if(!found_item) throw new Error('No item found for ' + JSON.stringify( name ));
 
@@ -47794,16 +47775,16 @@ class Item_Manager {
 
     if(!image_name) throw new Error('Can not find ' + name);
 
-    const found_sprite = PIXI.Sprite.fromFrame(image_name);
-    const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+    const found_sprite = new Sprite.fromFrame(image_name);
+    const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;
   }
 
   static extract_image_by_item_object(item) {
-    const found_sprite = PIXI.Sprite.fromFrame(item.image_name);
+    const found_sprite = new Sprite.fromFrame(item.image_name);
 
-    const image_from_spritesheet = app.renderer.plugins.extract.image(found_sprite);
+    const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
 
     return image_from_spritesheet;
   }
@@ -57213,9 +57194,7 @@ class Chest extends Item {
     this.name = 'chest';
 
     if(options.type === 'note') {
-      this.click = () => {
-        new Note(options.properties);
-      };
+      this.click = () => new Note(options.properties);
     }
 
     if(options.properties.label) {
@@ -57302,14 +57281,14 @@ module.exports = {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../character/attributes/lootable":208,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":286,"./item_model":255}],252:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { Sprite, Texture} = require('pixi.js');
 const { pad_container } = require('../../engine/pixi_containers');
 
 const event = require('events');
 
 class Click_Pad {
   constructor(data) {
-    this.area = new PIXI.Sprite(PIXI.Texture.WHITE);
+    this.area = new Sprite(Texture.WHITE);
     this.area.height = data.height;
     this.area.width  = data.width;
     this.area.alpha  = 0.2;
@@ -57397,9 +57376,6 @@ class Door extends Item {
     }
 
     if(options.properties.clickable) {
-      // this.shadow = true;
-      // this.shade.anchor.y = 1;
-      // this.shade.anchor.x = 0;
       this.sprite_tween = new Tween(this.sprite);
       this.click = () => {
         const current_rotation = this.sprite.rotation;
@@ -58133,7 +58109,7 @@ class Level_Factory {
     try {
       camera.set_center(player[0]);
 
-      background.forEach(elem => new Background(elem, true));
+      background.forEach(data => new Background(data, true));
       floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
       walls.forEach(data => {
@@ -58149,7 +58125,7 @@ class Level_Factory {
       lights.forEach(data => new Bright_Light(data));
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -59274,7 +59250,6 @@ class Caption_Dialog {
   }
 
   render_text(text) {
-    console.log(text);
     const sentence_array = this.split_sentence_string(text);
 
     this.create_text_timeout(sentence_array);
@@ -59364,9 +59339,7 @@ class Note {
     });
 
     gui_container.addChild(this.sprite, level_text, black_background);
-    this.sprite.click = () => {
-      console.log(options);
-    };
+    this.sprite.click = () => console.log(options);
   }
 
 }
