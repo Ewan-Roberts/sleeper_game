@@ -1,6 +1,5 @@
 'use strict';
-const { Sprite } = require('pixi.js');
-
+const { Sprite  } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
 
 class Blood {

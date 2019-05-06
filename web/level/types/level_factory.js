@@ -57,6 +57,7 @@ class Level_Factory {
     try {
       camera.set_center(player[0]);
 
+      shroud.forEach(data => new Shroud(data));
       background.forEach(data => new Background(data, true));
       floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
@@ -68,9 +69,8 @@ class Level_Factory {
       collision.forEach(data => new CollisionItem(data));
       item.forEach(data => new Chest(data));
       door.forEach(data => new Door(data));
-      shroud.forEach(data => new Shroud(data));
-      roof.forEach(data => new Roof(data));
       lights.forEach(data => new Bright_Light(data));
+      roof.forEach(data => new Roof(data));
 
     } catch (error) {
       console.error(error);

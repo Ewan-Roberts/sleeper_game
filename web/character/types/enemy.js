@@ -1,14 +1,13 @@
 'use strict';
 
-const { enemys } = require('../../engine/pixi_containers');
+const { enemys    } = require('../../engine/pixi_containers');
 
-const { Character  } = require('../character_model');
-const { Human      } = require('../animations/human');
-
-const { Inventory  } = require('../attributes/inventory');
-const { Vitals     } = require('../attributes/vitals');
-const { Lootable   } = require('../attributes/lootable');
-const { Pathfind   } = require('../attributes/pathfind');
+const { Character } = require('../character_model');
+const { Human     } = require('../animations/human');
+const { Inventory } = require('../attributes/inventory');
+const { Vitals    } = require('../attributes/vitals');
+const { Lootable  } = require('../attributes/lootable');
+const { Pathfind  } = require('../attributes/pathfind');
 
 class Enemy extends Character {
   constructor() {

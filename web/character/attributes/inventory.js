@@ -1,5 +1,4 @@
 'use strict';
-
 const { Item_Manager } = require('../../items/item_manager');
 
 class Inventory {

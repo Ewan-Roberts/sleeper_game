@@ -1,6 +1,5 @@
 'use strict';
-
-const { pathfind_sprite } = require('../../engine/pathfind.js');
+const { pathfind } = require('../../engine/pathfind.js');
 
 class Scavenge {
   constructor({ sprite, pathfind, tween, loot }) {
@@ -28,7 +27,7 @@ class Scavenge {
     this.target_item = first;
 
     try {
-      this.path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
+      this.path = await pathfind.get_sprite_to_sprite_path(this.sprite, first.sprite);
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +52,7 @@ class Scavenge {
 
     const { first } = this.pool;
 
-    const path_to_item = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, first.sprite);
+    const path_to_item = await pathfind.get_sprite_to_sprite_path(this.sprite, first.sprite);
     this.tween.path_smoothness = 100;
     this.tween.add_path(path_to_item);
     this.tween.time = 3000;

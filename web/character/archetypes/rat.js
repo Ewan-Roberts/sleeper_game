@@ -1,17 +1,22 @@
 'use strict';
+const { collisions, guis } = require('../../engine/pixi_containers');
+
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
-const { collisions, guis} = require('../../engine/pixi_containers');
 
-const event      = require('events');
-const { Animal } = require('../types/rat');
-const { Melee  } = require('../attributes/melee');
-const { pathfind_sprite } = require('../../engine/pathfind');
+const { Animal   } = require('../types/rat');
+const { Melee    } = require('../attributes/melee');
+const { pathfind } = require('../../engine/pathfind');
+const event        = require('events');
 //const { Tween  } = require('../../engine/tween');
 
+
+// truncanting
+//arr.length = 3;
+//console.log(arr); //=> [11, 22, 33]
 function break_at_door(path) {
   const arr = [];
 
@@ -74,7 +79,7 @@ class Rat extends Animal {
   }
 
   async _pathfind() {
-    const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 

@@ -1,8 +1,8 @@
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 
-const { pathfind_sprite } = require('../../engine/pathfind.js');
-const { items } = require('../../engine/pixi_containers');
+const { pathfind } = require('../../engine/pathfind.js');
+const { items    } = require('../../engine/pixi_containers');
 
 class Pathfind {
   constructor(sprite) {
@@ -17,17 +17,17 @@ class Pathfind {
   }
 
   go_to_sprite(sprite) {
-    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, sprite);
+    pathfind.move_sprite_to_sprite_on_grid(this.sprite, sprite);
   }
 
   go_to_point(point) {
     this.anchor_sprite.position.copy(point);
 
-    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, this.anchor_sprite);
+    pathfind.move_sprite_to_sprite_on_grid(this.sprite, this.anchor_sprite);
   }
 
   hightlight_grid_around() {
-    pathfind_sprite.grid_around_sprite(this.sprite);
+    pathfind.grid_around_sprite(this.sprite);
   }
 
   stop() {

@@ -1,6 +1,5 @@
 
 'use strict';
-
 const { Candle } = require('../../light/types/candle');
 
 class Light {

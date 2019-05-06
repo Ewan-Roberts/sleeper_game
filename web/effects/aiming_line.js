@@ -1,7 +1,6 @@
 'use strict';
 const { Graphics } = require('pixi.js');
-
-const { visuals } = require('../engine/pixi_containers');
+const { visuals  } = require('../engine/pixi_containers');
 
 class Aiming_Line {
   constructor() {

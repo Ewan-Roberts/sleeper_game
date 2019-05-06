@@ -1,6 +1,5 @@
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
-
 const { visuals } = require('../engine/pixi_containers');
 
 //TODO this needs to be abstracted

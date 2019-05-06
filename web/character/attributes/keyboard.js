@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const { tweenManager, keyboardManager} = require('pixi.js');
 
 const {
   collisions,
@@ -30,7 +30,7 @@ function point_contains(position) {
   return;
   const roof = roofs.children ;
   roof.forEach(child => {
-    const tweening = PIXI.tweenManager.getTweensForTarget(child);
+    const tweening = tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
       Fade.to(child, child.fade_opacity | 0.6);
@@ -56,13 +56,13 @@ class Keyboard {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
-    this.speed         = vitals.speed/2;
+    this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
     this.light         = light;
 
-    PIXI.keyboardManager.on('down', key => this.key_down(key));
-    PIXI.keyboardManager.on('released', () => this.key_up());
+    keyboardManager.on('down', key => this.key_down(key));
+    keyboardManager.on('released', () => this.key_up());
   }
 
   //TODO
@@ -70,7 +70,7 @@ class Keyboard {
   }
 
   key_down(key) {
-    if(!PIXI.keyboardManager.isEnabled) return;
+    if(!keyboardManager.isEnabled) return;
 
     switch(key) {
       // wasd
@@ -84,7 +84,7 @@ class Keyboard {
       case  72     : this.keyboard_left();        return;// h
       case  76     : this.keyboard_right();       return;// l
 
-      case  81     : this.speed = 20;             return;// q for speed
+      case  81     : this.speed *= 2;             return;// q for speed
       case 'n'     : this.save_game();            return;
       case 'i'     : View_HUD.toggle_inventory(); return;
       default      : return;
@@ -96,11 +96,11 @@ class Keyboard {
   }
 
   enable() {
-    PIXI.keyboardManager.enable();
+    keyboardManager.enable();
   }
 
   disable() {
-    PIXI.keyboardManager.disable();
+    keyboardManager.disable();
   }
 
   keyboard_up() {

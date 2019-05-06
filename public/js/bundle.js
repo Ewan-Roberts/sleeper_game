@@ -45592,7 +45592,6 @@ module.exports = {
 
 },{"../../utils/math":282,"pixi.js":151}],202:[function(require,module,exports){
 'use strict';
-
 const { enemys } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
@@ -45634,19 +45633,24 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/bird":198,"../character_model":214}],203:[function(require,module,exports){
 'use strict';
+const { collisions, guis } = require('../../engine/pixi_containers');
+
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
-const { collisions, guis} = require('../../engine/pixi_containers');
 
-const event      = require('events');
-const { Animal } = require('../types/rat');
-const { Melee  } = require('../attributes/melee');
-const { pathfind_sprite } = require('../../engine/pathfind');
+const { Animal   } = require('../types/rat');
+const { Melee    } = require('../attributes/melee');
+const { pathfind } = require('../../engine/pathfind');
+const event        = require('events');
 //const { Tween  } = require('../../engine/tween');
 
+
+// truncanting
+//arr.length = 3;
+//console.log(arr); //=> [11, 22, 33]
 function break_at_door(path) {
   const arr = [];
 
@@ -45709,7 +45713,7 @@ class Rat extends Animal {
   }
 
   async _pathfind() {
-    const normal_path = await pathfind_sprite.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 
@@ -45776,8 +45780,7 @@ module.exports = {
 
 },{"../../engine/damage_handler":224,"../../engine/pathfind":228,"../../engine/pixi_containers":229,"../../utils/line_of_sight":281,"../../utils/math":282,"../attributes/melee":209,"../types/rat":217,"events":290,"pixi.js":151}],204:[function(require,module,exports){
 'use strict';
-
-const { enemys } = require('../../engine/pixi_containers');
+const { enemys    } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
@@ -45817,7 +45820,6 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/zombie":201,"../character_model":214}],205:[function(require,module,exports){
 'use strict';
-
 const { Item_Manager } = require('../../items/item_manager');
 
 class Inventory {
@@ -45900,7 +45902,7 @@ module.exports = {
 
 },{"../../items/item_manager":237}],206:[function(require,module,exports){
 'use strict';
-const PIXI = require('pixi.js');
+const { tweenManager, keyboardManager} = require('pixi.js');
 
 const {
   collisions,
@@ -45931,7 +45933,7 @@ function point_contains(position) {
   return;
   const roof = roofs.children ;
   roof.forEach(child => {
-    const tweening = PIXI.tweenManager.getTweensForTarget(child);
+    const tweening = tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
       Fade.to(child, child.fade_opacity | 0.6);
@@ -45957,13 +45959,13 @@ class Keyboard {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
-    this.speed         = vitals.speed/2;
+    this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
     this.light         = light;
 
-    PIXI.keyboardManager.on('down', key => this.key_down(key));
-    PIXI.keyboardManager.on('released', () => this.key_up());
+    keyboardManager.on('down', key => this.key_down(key));
+    keyboardManager.on('released', () => this.key_up());
   }
 
   //TODO
@@ -45971,7 +45973,7 @@ class Keyboard {
   }
 
   key_down(key) {
-    if(!PIXI.keyboardManager.isEnabled) return;
+    if(!keyboardManager.isEnabled) return;
 
     switch(key) {
       // wasd
@@ -45985,7 +45987,7 @@ class Keyboard {
       case  72     : this.keyboard_left();        return;// h
       case  76     : this.keyboard_right();       return;// l
 
-      case  81     : this.speed = 20;             return;// q for speed
+      case  81     : this.speed *= 2;             return;// q for speed
       case 'n'     : this.save_game();            return;
       case 'i'     : View_HUD.toggle_inventory(); return;
       default      : return;
@@ -45997,11 +45999,11 @@ class Keyboard {
   }
 
   enable() {
-    PIXI.keyboardManager.enable();
+    keyboardManager.enable();
   }
 
   disable() {
-    PIXI.keyboardManager.disable();
+    keyboardManager.disable();
   }
 
   keyboard_up() {
@@ -46080,7 +46082,6 @@ module.exports = {
 },{"../../effects/fade":220,"../../engine/pixi_containers":229,"../../engine/shadows":231,"../../view/view_player_inventory":288,"pixi.js":151}],207:[function(require,module,exports){
 
 'use strict';
-
 const { Candle } = require('../../light/types/candle');
 
 class Light {
@@ -46183,9 +46184,8 @@ module.exports = {
 },{"../../effects/fade":220,"../../items/item_manager":237,"../../view/button":284,"../../view/view_inventory":287}],209:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
-
 const { melee_attack } = require('../../engine/melee');
-const { visuals } = require('../../engine/pixi_containers');
+const { visuals      } = require('../../engine/pixi_containers');
 
 class Melee {
   constructor({ inventory, animation, sprite }) {
@@ -46241,9 +46241,9 @@ module.exports = {
 
 },{"../../engine/melee":226,"../../engine/pixi_containers":229,"pixi.js":151}],210:[function(require,module,exports){
 'use strict';
-const { screen } = require('../../engine/app');
 //const { visuals } = require('../../engine/pixi_containers');
 
+const { screen      } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
@@ -46310,8 +46310,8 @@ module.exports = {
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 
-const { pathfind_sprite } = require('../../engine/pathfind.js');
-const { items } = require('../../engine/pixi_containers');
+const { pathfind } = require('../../engine/pathfind.js');
+const { items    } = require('../../engine/pixi_containers');
 
 class Pathfind {
   constructor(sprite) {
@@ -46326,17 +46326,17 @@ class Pathfind {
   }
 
   go_to_sprite(sprite) {
-    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, sprite);
+    pathfind.move_sprite_to_sprite_on_grid(this.sprite, sprite);
   }
 
   go_to_point(point) {
     this.anchor_sprite.position.copy(point);
 
-    pathfind_sprite.move_sprite_to_sprite_on_grid(this.sprite, this.anchor_sprite);
+    pathfind.move_sprite_to_sprite_on_grid(this.sprite, this.anchor_sprite);
   }
 
   hightlight_grid_around() {
-    pathfind_sprite.grid_around_sprite(this.sprite);
+    pathfind.grid_around_sprite(this.sprite);
   }
 
   stop() {
@@ -46352,7 +46352,6 @@ module.exports = {
 
 },{"../../engine/pathfind.js":228,"../../engine/pixi_containers":229,"pixi.js":151}],212:[function(require,module,exports){
 'use strict';
-
 const { tweenManager } = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
 
@@ -46389,7 +46388,6 @@ module.exports = {
 
 },{"../../view/view_player_status_meter":289,"pixi.js":151}],213:[function(require,module,exports){
 'use strict';
-
 const { Blood } = require('../../effects/blood');
 
 class Vitals {
@@ -46468,7 +46466,7 @@ module.exports = {
 },{}],215:[function(require,module,exports){
 'use strict';
 
-const { visuals } = require('../../engine/pixi_containers');
+const { visuals   } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');
@@ -46495,13 +46493,11 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/pathfind":211,"../character_model":214}],216:[function(require,module,exports){
 'use strict';
 
-const { players } = require('../../engine/pixi_containers');
-const { PlayerEvents     } = require('../../engine/item_handler');
+const { players      } = require('../../engine/pixi_containers');
+const { PlayerEvents } = require('../../engine/item_handler');
 
 const { Character } = require('../character_model');
 const { Human     } = require('../animations/human');
-
-const event        = require('events');
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');
 const { Inventory } = require('../attributes/inventory');
@@ -46510,6 +46506,7 @@ const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
 const { Blood     } = require('../../effects/blood');
+const event        = require('events');
 
 class Player extends Character {
   constructor() {
@@ -46557,8 +46554,7 @@ module.exports = {
 
 },{"../../effects/blood":219,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":212,"../attributes/vitals":213,"../character_model":214,"events":290}],217:[function(require,module,exports){
 'use strict';
-
-const { enemys } = require('../../engine/pixi_containers');
+const { enemys    } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');
@@ -46589,7 +46585,6 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"../animations/rat":200,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/vitals":213,"../character_model":214}],218:[function(require,module,exports){
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
-
 const { visuals } = require('../engine/pixi_containers');
 
 //TODO this needs to be abstracted
@@ -46632,8 +46627,7 @@ module.exports = {
 
 },{"../engine/pixi_containers":229,"pixi.js":151}],219:[function(require,module,exports){
 'use strict';
-const { Sprite } = require('pixi.js');
-
+const { Sprite  } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
 
 class Blood {
@@ -46910,7 +46904,7 @@ function path_between_grids (one, two) {
   });
 }
 
-class pathfind_sprite {
+class pathfind {
   static create_level_grid(tiled_level_data) {
     this.grid = new Grid(tiled_level_data);
     this.grid.build();
@@ -46986,7 +46980,7 @@ class pathfind_sprite {
 }
 
 module.exports = {
-  pathfind_sprite,
+  pathfind,
 };
 
 },{"../utils/grid":280,"./pixi_containers":229,"./tween":234,"easystarjs":3,"pixi.js":151}],229:[function(require,module,exports){
@@ -49506,7 +49500,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -49538,7 +49532,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -49667,7 +49661,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -50149,7 +50143,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51207,7 +51201,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51469,7 +51463,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -51478,30 +51472,7 @@ module.exports={ "height":50,
          "name":"roof",
          "objects":[
                 {
-                 "height":1286.37190909091,
-                 "id":135,
-                 "name":"",
-                 "properties":
-                    {
-                     "alpha":0.1,
-                     "fade":0.1,
-                     "image_name":"roof_00"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1470.01242424242,
-                 "x":474.171679530809,
-                 "y":-373.397991777247
-                }, 
-                {
-                 "height":76.785,
+                 "height":257.424184807781,
                  "id":154,
                  "name":"",
                  "properties":
@@ -51514,12 +51485,12 @@ module.exports={ "height":50,
                      "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":-91.6508,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":284.102,
-                 "x":751.282333333333,
-                 "y":241.6075
+                 "width":75.6721713756368,
+                 "x":698.480450085412,
+                 "y":-7.00106799226732
                 }, 
                 {
                  "height":916.301,
@@ -51541,29 +51512,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":969.221,
-                 "x":915.290607128025,
-                 "y":248.04675808268
-                }, 
-                {
-                 "height":1742.68,
-                 "id":174,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.6,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":2917.1,
-                 "x":620.327246941426,
-                 "y":-1499.40240174971
+                 "x":799.496257892268,
+                 "y":122.988860908062
                 }, 
                 {
                  "height":741.779217603573,
@@ -52008,7 +51958,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -57166,7 +57116,8 @@ class Roof extends Item {
   constructor(options) {
     super(options);
     this.sprite.fade_opacity = options.properties.fade;
-    this.alpha = options.properties.alpha | 0.2;
+    this.alpha = options.properties.alpha | 1;
+    this.anchor = 0;
 
     roofs.addChild(this.sprite);
   }
@@ -57806,7 +57757,7 @@ module.exports = {
 (function (global){
 'use strict';
 
-const { pathfind_sprite } = require('../../engine/pathfind.js');
+const { pathfind        } = require('../../engine/pathfind.js');
 const { Tiled_Data      } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad     } = require('../elements/pad');
 const { Rat             } = require('../../character/archetypes/rat');
@@ -57852,7 +57803,7 @@ class Defend_Room  {
       }
     });
 
-    this.grid = pathfind_sprite.create_level_grid(grid[0]);
+    this.grid = pathfind.create_level_grid(grid[0]);
   }
 }
 
@@ -58109,6 +58060,7 @@ class Level_Factory {
     try {
       camera.set_center(player[0]);
 
+      shroud.forEach(data => new Shroud(data));
       background.forEach(data => new Background(data, true));
       floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
@@ -58120,9 +58072,8 @@ class Level_Factory {
       collision.forEach(data => new CollisionItem(data));
       item.forEach(data => new Chest(data));
       door.forEach(data => new Door(data));
-      shroud.forEach(data => new Shroud(data));
-      roof.forEach(data => new Roof(data));
       lights.forEach(data => new Bright_Light(data));
+      roof.forEach(data => new Roof(data));
 
     } catch (error) {
       console.error(error);
@@ -58207,7 +58158,7 @@ module.exports = {
 (function (global){
 'use strict';
 
-const { pathfind_sprite } = require('../../engine/pathfind.js');
+const { pathfind        } = require('../../engine/pathfind.js');
 const { Tiled_Data      } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad     } = require('../elements/pad');
 const { Rat             } = require('../../character/archetypes/rat');
@@ -58246,7 +58197,7 @@ class School_Room {
       area.events.once('trigger', () => mouse.logic_start());
     });
 
-    this.grid = pathfind_sprite.create_level_grid(grid[0]);
+    this.grid = pathfind.create_level_grid(grid[0]);
   }
 }
 
@@ -58258,8 +58209,7 @@ module.exports = {
 },{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/school_room.json":246,"../elements/pad":256,"../elements/phone":257,"./level_factory":266}],269:[function(require,module,exports){
 (function (global){
 'use strict';
-const { visuals } = require('../../engine/pixi_containers');
-
+const { visuals       } = require('../../engine/pixi_containers');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
@@ -58339,7 +58289,7 @@ module.exports = {
 },{"../attributes/parse_tiled_data":238,"../data/street.json":247,"../elements/pad":256,"./level_factory":266}],271:[function(require,module,exports){
 (function (global){
 'use strict';
-const { visuals } = require('../../engine/pixi_containers');
+const { visuals       } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');

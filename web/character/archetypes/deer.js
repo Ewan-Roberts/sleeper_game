@@ -1,13 +1,11 @@
 'use strict';
-
-const { tweenManager } = require('pixi.js');
-
+const { tweenManager     } = require('pixi.js');
 const { distance_between } = require('../../utils/math');
 
-const event      = require('events');
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Blood  } = require('../../effects/blood');
+const event      = require('events');
 
 class Deer extends Animal {
   constructor() {

@@ -1,8 +1,8 @@
 'use strict';
 const { Sprite, Text } = require('pixi.js');
 
-const { dialog_container } = require('../engine/pixi_containers');
-const { world } = require('../engine/shadows');
+const { dialogs } = require('../engine/pixi_containers');
+const { world   } = require('../engine/shadows');
 
 //TODO (When you get here)
 //This is far too complicated break into attributes
@@ -17,7 +17,7 @@ class Dialog {
     this.background.height = world.height;
     this.background.position.set(0,0);
 
-    dialog_container.addChild(this.background);
+    dialogs.addChild(this.background);
   }
 
   add_script(script) {
@@ -30,16 +30,16 @@ class Dialog {
     this.portrait.zIndex = -11;
     this.portrait.position.set(point.x - 800, point.y);
 
-    dialog_container.addChild(this.portrait);
+    dialogs.addChild(this.portrait);
   }
 
   clear_slide_text() {
 
-    dialog_container.getChildByName('actor_text').text = '';
-    dialog_container.getChildByName('render_text').text = '';
-    dialog_container.getChildByName('button_text').text = '';
-    dialog_container.getChildByName('choice_one').text = '';
-    dialog_container.getChildByName('choice_two').text = '';
+    dialogs.getChildByName('actor_text').text = '';
+    dialogs.getChildByName('render_text').text = '';
+    dialogs.getChildByName('button_text').text = '';
+    dialogs.getChildByName('choice_one').text = '';
+    dialogs.getChildByName('choice_two').text = '';
 
   }
 
@@ -48,7 +48,7 @@ class Dialog {
     let current_text = '';
 
     if(this.timeout) {
-      dialog_container.getChildByName('render_text').text = '';
+      dialogs.getChildByName('render_text').text = '';
       clearInterval(this.timeout);
     } else {
       this.timeout = setInterval(()=> {
@@ -57,7 +57,7 @@ class Dialog {
           return;
         }
         current_text += text_array[i] + ' ';
-        dialog_container.getChildByName('render_text').text = current_text;
+        dialogs.getChildByName('render_text').text = current_text;
         i++;
       }, 150);
     }
@@ -68,9 +68,9 @@ class Dialog {
     const text_array = this.script[step].name.split(' ');
     this.create_text_timeout(text_array);
 
-    dialog_container.getChildByName('actor_text').text = this.script[step].actor;
-    dialog_container.getChildByName('button_text').text = 'next';
-    dialog_container.getChildByName('button_text').click = () => {
+    dialogs.getChildByName('actor_text').text = this.script[step].actor;
+    dialogs.getChildByName('button_text').text = 'next';
+    dialogs.getChildByName('button_text').click = () => {
 
       for(let i = 0; i < this.script.length; i++) {
         if(this.script[i].id === this.script[step].id){
@@ -82,8 +82,8 @@ class Dialog {
 
   refresh_branch_slide() {
     this.clear_slide_text();
-    dialog_container.getChildByName('choice_one').text = 'yes';
-    dialog_container.getChildByName('choice_two').text = 'no' ;
+    dialogs.getChildByName('choice_one').text = 'yes';
+    dialogs.getChildByName('choice_two').text = 'no' ;
   }
 
   enter_dialog_slide(point) {

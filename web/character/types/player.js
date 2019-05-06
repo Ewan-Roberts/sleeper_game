@@ -1,12 +1,10 @@
 'use strict';
 
-const { players } = require('../../engine/pixi_containers');
-const { PlayerEvents     } = require('../../engine/item_handler');
+const { players      } = require('../../engine/pixi_containers');
+const { PlayerEvents } = require('../../engine/item_handler');
 
 const { Character } = require('../character_model');
 const { Human     } = require('../animations/human');
-
-const event        = require('events');
 const { Keyboard  } = require('../attributes/keyboard');
 const { Mouse     } = require('../attributes/mouse');
 const { Inventory } = require('../attributes/inventory');
@@ -15,6 +13,7 @@ const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
 const { Blood     } = require('../../effects/blood');
+const event        = require('events');
 
 class Player extends Character {
   constructor() {

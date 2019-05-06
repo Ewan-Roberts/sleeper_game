@@ -1,5 +1,5 @@
 'use strict';
-const { visuals } = require('../../engine/pixi_containers');
+const { visuals       } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');

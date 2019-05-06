@@ -1,6 +1,5 @@
 'use strict';
-
-const { enemys } = require('../../engine/pixi_containers');
+const { enemys    } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');

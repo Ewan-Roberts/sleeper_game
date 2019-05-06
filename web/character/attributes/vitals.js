@@ -1,5 +1,4 @@
 'use strict';
-
 const { Blood } = require('../../effects/blood');
 
 class Vitals {

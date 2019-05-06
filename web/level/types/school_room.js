@@ -1,6 +1,6 @@
 'use strict';
 
-const { pathfind_sprite } = require('../../engine/pathfind.js');
+const { pathfind        } = require('../../engine/pathfind.js');
 const { Tiled_Data      } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad     } = require('../elements/pad');
 const { Rat             } = require('../../character/archetypes/rat');
@@ -39,7 +39,7 @@ class School_Room {
       area.events.once('trigger', () => mouse.logic_start());
     });
 
-    this.grid = pathfind_sprite.create_level_grid(grid[0]);
+    this.grid = pathfind.create_level_grid(grid[0]);
   }
 }
 

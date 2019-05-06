@@ -292,7 +292,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -324,7 +324,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -453,7 +453,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -935,7 +935,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1993,7 +1993,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -2255,7 +2255,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -2264,30 +2264,7 @@
          "name":"roof",
          "objects":[
                 {
-                 "height":1286.37190909091,
-                 "id":135,
-                 "name":"",
-                 "properties":
-                    {
-                     "alpha":0.1,
-                     "fade":0.1,
-                     "image_name":"roof_00"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1470.01242424242,
-                 "x":474.171679530809,
-                 "y":-373.397991777247
-                }, 
-                {
-                 "height":76.785,
+                 "height":257.424184807781,
                  "id":154,
                  "name":"",
                  "properties":
@@ -2300,12 +2277,12 @@
                      "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":-91.6508,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":284.102,
-                 "x":751.282333333333,
-                 "y":241.6075
+                 "width":75.6721713756368,
+                 "x":698.480450085412,
+                 "y":-7.00106799226732
                 }, 
                 {
                  "height":916.301,
@@ -2327,29 +2304,8 @@
                  "type":"",
                  "visible":true,
                  "width":969.221,
-                 "x":915.290607128025,
-                 "y":248.04675808268
-                }, 
-                {
-                 "height":1742.68,
-                 "id":174,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.6,
-                     "image_name":"black_dot"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":2917.1,
-                 "x":620.327246941426,
-                 "y":-1499.40240174971
+                 "x":799.496257892268,
+                 "y":122.988860908062
                 }, 
                 {
                  "height":741.779217603573,
@@ -2794,7 +2750,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 

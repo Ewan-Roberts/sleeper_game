@@ -1,11 +1,10 @@
 'use strict';
-
-const PIXI = require('pixi.js');
 const { collisions } = require('../../engine/pixi_containers');
-const { distance_between    } = require('../../utils/math');
-const { Sight               } = require('../../utils/line_of_sight');
 
-const event         = require('events');
+const { tweenManager     } = require('pixi.js');
+const { distance_between } = require('../../utils/math');
+const { Sight            } = require('../../utils/line_of_sight');
+
 const { Animal    } = require('../types/rat');
 const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
@@ -13,6 +12,7 @@ const { Scavenge  } = require('../attributes/scavenge');
 const { Script    } = require('../attributes/script');
 const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
+const event         = require('events');
 
 class Scripted_NPC extends Animal {
   constructor() {
@@ -41,7 +41,7 @@ class Scripted_NPC extends Animal {
     this.influence.add_box(600, 600);
     this.route = {};
 
-    this._logic        = PIXI.tweenManager.createTween(this.sprite);
+    this._logic        = tweenManager.createTween(this.sprite);
     this._logic.time   = 800;
     this._logic.repeat = 90;
     this._logic.expire = true;

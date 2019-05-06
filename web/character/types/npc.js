@@ -1,6 +1,6 @@
 'use strict';
 
-const { visuals } = require('../../engine/pixi_containers');
+const { visuals   } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');

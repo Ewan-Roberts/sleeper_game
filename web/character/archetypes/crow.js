@@ -1,5 +1,4 @@
 'use strict';
-
 const { enemys } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');

@@ -1,5 +1,4 @@
 'use strict';
-
 const { tweenManager } = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
 

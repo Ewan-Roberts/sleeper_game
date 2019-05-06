@@ -1,8 +1,7 @@
 'use strict';
 const { Sprite } = require('pixi.js');
-
 const { melee_attack } = require('../../engine/melee');
-const { visuals } = require('../../engine/pixi_containers');
+const { visuals      } = require('../../engine/pixi_containers');
 
 class Melee {
   constructor({ inventory, animation, sprite }) {

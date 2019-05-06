@@ -1,12 +1,11 @@
 'use strict';
-
-const { tweenManager }= require('pixi.js');
-const { sleep               } = require('../../utils/time');
 const { collisions } = require('../../engine/pixi_containers');
-const { distance_between    } = require('../../utils/math');
-const { Sight               } = require('../../utils/line_of_sight');
 
-const event         = require('events');
+const { tweenManager     } = require('pixi.js');
+const { sleep            } = require('../../utils/time');
+const { distance_between } = require('../../utils/math');
+const { Sight            } = require('../../utils/line_of_sight');
+
 const { Animal    } = require('../types/rat');
 const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
@@ -14,6 +13,7 @@ const { Scavenge  } = require('../attributes/scavenge');
 // const { Route  } = require('../attributes/route');
 const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
+const event         = require('events');
 
 class Scavenger extends Animal {
   constructor() {

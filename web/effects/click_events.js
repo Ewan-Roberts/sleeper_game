@@ -1,6 +1,5 @@
 'use strict';
-
-const { Crow   } = require('../character/archetypes/crow');
+const { Crow    } = require('../character/archetypes/crow');
 const { Lurcher } = require('../character/archetypes/zombie');
 
 function generate_crow({from, to}) {
