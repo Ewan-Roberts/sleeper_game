@@ -3,127 +3,27 @@ const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
-class animation {
-  static nothing_idle() {
-    const frames = [];
-    for (let i = 0; i <= 36; i++) {
-      const name = (i<10)?`Armature_nothing_idle_0${i}`:`Armature_nothing_idle_${i}`;
+// this makes an array of textures that and 0 before 10 in the name
+const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static nothing_walk() {
-    const frames = [];
-    for (let i = 0; i <= 48; i++) {
-      const name = (i<10)?`Armature_nothing_walk_0${i}`:`Armature_nothing_walk_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static candle_idle() {
-    const frames = [];
-    for (let i = 0; i <= 36; i++) {
-      const name = (i<10)?`Armature_candle_idle_0${i}`:`Armature_candle_idle_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static knife_idle() {
-    const frames = [];
-    for (let i = 0; i <= 19; i++) {
-      const name = `survivor-move_knife_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static knife_move() {
-    const frames = [];
-    for (let i = 0; i <= 19; i++) {
-      const name = `survivor-move_knife_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static knife_attack() {
-    const frames = [];
-    for (let i = 0; i <= 14; i++) {
-      const name = `survivor-meleeattack_knife_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static bow_walk() {
-    const frames = [];
-    for (let i = 0; i <= 20; i++) {
-      const name = (i<10)?`survivor-walk_bow_0${i}`:`survivor-walk_bow_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-
-  static bow_idle() {
-    const frames = [];
-    for (let i = 0; i <= 21; i++) {
-      const name = (i<10)?`survivor-bow-idle-0${i}`:`survivor-bow-idle-${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static bow_shoot() {
-    const frames = [];
-    for (let i = 0; i <= 38; i++) {
-      const name = (i<10)?`survivor-bow-pull-0${i}`:`survivor-bow-pull-${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static candle_walk() {
-    const frames = [];
-    for (let i = 0; i <= 48; i++) {
-      const name = (i<10)?`Armature_candle_walk_0${i}`:`Armature_candle_walk_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-}
+const nothing_idle = create_texture('Armature_nothing_idle_', 37);
+const nothing_walk = create_texture('Armature_nothing_walk_', 49);
+const candle_idle  = create_texture('Armature_candle_idle_', 37);
+const candle_walk  = create_texture('Armature_candle_walk_', 49);
+const bow_walk     = create_texture('survivor-walk_bow_', 21);
+const bow_idle     = create_texture('survivor-bow-idle-', 22);
+const bow_shoot    = create_texture('survivor-bow-pull-', 39);
+const knife_idle   = Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i));
+const knife_move   = Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i));
+const knife_attack = Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name+i));
+//const knife_attack = 'survivor-meleeattack_knife_'.repeat(15).split('').map((name, i) => Texture.fromFrame(name+i));
 
 class Human {
   constructor(entity) {
     this.name   = 'animation';
     this.state  = 'bow';
-    const idle_texture = animation.nothing_idle();
 
-    entity.sprite = new extras.AnimatedSprite(idle_texture);
+    entity.sprite = new extras.AnimatedSprite(nothing_idle);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.width  /= 6;
@@ -132,16 +32,16 @@ class Human {
     this.prefix = 'nothing';
 
     this.animations = {
-      nothing_idle : animation.nothing_idle(),
-      nothing_walk : animation.nothing_walk(),
-      candle_idle  : animation.candle_idle(),
-      candle_walk  : animation.candle_walk(),
-      bow_walk     : animation.bow_walk(),
-      bow_idle     : animation.bow_idle(),
-      bow_shoot    : animation.bow_shoot(),
-      knife_idle   : animation.knife_idle(),
-      knife_walk   : animation.knife_move(),
-      knife_shoot  : animation.knife_attack(),
+      nothing_idle,
+      nothing_walk,
+      candle_idle,
+      candle_walk,
+      bow_walk,
+      bow_idle,
+      bow_shoot,
+      knife_idle,
+      knife_walk: knife_move,
+      knife_shoot: knife_attack,
     };
   }
 

@@ -45055,81 +45055,65 @@ const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
-class bird_animations {
-  static move_frames() {
-    const moving_frames = [];
+const move = [
+  Texture.fromFrame('bird_0'),
+  Texture.fromFrame('bird_1'),
+  Texture.fromFrame('bird_2'),
+  Texture.fromFrame('bird_3'),
+  Texture.fromFrame('bird_9'),
+  Texture.fromFrame('bird_10'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_6'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_10'),
+  Texture.fromFrame('bird_9'),
 
-    moving_frames.push(Texture.fromFrame('bird_0'));
-    moving_frames.push(Texture.fromFrame('bird_1'));
-    moving_frames.push(Texture.fromFrame('bird_2'));
-    moving_frames.push(Texture.fromFrame('bird_3'));
-    moving_frames.push(Texture.fromFrame('bird_9'));
-    moving_frames.push(Texture.fromFrame('bird_10'));
-    moving_frames.push(Texture.fromFrame('bird_5'));
-    moving_frames.push(Texture.fromFrame('bird_6'));
-    moving_frames.push(Texture.fromFrame('bird_5'));
-    moving_frames.push(Texture.fromFrame('bird_10'));
-    moving_frames.push(Texture.fromFrame('bird_9'));
+  Texture.fromFrame('bird_3'),
+  Texture.fromFrame('bird_2'),
+  Texture.fromFrame('bird_1'),
+  Texture.fromFrame('bird_0'),
+  Texture.fromFrame('bird_1'),
+  Texture.fromFrame('bird_2'),
+  Texture.fromFrame('bird_3'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_4'),
+  Texture.fromFrame('bird_3'),
 
-    moving_frames.push(Texture.fromFrame('bird_3'));
-    moving_frames.push(Texture.fromFrame('bird_2'));
-    moving_frames.push(Texture.fromFrame('bird_1'));
-    moving_frames.push(Texture.fromFrame('bird_0'));
-    moving_frames.push(Texture.fromFrame('bird_1'));
-    moving_frames.push(Texture.fromFrame('bird_2'));
-    moving_frames.push(Texture.fromFrame('bird_3'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_4'));
-    moving_frames.push(Texture.fromFrame('bird_3'));
+  Texture.fromFrame('bird_9'),
+  Texture.fromFrame('bird_10'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_6'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_10'),
+  Texture.fromFrame('bird_9'),
+  Texture.fromFrame('bird_3'),
+  Texture.fromFrame('bird_2'),
+  Texture.fromFrame('bird_1'),
+  Texture.fromFrame('bird_0'),
+];
 
-    moving_frames.push(Texture.fromFrame('bird_9'));
-    moving_frames.push(Texture.fromFrame('bird_10'));
-    moving_frames.push(Texture.fromFrame('bird_5'));
-    moving_frames.push(Texture.fromFrame('bird_6'));
-    moving_frames.push(Texture.fromFrame('bird_5'));
-    moving_frames.push(Texture.fromFrame('bird_10'));
-    moving_frames.push(Texture.fromFrame('bird_9'));
-    moving_frames.push(Texture.fromFrame('bird_3'));
-    moving_frames.push(Texture.fromFrame('bird_2'));
-    moving_frames.push(Texture.fromFrame('bird_1'));
-    moving_frames.push(Texture.fromFrame('bird_0'));
+const wait = [
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_6'),
+  Texture.fromFrame('bird_6'),
+  Texture.fromFrame('bird_6'),
+  Texture.fromFrame('bird_6'),
+  Texture.fromFrame('bird_7'),
+];
 
-    return moving_frames;
-  }
+const dead = [ Texture.fromFrame('bird_8') ];
 
-  static wait_frames() {
-    const waiting_frames = [
-      Texture.fromFrame('bird_5'),
-      Texture.fromFrame('bird_6'),
-      Texture.fromFrame('bird_6'),
-      Texture.fromFrame('bird_6'),
-      Texture.fromFrame('bird_6'),
-      Texture.fromFrame('bird_7'),
-    ];
-
-    return waiting_frames;
-  }
-
-  static dead_frames() {
-    return [ Texture.fromFrame('bird_8') ];
-  }
-}
-
-const frames = {
-  move: bird_animations.move_frames(),
-  wait: bird_animations.wait_frames(),
-  dead: bird_animations.dead_frames(),
-};
+const frames = { move, wait, dead };
 
 class Bird {
   constructor(entity) {
@@ -45169,7 +45153,6 @@ class Bird {
   kill() {
     this.switch('dead');
   }
-
 }
 
 module.exports = {
@@ -45182,127 +45165,27 @@ const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
-class animation {
-  static nothing_idle() {
-    const frames = [];
-    for (let i = 0; i <= 36; i++) {
-      const name = (i<10)?`Armature_nothing_idle_0${i}`:`Armature_nothing_idle_${i}`;
+// this makes an array of textures that and 0 before 10 in the name
+const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static nothing_walk() {
-    const frames = [];
-    for (let i = 0; i <= 48; i++) {
-      const name = (i<10)?`Armature_nothing_walk_0${i}`:`Armature_nothing_walk_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static candle_idle() {
-    const frames = [];
-    for (let i = 0; i <= 36; i++) {
-      const name = (i<10)?`Armature_candle_idle_0${i}`:`Armature_candle_idle_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static knife_idle() {
-    const frames = [];
-    for (let i = 0; i <= 19; i++) {
-      const name = `survivor-move_knife_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static knife_move() {
-    const frames = [];
-    for (let i = 0; i <= 19; i++) {
-      const name = `survivor-move_knife_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static knife_attack() {
-    const frames = [];
-    for (let i = 0; i <= 14; i++) {
-      const name = `survivor-meleeattack_knife_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static bow_walk() {
-    const frames = [];
-    for (let i = 0; i <= 20; i++) {
-      const name = (i<10)?`survivor-walk_bow_0${i}`:`survivor-walk_bow_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-
-  static bow_idle() {
-    const frames = [];
-    for (let i = 0; i <= 21; i++) {
-      const name = (i<10)?`survivor-bow-idle-0${i}`:`survivor-bow-idle-${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static bow_shoot() {
-    const frames = [];
-    for (let i = 0; i <= 38; i++) {
-      const name = (i<10)?`survivor-bow-pull-0${i}`:`survivor-bow-pull-${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-  static candle_walk() {
-    const frames = [];
-    for (let i = 0; i <= 48; i++) {
-      const name = (i<10)?`Armature_candle_walk_0${i}`:`Armature_candle_walk_${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-
-}
+const nothing_idle = create_texture('Armature_nothing_idle_', 37);
+const nothing_walk = create_texture('Armature_nothing_walk_', 49);
+const candle_idle  = create_texture('Armature_candle_idle_', 37);
+const candle_walk  = create_texture('Armature_candle_walk_', 49);
+const bow_walk     = create_texture('survivor-walk_bow_', 21);
+const bow_idle     = create_texture('survivor-bow-idle-', 22);
+const bow_shoot    = create_texture('survivor-bow-pull-', 39);
+const knife_idle   = Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i));
+const knife_move   = Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i));
+const knife_attack = Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name+i));
+//const knife_attack = 'survivor-meleeattack_knife_'.repeat(15).split('').map((name, i) => Texture.fromFrame(name+i));
 
 class Human {
   constructor(entity) {
     this.name   = 'animation';
     this.state  = 'bow';
-    const idle_texture = animation.nothing_idle();
 
-    entity.sprite = new extras.AnimatedSprite(idle_texture);
+    entity.sprite = new extras.AnimatedSprite(nothing_idle);
     this.sprite = entity.sprite;
     this.sprite.anchor.set(0.5);
     this.sprite.width  /= 6;
@@ -45311,16 +45194,16 @@ class Human {
     this.prefix = 'nothing';
 
     this.animations = {
-      nothing_idle : animation.nothing_idle(),
-      nothing_walk : animation.nothing_walk(),
-      candle_idle  : animation.candle_idle(),
-      candle_walk  : animation.candle_walk(),
-      bow_walk     : animation.bow_walk(),
-      bow_idle     : animation.bow_idle(),
-      bow_shoot    : animation.bow_shoot(),
-      knife_idle   : animation.knife_idle(),
-      knife_walk   : animation.knife_move(),
-      knife_shoot  : animation.knife_attack(),
+      nothing_idle,
+      nothing_walk,
+      candle_idle,
+      candle_walk,
+      bow_walk,
+      bow_idle,
+      bow_shoot,
+      knife_idle,
+      knife_walk: knife_move,
+      knife_shoot: knife_attack,
     };
   }
 
@@ -45410,144 +45293,21 @@ module.exports = {
 const { Texture, extras } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
+// this makes an array of textures that and 0 before 10 in the name
+const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 
-//TODO move to dragon
-class rat_animations {
-  static move_frames() {
-    const moving_frames = [];
+const move   = create_texture('walk00', 32);
+const attack = create_texture('attack01_00', 20);
+const death  = create_texture('death01_00', 16);
+const eat    = create_texture('eating00', 24);
+const idle   = create_texture('idle00', 32);
 
-    for (let i = 2; i < 15; i++) {
-      moving_frames.push(Texture.fromFrame(`rat_${i}`));
-    }
-
-    for (let i = 15; i > 1; i--) {
-      moving_frames.push(Texture.fromFrame(`rat_${i}`));
-    }
-
-    moving_frames.push(Texture.fromFrame('rat_48'));
-    moving_frames.push(Texture.fromFrame('rat_49'));
-    moving_frames.push(Texture.fromFrame('rat_50'));
-    moving_frames.push(Texture.fromFrame('rat_49'));
-    moving_frames.push(Texture.fromFrame('rat_48'));
-
-    return moving_frames;
-  }
-
-  static wait_frames() {
-    const waiting_frames = [
-      Texture.fromFrame('rat_36'),
-      Texture.fromFrame('rat_37'),
-      Texture.fromFrame('rat_38'),
-      Texture.fromFrame('rat_51'),
-      Texture.fromFrame('rat_37'),
-      Texture.fromFrame('rat_36'),
-    ];
-
-    return waiting_frames;
-  }
-
-  static dead_frames() {
-    return [ Texture.fromFrame('rat_35') ];
-  }
-
-  static eat_frames() {
-    const eating_frames = [
-      Texture.fromFrame('rat_37'),
-      Texture.fromFrame('rat_38'),
-      Texture.fromFrame('rat_39'),
-      Texture.fromFrame('rat_40'),
-      Texture.fromFrame('rat_39'),
-      Texture.fromFrame('rat_40'),
-      Texture.fromFrame('rat_41'),
-      Texture.fromFrame('rat_40'),
-      Texture.fromFrame('rat_39'),
-      Texture.fromFrame('rat_38'),
-      Texture.fromFrame('rat_37'),
-      Texture.fromFrame('rat_36'),
-    ];
-
-    return eating_frames;
-  }
-}
-
-const frames = {
-  move: rat_animations.move_frames(),
-  wait: rat_animations.wait_frames(),
-  dead: rat_animations.dead_frames(),
-  eat:  rat_animations.eat_frames(),
-};
-
-class Rodent {
-  constructor(entity) {
-    this.name = 'animation';
-
-    const texture = [Texture.fromFrame('bunny')];
-    //TODO Finish migrating animation
-    entity.sprite = new extras.AnimatedSprite(texture);
-    this.sprite = entity.sprite;
-    this.sprite.anchor.set(0.5);
-    this.sprite.rotation_offset = 1.57;
-  }
-
-  switch(action) {
-    if (this.state === action) return;
-
-    this.sprite.textures = frames[action];
-    this.sprite.loop = true;
-    this.sprite.play();
-    this.state = action;
-  }
-
-  face_point(point) {
-    this.sprite.rotation = radian(point, this.sprite);
-  }
-
-  attack() {
-    this.switch('eat');
-  }
-
-  walk() {
-    this.switch('move');
-  }
-
-  kill() {
-    this.switch('dead');
-  }
-
-}
-
-module.exports = {
-  Rodent,
-};
-
-},{"../../utils/math":282,"pixi.js":151}],201:[function(require,module,exports){
-'use strict';
-const { Texture, extras } = require('pixi.js');
-
-const { radian } = require('../../utils/math');
-
-class zombie_animations {
-  static move_frames() {
-    const frames = [];
-    for (let i = 0; i <= 31; i++) {
-      const name = (i<10)?`walk000${i}`:`walk00${i}`;
-
-      frames.push(Texture.fromFrame(name));
-    }
-
-    return frames;
-  }
-}
-
-const frames = {
-  move: zombie_animations.move_frames(),
-};
-
+const frames = { move, attack, death, eat, idle };
 
 class Zombie {
   constructor(entity) {
     this.name = 'animation';
-
+    console.log(frames);
     entity.sprite = new extras.AnimatedSprite(frames.move);
 
     this.sprite = entity.sprite;
@@ -45556,6 +45316,7 @@ class Zombie {
     this.sprite.anchor.set(0.5);
     this.sprite.rotation = -0.7;
     this.sprite.animationSpeed = 0.3;
+    this.sprite.loop = true;
   }
 
 
@@ -45563,7 +45324,6 @@ class Zombie {
     if (this.state === action) return;
 
     this.sprite.textures = frames[action];
-    this.sprite.loop = true;
     this.sprite.play();
     this.state = action;
   }
@@ -45573,15 +45333,28 @@ class Zombie {
   }
 
   wait() {
-    this.switch('wait');
+    this.switch('idle');
   }
 
   move() {
     this.switch('move');
   }
 
+  walk() {
+    this.switch('move');
+  }
+
   kill() {
-    this.switch('dead');
+    this.switch('death');
+    this.sprite.loop = false;
+  }
+
+  attack() {
+    this.switch('attack');
+  }
+
+  eat() {
+    this.switch('eat');
   }
 }
 
@@ -45590,7 +45363,7 @@ module.exports = {
   Zombie,
 };
 
-},{"../../utils/math":282,"pixi.js":151}],202:[function(require,module,exports){
+},{"../../utils/math":282,"pixi.js":151}],201:[function(require,module,exports){
 'use strict';
 const { enemys } = require('../../engine/pixi_containers');
 
@@ -45631,49 +45404,62 @@ module.exports = {
   Crow,
 };
 
-},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/bird":198,"../character_model":214}],203:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/tween":233,"../../utils/math":282,"../animations/bird":198,"../character_model":213}],202:[function(require,module,exports){
 'use strict';
 const { collisions, guis } = require('../../engine/pixi_containers');
 
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
+const { radian           } = require('../../utils/math');
+const { random_number    } = require('../../utils/math');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
+const { pathfind         } = require('../../engine/pathfind');
 
 const { Animal   } = require('../types/rat');
 const { Melee    } = require('../attributes/melee');
-const { pathfind } = require('../../engine/pathfind');
-const event        = require('events');
-//const { Tween  } = require('../../engine/tween');
-
 
 // truncanting
-//arr.length = 3;
-//console.log(arr); //=> [11, 22, 33]
+
+// arr.length = 4;
+// console.log(arr); //=> [11, 22, 33]
+
 function break_at_door(path) {
-  const arr = [];
-
   for (let i = 0; i < path.length; i++) {
-    arr.push(path[i]);
-
-    if(path[i].door) return arr;
+    if(path[i].door) {
+      path.length = i+1;
+      return path;
+    }
   }
-  return arr;
+  return path;
 }
 
 class Rat extends Animal {
-  constructor() {
+  constructor({id}) {
     super();
     this.name = 'rat';
+    this.id = id;
+    this.sprite.id = id;
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
 
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
+      if(this.vitals.alive) {
+        return this.vitals.damage(damage);
+      }
+
+      this.kill();
+      damage_events.removeListener('damage', on_damage);
+    };
+
+    damage_events.on('damage', on_damage);
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
-
   }
 
   get _target_far_away() {
@@ -45682,7 +45468,7 @@ class Rat extends Animal {
     return distance > 200;
   }
 
-  on_damage(amount) {
+  on_damage2(amount) {
     if(this.vitals.alive) {
       return this.vitals.damage(amount);
     }
@@ -45695,7 +45481,7 @@ class Rat extends Animal {
 
     this.loot.set_position(this.sprite);
     this.loot.show();
-    this.tween.stop();
+    if(this.tween)this.tween.stop();
 
     this.animation.kill();
   }
@@ -45713,31 +45499,35 @@ class Rat extends Animal {
   }
 
   async _pathfind() {
+    this.animation.move();
+
     const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 
     const { damage } = this.inventory.equipped;
-    damage_events.emit('damage', {door_tile, damage});
+    damage_events.emit('damage_tile', {door_tile, damage});
 
     this.tween.path.lineTo(
       door_path[0].x,
       door_path[0].y
     );
+
+    const random = () => random_number(30, 50);
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
-        door_path[i-1].x,
-        door_path[i-1].y,
+        door_path[i-1].x + random(),
+        door_path[i-1].y + random(),
         door_path[i].x,
         door_path[i].y,
-        2);
+        20);
     }
   }
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
     this.tween = tweenManager.createTween(this.sprite);
-    this.tween.time = 2000;
+    this.tween.time = 4000;
     this.tween.expire = true;
     this.tween.start();
 
@@ -45748,7 +45538,7 @@ class Rat extends Animal {
       if(!this.enemy.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
-        this.tween.time = 2000;
+        this.tween.time = 4000;
         this.tween.start();
 
         return this.melee.attack(this.enemy);
@@ -45764,11 +45554,16 @@ class Rat extends Animal {
       }
 
       this.tween.time = this.tween.path.length
-        ?this.tween.path.length*1000
+        ?this.tween.path.length*2000
         :2000;
 
       this._show_path(this.tween.path);
       this.tween.start();
+    });
+
+    this.tween.on('update', () => {
+      if(!this.tween.path) return;
+      this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint);
     });
   }
 }
@@ -45778,23 +45573,26 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/damage_handler":224,"../../engine/pathfind":228,"../../engine/pixi_containers":229,"../../utils/line_of_sight":281,"../../utils/math":282,"../attributes/melee":209,"../types/rat":217,"events":290,"pixi.js":151}],204:[function(require,module,exports){
+},{"../../engine/damage_handler":223,"../../engine/pathfind":227,"../../engine/pixi_containers":228,"../../utils/line_of_sight":281,"../../utils/math":282,"../attributes/melee":208,"../types/rat":216,"pixi.js":151}],203:[function(require,module,exports){
 'use strict';
-const { enemys    } = require('../../engine/pixi_containers');
+const { enemys        } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
 const { Character } = require('../character_model');
 const { Zombie    } = require('../animations/zombie');
+const { Lootable  } = require('../attributes/lootable');
 
-// this should extend a character type
 class Lurcher extends Character{
-  constructor({ path, time, smooth, draw, turn } = {}) {
+  constructor({ id, path, time, smooth, draw, turn } = {}) {
     super();
     this.name = 'lurcher';
+    this.id = id;
 
     this.add_component(new Zombie(this));
-    this.sprite.play();
+    this.sprite.id = id;
+    this.add_component(new Lootable(this));
 
     if(path) {
       this.add_component(new Tween(this.sprite));
@@ -45810,6 +45608,21 @@ class Lurcher extends Character{
       }
     }
 
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.tween.stop();
+      this.loot.populate_with(['blood']);
+      this.loot.set_position(this.sprite);
+      this.loot.show();
+      this.sprite.destroy();
+    };
+    damage_events.on('damage', on_damage);
+
     enemys.addChild(this.sprite);
   }
 }
@@ -45818,7 +45631,7 @@ module.exports = {
   Lurcher,
 };
 
-},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":282,"../animations/zombie":201,"../character_model":214}],205:[function(require,module,exports){
+},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"../../engine/tween":233,"../../utils/math":282,"../animations/zombie":200,"../attributes/lootable":207,"../character_model":213}],204:[function(require,module,exports){
 'use strict';
 const { Item_Manager } = require('../../items/item_manager');
 
@@ -45855,6 +45668,10 @@ class Inventory {
     this.equipped = this.melee_weapon;
   }
 
+  get size() {
+    return this.items.length;
+  }
+
   equip_weapon(weapon) {
     this.equipped = weapon;
   }
@@ -45862,6 +45679,19 @@ class Inventory {
   give_item(item) {
     this.items.push(item);
   }
+
+  take_items(name) {
+    // return array of things you want remove them from items
+    const result = this.items.map((item,i) => {
+      if(item.name === name) {
+        this.items.splice(i,1);
+        return item;
+      }
+    }).filter(n => n);
+
+    return result;
+  }
+
 
   add_ranged_weapon_by_name(name) {
     const weapon = Item_Manager.get_item(name);
@@ -45900,7 +45730,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":237}],206:[function(require,module,exports){
+},{"../../items/item_manager":236}],205:[function(require,module,exports){
 'use strict';
 const { tweenManager, keyboardManager} = require('pixi.js');
 
@@ -46079,7 +45909,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":220,"../../engine/pixi_containers":229,"../../engine/shadows":231,"../../view/view_player_inventory":288,"pixi.js":151}],207:[function(require,module,exports){
+},{"../../effects/fade":219,"../../engine/pixi_containers":228,"../../engine/shadows":230,"../../view/view_player_inventory":288,"pixi.js":151}],206:[function(require,module,exports){
 
 'use strict';
 const { Candle } = require('../../light/types/candle');
@@ -46106,7 +45936,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":276}],208:[function(require,module,exports){
+},{"../../light/types/candle":276}],207:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -46181,7 +46011,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":220,"../../items/item_manager":237,"../../view/button":284,"../../view/view_inventory":287}],209:[function(require,module,exports){
+},{"../../effects/fade":219,"../../items/item_manager":236,"../../view/button":284,"../../view/view_inventory":287}],208:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 const { melee_attack } = require('../../engine/melee');
@@ -46239,7 +46069,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":226,"../../engine/pixi_containers":229,"pixi.js":151}],210:[function(require,module,exports){
+},{"../../engine/melee":225,"../../engine/pixi_containers":228,"pixi.js":151}],209:[function(require,module,exports){
 'use strict';
 //const { visuals } = require('../../engine/pixi_containers');
 
@@ -46306,7 +46136,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":218,"../../engine/app":221,"../../engine/ranged":230,"../../utils/math":282}],211:[function(require,module,exports){
+},{"../../effects/aiming_cone":217,"../../engine/app":220,"../../engine/ranged":229,"../../utils/math":282}],210:[function(require,module,exports){
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 
@@ -46350,7 +46180,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":228,"../../engine/pixi_containers":229,"pixi.js":151}],212:[function(require,module,exports){
+},{"../../engine/pathfind.js":227,"../../engine/pixi_containers":228,"pixi.js":151}],211:[function(require,module,exports){
 'use strict';
 const { tweenManager } = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -46386,7 +46216,7 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":289,"pixi.js":151}],213:[function(require,module,exports){
+},{"../../view/view_player_status_meter":289,"pixi.js":151}],212:[function(require,module,exports){
 'use strict';
 const { Blood } = require('../../effects/blood');
 
@@ -46440,7 +46270,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":219}],214:[function(require,module,exports){
+},{"../../effects/blood":218}],213:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -46463,7 +46293,7 @@ module.exports = {
   Character,
 };
 
-},{}],215:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 'use strict';
 
 const { visuals   } = require('../../engine/pixi_containers');
@@ -46490,11 +46320,12 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/pathfind":211,"../character_model":214}],216:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/tween":233,"../animations/human":199,"../attributes/pathfind":210,"../character_model":213}],215:[function(require,module,exports){
 'use strict';
 
 const { players      } = require('../../engine/pixi_containers');
 const { PlayerEvents } = require('../../engine/item_handler');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { Character } = require('../character_model');
 const { Human     } = require('../animations/human');
@@ -46506,16 +46337,13 @@ const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
 const { Blood     } = require('../../effects/blood');
-const event        = require('events');
 
 class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
-
+    this.id = 1;
     this.add_component(new Human(this));
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
     this.sprite.name = 'player';
     this.blood       = new Blood();
 
@@ -46529,6 +46357,17 @@ class Player extends Character {
 
     players.addChild(this.sprite);
 
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
     this.add_component(new PlayerEvents(this));
   }
 
@@ -46552,12 +46391,12 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":219,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":212,"../attributes/vitals":213,"../character_model":214,"events":290}],217:[function(require,module,exports){
+},{"../../effects/blood":218,"../../engine/damage_handler":223,"../../engine/item_handler":224,"../../engine/pixi_containers":228,"../../engine/tween":233,"../animations/human":199,"../attributes/inventory":204,"../attributes/keyboard":205,"../attributes/light":206,"../attributes/mouse":209,"../attributes/status_bar":211,"../attributes/vitals":212,"../character_model":213}],216:[function(require,module,exports){
 'use strict';
 const { enemys    } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
-const { Rodent    } = require('../animations/rat');
+const { Zombie    } = require('../animations/zombie');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Lootable  } = require('../attributes/lootable');
@@ -46569,10 +46408,11 @@ class Animal extends Character {
     super();
     this.name = 'rat';
 
-    this.add_component(new Rodent(this));
+    this.add_component(new Zombie(this));
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
+    this.sprite.play();
 
     enemys.addChild(this.sprite);
   }
@@ -46582,7 +46422,7 @@ module.exports = {
   Animal,
 };
 
-},{"../../engine/pixi_containers":229,"../animations/rat":200,"../attributes/inventory":205,"../attributes/lootable":208,"../attributes/vitals":213,"../character_model":214}],218:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../animations/zombie":200,"../attributes/inventory":204,"../attributes/lootable":207,"../attributes/vitals":212,"../character_model":213}],217:[function(require,module,exports){
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
@@ -46625,7 +46465,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":229,"pixi.js":151}],219:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],218:[function(require,module,exports){
 'use strict';
 const { Sprite  } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
@@ -46645,7 +46485,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":229,"pixi.js":151}],220:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],219:[function(require,module,exports){
 'use strict';
 const { tweenManager } = require('pixi.js');
 
@@ -46703,7 +46543,7 @@ module.exports = {
   Fade,
 };
 
-},{"pixi.js":151}],221:[function(require,module,exports){
+},{"pixi.js":151}],220:[function(require,module,exports){
 (function (global){
 'use strict';
 const { settings, Application } = require('pixi.js');
@@ -46728,7 +46568,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":151}],222:[function(require,module,exports){
+},{"pixi.js":151}],221:[function(require,module,exports){
 /* eslint-disable*/
 'use strict';
 
@@ -46765,7 +46605,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":216,"../level/types/archer_room":261,"../level/types/defend_room.js":262,"../level/types/intro.js":263,"../level/types/item_room":265,"../level/types/player_animations":267,"../level/types/school_room.js":268,"../level/types/simple.js":269,"../level/types/transition_room":271}],223:[function(require,module,exports){
+},{"../character/types/player.js":215,"../level/types/archer_room":261,"../level/types/defend_room.js":262,"../level/types/intro.js":263,"../level/types/item_room":265,"../level/types/player_animations":267,"../level/types/school_room.js":268,"../level/types/simple.js":269,"../level/types/transition_room":271}],222:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46803,28 +46643,37 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./shadows":231}],224:[function(require,module,exports){
+},{"./shadows":230}],223:[function(require,module,exports){
 'use strict';
 const event = require('events');
 
 const damage_events = new event();
+damage_events.on('error', err => new Error(err));
 
 module.exports = {
   damage_events,
 };
 
-},{"events":290}],225:[function(require,module,exports){
+},{"events":290}],224:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
 
 const player_events = new event();
+
+player_events.on('error', err => new Error(err));
 class PlayerEvents {
   constructor(player) {
     this.name = 'events';
 
     player_events.on('give_item', item => {
       player.inventory.give_item(item);
+    });
+
+    player_events.on('check_items', callback => {
+      const result = player.inventory.take_items('blood');
+
+      callback(result);
     });
 
     player_events.on('equip_weapon', item => {
@@ -46843,7 +46692,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":237,"events":290}],226:[function(require,module,exports){
+},{"../items/item_manager":236,"events":290}],225:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -46856,7 +46705,7 @@ module.exports = {
   melee_attack,
 };
 
-},{}],227:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 'use strict';
 const PIXI   = require('pixi.js');
 const packer = require('pixi-packer-parser');
@@ -46868,7 +46717,7 @@ module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":32,"pixi.js":151}],228:[function(require,module,exports){
+},{"pixi-packer-parser":32,"pixi.js":151}],227:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grids } = require('./pixi_containers');
@@ -46983,7 +46832,7 @@ module.exports = {
   pathfind,
 };
 
-},{"../utils/grid":280,"./pixi_containers":229,"./tween":234,"easystarjs":3,"pixi.js":151}],229:[function(require,module,exports){
+},{"../utils/grid":280,"./pixi_containers":228,"./tween":233,"easystarjs":3,"pixi.js":151}],228:[function(require,module,exports){
 'use strict';
 const { Container } = require('pixi.js');
 const { world     } = require('./shadows');
@@ -47101,20 +46950,21 @@ module.exports = {
 
 
 
-},{"./shadows":231,"pixi.js":151}],230:[function(require,module,exports){
+},{"./shadows":230,"pixi.js":151}],229:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
+const { damage_events } = require('./damage_handler');
 
-const { items } = require('./pixi_containers');
+const { items      } = require('./pixi_containers');
 const { collisions } = require('./pixi_containers');
-const { enemys } = require('./pixi_containers');
-const { players } = require('./pixi_containers');
+const { enemys     } = require('./pixi_containers');
+const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
-const players1  = players.children;
+const players1 = players.children;
 
 class Arrow {
   constructor() {
@@ -47122,7 +46972,7 @@ class Arrow {
     this.sprite = new Sprite.fromFrame('arrow');
     this.sprite.width  /= 6;
     this.sprite.height /= 6;
-    this.sprite.anchor.set(0.65);
+    this.sprite.anchor.set(1);
 
     this.tween = new Tween(this.sprite);
     items.addChild(this.sprite);
@@ -47138,7 +46988,7 @@ function shoot_arrow(speed, damage, origin, point) {
   arrow.rotation = radian(point, origin);
   arrow.tween.from(origin);
   arrow.tween.to(point);
-  arrow.tween.time = speed;
+  arrow.tween.time = speed*2;
 
   arrow.tween.movement.on('update', () => {
     const arrow_point = arrow.sprite.getGlobalPosition();
@@ -47146,18 +46996,15 @@ function shoot_arrow(speed, damage, origin, point) {
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
     if (collision_object) {
       arrow.tween.stop();
-      if(collision_object.events) {
-        collision_object.events.emit('damage', damage);
-      }
+      damage_events.emit('damage', {id: collision_object.id, damage});
       return;
     }
 
     const collision_enemies = enemies.find(enemy => enemy.containsPoint(arrow_point));
     if (collision_enemies) {
       if(collision_enemies.id === origin.id) return;
-
+      damage_events.emit('damage', {id: collision_enemies.id, damage});
       arrow.tween.stop();
-      collision_enemies.events.emit('damage', damage);
       return;
     }
 
@@ -47179,7 +47026,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":282,"./pixi_containers":229,"./tween":234,"pixi.js":151}],231:[function(require,module,exports){
+},{"../utils/math":282,"./damage_handler":223,"./pixi_containers":228,"./tween":233,"pixi.js":151}],230:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-layers');
@@ -47206,7 +47053,7 @@ module.exports = {
 
 
 
-},{"./app":221,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],232:[function(require,module,exports){
+},{"./app":220,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],231:[function(require,module,exports){
 'use strict';
 require('pixi-sound');
 const { sound } = require('pixi.js');
@@ -47224,7 +47071,7 @@ const Sound = sound.add({
 
 module.exports = Sound;
 
-},{"pixi-sound":34,"pixi.js":151}],233:[function(require,module,exports){
+},{"pixi-sound":34,"pixi.js":151}],232:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -47250,7 +47097,7 @@ ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":221,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],234:[function(require,module,exports){
+},{"./app":220,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],233:[function(require,module,exports){
 'use strict';
 require('./ticker');
 const { tween, tweenManager, Graphics} = require('pixi.js');
@@ -47360,7 +47207,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":282,"./pixi_containers":229,"./ticker":233,"pixi.js":151}],235:[function(require,module,exports){
+},{"../utils/math":282,"./pixi_containers":228,"./ticker":232,"pixi.js":151}],234:[function(require,module,exports){
 'use strict';
 require('./utils/globals');
 
@@ -47369,13 +47216,14 @@ loader.add('../../images/bedroom_EN_web.json');
 loader.load(() => {
   const { Level_Loader } = require('./engine/boot_loader.js');
 
-  Level_Loader.boot();
+  // TODO: For testing, space out CPU spikes
+  setTimeout(()=> Level_Loader.boot(), 500);
 });
 
 
 
 
-},{"./engine/boot_loader.js":222,"./engine/packer":227,"./utils/globals":279}],236:[function(require,module,exports){
+},{"./engine/boot_loader.js":221,"./engine/packer":226,"./utils/globals":279}],235:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -47632,6 +47480,18 @@ const items = [
     image_name: 'rat_meat',
   },
   {
+    name: 'blood',
+    id: 1,
+    rank: 0,
+    cost: 10,
+    category: 'fuel',
+
+    visual_name: 'blood',
+    description: 'the fuel for the cooker',
+    image_name: 'blood_vial',
+  },
+
+  {
     name: 'rat_hide',
     id: 2,
     rank: 0,
@@ -47715,7 +47575,7 @@ module.exports = {
 };
 
 
-},{}],237:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 
@@ -47789,7 +47649,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":221,"../utils/math":282,"./data/item_data":236,"pixi.js":151}],238:[function(require,module,exports){
+},{"../engine/app":220,"../utils/math":282,"./data/item_data":235,"pixi.js":151}],237:[function(require,module,exports){
 'use strict';
 
 class Tiled_Data {
@@ -47804,7 +47664,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],239:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -48388,7 +48248,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],240:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -48397,30 +48257,16 @@ module.exports={ "height":50,
          "name":"background",
          "objects":[
                 {
-                 "height":4278.38591251322,
-                 "id":51,
+                 "height":1833.73284504059,
+                 "id":348,
                  "name":"grass_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":5024.97094144733,
-                 "x":1045.93939393939,
-                 "y":351.515151515152
-                }, 
-                {
-                 "height":0,
-                 "id":141,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":3954,
-                 "y":-182
+                 "width":3863.65145781857,
+                 "x":212.544196964349,
+                 "y":-1215.13680727144
                 }],
-         "offsetx":-74,
-         "offsety":126,
          "opacity":1,
          "type":"objectgroup",
          "visible":false,
@@ -48429,105 +48275,29 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"prey",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "name":"walls",
          "objects":[
                 {
-                 "height":978.651971689517,
-                 "id":4,
+                 "height":200.66666666667,
+                 "id":2,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6666666666665,
-                 "x":1444,
-                 "y":810.121212121212
+                 "width":21.2804502210906,
+                 "x":1948.41810254982,
+                 "y":92.9025874701832
                 }, 
                 {
                  "height":32,
-                 "id":9,
+                 "id":55,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":756.161462577288,
-                 "x":1480.00418054265,
-                 "y":3027.80941148589
-                }, 
-                {
-                 "height":32,
-                 "id":53,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":790,
-                 "x":2629,
-                 "y":3047
-                }, 
-                {
-                 "height":1061.35607134136,
-                 "id":56,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1443.33333333333,
-                 "y":1998.33316666667
-                }, 
-                {
-                 "height":1964.652,
-                 "id":94,
-                 "name":"",
-                 "rotation":-270,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6667,
-                 "x":3438.5062918006,
-                 "y":809.247181698703
-                }, 
-                {
-                 "height":956.336210526316,
-                 "id":136,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6667,
-                 "x":3411.34963653611,
-                 "y":839.53079314565
-                }, 
-                {
-                 "height":895.63119216646,
-                 "id":137,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30.6667,
-                 "x":3423.34963653611,
-                 "y":2185.20521175031
-                }, 
-                {
-                 "height":100,
-                 "id":138,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":100,
-                 "x":2861.64124293053,
-                 "y":2219.96508111717
+                 "width":750.422838400654,
+                 "x":1163,
+                 "y":242
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -48538,50 +48308,7 @@ module.exports={ "height":50,
         {
          "draworder":"topdown",
          "name":"lights",
-         "objects":[
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1698.20047209111,
-                 "y":1461.15232693691
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "name":"exit_pad",
-         "objects":[
-                {
-                 "height":272,
-                 "id":15,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":298.666666666667,
-                 "x":3253.66666666667,
-                 "y":1809.72727272727
-                }],
-         "offsetx":-26,
-         "offsety":-12,
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -48594,15 +48321,15 @@ module.exports={ "height":50,
          "objects":[
                 {
                  "height":0,
-                 "id":144,
+                 "id":137,
                  "name":"",
                  "point":true,
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2462,
-                 "y":2641.15151515152
+                 "x":1151.20199169493,
+                 "y":-86.3345781426708
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -48612,11 +48339,226 @@ module.exports={ "height":50,
         }, 
         {
          "draworder":"topdown",
-         "name":"floor",
+         "name":"exit_pad",
          "objects":[
                 {
-                 "height":370.546,
-                 "id":152,
+                 "height":1251.8058653449,
+                 "id":15,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"street"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217.353159851301,
+                 "x":3978.47290893404,
+                 "y":-334.919993248553
+                }, 
+                {
+                 "height":250.611,
+                 "id":344,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"school"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":918.827,
+                 "x":2735.1768432893,
+                 "y":398.200746421479
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"click_pad",
+         "objects":[
+                {
+                 "height":168,
+                 "id":125,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":239.666666666667,
+                 "x":926.094481703733,
+                 "y":-575.844912235667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"door",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"floor",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"prey",
+         "objects":[
+                {
+                 "height":0,
+                 "id":335,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-191.026210573079,
+                         "y":306.530430919591
+                        }, 
+                        {
+                         "x":-484.229231452688,
+                         "y":444.247001332741
+                        }, 
+                        {
+                         "x":-897.378942692137,
+                         "y":586.406041759218
+                        }, 
+                        {
+                         "x":-1283.87383385162,
+                         "y":661.928031985784
+                        }, 
+                        {
+                         "x":-1359.39582407819,
+                         "y":697.467792092403
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2594.40248778321,
+                 "y":-484.229231452688
+                }, 
+                {
+                 "height":0,
+                 "id":336,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-155.486450466459,
+                         "y":111.061750333185
+                        }, 
+                        {
+                         "x":-328.742780986228,
+                         "y":279.875610839627
+                        }, 
+                        {
+                         "x":-457.574411372723,
+                         "y":453.131941359396
+                        }, 
+                        {
+                         "x":-581.963571745891,
+                         "y":635.27321190582
+                        }, 
+                        {
+                         "x":-693.025322079076,
+                         "y":817.414482452244
+                        }, 
+                        {
+                         "x":-812.972012438916,
+                         "y":924.033762772101
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2087.96090626388,
+                 "y":-759.662372278987
+                }, 
+                {
+                 "height":0,
+                 "id":340,
+                 "name":"zombie",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-319.857840959574,
+                         "y":-302.087960906264
+                        }, 
+                        {
+                         "x":-555.308751665927,
+                         "y":-333.185250999556
+                        }, 
+                        {
+                         "x":-848.511772545536,
+                         "y":-239.89338071968
+                        }, 
+                        {
+                         "x":-1150.5997334518,
+                         "y":8.88494002665482
+                        }, 
+                        {
+                         "x":-1337.18347401155,
+                         "y":137.71657041315
+                        }, 
+                        {
+                         "x":-1665.92625499778,
+                         "y":133.274100399822
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2949.8000888494,
+                 "y":35.5397601066193
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"decal",
+         "objects":[
+                {
+                 "height":73.9691315534127,
+                 "id":185,
                  "name":"",
                  "properties":
                     {
@@ -48626,31 +48568,31 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":189.126,
+                 "rotation":173.305,
                  "type":"",
                  "visible":true,
-                 "width":85.1823,
-                 "x":2791.40885,
-                 "y":2506.727
+                 "width":380.922546046984,
+                 "x":1011.05610638847,
+                 "y":-234.306104112117
                 }, 
                 {
-                 "height":148.297,
-                 "id":153,
+                 "height":203.04,
+                 "id":186,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"litter_01"
+                     "image_name":"litter_00"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":166.821,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":164.541,
-                 "x":2265.7295,
-                 "y":2577.8515
+                 "width":193.841,
+                 "x":879.837479847529,
+                 "y":-218.484584567573
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -48663,99 +48605,339 @@ module.exports={ "height":50,
          "name":"collision",
          "objects":[
                 {
-                 "height":145.819,
-                 "id":147,
+                 "height":161.61379235066,
+                 "id":102,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"table_00"
+                     "image_name":"rock_4"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-278.501463808118,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":249.333,
-                 "x":2156.33494241965,
-                 "y":2295.4300568583
+                 "width":149.589569900544,
+                 "x":256.29491528903,
+                 "y":71.6707981334745
                 }, 
                 {
-                 "height":270.498,
-                 "id":148,
+                 "height":161.614,
+                 "id":349,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"bale_square"
+                     "image_name":"rock_5"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":82.4865,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":179.61732481666,
-                 "x":2441.99884668411,
-                 "y":1864.41772861074
+                 "width":149.59,
+                 "x":239.359606424285,
+                 "y":279.235357924462
                 }, 
                 {
-                 "height":326.777,
-                 "id":150,
+                 "height":161.614,
+                 "id":350,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"broken_mattress_00"
+                     "image_name":"rock_1"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-100.187,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":282.574,
-                 "x":2154.713,
-                 "y":1930.6115
+                 "width":149.59,
+                 "x":292.307012001412,
+                 "y":-338.484373808683
                 }, 
                 {
-                 "height":145.819,
-                 "id":151,
+                 "height":161.614,
+                 "id":351,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"table_00"
+                     "image_name":"rock_2"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-265.398,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":249.333,
-                 "x":2147.3335,
-                 "y":1873.0905
+                 "width":149.59,
+                 "x":306.426320155312,
+                 "y":-536.15468796329
                 }, 
                 {
-                 "height":270.498,
-                 "id":156,
+                 "height":161.614,
+                 "id":352,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"bale_square"
+                     "image_name":"rock_3"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":104.065367571675,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":179.617,
-                 "x":2810.86723559316,
-                 "y":1949.22697541265
+                 "width":149.59,
+                 "x":264.068395693611,
+                 "y":-126.694751500176
+                }, 
+                {
+                 "height":161.614,
+                 "id":353,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_0"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":1015.92155488881,
+                 "y":-1206.82182527356
+                }, 
+                {
+                 "height":161.614,
+                 "id":354,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_8"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":352.314071655489,
+                 "y":-1185.64286304271
+                }, 
+                {
+                 "height":161.614,
+                 "id":355,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_6"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":295.836839039887,
+                 "y":-751.474137310272
+                }, 
+                {
+                 "height":161.614,
+                 "id":356,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_10"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":793.542451464878,
+                 "y":-1228.00078750441
+                }, 
+                {
+                 "height":161.614,
+                 "id":357,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_9"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":564.103693963996,
+                 "y":-1213.88147935051
+                }, 
+                {
+                 "height":161.614,
+                 "id":358,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_7"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":299.366666078362,
+                 "y":-991.50237592658
+                }, 
+                {
+                 "height":161.614,
+                 "id":359,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rock_11"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":149.59,
+                 "x":1238.30065831274,
+                 "y":-1189.17269008119
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"item",
+         "objects":[
+                {
+                 "height":56.3362428519837,
+                 "id":261,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"box_06",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"Box of shit",
+                     "label_image":"eye_icon",
+                     "random":true,
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "random":"bool",
+                     "shadow":"bool"
+                    },
+                 "rotation":-549.280894855743,
+                 "type":"",
+                 "visible":true,
+                 "width":56.3362428519837,
+                 "x":855.288272740603,
+                 "y":-23.5314298775259
+                }, 
+                {
+                 "height":31.9013311270645,
+                 "id":262,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"chest_01",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"box of supplies",
+                     "label_image":"eye_icon",
+                     "random":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "random":"bool"
+                    },
+                 "rotation":-520.881593379708,
+                 "type":"",
+                 "visible":true,
+                 "width":47.1597501743922,
+                 "x":741.840974320866,
+                 "y":194.457712589191
+                }, 
+                {
+                 "height":34.9898035316172,
+                 "id":263,
+                 "name":"",
+                 "properties":
+                    {
+                     "container":true,
+                     "image_name":"bookcase",
+                     "label":true,
+                     "label_action":"Examine",
+                     "label_description":"bookcase",
+                     "label_image":"eye_icon",
+                     "random":true,
+                     "shadow":true
+                    },
+                 "propertytypes":
+                    {
+                     "container":"bool",
+                     "image_name":"string",
+                     "label":"bool",
+                     "label_action":"string",
+                     "label_description":"string",
+                     "label_image":"string",
+                     "random":"bool",
+                     "shadow":"bool"
+                    },
+                 "rotation":-694.250478335837,
+                 "type":"",
+                 "visible":true,
+                 "width":266.079821313188,
+                 "x":461.255184344544,
+                 "y":336.787025600814
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -48768,33 +48950,252 @@ module.exports={ "height":50,
          "name":"roof",
          "objects":[
                 {
-                 "height":916.301,
-                 "id":154,
-                 "name":"tree",
+                 "height":356.426949879096,
+                 "id":160,
+                 "name":"",
                  "properties":
                     {
-                     "fade":0.5,
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_2"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.691770843059,
+                 "type":"",
+                 "visible":true,
+                 "width":377.012013289048,
+                 "x":1785.64646218469,
+                 "y":-1081.64395789206
+                }, 
+                {
+                 "height":356.426711793775,
+                 "id":361,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_3"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":377.011724415908,
+                 "x":2164.47481739079,
+                 "y":-1093.95844937807
+                }, 
+                {
+                 "height":356.426711793775,
+                 "id":362,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_4"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":377.011724415908,
+                 "x":3674.34963763816,
+                 "y":-1085.82941263715
+                }, 
+                {
+                 "height":362.532816913068,
+                 "id":363,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_5"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":383.470480576197,
+                 "x":3964.71135774879,
+                 "y":9.32986237115523
+                }, 
+                {
+                 "height":356.426711793775,
+                 "id":364,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_6"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":377.011724415908,
+                 "x":4056.50794917049,
+                 "y":-1097.13747834424
+                }, 
+                {
+                 "height":356.426711793775,
+                 "id":365,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_8"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":377.011724415908,
+                 "x":3292.23716526288,
+                 "y":-1082.81702016783
+                }, 
+                {
+                 "height":362.532816913068,
+                 "id":366,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
                      "image_name":"tree_11"
                     },
                  "propertytypes":
                     {
+                     "alpha":"float",
                      "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":179.692,
                  "type":"",
                  "visible":true,
-                 "width":969.221,
-                 "x":2325.3895,
-                 "y":1187.8495
+                 "width":383.470480576197,
+                 "x":4060.03777620897,
+                 "y":-732.193381615175
+                }, 
+                {
+                 "height":356.426711793775,
+                 "id":367,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_9"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":377.011724415908,
+                 "x":2915.95992175086,
+                 "y":-1084.73144757897
+                }, 
+                {
+                 "height":362.532816913068,
+                 "id":368,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_10"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":383.470480576197,
+                 "x":4055.72397934549,
+                 "y":-356.827437446667
+                }, 
+                {
+                 "height":356.426711793775,
+                 "id":369,
+                 "name":"",
+                 "properties":
+                    {
+                     "alpha":1,
+                     "fade":1,
+                     "image_name":"tree_7"
+                    },
+                 "propertytypes":
+                    {
+                     "alpha":"float",
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":179.692,
+                 "type":"",
+                 "visible":true,
+                 "width":377.011724415908,
+                 "x":2543.58622292814,
+                 "y":-1089.04888626044
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":157,
+ "nextobjectid":370,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -48805,7 +49206,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],241:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49205,7 +49606,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],242:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49248,7 +49649,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -49500,7 +49901,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -49556,8 +49957,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":217.353159851301,
-                 "x":3176.02354399009,
-                 "y":-1080.26446622358
+                 "x":2810.10015919878,
+                 "y":-977.348514251024
                 }, 
                 {
                  "height":83.2727845118233,
@@ -49579,7 +49980,7 @@ module.exports={ "height":50,
                  "y":844.488737313777
                 }, 
                 {
-                 "height":182,
+                 "height":250.61063464837,
                  "id":177,
                  "name":"",
                  "properties":
@@ -49593,13 +49994,32 @@ module.exports={ "height":50,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":638.667,
-                 "x":684.383972118959,
-                 "y":-1470.59520859149
+                 "width":918.827091480846,
+                 "x":718.689289443144,
+                 "y":-1436.2898912673
+                }, 
+                {
+                 "height":250.611,
+                 "id":344,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"archer"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":918.827,
+                 "x":1976.26403001715,
+                 "y":-1423.19000543168
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -49898,6 +50318,44 @@ module.exports={ "height":50,
                  "width":2091.54,
                  "x":3864.86029162747,
                  "y":250.484333490122
+                }, 
+                {
+                 "height":2094.93,
+                 "id":345,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90.0266118076578,
+                 "type":"",
+                 "visible":true,
+                 "width":1245.2,
+                 "x":3875.55164737352,
+                 "y":-2426.76699337521
+                }, 
+                {
+                 "height":2094.93,
+                 "id":346,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90.0266,
+                 "type":"",
+                 "visible":true,
+                 "width":1245.2,
+                 "x":1778.77221269297,
+                 "y":-2425.39524585477
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50152,7 +50610,7 @@ module.exports={ "height":50,
          "name":"decal",
          "objects":[
                 {
-                 "height":261.549964981513,
+                 "height":160.439325839214,
                  "id":181,
                  "name":"",
                  "properties":
@@ -50163,12 +50621,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-1309.96183394216,
+                 "rotation":-1361.14539248111,
                  "type":"",
                  "visible":true,
-                 "width":162.094754473301,
-                 "x":990.088843229564,
-                 "y":-143.135873329234
+                 "width":227.615276363712,
+                 "x":890.370467646313,
+                 "y":-181.021084215236
                 }, 
                 {
                  "height":139.019552865669,
@@ -50543,12 +51001,12 @@ module.exports={ "height":50,
                     {
                      "image_name":"string"
                     },
-                 "rotation":-179.804,
+                 "rotation":-89.1491864389498,
                  "type":"",
                  "visible":true,
                  "width":179.602,
-                 "x":1371.50905302152,
-                 "y":439.640940745813
+                 "x":1225.13937257107,
+                 "y":444.325816095254
                 }, 
                 {
                  "height":374.57077173416,
@@ -50636,27 +51094,6 @@ module.exports={ "height":50,
          "draworder":"topdown",
          "name":"collision",
          "objects":[
-                {
-                 "height":302.755880584049,
-                 "id":82,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.8,
-                     "image_name":"long_broken"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-358.048775542444,
-                 "type":"",
-                 "visible":true,
-                 "width":1347.74732988671,
-                 "x":1267.23994792838,
-                 "y":-1596.89218266952
-                }, 
                 {
                  "height":837.281246488164,
                  "id":111,
@@ -50909,8 +51346,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":429.099802246631,
-                 "x":1763.54713851356,
-                 "y":-548.505791541058
+                 "x":1659.58352577802,
+                 "y":-542.008065745087
                 }, 
                 {
                  "height":473.329758437391,
@@ -51198,6 +51635,48 @@ module.exports={ "height":50,
                  "width":866.253,
                  "x":765.529523569823,
                  "y":-1497.43181585085
+                }, 
+                {
+                 "height":632.690865148617,
+                 "id":343,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":536.05197550798,
+                 "x":1516.177083931,
+                 "y":-1690.19880085025
+                }, 
+                {
+                 "height":1226.80927379741,
+                 "id":347,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":270.437184722865,
+                 "type":"",
+                 "visible":true,
+                 "width":696.138820471786,
+                 "x":2726.58393845426,
+                 "y":-920.846149737715
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -51463,7 +51942,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -51958,7 +52437,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -52098,7 +52577,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":343,
+ "nextobjectid":348,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -52109,7 +52588,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],243:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53343,7 +53822,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],244:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53832,7 +54311,7 @@ module.exports={ "height":50,
                     {
                      "container":true,
                      "image_name":"box_06",
-                     "items":"[\"old_boots\",\"old_helmet\",\"old_boots\"]",
+                     "items":"[\"blood\",\"old_helmet\",\"blood\"]",
                      "label":true,
                      "label_action":"Take",
                      "label_description":"Some other shit",
@@ -54007,6 +54486,17 @@ module.exports={ "height":50,
                  "width":76.7389207792207,
                  "x":2025.34807207792,
                  "y":1838.69989350649
+                }, 
+                {
+                 "height":62.4541,
+                 "id":217,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":76.7389,
+                 "x":2501.50364209398,
+                 "y":1546.54691672955
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -54097,7 +54587,7 @@ module.exports={ "height":50,
          "x":0,
          "y":0
         }],
- "nextobjectid":217,
+ "nextobjectid":219,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -54108,7 +54598,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],245:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54533,7 +55023,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55490,7 +55980,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56577,7 +57067,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -56588,7 +57078,7 @@ module.exports={ "height":50,
                 {
                  "height":1864.10822842103,
                  "id":51,
-                 "name":"seamless_concrete",
+                 "name":"grass_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -56610,7 +57100,7 @@ module.exports={ "height":50,
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -56664,7 +57154,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -56686,7 +57176,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -56708,7 +57198,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -57062,7 +57552,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],249:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 'use strict';
 const { Texture, extras } = require('pixi.js');
 
@@ -57105,7 +57595,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":229,"pixi.js":151}],250:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"pixi.js":151}],249:[function(require,module,exports){
 'use strict';
 const { roofs } = require('../../engine/pixi_containers');
 
@@ -57127,7 +57617,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":229,"./item_model":255}],251:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":254}],250:[function(require,module,exports){
 (function (global){
 'use strict';
 const { items } = require('../../engine/pixi_containers');
@@ -57230,7 +57720,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":208,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":286,"./item_model":255}],252:[function(require,module,exports){
+},{"../../character/attributes/lootable":207,"../../engine/item_handler":224,"../../engine/pixi_containers":228,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":286,"./item_model":254}],251:[function(require,module,exports){
 'use strict';
 const { Sprite, Texture} = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
@@ -57239,6 +57729,7 @@ const event = require('events');
 
 class Click_Pad {
   constructor(data) {
+    this.id = data.id;
     this.area = new Sprite(Texture.WHITE);
     this.area.height = data.height;
     this.area.width  = data.width;
@@ -57266,10 +57757,10 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":229,"events":290,"pixi.js":151}],253:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"events":290,"pixi.js":151}],252:[function(require,module,exports){
 'use strict';
-const event = require('events');
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { Item } = require('./item_model');
 
@@ -57280,15 +57771,18 @@ class CollisionItem extends Item {
       this.shadow = true;
       this.shade.anchor.y = 1;
       this.shade.anchor.x = 0;
-      this.shade.events = new event();
-      this.shade.events.on('damage', () => {
-        this.shade.destroy();
-        this.sprite.destroy();
-      });
     }
 
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', () => this.sprite.destroy());
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+    damage_events.on('damage', on_damage);
 
     collisions.addChild(this.sprite);
   }
@@ -57298,7 +57792,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/pixi_containers":229,"./item_model":255,"events":290}],254:[function(require,module,exports){
+},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"./item_model":254}],253:[function(require,module,exports){
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
 
@@ -57343,7 +57837,7 @@ class Door extends Item {
       this.sprite.door = true;
       this.health = options.properties.health || 50;
 
-      damage_events.on('damage', ({door_tile, damage}) => {
+      damage_events.on('damage_tile', ({door_tile, damage}) => {
         door_tile.alpha = 1;
         if(door_tile.id === this.id) {
           if(this.health < 30) {
@@ -57354,9 +57848,9 @@ class Door extends Item {
                 image_name: 'door_broken',
               },
             });
-            wood_thump.volume = 0.3;
-            wood_thump.speed = 5;
-            wood_thump.play();
+            //wood_thump.volume = 0.3;
+            //wood_thump.speed = 5;
+            //wood_thump.play();
 
             broken_door.set_position(this.sprite);
           }
@@ -57373,7 +57867,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"../../engine/sound":232,"../../engine/tween":234,"../../view/button":284,"./item_model":255,"./visual_object":259}],255:[function(require,module,exports){
+},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"../../engine/sound":231,"../../engine/tween":233,"../../view/button":284,"./item_model":254,"./visual_object":259}],254:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 const { collisions } = require('../../engine/pixi_containers');
@@ -57382,8 +57876,11 @@ class Item {
   constructor(data) {
     // this texture ... for shadow
     //this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-
-    this.sprite = new Sprite.fromFrame(data.properties.image_name);
+    if(data.properties && data.properties.image_name) {
+      this.sprite = new Sprite.fromFrame(data.properties.image_name);
+    } else {
+      this.sprite = new Sprite.fromFrame('bunny');
+    }
     this.set_position(data);
     this.width     = data.width;
     this.height    = data.height;
@@ -57483,7 +57980,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":229,"pixi.js":151}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"pixi.js":151}],255:[function(require,module,exports){
 'use strict';
 const { Sprite, Texture } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
@@ -57492,6 +57989,7 @@ const event = require('events');
 
 class Trigger_Pad {
   constructor(data, player) {
+    this.id = data.id;
     this.area = new Sprite(Texture.WHITE);
     this.area.height = data.height;
     this.area.width  = data.width;
@@ -57519,7 +58017,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":229,"../types/level_factory":266,"events":290,"pixi.js":151}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../types/level_factory":266,"events":290,"pixi.js":151}],256:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -57645,7 +58143,53 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":229,"../../engine/sound":232,"../../light/types/led":277,"./item_model":255,"pixi.js":151}],258:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../../engine/sound":231,"../../light/types/led":277,"./item_model":254,"pixi.js":151}],257:[function(require,module,exports){
+'use strict';
+
+const { collisions    } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
+const { Inventory     } = require('../../character/attributes/inventory');
+//const { player_events } = require('../../engine/item_handler');
+
+const { Item } = require('./item_model');
+
+class Shrine extends Item {
+  constructor(options) {
+    super(options);
+    this.inventory = new Inventory();
+    const on_damage = ({id}) => {
+      if(this.id !== id) return;
+      console.log('you can not hit a shrine');
+      damage_events.removeListener('damage', on_damage);
+    };
+    damage_events.on('damage', on_damage);
+
+    //this.click = () => {
+    //  player_events.emit('check_items', (items) =>{
+    //    this.inventory = items;
+    //  });
+    //};
+
+    collisions.addChild(this.sprite);
+  }
+
+  give_blood(vial) {
+    console.log(vial);
+    if(vial) this.inventory.give_item(vial);
+  }
+
+  get enough_blood() {
+    console.log('feed me blood');
+
+    return (this.inventory.size > 1);
+  }
+}
+
+module.exports = {
+  Shrine,
+};
+
+},{"../../character/attributes/inventory":204,"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"./item_model":254}],258:[function(require,module,exports){
 'use strict';
 const { shrouds } = require('../../engine/pixi_containers');
 
@@ -57668,7 +58212,7 @@ module.exports = {
   Shroud,
 };
 
-},{"../../engine/pixi_containers":229,"./item_model":255}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":254}],259:[function(require,module,exports){
 'use strict';
 const { backgrounds } = require('../../engine/pixi_containers');
 
@@ -57689,11 +58233,11 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":229,"./item_model":255}],260:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./item_model":254}],260:[function(require,module,exports){
 'use strict';
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
 
-const event    = require('events');
 const { Item } = require('./item_model');
 
 class Wall extends Item {
@@ -57702,17 +58246,22 @@ class Wall extends Item {
 
     this.shadow = true;
     this.anchor = 0;
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', damage => this.on_hit(damage));
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
 
-    collisions.addChild(this.sprite);
-  }
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
 
-  on_hit() {
-    console.log('wall hit');
+      this.sprite.destroy();
+      damage_events.removeListener('damage', on_damage);
+    };
+    damage_events.on('damage', on_damage);
+
+    collisions.addChild(this.sprite);
   }
 }
 
@@ -57722,7 +58271,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":229,"./item_model":255,"events":290}],261:[function(require,module,exports){
+},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"./item_model":254}],261:[function(require,module,exports){
 'use strict';
 
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
@@ -57743,7 +58292,8 @@ class Archer_Room {
 
     Level_Factory.generate(elements);
 
-    const { exit_pad } = elements;
+    const { exit_pad, player } = elements;
+    this.player.set_position(player[0]);
 
     exit_pad.forEach(data => new Trigger_Pad(data));
   }
@@ -57753,15 +58303,15 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":238,"../data/archer_room.json":240,"../elements/pad":256,"./level_factory":266}],262:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":237,"../data/archer_room.json":239,"../elements/pad":255,"./level_factory":266}],262:[function(require,module,exports){
 (function (global){
 'use strict';
 
-const { pathfind        } = require('../../engine/pathfind.js');
-const { Tiled_Data      } = require('../attributes/parse_tiled_data');
-const { Trigger_Pad     } = require('../elements/pad');
-const { Rat             } = require('../../character/archetypes/rat');
-const { Level_Factory   } = require('./level_factory');
+const { pathfind      } = require('../../engine/pathfind.js');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Trigger_Pad   } = require('../elements/pad');
+const { Rat           } = require('../../character/archetypes/rat');
+const { Level_Factory } = require('./level_factory');
 
 class Defend_Room  {
   constructor(player) {
@@ -57781,11 +58331,11 @@ class Defend_Room  {
 
     this.player.set_position(player[0]);
 
-    const mouse = new Rat();
+    const mouse = new Rat(prey[0]);
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
-    const mouse2 = new Rat();
+    const mouse2 = new Rat({id: 999});
     mouse2.enemy(this.player);
     mouse2.set_position({x: prey[0].x +200, y: prey[0].y +100});
 
@@ -57812,7 +58362,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/defend_room.json":241,"../elements/pad":256,"./level_factory":266}],263:[function(require,module,exports){
+},{"../../character/archetypes/rat":202,"../../engine/pathfind.js":227,"../attributes/parse_tiled_data":237,"../data/defend_room.json":240,"../elements/pad":255,"./level_factory":266}],263:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
@@ -57902,7 +58452,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":204,"../../engine/camera":223,"../../engine/pixi_containers":229,"../../engine/tween":234,"../attributes/parse_tiled_data":238,"../data/intro_room.json":242,"../elements/click_pad":252,"../elements/pad":256,"./level_factory":266}],264:[function(require,module,exports){
+},{"../../character/archetypes/crow":201,"../../character/archetypes/zombie":203,"../../engine/camera":222,"../../engine/pixi_containers":228,"../../engine/tween":233,"../attributes/parse_tiled_data":237,"../data/intro_room.json":241,"../elements/click_pad":251,"../elements/pad":255,"./level_factory":266}],264:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57936,7 +58486,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":238,"../data/intro_room_level_2.json":243,"../elements/pad":256,"./level_factory":266}],265:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":237,"../data/intro_room_level_2.json":242,"../elements/pad":255,"./level_factory":266}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -57946,6 +58496,7 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
+const { Shrine        } = require('../elements/shrine');
 
 class Items_Room {
   constructor(player) {
@@ -57971,27 +58522,38 @@ class Items_Room {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
 
       if(npc.name === 'zombie') {
-        return new Lurcher({ path, time: 20000, turn: true});
+        return new Lurcher({ id: npc.id = 200, path, time: 20000, turn: true});
       }
 
       return new Crow({path});
     });
+    const areas = click_pad.map(data => new Click_Pad(data));
 
-    click_pad.forEach(data => {
-      const pad  = new Click_Pad(data);
+    const button_left = areas.find(({id}) => id === 200);
+    button_left.click = () => characters.forEach(({tween}) => tween.start());
 
-      if(data.id === 200) {
-        pad.click = () => characters.forEach(({tween}) => tween.start());
+    const furnace = new Shrine(click_pad[0]);
+    furnace.click = () => {
+      const result = this.player.inventory.take_items('blood');
+      furnace.give_blood(...result);
+      if(furnace.enough_blood) {
+        characters.forEach(({tween}) => tween.start());
       }
+    };
 
-      if(data.id === 184) {
-        pad.click = async () => {
-          //const lamp_light = level_lights.find(elems => elems.id === 188);
-          //lamp_light.intensity = 5;
-          //await lamp_light.strike.fast();
-        };
-      }
-    });
+    // const lamp_light = level_lights.find(elems => elems.id === 188);
+    // lamp_light.intensity = 5;
+    // await lamp_light.strike.fast();
+    console.log(elements);
+
+    const button_right = areas.find(({id}) => id === 217);
+    button_right.click = () => {
+      // const result = this.player.inventory.take_items('blood');
+      // if(result.length > 1) console.log('ppoppp');
+      // console.log(this.player);
+      // console.log(result);
+    };
+
   }
 }
 
@@ -58000,7 +58562,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":204,"../attributes/parse_tiled_data":238,"../data/items_room.json":244,"../elements/click_pad":252,"../elements/pad":256,"./level_factory":266}],266:[function(require,module,exports){
+},{"../../character/archetypes/crow":201,"../../character/archetypes/zombie":203,"../attributes/parse_tiled_data":237,"../data/items_room.json":243,"../elements/click_pad":251,"../elements/pad":255,"../elements/shrine":257,"./level_factory":266}],266:[function(require,module,exports){
 'use strict';
 const { clear_non_players } = require('../../engine/pixi_containers');
 
@@ -58089,7 +58651,7 @@ module.exports = {
   Level_Factory,
 };
 
-},{"../../engine/camera":223,"../../engine/pixi_containers":229,"../../light/types/bright_light":275,"../elements/background":249,"../elements/ceiling":250,"../elements/chest":251,"../elements/collision_object":253,"../elements/door":254,"../elements/shroud":258,"../elements/visual_object":259,"../elements/wall":260,"./archer_room":261,"./defend_room":262,"./intro":263,"./intro_level_02":264,"./item_room":265,"./school_room":268,"./simple":269,"./street":270,"./transition_room":271}],267:[function(require,module,exports){
+},{"../../engine/camera":222,"../../engine/pixi_containers":228,"../../light/types/bright_light":275,"../elements/background":248,"../elements/ceiling":249,"../elements/chest":250,"../elements/collision_object":252,"../elements/door":253,"../elements/shroud":258,"../elements/visual_object":259,"../elements/wall":260,"./archer_room":261,"./defend_room":262,"./intro":263,"./intro_level_02":264,"./item_room":265,"./school_room":268,"./simple":269,"./street":270,"./transition_room":271}],267:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58154,7 +58716,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":215,"../../engine/camera":223,"../elements/background":249}],268:[function(require,module,exports){
+},{"../../character/types/npc":214,"../../engine/camera":222,"../elements/background":248}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58206,7 +58768,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/school_room.json":246,"../elements/pad":256,"../elements/phone":257,"./level_factory":266}],269:[function(require,module,exports){
+},{"../../character/archetypes/rat":202,"../../engine/pathfind.js":227,"../attributes/parse_tiled_data":237,"../data/school_room.json":245,"../elements/pad":255,"../elements/phone":256,"./level_factory":266}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visuals       } = require('../../engine/pixi_containers');
@@ -58252,7 +58814,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":229,"../attributes/parse_tiled_data":238,"../data/apartment.json":239,"../data/lights_room.json":245,"../elements/pad":256,"./level_factory":266}],270:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/parse_tiled_data":237,"../data/apartment.json":238,"../data/lights_room.json":244,"../elements/pad":255,"./level_factory":266}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58286,7 +58848,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":238,"../data/street.json":247,"../elements/pad":256,"./level_factory":266}],271:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":237,"../data/street.json":246,"../elements/pad":255,"./level_factory":266}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visuals       } = require('../../engine/pixi_containers');
@@ -58304,7 +58866,7 @@ class Transition_Room {
   }
 
   _set_elements() {
-    global.set_light_level(0.8);
+    global.set_light_level(1);
     const level_data = require('../data/transition_room.json');
     const elements   = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
@@ -58352,7 +58914,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":229,"../attributes/parse_tiled_data":238,"../data/transition_room.json":248,"../elements/pad":256,"./level_factory":266,"pixi.js":151}],272:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/parse_tiled_data":237,"../data/transition_room.json":247,"../elements/pad":255,"./level_factory":266,"pixi.js":151}],272:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58527,7 +59089,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":229,"pixi.js":151}],275:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],275:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58564,7 +59126,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":229,"../attributes/strike":273,"../light_model":274}],276:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/strike":273,"../light_model":274}],276:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -58615,7 +59177,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":229,"../attributes/flicker":272,"../light_model":274,"pixi.js":151}],277:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/flicker":272,"../light_model":274,"pixi.js":151}],277:[function(require,module,exports){
 'use strict';
 
 const { visuals } = require('../../engine/pixi_containers');
@@ -58642,7 +59204,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":229,"../attributes/flicker":272,"../light_model":274}],278:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"../attributes/flicker":272,"../light_model":274}],278:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58733,7 +59295,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":229,"pixi.js":151}],280:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],280:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grids } = require('../engine/pixi_containers');
@@ -58862,7 +59424,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":229,"pixi.js":151}],281:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],281:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -59146,7 +59708,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":229,"pixi.js":151}],285:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],285:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59300,7 +59862,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":229,"../engine/shadows":231,"./caption":285,"pixi.js":151}],287:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"../engine/shadows":230,"./caption":285,"pixi.js":151}],287:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -59420,7 +59982,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":220,"../engine/item_handler":225,"../engine/pixi_containers":229,"pixi.js":151}],288:[function(require,module,exports){
+},{"../effects/fade":219,"../engine/item_handler":224,"../engine/pixi_containers":228,"pixi.js":151}],288:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59618,7 +60180,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":237}],289:[function(require,module,exports){
+},{"../items/item_manager":236}],289:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -62219,4 +62781,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[235]);
+},{}]},{},[234]);

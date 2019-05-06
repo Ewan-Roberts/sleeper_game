@@ -11,7 +11,7 @@ const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
-const players1  = players.children;
+const players1 = players.children;
 
 class Arrow {
   constructor() {
@@ -19,7 +19,7 @@ class Arrow {
     this.sprite = new Sprite.fromFrame('arrow');
     this.sprite.width  /= 6;
     this.sprite.height /= 6;
-    this.sprite.anchor.set(0.65);
+    this.sprite.anchor.set(1);
 
     this.tween = new Tween(this.sprite);
     items.addChild(this.sprite);
@@ -35,7 +35,7 @@ function shoot_arrow(speed, damage, origin, point) {
   arrow.rotation = radian(point, origin);
   arrow.tween.from(origin);
   arrow.tween.to(point);
-  arrow.tween.time = speed;
+  arrow.tween.time = speed*2;
 
   arrow.tween.movement.on('update', () => {
     const arrow_point = arrow.sprite.getGlobalPosition();

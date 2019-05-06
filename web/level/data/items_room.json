@@ -486,7 +486,7 @@
                     {
                      "container":true,
                      "image_name":"box_06",
-                     "items":"[\"old_boots\",\"old_helmet\",\"old_boots\"]",
+                     "items":"[\"blood\",\"old_helmet\",\"blood\"]",
                      "label":true,
                      "label_action":"Take",
                      "label_description":"Some other shit",
@@ -661,6 +661,17 @@
                  "width":76.7389207792207,
                  "x":2025.34807207792,
                  "y":1838.69989350649
+                }, 
+                {
+                 "height":62.4541,
+                 "id":217,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":76.7389,
+                 "x":2501.50364209398,
+                 "y":1546.54691672955
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -751,7 +762,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":217,
+ "nextobjectid":219,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

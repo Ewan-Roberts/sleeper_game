@@ -18,7 +18,8 @@ class Archer_Room {
 
     Level_Factory.generate(elements);
 
-    const { exit_pad } = elements;
+    const { exit_pad, player } = elements;
+    this.player.set_position(player[0]);
 
     exit_pad.forEach(data => new Trigger_Pad(data));
   }

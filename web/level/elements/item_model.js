@@ -6,8 +6,11 @@ class Item {
   constructor(data) {
     // this texture ... for shadow
     //this.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-
-    this.sprite = new Sprite.fromFrame(data.properties.image_name);
+    if(data.properties && data.properties.image_name) {
+      this.sprite = new Sprite.fromFrame(data.properties.image_name);
+    } else {
+      this.sprite = new Sprite.fromFrame('bunny');
+    }
     this.set_position(data);
     this.width     = data.width;
     this.height    = data.height;

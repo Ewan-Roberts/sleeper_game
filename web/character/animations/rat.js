@@ -26,7 +26,7 @@ class rat_animations {
   }
 
   static wait_frames() {
-    const waiting_frames = [
+    return [
       Texture.fromFrame('rat_36'),
       Texture.fromFrame('rat_37'),
       Texture.fromFrame('rat_38'),
@@ -34,8 +34,6 @@ class rat_animations {
       Texture.fromFrame('rat_37'),
       Texture.fromFrame('rat_36'),
     ];
-
-    return waiting_frames;
   }
 
   static dead_frames() {
@@ -43,7 +41,7 @@ class rat_animations {
   }
 
   static eat_frames() {
-    const eating_frames = [
+    return [
       Texture.fromFrame('rat_37'),
       Texture.fromFrame('rat_38'),
       Texture.fromFrame('rat_39'),
@@ -57,8 +55,6 @@ class rat_animations {
       Texture.fromFrame('rat_37'),
       Texture.fromFrame('rat_36'),
     ];
-
-    return eating_frames;
   }
 }
 

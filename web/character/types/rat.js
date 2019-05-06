@@ -2,7 +2,7 @@
 const { enemys    } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
-const { Rodent    } = require('../animations/rat');
+const { Zombie    } = require('../animations/zombie');
 const { Inventory } = require('../attributes/inventory');
 const { Vitals    } = require('../attributes/vitals');
 const { Lootable  } = require('../attributes/lootable');
@@ -14,10 +14,11 @@ class Animal extends Character {
     super();
     this.name = 'rat';
 
-    this.add_component(new Rodent(this));
+    this.add_component(new Zombie(this));
     this.add_component(new Vitals(this));
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
+    this.sprite.play();
 
     enemys.addChild(this.sprite);
   }

@@ -3,44 +3,49 @@ const { collisions, guis } = require('../../engine/pixi_containers');
 
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
+const { radian           } = require('../../utils/math');
+const { random_number    } = require('../../utils/math');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
+const { pathfind         } = require('../../engine/pathfind');
 
 const { Animal   } = require('../types/rat');
 const { Melee    } = require('../attributes/melee');
-const { pathfind } = require('../../engine/pathfind');
-const event        = require('events');
-//const { Tween  } = require('../../engine/tween');
-
 
 // truncanting
-//arr.length = 3;
-//console.log(arr); //=> [11, 22, 33]
+
+// arr.length = 4;
+// console.log(arr); //=> [11, 22, 33]
+
 function break_at_door(path) {
-  const arr = [];
-
   for (let i = 0; i < path.length; i++) {
-    arr.push(path[i]);
-
-    if(path[i].door) return arr;
+    if(path[i].door) {
+      path.length = i+1;
+      return path;
+    }
   }
-  return arr;
+  return path;
 }
 
 class Rat extends Animal {
-  constructor() {
+  constructor({id}) {
     super();
     this.name = 'rat';
-    this.id = 4;
+    this.id = id;
+    this.sprite.id = id;
     this.health = 100;
     const on_damage = ({id, damage}) => {
       if(this.id !== id) return;
       this.health -= damage;
       if(this.health > 0) return;
 
+      if(this.vitals.alive) {
+        return this.vitals.damage(damage);
+      }
+
+      this.kill();
       damage_events.removeListener('damage', on_damage);
-      this.sprite.destroy();
     };
 
     damage_events.on('damage', on_damage);
@@ -48,7 +53,6 @@ class Rat extends Animal {
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.switch_to_melee_weapon();
     this.add_component(new Melee(this));
-
   }
 
   get _target_far_away() {
@@ -57,7 +61,7 @@ class Rat extends Animal {
     return distance > 200;
   }
 
-  on_damage(amount) {
+  on_damage2(amount) {
     if(this.vitals.alive) {
       return this.vitals.damage(amount);
     }
@@ -70,7 +74,7 @@ class Rat extends Animal {
 
     this.loot.set_position(this.sprite);
     this.loot.show();
-    this.tween.stop();
+    if(this.tween)this.tween.stop();
 
     this.animation.kill();
   }
@@ -88,6 +92,8 @@ class Rat extends Animal {
   }
 
   async _pathfind() {
+    this.animation.move();
+
     const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
@@ -99,20 +105,22 @@ class Rat extends Animal {
       door_path[0].x,
       door_path[0].y
     );
+
+    const random = () => random_number(30, 50);
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
-        door_path[i-1].x,
-        door_path[i-1].y,
+        door_path[i-1].x + random(),
+        door_path[i-1].y + random(),
         door_path[i].x,
         door_path[i].y,
-        2);
+        20);
     }
   }
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
     this.tween = tweenManager.createTween(this.sprite);
-    this.tween.time = 2000;
+    this.tween.time = 4000;
     this.tween.expire = true;
     this.tween.start();
 
@@ -123,7 +131,7 @@ class Rat extends Animal {
       if(!this.enemy.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
-        this.tween.time = 2000;
+        this.tween.time = 4000;
         this.tween.start();
 
         return this.melee.attack(this.enemy);
@@ -139,11 +147,16 @@ class Rat extends Animal {
       }
 
       this.tween.time = this.tween.path.length
-        ?this.tween.path.length*1000
+        ?this.tween.path.length*2000
         :2000;
 
       this._show_path(this.tween.path);
       this.tween.start();
+    });
+
+    this.tween.on('update', () => {
+      if(!this.tween.path) return;
+      this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint);
     });
   }
 }

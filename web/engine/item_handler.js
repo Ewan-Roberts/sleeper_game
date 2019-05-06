@@ -3,12 +3,20 @@ const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
 
 const player_events = new event();
+
+player_events.on('error', err => new Error(err));
 class PlayerEvents {
   constructor(player) {
     this.name = 'events';
 
     player_events.on('give_item', item => {
       player.inventory.give_item(item);
+    });
+
+    player_events.on('check_items', callback => {
+      const result = player.inventory.take_items('blood');
+
+      callback(result);
     });
 
     player_events.on('equip_weapon', item => {

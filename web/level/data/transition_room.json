@@ -8,7 +8,7 @@
                 {
                  "height":1864.10822842103,
                  "id":51,
-                 "name":"seamless_concrete",
+                 "name":"grass_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -30,7 +30,7 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -84,7 +84,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -106,7 +106,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -128,7 +128,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 

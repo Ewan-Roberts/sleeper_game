@@ -53,9 +53,9 @@ class Door extends Item {
                 image_name: 'door_broken',
               },
             });
-            wood_thump.volume = 0.3;
-            wood_thump.speed = 5;
-            wood_thump.play();
+            //wood_thump.volume = 0.3;
+            //wood_thump.speed = 5;
+            //wood_thump.play();
 
             broken_door.set_position(this.sprite);
           }

@@ -24,11 +24,11 @@ class Defend_Room  {
 
     this.player.set_position(player[0]);
 
-    const mouse = new Rat();
+    const mouse = new Rat(prey[0]);
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
-    const mouse2 = new Rat();
+    const mouse2 = new Rat({id: 999});
     mouse2.enemy(this.player);
     mouse2.set_position({x: prey[0].x +200, y: prey[0].y +100});
 

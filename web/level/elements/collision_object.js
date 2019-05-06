@@ -1,6 +1,5 @@
 'use strict';
-const event = require('events');
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
 const { damage_events } = require('../../engine/damage_handler');
 
 const { Item } = require('./item_model');
@@ -12,11 +11,6 @@ class CollisionItem extends Item {
       this.shadow = true;
       this.shade.anchor.y = 1;
       this.shade.anchor.x = 0;
-      this.shade.events = new event();
-      this.shade.events.on('damage', () => {
-        this.shade.destroy();
-        this.sprite.destroy();
-      });
     }
 
     this.health = 100;

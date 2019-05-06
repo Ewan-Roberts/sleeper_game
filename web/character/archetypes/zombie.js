@@ -6,16 +6,17 @@ const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
 const { Character } = require('../character_model');
 const { Zombie    } = require('../animations/zombie');
+const { Lootable  } = require('../attributes/lootable');
 
 class Lurcher extends Character{
   constructor({ id, path, time, smooth, draw, turn } = {}) {
     super();
     this.name = 'lurcher';
+    this.id = id;
 
     this.add_component(new Zombie(this));
-    this.sprite.play();
-    this.id = id;
     this.sprite.id = id;
+    this.add_component(new Lootable(this));
 
     if(path) {
       this.add_component(new Tween(this.sprite));
@@ -39,6 +40,9 @@ class Lurcher extends Character{
 
       damage_events.removeListener('damage', on_damage);
       this.tween.stop();
+      this.loot.populate_with(['blood']);
+      this.loot.set_position(this.sprite);
+      this.loot.show();
       this.sprite.destroy();
     };
     damage_events.on('damage', on_damage);

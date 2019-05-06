@@ -20,17 +20,12 @@ class Wall extends Item {
       this.health -= damage;
       if(this.health > 0) return;
 
-      damage_events.removeListener('damage', on_damage);
       this.sprite.destroy();
+      damage_events.removeListener('damage', on_damage);
     };
-
     damage_events.on('damage', on_damage);
 
     collisions.addChild(this.sprite);
-  }
-
-  on_hit() {
-    console.log('wall hit');
   }
 }
 

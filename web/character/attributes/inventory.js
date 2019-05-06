@@ -34,6 +34,10 @@ class Inventory {
     this.equipped = this.melee_weapon;
   }
 
+  get size() {
+    return this.items.length;
+  }
+
   equip_weapon(weapon) {
     this.equipped = weapon;
   }
@@ -41,6 +45,19 @@ class Inventory {
   give_item(item) {
     this.items.push(item);
   }
+
+  take_items(name) {
+    // return array of things you want remove them from items
+    const result = this.items.map((item,i) => {
+      if(item.name === name) {
+        this.items.splice(i,1);
+        return item;
+      }
+    }).filter(n => n);
+
+    return result;
+  }
+
 
   add_ranged_weapon_by_name(name) {
     const weapon = Item_Manager.get_item(name);

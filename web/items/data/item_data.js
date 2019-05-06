@@ -254,6 +254,18 @@ const items = [
     image_name: 'rat_meat',
   },
   {
+    name: 'blood',
+    id: 1,
+    rank: 0,
+    cost: 10,
+    category: 'fuel',
+
+    visual_name: 'blood',
+    description: 'the fuel for the cooker',
+    image_name: 'blood_vial',
+  },
+
+  {
     name: 'rat_hide',
     id: 2,
     rank: 0,

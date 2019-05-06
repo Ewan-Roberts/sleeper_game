@@ -348,8 +348,8 @@
                  "type":"",
                  "visible":true,
                  "width":217.353159851301,
-                 "x":3176.02354399009,
-                 "y":-1080.26446622358
+                 "x":2810.10015919878,
+                 "y":-977.348514251024
                 }, 
                 {
                  "height":83.2727845118233,
@@ -371,7 +371,7 @@
                  "y":844.488737313777
                 }, 
                 {
-                 "height":182,
+                 "height":250.61063464837,
                  "id":177,
                  "name":"",
                  "properties":
@@ -385,13 +385,32 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":638.667,
-                 "x":684.383972118959,
-                 "y":-1470.59520859149
+                 "width":918.827091480846,
+                 "x":718.689289443144,
+                 "y":-1436.2898912673
+                }, 
+                {
+                 "height":250.611,
+                 "id":344,
+                 "name":"",
+                 "properties":
+                    {
+                     "level_name":"archer"
+                    },
+                 "propertytypes":
+                    {
+                     "level_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":918.827,
+                 "x":1976.26403001715,
+                 "y":-1423.19000543168
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -690,6 +709,44 @@
                  "width":2091.54,
                  "x":3864.86029162747,
                  "y":250.484333490122
+                }, 
+                {
+                 "height":2094.93,
+                 "id":345,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90.0266118076578,
+                 "type":"",
+                 "visible":true,
+                 "width":1245.2,
+                 "x":3875.55164737352,
+                 "y":-2426.76699337521
+                }, 
+                {
+                 "height":2094.93,
+                 "id":346,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90.0266,
+                 "type":"",
+                 "visible":true,
+                 "width":1245.2,
+                 "x":1778.77221269297,
+                 "y":-2425.39524585477
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1420,7 +1477,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1428,27 +1485,6 @@
          "draworder":"topdown",
          "name":"collision",
          "objects":[
-                {
-                 "height":302.755880584049,
-                 "id":82,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.8,
-                     "image_name":"long_broken"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-358.048775542444,
-                 "type":"",
-                 "visible":true,
-                 "width":1347.74732988671,
-                 "x":1267.23994792838,
-                 "y":-1596.89218266952
-                }, 
                 {
                  "height":837.281246488164,
                  "id":111,
@@ -1701,8 +1737,8 @@
                  "type":"",
                  "visible":true,
                  "width":429.099802246631,
-                 "x":1763.54713851356,
-                 "y":-548.505791541058
+                 "x":1659.58352577802,
+                 "y":-542.008065745087
                 }, 
                 {
                  "height":473.329758437391,
@@ -1990,10 +2026,52 @@
                  "width":866.253,
                  "x":765.529523569823,
                  "y":-1497.43181585085
+                }, 
+                {
+                 "height":632.690865148617,
+                 "id":343,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":536.05197550798,
+                 "x":1516.177083931,
+                 "y":-1690.19880085025
+                }, 
+                {
+                 "height":1226.80927379741,
+                 "id":347,
+                 "name":"",
+                 "properties":
+                    {
+                     "fade":0.1,
+                     "image_name":"roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":270.437184722865,
+                 "type":"",
+                 "visible":true,
+                 "width":696.138820471786,
+                 "x":2726.58393845426,
+                 "y":-920.846149737715
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -2890,7 +2968,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":343,
+ "nextobjectid":348,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
