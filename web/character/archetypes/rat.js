@@ -32,9 +32,18 @@ class Rat extends Animal {
   constructor() {
     super();
     this.name = 'rat';
+    this.id = 4;
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
 
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.switch_to_melee_weapon();
@@ -84,7 +93,7 @@ class Rat extends Animal {
     const door_tile   = door_path[door_path.length - 1];
 
     const { damage } = this.inventory.equipped;
-    damage_events.emit('damage', {door_tile, damage});
+    damage_events.emit('damage_tile', {door_tile, damage});
 
     this.tween.path.lineTo(
       door_path[0].x,

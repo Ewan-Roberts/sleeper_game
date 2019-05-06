@@ -42,7 +42,7 @@ class Door extends Item {
       this.sprite.door = true;
       this.health = options.properties.health || 50;
 
-      damage_events.on('damage', ({door_tile, damage}) => {
+      damage_events.on('damage_tile', ({door_tile, damage}) => {
         door_tile.alpha = 1;
         if(door_tile.id === this.id) {
           if(this.health < 30) {

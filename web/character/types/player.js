@@ -2,6 +2,7 @@
 
 const { players      } = require('../../engine/pixi_containers');
 const { PlayerEvents } = require('../../engine/item_handler');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { Character } = require('../character_model');
 const { Human     } = require('../animations/human');
@@ -13,16 +14,13 @@ const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
 const { Blood     } = require('../../effects/blood');
-const event        = require('events');
 
 class Player extends Character {
   constructor() {
     super();
     this.name = 'player';
-
+    this.id = 1;
     this.add_component(new Human(this));
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
     this.sprite.name = 'player';
     this.blood       = new Blood();
 
@@ -36,6 +34,17 @@ class Player extends Character {
 
     players.addChild(this.sprite);
 
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
     this.add_component(new PlayerEvents(this));
   }
 

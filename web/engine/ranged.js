@@ -2,11 +2,12 @@
 const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
+const { damage_events } = require('./damage_handler');
 
-const { items } = require('./pixi_containers');
+const { items      } = require('./pixi_containers');
 const { collisions } = require('./pixi_containers');
-const { enemys } = require('./pixi_containers');
-const { players } = require('./pixi_containers');
+const { enemys     } = require('./pixi_containers');
+const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
@@ -42,18 +43,15 @@ function shoot_arrow(speed, damage, origin, point) {
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
     if (collision_object) {
       arrow.tween.stop();
-      if(collision_object.events) {
-        collision_object.events.emit('damage', damage);
-      }
+      damage_events.emit('damage', {id: collision_object.id, damage});
       return;
     }
 
     const collision_enemies = enemies.find(enemy => enemy.containsPoint(arrow_point));
     if (collision_enemies) {
       if(collision_enemies.id === origin.id) return;
-
+      damage_events.emit('damage', {id: collision_enemies.id, damage});
       arrow.tween.stop();
-      collision_enemies.events.emit('damage', damage);
       return;
     }
 

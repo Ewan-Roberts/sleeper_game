@@ -1,19 +1,21 @@
 'use strict';
-const { enemys    } = require('../../engine/pixi_containers');
+const { enemys        } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
 const { Character } = require('../character_model');
 const { Zombie    } = require('../animations/zombie');
 
-// this should extend a character type
 class Lurcher extends Character{
-  constructor({ path, time, smooth, draw, turn } = {}) {
+  constructor({ id, path, time, smooth, draw, turn } = {}) {
     super();
     this.name = 'lurcher';
 
     this.add_component(new Zombie(this));
     this.sprite.play();
+    this.id = id;
+    this.sprite.id = id;
 
     if(path) {
       this.add_component(new Tween(this.sprite));
@@ -28,6 +30,18 @@ class Lurcher extends Character{
         });
       }
     }
+
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.tween.stop();
+      this.sprite.destroy();
+    };
+    damage_events.on('damage', on_damage);
 
     enemys.addChild(this.sprite);
   }

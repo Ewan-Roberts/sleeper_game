@@ -1,7 +1,7 @@
 'use strict';
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
 
-const event    = require('events');
 const { Item } = require('./item_model');
 
 class Wall extends Item {
@@ -10,11 +10,21 @@ class Wall extends Item {
 
     this.shadow = true;
     this.anchor = 0;
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', damage => this.on_hit(damage));
     if(data.options && data.options.hidden) {
       this.alpha = 0;
     }
+
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
 
     collisions.addChild(this.sprite);
   }

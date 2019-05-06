@@ -31,27 +31,19 @@ class Items_Room {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
 
       if(npc.name === 'zombie') {
-        return new Lurcher({ path, time: 20000, turn: true});
+        return new Lurcher({ id: npc.id, path, time: 20000, turn: true});
       }
 
       return new Crow({path});
     });
+    const areas = click_pad.map(data => new Click_Pad(data));
 
-    click_pad.forEach(data => {
-      const pad  = new Click_Pad(data);
+    const button_left = areas.find(({id}) => id === 200);
+    button_left.click = () => characters.forEach(({tween}) => tween.start());
 
-      if(data.id === 200) {
-        pad.click = () => characters.forEach(({tween}) => tween.start());
-      }
+    const button_right = areas.find(({id}) => id === 184);
+    button_right.click = () => characters.forEach(({tween}) => tween.start());
 
-      if(data.id === 184) {
-        pad.click = async () => {
-          //const lamp_light = level_lights.find(elems => elems.id === 188);
-          //lamp_light.intensity = 5;
-          //await lamp_light.strike.fast();
-        };
-      }
-    });
   }
 }
 

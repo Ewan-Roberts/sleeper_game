@@ -1,5 +1,6 @@
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { tweenManager     } = require('pixi.js');
 const { sleep            } = require('../../utils/time');
@@ -13,16 +14,24 @@ const { Scavenge  } = require('../attributes/scavenge');
 // const { Route  } = require('../attributes/route');
 const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
-const event         = require('events');
 
 class Scavenger extends Animal {
   constructor() {
     super();
     this.name = 'scavenger';
+    this.id = 3;
 
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id = 3;
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.equip_melee_weapon();

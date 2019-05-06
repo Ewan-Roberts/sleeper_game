@@ -40,7 +40,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -292,7 +292,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -944,7 +944,7 @@
          "name":"decal",
          "objects":[
                 {
-                 "height":261.549964981513,
+                 "height":160.439325839214,
                  "id":181,
                  "name":"",
                  "properties":
@@ -955,12 +955,12 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":-1309.96183394216,
+                 "rotation":-1361.14539248111,
                  "type":"",
                  "visible":true,
-                 "width":162.094754473301,
-                 "x":990.088843229564,
-                 "y":-143.135873329234
+                 "width":227.615276363712,
+                 "x":890.370467646313,
+                 "y":-181.021084215236
                 }, 
                 {
                  "height":139.019552865669,
@@ -1335,12 +1335,12 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":-179.804,
+                 "rotation":-89.1491864389498,
                  "type":"",
                  "visible":true,
                  "width":179.602,
-                 "x":1371.50905302152,
-                 "y":439.640940745813
+                 "x":1225.13937257107,
+                 "y":444.325816095254
                 }, 
                 {
                  "height":374.57077173416,
@@ -1420,7 +1420,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1993,7 +1993,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -2255,7 +2255,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -2750,7 +2750,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 

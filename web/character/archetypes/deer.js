@@ -1,20 +1,17 @@
 'use strict';
 const { tweenManager     } = require('pixi.js');
 const { distance_between } = require('../../utils/math');
+const { damage_events } = require('../../engine/damage_handler');
 
 const { Animal } = require('../types/rat');
 const { Melee  } = require('../attributes/melee');
 const { Blood  } = require('../../effects/blood');
-const event      = require('events');
 
 class Deer extends Animal {
   constructor() {
     super();
     this.name = 'rat';
-
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id = 2;
+    this.id = 2;
 
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.equip_melee_weapon();
@@ -27,6 +24,18 @@ class Deer extends Animal {
     this._logic.repeat = 200;
     this._logic.expire = true;
     this._logic.dead   = false;
+
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
+
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
   }
 
   _walk_to_enemy() {

@@ -2,8 +2,8 @@
 
 const { tweenManager     } = require('pixi.js');
 const { distance_between } = require('../../utils/math');
+const { damage_events } = require('../../engine/damage_handler');
 
-const event     = require('events');
 const { Enemy } = require('../types/enemy');
 const { Melee } = require('../attributes/melee');
 const { Range } = require('../attributes/ranged');
@@ -13,10 +13,18 @@ class Archer extends Enemy {
   constructor() {
     super();
     this.name = 'archer';
+    this.id = 6;
+    this.health = 100;
+    const on_damage = ({id, damage}) => {
+      if(this.id !== id) return;
+      this.health -= damage;
+      if(this.health > 0) return;
 
-    this.sprite.events = new event();
-    this.sprite.events.on('damage', amount => this.on_damage(amount));
-    this.sprite.id = 1;
+      damage_events.removeListener('damage', on_damage);
+      this.sprite.destroy();
+    };
+
+    damage_events.on('damage', on_damage);
 
     this.inventory.add_ranged_weapon_by_name('old_bow');
     this.inventory.add_melee_weapon_by_name('dev_knife');

@@ -6,6 +6,7 @@ const event = require('events');
 
 class Trigger_Pad {
   constructor(data, player) {
+    this.id = data.id;
     this.area = new Sprite(Texture.WHITE);
     this.area.height = data.height;
     this.area.width  = data.width;
