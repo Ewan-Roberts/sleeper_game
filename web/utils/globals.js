@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 /* ***************************************************************
  *                                                               *
@@ -26,7 +26,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
   bunny.width = 100;
   bunny.height = 100;
 
-  visual_effects_container.addChild(bunny);
+  visuals.addChild(bunny);
   //if(light) {
   //  const shade = new PIXI.Sprite(texture);
   //  shade.parentGroup = PIXI.shadows.casterGroup;

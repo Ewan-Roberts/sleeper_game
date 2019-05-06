@@ -3,14 +3,14 @@ const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
-const { item_container      } = require('./pixi_containers');
-const { collision_container } = require('./pixi_containers');
-const { enemy_container     } = require('./pixi_containers');
-const { player_container    } = require('./pixi_containers');
+const { items } = require('./pixi_containers');
+const { collisions } = require('./pixi_containers');
+const { enemys } = require('./pixi_containers');
+const { players } = require('./pixi_containers');
 
-const objects  = collision_container.children;
-const enemies  = enemy_container.children;
-const players  = player_container.children;
+const objects  = collisions.children;
+const enemies  = enemys.children;
+const players1  = players.children;
 
 class Arrow {
   constructor() {
@@ -21,7 +21,7 @@ class Arrow {
     this.sprite.anchor.set(0.65);
 
     this.tween = new Tween(this.sprite);
-    item_container.addChild(this.sprite);
+    items.addChild(this.sprite);
   }
 
   set rotation(value) {
@@ -57,7 +57,7 @@ function shoot_arrow(speed, damage, origin, point) {
       return;
     }
 
-    const collision_players = players.find(player=> player.containsPoint(arrow_point));
+    const collision_players = players1.find(player=> player.containsPoint(arrow_point));
     if (collision_players) {
       if(collision_players.id === origin.id) return;
 

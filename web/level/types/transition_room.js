@@ -1,5 +1,5 @@
 'use strict';
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -33,7 +33,7 @@ class Transition_Room {
       level_names.x = x + width/4;
       level_names.y = y + height/2;
 
-      visual_effects_container.addChild(level_names);
+      visuals.addChild(level_names);
     });
 
     const level_text = new Text(
@@ -52,7 +52,7 @@ class Transition_Room {
     level_text.x = player[0].x -150;
     level_text.y = player[0].y -50;
 
-    visual_effects_container.addChild(level_text);
+    visuals.addChild(level_text);
   }
 }
 

@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
-const { grid_container      } = require('../engine/pixi_containers');
-const { collision_container } = require('../engine/pixi_containers');
+const { grids } = require('../engine/pixi_containers');
+const { collisions } = require('../engine/pixi_containers');
 
 function check(rect1, rect2) {
 
@@ -65,9 +65,9 @@ class Grid {
       }
       grid_x++;
 
-      if(collision_container.children.length < 1) throw 'must have collision objects for grid';
+      if(collisions.children.length < 1) throw 'must have collision objects for grid';
 
-      collision_container.children.forEach(object => {
+      collisions.children.forEach(object => {
         if(check(tile, object)) {
           tile.passable = false;
           if(object.door) {
@@ -77,7 +77,7 @@ class Grid {
         }
       });
 
-      grid_container.addChild(tile);
+      grids.addChild(tile);
     }
   }
 
@@ -88,7 +88,7 @@ class Grid {
     let binary_line = [];
     let sprite_line = [];
 
-    grid_container.children.forEach((tile, i) => {
+    grids.children.forEach((tile, i) => {
       if(!tile.passable) {
         tile.alpha = 0.3;
         if(tile.door) {

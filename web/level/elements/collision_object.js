@@ -1,6 +1,6 @@
 'use strict';
 const event = require('events');
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -21,7 +21,7 @@ class CollisionItem extends Item {
     this.sprite.events = new event();
     this.sprite.events.on('damage', () => this.sprite.destroy());
 
-    collision_container.addChild(this.sprite);
+    collisions.addChild(this.sprite);
   }
 }
 

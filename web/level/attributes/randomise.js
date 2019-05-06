@@ -1,6 +1,6 @@
 'use strict';
 const PIXI = require('pixi.js');
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { random_bound    } = require('../../utils/math');
 const { Color_Pick      } = require('../../utils/color_picker');
@@ -13,7 +13,7 @@ class Randomise {
     this.area.anchor.set(0.5);
     this.rotate_items = true;
     // this.area.tint = 0xff0000;
-    visual_effects_container.addChild(this.area);
+    visuals.addChild(this.area);
   }
 
   set height(value) {

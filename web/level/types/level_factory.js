@@ -1,5 +1,5 @@
 'use strict';
-const { clear_non_player_containers } = require('../../engine/pixi_containers');
+const { clear_non_players } = require('../../engine/pixi_containers');
 
 const { Intro         } = require('./intro');
 const { Camera        } = require('../../engine/camera');
@@ -78,7 +78,7 @@ class Level_Factory {
   }
 
   static clear() {
-    clear_non_player_containers();
+    clear_non_players();
   }
 }
 

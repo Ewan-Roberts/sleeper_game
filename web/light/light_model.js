@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 class Light {
   constructor() {
@@ -52,11 +52,11 @@ class Light {
   }
 
   remove() {
-    visual_effects_container.removeChild(this.shadow);
+    visuals.removeChild(this.shadow);
   }
 
   add() {
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 }
 

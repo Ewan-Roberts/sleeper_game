@@ -1,5 +1,5 @@
 'use strict';
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const { Tween       } = require('../../engine/tween');
 const { Camera      } = require('../../engine/camera');
@@ -66,7 +66,7 @@ class Intro  {
     click_pad.forEach(data => {
       const pad = new Click_Pad(data);
       pad.click = () => {
-        const dumpster = collision_container.children.find(item => item.id === 102);
+        const dumpster = collisions.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
         tween_it.from(dumpster);
         tween_it.to({x: dumpster.x + 100, y:dumpster.y});

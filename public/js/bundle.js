@@ -45593,7 +45593,7 @@ module.exports = {
 },{"../../utils/math":282,"pixi.js":151}],202:[function(require,module,exports){
 'use strict';
 
-const { enemy_container } = require('../../engine/pixi_containers');
+const { enemys } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
@@ -45624,7 +45624,7 @@ class Crow extends Character{
       }
     }
 
-    enemy_container.addChild(this.sprite);
+    enemys.addChild(this.sprite);
   }
 }
 
@@ -45639,7 +45639,7 @@ const { Graphics, tween, tweenManager }= require('pixi.js');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
-const { collision_container, gui_container} = require('../../engine/pixi_containers');
+const { collisions, guis} = require('../../engine/pixi_containers');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
@@ -45705,7 +45705,7 @@ class Rat extends Animal {
     graphical_path.lineStyle(3, 0xffffff, 0.5);
     graphical_path.drawPath(path);
 
-    gui_container.addChild(graphical_path);
+    guis.addChild(graphical_path);
   }
 
   async _pathfind() {
@@ -45753,7 +45753,7 @@ class Rat extends Animal {
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
-      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {
+      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
         this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
       } else {
         await this._pathfind();
@@ -45777,7 +45777,7 @@ module.exports = {
 },{"../../engine/damage_handler":224,"../../engine/pathfind":228,"../../engine/pixi_containers":229,"../../utils/line_of_sight":281,"../../utils/math":282,"../attributes/melee":209,"../types/rat":217,"events":290,"pixi.js":151}],204:[function(require,module,exports){
 'use strict';
 
-const { enemy_container } = require('../../engine/pixi_containers');
+const { enemys } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
@@ -45807,7 +45807,7 @@ class Lurcher extends Character{
       }
     }
 
-    enemy_container.addChild(this.sprite);
+    enemys.addChild(this.sprite);
   }
 }
 
@@ -45903,10 +45903,10 @@ module.exports = {
 const PIXI = require('pixi.js');
 
 const {
-  collision_container,
-  roof_container,
-  pad_container,
-  shroud_container,
+  collisions,
+  roofs,
+  pads,
+  shrouds,
 } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -45914,7 +45914,7 @@ const { View_HUD } = require('../../view/view_player_inventory');
 const { Fade     } = require('../../effects/fade');
 
 function point_collides(position) {
-  const { children } = collision_container;
+  const { children } = collisions;
 
   return !!children.find(child => child.containsPoint(position));
 }
@@ -45922,15 +45922,15 @@ function point_collides(position) {
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
-  const shrouds = shroud_container.children ;
-  const shrouds_to_remove = shrouds.find(child => child.containsPoint(position));
+  const shroud = shrouds.children ;
+  const shrouds_to_remove = shroud.find(child => child.containsPoint(position));
   if (shrouds_to_remove && shrouds_to_remove.remove_on_enter) {
     Fade.out_destroy(shrouds_to_remove);
     delete shrouds_to_remove.remove_on_enter;
   }
   return;
-  const roofs = roof_container.children ;
-  roofs.forEach(child => {
+  const roof = roofs.children ;
+  roof.forEach(child => {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
@@ -45945,7 +45945,7 @@ function point_contains(position) {
 }
 
 function event_pad(position) {
-  const { children } = pad_container;
+  const { children } = pads;
 
   const pad = children.find(child => child.containsPoint(position));
 
@@ -46185,7 +46185,7 @@ module.exports = {
 const { Sprite } = require('pixi.js');
 
 const { melee_attack } = require('../../engine/melee');
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 class Melee {
   constructor({ inventory, animation, sprite }) {
@@ -46214,7 +46214,7 @@ class Melee {
     this.box.anchor.x = 0.5;
     this.box.alpha = 0.5;
 
-    visual_effects_container.addChild(this.box);
+    visuals.addChild(this.box);
   }
 
   hit_box() {
@@ -46242,13 +46242,13 @@ module.exports = {
 },{"../../engine/melee":226,"../../engine/pixi_containers":229,"pixi.js":151}],210:[function(require,module,exports){
 'use strict';
 const { screen } = require('../../engine/app');
-//const { visual_effects_container } = require('../../engine/pixi_containers');
+//const { visuals } = require('../../engine/pixi_containers');
 
 const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
 
-//const cone = visual_effects_container.children.find(elem => elem.name === 'aiming_cone');
+//const cone = visuals.children.find(elem => elem.name === 'aiming_cone');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
@@ -46311,7 +46311,7 @@ module.exports = {
 const { Sprite, tweenManager } = require('pixi.js');
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');
-const { item_container } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
 
 class Pathfind {
   constructor(sprite) {
@@ -46322,7 +46322,7 @@ class Pathfind {
     this.anchor_sprite = new Sprite.fromFrame('bunny');
     this.anchor_sprite.alpha = 1;
 
-    item_container.addChild(this.anchor_sprite);
+    items.addChild(this.anchor_sprite);
   }
 
   go_to_sprite(sprite) {
@@ -46468,7 +46468,7 @@ module.exports = {
 },{}],215:[function(require,module,exports){
 'use strict';
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { Character } = require('../character_model');
@@ -46484,7 +46484,7 @@ class NPC extends Character {
     this.add_component(new Tween(this.sprite));
     this.add_component(new Pathfind(this.sprite));
 
-    visual_effects_container.addChild(this.sprite);
+    visuals.addChild(this.sprite);
   }
 }
 
@@ -46495,7 +46495,7 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/pathfind":211,"../character_model":214}],216:[function(require,module,exports){
 'use strict';
 
-const { player_container } = require('../../engine/pixi_containers');
+const { players } = require('../../engine/pixi_containers');
 const { PlayerEvents     } = require('../../engine/item_handler');
 
 const { Character } = require('../character_model');
@@ -46530,7 +46530,7 @@ class Player extends Character {
     this.add_component(new Mouse(this));
     this.add_component(new Status());
 
-    player_container.addChild(this.sprite);
+    players.addChild(this.sprite);
 
     this.add_component(new PlayerEvents(this));
   }
@@ -46547,7 +46547,7 @@ class Player extends Character {
   }
 
   destroy() {
-    player_container.removeChild(this.sprite);
+    players.removeChild(this.sprite);
   }
 }
 
@@ -46558,7 +46558,7 @@ module.exports = {
 },{"../../effects/blood":219,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/inventory":205,"../attributes/keyboard":206,"../attributes/light":207,"../attributes/mouse":210,"../attributes/status_bar":212,"../attributes/vitals":213,"../character_model":214,"events":290}],217:[function(require,module,exports){
 'use strict';
 
-const { enemy_container } = require('../../engine/pixi_containers');
+const { enemys } = require('../../engine/pixi_containers');
 
 const { Character } = require('../character_model');
 const { Rodent    } = require('../animations/rat');
@@ -46578,7 +46578,7 @@ class Animal extends Character {
     this.add_component(new Inventory());
     this.add_component(new Lootable(this));
 
-    enemy_container.addChild(this.sprite);
+    enemys.addChild(this.sprite);
   }
 }
 
@@ -46590,14 +46590,14 @@ module.exports = {
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 //TODO this needs to be abstracted
 const cone = new Sprite.fromFrame('yellow_triangle');
 cone.alpha = 0;
 cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
-visual_effects_container.addChild(cone);
+visuals.addChild(cone);
 
 //TODO use tween to and from
 class Aiming_Cone {
@@ -46634,7 +46634,7 @@ module.exports = {
 'use strict';
 const { Sprite } = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 class Blood {
   add_at(point) {
@@ -46643,7 +46643,7 @@ class Blood {
     blood_splatter.alpha = 0.3;
     blood_splatter.position.set(point.x, point.y);
 
-    visual_effects_container.addChild(blood_splatter);
+    visuals.addChild(blood_splatter);
   }
 }
 
@@ -46877,7 +46877,7 @@ module.exports = {
 },{"pixi-packer-parser":32,"pixi.js":151}],228:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-const { grid_container } = require('./pixi_containers');
+const { grids } = require('./pixi_containers');
 const { Grid   } = require('../utils/grid');
 const { Tween  } = require('./tween');
 const easystarjs = require('easystarjs');
@@ -46889,7 +46889,7 @@ easystar.setTileCost(2, 1); // only go through these tiles if you have to
 //easystar.enableCornerCutting();
 
 const find_grid = sprite => {
-  const grid  = grid_container.children;
+  const grid  = grids.children;
   const point = sprite.getGlobalPosition();
   const found_tile = grid.find(tile => tile.containsPoint(point));
 
@@ -47010,62 +47010,62 @@ const {
   very_close,
 } = zIndex_layer;
 
-const background_container = new Container();
-background_container.name = 'background_image';
-background_container.zIndex = background;
+const backgrounds  = new Container();
+backgrounds.name = 'background_image';
+backgrounds.zIndex = background;
 
-const grid_container = new Container();
-grid_container.name = 'grid_container';
-grid_container.zIndex = background;
+const grids = new Container();
+grids.name = 'grid_container';
+grids.zIndex = background;
 
-const collision_container = new Container();
-collision_container.name = 'collision_items';
-collision_container.zIndex = low;
+const collisions = new Container();
+collisions.name = 'collision_items';
+collisions.zIndex = low;
 
-const item_container = new Container();
-item_container.name = 'non_collision_items';
-item_container.zIndex = low;
+const items = new Container();
+items.name = 'non_collision_items';
+items.zIndex = low;
 
-const enemy_container = new Container();
-enemy_container.name = 'enemy_container';
-enemy_container.zIndex = medium;
+const enemys= new Container();
+enemys.name = 'enemy_container';
+enemys.zIndex = medium;
 
-const player_container = new Container();
-player_container.name = 'player_container';
-player_container.zIndex = medium;
+const players = new Container();
+players.name = 'player_container';
+players.zIndex = medium;
 
-const shroud_container = new Container();
-shroud_container.name = 'shroud_container';
-shroud_container.zIndex = very_close;
+const shrouds = new Container();
+shrouds.name = 'shroud_container';
+shrouds.zIndex = very_close;
 
-const visual_effects_container = new Container();
-visual_effects_container.name = 'visual_effects_container';
-visual_effects_container.zIndex = close;
+const visuals = new Container();
+visuals.name = 'visuals';
+visuals.zIndex = close;
 
-const pad_container = new Container();
-pad_container.name = 'pad_container';
-pad_container.zIndex = close;
+const pads = new Container();
+pads.name = 'pad_container';
+pads.zIndex = close;
 
-const roof_container = new Container();
-roof_container.name = 'roof_container';
-roof_container.zIndex = close;
+const roofs= new Container();
+roofs.name = 'roof_container';
+roofs.zIndex = close;
 
-const gui_container = new Container();
-gui_container.name = 'gui_container';
-gui_container.zIndex = very_close;
+const guis= new Container();
+guis.name = 'gui_container';
+guis.zIndex = very_close;
 
 world.addChild(
-  shroud_container,
-  visual_effects_container,
-  roof_container,
-  background_container,
-  grid_container,
-  collision_container,
-  item_container,
-  enemy_container,
-  player_container,
-  gui_container,
-  pad_container
+  shrouds,
+  visuals,
+  roofs,
+  backgrounds,
+  grids,
+  collisions,
+  items,
+  enemys,
+  players,
+  guis,
+  pads
 );
 
 world.updateLayersOrder();
@@ -47086,23 +47086,23 @@ function clear_level_containers(expection) {
   }
 }
 
-function clear_non_player_containers() {
+function clear_non_players() {
   clear_level_containers('player_container');
 }
 
 module.exports = {
-  shroud_container,
-  roof_container,
-  background_container,
-  collision_container,
-  gui_container,
-  enemy_container,
-  player_container,
-  visual_effects_container,
-  grid_container,
-  item_container,
-  pad_container,
-  clear_non_player_containers,
+  shrouds,
+  visuals,
+  roofs,
+  backgrounds,
+  grids,
+  collisions,
+  items,
+  enemys,
+  players,
+  guis,
+  pads,
+  clear_non_players,
 };
 
 
@@ -47113,14 +47113,14 @@ const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
 const { Tween  } = require('./tween');
 
-const { item_container      } = require('./pixi_containers');
-const { collision_container } = require('./pixi_containers');
-const { enemy_container     } = require('./pixi_containers');
-const { player_container    } = require('./pixi_containers');
+const { items } = require('./pixi_containers');
+const { collisions } = require('./pixi_containers');
+const { enemys } = require('./pixi_containers');
+const { players } = require('./pixi_containers');
 
-const objects  = collision_container.children;
-const enemies  = enemy_container.children;
-const players  = player_container.children;
+const objects  = collisions.children;
+const enemies  = enemys.children;
+const players1  = players.children;
 
 class Arrow {
   constructor() {
@@ -47131,7 +47131,7 @@ class Arrow {
     this.sprite.anchor.set(0.65);
 
     this.tween = new Tween(this.sprite);
-    item_container.addChild(this.sprite);
+    items.addChild(this.sprite);
   }
 
   set rotation(value) {
@@ -47167,7 +47167,7 @@ function shoot_arrow(speed, damage, origin, point) {
       return;
     }
 
-    const collision_players = players.find(player=> player.containsPoint(arrow_point));
+    const collision_players = players1.find(player=> player.containsPoint(arrow_point));
     if (collision_players) {
       if(collision_players.id === origin.id) return;
 
@@ -47260,7 +47260,7 @@ ticker.add(delta => {
 'use strict';
 require('./ticker');
 const { tween, tweenManager, Graphics} = require('pixi.js');
-const { gui_container } = require('./pixi_containers');
+const { guis } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
 
 class Tween {
@@ -47358,7 +47358,7 @@ class Tween {
     graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
 
-    gui_container.addChild(graphical_path);
+    guis.addChild(graphical_path);
   }
 }
 
@@ -57116,7 +57116,7 @@ module.exports={ "height":50,
 'use strict';
 const { Texture, extras } = require('pixi.js');
 
-const { background_container } = require('../../engine/pixi_containers');
+const { backgrounds } = require('../../engine/pixi_containers');
 
 class Background {
   constructor(data) {
@@ -57147,7 +57147,7 @@ class Background {
   set_position({x, y}) {
     this.sprite.position.set(x, y);
 
-    background_container.addChild(this.sprite);
+    backgrounds.addChild(this.sprite);
   }
 }
 
@@ -57157,7 +57157,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"pixi.js":151}],250:[function(require,module,exports){
 'use strict';
-const { roof_container } = require('../../engine/pixi_containers');
+const { roofs } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -57168,7 +57168,7 @@ class Roof extends Item {
     this.sprite.fade_opacity = options.properties.fade;
     this.alpha = options.properties.alpha | 0.2;
 
-    roof_container.addChild(this.sprite);
+    roofs.addChild(this.sprite);
   }
 }
 
@@ -57179,7 +57179,7 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"./item_model":255}],251:[function(require,module,exports){
 (function (global){
 'use strict';
-const { item_container } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
 const { player_events  } = require('../../engine/item_handler');
 
 const { Lootable } = require('../../character/attributes/lootable');
@@ -57247,7 +57247,7 @@ class Chest extends Item {
       }
     }
 
-    item_container.addChild(this.sprite);
+    items.addChild(this.sprite);
   }
 
   set state_handling(bool) {
@@ -57282,7 +57282,7 @@ module.exports = {
 },{"../../character/attributes/lootable":208,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":286,"./item_model":255}],252:[function(require,module,exports){
 'use strict';
 const { Sprite, Texture} = require('pixi.js');
-const { pad_container } = require('../../engine/pixi_containers');
+const { pads } = require('../../engine/pixi_containers');
 
 const event = require('events');
 
@@ -57296,7 +57296,7 @@ class Click_Pad {
     this.area.position.set(data.x, data.y);
     this.area.events = new event({once: true});
 
-    pad_container.addChild(this.area);
+    pads.addChild(this.area);
   }
 
   set click(value) {
@@ -57307,7 +57307,7 @@ class Click_Pad {
   }
 
   destroy() {
-    pad_container.removeChild(this.area);
+    pads.removeChild(this.area);
   }
 }
 
@@ -57318,7 +57318,7 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"events":290,"pixi.js":151}],253:[function(require,module,exports){
 'use strict';
 const event = require('events');
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -57339,7 +57339,7 @@ class CollisionItem extends Item {
     this.sprite.events = new event();
     this.sprite.events.on('damage', () => this.sprite.destroy());
 
-    collision_container.addChild(this.sprite);
+    collisions.addChild(this.sprite);
   }
 }
 
@@ -57349,7 +57349,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"./item_model":255,"events":290}],254:[function(require,module,exports){
 'use strict';
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const { Item   } = require('./item_model');
 const { Tween  } = require('../../engine/tween');
@@ -57414,7 +57414,7 @@ class Door extends Item {
       });
     }
 
-    collision_container.addChild(this.sprite);
+    collisions.addChild(this.sprite);
   }
 }
 
@@ -57425,7 +57425,7 @@ module.exports = {
 },{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"../../engine/sound":232,"../../engine/tween":234,"../../view/button":284,"./item_model":255,"./visual_object":259}],255:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 class Item {
   constructor(data) {
@@ -57513,7 +57513,7 @@ class Item {
 
   set shadow(state) {
     if(!state && this.shade) {
-      collision_container.removeChild(this.shade);
+      collisions.removeChild(this.shade);
     }
     this.shade = new Sprite(this.texture);
     // TODO here for shadows
@@ -57523,7 +57523,7 @@ class Item {
     //this.shade.height = 20;
     //this.shade.anchor.set(0.5);
 
-    //collision_container.addChild(this.shade);
+    //collisions.addChild(this.shade);
   }
 }
 
@@ -57535,7 +57535,7 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"pixi.js":151}],256:[function(require,module,exports){
 'use strict';
 const { Sprite, Texture } = require('pixi.js');
-const { pad_container } = require('../../engine/pixi_containers');
+const { pads } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('../types/level_factory');
 const event = require('events');
 
@@ -57556,11 +57556,11 @@ class Trigger_Pad {
       });
     }
 
-    pad_container.addChild(this.area);
+    pads.addChild(this.area);
   }
 
   destroy() {
-    pad_container.removeChild(this.area);
+    pads.removeChild(this.area);
   }
 }
 
@@ -57574,7 +57574,7 @@ module.exports = {
 const PIXI = require('pixi.js');
 //const { GlitchFilter   } = require('@pixi/filter-glitch');
 //const { PixelateFilter } = require('@pixi/filter-pixelate');
-const { item_container } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
 const { ringing_phone, answer_phone  } = require('../../engine/sound');
 const { LED            } = require('../../light/types/led');
 const { Item           } = require('./item_model');
@@ -57600,7 +57600,7 @@ class Phone extends Item {
 
     this.light = new LED();
 
-    item_container.addChild(this.sprite);
+    items.addChild(this.sprite);
 
     this.sprite.on('removed', ()=> {
       this.effect.volume = 0;
@@ -57696,7 +57696,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"../../engine/sound":232,"../../light/types/led":277,"./item_model":255,"pixi.js":151}],258:[function(require,module,exports){
 'use strict';
-const { shroud_container } = require('../../engine/pixi_containers');
+const { shrouds } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -57709,7 +57709,7 @@ class Shroud extends Item {
     this.sprite.remove_on_enter = options.properties.remove_on_enter;
     this.anchor = 0;
 
-    shroud_container.addChild(this.sprite);
+    shrouds.addChild(this.sprite);
   }
 }
 
@@ -57719,7 +57719,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"./item_model":255}],259:[function(require,module,exports){
 'use strict';
-const { background_container } = require('../../engine/pixi_containers');
+const { backgrounds } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -57730,7 +57730,7 @@ class BackgroundVisualItem extends Item {
     this.alpha = data.properties.opacity | 1;
     this.anchor = 0;
 
-    background_container.addChild(this.sprite);
+    backgrounds.addChild(this.sprite);
   }
 }
 
@@ -57740,7 +57740,7 @@ module.exports = {
 
 },{"../../engine/pixi_containers":229,"./item_model":255}],260:[function(require,module,exports){
 'use strict';
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const event    = require('events');
 const { Item } = require('./item_model');
@@ -57757,7 +57757,7 @@ class Wall extends Item {
       this.alpha = 0;
     }
 
-    collision_container.addChild(this.sprite);
+    collisions.addChild(this.sprite);
   }
 
   on_hit() {
@@ -57864,7 +57864,7 @@ module.exports = {
 },{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/defend_room.json":241,"../elements/pad":256,"./level_factory":266}],263:[function(require,module,exports){
 (function (global){
 'use strict';
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const { Tween       } = require('../../engine/tween');
 const { Camera      } = require('../../engine/camera');
@@ -57931,7 +57931,7 @@ class Intro  {
     click_pad.forEach(data => {
       const pad = new Click_Pad(data);
       pad.click = () => {
-        const dumpster = collision_container.children.find(item => item.id === 102);
+        const dumpster = collisions.children.find(item => item.id === 102);
         const tween_it = new Tween(dumpster);
         tween_it.from(dumpster);
         tween_it.to({x: dumpster.x + 100, y:dumpster.y});
@@ -58051,7 +58051,7 @@ module.exports = {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":204,"../attributes/parse_tiled_data":238,"../data/items_room.json":244,"../elements/click_pad":252,"../elements/pad":256,"./level_factory":266}],266:[function(require,module,exports){
 'use strict';
-const { clear_non_player_containers } = require('../../engine/pixi_containers');
+const { clear_non_players } = require('../../engine/pixi_containers');
 
 const { Intro         } = require('./intro');
 const { Camera        } = require('../../engine/camera');
@@ -58130,7 +58130,7 @@ class Level_Factory {
   }
 
   static clear() {
-    clear_non_player_containers();
+    clear_non_players();
   }
 }
 
@@ -58258,7 +58258,7 @@ module.exports = {
 },{"../../character/archetypes/rat":203,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/school_room.json":246,"../elements/pad":256,"../elements/phone":257,"./level_factory":266}],269:[function(require,module,exports){
 (function (global){
 'use strict';
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -58276,8 +58276,8 @@ class Simple {
 
     if(properties.level_name === 'light') {
       this.level_data = require('../data/lights_room.json');
-      visual_effects_container.addChild(player.light.candle.sprite);
-      visual_effects_container.addChild(player.light.candle.shadow);
+      visuals.addChild(player.light.candle.sprite);
+      visuals.addChild(player.light.candle.shadow);
       global.set_light_level(0.5);
     }
     this.player = player;
@@ -58339,7 +58339,7 @@ module.exports = {
 },{"../attributes/parse_tiled_data":238,"../data/street.json":247,"../elements/pad":256,"./level_factory":266}],271:[function(require,module,exports){
 (function (global){
 'use strict';
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -58373,7 +58373,7 @@ class Transition_Room {
       level_names.x = x + width/4;
       level_names.y = y + height/2;
 
-      visual_effects_container.addChild(level_names);
+      visuals.addChild(level_names);
     });
 
     const level_text = new Text(
@@ -58392,7 +58392,7 @@ class Transition_Room {
     level_text.x = player[0].x -150;
     level_text.y = player[0].y -50;
 
-    visual_effects_container.addChild(level_text);
+    visuals.addChild(level_text);
   }
 }
 
@@ -58513,7 +58513,7 @@ module.exports = {
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 class Light {
   constructor() {
@@ -58564,11 +58564,11 @@ class Light {
   }
 
   remove() {
-    visual_effects_container.removeChild(this.shadow);
+    visuals.removeChild(this.shadow);
   }
 
   add() {
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 }
 
@@ -58581,7 +58581,7 @@ module.exports = {
 (function (global){
 'use strict';
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Light  } = require('../light_model');
 const { Strike } = require('../attributes/strike');
@@ -58605,7 +58605,7 @@ class Bright_Light extends Light {
     point.height = 20;
     point.width  = 20;
 
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 }
 
@@ -58618,7 +58618,7 @@ module.exports = {
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 const { Light                    } = require('../light_model');
 const { Flicker                  } = require('../attributes/flicker');
 
@@ -58637,7 +58637,7 @@ class Candle extends Light {
     this.shadow.pointCount = 1;
     this.shadow.range      = 350;
     this.shadow.intensity  = 0.5;
-    visual_effects_container.addChild(this.sprite, this.shadow);
+    visuals.addChild(this.sprite, this.shadow);
   }
 
   set_position({x, y}) {
@@ -58668,7 +58668,7 @@ module.exports = {
 },{"../../engine/pixi_containers":229,"../attributes/flicker":272,"../light_model":274,"pixi.js":151}],277:[function(require,module,exports){
 'use strict';
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Light   } = require('../light_model');
 const { Flicker } = require('../attributes/flicker');
@@ -58683,7 +58683,7 @@ class LED extends Light {
     this.shadow.range      = 200;
     this.shadow.intensity  = 0.5;
 
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 
 }
@@ -58740,7 +58740,7 @@ module.exports = {
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 /* ***************************************************************
  *                                                               *
@@ -58765,7 +58765,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
   bunny.width = 100;
   bunny.height = 100;
 
-  visual_effects_container.addChild(bunny);
+  visuals.addChild(bunny);
   //if(light) {
   //  const shade = new PIXI.Sprite(texture);
   //  shade.parentGroup = PIXI.shadows.casterGroup;
@@ -58786,8 +58786,8 @@ global.place_bunny = ({ x, y } /*light*/) => {
 },{"../engine/pixi_containers":229,"pixi.js":151}],280:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
-const { grid_container      } = require('../engine/pixi_containers');
-const { collision_container } = require('../engine/pixi_containers');
+const { grids } = require('../engine/pixi_containers');
+const { collisions } = require('../engine/pixi_containers');
 
 function check(rect1, rect2) {
 
@@ -58851,9 +58851,9 @@ class Grid {
       }
       grid_x++;
 
-      if(collision_container.children.length < 1) throw 'must have collision objects for grid';
+      if(collisions.children.length < 1) throw 'must have collision objects for grid';
 
-      collision_container.children.forEach(object => {
+      collisions.children.forEach(object => {
         if(check(tile, object)) {
           tile.passable = false;
           if(object.door) {
@@ -58863,7 +58863,7 @@ class Grid {
         }
       });
 
-      grid_container.addChild(tile);
+      grids.addChild(tile);
     }
   }
 
@@ -58874,7 +58874,7 @@ class Grid {
     let binary_line = [];
     let sprite_line = [];
 
-    grid_container.children.forEach((tile, i) => {
+    grids.children.forEach((tile, i) => {
       if(!tile.passable) {
         tile.alpha = 0.3;
         if(tile.door) {
@@ -59105,7 +59105,7 @@ module.exports = {
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
 class Label {
@@ -59120,7 +59120,7 @@ class Label {
     });
 
     this.sprite.anchor.set(0.5);
-    visual_effects_container.addChild(this.sprite);
+    visuals.addChild(this.sprite);
   }
 
   set visible(bool) {
@@ -59132,7 +59132,7 @@ class Label {
   }
 
   remove() {
-    visual_effects_container.removeChild(this.sprite);
+    visuals.removeChild(this.sprite);
   }
 }
 
@@ -59154,7 +59154,7 @@ class Button {
     this.sprite.height = 30;
     this.sprite.width  = 30;
 
-    visual_effects_container.addChild(this.sprite);
+    visuals.addChild(this.sprite);
   }
 
   set_position({x, y}) {
@@ -59179,7 +59179,7 @@ class Button {
   }
 
   remove() {
-    visual_effects_container.removeChild(this.sprite);
+    visuals.removeChild(this.sprite);
 
     if(this.action_label) {
       this.action_label.remove();
@@ -59269,7 +59269,7 @@ module.exports = {
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
-const { gui_container} = require('../engine/pixi_containers');
+const { guis } = require('../engine/pixi_containers');
 
 const { world } = require('../engine/shadows');
 const { Caption_Dialog } = require('./caption');
@@ -59338,7 +59338,7 @@ class Note {
 
     });
 
-    gui_container.addChild(this.sprite, level_text, black_background);
+    guis.addChild(this.sprite, level_text, black_background);
     this.sprite.click = () => console.log(options);
   }
 
@@ -59355,7 +59355,7 @@ module.exports = {
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 const { Fade } = require('../effects/fade');
 
 class View_Inventory {
@@ -59382,7 +59382,7 @@ class View_Inventory {
       this.slot_container.addChild(sprite);
     }
 
-    visual_effects_container.addChild(this.slot_container);
+    visuals.addChild(this.slot_container);
   }
 
   clear_slots() {

@@ -1,12 +1,12 @@
 'use strict';
 const { screen } = require('../../engine/app');
-//const { visual_effects_container } = require('../../engine/pixi_containers');
+//const { visuals } = require('../../engine/pixi_containers');
 
 const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
 
-//const cone = visual_effects_container.children.find(elem => elem.name === 'aiming_cone');
+//const cone = visuals.children.find(elem => elem.name === 'aiming_cone');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {

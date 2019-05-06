@@ -2,7 +2,7 @@
 
 const { tweenManager }= require('pixi.js');
 const { sleep               } = require('../../utils/time');
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 const { distance_between    } = require('../../utils/math');
 const { Sight               } = require('../../utils/line_of_sight');
 
@@ -94,7 +94,7 @@ class Scavenger extends Animal {
   }
 
   get _enemy_seen() {
-    return Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children);
+    return Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children);
   }
 
   get _in_influence() {

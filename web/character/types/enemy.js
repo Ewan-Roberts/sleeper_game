@@ -1,6 +1,6 @@
 'use strict';
 
-const { enemy_container } = require('../../engine/pixi_containers');
+const { enemys } = require('../../engine/pixi_containers');
 
 const { Character  } = require('../character_model');
 const { Human      } = require('../animations/human');
@@ -21,7 +21,7 @@ class Enemy extends Character {
     this.add_component(new Lootable(this));
     this.add_component(new Pathfind(this.sprite));
 
-    enemy_container.addChild(this.sprite);
+    enemys.addChild(this.sprite);
   }
 }
 

@@ -1,5 +1,5 @@
 'use strict';
-const { shroud_container } = require('../../engine/pixi_containers');
+const { shrouds } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -12,7 +12,7 @@ class Shroud extends Item {
     this.sprite.remove_on_enter = options.properties.remove_on_enter;
     this.anchor = 0;
 
-    shroud_container.addChild(this.sprite);
+    shrouds.addChild(this.sprite);
   }
 }
 

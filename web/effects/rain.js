@@ -1,7 +1,7 @@
 'use strict';
 const { extras, Texture} = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 const { random_number } = require('../utils/math');
 // const { Sound         } = require('../engine/sound');
 
@@ -33,7 +33,7 @@ class Rain {
       setInterval(() => animatedDrop.play(), random_number(200, 1100));
       setInterval(() => animatedDrop.gotoAndStop(11), random_number(100, 1000));
 
-      visual_effects_container.addChild(animatedDrop);
+      visuals.addChild(animatedDrop);
     }
   }
 }

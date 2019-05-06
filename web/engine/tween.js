@@ -1,7 +1,7 @@
 'use strict';
 require('./ticker');
 const { tween, tweenManager, Graphics} = require('pixi.js');
-const { gui_container } = require('./pixi_containers');
+const { guis } = require('./pixi_containers');
 const { random_number } = require('../utils/math');
 
 class Tween {
@@ -99,7 +99,7 @@ class Tween {
     graphical_path.lineStyle(5, 0xffffff, 0.5);
     graphical_path.drawPath(this.path);
 
-    gui_container.addChild(graphical_path);
+    guis.addChild(graphical_path);
   }
 }
 

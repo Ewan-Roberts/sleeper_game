@@ -4,7 +4,7 @@ const { Graphics, tween, tweenManager }= require('pixi.js');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
-const { collision_container, gui_container} = require('../../engine/pixi_containers');
+const { collisions, guis} = require('../../engine/pixi_containers');
 
 const event      = require('events');
 const { Animal } = require('../types/rat');
@@ -70,7 +70,7 @@ class Rat extends Animal {
     graphical_path.lineStyle(3, 0xffffff, 0.5);
     graphical_path.drawPath(path);
 
-    gui_container.addChild(graphical_path);
+    guis.addChild(graphical_path);
   }
 
   async _pathfind() {
@@ -118,7 +118,7 @@ class Rat extends Animal {
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
-      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collision_container.children)) {
+      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
         this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
       } else {
         await this._pathfind();

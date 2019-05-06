@@ -2,7 +2,7 @@
 const { Sprite } = require('pixi.js');
 
 const { melee_attack } = require('../../engine/melee');
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 class Melee {
   constructor({ inventory, animation, sprite }) {
@@ -31,7 +31,7 @@ class Melee {
     this.box.anchor.x = 0.5;
     this.box.alpha = 0.5;
 
-    visual_effects_container.addChild(this.box);
+    visuals.addChild(this.box);
   }
 
   hit_box() {

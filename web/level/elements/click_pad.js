@@ -1,6 +1,6 @@
 'use strict';
 const { Sprite, Texture} = require('pixi.js');
-const { pad_container } = require('../../engine/pixi_containers');
+const { pads } = require('../../engine/pixi_containers');
 
 const event = require('events');
 
@@ -14,7 +14,7 @@ class Click_Pad {
     this.area.position.set(data.x, data.y);
     this.area.events = new event({once: true});
 
-    pad_container.addChild(this.area);
+    pads.addChild(this.area);
   }
 
   set click(value) {
@@ -25,7 +25,7 @@ class Click_Pad {
   }
 
   destroy() {
-    pad_container.removeChild(this.area);
+    pads.removeChild(this.area);
   }
 }
 

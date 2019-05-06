@@ -1,6 +1,6 @@
 'use strict';
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Light  } = require('../light_model');
 const { Strike } = require('../attributes/strike');
@@ -24,7 +24,7 @@ class Bright_Light extends Light {
     point.height = 20;
     point.width  = 20;
 
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 }
 

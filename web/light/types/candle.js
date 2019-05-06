@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 const { Light                    } = require('../light_model');
 const { Flicker                  } = require('../attributes/flicker');
 
@@ -20,7 +20,7 @@ class Candle extends Light {
     this.shadow.pointCount = 1;
     this.shadow.range      = 350;
     this.shadow.intensity  = 0.5;
-    visual_effects_container.addChild(this.sprite, this.shadow);
+    visuals.addChild(this.sprite, this.shadow);
   }
 
   set_position({x, y}) {

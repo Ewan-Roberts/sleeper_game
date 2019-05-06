@@ -1,7 +1,7 @@
 'use strict';
 const { Texture, SCALE_MODES, Sprite } = require('pixi.js');
 
-const { enemy_container } = require('../../engine/pixi_containers');
+const { enemys } = require('../../engine/pixi_containers');
 class Influence {
   constructor() {
     this.name   = 'influence';
@@ -16,7 +16,7 @@ class Influence {
     this.sprite.height = height;
     this.sprite.anchor.set(0.5);
     this.sprite.alpha = 0.3;
-    enemy_container.addChild(this.sprite);
+    enemys.addChild(this.sprite);
   }
 
 }

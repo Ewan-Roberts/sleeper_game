@@ -1,7 +1,7 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
 class Label {
@@ -16,7 +16,7 @@ class Label {
     });
 
     this.sprite.anchor.set(0.5);
-    visual_effects_container.addChild(this.sprite);
+    visuals.addChild(this.sprite);
   }
 
   set visible(bool) {
@@ -28,7 +28,7 @@ class Label {
   }
 
   remove() {
-    visual_effects_container.removeChild(this.sprite);
+    visuals.removeChild(this.sprite);
   }
 }
 
@@ -50,7 +50,7 @@ class Button {
     this.sprite.height = 30;
     this.sprite.width  = 30;
 
-    visual_effects_container.addChild(this.sprite);
+    visuals.addChild(this.sprite);
   }
 
   set_position({x, y}) {
@@ -75,7 +75,7 @@ class Button {
   }
 
   remove() {
-    visual_effects_container.removeChild(this.sprite);
+    visuals.removeChild(this.sprite);
 
     if(this.action_label) {
       this.action_label.remove();

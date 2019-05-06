@@ -1,7 +1,7 @@
 'use strict';
 const { Texture, extras } = require('pixi.js');
 
-const { background_container } = require('../../engine/pixi_containers');
+const { backgrounds } = require('../../engine/pixi_containers');
 
 class Background {
   constructor(data) {
@@ -32,7 +32,7 @@ class Background {
   set_position({x, y}) {
     this.sprite.position.set(x, y);
 
-    background_container.addChild(this.sprite);
+    backgrounds.addChild(this.sprite);
   }
 }
 

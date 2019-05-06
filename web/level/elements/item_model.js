@@ -1,6 +1,6 @@
 'use strict';
 const { Sprite } = require('pixi.js');
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 class Item {
   constructor(data) {
@@ -88,7 +88,7 @@ class Item {
 
   set shadow(state) {
     if(!state && this.shade) {
-      collision_container.removeChild(this.shade);
+      collisions.removeChild(this.shade);
     }
     this.shade = new Sprite(this.texture);
     // TODO here for shadows
@@ -98,7 +98,7 @@ class Item {
     //this.shade.height = 20;
     //this.shade.anchor.set(0.5);
 
-    //collision_container.addChild(this.shade);
+    //collisions.addChild(this.shade);
   }
 }
 

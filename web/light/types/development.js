@@ -1,6 +1,6 @@
 'use strict';
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Light   } = require('../light_model');
 const { Strike  } = require('../attributes/strike');
@@ -23,7 +23,7 @@ class Dev_Light extends Light {
     this.shadow.intensity    = 0.8;
     this.shadow.ambientLight = 0.5;
 
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 }
 

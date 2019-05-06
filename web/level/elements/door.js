@@ -1,5 +1,5 @@
 'use strict';
-const { collision_container } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 
 const { Item   } = require('./item_model');
 const { Tween  } = require('../../engine/tween');
@@ -64,7 +64,7 @@ class Door extends Item {
       });
     }
 
-    collision_container.addChild(this.sprite);
+    collisions.addChild(this.sprite);
   }
 }
 

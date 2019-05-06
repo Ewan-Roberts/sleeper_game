@@ -1,5 +1,5 @@
 'use strict';
-const { background_container } = require('../../engine/pixi_containers');
+const { backgrounds } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -10,7 +10,7 @@ class BackgroundVisualItem extends Item {
     this.alpha = data.properties.opacity | 1;
     this.anchor = 0;
 
-    background_container.addChild(this.sprite);
+    backgrounds.addChild(this.sprite);
   }
 }
 

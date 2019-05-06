@@ -1,6 +1,6 @@
 'use strict';
 const PIXI = require('pixi.js');
-const { gui_container} = require('../engine/pixi_containers');
+const { guis } = require('../engine/pixi_containers');
 
 const { world } = require('../engine/shadows');
 const { Caption_Dialog } = require('./caption');
@@ -69,7 +69,7 @@ class Note {
 
     });
 
-    gui_container.addChild(this.sprite, level_text, black_background);
+    guis.addChild(this.sprite, level_text, black_background);
     this.sprite.click = () => console.log(options);
   }
 

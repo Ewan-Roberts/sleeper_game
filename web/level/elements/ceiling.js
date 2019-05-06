@@ -1,5 +1,5 @@
 'use strict';
-const { roof_container } = require('../../engine/pixi_containers');
+const { roofs } = require('../../engine/pixi_containers');
 
 const { Item } = require('./item_model');
 
@@ -10,7 +10,7 @@ class Roof extends Item {
     this.sprite.fade_opacity = options.properties.fade;
     this.alpha = options.properties.alpha | 0.2;
 
-    roof_container.addChild(this.sprite);
+    roofs.addChild(this.sprite);
   }
 }
 

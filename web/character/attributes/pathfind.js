@@ -2,7 +2,7 @@
 const { Sprite, tweenManager } = require('pixi.js');
 
 const { pathfind_sprite } = require('../../engine/pathfind.js');
-const { item_container } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
 
 class Pathfind {
   constructor(sprite) {
@@ -13,7 +13,7 @@ class Pathfind {
     this.anchor_sprite = new Sprite.fromFrame('bunny');
     this.anchor_sprite.alpha = 1;
 
-    item_container.addChild(this.anchor_sprite);
+    items.addChild(this.anchor_sprite);
   }
 
   go_to_sprite(sprite) {

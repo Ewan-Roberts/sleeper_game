@@ -1,6 +1,6 @@
 'use strict';
 const PIXI = require('pixi.js');
-const { grid_container } = require('./pixi_containers');
+const { grids } = require('./pixi_containers');
 const { Grid   } = require('../utils/grid');
 const { Tween  } = require('./tween');
 const easystarjs = require('easystarjs');
@@ -12,7 +12,7 @@ easystar.setTileCost(2, 1); // only go through these tiles if you have to
 //easystar.enableCornerCutting();
 
 const find_grid = sprite => {
-  const grid  = grid_container.children;
+  const grid  = grids.children;
   const point = sprite.getGlobalPosition();
   const found_tile = grid.find(tile => tile.containsPoint(point));
 

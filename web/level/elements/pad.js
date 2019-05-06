@@ -1,6 +1,6 @@
 'use strict';
 const { Sprite, Texture } = require('pixi.js');
-const { pad_container } = require('../../engine/pixi_containers');
+const { pads } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('../types/level_factory');
 const event = require('events');
 
@@ -21,11 +21,11 @@ class Trigger_Pad {
       });
     }
 
-    pad_container.addChild(this.area);
+    pads.addChild(this.area);
   }
 
   destroy() {
-    pad_container.removeChild(this.area);
+    pads.removeChild(this.area);
   }
 }
 

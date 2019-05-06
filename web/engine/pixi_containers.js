@@ -18,62 +18,62 @@ const {
   very_close,
 } = zIndex_layer;
 
-const background_container = new Container();
-background_container.name = 'background_image';
-background_container.zIndex = background;
+const backgrounds  = new Container();
+backgrounds.name = 'background_image';
+backgrounds.zIndex = background;
 
-const grid_container = new Container();
-grid_container.name = 'grid_container';
-grid_container.zIndex = background;
+const grids = new Container();
+grids.name = 'grid_container';
+grids.zIndex = background;
 
-const collision_container = new Container();
-collision_container.name = 'collision_items';
-collision_container.zIndex = low;
+const collisions = new Container();
+collisions.name = 'collision_items';
+collisions.zIndex = low;
 
-const item_container = new Container();
-item_container.name = 'non_collision_items';
-item_container.zIndex = low;
+const items = new Container();
+items.name = 'non_collision_items';
+items.zIndex = low;
 
-const enemy_container = new Container();
-enemy_container.name = 'enemy_container';
-enemy_container.zIndex = medium;
+const enemys= new Container();
+enemys.name = 'enemy_container';
+enemys.zIndex = medium;
 
-const player_container = new Container();
-player_container.name = 'player_container';
-player_container.zIndex = medium;
+const players = new Container();
+players.name = 'player_container';
+players.zIndex = medium;
 
-const shroud_container = new Container();
-shroud_container.name = 'shroud_container';
-shroud_container.zIndex = very_close;
+const shrouds = new Container();
+shrouds.name = 'shroud_container';
+shrouds.zIndex = very_close;
 
-const visual_effects_container = new Container();
-visual_effects_container.name = 'visual_effects_container';
-visual_effects_container.zIndex = close;
+const visuals = new Container();
+visuals.name = 'visuals';
+visuals.zIndex = close;
 
-const pad_container = new Container();
-pad_container.name = 'pad_container';
-pad_container.zIndex = close;
+const pads = new Container();
+pads.name = 'pad_container';
+pads.zIndex = close;
 
-const roof_container = new Container();
-roof_container.name = 'roof_container';
-roof_container.zIndex = close;
+const roofs= new Container();
+roofs.name = 'roof_container';
+roofs.zIndex = close;
 
-const gui_container = new Container();
-gui_container.name = 'gui_container';
-gui_container.zIndex = very_close;
+const guis= new Container();
+guis.name = 'gui_container';
+guis.zIndex = very_close;
 
 world.addChild(
-  shroud_container,
-  visual_effects_container,
-  roof_container,
-  background_container,
-  grid_container,
-  collision_container,
-  item_container,
-  enemy_container,
-  player_container,
-  gui_container,
-  pad_container
+  shrouds,
+  visuals,
+  roofs,
+  backgrounds,
+  grids,
+  collisions,
+  items,
+  enemys,
+  players,
+  guis,
+  pads
 );
 
 world.updateLayersOrder();
@@ -94,23 +94,23 @@ function clear_level_containers(expection) {
   }
 }
 
-function clear_non_player_containers() {
+function clear_non_players() {
   clear_level_containers('player_container');
 }
 
 module.exports = {
-  shroud_container,
-  roof_container,
-  background_container,
-  collision_container,
-  gui_container,
-  enemy_container,
-  player_container,
-  visual_effects_container,
-  grid_container,
-  item_container,
-  pad_container,
-  clear_non_player_containers,
+  shrouds,
+  visuals,
+  roofs,
+  backgrounds,
+  grids,
+  collisions,
+  items,
+  enemys,
+  players,
+  guis,
+  pads,
+  clear_non_players,
 };
 
 

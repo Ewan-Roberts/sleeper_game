@@ -3,7 +3,7 @@
 const PIXI = require('pixi.js');
 //const { GlitchFilter   } = require('@pixi/filter-glitch');
 //const { PixelateFilter } = require('@pixi/filter-pixelate');
-const { item_container } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
 const { ringing_phone, answer_phone  } = require('../../engine/sound');
 const { LED            } = require('../../light/types/led');
 const { Item           } = require('./item_model');
@@ -29,7 +29,7 @@ class Phone extends Item {
 
     this.light = new LED();
 
-    item_container.addChild(this.sprite);
+    items.addChild(this.sprite);
 
     this.sprite.on('removed', ()=> {
       this.effect.volume = 0;

@@ -1,5 +1,5 @@
 'use strict';
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
@@ -17,8 +17,8 @@ class Simple {
 
     if(properties.level_name === 'light') {
       this.level_data = require('../data/lights_room.json');
-      visual_effects_container.addChild(player.light.candle.sprite);
-      visual_effects_container.addChild(player.light.candle.shadow);
+      visuals.addChild(player.light.candle.sprite);
+      visuals.addChild(player.light.candle.shadow);
       global.set_light_level(0.5);
     }
     this.player = player;

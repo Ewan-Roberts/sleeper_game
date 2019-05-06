@@ -1,6 +1,6 @@
 'use strict';
 
-const { player_container } = require('../../engine/pixi_containers');
+const { players } = require('../../engine/pixi_containers');
 const { PlayerEvents     } = require('../../engine/item_handler');
 
 const { Character } = require('../character_model');
@@ -35,7 +35,7 @@ class Player extends Character {
     this.add_component(new Mouse(this));
     this.add_component(new Status());
 
-    player_container.addChild(this.sprite);
+    players.addChild(this.sprite);
 
     this.add_component(new PlayerEvents(this));
   }
@@ -52,7 +52,7 @@ class Player extends Character {
   }
 
   destroy() {
-    player_container.removeChild(this.sprite);
+    players.removeChild(this.sprite);
   }
 }
 

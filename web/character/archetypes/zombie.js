@@ -1,6 +1,6 @@
 'use strict';
 
-const { enemy_container } = require('../../engine/pixi_containers');
+const { enemys } = require('../../engine/pixi_containers');
 
 const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
@@ -30,7 +30,7 @@ class Lurcher extends Character{
       }
     }
 
-    enemy_container.addChild(this.sprite);
+    enemys.addChild(this.sprite);
   }
 }
 

@@ -2,10 +2,10 @@
 const PIXI = require('pixi.js');
 
 const {
-  collision_container,
-  roof_container,
-  pad_container,
-  shroud_container,
+  collisions,
+  roofs,
+  pads,
+  shrouds,
 } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
@@ -13,7 +13,7 @@ const { View_HUD } = require('../../view/view_player_inventory');
 const { Fade     } = require('../../effects/fade');
 
 function point_collides(position) {
-  const { children } = collision_container;
+  const { children } = collisions;
 
   return !!children.find(child => child.containsPoint(position));
 }
@@ -21,15 +21,15 @@ function point_collides(position) {
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
-  const shrouds = shroud_container.children ;
-  const shrouds_to_remove = shrouds.find(child => child.containsPoint(position));
+  const shroud = shrouds.children ;
+  const shrouds_to_remove = shroud.find(child => child.containsPoint(position));
   if (shrouds_to_remove && shrouds_to_remove.remove_on_enter) {
     Fade.out_destroy(shrouds_to_remove);
     delete shrouds_to_remove.remove_on_enter;
   }
   return;
-  const roofs = roof_container.children ;
-  roofs.forEach(child => {
+  const roof = roofs.children ;
+  roof.forEach(child => {
     const tweening = PIXI.tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;
     if(child.containsPoint(position)) {
@@ -44,7 +44,7 @@ function point_contains(position) {
 }
 
 function event_pad(position) {
-  const { children } = pad_container;
+  const { children } = pads;
 
   const pad = children.find(child => child.containsPoint(position));
 

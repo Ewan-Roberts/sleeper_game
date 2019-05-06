@@ -1,14 +1,14 @@
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 //TODO this needs to be abstracted
 const cone = new Sprite.fromFrame('yellow_triangle');
 cone.alpha = 0;
 cone.anchor.x = 0.5;
 cone.name = 'aiming_cone';
-visual_effects_container.addChild(cone);
+visuals.addChild(cone);
 
 //TODO use tween to and from
 class Aiming_Cone {

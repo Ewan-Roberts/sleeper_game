@@ -1,5 +1,5 @@
 'use strict';
-const { item_container } = require('../../engine/pixi_containers');
+const { items } = require('../../engine/pixi_containers');
 const { player_events  } = require('../../engine/item_handler');
 
 const { Lootable } = require('../../character/attributes/lootable');
@@ -67,7 +67,7 @@ class Chest extends Item {
       }
     }
 
-    item_container.addChild(this.sprite);
+    items.addChild(this.sprite);
   }
 
   set state_handling(bool) {

@@ -2,7 +2,7 @@
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 const { Fade } = require('../effects/fade');
 
 class View_Inventory {
@@ -29,7 +29,7 @@ class View_Inventory {
       this.slot_container.addChild(sprite);
     }
 
-    visual_effects_container.addChild(this.slot_container);
+    visuals.addChild(this.slot_container);
   }
 
   clear_slots() {

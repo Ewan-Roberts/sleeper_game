@@ -1,7 +1,7 @@
 'use strict';
 const { Sprite } = require('pixi.js');
 
-const { visual_effects_container } = require('../engine/pixi_containers');
+const { visuals } = require('../engine/pixi_containers');
 
 class Blood {
   add_at(point) {
@@ -10,7 +10,7 @@ class Blood {
     blood_splatter.alpha = 0.3;
     blood_splatter.position.set(point.x, point.y);
 
-    visual_effects_container.addChild(blood_splatter);
+    visuals.addChild(blood_splatter);
   }
 }
 

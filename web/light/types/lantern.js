@@ -1,6 +1,6 @@
 'use strict';
 
-const { visual_effects_container } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 
 const { Light   } = require('../light_model');
 const { Flicker } = require('../attributes/flicker');
@@ -18,7 +18,7 @@ class Lantern extends Light {
     this.shadow.range      = 500;
     this.shadow.intensity  = 0.6;
 
-    visual_effects_container.addChild(this.shadow);
+    visuals.addChild(this.shadow);
   }
 }
 
