@@ -4,6 +4,7 @@ const { pathfind      } = require('../../engine/pathfind.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Rat           } = require('../../character/archetypes/rat');
+const { Deer          } = require('../../character/archetypes/deer');
 const { Level_Factory } = require('./level_factory');
 
 class Defend_Room  {
@@ -28,9 +29,9 @@ class Defend_Room  {
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
-    const mouse2 = new Rat({id: 999});
-    mouse2.enemy(this.player);
-    mouse2.set_position({x: prey[0].x +200, y: prey[0].y +100});
+    const mouse2 = new Deer({id: 999});
+    mouse2.enemy(mouse);
+    mouse2.set_position(player[0]);
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad(data);

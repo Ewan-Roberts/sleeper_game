@@ -13,7 +13,6 @@ const { Vitals    } = require('../attributes/vitals');
 const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
-const { Blood     } = require('../../effects/blood');
 
 class Player extends Character {
   constructor() {
@@ -22,7 +21,6 @@ class Player extends Character {
     this.id = 1;
     this.add_component(new Human(this));
     this.sprite.name = 'player';
-    this.blood       = new Blood();
 
     this.add_component(new Light(this));
     this.add_component(new Tween(this.sprite));
@@ -41,22 +39,12 @@ class Player extends Character {
       if(this.health > 0) return;
 
       damage_events.removeListener('damage', on_damage);
-      this.sprite.destroy();
+      console.log('i am dead :(');
+      //this.sprite.destroy();
     };
 
     damage_events.on('damage', on_damage);
     this.add_component(new PlayerEvents(this));
-  }
-
-  on_damage(amount) {
-    this.vitals.damage(amount);
-
-    if(this.vitals.status === 'dead') {
-      this.blood.add_at(this.sprite);
-
-      this.sprite.destroy();
-      return;
-    }
   }
 
   destroy() {

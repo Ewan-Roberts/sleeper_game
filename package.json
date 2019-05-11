@@ -3,9 +3,9 @@
   "version": "1.1.8",
   "description": "Pixi.js web game",
   "scripts": {
-    "watch": "watchify web/index.js -o ./public/js/bundle.js",
+    "watch": "watchify web/index.js -o ./public/js/bundle.js --delay 1000",
     "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.js --compress --mangle",
-    "start": "nodemon server",
+    "start": "nodemon server --delay 2",
     "rinse": "./scripts/clean_trim_sprite.sh",
     "spritesheet": "pixi-packer  ./scripts/image_compression.js public/images/ --clean-cache"
   },

@@ -5943,7 +5943,7 @@ function setup(shadowCasterGroup, shadowOverlayGroup, shadowFilter) {
 
 
 }).call(this,require("timers").setImmediate)
-},{"timers":297}],35:[function(require,module,exports){
+},{"timers":298}],35:[function(require,module,exports){
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{},id:i,loaded:!1};return t[i].call(r.exports,r,r.exports,e),r.loaded=!0,r.exports}var n={};return e.m=t,e.c=n,e.p="",e(0)}([function(t,e,n){t.exports=n(6)},function(t,e){t.exports=PIXI},function(t,e){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={linear:function(){return function(t){return t}},inQuad:function(){return function(t){return t*t}},outQuad:function(){return function(t){return t*(2-t)}},inOutQuad:function(){return function(t){return t*=2,1>t?.5*t*t:-.5*(--t*(t-2)-1)}},inCubic:function(){return function(t){return t*t*t}},outCubic:function(){return function(t){return--t*t*t+1}},inOutCubic:function(){return function(t){return t*=2,1>t?.5*t*t*t:(t-=2,.5*(t*t*t+2))}},inQuart:function(){return function(t){return t*t*t*t}},outQuart:function(){return function(t){return 1- --t*t*t*t}},inOutQuart:function(){return function(t){return t*=2,1>t?.5*t*t*t*t:(t-=2,-.5*(t*t*t*t-2))}},inQuint:function(){return function(t){return t*t*t*t*t}},outQuint:function(){return function(t){return--t*t*t*t*t+1}},inOutQuint:function(){return function(t){return t*=2,1>t?.5*t*t*t*t*t:(t-=2,.5*(t*t*t*t*t+2))}},inSine:function(){return function(t){return 1-Math.cos(t*Math.PI/2)}},outSine:function(){return function(t){return Math.sin(t*Math.PI/2)}},inOutSine:function(){return function(t){return.5*(1-Math.cos(Math.PI*t))}},inExpo:function(){return function(t){return 0===t?0:Math.pow(1024,t-1)}},outExpo:function(){return function(t){return 1===t?1:1-Math.pow(2,-10*t)}},inOutExpo:function(){return function(t){return 0===t?0:1===t?1:(t*=2,1>t?.5*Math.pow(1024,t-1):.5*(-Math.pow(2,-10*(t-1))+2))}},inCirc:function(){return function(t){return 1-Math.sqrt(1-t*t)}},outCirc:function(){return function(t){return Math.sqrt(1- --t*t)}},inOutCirc:function(){return function(t){return t*=2,1>t?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-2)*(t-2))+1)}},inElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),-(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)))}},outElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),t*Math.pow(2,-10*n)*Math.sin((n-i)*(2*Math.PI)/e)+1)}},inOutElastic:function(){var t=arguments.length<=0||void 0===arguments[0]?.1:arguments[0],e=arguments.length<=1||void 0===arguments[1]?.4:arguments[1];return function(n){var i=void 0;return 0===n?0:1===n?1:(!t||1>t?(t=1,i=e/4):i=e*Math.asin(1/t)/(2*Math.PI),n*=2,1>n?-.5*(t*Math.pow(2,10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)):t*Math.pow(2,-10*(n-1))*Math.sin((n-1-i)*(2*Math.PI)/e)*.5+1)}},inBack:function(t){return function(e){var n=t||1.70158;return e*e*((n+1)*e-n)}},outBack:function(t){return function(e){var n=t||1.70158;return--e*e*((n+1)*e+n)+1}},inOutBack:function(t){return function(e){var n=1.525*(t||1.70158);return e*=2,1>e?.5*(e*e*((n+1)*e-n)):.5*((e-2)*(e-2)*((n+1)*(e-2)+n)+2)}},inBounce:function(){return function(t){return 1-n.outBounce()(1-t)}},outBounce:function(){return function(t){return 1/2.75>t?7.5625*t*t:2/2.75>t?(t-=1.5/2.75,7.5625*t*t+.75):2.5/2.75>t?(t-=2.25/2.75,7.5625*t*t+.9375):(t-=2.625/2.75,7.5625*t*t+.984375)}},inOutBounce:function(){return function(t){return.5>t?.5*n.inBounce()(2*t):.5*n.outBounce()(2*t-1)+.5}},customArray:function(t){return t?function(t){return t}:n.linear()}};e["default"]=n},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function s(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function o(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!=typeof e&&"function"!=typeof e?t:e}function a(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function u(t,e,n,i,r,s){for(var o in t)if(c(t[o]))u(t[o],e[o],n[o],i,r,s);else{var a=e[o],h=t[o]-e[o],l=i,f=r/l;n[o]=a+h*s(f)}}function h(t,e,n){for(var i in t)0===e[i]||e[i]||(c(n[i])?(e[i]=JSON.parse(JSON.stringify(n[i])),h(t[i],e[i],n[i])):e[i]=n[i])}function c(t){return"[object Object]"===Object.prototype.toString.call(t)}var l=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var f=n(1),p=r(f),d=n(2),g=i(d),v=function(t){function e(t,n){s(this,e);var i=o(this,Object.getPrototypeOf(e).call(this));return i.target=t,n&&i.addTo(n),i.clear(),i}return a(e,t),l(e,[{key:"addTo",value:function(t){return this.manager=t,this.manager.addTween(this),this}},{key:"chain",value:function(t){return t||(t=new e(this.target)),this._chainTween=t,t}},{key:"start",value:function(){return this.active=!0,this}},{key:"stop",value:function(){return this.active=!1,this.emit("stop"),this}},{key:"to",value:function(t){return this._to=t,this}},{key:"from",value:function(t){return this._from=t,this}},{key:"remove",value:function(){return this.manager?(this.manager.removeTween(this),this):this}},{key:"clear",value:function(){this.time=0,this.active=!1,this.easing=g["default"].linear(),this.expire=!1,this.repeat=0,this.loop=!1,this.delay=0,this.pingPong=!1,this.isStarted=!1,this.isEnded=!1,this._to=null,this._from=null,this._delayTime=0,this._elapsedTime=0,this._repeat=0,this._pingPong=!1,this._chainTween=null,this.path=null,this.pathReverse=!1,this.pathFrom=0,this.pathTo=0}},{key:"reset",value:function(){if(this._elapsedTime=0,this._repeat=0,this._delayTime=0,this.isStarted=!1,this.isEnded=!1,this.pingPong&&this._pingPong){var t=this._to,e=this._from;this._to=e,this._from=t,this._pingPong=!1}return this}},{key:"update",value:function(t,e){if(this._canUpdate()||!this._to&&!this.path){var n=void 0,i=void 0;if(this.delay>this._delayTime)return void(this._delayTime+=e);this.isStarted||(this._parseData(),this.isStarted=!0,this.emit("start"));var r=this.pingPong?this.time/2:this.time;if(r>this._elapsedTime){var s=this._elapsedTime+e,o=s>=r;this._elapsedTime=o?r:s,this._apply(r);var a=this._pingPong?r+this._elapsedTime:this._elapsedTime;if(this.emit("update",a),o){if(this.pingPong&&!this._pingPong)return this._pingPong=!0,n=this._to,i=this._from,this._from=n,this._to=i,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this.emit("pingpong"),void(this._elapsedTime=0);if(this.loop||this.repeat>this._repeat)return this._repeat++,this.emit("repeat",this._repeat),this._elapsedTime=0,void(this.pingPong&&this._pingPong&&(n=this._to,i=this._from,this._to=i,this._from=n,this.path&&(n=this.pathTo,i=this.pathFrom,this.pathTo=i,this.pathFrom=n),this._pingPong=!1));this.isEnded=!0,this.active=!1,this.emit("end"),this._chainTween&&(this._chainTween.addTo(this.manager),this._chainTween.start())}}}}},{key:"_parseData",value:function(){if(!this.isStarted&&(this._from||(this._from={}),h(this._to,this._from,this.target),this.path)){var t=this.path.totalDistance();this.pathReverse?(this.pathFrom=t,this.pathTo=0):(this.pathFrom=0,this.pathTo=t)}}},{key:"_apply",value:function(t){if(u(this._to,this._from,this.target,t,this._elapsedTime,this.easing),this.path){var e=this.pingPong?this.time/2:this.time,n=this.pathFrom,i=this.pathTo-this.pathFrom,r=e,s=this._elapsedTime/r,o=n+i*this.easing(s),a=this.path.getPointAtDistance(o);this.target.position.set(a.x,a.y)}}},{key:"_canUpdate",value:function(){return this.time&&this.active&&this.target}}]),e}(p.utils.EventEmitter);e["default"]=v},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(3),a=i(o),u=function(){function t(){r(this,t),this.tweens=[],this._tweensToDelete=[],this._last=0}return s(t,[{key:"update",value:function(t){var e=void 0;t||0===t?e=1e3*t:(e=this._getDeltaMS(),t=e/1e3);for(var n=0;n<this.tweens.length;n++){var i=this.tweens[n];i.active&&(i.update(t,e),i.isEnded&&i.expire&&i.remove())}if(this._tweensToDelete.length){for(var n=0;n<this._tweensToDelete.length;n++)this._remove(this._tweensToDelete[n]);this._tweensToDelete.length=0}}},{key:"getTweensForTarget",value:function(t){for(var e=[],n=0;n<this.tweens.length;n++)this.tweens[n].target===t&&e.push(this.tweens[n]);return e}},{key:"createTween",value:function(t){return new a["default"](t,this)}},{key:"addTween",value:function(t){t.manager=this,this.tweens.push(t)}},{key:"removeTween",value:function(t){this._tweensToDelete.push(t)}},{key:"_remove",value:function(t){var e=this.tweens.indexOf(t);-1!==e&&this.tweens.splice(e,1)}},{key:"_getDeltaMS",value:function(){0===this._last&&(this._last=Date.now());var t=Date.now(),e=t-this._last;return this._last=t,e}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}function r(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}();Object.defineProperty(e,"__esModule",{value:!0});var o=n(1),a=i(o),u=function(){function t(){r(this,t),this._colsed=!1,this.polygon=new a.Polygon,this.polygon.closed=!1,this._tmpPoint=new a.Point,this._tmpPoint2=new a.Point,this._tmpDistance=[],this.currentPath=null,this.graphicsData=[],this.dirty=!0}return s(t,[{key:"moveTo",value:function(t,e){return a.Graphics.prototype.moveTo.call(this,t,e),this.dirty=!0,this}},{key:"lineTo",value:function(t,e){return a.Graphics.prototype.lineTo.call(this,t,e),this.dirty=!0,this}},{key:"bezierCurveTo",value:function(t,e,n,i,r,s){return a.Graphics.prototype.bezierCurveTo.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"quadraticCurveTo",value:function(t,e,n,i){return a.Graphics.prototype.quadraticCurveTo.call(this,t,e,n,i),this.dirty=!0,this}},{key:"arcTo",value:function(t,e,n,i,r){return a.Graphics.prototype.arcTo.call(this,t,e,n,i,r),this.dirty=!0,this}},{key:"arc",value:function(t,e,n,i,r,s){return a.Graphics.prototype.arc.call(this,t,e,n,i,r,s),this.dirty=!0,this}},{key:"drawShape",value:function(t){return a.Graphics.prototype.drawShape.call(this,t),this.dirty=!0,this}},{key:"getPoint",value:function(t){this.parsePoints();var e=this.closed&&t>=this.length-1?0:2*t;return this._tmpPoint.set(this.polygon.points[e],this.polygon.points[e+1]),this._tmpPoint}},{key:"distanceBetween",value:function(t,e){this.parsePoints();var n=this.getPoint(t),i=n.x,r=n.y,s=this.getPoint(e),o=s.x,a=s.y,u=o-i,h=a-r;return Math.sqrt(u*u+h*h)}},{key:"totalDistance",value:function(){this.parsePoints(),this._tmpDistance.length=0,this._tmpDistance.push(0);for(var t=this.length,e=0,n=0;t-1>n;n++)e+=this.distanceBetween(n,n+1),this._tmpDistance.push(e);return e}},{key:"getPointAt",value:function(t){if(this.parsePoints(),t>this.length)return this.getPoint(this.length-1);if(t%1===0)return this.getPoint(t);this._tmpPoint2.set(0,0);var e=t%1,n=this.getPoint(Math.ceil(t)),i=n.x,r=n.y,s=this.getPoint(Math.floor(t)),o=s.x,a=s.y,u=-((o-i)*e),h=-((a-r)*e);return this._tmpPoint2.set(o+u,a+h),this._tmpPoint2}},{key:"getPointAtDistance",value:function(t){this.parsePoints(),this._tmpDistance||this.totalDistance();var e=this._tmpDistance.length,n=0,i=this._tmpDistance[this._tmpDistance.length-1];0>t?t=i+t:t>i&&(t-=i);for(var r=0;e>r&&(t>=this._tmpDistance[r]&&(n=r),!(t<this._tmpDistance[r]));r++);if(n===this.length-1)return this.getPointAt(n);var s=t-this._tmpDistance[n],o=this._tmpDistance[n+1]-this._tmpDistance[n];return this.getPointAt(n+s/o)}},{key:"parsePoints",value:function(){if(!this.dirty)return this;this.dirty=!1,this.polygon.points.length=0;for(var t=0;t<this.graphicsData.length;t++){var e=this.graphicsData[t].shape;e&&e.points&&(this.polygon.points=this.polygon.points.concat(e.points))}return this}},{key:"clear",value:function(){return this.graphicsData.length=0,this.currentPath=null,this.polygon.points.length=0,this._closed=!1,this.dirty=!1,this}},{key:"closed",get:function(){return this._closed},set:function(t){this._closed!==t&&(this.polygon.closed=t,this._closed=t,this.dirty=!0)}},{key:"length",get:function(){return this.polygon.points.length?this.polygon.points.length/2+(this._closed?1:0):0}}]),t}();e["default"]=u},function(t,e,n){"use strict";function i(t){return t&&t.__esModule?t:{"default":t}}function r(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n]);return e["default"]=t,e}Object.defineProperty(e,"__esModule",{value:!0});var s=n(1),o=r(s),a=n(4),u=i(a),h=n(3),c=i(h),l=n(5),f=i(l),p=n(2),d=i(p);o.Graphics.prototype.drawPath=function(t){return t.parsePoints(),this.drawShape(t.polygon),this};var g={TweenManager:u["default"],Tween:c["default"],Easing:d["default"],TweenPath:f["default"]};o.tweenManager||(o.tweenManager=new u["default"],o.tween=g),e["default"]=g}]);
 
 },{}],36:[function(require,module,exports){
@@ -17718,7 +17718,7 @@ var SpriteMaskFilter = function (_Filter) {
 
 exports.default = SpriteMaskFilter;
 
-},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":291}],86:[function(require,module,exports){
+},{"../../../../math":66,"../../../../textures/TextureMatrix":112,"../Filter":82,"path":292}],86:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -21518,7 +21518,7 @@ function generateSampleSrc(maxTextures) {
     return src;
 }
 
-},{"../../Shader":40,"path":291}],104:[function(require,module,exports){
+},{"../../Shader":40,"path":292}],104:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -27356,7 +27356,7 @@ function determineCrossOrigin(url) {
     return '';
 }
 
-},{"url":298}],121:[function(require,module,exports){
+},{"url":299}],121:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31930,7 +31930,7 @@ exports.default = TilingSpriteRenderer;
 
 core.WebGLRenderer.registerPlugin('tilingSprite', TilingSpriteRenderer);
 
-},{"../../core":61,"../../core/const":42,"path":291}],139:[function(require,module,exports){
+},{"../../core":61,"../../core/const":42,"path":292}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32014,7 +32014,7 @@ var AlphaFilter = function (_core$Filter) {
 
 exports.default = AlphaFilter;
 
-},{"../../core":61,"path":291}],140:[function(require,module,exports){
+},{"../../core":61,"path":292}],140:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33177,7 +33177,7 @@ var ColorMatrixFilter = function (_core$Filter) {
 exports.default = ColorMatrixFilter;
 ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
-},{"../../core":61,"path":291}],147:[function(require,module,exports){
+},{"../../core":61,"path":292}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33285,7 +33285,7 @@ var DisplacementFilter = function (_core$Filter) {
 
 exports.default = DisplacementFilter;
 
-},{"../../core":61,"path":291}],148:[function(require,module,exports){
+},{"../../core":61,"path":292}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33339,7 +33339,7 @@ var FXAAFilter = function (_core$Filter) {
 
 exports.default = FXAAFilter;
 
-},{"../../core":61,"path":291}],149:[function(require,module,exports){
+},{"../../core":61,"path":292}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33515,7 +33515,7 @@ var NoiseFilter = function (_core$Filter) {
 
 exports.default = NoiseFilter;
 
-},{"../../core":61,"path":291}],151:[function(require,module,exports){
+},{"../../core":61,"path":292}],151:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -36182,7 +36182,7 @@ function parse(resource, textures) {
     resource.bitmapFont = _extras.BitmapText.registerFont(resource.data, textures);
 }
 
-},{"../extras":137,"path":291,"resource-loader":190}],159:[function(require,module,exports){
+},{"../extras":137,"path":292,"resource-loader":190}],159:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -36545,7 +36545,7 @@ function getResourcePath(resource, baseUrl) {
     return _url2.default.resolve(resource.url.replace(baseUrl, ''), resource.data.meta.image);
 }
 
-},{"../core":61,"resource-loader":190,"url":298}],162:[function(require,module,exports){
+},{"../core":61,"resource-loader":190,"url":299}],162:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -38271,7 +38271,7 @@ exports.default = MeshRenderer;
 
 core.WebGLRenderer.registerPlugin('mesh', MeshRenderer);
 
-},{"../../core":61,"../Mesh":163,"path":291,"pixi-gl-core":19}],170:[function(require,module,exports){
+},{"../../core":61,"../Mesh":163,"path":292,"pixi-gl-core":19}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -45159,7 +45159,7 @@ module.exports = {
   Bird,
 };
 
-},{"../../utils/math":282,"pixi.js":151}],199:[function(require,module,exports){
+},{"../../utils/math":283,"pixi.js":151}],199:[function(require,module,exports){
 'use strict';
 const { Texture, extras } = require('pixi.js');
 
@@ -45288,7 +45288,124 @@ module.exports = {
 };
 
 
-},{"../../utils/math":282,"pixi.js":151}],200:[function(require,module,exports){
+},{"../../utils/math":283,"pixi.js":151}],200:[function(require,module,exports){
+'use strict';
+const { Texture, extras } = require('pixi.js');
+
+const { radian } = require('../../utils/math');
+
+//TODO move to dragon
+class rat_animations {
+  static move_frames() {
+    const moving_frames = [];
+
+    for (let i = 2; i < 15; i++) {
+      moving_frames.push(Texture.fromFrame(`rat_${i}`));
+    }
+
+    for (let i = 15; i > 1; i--) {
+      moving_frames.push(Texture.fromFrame(`rat_${i}`));
+    }
+
+    moving_frames.push(Texture.fromFrame('rat_48'));
+    moving_frames.push(Texture.fromFrame('rat_49'));
+    moving_frames.push(Texture.fromFrame('rat_50'));
+    moving_frames.push(Texture.fromFrame('rat_49'));
+    moving_frames.push(Texture.fromFrame('rat_48'));
+
+    return moving_frames;
+  }
+
+  static wait_frames() {
+    return [
+      Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_51'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
+    ];
+  }
+
+  static dead_frames() {
+    return [ Texture.fromFrame('rat_35') ];
+  }
+
+  static eat_frames() {
+    return [
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_41'),
+      Texture.fromFrame('rat_40'),
+      Texture.fromFrame('rat_39'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
+    ];
+  }
+}
+
+const frames = {
+  move: rat_animations.move_frames(),
+  wait: rat_animations.wait_frames(),
+  dead: rat_animations.dead_frames(),
+  eat:  rat_animations.eat_frames(),
+};
+
+class Rodent {
+  constructor(entity) {
+    this.name = 'animation';
+
+    const texture = [Texture.fromFrame('bunny')];
+    //TODO Finish migrating animation
+    entity.sprite = new extras.AnimatedSprite(texture);
+    this.sprite = entity.sprite;
+    this.sprite.width  /=4;
+    this.sprite.height /=4;
+    this.sprite.anchor.set(0.5);
+    this.sprite.rotation_offset = 1.57;
+  }
+
+  switch(action) {
+    if (this.state === action) return;
+
+    this.sprite.textures = frames[action];
+    this.sprite.loop = true;
+    this.sprite.play();
+    this.state = action;
+  }
+
+  face_point(point) {
+    this.sprite.rotation = radian(point, this.sprite);
+  }
+
+  attack() {
+    this.switch('eat');
+  }
+
+  move() {
+    this.switch('move');
+  }
+
+  walk() {
+    this.switch('move');
+  }
+
+  kill() {
+    this.switch('dead');
+  }
+
+}
+
+module.exports = {
+  Rodent,
+};
+
+},{"../../utils/math":283,"pixi.js":151}],201:[function(require,module,exports){
 'use strict';
 const { Texture, extras } = require('pixi.js');
 
@@ -45308,7 +45425,7 @@ class Zombie {
   constructor(entity) {
     this.name = 'animation';
     console.log(frames);
-    entity.sprite = new extras.AnimatedSprite(frames.move);
+    entity.sprite = new extras.AnimatedSprite(frames.idle);
 
     this.sprite = entity.sprite;
     this.sprite.width  /=2;
@@ -45333,6 +45450,10 @@ class Zombie {
   }
 
   wait() {
+    this.switch('idle');
+  }
+
+  idle() {
     this.switch('idle');
   }
 
@@ -45363,7 +45484,7 @@ module.exports = {
   Zombie,
 };
 
-},{"../../utils/math":282,"pixi.js":151}],201:[function(require,module,exports){
+},{"../../utils/math":283,"pixi.js":151}],202:[function(require,module,exports){
 'use strict';
 const { enemys } = require('../../engine/pixi_containers');
 
@@ -45404,26 +45525,25 @@ module.exports = {
   Crow,
 };
 
-},{"../../engine/pixi_containers":228,"../../engine/tween":233,"../../utils/math":282,"../animations/bird":198,"../character_model":213}],202:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":283,"../animations/bird":198,"../character_model":215}],203:[function(require,module,exports){
 'use strict';
 const { collisions, guis } = require('../../engine/pixi_containers');
+const { enemys           } = require('../../engine/pixi_containers');
 
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
+const { Character        } = require('../character_model');
 const { radian           } = require('../../utils/math');
 const { random_number    } = require('../../utils/math');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
-
-const { Animal   } = require('../types/rat');
-const { Melee    } = require('../attributes/melee');
-
-// truncanting
-
-// arr.length = 4;
-// console.log(arr); //=> [11, 22, 33]
+const { Rodent           } = require('../animations/rat');
+const { Inventory        } = require('../attributes/inventory');
+const { Vitals           } = require('../attributes/vitals');
+const { Lootable         } = require('../attributes/lootable');
+const { Melee            } = require('../attributes/melee');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -45435,31 +45555,25 @@ function break_at_door(path) {
   return path;
 }
 
-class Rat extends Animal {
+class Deer extends Character {
   constructor({id}) {
     super();
     this.name = 'rat';
     this.id = id;
-    this.sprite.id = id;
     this.health = 100;
-    const on_damage = ({id, damage}) => {
-      if(this.id !== id) return;
-      this.health -= damage;
-      if(this.health > 0) return;
+    this.add_component(new Rodent(this));
+    this.sprite.id = id;
+    this.sprite.play();
 
-      if(this.vitals.alive) {
-        return this.vitals.damage(damage);
-      }
-
-      this.kill();
-      damage_events.removeListener('damage', on_damage);
-    };
-
-    damage_events.on('damage', on_damage);
-
-    this.inventory.add_melee_weapon_by_name('rat_teeth');
-    this.inventory.switch_to_melee_weapon();
+    this.add_component(new Vitals(this));
+    this.add_component(new Inventory());
+    this.add_component(new Lootable(this));
     this.add_component(new Melee(this));
+    this.inventory.add_melee_weapon_by_name('wrench_blade');
+    this.inventory.switch_to_melee_weapon();
+
+    enemys.addChild(this.sprite);
+    damage_events.on('damage', data => this.on_damage(data));
   }
 
   get _target_far_away() {
@@ -45468,12 +45582,17 @@ class Rat extends Animal {
     return distance > 200;
   }
 
-  on_damage2(amount) {
+  on_damage({id, damage}) {
+    if(this.id !== id) return;
+    this.health -= damage;
+    if(this.health > 0) return;
+
     if(this.vitals.alive) {
-      return this.vitals.damage(amount);
+      return this.vitals.damage(damage);
     }
 
     this.kill();
+    damage_events.removeListener('damage', this.on_damage);
   }
 
   kill() {
@@ -45513,21 +45632,195 @@ class Rat extends Animal {
       door_path[0].y
     );
 
-    const random = () => random_number(30, 50);
+    //const random = () => random_number(30, 50);
+
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
-        door_path[i-1].x + random(),
-        door_path[i-1].y + random(),
+        door_path[i-1].x,
+        door_path[i-1].y,
         door_path[i].x,
         door_path[i].y,
         20);
     }
+
+    this.tween.time = door_path.length*100;
   }
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
     this.tween = tweenManager.createTween(this.sprite);
-    this.tween.time = 4000;
+    this.tween.time = 1000;
+    this.tween.expire = true;
+    this.tween.start();
+
+    this.tween.on('end', async () => {
+      this.tween.clear();
+      this.tween.expire = true;
+
+      //if(!this.enemy.vitals.alive) throw 'game over';
+
+      if(!this._target_far_away) {
+        this.tween.time = 1000;
+        this.tween.start();
+
+        damage_events.emit('damage', {id: this.enemy.id, damage: 50});
+        return;
+      }
+
+      this.tween.path = new tween.TweenPath();
+      this.tween.path.moveTo(this.sprite.x, this.sprite.y);
+
+      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
+        this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+        this.animation.move();
+        this.tween.time = 200;
+      } else {
+        await this._pathfind();
+      }
+
+      this._show_path(this.tween.path);
+      this.tween.start();
+    });
+
+    this.tween.on('update', () => {
+      if(!this.tween.path) return;
+
+      this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint)+1.57;
+    });
+  }
+}
+
+module.exports = {
+  Deer,
+};
+
+},{"../../engine/damage_handler":224,"../../engine/pathfind":228,"../../engine/pixi_containers":229,"../../utils/line_of_sight":282,"../../utils/math":283,"../animations/rat":200,"../attributes/inventory":206,"../attributes/lootable":209,"../attributes/melee":210,"../attributes/vitals":214,"../character_model":215,"pixi.js":151}],204:[function(require,module,exports){
+'use strict';
+const { collisions, guis } = require('../../engine/pixi_containers');
+const { enemys           } = require('../../engine/pixi_containers');
+
+const { Graphics, tween, tweenManager }= require('pixi.js');
+
+const { Character        } = require('../character_model');
+const { radian           } = require('../../utils/math');
+const { random_number    } = require('../../utils/math');
+const { distance_between } = require('../../utils/math');
+const { Sight            } = require('../../utils/line_of_sight');
+const { damage_events    } = require('../../engine/damage_handler');
+const { pathfind         } = require('../../engine/pathfind');
+const { Zombie           } = require('../animations/zombie');
+const { Inventory        } = require('../attributes/inventory');
+const { Vitals           } = require('../attributes/vitals');
+const { Lootable         } = require('../attributes/lootable');
+const { Melee            } = require('../attributes/melee');
+
+function break_at_door(path) {
+  for (let i = 0; i < path.length; i++) {
+    if(path[i].door) {
+      path.length = i+1;
+      return path;
+    }
+  }
+  return path;
+}
+
+class Rat extends Character {
+  constructor({id}) {
+    super();
+    this.name = 'zombie';
+    this.id = id;
+    this.health = 100;
+    this.add_component(new Zombie(this));
+    this.sprite.id = id;
+    this.sprite.play();
+
+    this.add_component(new Vitals(this));
+    this.add_component(new Inventory());
+    this.add_component(new Lootable(this));
+    this.add_component(new Melee(this));
+    this.inventory.add_melee_weapon_by_name('rat_teeth');
+    this.inventory.switch_to_melee_weapon();
+
+    enemys.addChild(this.sprite);
+    damage_events.on('damage', data => this.on_damage(data));
+  }
+
+  get _target_far_away() {
+    const distance = distance_between(this.enemy.sprite, this.sprite);
+
+    return distance > 200;
+  }
+
+  on_damage({id, damage}) {
+    console.log(this.sprite.id);
+    if(this.id !== id) return;
+    this.health -= damage;
+    if(this.health > 0) return;
+
+    if(this.vitals.alive) {
+      return this.vitals.damage(damage);
+    }
+
+    this.kill();
+    damage_events.removeListener('damage', this.on_damage);
+  }
+
+  kill() {
+    // if(!this.loot.items.length) this.loot.populate();
+
+    // this.loot.set_position(this.sprite);
+    // this.loot.show();
+    if(this.tween) this.tween.stop();
+
+    console.log('zombie dea2');
+    this.animation.kill();
+  }
+
+  enemy(character) {
+    this.enemy = character;
+  }
+
+  _show_path(path) {
+    const graphical_path = new Graphics();
+    graphical_path.lineStyle(3, 0xffffff, 0.5);
+    graphical_path.drawPath(path);
+
+    guis.addChild(graphical_path);
+  }
+
+  async _pathfind() {
+    this.animation.move();
+
+    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const door_path   = break_at_door(normal_path);
+    const door_tile   = door_path[door_path.length - 1];
+
+    const { damage } = this.inventory.equipped;
+    damage_events.emit('damage_tile', {door_tile, damage});
+
+    this.tween.path.lineTo(
+      door_path[0].x,
+      door_path[0].y
+    );
+
+    //const random = () => random_number(30, 50);
+
+    for (let i = 1; i < door_path.length; i++) {
+      this.tween.path.arcTo(
+        door_path[i-1].x,
+        door_path[i-1].y,
+        door_path[i].x,
+        door_path[i].y,
+        20);
+    }
+
+    this.tween.time = door_path.length*100;
+  }
+
+  // NOTE: Keep this verbose and dumb
+  logic_start() {
+    this.tween = tweenManager.createTween(this.sprite);
+    this.tween.time = 1000;
     this.tween.expire = true;
     this.tween.start();
 
@@ -45538,10 +45831,15 @@ class Rat extends Animal {
       if(!this.enemy.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
-        this.tween.time = 4000;
+        this.tween.time = 1000;
         this.tween.start();
 
-        return this.melee.attack(this.enemy);
+        damage_events.emit('damage', {id: this.enemy.id, damage: 50});
+        this.animation.attack();
+
+        this.animation.face_point(this.enemy.sprite);
+        return;
+        //return this.melee.attack(this.enemy);
       }
 
       this.tween.path = new tween.TweenPath();
@@ -45549,13 +45847,11 @@ class Rat extends Animal {
 
       if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
         this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+        this.animation.move();
+        this.tween.time = 200;
       } else {
         await this._pathfind();
       }
-
-      this.tween.time = this.tween.path.length
-        ?this.tween.path.length*2000
-        :2000;
 
       this._show_path(this.tween.path);
       this.tween.start();
@@ -45563,6 +45859,7 @@ class Rat extends Animal {
 
     this.tween.on('update', () => {
       if(!this.tween.path) return;
+
       this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint);
     });
   }
@@ -45573,7 +45870,7 @@ module.exports = {
   Rat,
 };
 
-},{"../../engine/damage_handler":223,"../../engine/pathfind":227,"../../engine/pixi_containers":228,"../../utils/line_of_sight":281,"../../utils/math":282,"../attributes/melee":208,"../types/rat":216,"pixi.js":151}],203:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pathfind":228,"../../engine/pixi_containers":229,"../../utils/line_of_sight":282,"../../utils/math":283,"../animations/zombie":201,"../attributes/inventory":206,"../attributes/lootable":209,"../attributes/melee":210,"../attributes/vitals":214,"../character_model":215,"pixi.js":151}],205:[function(require,module,exports){
 'use strict';
 const { enemys        } = require('../../engine/pixi_containers');
 const { damage_events } = require('../../engine/damage_handler');
@@ -45631,7 +45928,7 @@ module.exports = {
   Lurcher,
 };
 
-},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"../../engine/tween":233,"../../utils/math":282,"../animations/zombie":200,"../attributes/lootable":207,"../character_model":213}],204:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"../../engine/tween":234,"../../utils/math":283,"../animations/zombie":201,"../attributes/lootable":209,"../character_model":215}],206:[function(require,module,exports){
 'use strict';
 const { Item_Manager } = require('../../items/item_manager');
 
@@ -45730,7 +46027,7 @@ module.exports = {
 };
 
 
-},{"../../items/item_manager":236}],205:[function(require,module,exports){
+},{"../../items/item_manager":237}],207:[function(require,module,exports){
 'use strict';
 const { tweenManager, keyboardManager} = require('pixi.js');
 
@@ -45909,7 +46206,7 @@ module.exports = {
   Keyboard,
 };
 
-},{"../../effects/fade":219,"../../engine/pixi_containers":228,"../../engine/shadows":230,"../../view/view_player_inventory":288,"pixi.js":151}],206:[function(require,module,exports){
+},{"../../effects/fade":220,"../../engine/pixi_containers":229,"../../engine/shadows":231,"../../view/view_player_inventory":289,"pixi.js":151}],208:[function(require,module,exports){
 
 'use strict';
 const { Candle } = require('../../light/types/candle');
@@ -45936,7 +46233,7 @@ module.exports = {
   Light,
 };
 
-},{"../../light/types/candle":276}],207:[function(require,module,exports){
+},{"../../light/types/candle":277}],209:[function(require,module,exports){
 'use strict';
 
 const { Item_Manager   } = require('../../items/item_manager');
@@ -46011,7 +46308,7 @@ module.exports = {
   Lootable,
 };
 
-},{"../../effects/fade":219,"../../items/item_manager":236,"../../view/button":284,"../../view/view_inventory":287}],208:[function(require,module,exports){
+},{"../../effects/fade":220,"../../items/item_manager":237,"../../view/button":285,"../../view/view_inventory":288}],210:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 const { melee_attack } = require('../../engine/melee');
@@ -46069,7 +46366,7 @@ module.exports = {
   Melee,
 };
 
-},{"../../engine/melee":225,"../../engine/pixi_containers":228,"pixi.js":151}],209:[function(require,module,exports){
+},{"../../engine/melee":226,"../../engine/pixi_containers":229,"pixi.js":151}],211:[function(require,module,exports){
 'use strict';
 //const { visuals } = require('../../engine/pixi_containers');
 
@@ -46136,7 +46433,7 @@ module.exports = {
   Mouse,
 };
 
-},{"../../effects/aiming_cone":217,"../../engine/app":220,"../../engine/ranged":229,"../../utils/math":282}],210:[function(require,module,exports){
+},{"../../effects/aiming_cone":218,"../../engine/app":221,"../../engine/ranged":230,"../../utils/math":283}],212:[function(require,module,exports){
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 
@@ -46180,7 +46477,7 @@ module.exports = {
   Pathfind,
 };
 
-},{"../../engine/pathfind.js":227,"../../engine/pixi_containers":228,"pixi.js":151}],211:[function(require,module,exports){
+},{"../../engine/pathfind.js":228,"../../engine/pixi_containers":229,"pixi.js":151}],213:[function(require,module,exports){
 'use strict';
 const { tweenManager } = require('pixi.js');
 const { status_meter } = require('../../view/view_player_status_meter');
@@ -46216,7 +46513,7 @@ module.exports = {
   Status,
 };
 
-},{"../../view/view_player_status_meter":289,"pixi.js":151}],212:[function(require,module,exports){
+},{"../../view/view_player_status_meter":290,"pixi.js":151}],214:[function(require,module,exports){
 'use strict';
 const { Blood } = require('../../effects/blood');
 
@@ -46270,7 +46567,7 @@ module.exports = {
 };
 
 
-},{"../../effects/blood":218}],213:[function(require,module,exports){
+},{"../../effects/blood":219}],215:[function(require,module,exports){
 'use strict';
 
 class Character {
@@ -46293,7 +46590,7 @@ module.exports = {
   Character,
 };
 
-},{}],214:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 'use strict';
 
 const { visuals   } = require('../../engine/pixi_containers');
@@ -46320,7 +46617,7 @@ module.exports = {
   NPC,
 };
 
-},{"../../engine/pixi_containers":228,"../../engine/tween":233,"../animations/human":199,"../attributes/pathfind":210,"../character_model":213}],215:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/pathfind":212,"../character_model":215}],217:[function(require,module,exports){
 'use strict';
 
 const { players      } = require('../../engine/pixi_containers');
@@ -46336,7 +46633,6 @@ const { Vitals    } = require('../attributes/vitals');
 const { Status    } = require('../attributes/status_bar');
 const { Light     } = require('../attributes/light');
 const { Tween     } = require('../../engine/tween');
-const { Blood     } = require('../../effects/blood');
 
 class Player extends Character {
   constructor() {
@@ -46345,7 +46641,6 @@ class Player extends Character {
     this.id = 1;
     this.add_component(new Human(this));
     this.sprite.name = 'player';
-    this.blood       = new Blood();
 
     this.add_component(new Light(this));
     this.add_component(new Tween(this.sprite));
@@ -46364,22 +46659,12 @@ class Player extends Character {
       if(this.health > 0) return;
 
       damage_events.removeListener('damage', on_damage);
-      this.sprite.destroy();
+      console.log('i am dead :(');
+      //this.sprite.destroy();
     };
 
     damage_events.on('damage', on_damage);
     this.add_component(new PlayerEvents(this));
-  }
-
-  on_damage(amount) {
-    this.vitals.damage(amount);
-
-    if(this.vitals.status === 'dead') {
-      this.blood.add_at(this.sprite);
-
-      this.sprite.destroy();
-      return;
-    }
   }
 
   destroy() {
@@ -46391,38 +46676,7 @@ module.exports = {
   Player,
 };
 
-},{"../../effects/blood":218,"../../engine/damage_handler":223,"../../engine/item_handler":224,"../../engine/pixi_containers":228,"../../engine/tween":233,"../animations/human":199,"../attributes/inventory":204,"../attributes/keyboard":205,"../attributes/light":206,"../attributes/mouse":209,"../attributes/status_bar":211,"../attributes/vitals":212,"../character_model":213}],216:[function(require,module,exports){
-'use strict';
-const { enemys    } = require('../../engine/pixi_containers');
-
-const { Character } = require('../character_model');
-const { Zombie    } = require('../animations/zombie');
-const { Inventory } = require('../attributes/inventory');
-const { Vitals    } = require('../attributes/vitals');
-const { Lootable  } = require('../attributes/lootable');
-
-//TODO: Animal isnt quite right, more neutral character
-// the logic for it being an animal is in the parent ArcheType
-class Animal extends Character {
-  constructor() {
-    super();
-    this.name = 'rat';
-
-    this.add_component(new Zombie(this));
-    this.add_component(new Vitals(this));
-    this.add_component(new Inventory());
-    this.add_component(new Lootable(this));
-    this.sprite.play();
-
-    enemys.addChild(this.sprite);
-  }
-}
-
-module.exports = {
-  Animal,
-};
-
-},{"../../engine/pixi_containers":228,"../animations/zombie":200,"../attributes/inventory":204,"../attributes/lootable":207,"../attributes/vitals":212,"../character_model":213}],217:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../engine/tween":234,"../animations/human":199,"../attributes/inventory":206,"../attributes/keyboard":207,"../attributes/light":208,"../attributes/mouse":211,"../attributes/status_bar":213,"../attributes/vitals":214,"../character_model":215}],218:[function(require,module,exports){
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
@@ -46465,7 +46719,7 @@ module.exports = {
   Aiming_Cone,
 };
 
-},{"../engine/pixi_containers":228,"pixi.js":151}],218:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],219:[function(require,module,exports){
 'use strict';
 const { Sprite  } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
@@ -46473,6 +46727,8 @@ const { visuals } = require('../engine/pixi_containers');
 class Blood {
   add_at(point) {
     const blood_splatter = new Sprite.fromFrame('round_floor_stain');
+    blood_splatter.width  /= 4;
+    blood_splatter.height /= 4;
     blood_splatter.anchor.set(0.5);
     blood_splatter.alpha = 0.3;
     blood_splatter.position.set(point.x, point.y);
@@ -46485,7 +46741,7 @@ module.exports = {
   Blood,
 };
 
-},{"../engine/pixi_containers":228,"pixi.js":151}],219:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],220:[function(require,module,exports){
 'use strict';
 const { tweenManager } = require('pixi.js');
 
@@ -46543,7 +46799,7 @@ module.exports = {
   Fade,
 };
 
-},{"pixi.js":151}],220:[function(require,module,exports){
+},{"pixi.js":151}],221:[function(require,module,exports){
 (function (global){
 'use strict';
 const { settings, Application } = require('pixi.js');
@@ -46568,7 +46824,7 @@ module.exports = app;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"pixi.js":151}],221:[function(require,module,exports){
+},{"pixi.js":151}],222:[function(require,module,exports){
 /* eslint-disable*/
 'use strict';
 
@@ -46605,7 +46861,7 @@ module.exports = {
   Level_Loader,
 };
 
-},{"../character/types/player.js":215,"../level/types/archer_room":261,"../level/types/defend_room.js":262,"../level/types/intro.js":263,"../level/types/item_room":265,"../level/types/player_animations":267,"../level/types/school_room.js":268,"../level/types/simple.js":269,"../level/types/transition_room":271}],222:[function(require,module,exports){
+},{"../character/types/player.js":217,"../level/types/archer_room":262,"../level/types/defend_room.js":263,"../level/types/intro.js":264,"../level/types/item_room":266,"../level/types/player_animations":268,"../level/types/school_room.js":269,"../level/types/simple.js":270,"../level/types/transition_room":272}],223:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -46643,7 +46899,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./shadows":230}],223:[function(require,module,exports){
+},{"./shadows":231}],224:[function(require,module,exports){
 'use strict';
 const event = require('events');
 
@@ -46654,7 +46910,7 @@ module.exports = {
   damage_events,
 };
 
-},{"events":290}],224:[function(require,module,exports){
+},{"events":291}],225:[function(require,module,exports){
 'use strict';
 const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
@@ -46692,7 +46948,7 @@ module.exports = {
   player_events,
 };
 
-},{"../items/item_manager":236,"events":290}],225:[function(require,module,exports){
+},{"../items/item_manager":237,"events":291}],226:[function(require,module,exports){
 'use strict';
 
 function melee_attack(melee_weapon, target) {
@@ -46705,19 +46961,19 @@ module.exports = {
   melee_attack,
 };
 
-},{}],226:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 'use strict';
 const PIXI   = require('pixi.js');
 const packer = require('pixi-packer-parser');
-const loader = new PIXI.loaders.Loader();
 
+const loader = new PIXI.loaders.Loader();
 loader.use(packer(PIXI));
 
 module.exports = {
   loader,
 };
 
-},{"pixi-packer-parser":32,"pixi.js":151}],227:[function(require,module,exports){
+},{"pixi-packer-parser":32,"pixi.js":151}],228:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grids } = require('./pixi_containers');
@@ -46832,7 +47088,7 @@ module.exports = {
   pathfind,
 };
 
-},{"../utils/grid":280,"./pixi_containers":228,"./tween":233,"easystarjs":3,"pixi.js":151}],228:[function(require,module,exports){
+},{"../utils/grid":281,"./pixi_containers":229,"./tween":234,"easystarjs":3,"pixi.js":151}],229:[function(require,module,exports){
 'use strict';
 const { Container } = require('pixi.js');
 const { world     } = require('./shadows');
@@ -46950,7 +47206,7 @@ module.exports = {
 
 
 
-},{"./shadows":230,"pixi.js":151}],229:[function(require,module,exports){
+},{"./shadows":231,"pixi.js":151}],230:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 const { radian } = require('../utils/math');
@@ -47026,7 +47282,7 @@ module.exports = {
 };
 
 
-},{"../utils/math":282,"./damage_handler":223,"./pixi_containers":228,"./tween":233,"pixi.js":151}],230:[function(require,module,exports){
+},{"../utils/math":283,"./damage_handler":224,"./pixi_containers":229,"./tween":234,"pixi.js":151}],231:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 require('pixi-layers');
@@ -47053,7 +47309,7 @@ module.exports = {
 
 
 
-},{"./app":220,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],231:[function(require,module,exports){
+},{"./app":221,"pixi-layers":31,"pixi-shadows":33,"pixi.js":151}],232:[function(require,module,exports){
 'use strict';
 require('pixi-sound');
 const { sound } = require('pixi.js');
@@ -47071,7 +47327,7 @@ const Sound = sound.add({
 
 module.exports = Sound;
 
-},{"pixi-sound":34,"pixi.js":151}],232:[function(require,module,exports){
+},{"pixi-sound":34,"pixi.js":151}],233:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -47097,7 +47353,7 @@ ticker.add(delta => {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app":220,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],233:[function(require,module,exports){
+},{"./app":221,"pixi-keyboard":30,"pixi-tween":35,"pixi.js":151}],234:[function(require,module,exports){
 'use strict';
 require('./ticker');
 const { tween, tweenManager, Graphics} = require('pixi.js');
@@ -47207,7 +47463,7 @@ module.exports = {
   Tween,
 };
 
-},{"../utils/math":282,"./pixi_containers":228,"./ticker":232,"pixi.js":151}],234:[function(require,module,exports){
+},{"../utils/math":283,"./pixi_containers":229,"./ticker":233,"pixi.js":151}],235:[function(require,module,exports){
 'use strict';
 require('./utils/globals');
 
@@ -47215,15 +47471,14 @@ const { loader } = require('./engine/packer');
 loader.add('../../images/bedroom_EN_web.json');
 loader.load(() => {
   const { Level_Loader } = require('./engine/boot_loader.js');
-
   // TODO: For testing, space out CPU spikes
-  setTimeout(()=> Level_Loader.boot(), 500);
+  setTimeout(()=> Level_Loader.boot(), 1000);
 });
 
 
 
 
-},{"./engine/boot_loader.js":221,"./engine/packer":226,"./utils/globals":279}],235:[function(require,module,exports){
+},{"./engine/boot_loader.js":222,"./engine/packer":227,"./utils/globals":280}],236:[function(require,module,exports){
 'use strict';
 
 //https://www.uihere.com/free-graphics/search?q=knife
@@ -47339,7 +47594,7 @@ const items = [
     cost:        80,
     category:    'primary',
     range:       20,
-    damage:      2,
+    damage:      50,
     speed:       1,
     condition:   100,
 
@@ -47575,7 +47830,7 @@ module.exports = {
 };
 
 
-},{}],236:[function(require,module,exports){
+},{}],237:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 
@@ -47649,7 +47904,7 @@ module.exports = {
 };
 
 
-},{"../engine/app":220,"../utils/math":282,"./data/item_data":235,"pixi.js":151}],237:[function(require,module,exports){
+},{"../engine/app":221,"../utils/math":283,"./data/item_data":236,"pixi.js":151}],238:[function(require,module,exports){
 'use strict';
 
 class Tiled_Data {
@@ -47664,7 +47919,7 @@ module.exports = {
   Tiled_Data,
 };
 
-},{}],238:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -48248,7 +48503,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],239:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49206,7 +49461,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],240:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -49438,7 +49693,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -49543,8 +49798,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":20.7938473026925,
-                 "x":2060.41769908701,
-                 "y":1509.78232238571
+                 "x":2257.74793704406,
+                 "y":1617.15318715646
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49606,7 +49861,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],241:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -52588,7 +52843,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],242:[function(require,module,exports){
+},{}],243:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -53822,7 +54077,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],243:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -54598,7 +54853,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],244:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55023,7 +55278,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -55980,7 +56235,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -57067,7 +57322,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],247:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 module.exports={ "height":50,
  "infinite":false,
  "layers":[
@@ -57552,7 +57807,7 @@ module.exports={ "height":50,
  "version":1,
  "width":50
 }
-},{}],248:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 'use strict';
 const { Texture, extras } = require('pixi.js');
 
@@ -57595,7 +57850,7 @@ module.exports = {
   Background,
 };
 
-},{"../../engine/pixi_containers":228,"pixi.js":151}],249:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"pixi.js":151}],250:[function(require,module,exports){
 'use strict';
 const { roofs } = require('../../engine/pixi_containers');
 
@@ -57617,7 +57872,7 @@ module.exports = {
   Roof,
 };
 
-},{"../../engine/pixi_containers":228,"./item_model":254}],250:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255}],251:[function(require,module,exports){
 (function (global){
 'use strict';
 const { items } = require('../../engine/pixi_containers');
@@ -57720,7 +57975,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/attributes/lootable":207,"../../engine/item_handler":224,"../../engine/pixi_containers":228,"../../view/button":284,"../../view/caption":285,"../../view/overlay_object":286,"./item_model":254}],251:[function(require,module,exports){
+},{"../../character/attributes/lootable":209,"../../engine/item_handler":225,"../../engine/pixi_containers":229,"../../view/button":285,"../../view/caption":286,"../../view/overlay_object":287,"./item_model":255}],252:[function(require,module,exports){
 'use strict';
 const { Sprite, Texture} = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
@@ -57757,7 +58012,7 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../engine/pixi_containers":228,"events":290,"pixi.js":151}],252:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"events":291,"pixi.js":151}],253:[function(require,module,exports){
 'use strict';
 const { collisions    } = require('../../engine/pixi_containers');
 const { damage_events } = require('../../engine/damage_handler');
@@ -57792,7 +58047,7 @@ module.exports = {
   CollisionItem,
 };
 
-},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"./item_model":254}],253:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"./item_model":255}],254:[function(require,module,exports){
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
 
@@ -57867,7 +58122,7 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"../../engine/sound":231,"../../engine/tween":233,"../../view/button":284,"./item_model":254,"./visual_object":259}],254:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"../../engine/sound":232,"../../engine/tween":234,"../../view/button":285,"./item_model":255,"./visual_object":260}],255:[function(require,module,exports){
 'use strict';
 const { Sprite } = require('pixi.js');
 const { collisions } = require('../../engine/pixi_containers');
@@ -57980,7 +58235,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":228,"pixi.js":151}],255:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"pixi.js":151}],256:[function(require,module,exports){
 'use strict';
 const { Sprite, Texture } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
@@ -58017,7 +58272,7 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../engine/pixi_containers":228,"../types/level_factory":266,"events":290,"pixi.js":151}],256:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../types/level_factory":267,"events":291,"pixi.js":151}],257:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58143,7 +58398,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":228,"../../engine/sound":231,"../../light/types/led":277,"./item_model":254,"pixi.js":151}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../../engine/sound":232,"../../light/types/led":278,"./item_model":255,"pixi.js":151}],258:[function(require,module,exports){
 'use strict';
 
 const { collisions    } = require('../../engine/pixi_containers');
@@ -58189,7 +58444,7 @@ module.exports = {
   Shrine,
 };
 
-},{"../../character/attributes/inventory":204,"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"./item_model":254}],258:[function(require,module,exports){
+},{"../../character/attributes/inventory":206,"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"./item_model":255}],259:[function(require,module,exports){
 'use strict';
 const { shrouds } = require('../../engine/pixi_containers');
 
@@ -58212,7 +58467,7 @@ module.exports = {
   Shroud,
 };
 
-},{"../../engine/pixi_containers":228,"./item_model":254}],259:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255}],260:[function(require,module,exports){
 'use strict';
 const { backgrounds } = require('../../engine/pixi_containers');
 
@@ -58233,7 +58488,7 @@ module.exports = {
   BackgroundVisualItem,
 };
 
-},{"../../engine/pixi_containers":228,"./item_model":254}],260:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"./item_model":255}],261:[function(require,module,exports){
 'use strict';
 const { collisions    } = require('../../engine/pixi_containers');
 const { damage_events } = require('../../engine/damage_handler');
@@ -58244,7 +58499,7 @@ class Wall extends Item {
   constructor(data) {
     super(data);
 
-    this.shadow = true;
+    //this.shadow = true;
     this.anchor = 0;
     if(data.options && data.options.hidden) {
       this.alpha = 0;
@@ -58271,7 +58526,7 @@ module.exports = {
 
 
 
-},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"./item_model":254}],261:[function(require,module,exports){
+},{"../../engine/damage_handler":224,"../../engine/pixi_containers":229,"./item_model":255}],262:[function(require,module,exports){
 'use strict';
 
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
@@ -58303,7 +58558,7 @@ module.exports = {
   Archer_Room,
 };
 
-},{"../attributes/parse_tiled_data":237,"../data/archer_room.json":239,"../elements/pad":255,"./level_factory":266}],262:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":238,"../data/archer_room.json":240,"../elements/pad":256,"./level_factory":267}],263:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58311,6 +58566,7 @@ const { pathfind      } = require('../../engine/pathfind.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Rat           } = require('../../character/archetypes/rat');
+const { Deer          } = require('../../character/archetypes/deer');
 const { Level_Factory } = require('./level_factory');
 
 class Defend_Room  {
@@ -58335,9 +58591,9 @@ class Defend_Room  {
     mouse.enemy(this.player);
     mouse.set_position(prey[0]);
 
-    const mouse2 = new Rat({id: 999});
-    mouse2.enemy(this.player);
-    mouse2.set_position({x: prey[0].x +200, y: prey[0].y +100});
+    const mouse2 = new Deer({id: 999});
+    mouse2.enemy(mouse);
+    mouse2.set_position(player[0]);
 
     exit_pad.forEach(data => {
       const pad  = new Trigger_Pad(data);
@@ -58362,7 +58618,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":202,"../../engine/pathfind.js":227,"../attributes/parse_tiled_data":237,"../data/defend_room.json":240,"../elements/pad":255,"./level_factory":266}],263:[function(require,module,exports){
+},{"../../character/archetypes/deer":203,"../../character/archetypes/rat":204,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/defend_room.json":241,"../elements/pad":256,"./level_factory":267}],264:[function(require,module,exports){
 (function (global){
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
@@ -58452,7 +58708,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/crow":201,"../../character/archetypes/zombie":203,"../../engine/camera":222,"../../engine/pixi_containers":228,"../../engine/tween":233,"../attributes/parse_tiled_data":237,"../data/intro_room.json":241,"../elements/click_pad":251,"../elements/pad":255,"./level_factory":266}],264:[function(require,module,exports){
+},{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":205,"../../engine/camera":223,"../../engine/pixi_containers":229,"../../engine/tween":234,"../attributes/parse_tiled_data":238,"../data/intro_room.json":242,"../elements/click_pad":252,"../elements/pad":256,"./level_factory":267}],265:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58486,7 +58742,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":237,"../data/intro_room_level_2.json":242,"../elements/pad":255,"./level_factory":266}],265:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":238,"../data/intro_room_level_2.json":243,"../elements/pad":256,"./level_factory":267}],266:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58562,7 +58818,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/crow":201,"../../character/archetypes/zombie":203,"../attributes/parse_tiled_data":237,"../data/items_room.json":243,"../elements/click_pad":251,"../elements/pad":255,"../elements/shrine":257,"./level_factory":266}],266:[function(require,module,exports){
+},{"../../character/archetypes/crow":202,"../../character/archetypes/zombie":205,"../attributes/parse_tiled_data":238,"../data/items_room.json":244,"../elements/click_pad":252,"../elements/pad":256,"../elements/shrine":258,"./level_factory":267}],267:[function(require,module,exports){
 'use strict';
 const { clear_non_players } = require('../../engine/pixi_containers');
 
@@ -58651,7 +58907,7 @@ module.exports = {
   Level_Factory,
 };
 
-},{"../../engine/camera":222,"../../engine/pixi_containers":228,"../../light/types/bright_light":275,"../elements/background":248,"../elements/ceiling":249,"../elements/chest":250,"../elements/collision_object":252,"../elements/door":253,"../elements/shroud":258,"../elements/visual_object":259,"../elements/wall":260,"./archer_room":261,"./defend_room":262,"./intro":263,"./intro_level_02":264,"./item_room":265,"./school_room":268,"./simple":269,"./street":270,"./transition_room":271}],267:[function(require,module,exports){
+},{"../../engine/camera":223,"../../engine/pixi_containers":229,"../../light/types/bright_light":276,"../elements/background":249,"../elements/ceiling":250,"../elements/chest":251,"../elements/collision_object":253,"../elements/door":254,"../elements/shroud":259,"../elements/visual_object":260,"../elements/wall":261,"./archer_room":262,"./defend_room":263,"./intro":264,"./intro_level_02":265,"./item_room":266,"./school_room":269,"./simple":270,"./street":271,"./transition_room":272}],268:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58716,7 +58972,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/types/npc":214,"../../engine/camera":222,"../elements/background":248}],268:[function(require,module,exports){
+},{"../../character/types/npc":216,"../../engine/camera":223,"../elements/background":249}],269:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58768,7 +59024,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../character/archetypes/rat":202,"../../engine/pathfind.js":227,"../attributes/parse_tiled_data":237,"../data/school_room.json":245,"../elements/pad":255,"../elements/phone":256,"./level_factory":266}],269:[function(require,module,exports){
+},{"../../character/archetypes/rat":204,"../../engine/pathfind.js":228,"../attributes/parse_tiled_data":238,"../data/school_room.json":246,"../elements/pad":256,"../elements/phone":257,"./level_factory":267}],270:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visuals       } = require('../../engine/pixi_containers');
@@ -58814,7 +59070,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":228,"../attributes/parse_tiled_data":237,"../data/apartment.json":238,"../data/lights_room.json":244,"../elements/pad":255,"./level_factory":266}],270:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/parse_tiled_data":238,"../data/apartment.json":239,"../data/lights_room.json":245,"../elements/pad":256,"./level_factory":267}],271:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -58848,7 +59104,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../attributes/parse_tiled_data":237,"../data/street.json":246,"../elements/pad":255,"./level_factory":266}],271:[function(require,module,exports){
+},{"../attributes/parse_tiled_data":238,"../data/street.json":247,"../elements/pad":256,"./level_factory":267}],272:[function(require,module,exports){
 (function (global){
 'use strict';
 const { visuals       } = require('../../engine/pixi_containers');
@@ -58914,7 +59170,7 @@ module.exports = {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":228,"../attributes/parse_tiled_data":237,"../data/transition_room.json":247,"../elements/pad":255,"./level_factory":266,"pixi.js":151}],272:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/parse_tiled_data":238,"../data/transition_room.json":248,"../elements/pad":256,"./level_factory":267,"pixi.js":151}],273:[function(require,module,exports){
 'use strict';
 
 const PIXI = require('pixi.js');
@@ -58959,7 +59215,7 @@ module.exports = {
   Flicker,
 };
 
-},{"pixi.js":151}],273:[function(require,module,exports){
+},{"pixi.js":151}],274:[function(require,module,exports){
 'use strict';
 
 //const { Sound } = require('../../engine/sound');
@@ -59021,7 +59277,7 @@ module.exports = {
   Strike,
 };
 
-},{"../../utils/time":283}],274:[function(require,module,exports){
+},{"../../utils/time":284}],275:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59089,7 +59345,7 @@ module.exports = {
 };
 
 
-},{"../engine/pixi_containers":228,"pixi.js":151}],275:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],276:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59126,7 +59382,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../engine/pixi_containers":228,"../attributes/strike":273,"../light_model":274}],276:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/strike":274,"../light_model":275}],277:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59177,7 +59433,7 @@ module.exports = {
   Candle,
 };
 
-},{"../../engine/pixi_containers":228,"../attributes/flicker":272,"../light_model":274,"pixi.js":151}],277:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/flicker":273,"../light_model":275,"pixi.js":151}],278:[function(require,module,exports){
 'use strict';
 
 const { visuals } = require('../../engine/pixi_containers');
@@ -59204,7 +59460,7 @@ module.exports = {
   LED,
 };
 
-},{"../../engine/pixi_containers":228,"../attributes/flicker":272,"../light_model":274}],278:[function(require,module,exports){
+},{"../../engine/pixi_containers":229,"../attributes/flicker":273,"../light_model":275}],279:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59247,7 +59503,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],279:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59295,7 +59551,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
 // 20/ 29
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":228,"pixi.js":151}],280:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],281:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { grids } = require('../engine/pixi_containers');
@@ -59424,7 +59680,7 @@ module.exports = {
 
 
 
-},{"../engine/pixi_containers":228,"pixi.js":151}],281:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],282:[function(require,module,exports){
 'use strict';
 
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
@@ -59544,7 +59800,7 @@ module.exports = {
 
 
 
-},{}],282:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59602,7 +59858,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],283:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 'use strict';
 
 function sleep(time) {
@@ -59613,7 +59869,7 @@ module.exports = {
   sleep,
 };
 
-},{}],284:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 
@@ -59708,7 +59964,7 @@ module.exports = {
   Button,
 };
 
-},{"../engine/pixi_containers":228,"pixi.js":151}],285:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"pixi.js":151}],286:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -59777,7 +60033,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],286:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 (function (global){
 'use strict';
 const PIXI = require('pixi.js');
@@ -59862,7 +60118,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../engine/pixi_containers":228,"../engine/shadows":230,"./caption":285,"pixi.js":151}],287:[function(require,module,exports){
+},{"../engine/pixi_containers":229,"../engine/shadows":231,"./caption":286,"pixi.js":151}],288:[function(require,module,exports){
 'use strict';
 const PIXI = require('pixi.js');
 const { player_events } = require('../engine/item_handler');
@@ -59982,7 +60238,7 @@ module.exports = {
   View_Inventory,
 };
 
-},{"../effects/fade":219,"../engine/item_handler":224,"../engine/pixi_containers":228,"pixi.js":151}],288:[function(require,module,exports){
+},{"../effects/fade":220,"../engine/item_handler":225,"../engine/pixi_containers":229,"pixi.js":151}],289:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -60180,7 +60436,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../items/item_manager":236}],289:[function(require,module,exports){
+},{"../items/item_manager":237}],290:[function(require,module,exports){
 'use strict';
 
 const { Selector } = require('../utils/dom');
@@ -60217,7 +60473,7 @@ module.exports = {
   status_meter,
 };
 
-},{"../utils/dom":278}],290:[function(require,module,exports){
+},{"../utils/dom":279}],291:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -60742,7 +60998,7 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],291:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 (function (process){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -61048,7 +61304,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":292}],292:[function(require,module,exports){
+},{"_process":293}],293:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -61234,7 +61490,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],293:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -61771,7 +62027,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],294:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61857,7 +62113,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -61944,13 +62200,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],296:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":294,"./encode":295}],297:[function(require,module,exports){
+},{"./decode":295,"./encode":296}],298:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -62029,7 +62285,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":292,"timers":297}],298:[function(require,module,exports){
+},{"process/browser.js":293,"timers":298}],299:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62763,7 +63019,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":299,"punycode":293,"querystring":296}],299:[function(require,module,exports){
+},{"./util":300,"punycode":294,"querystring":297}],300:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -62781,4 +63037,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[234]);
+},{}]},{},[235]);

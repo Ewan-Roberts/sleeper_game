@@ -8,7 +8,7 @@ class Wall extends Item {
   constructor(data) {
     super(data);
 
-    this.shadow = true;
+    //this.shadow = true;
     this.anchor = 0;
     if(data.options && data.options.hidden) {
       this.alpha = 0;

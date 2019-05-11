@@ -17,7 +17,7 @@ class Zombie {
   constructor(entity) {
     this.name = 'animation';
     console.log(frames);
-    entity.sprite = new extras.AnimatedSprite(frames.move);
+    entity.sprite = new extras.AnimatedSprite(frames.idle);
 
     this.sprite = entity.sprite;
     this.sprite.width  /=2;
@@ -42,6 +42,10 @@ class Zombie {
   }
 
   wait() {
+    this.switch('idle');
+  }
+
+  idle() {
     this.switch('idle');
   }
 

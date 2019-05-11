@@ -113,7 +113,7 @@ const items = [
     cost:        80,
     category:    'primary',
     range:       20,
-    damage:      2,
+    damage:      50,
     speed:       1,
     condition:   100,
 

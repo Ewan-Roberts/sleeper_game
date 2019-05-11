@@ -1,22 +1,21 @@
 'use strict';
 const { collisions, guis } = require('../../engine/pixi_containers');
+const { enemys           } = require('../../engine/pixi_containers');
 
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
+const { Character        } = require('../character_model');
 const { radian           } = require('../../utils/math');
 const { random_number    } = require('../../utils/math');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
-
-const { Animal   } = require('../types/rat');
-const { Melee    } = require('../attributes/melee');
-
-// truncanting
-
-// arr.length = 4;
-// console.log(arr); //=> [11, 22, 33]
+const { Zombie           } = require('../animations/zombie');
+const { Inventory        } = require('../attributes/inventory');
+const { Vitals           } = require('../attributes/vitals');
+const { Lootable         } = require('../attributes/lootable');
+const { Melee            } = require('../attributes/melee');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -28,31 +27,25 @@ function break_at_door(path) {
   return path;
 }
 
-class Rat extends Animal {
+class Rat extends Character {
   constructor({id}) {
     super();
-    this.name = 'rat';
+    this.name = 'zombie';
     this.id = id;
-    this.sprite.id = id;
     this.health = 100;
-    const on_damage = ({id, damage}) => {
-      if(this.id !== id) return;
-      this.health -= damage;
-      if(this.health > 0) return;
+    this.add_component(new Zombie(this));
+    this.sprite.id = id;
+    this.sprite.play();
 
-      if(this.vitals.alive) {
-        return this.vitals.damage(damage);
-      }
-
-      this.kill();
-      damage_events.removeListener('damage', on_damage);
-    };
-
-    damage_events.on('damage', on_damage);
-
+    this.add_component(new Vitals(this));
+    this.add_component(new Inventory());
+    this.add_component(new Lootable(this));
+    this.add_component(new Melee(this));
     this.inventory.add_melee_weapon_by_name('rat_teeth');
     this.inventory.switch_to_melee_weapon();
-    this.add_component(new Melee(this));
+
+    enemys.addChild(this.sprite);
+    damage_events.on('damage', data => this.on_damage(data));
   }
 
   get _target_far_away() {
@@ -61,21 +54,28 @@ class Rat extends Animal {
     return distance > 200;
   }
 
-  on_damage2(amount) {
+  on_damage({id, damage}) {
+    console.log(this.sprite.id);
+    if(this.id !== id) return;
+    this.health -= damage;
+    if(this.health > 0) return;
+
     if(this.vitals.alive) {
-      return this.vitals.damage(amount);
+      return this.vitals.damage(damage);
     }
 
     this.kill();
+    damage_events.removeListener('damage', this.on_damage);
   }
 
   kill() {
-    if(!this.loot.items.length) this.loot.populate();
+    // if(!this.loot.items.length) this.loot.populate();
 
-    this.loot.set_position(this.sprite);
-    this.loot.show();
-    if(this.tween)this.tween.stop();
+    // this.loot.set_position(this.sprite);
+    // this.loot.show();
+    if(this.tween) this.tween.stop();
 
+    console.log('zombie dea2');
     this.animation.kill();
   }
 
@@ -106,21 +106,24 @@ class Rat extends Animal {
       door_path[0].y
     );
 
-    const random = () => random_number(30, 50);
+    //const random = () => random_number(30, 50);
+
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
-        door_path[i-1].x + random(),
-        door_path[i-1].y + random(),
+        door_path[i-1].x,
+        door_path[i-1].y,
         door_path[i].x,
         door_path[i].y,
         20);
     }
+
+    this.tween.time = door_path.length*100;
   }
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
     this.tween = tweenManager.createTween(this.sprite);
-    this.tween.time = 4000;
+    this.tween.time = 1000;
     this.tween.expire = true;
     this.tween.start();
 
@@ -131,10 +134,15 @@ class Rat extends Animal {
       if(!this.enemy.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
-        this.tween.time = 4000;
+        this.tween.time = 1000;
         this.tween.start();
 
-        return this.melee.attack(this.enemy);
+        damage_events.emit('damage', {id: this.enemy.id, damage: 50});
+        this.animation.attack();
+
+        this.animation.face_point(this.enemy.sprite);
+        return;
+        //return this.melee.attack(this.enemy);
       }
 
       this.tween.path = new tween.TweenPath();
@@ -142,13 +150,11 @@ class Rat extends Animal {
 
       if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
         this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+        this.animation.move();
+        this.tween.time = 200;
       } else {
         await this._pathfind();
       }
-
-      this.tween.time = this.tween.path.length
-        ?this.tween.path.length*2000
-        :2000;
 
       this._show_path(this.tween.path);
       this.tween.start();
@@ -156,6 +162,7 @@ class Rat extends Animal {
 
     this.tween.on('update', () => {
       if(!this.tween.path) return;
+
       this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint);
     });
   }
