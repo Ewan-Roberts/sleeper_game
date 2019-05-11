@@ -2,12 +2,12 @@
 const { pathfind } = require('../../engine/pathfind.js');
 
 class Scavenge {
-  constructor({ sprite, pathfind, tween, loot }) {
+  constructor({ sprite, pathfind, tween, inventory }) {
     this.name     = 'scavenge';
     this.sprite   = sprite;
     this.pathfind = pathfind;
     this.tween    = tween;
-    this.loot     = loot;
+    this.inventory = inventory;
   }
 
   load_pool(item_pool) {
@@ -38,7 +38,7 @@ class Scavenge {
       this.tween.add_path(this.path);
       this.tween.time = 3000;
       this.tween.movement.on('end', () => {
-        this.loot.take_items(this.target_item.loot.items);
+        this.inventory.take_items(this.target_item.inventory.items);
 
         resolve();
       });
@@ -59,9 +59,7 @@ class Scavenge {
     this.tween.draw_path();
     this.tween.start();
 
-    this.tween.movement.on('end', () => {
-      this.loot.take_items(first.loot.items);
-    });
+    this.tween.movement.on('end', () => this.inventory.take_items(first.inventory.items));
   }
 }
 

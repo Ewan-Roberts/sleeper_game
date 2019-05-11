@@ -1,6 +1,5 @@
 'use strict';
 const { Sprite, tweenManager } = require('pixi.js');
-
 const { pathfind } = require('../../engine/pathfind.js');
 const { items    } = require('../../engine/pixi_containers');
 

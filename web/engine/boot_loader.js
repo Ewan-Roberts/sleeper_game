@@ -15,7 +15,7 @@ class Level_Loader {
   static boot() {
     const player = new Player();
     player.set_position({x:1000, y:700});
-    player.inventory.arm_ranged('old_bow');
+    player.inventory.equip('old_bow');
 
     new Transition_Room(player);
 

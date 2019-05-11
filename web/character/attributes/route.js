@@ -4,8 +4,7 @@ const { tween, tweenManager } = require('pixi.js');
 
 class Route {
   constructor({ sprite, tween }) {
-    this.name = 'route';
-
+    this.name   = 'route';
     this.tween  = tween;
     this.sprite = sprite;
   }

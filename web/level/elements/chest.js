@@ -2,7 +2,7 @@
 const { items } = require('../../engine/pixi_containers');
 const { player_events  } = require('../../engine/item_handler');
 
-const { Lootable } = require('../../character/attributes/lootable');
+const { Inventory } = require('../../character/attributes/inventory');
 const { Button   } = require('../../view/button');
 const { Note     } = require('../../view/overlay_object');
 const { Caption_Dialog } = require('../../view/caption');
@@ -57,13 +57,13 @@ class Chest extends Item {
     }
 
     if(options.properties.container) {
-      this.add_component(new Lootable(this));
+      this.add_component(new Inventory(this));
       this.state = 'closed';
       this.state_handling = true;
-      if(options.properties.random) this.loot.populate();
+      if(options.properties.random) this.inventory.populate();
       if(!options.properties.random && options.properties.items) {
         const items_array = JSON.parse(options.properties.items);
-        this.loot.populate_with(items_array);
+        this.inventory.populate_with(items_array);
       }
     }
 
@@ -81,8 +81,8 @@ class Chest extends Item {
 
   _open() {
     global.set_light_level(1);
-    this.loot.set_position(this.sprite);
-    this.loot.show();
+    this.inventory.set_position(this.sprite);
+    this.inventory.show();
   }
 
   _empty() {

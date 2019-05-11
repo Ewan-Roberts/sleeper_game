@@ -103,12 +103,40 @@
                  "id":140,
                  "name":"",
                  "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
                  "x":2241.83812432696,
                  "y":769.330362455439
+                }, 
+                {
+                 "height":0,
+                 "id":243,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1660.36717062635,
+                 "y":1007.01943844492
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -250,6 +278,14 @@
                  "id":144,
                  "name":"",
                  "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -364,8 +400,8 @@
                  "type":"",
                  "visible":true,
                  "width":20.7938473026925,
-                 "x":2257.74793704406,
-                 "y":1617.15318715646
+                 "x":2063.3634878,
+                 "y":1491.613230353
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -416,7 +452,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":242,
+ "nextobjectid":244,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

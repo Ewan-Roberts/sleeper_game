@@ -24,13 +24,14 @@ class Defend_Room  {
     const { prey, exit_pad, grid, player } = elements;
 
     this.player.set_position(player[0]);
-
+    console.log('iiiiiiiiiiiii');
+    console.log(prey[0]);
     const mouse = new Rat(prey[0]);
     mouse.target(this.player);
     mouse.set_position(prey[0]);
 
-    const mouse2 = new Deer({id: 999});
-    mouse2.set_position(player[0]);
+    const mouse2 = new Deer(prey[1]);
+    mouse2.set_position(prey[1]);
 
     const [thing] = exit_pad.map(data => {
       const pad  = new Trigger_Pad(data);
@@ -46,7 +47,6 @@ class Defend_Room  {
       }
       return pad;
     });
-    console.log(mouse);
     mouse2.target(thing);
 
     this.grid = pathfind.create_level_grid(grid[0]);

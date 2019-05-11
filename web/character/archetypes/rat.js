@@ -1,11 +1,12 @@
 'use strict';
-const { Graphics, tween, tweenManager }= require('pixi.js');
+const { tween, tweenManager }= require('pixi.js');
 
-const { collisions, guis } = require('../../engine/pixi_containers');
+const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { Character        } = require('../character_model');
 const { radian           } = require('../../utils/math');
 const { random_number    } = require('../../utils/math');
+const { draw_path        } = require('../../utils/line');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
@@ -13,7 +14,6 @@ const { pathfind         } = require('../../engine/pathfind');
 const { Zombie           } = require('../animations/zombie');
 const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
-const { Lootable         } = require('../attributes/lootable');
 const { Melee            } = require('../attributes/melee');
 
 function break_at_door(path) {
@@ -27,16 +27,16 @@ function break_at_door(path) {
 }
 
 class Rat extends Character {
-  constructor({id}) {
+  constructor({id, properties}) {
     super();
     this.name = 'zombie';
     this.id = id;
     this.add_component(new Zombie(this));
     this.add_component(new Vitals(this));
     this.add_component(new Inventory({
-      equip: 'rat_teeth',
+      ...this,
+      properties,
     }));
-    this.add_component(new Lootable(this));
     this.add_component(new Melee(this));
 
     enemys.addChild(this.sprite);
@@ -45,7 +45,6 @@ class Rat extends Character {
 
   get _target_far_away() {
     const distance = distance_between(this.target.sprite, this.sprite);
-
     return distance > 200;
   }
 
@@ -58,9 +57,9 @@ class Rat extends Character {
   }
 
   kill() {
-    if(!this.loot.items.length) this.loot.populate();
+    if(!this.inventory.items.length) this.inventory.populate();
 
-    this.loot.show();
+    this.inventory.show();
     if(this.tween) this.tween.stop();
 
     this.animation.kill();
@@ -68,14 +67,6 @@ class Rat extends Character {
 
   target(character) {
     this.target = character;
-  }
-
-  _show_path(path) {
-    const graphical_path = new Graphics();
-    graphical_path.lineStyle(3, 0xffffff, 0.5);
-    graphical_path.drawPath(path);
-
-    guis.addChild(graphical_path);
   }
 
   async _pathfind() {
@@ -142,7 +133,7 @@ class Rat extends Character {
         await this._pathfind();
       }
 
-      this._show_path(this.tween.path);
+      draw_path(this.tween.path);
       this.tween.start();
     });
 

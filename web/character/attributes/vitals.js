@@ -6,8 +6,6 @@ class Vitals {
     this.name   ='vitals';
     this.sprite = sprite;
     this.blood = new Blood();
-
-    //TODO derive from archtype data
     this.power  = 5000;
     this.speed  = 20;
     this.health = 80;

@@ -1,5 +1,5 @@
 'use strict';
-const { Sprite } = require('pixi.js');
+const { Sprite       } = require('pixi.js');
 const { melee_attack } = require('../../engine/melee');
 const { visuals      } = require('../../engine/pixi_containers');
 
@@ -17,8 +17,7 @@ class Melee {
   }
 
   equip() {
-    this.inventory.switch_to_melee_weapon();
-
+    this.inventory.equip(this.melee_weapon.name);
     this.animation.weapon = this.melee_weapon.animation_name;
   }
 

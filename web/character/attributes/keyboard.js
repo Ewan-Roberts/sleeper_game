@@ -28,7 +28,7 @@ function point_contains(position) {
     delete shrouds_to_remove.remove_on_enter;
   }
   return;
-  const roof = roofs.children ;
+  const roof = roofs.children;
   roof.forEach(child => {
     const tweening = tweenManager.getTweensForTarget(child);
     if(tweening.length>=1) return;

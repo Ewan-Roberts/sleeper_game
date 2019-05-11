@@ -3,9 +3,7 @@
 const { collisions    } = require('../../engine/pixi_containers');
 const { damage_events } = require('../../engine/damage_handler');
 const { Inventory     } = require('../../character/attributes/inventory');
-//const { player_events } = require('../../engine/item_handler');
-
-const { Item } = require('./item_model');
+const { Item          } = require('./item_model');
 
 class Shrine extends Item {
   constructor(options) {
@@ -17,12 +15,6 @@ class Shrine extends Item {
       damage_events.removeListener('damage', on_damage);
     };
     damage_events.on('damage', on_damage);
-
-    //this.click = () => {
-    //  player_events.emit('check_items', (items) =>{
-    //    this.inventory = items;
-    //  });
-    //};
 
     collisions.addChild(this.sprite);
   }

@@ -1,8 +1,8 @@
 'use strict';
 require('./ticker');
-const { tween, tweenManager, Graphics} = require('pixi.js');
-const { guis } = require('./pixi_containers');
-const { random_number } = require('../utils/math');
+const { tween, tweenManager } = require('pixi.js');
+const { random_number       } = require('../utils/math');
+const { draw_path           } = require('../utils/line');
 
 class Tween {
   constructor(sprite) {
@@ -95,11 +95,7 @@ class Tween {
   }
 
   draw_path() {
-    const graphical_path = new Graphics();
-    graphical_path.lineStyle(5, 0xffffff, 0.5);
-    graphical_path.drawPath(this.path);
-
-    guis.addChild(graphical_path);
+    draw_path(this.path);
   }
 }
 

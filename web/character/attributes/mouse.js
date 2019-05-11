@@ -1,6 +1,4 @@
 'use strict';
-//const { visuals } = require('../../engine/pixi_containers');
-
 const { screen      } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Cone } = require('../../effects/aiming_cone');

@@ -6,7 +6,7 @@ const { Tween     } = require('../../engine/tween');
 const { radian    } = require('../../utils/math');
 const { Character } = require('../character_model');
 const { Zombie    } = require('../animations/zombie');
-const { Lootable  } = require('../attributes/lootable');
+const { Inventory } = require('../attributes/inventory');
 
 class Lurcher extends Character{
   constructor({ id, path, time, smooth, draw, turn } = {}) {
@@ -14,7 +14,7 @@ class Lurcher extends Character{
     this.name = 'lurcher';
     this.id = id;
     this.add_component(new Zombie(this));
-    this.add_component(new Lootable(this));
+    this.add_component(new Inventory(this));
 
     if(path) {
       this.add_component(new Tween(this.sprite));

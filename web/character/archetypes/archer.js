@@ -2,7 +2,7 @@
 
 const { tweenManager     } = require('pixi.js');
 const { distance_between } = require('../../utils/math');
-const { damage_events } = require('../../engine/damage_handler');
+const { damage_events    } = require('../../engine/damage_handler');
 
 const { Enemy } = require('../types/enemy');
 const { Melee } = require('../attributes/melee');
@@ -49,6 +49,7 @@ class Archer extends Enemy {
   }
 
   _loot_enemy() {
+    this.melee.equip();
     this.animation.idle();
 
     this.loot.take_items(this.enemy.loot.items);

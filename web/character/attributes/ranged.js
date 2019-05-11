@@ -1,5 +1,4 @@
 'use strict';
-
 const { shoot_arrow } = require('../../engine/ranged');
 const { Aiming_Line } = require('../../effects/aiming_line');
 
@@ -13,8 +12,7 @@ class Range {
   }
 
   equip() {
-    this.inventory.switch_to_ranged_weapon();
-
+    //this.inventory.switch_to_ranged_weapon();
     this.animation.weapon = this.inventory.ranged_weapon.animation_name;
   }
 

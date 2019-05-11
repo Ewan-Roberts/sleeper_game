@@ -1,12 +1,15 @@
 'use strict';
-const { Item_Manager } = require('../../items/item_manager');
+const { Item_Manager   } = require('../../items/item_manager');
+const { View_Inventory } = require('../../view/view_inventory');
+const { Button         } = require('../../view/button');
+const { Fade           } = require('../../effects/fade');
 
 class Inventory {
-  constructor({ equip } = {}) {
+  constructor({ properties, sprite } = {}) {
     this.name = 'inventory';
 
-    if(equip) {
-      this.equipped = Item_Manager.get_item(equip);
+    if(properties && properties.equip) {
+      this.equip(properties.equip);
     } else {
       this.equipped = null;
     }
@@ -14,29 +17,64 @@ class Inventory {
     this.ranged_weapon = null;
     this.melee_weapon  = null;
     this.items         = [];
+    this.sprite = sprite;
+    this.looted = false;
+    this.items  = [];
+    this.inventory_view = new View_Inventory();
   }
 
-  equip_weapon_by_name(name) {
-    const weapon = Item_Manager.get_item(name);
-
-    this.equipped = weapon;
+  set_position({x, y}) {
+    this.inventory_view.set_position({x, y});
   }
 
-  arm_ranged(name) {
+  populate() {
+    this.items = Item_Manager.get_random_items();
+
+    this.inventory_view.populate_slots(this.items);
+  }
+
+  populate_with(items) {
+    items.forEach(name => {
+      const found_item = Item_Manager.get_item(name);
+
+      this.items.push(found_item);
+    });
+
+    this.inventory_view.populate_slots(this.items);
+  }
+
+  create_icon() {
+    const prompt = new Button('bunny');
+    prompt.set_position(this.sprite);
+    prompt.sprite.on('click', () => {
+      this.sprite.buttonMode = false;
+      this.looted = true;
+      this.show();
+
+      prompt.remove();
+    });
+  }
+
+  equip(name) {
     this.equipped = Item_Manager.get_item(name);
-    this.ranged_weapon = Item_Manager.get_item(name);
   }
 
-  switch_to_ranged_weapon() {
-    if(!this.ranged_weapon) throw new Error('no ranged weapon equipped');
+  show() {
+    this.set_position(this.sprite);
 
-    this.equipped = this.ranged_weapon;
+    Fade.in(this.inventory_view.slot_container);
   }
 
-  switch_to_melee_weapon() {
-    if(!this.melee_weapon) throw new Error('no melee weapon equipped');
+  hide() {
+    Fade.out(this.inventory_view.slot_container);
+  }
 
-    this.equipped = this.melee_weapon;
+  clear() {
+    this.inventory_view.clear_slots();
+  }
+
+  empty() {
+    this.items = [];
   }
 
   get size() {
@@ -63,36 +101,12 @@ class Inventory {
     return result;
   }
 
-
   add_ranged_weapon_by_name(name) {
-    const weapon = Item_Manager.get_item(name);
-
-    this.ranged_weapon = weapon;
+    this.ranged_weapon = Item_Manager.get_item(name);
   }
 
   add_melee_weapon_by_name(name) {
-    const weapon = Item_Manager.get_item(name);
-
-    this.melee_weapon = weapon;
-  }
-
-  get ammo_type() {
-    if(!this.equipped) throw new Error('no weapon equipped');
-    if(!this.equipped.ammo) throw new Error('does not have an ammo type: ' + this.equipped);
-
-    return this.equipped.ammo;
-  }
-
-  get weapon_speed() {
-    if(!this.equipped) throw new Error('no weapon equipped');
-
-    return this.equipped.speed;
-  }
-
-  get weapon_damage() {
-    if(!this.equipped) throw new Error('no weapon equipped');
-
-    return this.equipped.damage;
+    this.melee_weapon = Item_Manager.get_item(name);
   }
 }
 
