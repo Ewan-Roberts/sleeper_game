@@ -321,6 +321,17 @@ const items = [
     image_name: 'bunny',
   },
   {
+    name: 'arrow',
+    id:   6,
+    rank: 0,
+    cost: 15,
+    category: 'ammo',
+
+    visual_name: 'used arrow',
+    description: 'Theres some dry blood on the tip...',
+    image_name: '52232_Primative_Arrows_5',
+  },
+  {
     name: 'skull_cap_bone',
     id:   5,
     rank: 0,

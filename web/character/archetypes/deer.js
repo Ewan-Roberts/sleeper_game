@@ -16,6 +16,7 @@ const { Rodent           } = require('../animations/rat');
 const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Melee            } = require('../attributes/melee');
+const { Button           } = require('../../view/button');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -59,12 +60,29 @@ class Deer extends Character {
   }
 
   kill() {
-    if(!this.inventory.items.length) this.inventory.populate();
-
-    this.inventory.show();
     if(this.tween)this.tween.stop();
 
     this.animation.kill();
+    this.sprite.dead = true;
+    this.sprite.interactive = true;
+    this.button = new Button({
+      label_action: 'Loot',
+      label_description: 'Dead Deer',
+      label_image: 'eye_icon',
+    });
+    this.button.visible = false;
+    this.sprite.on('mouseover', () => {
+      this.button.set_position(this.sprite);
+      this.button.visible = true;
+    });
+    this.sprite.on('mouseout', () => {
+      this.button.visible = false;
+    });
+
+    this.sprite.click = () => {
+      this.button.visible = false;
+      this.inventory.show();
+    };
   }
 
   target(character) {
@@ -95,7 +113,7 @@ class Deer extends Character {
         20);
     }
 
-    this.tween.time = door_path.length*100;
+    this.tween.time = door_path.length*1000;
   }
 
   // NOTE: Keep this verbose and dumb
@@ -126,7 +144,7 @@ class Deer extends Character {
       if(Sight.lineOfSight(this.sprite, this.target.sprite, collisions.children)) {
         this.tween.path.lineTo(this.target.sprite.x, this.target.sprite.y);
         this.animation.move();
-        this.tween.time = 200;
+        this.tween.time = 2000;
       } else {
         await this._pathfind();
       }

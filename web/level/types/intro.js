@@ -48,7 +48,7 @@ class Intro  {
     const elements   = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
 
-    const { Trigger_Pad   } = require('../elements/pad');
+    const { Trigger_Pad } = require('../elements/pad');
     const { exit_pad, click_pad, player, prey } = elements;
 
     this.player.set_position(player[0]);

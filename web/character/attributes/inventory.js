@@ -8,19 +8,26 @@ class Inventory {
   constructor({ properties, sprite } = {}) {
     this.name = 'inventory';
 
-    if(properties && properties.equip) {
-      this.equip(properties.equip);
-    } else {
-      this.equipped = null;
+    this.items  = [];
+    this.equipped = null;
+
+    this.inventory_view = new View_Inventory();
+    if(properties){
+      if(properties.equip) {
+        this.equip(properties.equip);
+      }
+      if(properties.items) {
+        const item_array = JSON.parse(properties.items);
+        this.items = this.populate_with(item_array);
+      }
+      if(properties.random) this.populate();
     }
+
 
     this.ranged_weapon = null;
     this.melee_weapon  = null;
-    this.items         = [];
     this.sprite = sprite;
     this.looted = false;
-    this.items  = [];
-    this.inventory_view = new View_Inventory();
   }
 
   set_position({x, y}) {
@@ -34,11 +41,7 @@ class Inventory {
   }
 
   populate_with(items) {
-    items.forEach(name => {
-      const found_item = Item_Manager.get_item(name);
-
-      this.items.push(found_item);
-    });
+    this.items = items.map(name => Item_Manager.get_item(name));
 
     this.inventory_view.populate_slots(this.items);
   }

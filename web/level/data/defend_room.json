@@ -6,19 +6,19 @@
          "name":"grid",
          "objects":[
                 {
-                 "height":2541.47448608077,
+                 "height":2481.86196745186,
                  "id":223,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2674.97606414338,
-                 "x":168,
+                 "width":1785.75599459544,
+                 "x":843.608544461003,
                  "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 

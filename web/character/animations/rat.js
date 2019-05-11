@@ -71,8 +71,8 @@ class Rodent {
     //TODO Finish migrating animation
     entity.sprite = new extras.AnimatedSprite(texture);
     this.sprite = entity.sprite;
-    this.sprite.width  /=4;
-    this.sprite.height /=4;
+    this.sprite.width  /=2;
+    this.sprite.height /=2;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;
     // IMPORTANT FOR ARROWS MANAGER

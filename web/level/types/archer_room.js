@@ -1,8 +1,11 @@
 'use strict';
 
+const { pathfind      } = require('../../engine/pathfind.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
+const { Click_Pad     } = require('../elements/click_pad');
+const { Deer          } = require('../../character/archetypes/deer');
 
 class Archer_Room {
   constructor(player) {
@@ -18,10 +21,25 @@ class Archer_Room {
 
     Level_Factory.generate(elements);
 
-    const { exit_pad, player } = elements;
+    const { click_pad, prey, exit_pad, player, grid } = elements;
     this.player.set_position(player[0]);
 
-    exit_pad.forEach(data => new Trigger_Pad(data));
+    const [exit] = exit_pad.map(data => new Trigger_Pad(data, this.player));
+
+    const mice = prey.map(entity => {
+      const mouse = new Deer(entity);
+      mouse.set_position(entity);
+      mouse.target(exit);
+      return mouse;
+    });
+
+    click_pad.forEach(data => {
+      const pad = new Click_Pad(data);
+
+      pad.click = () => mice.forEach(mouse => mouse.logic_start());
+    });
+
+    this.grid = pathfind.create_level_grid(grid[0]);
   }
 }
 

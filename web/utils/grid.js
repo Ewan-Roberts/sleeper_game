@@ -1,21 +1,21 @@
 'use strict';
-const PIXI = require('pixi.js');
-const { grids } = require('../engine/pixi_containers');
+const { Sprite     } = require('pixi.js');
+const { grids      } = require('../engine/pixi_containers');
 const { collisions } = require('../engine/pixi_containers');
 
 function check(rect1, rect2) {
-
   if (rect1.x < rect2.x + rect2.width &&
     rect1.x + rect1.width > rect2.x &&
     rect1.y < rect2.y + rect2.height &&
     rect1.y + rect1.height > rect2.y) {
     return true;
   }
+  return false;
 }
 
 class Tile {
   constructor() {
-    const tile = PIXI.Sprite.fromFrame('black_dot');
+    const tile = Sprite.fromFrame('black_dot');
     tile.width  = 100;
     tile.height = 100;
     tile.passable = true;
@@ -29,6 +29,9 @@ class Grid {
     this.width  = data.width;
     this.height = data.height;
     this.area   = data.width * data.height;
+    this.original_x = data.x;
+    this.x = data.x;
+    this.y = data.y;
 
     this.tile_width  = Math.ceil(data.width/100);
     this.tile_height = Math.ceil(data.height/100);
@@ -36,15 +39,13 @@ class Grid {
   }
 
   build() {
-    let y = 0;
-    let x = 0;
     let grid_x = 0;
     let grid_y = 0;
 
     for(let i=0; i<=this.tile_area; i++){
       const tile = new Tile();
-      tile.x = x;
-      tile.y = y;
+      tile.x = this.x;
+      tile.y = this.y;
       tile.alpha = 0.2;
       tile.anchor.set(0);
 
@@ -54,14 +55,14 @@ class Grid {
         y: grid_y,
       };
 
-      x += 100;
+      this.x += 100;
       if(i % this.tile_width === 0) {
         if(i !== 0) {
-          y += 100;
+          this.y += 100;
           grid_x = 0;
           grid_y++;
         }
-        x = 0;
+        this.x = this.original_x;
       }
       grid_x++;
 

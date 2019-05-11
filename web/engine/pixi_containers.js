@@ -30,13 +30,13 @@ const collisions = new Container();
 collisions.name = 'collision_items';
 collisions.zIndex = low;
 
-const items = new Container();
-items.name = 'non_collision_items';
-items.zIndex = low;
-
 const enemys= new Container();
 enemys.name = 'enemy_container';
-enemys.zIndex = medium;
+enemys.zIndex = low;
+
+const items = new Container();
+items.name = 'non_collision_items';
+items.zIndex = medium;
 
 const players = new Container();
 players.name = 'player_container';

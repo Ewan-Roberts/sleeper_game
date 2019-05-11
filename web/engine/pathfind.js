@@ -1,6 +1,6 @@
 'use strict';
-const PIXI = require('pixi.js');
-const { grids } = require('./pixi_containers');
+const { tweenManager } = require('pixi.js');
+const { grids  } = require('./pixi_containers');
 const { Grid   } = require('../utils/grid');
 const { Tween  } = require('./tween');
 const easystarjs = require('easystarjs');
@@ -8,14 +8,17 @@ const easystar   = new easystarjs.js();
 easystar.setIterationsPerCalculation(2000);
 easystar.setAcceptableTiles([0,2]);
 easystar.setTileCost(2, 1); // only go through these tiles if you have to
-//easystar.enableDiagonals();
-//easystar.enableCornerCutting();
+easystar.enableDiagonals();
+easystar.enableCornerCutting();
 
 const find_grid = sprite => {
   const grid  = grids.children;
   const point = sprite.getGlobalPosition();
-  const found_tile = grid.find(tile => tile.containsPoint(point));
+  console.log(point);
+  console.log(grids);
 
+  const found_tile = grid.find(tile => tile.containsPoint(point));
+  console.log(found_tile);
   if(!found_tile) throw `${sprite.name} was not found`;
 
   return found_tile;
@@ -50,7 +53,7 @@ class pathfind {
 
   static move_sprite_on_path(sprite, path_array) {
     if(path_array.length < 2) return;
-    const tweens = PIXI.tweenManager.getTweensForTarget(sprite);
+    const tweens = tweenManager.getTweensForTarget(sprite);
     if(tweens.length > 1) return;
 
     const tween = new Tween(sprite);

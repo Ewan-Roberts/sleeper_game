@@ -50,9 +50,11 @@ function shoot_arrow(speed, damage, origin, point) {
     const collision_enemies = enemies.find(enemy => enemy.containsPoint(arrow_point));
     if (collision_enemies) {
       if(collision_enemies.id === origin.id) return;
-      damage_events.emit('damage', {id: collision_enemies.id, damage});
-      arrow.tween.stop();
-      return;
+      if(!collision_enemies.dead) {
+        arrow.tween.stop();
+        damage_events.emit('damage', {id: collision_enemies.id, damage});
+        return;
+      }
     }
 
     const collision_players = players1.find(player=> player.containsPoint(arrow_point));
