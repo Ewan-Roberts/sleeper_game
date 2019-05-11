@@ -49,7 +49,7 @@ class Rat extends Character {
   }
 
   get _target_far_away() {
-    const distance = distance_between(this.enemy.sprite, this.sprite);
+    const distance = distance_between(this.target.sprite, this.sprite);
 
     return distance > 200;
   }
@@ -79,8 +79,8 @@ class Rat extends Character {
     this.animation.kill();
   }
 
-  enemy(character) {
-    this.enemy = character;
+  target(character) {
+    this.target= character;
   }
 
   _show_path(path) {
@@ -94,7 +94,7 @@ class Rat extends Character {
   async _pathfind() {
     this.animation.move();
 
-    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.target.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 
@@ -131,16 +131,16 @@ class Rat extends Character {
       this.tween.clear();
       this.tween.expire = true;
 
-      if(!this.enemy.vitals.alive) throw 'game over';
+      if(!this.target.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
         this.tween.time = 1000;
         this.tween.start();
 
-        damage_events.emit('damage', {id: this.enemy.id, damage: 50});
+        damage_events.emit('damage', {id: this.target.id, damage: 50});
         this.animation.attack();
 
-        this.animation.face_point(this.enemy.sprite);
+        this.animation.face_point(this.target.sprite);
         return;
         //return this.melee.attack(this.enemy);
       }
@@ -148,8 +148,8 @@ class Rat extends Character {
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
-      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
-        this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+      if(Sight.lineOfSight(this.sprite, this.target.sprite, collisions.children)) {
+        this.tween.path.lineTo(this.target.sprite.x, this.target.sprite.y);
         this.animation.move();
         this.tween.time = 200;
       } else {

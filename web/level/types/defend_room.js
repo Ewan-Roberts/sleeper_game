@@ -26,26 +26,28 @@ class Defend_Room  {
     this.player.set_position(player[0]);
 
     const mouse = new Rat(prey[0]);
-    mouse.enemy(this.player);
+    mouse.target(this.player);
     mouse.set_position(prey[0]);
 
     const mouse2 = new Deer({id: 999});
-    mouse2.enemy(mouse);
     mouse2.set_position(player[0]);
 
-    exit_pad.forEach(data => {
+    const [thing] = exit_pad.map(data => {
       const pad  = new Trigger_Pad(data);
 
       if(data.id === 236) {
-        pad.area.events.once('trigger', () => {
+        pad.sprite.events.once('trigger', () => {
           mouse2.logic_start();
         });
       } else {
-        pad.area.events.once('trigger', () => {
+        pad.sprite.events.once('trigger', () => {
           mouse.logic_start();
         });
       }
+      return pad;
     });
+    console.log(mouse);
+    mouse2.target(thing);
 
     this.grid = pathfind.create_level_grid(grid[0]);
   }

@@ -26,7 +26,7 @@ class School_Room {
     this.player.set_position(player[0]);
 
     const mouse = new Rat();
-    mouse.enemy(this.player);
+    mouse.target(this.player);
     mouse.set_position(prey[0]);
 
     const phone = new Phone({image_name: 'phone_00'});
@@ -35,8 +35,8 @@ class School_Room {
     phone.set_position({x: 800, y: 810});
 
     exit_pad.forEach(data => {
-      const { area } = new Trigger_Pad(data, this.player);
-      area.events.once('trigger', () => mouse.logic_start());
+      const { sprite } = new Trigger_Pad(data, this.player);
+      sprite.events.once('trigger', () => mouse.logic_start());
     });
 
     this.grid = pathfind.create_level_grid(grid[0]);

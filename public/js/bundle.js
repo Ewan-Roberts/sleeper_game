@@ -45577,7 +45577,7 @@ class Deer extends Character {
   }
 
   get _target_far_away() {
-    const distance = distance_between(this.enemy.sprite, this.sprite);
+    const distance = distance_between(this.target.sprite, this.sprite);
 
     return distance > 200;
   }
@@ -45605,8 +45605,8 @@ class Deer extends Character {
     this.animation.kill();
   }
 
-  enemy(character) {
-    this.enemy = character;
+  target(character) {
+    this.target = character;
   }
 
   _show_path(path) {
@@ -45620,7 +45620,7 @@ class Deer extends Character {
   async _pathfind() {
     this.animation.move();
 
-    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.target.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 
@@ -45631,8 +45631,6 @@ class Deer extends Character {
       door_path[0].x,
       door_path[0].y
     );
-
-    //const random = () => random_number(30, 50);
 
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
@@ -45657,21 +45655,19 @@ class Deer extends Character {
       this.tween.clear();
       this.tween.expire = true;
 
-      //if(!this.enemy.vitals.alive) throw 'game over';
-
       if(!this._target_far_away) {
         this.tween.time = 1000;
         this.tween.start();
 
-        damage_events.emit('damage', {id: this.enemy.id, damage: 50});
+        damage_events.emit('damage', {id: this.target.id, damage: 50});
         return;
       }
 
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
-      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
-        this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+      if(Sight.lineOfSight(this.sprite, this.target.sprite, collisions.children)) {
+        this.tween.path.lineTo(this.target.sprite.x, this.target.sprite.y);
         this.animation.move();
         this.tween.time = 200;
       } else {
@@ -45746,7 +45742,7 @@ class Rat extends Character {
   }
 
   get _target_far_away() {
-    const distance = distance_between(this.enemy.sprite, this.sprite);
+    const distance = distance_between(this.target.sprite, this.sprite);
 
     return distance > 200;
   }
@@ -45776,8 +45772,8 @@ class Rat extends Character {
     this.animation.kill();
   }
 
-  enemy(character) {
-    this.enemy = character;
+  target(character) {
+    this.target= character;
   }
 
   _show_path(path) {
@@ -45791,7 +45787,7 @@ class Rat extends Character {
   async _pathfind() {
     this.animation.move();
 
-    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.enemy.sprite);
+    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.target.sprite);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 
@@ -45828,16 +45824,16 @@ class Rat extends Character {
       this.tween.clear();
       this.tween.expire = true;
 
-      if(!this.enemy.vitals.alive) throw 'game over';
+      if(!this.target.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
         this.tween.time = 1000;
         this.tween.start();
 
-        damage_events.emit('damage', {id: this.enemy.id, damage: 50});
+        damage_events.emit('damage', {id: this.target.id, damage: 50});
         this.animation.attack();
 
-        this.animation.face_point(this.enemy.sprite);
+        this.animation.face_point(this.target.sprite);
         return;
         //return this.melee.attack(this.enemy);
       }
@@ -45845,8 +45841,8 @@ class Rat extends Character {
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.sprite.x, this.sprite.y);
 
-      if(Sight.lineOfSight(this.sprite, this.enemy.sprite, collisions.children)) {
-        this.tween.path.lineTo(this.enemy.sprite.x, this.enemy.sprite.y);
+      if(Sight.lineOfSight(this.sprite, this.target.sprite, collisions.children)) {
+        this.tween.path.lineTo(this.target.sprite.x, this.target.sprite.y);
         this.animation.move();
         this.tween.time = 200;
       } else {
@@ -49819,8 +49815,8 @@ module.exports={ "height":50,
                  "type":"",
                  "visible":true,
                  "width":217.283450366449,
-                 "x":1683.27950537647,
-                 "y":551.38406302162
+                 "x":2128.55482828606,
+                 "y":493.600242491368
                 }, 
                 {
                  "height":182.562,
@@ -49846,7 +49842,7 @@ module.exports={ "height":50,
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
@@ -57985,26 +57981,26 @@ const event = require('events');
 class Click_Pad {
   constructor(data) {
     this.id = data.id;
-    this.area = new Sprite(Texture.WHITE);
-    this.area.height = data.height;
-    this.area.width  = data.width;
-    this.area.alpha  = 0.2;
-    this.area.anchor.set(0);
-    this.area.position.set(data.x, data.y);
-    this.area.events = new event({once: true});
+    this.sprite = new Sprite(Texture.WHITE);
+    this.sprite.height = data.height;
+    this.sprite.width  = data.width;
+    this.sprite.alpha  = 0.2;
+    this.sprite.anchor.set(0);
+    this.sprite.position.set(data.x, data.y);
+    this.sprite.events = new event({once: true});
 
-    pads.addChild(this.area);
+    pads.addChild(this.sprite);
   }
 
   set click(value) {
-    this.area.interactive = true;
-    this.area.buttonMode  = true;
+    this.sprite.interactive = true;
+    this.sprite.buttonMode  = true;
 
-    this.area.click = value;
+    this.sprite.click = value;
   }
 
   destroy() {
-    pads.removeChild(this.area);
+    pads.removeChild(this.sprite);
   }
 }
 
@@ -58245,26 +58241,26 @@ const event = require('events');
 class Trigger_Pad {
   constructor(data, player) {
     this.id = data.id;
-    this.area = new Sprite(Texture.WHITE);
-    this.area.height = data.height;
-    this.area.width  = data.width;
-    this.area.alpha  = 0.3;
-    this.area.anchor.set(0);
-    this.area.position.set(data.x, data.y);
-    this.area.events = new event({once: true});
-    this.area.rotation = data.rotation * (Math.PI/180);
+    this.sprite = new Sprite(Texture.WHITE);
+    this.sprite.height = data.height;
+    this.sprite.width  = data.width;
+    this.sprite.alpha  = 0.3;
+    this.sprite.anchor.set(0);
+    this.sprite.position.set(data.x, data.y);
+    this.sprite.events = new event({once: true});
+    this.sprite.rotation = data.rotation * (Math.PI/180);
 
     if(data.properties && data.properties.level_name) {
-      this.area.events.once('trigger', () => {
+      this.sprite.events.once('trigger', () => {
         Level_Factory.create(data.properties, player);
       });
     }
 
-    pads.addChild(this.area);
+    pads.addChild(this.sprite);
   }
 
   destroy() {
-    pads.removeChild(this.area);
+    pads.removeChild(this.sprite);
   }
 }
 
@@ -58588,26 +58584,28 @@ class Defend_Room  {
     this.player.set_position(player[0]);
 
     const mouse = new Rat(prey[0]);
-    mouse.enemy(this.player);
+    mouse.target(this.player);
     mouse.set_position(prey[0]);
 
     const mouse2 = new Deer({id: 999});
-    mouse2.enemy(mouse);
     mouse2.set_position(player[0]);
 
-    exit_pad.forEach(data => {
+    const [thing] = exit_pad.map(data => {
       const pad  = new Trigger_Pad(data);
 
       if(data.id === 236) {
-        pad.area.events.once('trigger', () => {
+        pad.sprite.events.once('trigger', () => {
           mouse2.logic_start();
         });
       } else {
-        pad.area.events.once('trigger', () => {
+        pad.sprite.events.once('trigger', () => {
           mouse.logic_start();
         });
       }
+      return pad;
     });
+    console.log(mouse);
+    mouse2.target(thing);
 
     this.grid = pathfind.create_level_grid(grid[0]);
   }
@@ -59002,7 +59000,7 @@ class School_Room {
     this.player.set_position(player[0]);
 
     const mouse = new Rat();
-    mouse.enemy(this.player);
+    mouse.target(this.player);
     mouse.set_position(prey[0]);
 
     const phone = new Phone({image_name: 'phone_00'});
@@ -59011,8 +59009,8 @@ class School_Room {
     phone.set_position({x: 800, y: 810});
 
     exit_pad.forEach(data => {
-      const { area } = new Trigger_Pad(data, this.player);
-      area.events.once('trigger', () => mouse.logic_start());
+      const { sprite } = new Trigger_Pad(data, this.player);
+      sprite.events.once('trigger', () => mouse.logic_start());
     });
 
     this.grid = pathfind.create_level_grid(grid[0]);

@@ -7,26 +7,26 @@ const event = require('events');
 class Trigger_Pad {
   constructor(data, player) {
     this.id = data.id;
-    this.area = new Sprite(Texture.WHITE);
-    this.area.height = data.height;
-    this.area.width  = data.width;
-    this.area.alpha  = 0.3;
-    this.area.anchor.set(0);
-    this.area.position.set(data.x, data.y);
-    this.area.events = new event({once: true});
-    this.area.rotation = data.rotation * (Math.PI/180);
+    this.sprite = new Sprite(Texture.WHITE);
+    this.sprite.height = data.height;
+    this.sprite.width  = data.width;
+    this.sprite.alpha  = 0.3;
+    this.sprite.anchor.set(0);
+    this.sprite.position.set(data.x, data.y);
+    this.sprite.events = new event({once: true});
+    this.sprite.rotation = data.rotation * (Math.PI/180);
 
     if(data.properties && data.properties.level_name) {
-      this.area.events.once('trigger', () => {
+      this.sprite.events.once('trigger', () => {
         Level_Factory.create(data.properties, player);
       });
     }
 
-    pads.addChild(this.area);
+    pads.addChild(this.sprite);
   }
 
   destroy() {
-    pads.removeChild(this.area);
+    pads.removeChild(this.sprite);
   }
 }
 
