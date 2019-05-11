@@ -25,10 +25,29 @@
         {
          "draworder":"topdown",
          "name":"decal",
-         "objects":[],
+         "objects":[
+                {
+                 "height":61.4779450376335,
+                 "id":241,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"pit_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":58.4148401522788,
+                 "x":2176.43229282865,
+                 "y":450.607142312911
+                }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -194,6 +213,17 @@
                  "width":224.242424242424,
                  "x":1825.75757575758,
                  "y":1389.39393939394
+                }, 
+                {
+                 "height":33.3333,
+                 "id":240,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":224.242,
+                 "x":2125.25566860128,
+                 "y":351.876588537435
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -386,7 +416,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":240,
+ "nextobjectid":242,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

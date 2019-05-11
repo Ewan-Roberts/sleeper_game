@@ -49,7 +49,6 @@ class Archer extends Enemy {
   }
 
   _loot_enemy() {
-    this.melee.equip();
     this.animation.idle();
 
     this.loot.take_items(this.enemy.loot.items);

@@ -52,6 +52,7 @@ class Lootable {
   }
 
   show() {
+    this.set_position(this.sprite);
     Fade.in(this.inventory.slot_container);
   }
 

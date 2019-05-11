@@ -32,17 +32,13 @@ class Deer extends Character {
     super();
     this.name = 'rat';
     this.id = id;
-    this.health = 100;
     this.add_component(new Rodent(this));
-    this.sprite.id = id;
-    this.sprite.play();
-
     this.add_component(new Vitals(this));
-    this.add_component(new Inventory());
+    this.add_component(new Inventory({
+      equip: 'rat_teeth',
+    }));
     this.add_component(new Lootable(this));
     this.add_component(new Melee(this));
-    this.inventory.add_melee_weapon_by_name('wrench_blade');
-    this.inventory.switch_to_melee_weapon();
 
     enemys.addChild(this.sprite);
     damage_events.on('damage', data => this.on_damage(data));
@@ -56,12 +52,7 @@ class Deer extends Character {
 
   on_damage({id, damage}) {
     if(this.id !== id) return;
-    this.health -= damage;
-    if(this.health > 0) return;
-
-    if(this.vitals.alive) {
-      return this.vitals.damage(damage);
-    }
+    if(this.vitals.alive) this.vitals.damage(damage);
 
     this.kill();
     damage_events.removeListener('damage', this.on_damage);
@@ -70,7 +61,6 @@ class Deer extends Character {
   kill() {
     if(!this.loot.items.length) this.loot.populate();
 
-    this.loot.set_position(this.sprite);
     this.loot.show();
     if(this.tween)this.tween.stop();
 
@@ -131,7 +121,10 @@ class Deer extends Character {
         this.tween.time = 1000;
         this.tween.start();
 
-        damage_events.emit('damage', {id: this.target.id, damage: 50});
+        console.log('cya!');
+        this.sprite.destroy();
+        this.tween.remove();
+        //damage_events.emit('damage', {id: this.target.id, damage: 50});
         return;
       }
 

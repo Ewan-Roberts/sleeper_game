@@ -1,9 +1,8 @@
 'use strict';
-const { collisions, guis } = require('../../engine/pixi_containers');
-const { enemys           } = require('../../engine/pixi_containers');
-
 const { Graphics, tween, tweenManager }= require('pixi.js');
 
+const { collisions, guis } = require('../../engine/pixi_containers');
+const { enemys           } = require('../../engine/pixi_containers');
 const { Character        } = require('../character_model');
 const { radian           } = require('../../utils/math');
 const { random_number    } = require('../../utils/math');
@@ -32,17 +31,13 @@ class Rat extends Character {
     super();
     this.name = 'zombie';
     this.id = id;
-    this.health = 100;
     this.add_component(new Zombie(this));
-    this.sprite.id = id;
-    this.sprite.play();
-
     this.add_component(new Vitals(this));
-    this.add_component(new Inventory());
+    this.add_component(new Inventory({
+      equip: 'rat_teeth',
+    }));
     this.add_component(new Lootable(this));
     this.add_component(new Melee(this));
-    this.inventory.add_melee_weapon_by_name('rat_teeth');
-    this.inventory.switch_to_melee_weapon();
 
     enemys.addChild(this.sprite);
     damage_events.on('damage', data => this.on_damage(data));
@@ -55,32 +50,24 @@ class Rat extends Character {
   }
 
   on_damage({id, damage}) {
-    console.log(this.sprite.id);
     if(this.id !== id) return;
-    this.health -= damage;
-    if(this.health > 0) return;
-
-    if(this.vitals.alive) {
-      return this.vitals.damage(damage);
-    }
+    if(this.vitals.alive) return this.vitals.damage(damage);
 
     this.kill();
     damage_events.removeListener('damage', this.on_damage);
   }
 
   kill() {
-    // if(!this.loot.items.length) this.loot.populate();
+    if(!this.loot.items.length) this.loot.populate();
 
-    // this.loot.set_position(this.sprite);
-    // this.loot.show();
+    this.loot.show();
     if(this.tween) this.tween.stop();
 
-    console.log('zombie dea2');
     this.animation.kill();
   }
 
   target(character) {
-    this.target= character;
+    this.target = character;
   }
 
   _show_path(path) {
@@ -142,7 +129,6 @@ class Rat extends Character {
 
         this.animation.face_point(this.target.sprite);
         return;
-        //return this.melee.attack(this.enemy);
       }
 
       this.tween.path = new tween.TweenPath();

@@ -2,10 +2,15 @@
 const { Item_Manager } = require('../../items/item_manager');
 
 class Inventory {
-  constructor() {
-    this.name          = 'inventory';
+  constructor({ equip } = {}) {
+    this.name = 'inventory';
 
-    this.equipped      = null;
+    if(equip) {
+      this.equipped = Item_Manager.get_item(equip);
+    } else {
+      this.equipped = null;
+    }
+
     this.ranged_weapon = null;
     this.melee_weapon  = null;
     this.items         = [];

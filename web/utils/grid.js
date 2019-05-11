@@ -93,7 +93,7 @@ class Grid {
         tile.alpha = 0.3;
         if(tile.door) {
           binary_line.push(2);
-          tile.alpha = 1;
+          //tile.alpha = 1;
         } else {
           binary_line.push(1);
         }

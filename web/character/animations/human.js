@@ -30,6 +30,8 @@ class Human {
     this.sprite.height /= 6;
     this.entity = entity;
     this.prefix = 'nothing';
+    this.sprite.id = entity.id;
+    this.sprite.play();
 
     this.animations = {
       nothing_idle,

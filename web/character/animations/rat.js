@@ -1,9 +1,7 @@
 'use strict';
 const { Texture, extras } = require('pixi.js');
-
 const { radian } = require('../../utils/math');
 
-//TODO move to dragon
 class rat_animations {
   static move_frames() {
     const moving_frames = [];
@@ -77,6 +75,9 @@ class Rodent {
     this.sprite.height /=4;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;
+    // IMPORTANT FOR ARROWS MANAGER
+    this.sprite.id = entity.id;
+    this.sprite.play();
   }
 
   switch(action) {

@@ -43,7 +43,7 @@ class Door extends Item {
       this.health = options.properties.health || 50;
 
       damage_events.on('damage_tile', ({door_tile, damage}) => {
-        door_tile.alpha = 1;
+        door_tile.alpha = 0.6;
         if(door_tile.id === this.id) {
           if(this.health < 30) {
             delete door_tile.door;

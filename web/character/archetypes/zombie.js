@@ -13,9 +13,7 @@ class Lurcher extends Character{
     super();
     this.name = 'lurcher';
     this.id = id;
-
     this.add_component(new Zombie(this));
-    this.sprite.id = id;
     this.add_component(new Lootable(this));
 
     if(path) {
