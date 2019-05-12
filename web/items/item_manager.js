@@ -45,6 +45,14 @@ class Item_Manager {
     return items.find(item => item.id === id);
   }
 
+  static extract_image(name) {
+    const found_sprite = new Sprite.fromFrame(name);
+
+    const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);
+
+    return image_from_spritesheet;
+  }
+
   static extract_item_image_by_name(name) {
     const item = this.get_item_by_name(name);
     const image_name = item ? item.image_name: name;

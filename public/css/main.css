@@ -286,6 +286,63 @@ html, body, canvas {
   margin-right: 25%;
 }
 
+.interaction_inventory {
+  display: block;
+  left:0;
+  width: 18%;
+  height: 100%;
+  padding: 1%;
+  position: fixed;
+  background-color: #3d3a24;
+}
+
+.interaction_inventory .visual {
+  display: block;
+  left:0;
+  width: 100%;
+  height: 40%;
+  background-color: gray;
+}
+
+.interaction_inventory .describe {
+  margin-top: 20px;
+  padding: 5%;
+  display: block;
+  width: 90%;
+  background-color: gray;
+  font-size: 1vw;
+  height: 2%;
+}
+
+.interaction_inventory .interaction_inner {
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+  background-color: gray;
+  font-size: 1vw;
+  height: 14%;
+}
+
+.interaction_inventory .interaction_inner .interaction_item {
+  display: block;
+  padding: 10px;
+  height: 80px;
+  width: 80px;
+  background-color: #67613e;
+  float: left;
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+.interaction_inventory .interaction_item_description {
+  margin-top: 20px;
+  padding: 5%;
+  display: block;
+  width: 90%;
+  background-color: gray;
+  font-size: 1vw;
+  height: 10%;
+}
+
 .item_menu {
   position: absolute;
   display: block;

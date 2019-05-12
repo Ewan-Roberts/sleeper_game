@@ -9,7 +9,8 @@ const {
 } = require('../../engine/pixi_containers');
 
 const { world    } = require('../../engine/shadows');
-const { View_HUD } = require('../../view/view_player_inventory');
+const { Player_Inventory} = require('../../view/view_player_inventory');
+const { Interaction_Menu } = require('../../view/interaction_menu');
 const { Fade     } = require('../../effects/fade');
 
 function point_collides(position) {
@@ -61,6 +62,8 @@ class Keyboard {
     this.can_move      = true;
     this.light         = light;
     this.inventory     = inventory;
+    this.inventory_view= new Player_Inventory();
+    this.interaction   = new Interaction_Menu();
 
     keyboardManager.on('down', key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
@@ -86,22 +89,44 @@ class Keyboard {
       case  76     : this.keyboard_right(); return;// l
 
       case  81     : this.speed *= 2;       return;// q for speed
-      case  73     : this.fill_inventory(); return;//i
+      case  73     : this.large_inventory(); return;// i
+      case  80     : this.small_inventory(); return;// p
+      case  79     : this.open_interaction(); return;// o
       case 'n'     : this.save_game();      return;
       default      : return;
     }
   }
 
-  fill_inventory() {
-    View_HUD.toggle_inventory();
-    View_HUD.clear();
-    console.log(this.inventory);
-    keyboardManager.disable();
-    View_HUD.add_primary_weapon(this.inventory.equipped.image_name);
+  small_inventory() {
+    this.disable();
+    this.inventory_view.show('wide');
+    this.inventory_view.clear();
+    this.inventory_view.add_primary_weapon(this.inventory.equipped.image_name);
 
-    this.inventory.items.forEach(item => View_HUD.populate_free_slot(item));
+    this.inventory_view.fill_inventory('bunny');
+    this.inventory_view.character_tile('bunny');
+  }
 
+  large_inventory() {
+    this.disable();
+    this.inventory_view.show('thin');
+    this.inventory_view.clear();
+    this.inventory_view.add_primary_weapon(this.inventory.equipped.image_name);
 
+    this.inventory.items.forEach(item => {
+      this.inventory_view.populate_free_slot(item);
+    });
+  }
+
+  open_interaction() {
+    this.disable();
+    this.inventory_view.show('wide');
+    this.interaction.clear();
+    this.interaction.image('fire_pit');
+    this.interaction.decription('its a fireplace');
+    this.interaction.fill_inventory('bunny');
+
+    //this.inventory.items.forEach(item => this.interaction.populate(item));
   }
 
   key_up() {

@@ -1,8 +1,7 @@
 'use strict';
 
 const { Item_Manager } = require('../items/item_manager');
-
-const dom_hud = global.document.querySelector('.characterInventory');
+const { Item_Menu    } = require('./item_menu');
 
 function get_node_dimensions(div) {
   const style = global.window.getComputedStyle(div, null);
@@ -39,139 +38,75 @@ function insert_all_div_with_image(class_name, image_name) {
   });
 }
 
-class View_HUD {
+class Player_Inventory {
   constructor() {
-    this.name             = 'hud';
-    this.background       = {};
-    this.primary_weapon   = {};
-    this.secondary_weapon = {};
-    this.small_weapon     = {};
-    this.head             = {};
-    this.chest            = {};
-    this.shoes            = {};
-    this.hat              = {};
-    this.slot_one         = {};
-    this.slot_two         = {};
-    this.item_slots       = [];
+    this.hud = global.document.querySelector('.characterInventory');
+    this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
+    this.inventory = global.document.querySelector('.characterInventory .inventory');
+    this.character_model = global.document.querySelector('.characterModel');
+
   }
 
-  static toggle_inventory() {
+  character_tile(image_name) {
+    insert_div_with_image('.primary_weapon', image_name);
+    insert_div_with_image('.secondary_weapon', image_name);
+    insert_div_with_image('.small_weapon', image_name);
+    insert_div_with_image('.model_head', image_name);
+    insert_div_with_image('.model_chest', image_name);
+    insert_div_with_image('.model_feet', image_name);
+    insert_div_with_image('.model_hat', image_name);
+    insert_div_with_image('.model_slot_1', image_name);
+    insert_div_with_image('.model_slot_2', image_name);
+    insert_div_with_image('.model_background', image_name);
+  }
 
-    if(dom_hud.style.display === 'block') {
-      dom_hud.style.opacity = 0;
-      dom_hud.style.display = 'none';
+  toggle_inventory() {
+    if(this.hud.style.display === 'block') {
+      this.hud.style.opacity = 0;
+      this.hud.style.display = 'none';
 
       return;
     }
 
-    dom_hud.style.opacity = 1;
-    dom_hud.style.display = 'block';
+    this.hud.style.opacity = 1;
+    this.hud.style.display = 'block';
   }
 
-  static show_player_inventory() {
-    dom_hud.style.display = 'block';
-  }
-
-  static hide_player_inventory() {
-    dom_hud.style.display = 'none';
-  }
-
-
-  static add_primary_weapon(image_name) {
-    insert_div_with_image('.primary_weapon', image_name);
-    this.primary_weapon = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_secondary_weapon(image_name) {
-    insert_div_with_image('.secondary_weapon', image_name);
-    this.secondary_weapon = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_small_weapon(image_name) {
-    insert_div_with_image('.small_weapon', image_name);
-    this.small_weapon = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_head(image_name) {
-    insert_div_with_image('.model_head', image_name);
-    this.head = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_chest(image_name) {
-    insert_div_with_image('.model_chest', image_name);
-    this.chest = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_shoes(image_name) {
-    insert_div_with_image('.model_feet', image_name);
-    this.shoes = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_hat(image_name) {
-    insert_div_with_image('.model_hat', image_name);
-    this.hat = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_slot_one(image_name) {
-    insert_div_with_image('.model_slot_1', image_name);
-    this.slot_one = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_slot_two(image_name) {
-    insert_div_with_image('.model_slot_2', image_name);
-    this.slot_two = Item_Manager.get_item_by_name(image_name);
-  }
-
-  static add_background(image_name) {
-    insert_div_with_image('.model_background', image_name);
-    this.background = Item_Manager.get_item_by_name(image_name);
-  }
-
-  //for testing
-  fill_inventory(image_name) {
-    insert_all_div_with_image('.inventory_slot', image_name);
-  }
-
-
-  static inventory_slot(image_name, slot_number) {
-    const selected_divs = global.document.querySelectorAll('.inventory_slot');
-    const slot_div = selected_divs[slot_number];
-
-    const image = Item_Manager.extract_item_image_by_name(image_name);
-
-    const { height, width } = get_node_dimensions(slot_div);
-
-    image.height = height;
-    image.width  = width;
-
-    if(slot_div.firstChild) {
-      slot_div.removeChild(slot_div.firstChild);
+  show(option) {
+    if(option === 'thin') {
+      this.hud.style.width = '80%';
+      this.hud.style.right = '0';
+      this.inventory.style.width = '80%';
+      this.inventory.style['padding-left'] = '0';
+      this.character_model.style.display = 'none';
     }
 
-    slot_div.appendChild(image);
-  }
-
-  static add_item_to_inventory_slot(item) {
-    if(this.item_slots.length > 10) {
-      throw new Error('not enough space');
+    if(option === 'wide') {
+      this.hud.style.width = '100%';
+      this.inventory.style['padding-left'] = '20%';
+      this.inventory.style.width = '61%';
+      this.character_model.style.display = 'block';
     }
 
-    this.item_slots.push(item);
+    this.toggle_inventory();
   }
-  static clear () {
-    const inventory_slots = global.document.querySelectorAll('.inventory_slot');
-    inventory_slots.forEach(slot => {
+
+  clear () {
+    this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
+    this.inventory_slots.forEach(slot => {
       if(slot.firstChild) slot.firstChild.remove();
     });
   }
 
-  static populate_free_slot(item) {
-    const inventory_slots = global.document.querySelectorAll('.inventory_slot');
+  add_primary_weapon(image_name) {
+    insert_div_with_image('.primary_weapon', image_name);
+    this.primary_weapon = Item_Manager.get_item_by_name(image_name);
+  }
 
-    const first_free_slot = Array.from(inventory_slots)
+  populate_free_slot(item) {
+    const first_free_slot = Array.from(this.inventory_slots)
       .find(slot => slot.childElementCount === 0);
 
-    //TODO: handle this error and give a nice error to the user
     if(!first_free_slot) {
       throw new Error('there are no free slots!');
     }
@@ -193,63 +128,32 @@ class View_HUD {
       menu.show();
     };
   }
+
+  fill_inventory(image_name) {
+    insert_all_div_with_image('.inventory_slot', image_name);
+  }
+
+  inventory_slot(image_name, slot_number) {
+    const selected_divs = global.document.querySelectorAll('.inventory_slot');
+    const slot_div = selected_divs[slot_number];
+
+    const image = Item_Manager.extract_item_image_by_name(image_name);
+
+    const { height, width } = get_node_dimensions(slot_div);
+
+    image.height = height;
+    image.width  = width;
+
+    if(slot_div.firstChild) {
+      slot_div.removeChild(slot_div.firstChild);
+    }
+
+    slot_div.appendChild(image);
+  }
+
 }
-
-const category_enum = {
-  food:     ['Eat', 'Drop', 'Describe'],
-  fuel:     ['Use', 'Drop', 'Describe'],
-  material: ['Drop', 'Describe'],
-  ammo:     ['Load', 'Drop', 'Describe'],
-  weapon:   ['Equip', 'Drop', 'Describe'],
-  armour:   ['Equip', 'Drop', 'Describe'],
-};
-
-
-class Item_Menu {
-  constructor() {
-    this.menu_container = global.document.querySelector('.item_menu');
-
-    this.menu_container.onmouseleave = () => this.hide();
-  }
-
-  set_position({x,y}) {
-    this.menu_container.style.left = x+'px';
-    this.menu_container.style.top  = y+'px';
-  }
-
-  show() {
-    this.menu_container.style.display = 'block';
-  }
-
-  hide() {
-    this.menu_container.style.display = 'none';
-  }
-
-  populate({ category }) {
-    this._clear();
-    const options = category_enum[category];
-
-    options.forEach(text => {
-      const option = global.document.createElement('div');
-      option.setAttribute('class', 'item_option');
-
-      option.onclick = () => this.hide();
-
-      const option_text = global.document.createTextNode(text);
-      option.appendChild(option_text);
-      this.menu_container.appendChild(option);
-    });
-  }
-
-  _clear() {
-    const item_options = global.document.querySelectorAll('.item_menu .item_option');
-
-    item_options.forEach(option => option.remove());
-  }
-}
-
 
 
 module.exports = {
-  View_HUD,
+  Player_Inventory,
 };
