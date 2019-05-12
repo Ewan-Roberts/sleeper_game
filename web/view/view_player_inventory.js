@@ -184,17 +184,26 @@ class View_HUD {
     first_free_slot.appendChild(image);
 
     const menu = new Item_Menu();
-    menu.populate(['foo', 'bar', 'thing']);
     image.onclick = ({clientX,clientY}) => {
       menu.set_position({
         x: clientX,
         y: clientY,
       });
-
+      menu.populate(item);
       menu.show();
     };
   }
 }
+
+const category_enum = {
+  food:     ['Eat', 'Drop', 'Describe'],
+  fuel:     ['Use', 'Drop', 'Describe'],
+  material: ['Drop', 'Describe'],
+  ammo:     ['Load', 'Drop', 'Describe'],
+  weapon:   ['Equip', 'Drop', 'Describe'],
+  armour:   ['Equip', 'Drop', 'Describe'],
+};
+
 
 class Item_Menu {
   constructor() {
@@ -216,7 +225,10 @@ class Item_Menu {
     this.menu_container.style.display = 'none';
   }
 
-  populate(options) {
+  populate({ category }) {
+    this._clear();
+    const options = category_enum[category];
+
     options.forEach(text => {
       const option = global.document.createElement('div');
       option.setAttribute('class', 'item_option');
@@ -229,13 +241,12 @@ class Item_Menu {
     });
   }
 
-  clear() {
-    this.menu_container.forEach(slot => {
-      if(slot.firstChild) slot.firstChild.remove();
-    });
+  _clear() {
+    const item_options = global.document.querySelectorAll('.item_menu .item_option');
+
+    item_options.forEach(option => option.remove());
   }
 }
-
 
 
 

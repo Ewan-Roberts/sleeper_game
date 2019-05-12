@@ -7,17 +7,29 @@
 
 # Updates
 
-## 28.05.19:
+
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_17.png)
+## 12.05.19:
+- :tada: Item menus
+- :tada: Prey escape logic
+- :tada: Add Zombies type
+
+# Updates
+
+## 28.04.19:
+- :tada: Level factory
+- :tada: Overlays for item hover
+- :tada: Complete refactor
+- :tada: Pathfinding with enemy able to destroy doors
+
+
+## 28.4.19:
 - :tada: Level factory
 - :tada: Overlays for item hover
 - :tada: Complete refactor
 - :tada: Pathfinding with enemy able to destroy doors
 
 ## 02-08.03.19:
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_12.png)
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_13.png)
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_14.png)
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_15.png)
 - :tada: Lighting engine and types
 - :tada: Random level generator
 - :tada: Item manager
