@@ -28,7 +28,7 @@ class Item_Manager {
   static get_item_by_name(name) {
     const found_item = items.find(item => item.name === name);
 
-    if(!found_item) throw new Error('no item found based on name ' + name);
+    //if(!found_item) throw new Error('no item found based on name ' + name);
 
     return found_item;
   }
@@ -58,6 +58,7 @@ class Item_Manager {
   }
 
   static extract_image_by_item_object(item) {
+    console.log(item);
     const found_sprite = new Sprite.fromFrame(item.image_name);
 
     const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);

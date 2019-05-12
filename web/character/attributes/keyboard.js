@@ -52,7 +52,7 @@ function event_pad(position) {
 }
 
 class Keyboard {
-  constructor({ animation, sprite, vitals, light }) {
+  constructor({ animation, sprite, vitals, light, inventory}) {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
@@ -60,6 +60,7 @@ class Keyboard {
     this.buffer        = 50;
     this.can_move      = true;
     this.light         = light;
+    this.inventory     = inventory;
 
     keyboardManager.on('down', key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
@@ -74,25 +75,38 @@ class Keyboard {
 
     switch(key) {
       // wasd
-      case  87     : this.keyboard_up();          return;// w
-      case  83     : this.keyboard_down();        return;// s
-      case  65     : this.keyboard_left();        return;// a
-      case  68     : this.keyboard_right();       return;// d
+      case  87     : this.keyboard_up();    return;// w
+      case  83     : this.keyboard_down();  return;// s
+      case  65     : this.keyboard_left();  return;// a
+      case  68     : this.keyboard_right(); return;// d
       // vim
-      case  75     : this.keyboard_up();          return;// k
-      case  74     : this.keyboard_down();        return;// j
-      case  72     : this.keyboard_left();        return;// h
-      case  76     : this.keyboard_right();       return;// l
+      case  75     : this.keyboard_up();    return;// k
+      case  74     : this.keyboard_down();  return;// j
+      case  72     : this.keyboard_left();  return;// h
+      case  76     : this.keyboard_right(); return;// l
 
-      case  81     : this.speed *= 2;             return;// q for speed
-      case 'n'     : this.save_game();            return;
-      case 'i'     : View_HUD.toggle_inventory(); return;
+      case  81     : this.speed *= 2;       return;// q for speed
+      case  73     : this.fill_inventory(); return;//i
+      case 'n'     : this.save_game();      return;
       default      : return;
     }
   }
 
+  fill_inventory() {
+    View_HUD.toggle_inventory();
+    View_HUD.clear();
+    console.log(this.inventory);
+    keyboardManager.disable();
+    View_HUD.add_primary_weapon(this.inventory.equipped.image_name);
+
+    this.inventory.items.forEach(item => View_HUD.populate_free_slot(item));
+
+
+  }
+
   key_up() {
     this.animation.idle();
+    keyboardManager.enable();
   }
 
   enable() {

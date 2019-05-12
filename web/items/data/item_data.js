@@ -329,7 +329,7 @@ const items = [
 
     visual_name: 'used arrow',
     description: 'Theres some dry blood on the tip...',
-    image_name: '52232_Primative_Arrows_5',
+    image_name: 'flying_arrow',
   },
   {
     name: 'skull_cap_bone',

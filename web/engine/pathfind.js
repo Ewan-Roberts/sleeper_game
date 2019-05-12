@@ -14,11 +14,8 @@ easystar.enableCornerCutting();
 const find_grid = sprite => {
   const grid  = grids.children;
   const point = sprite.getGlobalPosition();
-  console.log(point);
-  console.log(grids);
 
   const found_tile = grid.find(tile => tile.containsPoint(point));
-  console.log(found_tile);
   if(!found_tile) throw `${sprite.name} was not found`;
 
   return found_tile;

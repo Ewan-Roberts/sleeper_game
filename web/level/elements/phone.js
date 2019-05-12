@@ -5,7 +5,7 @@ const PIXI = require('pixi.js');
 //const { PixelateFilter } = require('@pixi/filter-pixelate');
 const { items } = require('../../engine/pixi_containers');
 const { ringing_phone, answer_phone  } = require('../../engine/sound');
-const { LED            } = require('../../light/types/led');
+//const { LED            } = require('../../light/types/led');
 const { Item           } = require('./item_model');
 
 class Phone extends Item {

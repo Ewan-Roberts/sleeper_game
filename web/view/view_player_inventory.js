@@ -158,10 +158,16 @@ class View_HUD {
 
     this.item_slots.push(item);
   }
-
-  static populate_free_slot(image_name) {
-    const item = Item_Manager.get_item_by_name(image_name);
+  static clear () {
     const inventory_slots = global.document.querySelectorAll('.inventory_slot');
+    inventory_slots.forEach(slot => {
+      if(slot.firstChild) slot.firstChild.remove();
+    });
+  }
+
+  static populate_free_slot(item) {
+    const inventory_slots = global.document.querySelectorAll('.inventory_slot');
+
     const first_free_slot = Array.from(inventory_slots)
       .find(slot => slot.childElementCount === 0);
 
@@ -169,25 +175,69 @@ class View_HUD {
     if(!first_free_slot) {
       throw new Error('there are no free slots!');
     }
-
-    if(!item) {
-      throw new Error('item doesnt exist ' + image_name);
-    }
-
-    if(item.image_name === 'bunny') {
-      throw new Error('bunny, replace me');
-    }
-
     const { height, width } = get_node_dimensions(first_free_slot);
 
-    const image  = Item_Manager.extract_item_image_by_name(item.image_name);
+    const image  = Item_Manager.extract_image_by_item_object(item);
     image.height = height;
     image.width  = width;
 
     first_free_slot.appendChild(image);
-    this.add_item_to_inventory_slot(item);
+
+    const menu = new Item_Menu();
+    menu.populate(['foo', 'bar', 'thing']);
+    image.onclick = ({clientX,clientY}) => {
+      menu.set_position({
+        x: clientX,
+        y: clientY,
+      });
+
+      menu.show();
+    };
   }
 }
+
+class Item_Menu {
+  constructor() {
+    this.menu_container = global.document.querySelector('.item_menu');
+
+    this.menu_container.onmouseleave = () => this.hide();
+  }
+
+  set_position({x,y}) {
+    this.menu_container.style.left = x+'px';
+    this.menu_container.style.top  = y+'px';
+  }
+
+  show() {
+    this.menu_container.style.display = 'block';
+  }
+
+  hide() {
+    this.menu_container.style.display = 'none';
+  }
+
+  populate(options) {
+    options.forEach(text => {
+      const option = global.document.createElement('div');
+      option.setAttribute('class', 'item_option');
+
+      option.onclick = () => this.hide();
+
+      const option_text = global.document.createTextNode(text);
+      option.appendChild(option_text);
+      this.menu_container.appendChild(option);
+    });
+  }
+
+  clear() {
+    this.menu_container.forEach(slot => {
+      if(slot.firstChild) slot.firstChild.remove();
+    });
+  }
+}
+
+
+
 
 module.exports = {
   View_HUD,

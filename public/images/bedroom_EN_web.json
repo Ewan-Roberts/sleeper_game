@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "49cfea3801d52daa53aa2e481505b370988b8c15.png",
-            "filesize": 484287,
+            "image": "d68b2fd3b1fd9d74fbbb0bf1619aa80934317a93.png",
+            "filesize": 496473,
             "sprites": [
                 {
                     "name": "road_00",
@@ -719,6 +719,17 @@
                     }
                 },
                 {
+                    "name": "fire_pit",
+                    "position": {
+                        "x": 472,
+                        "y": 160
+                    },
+                    "dimension": {
+                        "w": 72,
+                        "h": 67
+                    }
+                },
+                {
                     "name": "tree_6",
                     "position": {
                         "x": 1296,
@@ -897,7 +908,7 @@
                 {
                     "name": "broken_mattress_01",
                     "position": {
-                        "x": 472,
+                        "x": 545,
                         "y": 160
                     },
                     "dimension": {
@@ -908,7 +919,7 @@
                 {
                     "name": "rock_0",
                     "position": {
-                        "x": 533,
+                        "x": 606,
                         "y": 160
                     },
                     "dimension": {
@@ -930,7 +941,7 @@
                 {
                     "name": "rock_2",
                     "position": {
-                        "x": 594,
+                        "x": 667,
                         "y": 160
                     },
                     "dimension": {
@@ -963,7 +974,7 @@
                 {
                     "name": "tree_7",
                     "position": {
-                        "x": 651,
+                        "x": 724,
                         "y": 160
                     },
                     "dimension": {
@@ -1821,7 +1832,7 @@
                 {
                     "name": "survivor-walk_bow_12",
                     "position": {
-                        "x": 711,
+                        "x": 784,
                         "y": 160
                     },
                     "dimension": {
@@ -1832,7 +1843,7 @@
                 {
                     "name": "survivor-walk_bow_13",
                     "position": {
-                        "x": 770,
+                        "x": 843,
                         "y": 160
                     },
                     "dimension": {
@@ -1843,7 +1854,7 @@
                 {
                     "name": "survivor-walk_bow_14",
                     "position": {
-                        "x": 829,
+                        "x": 902,
                         "y": 160
                     },
                     "dimension": {
@@ -1854,7 +1865,7 @@
                 {
                     "name": "survivor-walk_bow_15",
                     "position": {
-                        "x": 888,
+                        "x": 961,
                         "y": 160
                     },
                     "dimension": {
@@ -1865,7 +1876,7 @@
                 {
                     "name": "survivor-walk_bow_16",
                     "position": {
-                        "x": 947,
+                        "x": 1020,
                         "y": 160
                     },
                     "dimension": {
@@ -1876,7 +1887,7 @@
                 {
                     "name": "survivor-walk_bow_17",
                     "position": {
-                        "x": 1006,
+                        "x": 1079,
                         "y": 160
                     },
                     "dimension": {
@@ -1887,7 +1898,7 @@
                 {
                     "name": "survivor-walk_bow_18",
                     "position": {
-                        "x": 1065,
+                        "x": 1138,
                         "y": 160
                     },
                     "dimension": {
@@ -1898,7 +1909,7 @@
                 {
                     "name": "survivor-walk_bow_19",
                     "position": {
-                        "x": 1124,
+                        "x": 1197,
                         "y": 160
                     },
                     "dimension": {
@@ -1909,7 +1920,7 @@
                 {
                     "name": "survivor-walk_bow_20",
                     "position": {
-                        "x": 1183,
+                        "x": 1256,
                         "y": 160
                     },
                     "dimension": {
@@ -2184,7 +2195,7 @@
                 {
                     "name": "survivor-move_knife_1",
                     "position": {
-                        "x": 1242,
+                        "x": 1315,
                         "y": 160
                     },
                     "dimension": {
@@ -2195,7 +2206,7 @@
                 {
                     "name": "survivor-move_knife_10",
                     "position": {
-                        "x": 1299,
+                        "x": 1372,
                         "y": 160
                     },
                     "dimension": {
@@ -2206,7 +2217,7 @@
                 {
                     "name": "survivor-move_knife_11",
                     "position": {
-                        "x": 1356,
+                        "x": 1429,
                         "y": 160
                     },
                     "dimension": {
@@ -2217,7 +2228,7 @@
                 {
                     "name": "survivor-move_knife_12",
                     "position": {
-                        "x": 1413,
+                        "x": 1486,
                         "y": 160
                     },
                     "dimension": {
@@ -2228,7 +2239,7 @@
                 {
                     "name": "survivor-move_knife_13",
                     "position": {
-                        "x": 1470,
+                        "x": 1543,
                         "y": 160
                     },
                     "dimension": {
@@ -2239,7 +2250,7 @@
                 {
                     "name": "survivor-move_knife_14",
                     "position": {
-                        "x": 1527,
+                        "x": 1600,
                         "y": 160
                     },
                     "dimension": {
@@ -2250,7 +2261,7 @@
                 {
                     "name": "survivor-move_knife_15",
                     "position": {
-                        "x": 1584,
+                        "x": 1657,
                         "y": 160
                     },
                     "dimension": {
@@ -2261,7 +2272,7 @@
                 {
                     "name": "survivor-move_knife_16",
                     "position": {
-                        "x": 1641,
+                        "x": 1714,
                         "y": 160
                     },
                     "dimension": {
@@ -2272,7 +2283,7 @@
                 {
                     "name": "survivor-move_knife_17",
                     "position": {
-                        "x": 1698,
+                        "x": 1771,
                         "y": 160
                     },
                     "dimension": {
@@ -2283,7 +2294,7 @@
                 {
                     "name": "survivor-move_knife_18",
                     "position": {
-                        "x": 1755,
+                        "x": 1828,
                         "y": 160
                     },
                     "dimension": {
@@ -2294,7 +2305,7 @@
                 {
                     "name": "survivor-move_knife_19",
                     "position": {
-                        "x": 1812,
+                        "x": 1885,
                         "y": 160
                     },
                     "dimension": {
@@ -2305,7 +2316,7 @@
                 {
                     "name": "survivor-move_knife_2",
                     "position": {
-                        "x": 1869,
+                        "x": 1942,
                         "y": 160
                     },
                     "dimension": {
@@ -2316,28 +2327,6 @@
                 {
                     "name": "survivor-move_knife_3",
                     "position": {
-                        "x": 1926,
-                        "y": 160
-                    },
-                    "dimension": {
-                        "w": 56,
-                        "h": 44
-                    }
-                },
-                {
-                    "name": "survivor-move_knife_4",
-                    "position": {
-                        "x": 1983,
-                        "y": 160
-                    },
-                    "dimension": {
-                        "w": 56,
-                        "h": 44
-                    }
-                },
-                {
-                    "name": "survivor-move_knife_5",
-                    "position": {
                         "x": 328,
                         "y": 114
                     },
@@ -2347,7 +2336,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_6",
+                    "name": "survivor-move_knife_4",
                     "position": {
                         "x": 385,
                         "y": 114
@@ -2358,7 +2347,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_7",
+                    "name": "survivor-move_knife_5",
                     "position": {
                         "x": 442,
                         "y": 114
@@ -2369,7 +2358,7 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_8",
+                    "name": "survivor-move_knife_6",
                     "position": {
                         "x": 499,
                         "y": 114
@@ -2380,9 +2369,31 @@
                     }
                 },
                 {
-                    "name": "survivor-move_knife_9",
+                    "name": "survivor-move_knife_7",
                     "position": {
                         "x": 556,
+                        "y": 114
+                    },
+                    "dimension": {
+                        "w": 56,
+                        "h": 44
+                    }
+                },
+                {
+                    "name": "survivor-move_knife_8",
+                    "position": {
+                        "x": 613,
+                        "y": 114
+                    },
+                    "dimension": {
+                        "w": 56,
+                        "h": 44
+                    }
+                },
+                {
+                    "name": "survivor-move_knife_9",
+                    "position": {
+                        "x": 670,
                         "y": 114
                     },
                     "dimension": {
@@ -3240,8 +3251,8 @@
                 {
                     "name": "Armature_candle_walk_37",
                     "position": {
-                        "x": 613,
-                        "y": 114
+                        "x": 1999,
+                        "y": 160
                     },
                     "dimension": {
                         "w": 43,
@@ -3251,7 +3262,7 @@
                 {
                     "name": "Armature_candle_walk_38",
                     "position": {
-                        "x": 657,
+                        "x": 727,
                         "y": 114
                     },
                     "dimension": {
@@ -3262,7 +3273,7 @@
                 {
                     "name": "Armature_candle_walk_39",
                     "position": {
-                        "x": 701,
+                        "x": 771,
                         "y": 114
                     },
                     "dimension": {
@@ -3273,7 +3284,7 @@
                 {
                     "name": "Armature_candle_walk_40",
                     "position": {
-                        "x": 745,
+                        "x": 815,
                         "y": 114
                     },
                     "dimension": {
@@ -3284,7 +3295,7 @@
                 {
                     "name": "Armature_candle_walk_41",
                     "position": {
-                        "x": 789,
+                        "x": 859,
                         "y": 114
                     },
                     "dimension": {
@@ -3295,7 +3306,7 @@
                 {
                     "name": "Armature_candle_walk_42",
                     "position": {
-                        "x": 833,
+                        "x": 903,
                         "y": 114
                     },
                     "dimension": {
@@ -3306,7 +3317,7 @@
                 {
                     "name": "Armature_candle_walk_43",
                     "position": {
-                        "x": 877,
+                        "x": 947,
                         "y": 114
                     },
                     "dimension": {
@@ -3317,7 +3328,7 @@
                 {
                     "name": "Armature_candle_walk_44",
                     "position": {
-                        "x": 921,
+                        "x": 991,
                         "y": 114
                     },
                     "dimension": {
@@ -3328,7 +3339,7 @@
                 {
                     "name": "Armature_candle_walk_45",
                     "position": {
-                        "x": 965,
+                        "x": 1035,
                         "y": 114
                     },
                     "dimension": {
@@ -3339,7 +3350,7 @@
                 {
                     "name": "Armature_candle_walk_46",
                     "position": {
-                        "x": 1009,
+                        "x": 1079,
                         "y": 114
                     },
                     "dimension": {
@@ -3350,7 +3361,7 @@
                 {
                     "name": "Armature_candle_walk_47",
                     "position": {
-                        "x": 1053,
+                        "x": 1123,
                         "y": 114
                     },
                     "dimension": {
@@ -3361,7 +3372,7 @@
                 {
                     "name": "Armature_candle_walk_48",
                     "position": {
-                        "x": 1097,
+                        "x": 1167,
                         "y": 114
                     },
                     "dimension": {
@@ -3548,7 +3559,7 @@
                 {
                     "name": "blood_vial",
                     "position": {
-                        "x": 1141,
+                        "x": 1211,
                         "y": 114
                     },
                     "dimension": {
@@ -3581,7 +3592,7 @@
                 {
                     "name": "shadow_small_corner",
                     "position": {
-                        "x": 1182,
+                        "x": 1252,
                         "y": 114
                     },
                     "dimension": {
@@ -3614,7 +3625,7 @@
                 {
                     "name": "Armature_candle_idle_00",
                     "position": {
-                        "x": 1223,
+                        "x": 1293,
                         "y": 114
                     },
                     "dimension": {
@@ -3625,7 +3636,7 @@
                 {
                     "name": "Armature_candle_idle_01",
                     "position": {
-                        "x": 1262,
+                        "x": 1332,
                         "y": 114
                     },
                     "dimension": {
@@ -3636,7 +3647,7 @@
                 {
                     "name": "Armature_candle_idle_02",
                     "position": {
-                        "x": 1301,
+                        "x": 1371,
                         "y": 114
                     },
                     "dimension": {
@@ -3647,7 +3658,7 @@
                 {
                     "name": "Armature_candle_idle_03",
                     "position": {
-                        "x": 1340,
+                        "x": 1410,
                         "y": 114
                     },
                     "dimension": {
@@ -3658,7 +3669,7 @@
                 {
                     "name": "Armature_candle_idle_04",
                     "position": {
-                        "x": 1379,
+                        "x": 1449,
                         "y": 114
                     },
                     "dimension": {
@@ -3669,7 +3680,7 @@
                 {
                     "name": "Armature_candle_idle_05",
                     "position": {
-                        "x": 1418,
+                        "x": 1488,
                         "y": 114
                     },
                     "dimension": {
@@ -3680,7 +3691,7 @@
                 {
                     "name": "Armature_candle_idle_06",
                     "position": {
-                        "x": 1457,
+                        "x": 1527,
                         "y": 114
                     },
                     "dimension": {
@@ -3691,7 +3702,7 @@
                 {
                     "name": "Armature_candle_idle_07",
                     "position": {
-                        "x": 1496,
+                        "x": 1566,
                         "y": 114
                     },
                     "dimension": {
@@ -3702,7 +3713,7 @@
                 {
                     "name": "Armature_candle_idle_08",
                     "position": {
-                        "x": 1535,
+                        "x": 1605,
                         "y": 114
                     },
                     "dimension": {
@@ -3713,7 +3724,7 @@
                 {
                     "name": "Armature_candle_idle_09",
                     "position": {
-                        "x": 1574,
+                        "x": 1644,
                         "y": 114
                     },
                     "dimension": {
@@ -3724,7 +3735,7 @@
                 {
                     "name": "Armature_candle_idle_10",
                     "position": {
-                        "x": 1613,
+                        "x": 1683,
                         "y": 114
                     },
                     "dimension": {
@@ -3735,7 +3746,7 @@
                 {
                     "name": "Armature_candle_idle_11",
                     "position": {
-                        "x": 1652,
+                        "x": 1722,
                         "y": 114
                     },
                     "dimension": {
@@ -3746,7 +3757,7 @@
                 {
                     "name": "Armature_candle_idle_12",
                     "position": {
-                        "x": 1691,
+                        "x": 1761,
                         "y": 114
                     },
                     "dimension": {
@@ -3757,7 +3768,7 @@
                 {
                     "name": "Armature_candle_idle_13",
                     "position": {
-                        "x": 1730,
+                        "x": 1800,
                         "y": 114
                     },
                     "dimension": {
@@ -3768,7 +3779,7 @@
                 {
                     "name": "Armature_candle_idle_14",
                     "position": {
-                        "x": 1769,
+                        "x": 1839,
                         "y": 114
                     },
                     "dimension": {
@@ -3779,7 +3790,7 @@
                 {
                     "name": "Armature_candle_idle_15",
                     "position": {
-                        "x": 1808,
+                        "x": 1878,
                         "y": 114
                     },
                     "dimension": {
@@ -3790,7 +3801,7 @@
                 {
                     "name": "Armature_candle_idle_16",
                     "position": {
-                        "x": 1847,
+                        "x": 1917,
                         "y": 114
                     },
                     "dimension": {
@@ -3801,7 +3812,7 @@
                 {
                     "name": "Armature_candle_idle_17",
                     "position": {
-                        "x": 1886,
+                        "x": 1956,
                         "y": 114
                     },
                     "dimension": {
@@ -3812,29 +3823,7 @@
                 {
                     "name": "Armature_candle_idle_18",
                     "position": {
-                        "x": 1925,
-                        "y": 114
-                    },
-                    "dimension": {
-                        "w": 38,
-                        "h": 39
-                    }
-                },
-                {
-                    "name": "Armature_candle_idle_19",
-                    "position": {
-                        "x": 1964,
-                        "y": 114
-                    },
-                    "dimension": {
-                        "w": 38,
-                        "h": 39
-                    }
-                },
-                {
-                    "name": "Armature_candle_idle_20",
-                    "position": {
-                        "x": 2003,
+                        "x": 1995,
                         "y": 114
                     },
                     "dimension": {
@@ -4173,7 +4162,7 @@
                     }
                 },
                 {
-                    "name": "52232_Primative_Arrows_5",
+                    "name": "flying_arrow",
                     "position": {
                         "x": 703,
                         "y": 881
@@ -5319,8 +5308,8 @@
             ]
         },
         {
-            "image": "79b46280b74783becbabd7e7a7d67efc65d84ff8.png",
-            "filesize": 42179,
+            "image": "bfcd6d5bfcb24f8c123a46472644e02ea6007754.png",
+            "filesize": 43800,
             "sprites": [
                 {
                     "name": "attack01_0019",
@@ -7248,7 +7237,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_21",
+                    "name": "Armature_candle_idle_19",
                     "position": {
                         "x": 1545,
                         "y": 780
@@ -7259,7 +7248,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_22",
+                    "name": "Armature_candle_idle_20",
                     "position": {
                         "x": 1584,
                         "y": 780
@@ -7270,7 +7259,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_23",
+                    "name": "Armature_candle_idle_21",
                     "position": {
                         "x": 1623,
                         "y": 780
@@ -7281,7 +7270,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_24",
+                    "name": "Armature_candle_idle_22",
                     "position": {
                         "x": 1662,
                         "y": 780
@@ -7292,7 +7281,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_25",
+                    "name": "Armature_candle_idle_23",
                     "position": {
                         "x": 1701,
                         "y": 780
@@ -7303,7 +7292,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_26",
+                    "name": "Armature_candle_idle_24",
                     "position": {
                         "x": 1740,
                         "y": 780
@@ -7314,7 +7303,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_27",
+                    "name": "Armature_candle_idle_25",
                     "position": {
                         "x": 1779,
                         "y": 780
@@ -7325,7 +7314,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_28",
+                    "name": "Armature_candle_idle_26",
                     "position": {
                         "x": 1818,
                         "y": 780
@@ -7336,7 +7325,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_29",
+                    "name": "Armature_candle_idle_27",
                     "position": {
                         "x": 1857,
                         "y": 780
@@ -7347,7 +7336,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_30",
+                    "name": "Armature_candle_idle_28",
                     "position": {
                         "x": 1896,
                         "y": 780
@@ -7358,7 +7347,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_31",
+                    "name": "Armature_candle_idle_29",
                     "position": {
                         "x": 1935,
                         "y": 780
@@ -7369,7 +7358,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_32",
+                    "name": "Armature_candle_idle_30",
                     "position": {
                         "x": 1974,
                         "y": 780
@@ -7380,7 +7369,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_33",
+                    "name": "Armature_candle_idle_31",
                     "position": {
                         "x": 52,
                         "y": 728
@@ -7391,7 +7380,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_34",
+                    "name": "Armature_candle_idle_32",
                     "position": {
                         "x": 91,
                         "y": 728
@@ -7402,7 +7391,7 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_35",
+                    "name": "Armature_candle_idle_33",
                     "position": {
                         "x": 130,
                         "y": 728
@@ -7413,9 +7402,31 @@
                     }
                 },
                 {
-                    "name": "Armature_candle_idle_36",
+                    "name": "Armature_candle_idle_34",
                     "position": {
                         "x": 169,
+                        "y": 728
+                    },
+                    "dimension": {
+                        "w": 38,
+                        "h": 39
+                    }
+                },
+                {
+                    "name": "Armature_candle_idle_35",
+                    "position": {
+                        "x": 208,
+                        "y": 728
+                    },
+                    "dimension": {
+                        "w": 38,
+                        "h": 39
+                    }
+                },
+                {
+                    "name": "Armature_candle_idle_36",
+                    "position": {
+                        "x": 247,
                         "y": 728
                     },
                     "dimension": {
@@ -7437,7 +7448,7 @@
                 {
                     "name": "Armature_nothing_idle_02",
                     "position": {
-                        "x": 208,
+                        "x": 286,
                         "y": 728
                     },
                     "dimension": {
@@ -7448,7 +7459,7 @@
                 {
                     "name": "Armature_nothing_idle_03",
                     "position": {
-                        "x": 233,
+                        "x": 311,
                         "y": 728
                     },
                     "dimension": {
@@ -7459,7 +7470,7 @@
                 {
                     "name": "Armature_nothing_idle_04",
                     "position": {
-                        "x": 258,
+                        "x": 336,
                         "y": 728
                     },
                     "dimension": {
@@ -7470,7 +7481,7 @@
                 {
                     "name": "Armature_nothing_idle_05",
                     "position": {
-                        "x": 283,
+                        "x": 361,
                         "y": 728
                     },
                     "dimension": {
@@ -7481,7 +7492,7 @@
                 {
                     "name": "Armature_nothing_idle_06",
                     "position": {
-                        "x": 308,
+                        "x": 386,
                         "y": 728
                     },
                     "dimension": {
@@ -7492,7 +7503,7 @@
                 {
                     "name": "Armature_nothing_idle_07",
                     "position": {
-                        "x": 333,
+                        "x": 411,
                         "y": 728
                     },
                     "dimension": {
@@ -7503,7 +7514,7 @@
                 {
                     "name": "Armature_nothing_idle_08",
                     "position": {
-                        "x": 358,
+                        "x": 436,
                         "y": 728
                     },
                     "dimension": {
@@ -7514,7 +7525,7 @@
                 {
                     "name": "Armature_nothing_idle_09",
                     "position": {
-                        "x": 383,
+                        "x": 461,
                         "y": 728
                     },
                     "dimension": {
@@ -7525,7 +7536,7 @@
                 {
                     "name": "Armature_nothing_idle_10",
                     "position": {
-                        "x": 408,
+                        "x": 486,
                         "y": 728
                     },
                     "dimension": {
@@ -7536,7 +7547,7 @@
                 {
                     "name": "Armature_nothing_idle_11",
                     "position": {
-                        "x": 433,
+                        "x": 511,
                         "y": 728
                     },
                     "dimension": {
@@ -7547,7 +7558,7 @@
                 {
                     "name": "Armature_nothing_idle_12",
                     "position": {
-                        "x": 458,
+                        "x": 536,
                         "y": 728
                     },
                     "dimension": {
@@ -7558,7 +7569,7 @@
                 {
                     "name": "Armature_nothing_idle_13",
                     "position": {
-                        "x": 483,
+                        "x": 561,
                         "y": 728
                     },
                     "dimension": {
@@ -7569,7 +7580,7 @@
                 {
                     "name": "Armature_nothing_idle_14",
                     "position": {
-                        "x": 508,
+                        "x": 586,
                         "y": 728
                     },
                     "dimension": {
@@ -7580,7 +7591,7 @@
                 {
                     "name": "Armature_nothing_idle_15",
                     "position": {
-                        "x": 533,
+                        "x": 611,
                         "y": 728
                     },
                     "dimension": {
@@ -7591,7 +7602,7 @@
                 {
                     "name": "Armature_nothing_idle_16",
                     "position": {
-                        "x": 558,
+                        "x": 636,
                         "y": 728
                     },
                     "dimension": {
@@ -7602,7 +7613,7 @@
                 {
                     "name": "Armature_nothing_idle_17",
                     "position": {
-                        "x": 583,
+                        "x": 661,
                         "y": 728
                     },
                     "dimension": {
@@ -7613,7 +7624,7 @@
                 {
                     "name": "Armature_nothing_idle_18",
                     "position": {
-                        "x": 608,
+                        "x": 686,
                         "y": 728
                     },
                     "dimension": {
@@ -7624,7 +7635,7 @@
                 {
                     "name": "Armature_nothing_idle_19",
                     "position": {
-                        "x": 633,
+                        "x": 711,
                         "y": 728
                     },
                     "dimension": {
@@ -7635,7 +7646,7 @@
                 {
                     "name": "Armature_nothing_idle_20",
                     "position": {
-                        "x": 658,
+                        "x": 736,
                         "y": 728
                     },
                     "dimension": {
@@ -7646,7 +7657,7 @@
                 {
                     "name": "Armature_nothing_idle_21",
                     "position": {
-                        "x": 683,
+                        "x": 761,
                         "y": 728
                     },
                     "dimension": {
@@ -7657,7 +7668,7 @@
                 {
                     "name": "Armature_nothing_idle_22",
                     "position": {
-                        "x": 708,
+                        "x": 786,
                         "y": 728
                     },
                     "dimension": {
@@ -7668,7 +7679,7 @@
                 {
                     "name": "Armature_nothing_idle_23",
                     "position": {
-                        "x": 733,
+                        "x": 811,
                         "y": 728
                     },
                     "dimension": {
@@ -7679,7 +7690,7 @@
                 {
                     "name": "Armature_nothing_idle_24",
                     "position": {
-                        "x": 758,
+                        "x": 836,
                         "y": 728
                     },
                     "dimension": {
@@ -7690,7 +7701,7 @@
                 {
                     "name": "Armature_nothing_idle_25",
                     "position": {
-                        "x": 783,
+                        "x": 861,
                         "y": 728
                     },
                     "dimension": {
@@ -7701,7 +7712,7 @@
                 {
                     "name": "Armature_nothing_idle_26",
                     "position": {
-                        "x": 808,
+                        "x": 886,
                         "y": 728
                     },
                     "dimension": {
@@ -7712,7 +7723,7 @@
                 {
                     "name": "Armature_nothing_idle_27",
                     "position": {
-                        "x": 833,
+                        "x": 911,
                         "y": 728
                     },
                     "dimension": {
@@ -7723,7 +7734,7 @@
                 {
                     "name": "Armature_nothing_idle_28",
                     "position": {
-                        "x": 858,
+                        "x": 936,
                         "y": 728
                     },
                     "dimension": {
@@ -7734,7 +7745,7 @@
                 {
                     "name": "Armature_nothing_idle_29",
                     "position": {
-                        "x": 883,
+                        "x": 961,
                         "y": 728
                     },
                     "dimension": {
@@ -7745,7 +7756,7 @@
                 {
                     "name": "Armature_nothing_idle_30",
                     "position": {
-                        "x": 908,
+                        "x": 986,
                         "y": 728
                     },
                     "dimension": {
@@ -7756,7 +7767,7 @@
                 {
                     "name": "Armature_nothing_idle_31",
                     "position": {
-                        "x": 933,
+                        "x": 1011,
                         "y": 728
                     },
                     "dimension": {
@@ -7767,7 +7778,7 @@
                 {
                     "name": "Armature_nothing_idle_32",
                     "position": {
-                        "x": 958,
+                        "x": 1036,
                         "y": 728
                     },
                     "dimension": {
@@ -7778,7 +7789,7 @@
                 {
                     "name": "Armature_nothing_idle_33",
                     "position": {
-                        "x": 983,
+                        "x": 1061,
                         "y": 728
                     },
                     "dimension": {
@@ -7789,7 +7800,7 @@
                 {
                     "name": "Armature_nothing_idle_34",
                     "position": {
-                        "x": 1008,
+                        "x": 1086,
                         "y": 728
                     },
                     "dimension": {
@@ -7800,7 +7811,7 @@
                 {
                     "name": "Armature_nothing_idle_35",
                     "position": {
-                        "x": 1033,
+                        "x": 1111,
                         "y": 728
                     },
                     "dimension": {
@@ -7811,7 +7822,7 @@
                 {
                     "name": "Armature_nothing_idle_36",
                     "position": {
-                        "x": 1058,
+                        "x": 1136,
                         "y": 728
                     },
                     "dimension": {
@@ -7822,7 +7833,7 @@
                 {
                     "name": "femur",
                     "position": {
-                        "x": 1083,
+                        "x": 1161,
                         "y": 728
                     },
                     "dimension": {
@@ -7833,7 +7844,7 @@
                 {
                     "name": "rock_4",
                     "position": {
-                        "x": 1119,
+                        "x": 1197,
                         "y": 728
                     },
                     "dimension": {
@@ -7844,7 +7855,7 @@
                 {
                     "name": "tree_stump_00",
                     "position": {
-                        "x": 1156,
+                        "x": 1234,
                         "y": 728
                     },
                     "dimension": {

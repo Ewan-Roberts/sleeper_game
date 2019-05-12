@@ -213,28 +213,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":370,
-                 "name":"",
-                 "point":true,
-                 "properties":
-                    {
-                     "equip":"rat_teeth",
-                     "random":true
-                    },
-                 "propertytypes":
-                    {
-                     "equip":"string",
-                     "random":"bool"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":348.338142734751,
-                 "y":1388.88953800414
-                }, 
-                {
-                 "height":0,
                  "id":371,
                  "name":"",
                  "point":true,
@@ -261,7 +239,7 @@
                  "properties":
                     {
                      "equip":"rat_teeth",
-                     "items":"[\"blood\",\"old_helmet\",\"blood\"]"
+                     "items":"[\"blood\",\"meat\",\"blood\"]"
                     },
                  "propertytypes":
                     {
@@ -322,6 +300,25 @@
                  "width":193.841,
                  "x":-594.816898032655,
                  "y":1419.65520037866
+                }, 
+                {
+                 "height":203.04,
+                 "id":381,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fire_pit"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":193.841,
+                 "x":-506.980642154183,
+                 "y":866.221935483871
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -950,8 +947,29 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"unique",
+         "objects":[
+                {
+                 "height":125.751776927283,
+                 "id":379,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":98.4144341170038,
+                 "x":1683.98031711318,
+                 "y":1716.78512848551
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":379,
+ "nextobjectid":382,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

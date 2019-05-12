@@ -6,18 +6,16 @@
          "name":"background",
          "objects":[
                 {
-                 "height":1864.10822842103,
+                 "height":1570.46019604568,
                  "id":51,
                  "name":"grass_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1542.67751817583,
-                 "x":1852.57233379324,
-                 "y":770.28974398283
+                 "width":1813.83226338387,
+                 "x":1833.87200653751,
+                 "y":1353.79284882195
                 }],
-         "offsetx":-74,
-         "offsety":126,
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -128,7 +126,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -138,7 +136,7 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -209,7 +207,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -242,7 +240,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -454,6 +452,16 @@
         {
          "draworder":"topdown",
          "name":"shroud",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"unique",
          "objects":[],
          "opacity":1,
          "type":"objectgroup",

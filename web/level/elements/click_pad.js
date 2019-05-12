@@ -1,5 +1,5 @@
 'use strict';
-const { Sprite, Texture} = require('pixi.js');
+const { Sprite, Texture } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
 
 const event = require('events');

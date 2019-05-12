@@ -29,9 +29,9 @@ class Grid {
     this.width  = data.width;
     this.height = data.height;
     this.area   = data.width * data.height;
-    this.original_x = data.x;
-    this.x = data.x;
-    this.y = data.y;
+    this.original_x = Math.round(data.x);
+    this.x = Math.round(data.x);
+    this.y = Math.round(data.y);
 
     this.tile_width  = Math.ceil(data.width/100);
     this.tile_height = Math.ceil(data.height/100);
