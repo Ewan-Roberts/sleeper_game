@@ -6,7 +6,7 @@ const items = [
   {
     name:           'rusty_knife',
     animation_name: 'knife',
-    id:             1001,
+    id:             1,
     rank:           0,
     cost:           50,
     category:       'weapon',
@@ -22,7 +22,7 @@ const items = [
   {
     name:           'dev_knife',
     animation_name: 'knife',
-    id:             1009,
+    id:             2,
     rank:           99,
     cost:           999,
     category:       'weapon',
@@ -38,7 +38,7 @@ const items = [
   {
     name:           'old_bow',
     animation_name: 'bow',
-    id:             1002,
+    id:             3,
     rank:           0,
     cost:           200,
     category:       'weapon',
@@ -56,7 +56,7 @@ const items = [
   {
     name:           'weak_bow',
     animation_name: 'bow',
-    id:             1009,
+    id:             4,
     rank:           0,
     cost:           200,
     category:       'weapon',
@@ -75,7 +75,7 @@ const items = [
   {
     name:           'dev_bow',
     animation_name: 'bow',
-    id:             1003,
+    id:             5,
     rank:           99,
     cost:           999,
     category:       'weapon',
@@ -92,7 +92,7 @@ const items = [
   },
   {
     name:        'rat_teeth',
-    id:          1004,
+    id:          6,
     rank:        1,
     cost:        80,
     category:    'weapon',
@@ -108,7 +108,7 @@ const items = [
 
   {
     name:        'wrench_blade',
-    id:          1002,
+    id:          7,
     rank:        1,
     cost:        80,
     category:    'weapon',
@@ -125,7 +125,7 @@ const items = [
   //secondary
   {
     name:        'pistol',
-    id:          1004,
+    id:          8,
     rank:        0,
     cost:        50,
     category:    'weapon',
@@ -142,7 +142,7 @@ const items = [
   //melee
   {
     name:         'wrench_blade',
-    id:           1002,
+    id:           9,
     rank:         1,
     cost:         80,
     category:     'weapon',
@@ -161,7 +161,7 @@ const items = [
   //util
   {
     name: 'util',
-    id: 105,
+    id: 10,
     rank: 0,
     cost: 20,
     category: 'armour',
@@ -175,7 +175,7 @@ const items = [
   {
     name: 'old_helmet',
     position: 'hat',
-    id: 100,
+    id: 11,
     rank: 0,
     cost: 20,
     category: 'armour',
@@ -188,7 +188,7 @@ const items = [
   //chest
   {
     name: 'old_clothes',
-    id: 100,
+    id: 12,
     rank: 0,
     cost: 20,
     category: 'armour',
@@ -201,7 +201,7 @@ const items = [
   //feet
   {
     name: 'old_boots',
-    id: 100,
+    id: 13,
     rank: 0,
     cost: 20,
     category: 'armour',
@@ -214,7 +214,7 @@ const items = [
   //slot
   {
     name: 'keys',
-    id: 101,
+    id: 14,
     rank: 0,
     cost: 20,
     category: 'material',
@@ -225,7 +225,7 @@ const items = [
   },
   {
     name: 'ball',
-    id: 102,
+    id: 15,
     rank: 0,
     cost: 20,
     category: 'material',
@@ -238,7 +238,7 @@ const items = [
   //head
   {
     name: 'old_bandana',
-    id: 100,
+    id: 16,
     rank: 0,
     cost: 20,
     category: 'armour',
@@ -251,7 +251,7 @@ const items = [
   //misc
   {
     name: 'meat',
-    id: 1,
+    id: 17,
     rank: 0,
     cost: 20,
     category: 'food',
@@ -262,7 +262,7 @@ const items = [
   },
   {
     name: 'blood',
-    id: 1,
+    id: 18,
     rank: 0,
     cost: 10,
     category: 'fuel',
@@ -274,7 +274,7 @@ const items = [
 
   {
     name: 'rat_hide',
-    id: 2,
+    id: 19,
     rank: 0,
     cost: 80,
     category: 'material',
@@ -285,7 +285,7 @@ const items = [
   },
   {
     name: 'rat_teeth',
-    id: 3,
+    id: 20,
     rank: 0,
     cost: 40,
     category: 'material',
@@ -296,7 +296,7 @@ const items = [
   },
   {
     name: 'rat_femur',
-    id: 4,
+    id: 21,
     rank: 0,
     cost: 20,
     category: 'material',
@@ -307,7 +307,7 @@ const items = [
   },
   {
     name: 'rag',
-    id: 4,
+    id: 22,
     rank: 0,
     cost: 10,
     category: 'material',
@@ -318,7 +318,7 @@ const items = [
   },
   {
     name: 'oil_can',
-    id: 4,
+    id: 23,
     rank: 0,
     cost: 10,
     category: 'material',
@@ -329,7 +329,7 @@ const items = [
   },
   {
     name: 'arrow',
-    id:   6,
+    id:   24,
     rank: 0,
     cost: 15,
     category: 'ammo',
@@ -340,7 +340,7 @@ const items = [
   },
   {
     name: 'skull_cap_bone',
-    id:   5,
+    id:   25,
     rank: 0,
     cost: 10,
     category: 'material',
@@ -351,7 +351,7 @@ const items = [
   },
   {
     name: 'rat_leg_bone',
-    id:   6,
+    id:   26,
     rank: 0,
     cost: 10,
     category: 'material',

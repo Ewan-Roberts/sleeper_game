@@ -1,6 +1,8 @@
 'use strict';
 
 const { Item_Manager } = require('../items/item_manager');
+const { Item_Menu    } = require('./item_menu');
+const { Items        } = require('../engine/item_handler');
 
 function get_node_dimensions(div) {
   const style = global.window.getComputedStyle(div, null);
@@ -27,6 +29,13 @@ class Interaction_Menu {
     this.visual = global.document.querySelector('.interaction_inventory .visual');
     this.describe = global.document.querySelector('.interaction_inventory .describe');
     this.inventory_slots = global.document.querySelectorAll('.interaction_item');
+
+    this.manager = new Items();
+    this.manager.events.on('interaction', item => {
+      this.manager.give(item);
+      console.log(this.manager.items);
+      this.manager.items.forEach(item => this.populate(item));
+    });
 
     this.menu_container.onmouseleave = () => this.hide();
   }
@@ -59,8 +68,8 @@ class Interaction_Menu {
   }
 
   populate(item) {
-    this._clear();
-
+    this.clear();
+    console.log(item);
     const first_free_slot = Array.from(this.inventory_slots)
       .find(slot => slot.childElementCount === 0);
 
@@ -74,6 +83,20 @@ class Interaction_Menu {
     image.width  = width;
 
     first_free_slot.appendChild(image);
+
+    const menu = new Item_Menu();
+    image.oncontextmenu = ({clientX,clientY}) => {
+      menu.set_position({
+        x: clientX,
+        y: clientY,
+      });
+
+      menu.populate(item);
+      menu.show();
+      return false;
+    };
+
+    return image;
   }
 
   fill_inventory(image_name) {

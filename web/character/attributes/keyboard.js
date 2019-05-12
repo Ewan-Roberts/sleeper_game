@@ -1,5 +1,6 @@
 'use strict';
 const { tweenManager, keyboardManager} = require('pixi.js');
+const { item_events } = require('../../engine/item_handler');
 
 const {
   collisions,
@@ -78,22 +79,22 @@ class Keyboard {
 
     switch(key) {
       // wasd
-      case  87     : this.keyboard_up();    return;// w
-      case  83     : this.keyboard_down();  return;// s
-      case  65     : this.keyboard_left();  return;// a
-      case  68     : this.keyboard_right(); return;// d
+      case  87 : this.keyboard_up();      return;// w
+      case  83 : this.keyboard_down();    return;// s
+      case  65 : this.keyboard_left();    return;// a
+      case  68 : this.keyboard_right();   return;// d
       // vim
-      case  75     : this.keyboard_up();    return;// k
-      case  74     : this.keyboard_down();  return;// j
-      case  72     : this.keyboard_left();  return;// h
-      case  76     : this.keyboard_right(); return;// l
+      case  75 : this.keyboard_up();      return;// k
+      case  74 : this.keyboard_down();    return;// j
+      case  72 : this.keyboard_left();    return;// h
+      case  76 : this.keyboard_right();   return;// l
 
-      case  81     : this.speed *= 2;       return;// q for speed
-      case  73     : this.large_inventory(); return;// i
-      case  80     : this.small_inventory(); return;// p
-      case  79     : this.open_interaction(); return;// o
-      case 'n'     : this.save_game();      return;
-      default      : return;
+      case  81 : this.speed *= 1.5;       return;// q for speed
+      case  73 : this.large_inventory();  return;// i
+      case  80 : this.small_inventory();  return;// p
+      case  79 : this.open_interaction(); return;// o
+      case 'n' : this.save_game();        return;
+      default  : return;
     }
   }
 
@@ -114,19 +115,27 @@ class Keyboard {
     this.inventory_view.add_primary_weapon(this.inventory.equipped.image_name);
 
     this.inventory.items.forEach(item => {
-      this.inventory_view.populate_free_slot(item);
+      const image = this.inventory_view.populate_free_slot(item);
+      image.onclick = () => {
+        image.remove();
+        item_events.emit('interaction', item);
+      };
     });
   }
 
   open_interaction() {
     this.disable();
-    this.inventory_view.show('wide');
+    this.inventory_view.show('thin');
     this.interaction.clear();
+    this.interaction.show();
     this.interaction.image('fire_pit');
     this.interaction.decription('its a fireplace');
-    this.interaction.fill_inventory('bunny');
+    //this.interaction.fill_inventory('bunny');
 
-    //this.inventory.items.forEach(item => this.interaction.populate(item));
+    this.inventory.items.forEach(item => this.interaction.populate(item));
+    this.inventory.items.forEach(item => {
+      this.inventory_view.populate_free_slot(item);
+    });
   }
 
   key_up() {

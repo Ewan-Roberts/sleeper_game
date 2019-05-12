@@ -92,7 +92,6 @@ class Player_Inventory {
   }
 
   clear () {
-    this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
     this.inventory_slots.forEach(slot => {
       if(slot.firstChild) slot.firstChild.remove();
     });
@@ -119,14 +118,18 @@ class Player_Inventory {
     first_free_slot.appendChild(image);
 
     const menu = new Item_Menu();
-    image.onclick = ({clientX,clientY}) => {
+    image.oncontextmenu = ({clientX,clientY}) => {
       menu.set_position({
         x: clientX,
         y: clientY,
       });
+
       menu.populate(item);
       menu.show();
+      return false;
     };
+
+    return image;
   }
 
   fill_inventory(image_name) {
@@ -134,8 +137,8 @@ class Player_Inventory {
   }
 
   inventory_slot(image_name, slot_number) {
-    const selected_divs = global.document.querySelectorAll('.inventory_slot');
-    const slot_div = selected_divs[slot_number];
+    this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
+    const slot_div = this.selected_divs[slot_number];
 
     const image = Item_Manager.extract_item_image_by_name(image_name);
 

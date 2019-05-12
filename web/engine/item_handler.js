@@ -3,6 +3,7 @@ const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
 
 const player_events = new event();
+const item_events = new event();
 
 player_events.on('error', err => new Error(err));
 class PlayerEvents {
@@ -30,7 +31,47 @@ class PlayerEvents {
   }
 }
 
+class Items {
+  constructor(id) {
+    this.items  = [];
+    this.id     = id;
+    this.events = item_events;
+  }
+
+  give(item) {
+    this.items.push(item);
+  }
+
+  find(id) {
+    this.items.find(item => item.id === id);
+  }
+
+  remove(id) {
+    this.items.find(item => item.id === id);
+  }
+
+  includes(id) {
+    this.items.some(item => item.id === id);
+  }
+
+  take_items(name) {
+    const result = this.items.map((item,i) => {
+      if(item.name === name) {
+        this.items.splice(i,1);
+        return item;
+      }
+    }).filter(n => n);
+
+    return result;
+  }
+}
+
+
+
+
 module.exports = {
   PlayerEvents,
+  Items,
   player_events,
+  item_events,
 };
