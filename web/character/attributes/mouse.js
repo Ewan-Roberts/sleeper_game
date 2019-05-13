@@ -22,7 +22,7 @@ class Mouse {
     this.inventory = inventory;
     this.sprite    = sprite;
 
-    document.addEventListener('mousemove', event => {
+    global.document.addEventListener('mousemove', event => {
       const mouse_position = get_relative_mouse_position(sprite, event);
       // new Aiming_Line().add_between_sprites(mouse_position, player);
       const rotation = radian(mouse_position, sprite);
@@ -31,7 +31,7 @@ class Mouse {
       // if(cone) cone.rotation = rotation - 1.57;
     });
 
-    document.addEventListener('mouseup', event => {
+    global.document.addEventListener('mouseup', event => {
       if(!event.shiftKey) return;
 
       const mouse_position = get_relative_mouse_position(sprite, event);
@@ -46,7 +46,7 @@ class Mouse {
       }
     });
 
-    document.addEventListener('mousedown', event => {
+    global.document.addEventListener('mousedown', event => {
       const mouse_position = get_relative_mouse_position(sprite, event);
       sprite.rotation = radian(mouse_position, sprite);
 
