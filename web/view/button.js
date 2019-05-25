@@ -1,12 +1,12 @@
 'use strict';
-const PIXI = require('pixi.js');
+const {Text,Sprite} = require('pixi.js');
 
 const { visuals } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
 class Label {
   constructor(text) {
-    this.sprite = new PIXI.Text(text, {
+    this.sprite = new Text(text, {
       fontSize: 20,
       fill: '#D2D8D7',
       fontVariant: 'small-caps',
@@ -45,7 +45,7 @@ class Button {
       this.description_label = new Label(label_description);
     }
 
-    this.sprite = PIXI.Sprite.fromFrame(label_image);
+    this.sprite = Sprite.fromFrame(label_image);
     this.sprite.anchor.set(0.5);
     this.sprite.height = 30;
     this.sprite.width  = 30;

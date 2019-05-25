@@ -1,38 +1,53 @@
 'use strict';
 const PIXI = require('pixi.js');
-const { guis } = require('../engine/pixi_containers');
-
+const { guis  } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
+
 const { Caption_Dialog } = require('./caption');
 
-class Note {
-  constructor(options) {
+class Background {
+  constructor() {
     const screen_center = {
       x: -world.x + global.window.innerWidth/2,
       y: -world.y + global.window.innerHeight/2,
     };
     const black_square = PIXI.Texture.fromImage('black_dot');
-    const black_background  = new PIXI.Sprite(black_square);
-    black_background.width  = global.window.innerWidth;
-    black_background.height = global.window.innerHeight;
-    black_background.anchor.set(0.5);
-    black_background.position.set(screen_center.x, screen_center.y);
-    black_background.alpha = 0.5;
+    this.sprite = new PIXI.Sprite(black_square);
+    this.sprite.width  = global.window.innerWidth;
+    this.sprite.height = global.window.innerHeight;
+    this.sprite.anchor.set(0.5);
+    this.sprite.position.set(screen_center.x, screen_center.y);
+    this.sprite.alpha = 0.5;
+  }
+
+  set visible(value) {
+    this.sprite.visible = value;
+  }
+
+  get position() {
+    return this.sprite.position;
+  }
+}
+
+class Note {
+  constructor(options) {
+    this.name = 'note';
+    this.background = new Background();
 
     const texture = PIXI.Texture.fromImage(options.image_on_click);
     this.sprite = new PIXI.Sprite(texture);
-    this.name = 'note';
+    this.sprite.width = 300;
+    this.sprite.height= 200;
+    this.sprite.position.copy(this.background.position);
+    this.sprite.anchor.set(0.5);
+    this.sprite.interactive = true;
 
     if(options.remove_on_click) {
       this.click = () => {
         this.sprite.destroy();
       };
     }
-    this.sprite.width = 300;
-    this.sprite.height= 200;
-    this.sprite.position.set(screen_center.x, screen_center.y);
-    this.sprite.anchor.set(0.5);
-    const level_text = new PIXI.Text(
+    this.text = new PIXI.Text(
       options.text,
       {
         fontSize: 15,
@@ -42,37 +57,24 @@ class Note {
         wordWrapWidth: 200,
       }
     );
-    level_text.anchor.set(0.5);
-    level_text.rotation = 0.01;
-    level_text.position.copy(this.sprite);
-
-    this.sprite.visible = true;
-    this.sprite.interactive = true;
-    black_background.visible = true;
-    level_text.visible = true;
-
-    this.sprite.on('mouseover', () => {
-      this.sprite.visible = true;
-      level_text.visible = true;
-      black_background.visible = true;
-    });
+    this.text.anchor.set(0.5);
+    this.text.rotation = 0.01;
+    this.text.position.copy(this.sprite);
 
     this.sprite.on('mouseout', () => {
       this.sprite.visible = false;
-      level_text.visible = false;
-      black_background.visible = false;
+      this.text.visible = false;
+      this.background.visible = false;
+
       if(options.post_open_dialog) {
         const dialog = new Caption_Dialog();
         dialog.show();
         dialog.render_text(options.post_open_dialog);
       }
-
     });
 
-    guis.addChild(this.sprite, level_text, black_background);
-    this.sprite.click = () => console.log(options);
+    guis.addChild(this.sprite, this.text, this.background.sprite);
   }
-
 }
 
 

@@ -11,7 +11,6 @@ class Slot {
     this.sprite.height = 100;
     this.sprite.anchor.set(0.5);
   }
-
 }
 
 class Value {
