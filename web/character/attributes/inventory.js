@@ -10,7 +10,7 @@ class Inventory {
 
     this.items  = [];
     this.equipped = null;
-
+    console.log('hi');
     this.inventory_view = new View_Inventory();
     if(properties){
       if(properties.equip) {
