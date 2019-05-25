@@ -43,10 +43,9 @@ class Note {
     this.sprite.interactive = true;
 
     if(options.remove_on_click) {
-      this.click = () => {
-        this.sprite.destroy();
-      };
+      this.click = () => this.sprite.destroy();
     }
+
     this.text = new PIXI.Text(
       options.text,
       {

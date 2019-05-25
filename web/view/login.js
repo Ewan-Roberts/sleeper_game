@@ -1,18 +1,20 @@
 'use strict';
 
+const { select, select_all } = require('../utils/dom');
+
 const {
   register_user,
   get_user,
 } = require('./socket');
 
-const login_register = global.document.querySelector('.login_register');
-const login_register_button = global.document.querySelector('.login_register_button');
-const login_passcode = global.document.querySelector('.login_passcode');
+const login_register     = select('.login_register');
+const login_register_button = select('.login_register_button');
+const login_passcode     = select('.login_passcode');
 
-const login_start_button = global.document.querySelector('.login_start_button');
-const login_menu   = global.document.querySelectorAll('.login_menu input');
-const login_display = global.document.querySelector('.login_menu');
-const login_mode   = global.document.querySelector('.login_mode button');
+const login_start_button = select('.login_start_button');
+const login_menu         = select_all('.login_menu input');
+const login_display      = select('.login_menu');
+const login_mode         = select('.login_mode button');
 
 login_mode.addEventListener('click', function() {
 

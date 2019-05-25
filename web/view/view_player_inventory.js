@@ -3,6 +3,7 @@ const { Sprite       } = require('pixi.js');
 const { renderer     } = require('../engine/app');
 const { Item_Manager } = require('../items/item_manager');
 const { Item_Menu    } = require('./item_menu');
+const { select, select_all } = require('../utils/dom');
 
 function get_node_dimensions(div) {
   const style = global.window.getComputedStyle(div);
@@ -20,7 +21,7 @@ class Slot {
     const sprite = new Sprite.fromFrame(image_name || 'bunny');
     this.image = renderer.plugins.extract.image(sprite);
 
-    const divs = global.document.querySelectorAll(div_name);
+    const divs = select_all(div_name);
     this.div_slots = Array.from(divs);
     this.render();
     this.menu();
@@ -65,15 +66,15 @@ class Slot {
 
 class Player_Inventory {
   constructor() {
-    this.hud = global.document.querySelector('.characterInventory');
-    this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
-    this.inventory = global.document.querySelector('.characterInventory .inventory');
-    this.character_model = global.document.querySelector('.characterModel');
+    this.hud = select('.characterInventory');
+    this.inventory_slots = select_all('.inventory_slot');
+    this.inventory = select('.characterInventory .inventory');
+    this.character_model = select('.characterModel');
   }
 
   fill_inventory(image_name) {
     this.clear();
-    const selected_divs = global.document.querySelectorAll('.inventory_slot');
+    const selected_divs = select_all('.inventory_slot');
     selected_divs.forEach(div => {
       const image = Item_Manager.extract_item_image_by_name(image_name);
 

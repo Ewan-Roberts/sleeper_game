@@ -3,6 +3,7 @@
 const { Item_Manager } = require('../items/item_manager');
 const { Item_Menu    } = require('./item_menu');
 const { Items        } = require('../engine/item_handler');
+const { select, select_all } = require('../utils/dom');
 
 function get_node_dimensions(div) {
   const style = global.window.getComputedStyle(div, null);
@@ -14,7 +15,7 @@ function get_node_dimensions(div) {
 }
 
 function insert_all_div_with_image(class_name, image_name) {
-  const selected_divs = global.document.querySelectorAll(class_name);
+  const selected_divs = select_all(class_name);
 
   selected_divs.forEach(div => {
     const image = Item_Manager.extract_item_image_by_name(image_name);
@@ -25,15 +26,14 @@ function insert_all_div_with_image(class_name, image_name) {
 
 class Interaction_Menu {
   constructor() {
-    this.menu_container = global.document.querySelector('.interaction_inventory');
-    this.visual = global.document.querySelector('.interaction_inventory .visual');
-    this.describe = global.document.querySelector('.interaction_inventory .describe');
-    this.inventory_slots = global.document.querySelectorAll('.interaction_item');
+    this.menu_container = select('.interaction_inventory');
+    this.visual = select('.interaction_inventory .visual');
+    this.describe = select('.interaction_inventory .describe');
+    this.inventory_slots = select_all('.interaction_item');
 
     this.manager = new Items();
     this.manager.events.on('interaction', item => {
       this.manager.give(item);
-      console.log(this.manager.items);
       this.manager.items.forEach(item => this.populate(item));
     });
 
@@ -84,17 +84,17 @@ class Interaction_Menu {
 
     first_free_slot.appendChild(image);
 
-    const menu = new Item_Menu();
-    image.oncontextmenu = ({clientX,clientY}) => {
-      menu.set_position({
-        x: clientX,
-        y: clientY,
-      });
+    // const menu = new Item_Menu();
+    // image.oncontextmenu = ({clientX,clientY}) => {
+    //   menu.set_position({
+    //     x: clientX,
+    //     y: clientY,
+    //   });
 
-      menu.populate(item);
-      menu.show();
-      return false;
-    };
+    //   menu.populate(item);
+    //   menu.show();
+    //   return false;
+    // };
 
     return image;
   }

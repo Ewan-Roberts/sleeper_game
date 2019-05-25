@@ -1,8 +1,8 @@
 'use strict';
 
-const { Selector } = require('../utils/dom');
+const { Select } = require('../utils/dom');
 
-class Meter extends Selector {
+class Meter extends Select {
   set value(amount) {
     this.element.innerHTML = amount;
     this.element.width     = amount + '%';

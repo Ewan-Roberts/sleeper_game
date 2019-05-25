@@ -1,5 +1,6 @@
 'use strict';
 
+const { select, select_all } = require('../utils/dom');
 const category_enum = {
   food:     ['Eat',   'Cook', 'Describe'],
   fuel:     ['Use',   'Fuel', 'Describe'],
@@ -11,7 +12,7 @@ const category_enum = {
 
 class Item_Menu {
   constructor(category) {
-    this.menu_container = global.document.querySelector('.item_menu');
+    this.menu_container = select('.item_menu');
 
     this.menu_container.onmouseleave = () => this.hide();
     this.populate(category);
@@ -47,7 +48,7 @@ class Item_Menu {
   }
 
   _clear() {
-    const item_options = global.document.querySelectorAll('.item_menu .item_option');
+    const item_options = select_all('.item_menu .item_option');
 
     item_options.forEach(option => option.remove());
   }

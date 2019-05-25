@@ -1,6 +1,7 @@
 'use strict';
 
-const dialog_caption_holder = global.document.querySelector('.dialog_caption_holder');
+const { select } = require('../utils/dom');
+const dialog_caption_holder = select('.dialog_caption_holder');
 
 class Caption_Dialog {
   play_audio_track(track) {

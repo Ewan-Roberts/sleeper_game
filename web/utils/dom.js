@@ -1,6 +1,6 @@
 'use strict';
 
-class Selector {
+class Select {
   constructor(name){
     this.element = global.document.querySelector(name);
   }
@@ -34,6 +34,16 @@ class Selector {
   }
 }
 
+function select(name) {
+  return global.document.querySelector(name);
+}
+
+function select_all(name) {
+  return global.document.querySelectorAll(name);
+}
+
 module.exports = {
-  Selector,
+  Select,
+  select,
+  select_all,
 };

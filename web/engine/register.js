@@ -1,11 +1,11 @@
 'use strict';
 
-const { Selector } = require('../utils/dom');
+const { Select} = require('../utils/dom');
 
-const player_name = new Selector('.player_name_input');
-const login_input = new Selector('.login_password_input');
-const button      = new Selector('.login_register_button');
-const overlay     = new Selector('.game_overlay');
+const player_name = new Select('.player_name_input');
+const login_input = new Select('.login_password_input');
+const button      = new Select('.login_register_button');
+const overlay     = new Select('.game_overlay');
 
 button.event('click', async () => {
   overlay.hide();
