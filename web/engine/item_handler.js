@@ -47,7 +47,9 @@ class Items {
   }
 
   remove(id) {
-    this.items.find(item => item.id === id);
+    const index = this.items.findIndex(item => item.id === id);
+
+    this.items.splice(index, 1);
   }
 
   includes(id) {

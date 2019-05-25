@@ -1,42 +1,67 @@
 'use strict';
-
+const { Sprite       } = require('pixi.js');
+const { renderer     } = require('../engine/app');
 const { Item_Manager } = require('../items/item_manager');
 const { Item_Menu    } = require('./item_menu');
 
 function get_node_dimensions(div) {
-  const style = global.window.getComputedStyle(div, null);
-
+  const style = global.window.getComputedStyle(div);
   return {
     height: style.getPropertyValue('height').replace('px', ''),
     width:  style.getPropertyValue('width').replace('px', ''),
   };
 }
 
-function insert_div_with_image(class_name, image_name) {
-  const image = Item_Manager.extract_item_image_by_name(image_name);
+class Slot {
+  constructor({id,image_name, category}, div_name) {
+    this.id = id;
+    this.category = category;
 
-  const selected_div = global.document.querySelector(class_name);
-  const { height, width } = get_node_dimensions(selected_div);
+    const sprite = new Sprite.fromFrame(image_name || 'bunny');
+    this.image = renderer.plugins.extract.image(sprite);
 
-  image.height = height;
-  image.width  = width;
-
-  if(selected_div.firstChild) {
-    selected_div.removeChild(selected_div.firstChild);
+    const divs = global.document.querySelectorAll(div_name);
+    this.div_slots = Array.from(divs);
+    this.render();
+    this.menu();
   }
 
-  selected_div.appendChild(image);
+  set click(func) {
+    this.image.onclick = func;
+  }
+
+  menu() {
+    this.image.oncontextmenu = event => {
+      const menu = new Item_Menu(this.category);
+      menu.set_position(event);
+      menu.show();
+      return false;
+    };
+  }
+
+  set height(value) {
+    this.image.height = value;
+  }
+
+  remove() {
+    this.image.remove();
+  }
+
+  set width(value) {
+    this.image.width = value;
+  }
+
+  render() {
+    const free_slot = this.div_slots.find(slot => slot.childElementCount === 0);
+    if(!free_slot) return;
+    const { height, width } = get_node_dimensions(free_slot);
+    this.height = height;
+    this.width  = width;
+
+    free_slot.appendChild(this.image);
+  }
 }
 
-function insert_all_div_with_image(class_name, image_name) {
-  const selected_divs = global.document.querySelectorAll(class_name);
-
-  selected_divs.forEach(div => {
-    const image = Item_Manager.extract_item_image_by_name(image_name);
-
-    div.appendChild(image);
-  });
-}
 
 class Player_Inventory {
   constructor() {
@@ -44,51 +69,61 @@ class Player_Inventory {
     this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
     this.inventory = global.document.querySelector('.characterInventory .inventory');
     this.character_model = global.document.querySelector('.characterModel');
-
   }
 
-  character_tile(image_name) {
-    insert_div_with_image('.primary_weapon', image_name);
-    insert_div_with_image('.secondary_weapon', image_name);
-    insert_div_with_image('.small_weapon', image_name);
-    insert_div_with_image('.model_head', image_name);
-    insert_div_with_image('.model_chest', image_name);
-    insert_div_with_image('.model_feet', image_name);
-    insert_div_with_image('.model_hat', image_name);
-    insert_div_with_image('.model_slot_1', image_name);
-    insert_div_with_image('.model_slot_2', image_name);
-    insert_div_with_image('.model_background', image_name);
+  fill_inventory(image_name) {
+    this.clear();
+    const selected_divs = global.document.querySelectorAll('.inventory_slot');
+    selected_divs.forEach(div => {
+      const image = Item_Manager.extract_item_image_by_name(image_name);
+
+      div.appendChild(image);
+    });
   }
 
-  toggle_inventory() {
+  character_tile(item) {
+    new Slot(item, '.primary_weapon');
+    new Slot(item, '.secondary_weapon');
+    new Slot(item, '.small_weapon');
+    new Slot(item, '.model_head');
+    new Slot(item, '.model_chest');
+    new Slot(item, '.model_feet');
+    new Slot(item, '.model_hat');
+    new Slot(item, '.model_slot_1');
+    new Slot(item, '.model_slot_2');
+    new Slot(item, '.model_background');
+  }
+
+  toggle() {
     if(this.hud.style.display === 'block') {
-      this.hud.style.opacity = 0;
-      this.hud.style.display = 'none';
-
+      this.hide();
       return;
     }
 
-    this.hud.style.opacity = 1;
+    this.show();
+  }
+
+  thin() {
+    this.hud.style.width = '80%';
+    this.hud.style.right = '0';
+    this.inventory.style.width = '80%';
+    this.inventory.style['padding-left'] = '0';
+    this.character_model.style.display = 'none';
+  }
+
+  show() {
     this.hud.style.display = 'block';
   }
 
-  show(option) {
-    if(option === 'thin') {
-      this.hud.style.width = '80%';
-      this.hud.style.right = '0';
-      this.inventory.style.width = '80%';
-      this.inventory.style['padding-left'] = '0';
-      this.character_model.style.display = 'none';
-    }
+  hide() {
+    this.hud.style.display = 'none';
+  }
 
-    if(option === 'wide') {
-      this.hud.style.width = '100%';
-      this.inventory.style['padding-left'] = '20%';
-      this.inventory.style.width = '61%';
-      this.character_model.style.display = 'block';
-    }
-
-    this.toggle_inventory();
+  wide() {
+    this.hud.style.width = '100%';
+    this.inventory.style['padding-left'] = '20%';
+    this.inventory.style.width = '61%';
+    this.character_model.style.display = 'block';
   }
 
   clear () {
@@ -97,63 +132,16 @@ class Player_Inventory {
     });
   }
 
-  add_primary_weapon(image_name) {
-    insert_div_with_image('.primary_weapon', image_name);
-    this.primary_weapon = Item_Manager.get_item_by_name(image_name);
+  add_primary_weapon(item) {
+    new Slot(item, '.primary_weapon');
   }
 
-  populate_free_slot(item) {
-    const first_free_slot = Array.from(this.inventory_slots)
-      .find(slot => slot.childElementCount === 0);
+  populate_with_items(items) {
+    this.clear();
+    const slots = items.map(item => new Slot(item, '.inventory_slot'));
 
-    if(!first_free_slot) {
-      throw new Error('there are no free slots!');
-    }
-    const { height, width } = get_node_dimensions(first_free_slot);
-
-    const image  = Item_Manager.extract_image_by_item_object(item);
-    image.height = height;
-    image.width  = width;
-
-    first_free_slot.appendChild(image);
-
-    const menu = new Item_Menu();
-    image.oncontextmenu = ({clientX,clientY}) => {
-      menu.set_position({
-        x: clientX,
-        y: clientY,
-      });
-
-      menu.populate(item);
-      menu.show();
-      return false;
-    };
-
-    return image;
+    return slots;
   }
-
-  fill_inventory(image_name) {
-    insert_all_div_with_image('.inventory_slot', image_name);
-  }
-
-  inventory_slot(image_name, slot_number) {
-    this.inventory_slots = global.document.querySelectorAll('.inventory_slot');
-    const slot_div = this.selected_divs[slot_number];
-
-    const image = Item_Manager.extract_item_image_by_name(image_name);
-
-    const { height, width } = get_node_dimensions(slot_div);
-
-    image.height = height;
-    image.width  = width;
-
-    if(slot_div.firstChild) {
-      slot_div.removeChild(slot_div.firstChild);
-    }
-
-    slot_div.appendChild(image);
-  }
-
 }
 
 

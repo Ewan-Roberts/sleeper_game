@@ -62,6 +62,12 @@ class Inventory {
     this.equipped = Item_Manager.get_item(name);
   }
 
+  remove(id) {
+    const index = this.items.findIndex(item => item.id === id);
+
+    this.items.splice(index, 1);
+  }
+
   show() {
     this.set_position(this.sprite);
 

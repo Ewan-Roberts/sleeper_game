@@ -66,7 +66,6 @@ class Item_Manager {
   }
 
   static extract_image_by_item_object(item) {
-    console.log(item);
     const found_sprite = new Sprite.fromFrame(item.image_name);
 
     const image_from_spritesheet = renderer.plugins.extract.image(found_sprite);

@@ -10,15 +10,16 @@ const category_enum = {
 };
 
 class Item_Menu {
-  constructor() {
+  constructor(category) {
     this.menu_container = global.document.querySelector('.item_menu');
 
     this.menu_container.onmouseleave = () => this.hide();
+    this.populate(category);
   }
 
-  set_position({x,y}) {
-    this.menu_container.style.left = x+'px';
-    this.menu_container.style.top  = y+'px';
+  set_position({clientX,clientY}) {
+    this.menu_container.style.left = clientX+'px';
+    this.menu_container.style.top  = clientY+'px';
   }
 
   show() {
@@ -29,7 +30,7 @@ class Item_Menu {
     this.menu_container.style.display = 'none';
   }
 
-  populate({ category }) {
+  populate(category) {
     this._clear();
     const options = category_enum[category];
 

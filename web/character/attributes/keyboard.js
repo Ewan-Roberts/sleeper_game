@@ -100,9 +100,9 @@ class Keyboard {
 
   small_inventory() {
     this.disable();
-    this.inventory_view.show('wide');
-    this.inventory_view.clear();
-    this.inventory_view.add_primary_weapon(this.inventory.equipped.image_name);
+    this.inventory_view.thin();
+    this.inventory_view.toggle();
+    this.inventory_view.add_primary_weapon(this.inventory.equipped);
 
     this.inventory_view.fill_inventory('bunny');
     this.inventory_view.character_tile('bunny');
@@ -110,32 +110,31 @@ class Keyboard {
 
   large_inventory() {
     this.disable();
-    this.inventory_view.show('thin');
-    this.inventory_view.clear();
-    this.inventory_view.add_primary_weapon(this.inventory.equipped.image_name);
+    this.inventory_view.thin();
+    this.inventory_view.toggle();
+    this.inventory_view.add_primary_weapon(this.inventory.equipped);
+    const { items } = this.inventory;
 
-    this.inventory.items.forEach(item => {
-      const image = this.inventory_view.populate_free_slot(item);
-      image.onclick = () => {
-        image.remove();
-        item_events.emit('interaction', item);
+    const slots = this.inventory_view.populate_with_items(items);
+    slots.forEach(slot => {
+      slot.click = () => {
+        slot.remove();
+        this.inventory.remove(slot.id);
+        console.log(this.inventory);
       };
     });
   }
 
   open_interaction() {
     this.disable();
-    this.inventory_view.show('thin');
-    this.interaction.clear();
+    this.inventory_view.wide();
+    this.inventory_view.toggle();
     this.interaction.show();
     this.interaction.image('fire_pit');
     this.interaction.decription('its a fireplace');
     //this.interaction.fill_inventory('bunny');
 
     this.inventory.items.forEach(item => this.interaction.populate(item));
-    this.inventory.items.forEach(item => {
-      this.inventory_view.populate_free_slot(item);
-    });
   }
 
   key_up() {
