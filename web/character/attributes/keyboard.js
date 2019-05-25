@@ -50,7 +50,7 @@ function event_pad(position) {
 
   const pad = children.find(child => child.containsPoint(position));
 
-  if(pad) pad.events.emit('trigger');
+  if(pad && pad.events) pad.events.emit('trigger');
 }
 
 class Keyboard {

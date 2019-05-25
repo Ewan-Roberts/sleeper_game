@@ -40,7 +40,6 @@ class Button {
     if(label_action) {
       this.action_label = new Label(label_action);
     }
-
     if(label_description) {
       this.description_label = new Label(label_description);
     }
@@ -84,7 +83,6 @@ class Button {
     if(this.description_label) {
       this.description_label.remove();
     }
-
   }
 }
 

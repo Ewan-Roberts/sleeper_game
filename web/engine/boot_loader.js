@@ -2,13 +2,13 @@
 'use strict';
 
 //const { Animations_Room } = require('../level/types/player_animations');
-const { Archer_Room     } = require('../level/types/archer_room');
-const { Items_Room      } = require('../level/types/item_room');
+// const { Archer_Room     } = require('../level/types/archer_room');
+// const { Items_Room      } = require('../level/types/item_room');
 const { Transition_Room } = require('../level/types/transition_room');
-const { Intro           } = require('../level/types/intro.js');
-const { School_Room     } = require('../level/types/school_room.js');
-const { Simple          } = require('../level/types/simple.js');
-const { Defend_Room     } = require('../level/types/defend_room.js');
+// const { Intro           } = require('../level/types/intro.js');
+// const { School_Room     } = require('../level/types/school_room.js');
+// const { Simple          } = require('../level/types/simple.js');
+// const { Defend_Room     } = require('../level/types/defend_room.js');
 const { Player          } = require('../character/types/player.js');
 
 class Level_Loader {

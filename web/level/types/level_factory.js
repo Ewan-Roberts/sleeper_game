@@ -61,11 +61,7 @@ class Level_Factory {
       background.forEach(data => new Background(data, true));
       floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
-      walls.forEach(data => {
-        data.properties = {};
-        data.properties.image_name = 'black_dot';
-        new Wall(data);
-      });
+      walls.forEach(data => new Wall(data));
       collision.forEach(data => new CollisionItem(data));
       item.forEach(data => new Chest(data));
       door.forEach(data => new Door(data));

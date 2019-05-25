@@ -1,5 +1,5 @@
 'use strict';
-const PIXI = require('pixi.js');
+const {Texture, Sprite, Text}= require('pixi.js');
 const { guis  } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 
@@ -11,8 +11,8 @@ class Background {
       x: -world.x + global.window.innerWidth/2,
       y: -world.y + global.window.innerHeight/2,
     };
-    const black_square = PIXI.Texture.fromImage('black_dot');
-    this.sprite = new PIXI.Sprite(black_square);
+    const black_square = Texture.fromImage('black_dot');
+    this.sprite = new Sprite(black_square);
     this.sprite.width  = global.window.innerWidth;
     this.sprite.height = global.window.innerHeight;
     this.sprite.anchor.set(0.5);
@@ -34,8 +34,8 @@ class Note {
     this.name = 'note';
     this.background = new Background();
 
-    const texture = PIXI.Texture.fromImage(options.image_on_click);
-    this.sprite = new PIXI.Sprite(texture);
+    const texture = Texture.fromImage(options.image_on_click);
+    this.sprite = new Sprite(texture);
     this.sprite.width = 300;
     this.sprite.height= 200;
     this.sprite.position.copy(this.background.position);
@@ -46,7 +46,7 @@ class Note {
       this.click = () => this.sprite.destroy();
     }
 
-    this.text = new PIXI.Text(
+    this.text = new Text(
       options.text,
       {
         fontSize: 15,

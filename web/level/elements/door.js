@@ -5,7 +5,7 @@ const { Item   } = require('./item_model');
 const { Tween  } = require('../../engine/tween');
 const { Button } = require('../../view/button');
 const { damage_events } = require('../../engine/damage_handler');
-const { wood_thump } = require('../../engine/sound');
+//const { wood_thump } = require('../../engine/sound');
 const { BackgroundVisualItem } = require('./visual_object');
 
 class Door extends Item {

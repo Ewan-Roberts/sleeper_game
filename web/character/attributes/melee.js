@@ -1,6 +1,5 @@
 'use strict';
 const { Sprite       } = require('pixi.js');
-const { melee_attack } = require('../../engine/melee');
 const { visuals      } = require('../../engine/pixi_containers');
 
 class Melee {
@@ -45,8 +44,7 @@ class Melee {
     this.animation.face_point(target.sprite);
 
     this.hit_box(target.sprite);
-
-    melee_attack(this.melee_weapon, target);
+    target.vitals.damage(this.melee_weapon);
   }
 }
 

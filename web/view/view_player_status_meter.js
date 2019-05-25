@@ -10,7 +10,6 @@ class Meter extends Select {
   }
 }
 
-
 class status_meter {
   constructor() {
     this.health_remaining = Meter('.health_remaining');

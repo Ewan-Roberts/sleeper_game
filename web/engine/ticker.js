@@ -7,7 +7,7 @@ require('pixi-tween');
 require('pixi-keyboard');
 
 // 60/30 for 30 fps
-const fpsDelta = 60/55;
+const fpsDelta = 60/50;
 
 let elapsedTime = 0;
 ticker.add(delta => {

@@ -6,6 +6,9 @@ const { Item } = require('./item_model');
 
 class Wall extends Item {
   constructor(data) {
+    data.properties = {
+      image_name : 'black_dot',
+    };
     super(data);
 
     //this.shadow = true;
