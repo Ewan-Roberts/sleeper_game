@@ -16,7 +16,6 @@ const { Rodent           } = require('../animations/rat');
 const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Melee            } = require('../attributes/melee');
-const { Button           } = require('../../view/button');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -34,55 +33,20 @@ class Deer extends Character {
     this.name = 'rat';
     this.id = id;
     this.add_component(new Rodent(this));
-    this.add_component(new Vitals(this));
-    console.log(properties);
     this.add_component(new Inventory({
       ...this,
       properties,
     }));
+    this.add_component(new Vitals(this));
     this.add_component(new Melee(this));
 
     enemys.addChild(this.sprite);
-    damage_events.on('damage', data => this.on_damage(data));
+    // damage_events.on('damage', data => this.on_damage(data));
   }
 
   get _target_far_away() {
     const distance = distance_between(this.target.sprite, this.sprite);
     return distance > 200;
-  }
-
-  on_damage({id, damage}) {
-    if(this.id !== id) return;
-    if(this.vitals.alive) this.vitals.damage(damage);
-
-    this.kill();
-    damage_events.removeListener('damage', this.on_damage);
-  }
-
-  kill() {
-    if(this.tween)this.tween.stop();
-
-    this.animation.kill();
-    this.sprite.dead = true;
-    this.sprite.interactive = true;
-    this.button = new Button({
-      label_action: 'Loot',
-      label_description: 'Dead Deer',
-      label_image: 'eye_icon',
-    });
-    this.button.visible = false;
-    this.sprite.on('mouseover', () => {
-      this.button.set_position(this.sprite);
-      this.button.visible = true;
-    });
-    this.sprite.on('mouseout', () => {
-      this.button.visible = false;
-    });
-
-    this.sprite.click = () => {
-      this.button.visible = false;
-      this.inventory.show();
-    };
   }
 
   target(character) {

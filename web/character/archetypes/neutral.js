@@ -1,12 +1,16 @@
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
+const { enemys    } = require('../../engine/pixi_containers');
 
 const { tweenManager     } = require('pixi.js');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events } = require('../../engine/damage_handler');
 
-const { Animal    } = require('../types/rat');
+const { Character } = require('../character_model');
+const { Zombie    } = require('../animations/zombie');
+const { Vitals    } = require('../attributes/vitals');
+const { Inventory } = require('../attributes/inventory');
 const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
 const { Scavenge  } = require('../attributes/scavenge');
@@ -14,9 +18,17 @@ const { Script    } = require('../attributes/script');
 const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
 
-class Scripted_NPC extends Animal {
+class Scripted_NPC extends Character {
   constructor() {
     super();
+    this.name = 'scripted_npc';
+
+    this.add_component(new Zombie(this));
+    this.add_component(new Vitals(this));
+    this.add_component(new Inventory());
+    this.sprite.play();
+
+    enemys.addChild(this.sprite);
     this.name = 'scavenger';
     this.id = 5;
     this.blood = new Blood();

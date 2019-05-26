@@ -1,6 +1,5 @@
 'use strict';
 const { tween, tweenManager } = require('pixi.js');
-// const { sleep } = require('../../utils/time');
 
 class Route {
   constructor({ sprite, tween }) {

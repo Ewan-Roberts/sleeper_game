@@ -79,21 +79,21 @@ class Keyboard {
 
     switch(key) {
       // wasd
-      case  87 : this.keyboard_up();      return;// w
-      case  83 : this.keyboard_down();    return;// s
-      case  65 : this.keyboard_left();    return;// a
-      case  68 : this.keyboard_right();   return;// d
+      case  87 : return this.keyboard_up();      // w
+      case  83 : return this.keyboard_down();    // s
+      case  65 : return this.keyboard_left();    // a
+      case  68 : return this.keyboard_right();   // d
       // vim
-      case  75 : this.keyboard_up();      return;// k
-      case  74 : this.keyboard_down();    return;// j
-      case  72 : this.keyboard_left();    return;// h
-      case  76 : this.keyboard_right();   return;// l
+      case  75 : return this.keyboard_up();      // k
+      case  74 : return this.keyboard_down();    // j
+      case  72 : return this.keyboard_left();    // h
+      case  76 : return this.keyboard_right();   // l
 
-      case  81 : this.speed *= 1.5;       return;// q for speed
-      case  73 : this.large_inventory();  return;// i
-      case  80 : this.small_inventory();  return;// p
-      case  79 : this.open_interaction(); return;// o
-      case 'n' : this.save_game();        return;
+      case  81 : return this.speed *= 1.5;       // q for speed
+      case  73 : return this.large_inventory();  // i
+      case  80 : return this.small_inventory();  // p
+      case  79 : return this.open_interaction(); // o
+      case 'n' : return this.save_game();
       default  : return;
     }
   }

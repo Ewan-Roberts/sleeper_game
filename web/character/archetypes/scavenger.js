@@ -1,5 +1,6 @@
 'use strict';
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
+const { enemys        } = require('../../engine/pixi_containers');
 const { damage_events } = require('../../engine/damage_handler');
 
 const { tweenManager     } = require('pixi.js');
@@ -7,7 +8,10 @@ const { sleep            } = require('../../utils/time');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');
 
-const { Animal    } = require('../types/rat');
+const { Character } = require('../character_model');
+const { Zombie    } = require('../animations/zombie');
+const { Vitals    } = require('../attributes/vitals');
+const { Inventory } = require('../attributes/inventory');
 const { Melee     } = require('../attributes/melee');
 const { Influence } = require('../attributes/influence');
 const { Scavenge  } = require('../attributes/scavenge');
@@ -15,10 +19,17 @@ const { Scavenge  } = require('../attributes/scavenge');
 const { Blood     } = require('../../effects/blood');
 const { Tween     } = require('../../engine/tween');
 
-class Scavenger extends Animal {
+class Scavenger extends Character{
   constructor() {
     super();
     this.name = 'scavenger';
+
+    this.add_component(new Zombie(this));
+    this.add_component(new Vitals(this));
+    this.add_component(new Inventory());
+    this.sprite.play();
+
+    enemys.addChild(this.sprite);
     this.id = 3;
 
     this.health = 100;

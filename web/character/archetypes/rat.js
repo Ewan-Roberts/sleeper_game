@@ -32,37 +32,19 @@ class Rat extends Character {
     this.name = 'zombie';
     this.id = id;
     this.add_component(new Zombie(this));
-    this.add_component(new Vitals(this));
     this.add_component(new Inventory({
       ...this,
       properties,
     }));
+    this.add_component(new Vitals(this));
     this.add_component(new Melee(this));
 
     enemys.addChild(this.sprite);
-    damage_events.on('damage', data => this.on_damage(data));
   }
 
   get _target_far_away() {
     const distance = distance_between(this.target.sprite, this.sprite);
     return distance > 200;
-  }
-
-  on_damage({id, damage}) {
-    if(this.id !== id) return;
-    if(this.vitals.alive) return this.vitals.damage(damage);
-
-    this.kill();
-    damage_events.removeListener('damage', this.on_damage);
-  }
-
-  kill() {
-    if(!this.inventory.items.length) this.inventory.populate();
-
-    this.inventory.show();
-    if(this.tween) this.tween.stop();
-
-    this.animation.kill();
   }
 
   target(character) {

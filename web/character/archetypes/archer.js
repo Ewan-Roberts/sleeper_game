@@ -2,30 +2,29 @@
 
 const { tweenManager     } = require('pixi.js');
 const { distance_between } = require('../../utils/math');
-const { damage_events    } = require('../../engine/damage_handler');
+const { enemys    } = require('../../engine/pixi_containers');
+const { Character } = require('../character_model');
+const { Human     } = require('../animations/human');
+const { Inventory } = require('../attributes/inventory');
+const { Vitals    } = require('../attributes/vitals');
+const { Pathfind  } = require('../attributes/pathfind');
 
-const { Enemy } = require('../types/enemy');
 const { Melee } = require('../attributes/melee');
 const { Range } = require('../attributes/ranged');
 const { Blood } = require('../../effects/blood');
 
-class Archer extends Enemy {
+class Archer extends Character {
   constructor() {
     super();
     this.name = 'archer';
     this.id = 6;
-    this.health = 100;
-    const on_damage = ({id, damage}) => {
-      if(this.id !== id) return;
-      this.health -= damage;
-      if(this.health > 0) return;
+    this.add_component(new Human(this));
 
-      damage_events.removeListener('damage', on_damage);
-      this.sprite.destroy();
-    };
+    this.add_component(new Inventory());
+    this.add_component(new Vitals(this));
+    this.add_component(new Pathfind(this.sprite));
 
-    damage_events.on('damage', on_damage);
-
+    enemys.addChild(this.sprite);
     this.inventory.add_ranged_weapon_by_name('old_bow');
     this.inventory.add_melee_weapon_by_name('dev_knife');
     this.inventory.equip_ranged_weapon();
@@ -64,17 +63,6 @@ class Archer extends Enemy {
     return distance_between(point, this.sprite);
   }
 
-  on_damage(amount) {
-    if(this._logic.dead) return;
-
-    this.vitals.damage(amount);
-
-    if(this.vitals.status === 'dead') {
-      this.blood.add_at(this.sprite);
-      this.kill();
-    }
-  }
-
   get _target_far_away() {
     const distance = this._distance_to(this.enemy.sprite);
 
@@ -83,18 +71,6 @@ class Archer extends Enemy {
 
   enemy(character) {
     this.enemy = character;
-  }
-
-  kill() {
-    if(!this.loot.items.length) this.loot.populate();
-    this.loot.create_icon();
-
-    this.animation.kill();
-
-    this.pathfind.stop();
-    this._logic.stop();
-    this._logic.remove();
-    this._logic.dead = true;
   }
 
   logic_start() {

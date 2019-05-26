@@ -13,10 +13,10 @@ class Trigger_Pad {
     this.sprite.alpha  = 0.3;
     this.sprite.anchor.set(0);
     this.sprite.position.set(data.x, data.y);
+    this.sprite.events = new event({once: true});
     this.sprite.rotation = data.rotation * (Math.PI/180);
 
     if(data.properties && data.properties.level_name) {
-      this.sprite.events = new event({once: true});
       this.sprite.events.once('trigger', () => {
         Level_Factory.create(data.properties, player);
       });

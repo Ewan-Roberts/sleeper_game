@@ -34,7 +34,7 @@ class Label {
 
 
 class Button {
-  constructor({label_action, label_description, label_image}) {
+  constructor({label_action, label_description, label_image, visible}) {
     this.name = 'button';
 
     if(label_action) {
@@ -49,6 +49,9 @@ class Button {
     this.sprite.height = 30;
     this.sprite.width  = 30;
 
+    if(visible) {
+      this.visible = visible;
+    }
     visuals.addChild(this.sprite);
   }
 

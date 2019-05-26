@@ -9,7 +9,7 @@ const { Transition_Room } = require('../level/types/transition_room');
 // const { School_Room     } = require('../level/types/school_room.js');
 // const { Simple          } = require('../level/types/simple.js');
 // const { Defend_Room     } = require('../level/types/defend_room.js');
-const { Player          } = require('../character/types/player.js');
+const { Player          } = require('../character/archetypes/player.js');
 
 class Level_Loader {
   static boot() {

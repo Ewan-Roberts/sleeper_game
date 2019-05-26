@@ -2,6 +2,8 @@
 const { Sprite, Texture } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
 
+const event = require('events');
+
 class Click_Pad {
   constructor(data) {
     this.id = data.id;
@@ -11,6 +13,7 @@ class Click_Pad {
     this.sprite.alpha  = 0.2;
     this.sprite.anchor.set(0);
     this.sprite.position.set(data.x, data.y);
+    this.sprite.events = new event({once: true});
 
     pads.addChild(this.sprite);
   }
