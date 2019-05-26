@@ -7,10 +7,9 @@ const { Fade           } = require('../../effects/fade');
 class Inventory {
   constructor({ properties, sprite } = {}) {
     this.name = 'inventory';
-
+    // inventory item event handler
     this.items  = [];
     this.equipped = null;
-    console.log('hi');
     this.inventory_view = new View_Inventory();
     if(properties){
       if(properties.equip) {
@@ -22,8 +21,6 @@ class Inventory {
       }
       if(properties.random) this.populate();
     }
-
-
     this.ranged_weapon = null;
     this.melee_weapon  = null;
     this.sprite = sprite;
@@ -99,7 +96,7 @@ class Inventory {
   }
 
   take_items(name) {
-    // return array of things you want remove them from items
+    // getIndexof splice
     const result = this.items.map((item,i) => {
       if(item.name === name) {
         this.items.splice(i,1);

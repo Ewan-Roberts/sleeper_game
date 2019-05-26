@@ -1,7 +1,6 @@
 'use strict';
 const { tweenManager } = require('pixi.js');
 
-//const tweening = PIXI.tweenManager.getTweensForTarget(sprite);
 //TODO this isnt really a mixin currently consider making it static
 class Fade {
   static in(sprite) {

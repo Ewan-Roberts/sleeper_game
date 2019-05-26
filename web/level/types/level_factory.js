@@ -18,20 +18,14 @@ const camera = new Camera();
 class Level_Factory {
   static create(properties, player) {
     this.clear();
-    const { Archer_Room } = require('./archer_room');
-    const { School_Room } = require('./school_room');
     const { Items_Room  } = require('./item_room');
-    const { Items_Room_level_2  } = require('./intro_level_02');
     const { Street } = require('./street');
     const { Simple } = require('./simple');
     const { Transition_Room } = require('./transition_room');
     const { Defend_Room } = require('./defend_room');
 
     switch(properties.level_name) {
-      case 'archer'    : return new Archer_Room(player);
       case 'intro'     : return new Intro(player, properties);
-      case 'intro_level_02' : return new Items_Room_level_2(player);
-      case 'school'    : return new School_Room(player);
       case 'item'      : return new Items_Room(player);
       case 'street'    : return new Street(player);
       case 'transition': return new Transition_Room(player);

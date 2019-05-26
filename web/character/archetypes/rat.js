@@ -1,11 +1,10 @@
 'use strict';
 const { tween, tweenManager }= require('pixi.js');
-
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { Character        } = require('../character_model');
 const { radian           } = require('../../utils/math');
-const { random_number    } = require('../../utils/math');
+//const { random_number    } = require('../../utils/math');
 const { draw_path        } = require('../../utils/line');
 const { distance_between } = require('../../utils/math');
 const { Sight            } = require('../../utils/line_of_sight');

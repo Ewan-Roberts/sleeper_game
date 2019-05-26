@@ -9,17 +9,15 @@ const { Keyboard     } = require('../attributes/keyboard');
 const { Mouse        } = require('../attributes/mouse');
 const { Inventory    } = require('../attributes/inventory');
 const { Vitals       } = require('../attributes/vitals');
-const { Light        } = require('../attributes/light');
 
 class Player extends Character {
   constructor() {
     super();
-    this.name = 'player';
     this.id = 1;
+    this.name = 'player';
     this.add_component(new Human(this));
     this.sprite.name = 'player';
 
-    this.add_component(new Light(this));
     this.add_component(new Tween(this.sprite));
     this.add_component(new Inventory());
     this.add_component(new Vitals(this));

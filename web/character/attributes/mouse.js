@@ -1,10 +1,7 @@
 'use strict';
 const { screen      } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
-const { Aiming_Cone } = require('../../effects/aiming_cone');
 const { radian      } = require('../../utils/math');
-
-//const cone = visuals.children.find(elem => elem.name === 'aiming_cone');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
@@ -24,11 +21,8 @@ class Mouse {
 
     global.document.addEventListener('mousemove', event => {
       const mouse_position = get_relative_mouse_position(sprite, event);
-      // new Aiming_Line().add_between_sprites(mouse_position, player);
       const rotation = radian(mouse_position, sprite);
       sprite.rotation = rotation;
-
-      // if(cone) cone.rotation = rotation - 1.57;
     });
 
     global.document.addEventListener('mouseup', event => {
@@ -51,8 +45,7 @@ class Mouse {
       sprite.rotation = radian(mouse_position, sprite);
 
       if(event.shiftKey && animation.prefix === 'bow') {
-        this.cone_timer = Aiming_Cone.start_at(this.sprite);
-        this.cone_timer.start();
+        //aiming cone
       }
     });
   }

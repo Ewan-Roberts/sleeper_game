@@ -24,8 +24,6 @@ class Defend_Room  {
     const { prey, exit_pad, grid, player } = elements;
 
     this.player.set_position(player[0]);
-    console.log('iiiiiiiiiiiii');
-    console.log(prey[0]);
     const mouse = new Rat(prey[0]);
     mouse.target(this.player);
     mouse.set_position(prey[0]);

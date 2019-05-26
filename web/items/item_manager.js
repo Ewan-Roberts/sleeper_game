@@ -4,7 +4,7 @@ const { Sprite } = require('pixi.js');
 const { renderer }      = require('../engine/app');
 const { random_number } = require('../utils/math');
 const { items         } = require('./data/item_data');
-
+// Temp interface
 class Item_Manager {
   static get_random_items(max = 2) {
     const number_of_items_to_return = random_number(1, max);
@@ -27,8 +27,6 @@ class Item_Manager {
 
   static get_item_by_name(name) {
     const found_item = items.find(item => item.name === name);
-
-    //if(!found_item) throw new Error('no item found based on name ' + name);
 
     return found_item;
   }

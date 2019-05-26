@@ -1,7 +1,7 @@
 'use strict';
 
 const { Item_Manager } = require('../items/item_manager');
-const { Item_Menu    } = require('./item_menu');
+// const { Item_Menu    } = require('./item_menu');
 const { Items        } = require('../engine/item_handler');
 const { select, select_all } = require('../utils/dom');
 

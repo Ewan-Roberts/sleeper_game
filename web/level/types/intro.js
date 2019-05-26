@@ -33,9 +33,6 @@ class Intro  {
     this.player.tween.smooth();
     this.player.tween.time = 1000;
     this.player.tween.start();
-    this.player.tween.movement.on('update', () => {
-      this.player.light.set_position(this.player.sprite);
-    });
 
     this.player.keyboard.enable();
   }

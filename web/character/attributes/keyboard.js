@@ -120,7 +120,6 @@ class Keyboard {
       slot.click = () => {
         slot.remove();
         this.inventory.remove(slot.id);
-        console.log(this.inventory);
       };
     });
   }
@@ -132,7 +131,6 @@ class Keyboard {
     this.interaction.show();
     this.interaction.image('fire_pit');
     this.interaction.decription('its a fireplace');
-    //this.interaction.fill_inventory('bunny');
 
     this.inventory.items.forEach(item => this.interaction.populate(item));
   }
