@@ -29,7 +29,7 @@ class Fade {
 
     if(tweens.length > 0) return;
     const movement = tweenManager.createTween(sprite);
-    movement.time = 250;
+    movement.time = 400;
     movement.expire = true;
     movement.from({alpha: sprite.alpha});
     movement.to({alpha: 0});

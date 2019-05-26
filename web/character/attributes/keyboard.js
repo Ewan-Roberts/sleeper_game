@@ -1,6 +1,5 @@
 'use strict';
 const { tweenManager, keyboardManager} = require('pixi.js');
-const { item_events } = require('../../engine/item_handler');
 
 const {
   collisions,

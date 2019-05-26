@@ -49,9 +49,7 @@ class Button {
     this.sprite.height = 30;
     this.sprite.width  = 30;
 
-    if(visible) {
-      this.visible = visible;
-    }
+    this.visible = visible || true;
     visuals.addChild(this.sprite);
   }
 
@@ -65,6 +63,7 @@ class Button {
       this.description_label.set_position({x, y: y-30});
     }
   }
+
   set visible(bool) {
     this.sprite.visible = bool;
 
