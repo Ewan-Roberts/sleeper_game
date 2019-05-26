@@ -297,7 +297,7 @@
          "name":"click_pad",
          "objects":[
                 {
-                 "height":97.5029190087582,
+                 "height":77.9940275067248,
                  "id":381,
                  "name":"",
                  "properties":
@@ -318,8 +318,8 @@
                  "type":"",
                  "visible":true,
                  "width":175.722153248954,
-                 "x":1013.9059998336,
-                 "y":231.962307120116
+                 "x":1024.66374877463,
+                 "y":230.617588502487
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1550,7 +1550,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 

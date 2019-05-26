@@ -16,8 +16,8 @@ elements.dumpster_moved = false;
 
 class Intro {
   constructor(player, {properties}) {
-    this.properties   = properties;
     this.name         = 'intro';
+    this.properties   = properties;
     this.player       = player;
 
     this._set_elements();
@@ -41,7 +41,7 @@ class Intro {
       this.player.set_position(player[0]);
       background.set_position(player[0]);
     }
-    background.fade_out(1000);
+    background.fade_out(500);
 
     const characters = prey.map(npc => {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));

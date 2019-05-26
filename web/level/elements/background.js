@@ -7,6 +7,7 @@ class Background {
   constructor(data) {
     const texture = Texture.fromImage(data.name);
     this.sprite = new extras.TilingSprite(texture);
+    this.sprite.alpha = 0.4;
     if(data.name === 'tile_floor') {
       this.sprite.tileScale.x = 0.15;
       this.sprite.tileScale.y = 0.15;
@@ -20,8 +21,13 @@ class Background {
       this.sprite.tileScale.x = 0.1;
       this.sprite.tileScale.y = 0.1;
     }
+    if(data.name === 'tarmac_tile') {
+      // this.sprite.tileScale.x = 0.1;
+      // this.sprite.tileScale.y = 0.1;
+      this.sprite.alpha = 0.8;
+      this.sprite.tint = 0xA9A9A9;
+    }
 
-    this.sprite.alpha = 0.4;
     this.sprite.anchor.set(0);
     this.sprite.width  = data.width;
     this.sprite.height = data.height;

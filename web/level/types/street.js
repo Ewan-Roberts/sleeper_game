@@ -29,7 +29,7 @@ class Street {
 
     const background = new Background();
     background.set_position(player[0]);
-    background.fade_out(1000);
+    background.fade_out(500);
 
     this.player.set_position(player[0]);
     this.player.keyboard.disable_for(1000);
@@ -43,6 +43,7 @@ class Street {
 
       return new Crow({path});
     });
+    characters.forEach(({tween}) => tween.start());
 
     const dumpster = collisions.children.find(item => item.id === 102);
     dumpster.tint = 0xd3d3d3;

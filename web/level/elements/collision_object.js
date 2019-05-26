@@ -7,11 +7,11 @@ const { Item } = require('./item_model');
 class CollisionItem extends Item {
   constructor(options) {
     super(options);
-    if(options.properties.shadow) {
-      this.shadow = true;
-      this.shade.anchor.y = 1;
-      this.shade.anchor.x = 0;
-    }
+    // if(options.properties.shadow) {
+    //   this.shadow = true;
+    //   this.shade.anchor.y = 1;
+    //   this.shade.anchor.x = 0;
+    // }
 
     this.health = 100;
     const on_damage = ({id, damage}) => {
@@ -24,6 +24,7 @@ class CollisionItem extends Item {
     };
     damage_events.on('damage', on_damage);
 
+    this.sprite.tint = 0xA9A9A9;
     collisions.addChild(this.sprite);
   }
 }

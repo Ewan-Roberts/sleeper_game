@@ -18,19 +18,26 @@ class Crow extends Character{
     if(path) {
       this.add_component(new Tween(this.sprite));
       this.tween.add_path(path);
-      this.tween.time = time | 10000;
-      this.tween.path_smoothness = smooth | 100;
+      this.tween.time = time || 10000;
+      this.tween.path_smoothness = smooth || 100;
       if(draw) this.tween.draw_path();
       if(turn) {
         this.tween.movement.on('update', () => {
-          this.sprite.rotation =
-            radian(this.sprite, this.tween.movement.path._tmpPoint);
+          this.sprite.rotation = radian(this.sprite, this.tween.movement.path._tmpPoint);
         });
       }
+      this.tween.movement.on('end', () => {
+        this.sprite.destroy();
+      });
     }
 
     enemys.addChild(this.sprite);
   }
+
+  destroy() {
+    this.sprite.destroy();
+  }
+
 }
 
 module.exports = {

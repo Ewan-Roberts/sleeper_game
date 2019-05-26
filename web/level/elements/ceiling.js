@@ -11,6 +11,7 @@ class Roof extends Item {
     console.log(options.properties.alpha);
     this.alpha = options.properties.alpha || 1;
     this.anchor = 0;
+    this.sprite.tint = options.properties.tint || 0xffffff;
 
     roofs.addChild(this.sprite);
   }

@@ -15,6 +15,7 @@ const app = new Application({
   powerPreference : 'low-performance',
   backgroundColor : 0x000000,
   roundPixels     : true,
+  forceFXAA       : true,
 });
 
 global.document.body.appendChild(app.view);
