@@ -24,12 +24,12 @@ class Fade {
     movement.start();
   }
 
-  static out_destroy(sprite) {
+  static out_destroy(sprite, time) {
     const tweens = tweenManager.getTweensForTarget(sprite);
 
     if(tweens.length > 0) return;
     const movement = tweenManager.createTween(sprite);
-    movement.time = 400;
+    movement.time = time || 400;
     movement.expire = true;
     movement.from({alpha: sprite.alpha});
     movement.to({alpha: 0});

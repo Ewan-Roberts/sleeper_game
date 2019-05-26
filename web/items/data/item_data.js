@@ -271,7 +271,6 @@ const items = [
     description: 'the fuel for the cooker',
     image_name: 'blood_vial',
   },
-
   {
     name: 'rat_hide',
     id: 19,
@@ -359,6 +358,17 @@ const items = [
     visual_name: 'rat leg bone',
     description: 'the leg bone of a rat',
     image_name: 'right_leg_bone',
+  },
+  {
+    name: 'old_book',
+    id: 27,
+    rank: 0,
+    cost: 10,
+    category: 'material',
+
+    visual_name: 'old book',
+    description: 'maybe it will hold a flame...',
+    image_name: 'old_book',
   },
 ];
 

@@ -14,7 +14,7 @@ class Click_Pad {
     this.sprite.anchor.set(0);
     this.sprite.position.set(data.x, data.y);
     this.sprite.events = new event({once: true});
-
+    this.number_clicks = 0;
     pads.addChild(this.sprite);
   }
 

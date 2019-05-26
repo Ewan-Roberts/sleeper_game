@@ -1,54 +1,47 @@
 'use strict';
 const { collisions } = require('../../engine/pixi_containers');
 
-const { Tween       } = require('../../engine/tween');
-const { Camera      } = require('../../engine/camera');
-const { Lurcher     } = require('../../character/archetypes/zombie');
-const { Crow        } = require('../../character/archetypes/crow');
-const { Tiled_Data  } = require('../attributes/parse_tiled_data');
-const { Click_Pad   } = require('../elements/click_pad');
+const { Tween      } = require('../../engine/tween');
+const { Camera     } = require('../../engine/camera');
+const { Lurcher    } = require('../../character/archetypes/zombie');
+const { Crow       } = require('../../character/archetypes/crow');
+const { Tiled_Data } = require('../attributes/parse_tiled_data');
+const { Click_Pad  } = require('../elements/click_pad');
+const { Background } = require('../../view/overlay_object');
+const { Button     } = require('../../view/button');
 
-class Intro  {
-  constructor(player, options) {
+const level_data = require('../data/intro_room.json');
+const elements = new Tiled_Data(level_data);
+elements.dumpster_moved = false;
+
+class Intro {
+  constructor(player, {properties}) {
+    this.properties   = properties;
     this.name         = 'intro';
     this.player       = player;
+
     this._set_elements();
-
-    if(options && options.cutscene) this._cutscene();
-  }
-
-  _cutscene() {
-    this.camera = new Camera();
-    this.player.keyboard.disable();
-
-    this.camera.tween.from_path({ x: -120, y: -150 });
-    this.camera.tween.to_path({   x: -100, y: -120 });
-    this.camera.tween.to_path({   x: -600, y: 0 });
-    this.camera.tween.smooth();
-    this.camera.tween.time = 1000;
-    this.camera.tween.start();
-
-    this.player.tween.from({ x: 1000, y: 400 });
-    this.player.tween.to({ x: 1080, y: 410 });
-    this.player.tween.smooth();
-    this.player.tween.time = 1000;
-    this.player.tween.start();
-
-    this.player.keyboard.enable();
   }
 
   _set_elements() {
     global.set_light_level(0.8);
-    const level_data = require('../data/intro_room.json');
-
     const { Level_Factory } = require('./level_factory');
-    const elements   = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
 
     const { Trigger_Pad } = require('../elements/pad');
     const { exit_pad, click_pad, player, prey } = elements;
+    const background = new Background();
 
-    this.player.set_position(player[0]);
+    if(this.properties.entry_id) {
+      const entry_point = player.find(point => point.id === this.properties.entry_id);
+      this.player.set_position(entry_point);
+      background.set_position(entry_point);
+      Camera.set_center(entry_point);
+    } else {
+      this.player.set_position(player[0]);
+      background.set_position(player[0]);
+    }
+    background.fade_out(1000);
 
     const characters = prey.map(npc => {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
@@ -60,21 +53,44 @@ class Intro  {
       return new Crow({path});
     });
 
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
+    if(elements.dumpster_moved) {
+      const dumpster = collisions.children.find(item => item.id === 102);
+      dumpster.x -= 45;
+      dumpster.y -= 60;
+      return;
+    }
+
+    const dumpster = collisions.children.find(item => item.id === 102);
+    dumpster.tint = 0xd3d3d3;
+
     click_pad.forEach(data => {
       const pad = new Click_Pad(data);
+      const button = new Button(data.properties);
+      button.visible = false;
+      button.set_position(pad.sprite);
+      pad.sprite.on('mouseover', () => {
+        dumpster.tint = 0xffffff;
+        button.visible = true;
+      });
+      pad.sprite.on('mouseout', () => {
+        dumpster.tint = 0xd3d3d3;
+        button.visible = false;
+      });
+
       pad.click = () => {
-        const dumpster = collisions.children.find(item => item.id === 102);
+        if(pad.number_clicks === 3) return;
         const tween_it = new Tween(dumpster);
         tween_it.from(dumpster);
-        tween_it.to({x: dumpster.x + 100, y:dumpster.y});
-        tween_it.time = 2000;
+        tween_it.to({x: dumpster.x - 15, y:dumpster.y - 20});
+        tween_it.time = 1000;
         tween_it.start();
-
         characters.forEach(({tween}) => tween.start());
+        pad.number_clicks++;
+        elements.dumpster_moved = true;
       };
     });
 
-    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
   }
 }
 

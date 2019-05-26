@@ -18,7 +18,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -274,7 +274,7 @@
                  "properties":
                     {
                      "cutscene":true,
-                     "level_name":"intro"
+                     "level_name":"street"
                     },
                  "propertytypes":
                     {

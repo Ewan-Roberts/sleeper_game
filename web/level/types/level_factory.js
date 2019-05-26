@@ -13,10 +13,9 @@ const { Shroud        } = require('../elements/shroud');
 const { CollisionItem } = require('../elements/collision_object');
 const { BackgroundVisualItem } = require('../elements/visual_object');
 
-const camera = new Camera();
-
 class Level_Factory {
-  static create(properties, player) {
+  static create(data, player) {
+    const {properties} = data;
     this.clear();
     const { Items_Room  } = require('./item_room');
     const { Street } = require('./street');
@@ -25,7 +24,7 @@ class Level_Factory {
     const { Defend_Room } = require('./defend_room');
 
     switch(properties.level_name) {
-      case 'intro'     : return new Intro(player, properties);
+      case 'intro'     : return new Intro(player, data);
       case 'item'      : return new Items_Room(player);
       case 'street'    : return new Street(player);
       case 'transition': return new Transition_Room(player);
@@ -49,7 +48,7 @@ class Level_Factory {
   }
   ) {
     try {
-      camera.set_center(player[0]);
+      Camera.set_center(player[0]);
 
       shroud.forEach(data => new Shroud(data));
       background.forEach(data => new Background(data, true));

@@ -18,7 +18,7 @@ class Trigger_Pad {
 
     if(data.properties && data.properties.level_name) {
       this.sprite.events.once('trigger', () => {
-        Level_Factory.create(data.properties, player);
+        Level_Factory.create(data, player);
       });
     }
 

@@ -1,7 +1,7 @@
 'use strict';
 const {Text,Sprite,Container,Texture}= require('pixi.js');
 const { player_events } = require('../engine/item_handler');
-const { visuals       } = require('../engine/pixi_containers');
+const { guis          } = require('../engine/pixi_containers');
 const { Fade          } = require('../effects/fade');
 
 class Slot {
@@ -15,7 +15,7 @@ class Slot {
 
 class Value {
   constructor() {
-    this.sprite = new Text('',{fontSize: 15, fill: 'white'});
+    this.sprite = new Text('', {fontSize: 15, fill: 'white'});
     this.sprite.x -= 40;
     this.sprite.visible = false;
   }
@@ -96,8 +96,8 @@ class Description {
 class Item {
   constructor({image_name}) {
     this.sprite = Sprite.fromFrame(image_name);
-    this.sprite.height = 500;
-    this.sprite.width  = 500;
+    this.sprite.height = 250;
+    this.sprite.width  = 250;
     this.sprite.anchor.set(0.5);
     this.sprite.interactive = true;
     this.sprite.buttonMode  = true;
@@ -133,7 +133,7 @@ class View_Inventory {
       this.slots.push(slot);
     }
 
-    visuals.addChild(this.slot_container);
+    guis.addChild(this.slot_container);
   }
 
   clear_slots() {

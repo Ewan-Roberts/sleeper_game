@@ -136,7 +136,12 @@ class Keyboard {
 
   key_up() {
     this.animation.idle();
-    keyboardManager.enable();
+    //keyboardManager.enable();
+  }
+
+  disable_for(time) {
+    keyboardManager.disable();
+    setTimeout(()=> keyboardManager.enable(), time);
   }
 
   enable() {

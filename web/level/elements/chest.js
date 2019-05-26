@@ -20,13 +20,16 @@ class Chest extends Item {
 
     if(properties.label) {
       this.sprite.interactive = true;
+      this.sprite.tint = 0xd3d3d3;
       this.button = new Button(properties);
       this.button.visible = false;
       this.sprite.on('mouseover', () => {
+        this.sprite.tint = 0xffffff;
         this.button.set_position(this.sprite);
         this.button.visible = true;
       });
       this.sprite.on('mouseout', () => {
+        this.sprite.tint = 0xd3d3d3;
         this.button.visible = false;
       });
     }
@@ -45,6 +48,7 @@ class Chest extends Item {
       };
     }
 
+    this.sprite.alpha = 1;
     if(properties.dialog_on_click) {
       this.click = () => {
         const dialog = new Caption_Dialog();

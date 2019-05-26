@@ -44,7 +44,7 @@ players.zIndex = medium;
 
 const shrouds = new Container();
 shrouds.name = 'shroud_container';
-shrouds.zIndex = very_close;
+shrouds.zIndex = close;
 
 const visuals = new Container();
 visuals.name = 'visuals';

@@ -1,5 +1,6 @@
 'use strict';
 
+const worker_timer = require('worker-timers');
 const { select } = require('../utils/dom');
 const dialog_caption_holder = select('.dialog_caption_holder');
 
@@ -26,28 +27,23 @@ class Caption_Dialog {
   create_text_timeout(text_array) {
     let i = 0;
     let current_text = '';
+    if(this.running) return;
+    this.text_timer = worker_timer.setInterval(()=> {
+      if(i % 50 === 0){
+        current_text = '';
+      }
 
-    if(this.timeout) {
-      this.clear_text();
+      if(i === text_array.length){
+        worker_timer.clearInterval(this.text_timer);
+        this.running = false;
+        return;
+      }
 
-      clearInterval(this.timeout);
-    } else {
-      this.timeout = setInterval(()=> {
-        if(i % 50 === 0){
-          current_text = '';
-        }
-
-        if(i === text_array.length){
-          clearInterval(this.timeout);
-          setTimeout(()=> this.hide(), 2000);
-          return;
-        }
-
-        current_text += text_array[i];
-        dialog_caption_holder.innerHTML = current_text;
-        i++;
-      }, 75);
-    }
+      current_text += text_array[i];
+      dialog_caption_holder.innerHTML = current_text;
+      i++;
+    }, 75);
+    this.running = true;
   }
 
   render_text(text) {

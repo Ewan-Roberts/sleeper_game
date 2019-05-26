@@ -20,8 +20,8 @@ class Camera {
     this.sprite.position.set(-x, -y);
   }
 
-  set_center({ x, y }) {
-    this.sprite.position.set(
+  static set_center({ x, y }) {
+    world.position.set(
       -x + global.window.innerWidth/2,
       -y + global.window.innerHeight/2
     );
