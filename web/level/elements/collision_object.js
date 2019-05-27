@@ -10,6 +10,7 @@ class CollisionItem extends Item {
     this.sprite.anchor.x = 0;
     this.sprite.anchor.y = 1;
 
+    this.alpha = options.properties.alpha || 1;
     this.sprite.tint = 0xA9A9A9;
     collisions.addChild(this.sprite);
   }

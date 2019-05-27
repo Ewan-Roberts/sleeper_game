@@ -53,13 +53,13 @@ class Intro {
 
     exit_pad.forEach(data => new Trigger_Pad(data, this.player));
     if(elements.dumpster_moved) {
-      const dumpster = collisions.children.find(item => item.id === 460);
+      const dumpster = collisions.children.find(item => item.id === 102);
       dumpster.x -= 45;
       dumpster.y -= 60;
       return;
     }
 
-    const dumpster = collisions.children.find(item => item.id === 460);
+    const dumpster = collisions.children.find(item => item.id === 102);
     dumpster.tint = 0xd3d3d3;
 
     click_pad.forEach(data => {

@@ -18,7 +18,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -145,69 +145,68 @@
          "name":"collision",
          "objects":[
                 {
-                 "height":103.132964801358,
-                 "id":152,
+                 "gid":1,
+                 "height":517.3022242737,
+                 "id":177,
                  "name":"",
-                 "properties":
-                    {
-                     "container":false,
-                     "image_name":"dumpster_00",
-                     "shadow":false
-                    },
-                 "propertytypes":
-                    {
-                     "container":"bool",
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-422.207991311383,
+                 "rotation":96.7841454336942,
                  "type":"",
                  "visible":true,
-                 "width":200.128958629907,
-                 "x":2977.09246394411,
-                 "y":2599.17123244512
+                 "width":177.651872675879,
+                 "x":2024.60685157587,
+                 "y":2529.20703059936
                 }, 
                 {
-                 "height":97.2746663089947,
-                 "id":165,
+                 "gid":2,
+                 "height":110.112332112332,
+                 "id":179,
                  "name":"",
-                 "properties":
-                    {
-                     "image_name":"bale_square"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":50.5857091070179,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":157.287969434019,
-                 "x":2015.11659103145,
-                 "y":2361.96837904467
+                 "width":178.635474038352,
+                 "x":2953.34743194455,
+                 "y":2593.21245421245
                 }, 
                 {
-                 "height":380.042609765565,
-                 "id":167,
+                 "gid":3,
+                 "height":157.800615975125,
+                 "id":180,
                  "name":"",
-                 "properties":
-                    {
-                     "image_name":"truck_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-84.9902667189244,
+                 "rotation":-51.0311964209524,
                  "type":"",
                  "visible":true,
-                 "width":149.93868707707,
-                 "x":2111.87043343498,
-                 "y":2689.91426712845
+                 "width":368.201437275292,
+                 "x":1866.47180356004,
+                 "y":2232.1529427869
+                }, 
+                {
+                 "gid":4,
+                 "height":84.6398046398047,
+                 "id":181,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":169.279609279609,
+                 "x":2052.11233211233,
+                 "y":1800.56166056166
+                }, 
+                {
+                 "gid":5,
+                 "height":145.689865689866,
+                 "id":182,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":364.224664224664,
+                 "x":2571.24542124542,
+                 "y":1980.65934065934
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -254,7 +253,7 @@
                  "name":"",
                  "properties":
                     {
-                     "level_name":"archer"
+                     "level_name":"park"
                     },
                  "propertytypes":
                     {
@@ -286,26 +285,7 @@
                  "visible":true,
                  "width":211,
                  "x":2870.56829679595,
-                 "y":2358.40078695897
-                }, 
-                {
-                 "height":192.691961776279,
-                 "id":148,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"school"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":211,
-                 "x":2870.21237330273,
-                 "y":1892.07909176254
+                 "y":2288.1932167514
                 }, 
                 {
                  "height":187.070826306914,
@@ -345,7 +325,7 @@
                  "visible":true,
                  "width":211,
                  "x":2870.89123102867,
-                 "y":2108.54460399101
+                 "y":2035.28453073094
                 }, 
                 {
                  "height":164.503,
@@ -367,44 +347,6 @@
                  "y":2562.49273833614
                 }, 
                 {
-                 "height":187.071,
-                 "id":173,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"light"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":205.378864530635,
-                 "x":2016.47863968522,
-                 "y":1851.37737240023
-                }, 
-                {
-                 "height":192.692,
-                 "id":174,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"intro_level_02"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":211,
-                 "x":2640.42467678471,
-                 "y":1775.49211129849
-                }, 
-                {
                  "height":164.503,
                  "id":176,
                  "name":"",
@@ -420,8 +362,8 @@
                  "type":"",
                  "visible":true,
                  "width":245.635993816751,
-                 "x":2231.03248088814,
-                 "y":1761.48093395166
+                 "x":2252.40000225566,
+                 "y":1798.1109705817
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -479,12 +421,137 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":177,
+ "nextobjectid":183,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
  "tileheight":100,
- "tilesets":[],
+ "tilesets":[
+        {
+         "columns":0,
+         "firstgid":1,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"truck_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":560,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/cars\/truck_00.png",
+                 "imageheight":560,
+                 "imagewidth":280
+                }
+            },
+         "tilewidth":280
+        }, 
+        {
+         "columns":0,
+         "firstgid":2,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"bale_square",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":278,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/game_images\/bale_square.png",
+                 "imageheight":278,
+                 "imagewidth":451
+                }
+            },
+         "tilewidth":451
+        }, 
+        {
+         "columns":0,
+         "firstgid":3,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"wood_table",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":240,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/items\/wood_table.png",
+                 "imageheight":240,
+                 "imagewidth":560
+                }
+            },
+         "tilewidth":560
+        }, 
+        {
+         "columns":0,
+         "firstgid":4,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dumpster_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/junk\/dumpster_00.png",
+                 "imageheight":280,
+                 "imagewidth":560
+                }
+            },
+         "tilewidth":560
+        }, 
+        {
+         "columns":0,
+         "firstgid":5,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"shipping_container_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/junk\/shipping_container_00.png",
+                 "imageheight":280,
+                 "imagewidth":700
+                }
+            },
+         "tilewidth":700
+        }],
  "tilewidth":100,
  "type":"map",
  "version":1,

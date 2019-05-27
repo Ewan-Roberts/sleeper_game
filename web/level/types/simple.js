@@ -13,7 +13,6 @@ class Simple {
     }
 
     this.player = player;
-
     this._set_elements();
   }
 

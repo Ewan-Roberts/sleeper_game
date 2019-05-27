@@ -23,6 +23,9 @@ class Background {
       this.sprite.tileScale.x = 0.1;
       this.sprite.tileScale.y = 0.1;
     }
+    if(data.name === 'carpet_floor') {
+      this.sprite.alpha = 1;
+    }
     if(data.name === 'tarmac_tile') {
       // this.sprite.tileScale.x = 0.1;
       // this.sprite.tileScale.y = 0.1;
