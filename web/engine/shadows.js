@@ -1,10 +1,7 @@
 'use strict';
-const PIXI = require('pixi.js');
 require('pixi-layers');
-require('pixi-shadows');
-
 const app = require('./app');
-const world = PIXI.shadows.init(app);
+const world = app.stage;
 world.name = 'world';
 world.updateLayersOrder = function () {
   world.children.sort(function(a,b) {

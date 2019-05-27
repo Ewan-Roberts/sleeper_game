@@ -24,7 +24,6 @@ class Intro {
   }
 
   _set_elements() {
-    global.set_light_level(0.8);
     const { Level_Factory } = require('./level_factory');
     Level_Factory.generate(elements);
 

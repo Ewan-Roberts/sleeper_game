@@ -11,10 +11,6 @@ const { visuals } = require('../engine/pixi_containers');
 
 // LIGHTING
 // This global is for testing lighting anywhere in the code base
-global.set_light_level = amount => {
-  PIXI.shadows.filter.ambientLight = amount;
-};
-
 // QUICK POINT CHECKING
 global.place_bunny = ({ x, y } /*light*/) => {
   //const texture = PIXI.Texture.fromImage('bunny');

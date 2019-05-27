@@ -3,7 +3,6 @@ const { clear_non_players } = require('../../engine/pixi_containers');
 
 const { Intro         } = require('./intro');
 const { Camera        } = require('../../engine/camera');
-const { Bright_Light  } = require('../../light/types/bright_light');
 const { Wall          } = require('../elements/wall');
 const { Background    } = require('../elements/background');
 const { Chest         } = require('../elements/chest');
@@ -43,7 +42,6 @@ class Level_Factory {
     decal,
     background,
     collision,
-    lights,
     player,
   }
   ) {
@@ -58,7 +56,6 @@ class Level_Factory {
       collision.forEach(data => new CollisionItem(data));
       item.forEach(data => new Chest(data));
       door.forEach(data => new Door(data));
-      lights.forEach(data => new Bright_Light(data));
       roof.forEach(data => new Roof(data));
 
     } catch (error) {

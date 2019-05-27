@@ -7,8 +7,8 @@ class Light {
   constructor() {
     this.name   = 'light';
 
-    this.shadow = new PIXI.shadows.Shadow(500);
-    this.shadow.anchor.set(0.5);
+    //this.shadow = new PIXI.shadows.Shadow(500);
+    //this.shadow.anchor.set(0.5);
   }
 
   add_component(component) {

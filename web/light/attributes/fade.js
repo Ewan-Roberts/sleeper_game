@@ -30,7 +30,8 @@ class Fade {
 
   out(speed = 0.05, limit = 0) {
     const fade_timer = PIXI.tweenManager.createTween();
-    fade_timer.time   = 140;
+    fade_timer.time   = 100;
+    const fade_timer  = timer.createTimer(140);
     fade_timer.expire = true;
     fade_timer.repeat = 50;
 

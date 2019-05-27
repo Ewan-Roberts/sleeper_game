@@ -19,7 +19,6 @@ class Street {
   }
 
   _set_elements() {
-    global.set_light_level(0.9);
     const level_data = require('../data/home_street.json');
     const elements = new Tiled_Data(level_data);
     Level_Factory.generate(elements);

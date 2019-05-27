@@ -85,7 +85,6 @@ class Chest extends Item {
   }
 
   _open() {
-    global.set_light_level(1);
     this.inventory.set_position(this.sprite);
     this.inventory.show();
   }

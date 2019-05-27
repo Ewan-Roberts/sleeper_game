@@ -16,7 +16,6 @@ class Defend_Room  {
   }
 
   _set_elements() {
-    global.set_light_level(1);
     const level_data = require('../data/defend_room.json');
     const elements = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
