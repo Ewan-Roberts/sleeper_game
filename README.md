@@ -1,6 +1,6 @@
 # Working_Title
 
-![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_16.png)
+![alt text](https://github.com/Ewan-Roberts/sleeper_game/blob/master/documentation/update_18.png)
 
 - [UPCOMING](../documentation/TODO.md)
 - [COMPLETE](../documentation/DONE.md)

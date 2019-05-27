@@ -6,26 +6,28 @@
          "name":"background",
          "objects":[
                 {
-                 "height":1375.66187148346,
-                 "id":399,
-                 "name":"grass_tile",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1641.49245478083,
-                 "x":-1196.95746687725,
-                 "y":-1097.12720920064
-                }, 
-                {
-                 "height":892.156006043818,
-                 "id":400,
+                 "gid":27,
+                 "height":1236.57160012008,
+                 "id":461,
                  "name":"tarmac_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":435.247456560061,
-                 "x":365.831820363622,
-                 "y":-1658.90493448662
+                 "width":630.14710297208,
+                 "x":176.267606456889,
+                 "y":-435.779075386141
+                }, 
+                {
+                 "gid":28,
+                 "height":1441.62413689583,
+                 "id":463,
+                 "name":"grass_tile",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1630.7565295707,
+                 "x":-1045.94479546905,
+                 "y":374.423060022219
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -82,41 +84,41 @@
                  "y":242
                 }, 
                 {
-                 "height":572.034419243094,
+                 "height":368.767435185548,
                  "id":192,
                  "name":"",
-                 "rotation":55.6623107796069,
+                 "rotation":53.7725927283738,
                  "type":"",
                  "visible":true,
-                 "width":16.2454161843325,
-                 "x":2309.25302561592,
-                 "y":-468.959341534339
+                 "width":19.6492755262448,
+                 "x":2239.63683397651,
+                 "y":-325.599762973725
                 }, 
                 {
-                 "height":569.17332271984,
+                 "height":371.987058252753,
                  "id":193,
                  "name":"",
-                 "rotation":55.6623,
+                 "rotation":53.1346850127571,
                  "type":"",
                  "visible":true,
-                 "width":18.1992825178925,
-                 "x":2437.3716755207,
-                 "y":-278.481886263095
+                 "width":19.062825208978,
+                 "x":2330.71532404618,
+                 "y":-200.920504312071
                 }, 
                 {
-                 "height":212.899489622379,
+                 "height":174.309992830225,
                  "id":194,
                  "name":"",
-                 "rotation":-214.773950218209,
+                 "rotation":-215.511102727331,
                  "type":"",
                  "visible":true,
-                 "width":35.6416101268249,
-                 "x":1996.71019899337,
-                 "y":21.2484225232558
+                 "width":31.0596896697346,
+                 "x":2073.10670817148,
+                 "y":18.5374979244955
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -148,7 +150,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -217,7 +219,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -238,7 +240,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -253,12 +255,13 @@
          "y":0
         }, 
         {
-         "draworder":"topdown",
+         "draworder":"index",
          "name":"floor",
          "objects":[
                 {
-                 "height":1761.35009095054,
-                 "id":139,
+                 "gid":11,
+                 "height":1249.78549097456,
+                 "id":426,
                  "name":"",
                  "properties":
                     {
@@ -268,16 +271,77 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.8560530069218,
+                 "rotation":-90.0176940859197,
                  "type":"",
                  "visible":true,
-                 "width":1046.92867641744,
-                 "x":184.17468535729,
-                 "y":39.9899198408899
+                 "width":1037.66040067377,
+                 "x":1824.57245754445,
+                 "y":38.1633465213699
                 }, 
                 {
-                 "height":211.988966123521,
-                 "id":144,
+                 "gid":3,
+                 "height":1746.75340599799,
+                 "id":411,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dirt_road"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":268.708921145837,
+                 "type":"",
+                 "visible":true,
+                 "width":225.158638523997,
+                 "x":359.795224405231,
+                 "y":-257.510835486227
+                }, 
+                {
+                 "gid":10,
+                 "height":390.13099390422,
+                 "id":424,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dirt_inlet"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-89.5757621746378,
+                 "type":"",
+                 "visible":true,
+                 "width":624.209590246751,
+                 "x":559.05596439512,
+                 "y":-42.8100860116255
+                }, 
+                {
+                 "gid":11,
+                 "height":1363.58,
+                 "id":427,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_decal_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-90.0177,
+                 "type":"",
+                 "visible":true,
+                 "width":1037.66,
+                 "x":3180.95887959134,
+                 "y":37.1667260911399
+                }, 
+                {
+                 "gid":13,
+                 "height":178.216159496327,
+                 "id":429,
                  "name":"",
                  "properties":
                     {
@@ -290,32 +354,34 @@
                  "rotation":180,
                  "type":"",
                  "visible":true,
-                 "width":1368.8048310909,
-                 "x":1776.70258857512,
-                 "y":255.27480503672
+                 "width":1628.81349477584,
+                 "x":2075.4951167502,
+                 "y":22.511269306576
                 }, 
                 {
-                 "height":1761.35151082647,
-                 "id":329,
+                 "gid":12,
+                 "height":700,
+                 "id":428,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"concrete_decal_01"
+                     "image_name":"dirt_patch"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-89.8561,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1046.9251484685,
-                 "x":1943.19157088111,
-                 "y":45.0052085679064
+                 "width":840,
+                 "x":35.3059020765781,
+                 "y":-0.920498125836389
                 }, 
                 {
-                 "height":211.989,
-                 "id":332,
+                 "gid":13,
+                 "height":178.216,
+                 "id":430,
                  "name":"",
                  "properties":
                     {
@@ -325,16 +391,17 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":179.832,
+                 "rotation":180,
                  "type":"",
                  "visible":true,
-                 "width":1721.26915167494,
-                 "x":3494.59103500716,
-                 "y":251.570022766222
+                 "width":1782.16,
+                 "x":3858.72142970612,
+                 "y":24.7389684935134
                 }, 
                 {
-                 "height":1708.60009315773,
-                 "id":351,
+                 "gid":14,
+                 "height":1120,
+                 "id":431,
                  "name":"",
                  "properties":
                     {
@@ -347,72 +414,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1015.57037037037,
-                 "x":776.321547230591,
-                 "y":-2691.83599144271
-                }, 
-                {
-                 "height":1608.09832237458,
-                 "id":401,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dirt_road",
-                     "opacity":0.7
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "opacity":"float"
-                    },
-                 "rotation":-89.8561,
-                 "type":"",
-                 "visible":true,
-                 "width":239.950712916313,
-                 "x":-1413.31785308316,
-                 "y":-555.434904202152
-                }, 
-                {
-                 "height":601.69200892048,
-                 "id":402,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dirt_inlet",
-                     "opacity":0.5
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "opacity":"float"
-                    },
-                 "rotation":-89.8561,
-                 "type":"",
-                 "visible":true,
-                 "width":589.860145428246,
-                 "x":-17.6250773764453,
-                 "y":-416.229003026426
-                }, 
-                {
-                 "height":601.692,
-                 "id":403,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dirt_patch",
-                     "opacity":0.4
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "opacity":"float"
-                    },
-                 "rotation":272.58,
-                 "type":"",
-                 "visible":true,
-                 "width":589.86,
-                 "x":371.05,
-                 "y":-391
+                 "width":700,
+                 "x":742.566174540959,
+                 "y":-959.134198528576
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -606,112 +610,18 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
-         "draworder":"topdown",
+         "draworder":"index",
          "name":"decal",
          "objects":[
                 {
-                 "height":160.439325839214,
-                 "id":181,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dirty_matress"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-1361.14539248111,
-                 "type":"",
-                 "visible":true,
-                 "width":227.615276363712,
-                 "x":792.448327689303,
-                 "y":-212.069567616239
-                }, 
-                {
-                 "height":139.019552865669,
-                 "id":182,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-563.482,
-                 "type":"",
-                 "visible":true,
-                 "width":132.72147951834,
-                 "x":2437.38637739938,
-                 "y":156.57183230818
-                }, 
-                {
-                 "height":133.64267643757,
-                 "id":183,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":33.1611,
-                 "type":"",
-                 "visible":true,
-                 "width":135.263504177198,
-                 "x":358.448662014297,
-                 "y":-751.613711953629
-                }, 
-                {
-                 "height":185.751743045908,
-                 "id":184,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-263.062,
-                 "type":"",
-                 "visible":true,
-                 "width":177.336537573136,
-                 "x":1075.89588266918,
-                 "y":-215.561381700032
-                }, 
-                {
-                 "height":73.9691315534127,
-                 "id":185,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":173.305,
-                 "type":"",
-                 "visible":true,
-                 "width":380.922546046984,
-                 "x":1957.0497526998,
-                 "y":-979.099609230366
-                }, 
-                {
-                 "height":203.04,
-                 "id":186,
+                 "gid":31,
+                 "height":120.916710696561,
+                 "id":471,
                  "name":"",
                  "properties":
                     {
@@ -724,66 +634,309 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":193.841,
-                 "x":1984.67334289024,
-                 "y":85.0805407412865
+                 "width":126.271415701661,
+                 "x":785.706864335952,
+                 "y":-37.4716977327592
                 }, 
                 {
-                 "height":185.728902208491,
-                 "id":188,
+                 "gid":31,
+                 "height":120.917,
+                 "id":472,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"floor_decal_01"
+                     "image_name":"litter_00"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":270.483862918287,
+                 "rotation":-222.629388003349,
                  "type":"",
                  "visible":true,
-                 "width":77.6176729311301,
-                 "x":1010.62987353911,
-                 "y":255.321609864278
+                 "width":126.271,
+                 "x":2323.0933301933,
+                 "y":-377.294257399963
                 }, 
                 {
-                 "height":513.312177376155,
-                 "id":189,
+                 "gid":32,
+                 "height":237.79386985477,
+                 "id":473,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"concrete_decal_00"
+                     "image_name":"floor_decal_03"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-310.605435344746,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":168.652679407577,
-                 "x":1314.3669724958,
-                 "y":-261.747197373986
+                 "width":399.493701356014,
+                 "x":454.160497284712,
+                 "y":191.540935841667
                 }, 
                 {
-                 "height":309.285654028701,
-                 "id":350,
+                 "gid":32,
+                 "height":237.794,
+                 "id":475,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"road_decal"
+                     "image_name":"floor_decal_03"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-271.480246957051,
+                 "rotation":-268.970783130492,
                  "type":"",
                  "visible":true,
-                 "width":295.274290605149,
-                 "x":2096.79931557891,
-                 "y":-66.1345745282563
+                 "width":399.494,
+                 "x":584.637455748076,
+                 "y":-900.707913718968
+                }, 
+                {
+                 "gid":32,
+                 "height":237.794,
+                 "id":476,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"floor_decal_03"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":630.144518331033,
+                 "type":"",
+                 "visible":true,
+                 "width":399.494,
+                 "x":475.31268661315,
+                 "y":-510.521907139638
+                }, 
+                {
+                 "gid":33,
+                 "height":800,
+                 "id":477,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":800,
+                 "x":433.456859979226,
+                 "y":225.468139423064
+                }, 
+                {
+                 "gid":33,
+                 "height":447.614954877525,
+                 "id":479,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":492.737430167597,
+                 "x":973.67219037306,
+                 "y":355.217705215288
+                }, 
+                {
+                 "gid":34,
+                 "height":15,
+                 "id":480,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dots"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":100.862478943269,
+                 "type":"",
+                 "visible":true,
+                 "width":200,
+                 "x":1308.39255987841,
+                 "y":-313.759665903427
+                }, 
+                {
+                 "gid":34,
+                 "height":15,
+                 "id":481,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"dots"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-91.7610611762704,
+                 "type":"",
+                 "visible":true,
+                 "width":200,
+                 "x":1324.59343107924,
+                 "y":-293.250406559228
+                }, 
+                {
+                 "gid":35,
+                 "height":30,
+                 "id":482,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"arrow_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":267.535594667506,
+                 "type":"",
+                 "visible":true,
+                 "width":77,
+                 "x":1324.52100842586,
+                 "y":-512.525072603281
+                }, 
+                {
+                 "gid":33,
+                 "height":447.615,
+                 "id":484,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"fog_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":492.737,
+                 "x":261.502564467766,
+                 "y":338.411390554723
+                }, 
+                {
+                 "gid":36,
+                 "height":599,
+                 "id":486,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"Scorch-d"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1.89409,
+                 "type":"",
+                 "visible":true,
+                 "width":369,
+                 "x":543.223334360665,
+                 "y":371.361753651181
+                }, 
+                {
+                 "gid":36,
+                 "height":317.22159903047,
+                 "id":487,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"Scorch-d"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-1.89409,
+                 "type":"",
+                 "visible":true,
+                 "width":195.416978367685,
+                 "x":591.620083444629,
+                 "y":-577.4399417477
+                }, 
+                {
+                 "gid":37,
+                 "height":496,
+                 "id":489,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"Scorch-a"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":542,
+                 "x":1592.71209432098,
+                 "y":345.341892796983
+                }, 
+                {
+                 "gid":37,
+                 "height":496,
+                 "id":491,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"Scorch-a"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-218.012054626239,
+                 "type":"",
+                 "visible":true,
+                 "width":542,
+                 "x":2019.67445055833,
+                 "y":-736.247462622205
+                }, 
+                {
+                 "gid":30,
+                 "height":280,
+                 "id":470,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"rubble_05"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.613,
+                 "type":"",
+                 "visible":true,
+                 "width":560,
+                 "x":1805.14120971695,
+                 "y":-18.6067110579209
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -792,113 +945,193 @@
          "y":0
         }, 
         {
-         "draworder":"topdown",
+         "draworder":"index",
          "name":"collision",
          "objects":[
                 {
-                 "height":837.281246488164,
-                 "id":111,
+                 "gid":6,
+                 "height":945.173,
+                 "id":418,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.1,
                      "image_name":"roof_city_00"
                     },
                  "propertytypes":
                     {
-                     "fade":"float",
+                     "image_name":"string"
+                    },
+                 "rotation":-270.148,
+                 "type":"",
+                 "visible":true,
+                 "width":630.115,
+                 "x":-178.675357305777,
+                 "y":-1517.846388482
+                }, 
+                {
+                 "gid":7,
+                 "height":1126.0402133771,
+                 "id":420,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_roof"
+                    },
+                 "propertytypes":
+                    {
                      "image_name":"string"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":864.083333317581,
-                 "x":-395.720489110349,
-                 "y":229.44022052861
+                 "width":920.869922035289,
+                 "x":-113.697168649979,
+                 "y":-1523.56175625769
                 }, 
                 {
-                 "height":237.522399653121,
-                 "id":72,
+                 "gid":8,
+                 "height":1105.52318424292,
+                 "id":421,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"car_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-955.709461243201,
-                 "type":"",
-                 "visible":true,
-                 "width":394.71292012173,
-                 "x":1040.67856328165,
-                 "y":-53.6229770810678
-                }, 
-                {
-                 "height":273.464369239602,
-                 "id":118,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":85.6309707005318,
-                 "type":"",
-                 "visible":true,
-                 "width":866.253021219564,
-                 "x":597.097587498915,
-                 "y":-633.585120873428
-                }, 
-                {
-                 "height":104.409252714882,
-                 "id":102,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"dumpster_00"
+                     "image_name":"tar_roof"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-132.94297278862,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":196.915461636213,
-                 "x":1016.7163440695,
-                 "y":215.426742385818
+                 "width":737.015456161947,
+                 "x":32.2582410067025,
+                 "y":-2643.791546984
                 }, 
                 {
-                 "height":260.616208568078,
-                 "id":128,
+                 "gid":9,
+                 "height":89.4856288554723,
+                 "id":422,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"car_01"
+                     "image_name":"Worn_ome"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-447.588662718805,
+                 "rotation":352.415884284758,
                  "type":"",
                  "visible":true,
-                 "width":429.099802246631,
-                 "x":1242.82080153092,
-                 "y":-1038.07105787107
+                 "width":282.411112166903,
+                 "x":45.8213944779387,
+                 "y":-762.649716126656
                 }, 
                 {
-                 "height":432.117737874055,
-                 "id":129,
+                 "gid":6,
+                 "height":945.173,
+                 "id":425,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-270.148,
+                 "type":"",
+                 "visible":true,
+                 "width":630.115,
+                 "x":-1204.00905166602,
+                 "y":-1608.07635328774
+                }, 
+                {
+                 "gid":19,
+                 "height":164.929492956344,
+                 "id":444,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":86.3875853306082,
+                 "type":"",
+                 "visible":true,
+                 "width":499.441763731565,
+                 "x":364.114673845395,
+                 "y":-306.059954905908
+                }, 
+                {
+                 "gid":19,
+                 "height":143.806299903495,
+                 "id":446,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shipping_container_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":89.1848856544989,
+                 "type":"",
+                 "visible":true,
+                 "width":390.78821013398,
+                 "x":454.082244634699,
+                 "y":-891.356153018415
+                }, 
+                {
+                 "gid":39,
+                 "height":511.459041262136,
+                 "id":495,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"long_broken"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1983.84112974404,
+                 "x":-1562.30891438658,
+                 "y":593.492580538394
+                }, 
+                {
+                 "gid":23,
+                 "height":889.172932330827,
+                 "id":453,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"tarp_roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1481.95488721804,
+                 "x":1398.21548739487,
+                 "y":1109.87908723727
+                }, 
+                {
+                 "gid":20,
+                 "height":340.705523413757,
+                 "id":447,
                  "name":"",
                  "properties":
                     {
@@ -908,117 +1141,57 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":-166.544115481598,
+                 "rotation":225.690190912047,
                  "type":"",
                  "visible":true,
-                 "width":218.746702928251,
-                 "x":846.219585722969,
-                 "y":-824.168633449329
+                 "width":168.430091969763,
+                 "x":938.016080213989,
+                 "y":-860.491553093373
                 }, 
                 {
-                 "height":213.89566022063,
-                 "id":330,
+                 "gid":21,
+                 "height":259.754594696796,
+                 "id":450,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"shipping_container_00",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":97.6850197733609,
-                 "type":"",
-                 "visible":true,
-                 "width":677.558133257398,
-                 "x":733.045615351313,
-                 "y":-1479.95398235128
-                }, 
-                {
-                 "height":798.045195857278,
-                 "id":343,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":536.05197550798,
-                 "x":1516.177083931,
-                 "y":-1677.16201745592
-                }, 
-                {
-                 "height":1106.99462261835,
-                 "id":352,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"concrete_roof"
+                     "image_name":"car_00"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":-249.279553720917,
                  "type":"",
                  "visible":true,
-                 "width":937.909155407317,
-                 "x":-142.621321974124,
-                 "y":-2643.59515565242
+                 "width":361.550314240136,
+                 "x":667.111562812713,
+                 "y":-212.001313098863
                 }, 
                 {
-                 "height":1106.99,
-                 "id":353,
+                 "gid":22,
+                 "height":1141.82488453986,
+                 "id":451,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"concrete_roof"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-89.4540535635062,
-                 "type":"",
-                 "visible":true,
-                 "width":800.044952901845,
-                 "x":2060.17196809487,
-                 "y":-873.697638335422
-                }, 
-                {
-                 "height":1226.81,
-                 "id":354,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
                      "image_name":"roof_00"
                     },
                  "propertytypes":
                     {
-                     "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":270.437,
+                 "rotation":90.8920704456007,
                  "type":"",
                  "visible":true,
-                 "width":763.06618715072,
-                 "x":3080.49322047112,
-                 "y":-837.220783545401
+                 "width":879.437729492105,
+                 "x":333.198287912397,
+                 "y":118.607922234166
                 }, 
                 {
-                 "height":958.294010211423,
-                 "id":356,
+                 "gid":8,
+                 "height":1105.52,
+                 "id":454,
                  "name":"",
                  "properties":
                     {
@@ -1028,16 +1201,97 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":-269.659542669877,
                  "type":"",
                  "visible":true,
-                 "width":811.924748031496,
-                 "x":-20.1356023622049,
-                 "y":-3601.64940391221
+                 "width":737.015,
+                 "x":3297.11941374761,
+                 "y":207.177423313957
                 }, 
                 {
-                 "height":743.236042253789,
-                 "id":357,
+                 "gid":7,
+                 "height":1126.04,
+                 "id":456,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"concrete_roof"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-90.0601554365792,
+                 "type":"",
+                 "visible":true,
+                 "width":920.87,
+                 "x":3186.45392478095,
+                 "y":-882.58981685684
+                }, 
+                {
+                 "gid":22,
+                 "height":1571.06,
+                 "id":455,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"roof_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":90.8921,
+                 "type":"",
+                 "visible":true,
+                 "width":972.15,
+                 "x":3074.58073770492,
+                 "y":-1828.15295081967
+                }, 
+                {
+                 "gid":6,
+                 "height":945.173,
+                 "id":457,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"roof_city_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-179.652911788448,
+                 "type":"",
+                 "visible":true,
+                 "width":630.115,
+                 "x":2050.28075167329,
+                 "y":-1827.43633937267
+                }, 
+                {
+                 "gid":24,
+                 "height":182.437411757342,
+                 "id":458,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"car_01"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":273.666420007519,
+                 "type":"",
+                 "visible":true,
+                 "width":364.874823514684,
+                 "x":1396.10907123418,
+                 "y":-826.154217483431
+                }, 
+                {
+                 "gid":25,
+                 "height":697.734195874685,
+                 "id":459,
                  "name":"",
                  "properties":
                     {
@@ -1047,136 +1301,72 @@
                     {
                      "image_name":"string"
                     },
-                 "rotation":89.676886335762,
+                 "rotation":90.3707051132718,
                  "type":"",
                  "visible":true,
-                 "width":1337.43186911287,
-                 "x":2285.23046321401,
-                 "y":-3018.58329750017
+                 "width":1917.20124957202,
+                 "x":1435.87048185682,
+                 "y":-3744.6072900751
                 }, 
                 {
-                 "height":958.294,
-                 "id":358,
+                 "gid":26,
+                 "height":82.882601561592,
+                 "id":460,
                  "name":"",
                  "properties":
                     {
-                     "image_name":"tar_roof"
+                     "image_name":"dumpster_00"
                     },
                  "propertytypes":
                     {
                      "image_name":"string"
                     },
-                 "rotation":-269.594114828619,
+                 "rotation":-317.915703059177,
                  "type":"",
                  "visible":true,
-                 "width":811.925,
-                 "x":4340.27852148605,
-                 "y":266.733289444286
+                 "width":165.765203123184,
+                 "x":825.227741528385,
+                 "y":43.6088094701281
                 }, 
                 {
-                 "height":681.076,
-                 "id":359,
+                 "gid":38,
+                 "height":169,
+                 "id":492,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.1,
-                     "image_name":"tarp_roof_00"
+                     "image_name":"rock_7"
                     },
                  "propertytypes":
                     {
-                     "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":180.255,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1539.23,
-                 "x":3383.92830708661,
-                 "y":927.674598425197
+                 "width":169,
+                 "x":298.720534678454,
+                 "y":-749.144658393051
                 }, 
                 {
-                 "height":1504.87,
-                 "id":360,
+                 "gid":38,
+                 "height":264.419979613764,
+                 "id":494,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.1,
-                     "image_name":"roof_00"
+                     "image_name":"rock_7"
                     },
                  "propertytypes":
                     {
-                     "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":449.865,
+                 "rotation":-543.959298647574,
                  "type":"",
                  "visible":true,
-                 "width":953.577,
-                 "x":1922.25918691244,
-                 "y":183.149448437158
-                }, 
-                {
-                 "height":381.288323113882,
-                 "id":361,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"RuinedBridge1",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-154.050954566684,
-                 "type":"",
-                 "visible":true,
-                 "width":199.68448081567,
-                 "x":433.832799840667,
-                 "y":391.100007870733
-                }, 
-                {
-                 "height":111.122908506372,
-                 "id":362,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"Worn_ome",
-                     "shadow":true
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string",
-                     "shadow":"bool"
-                    },
-                 "rotation":-726.226320260807,
-                 "type":"",
-                 "visible":true,
-                 "width":431.823536989947,
-                 "x":-5.01109505669694,
-                 "y":-901.023207085753
-                }, 
-                {
-                 "height":1036.10494156783,
-                 "id":398,
-                 "name":"",
-                 "properties":
-                    {
-                     "fade":0.1,
-                     "image_name":"roof_city_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-269.857243751875,
-                 "type":"",
-                 "visible":true,
-                 "width":586.716730787213,
-                 "x":440.005060444955,
-                 "y":-1526.97103962174
+                 "width":264.419979613764,
+                 "x":414.762803678856,
+                 "y":-54.5677327024148
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1190,472 +1380,357 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
         {
-         "draworder":"topdown",
+         "draworder":"index",
          "name":"roof",
          "objects":[
                 {
-                 "height":257.424184807781,
-                 "id":154,
+                 "gid":2,
+                 "height":420,
+                 "id":410,
                  "name":"",
                  "properties":
                     {
-                     "fade":0.5,
+                     "image_name":"medium_tree"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":-181.69172513423,
+                 "type":"",
+                 "visible":true,
+                 "width":560,
+                 "x":88.8964815776891,
+                 "y":-881.326424837591
+                }, 
+                {
+                 "gid":4,
+                 "height":444.885375520522,
+                 "id":413,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"shade_tree"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180.513,
+                 "type":"",
+                 "visible":true,
+                 "width":444.885375520522,
+                 "x":499.892992933153,
+                 "y":-924.408582961245
+                }, 
+                {
+                 "gid":15,
+                 "height":348.503089746458,
+                 "id":432,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"RuinedBridge1_dgw_tt"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":20.0324308841206,
+                 "type":"",
+                 "visible":true,
+                 "width":143.738642606047,
+                 "x":361.024678874675,
+                 "y":-256.867526830903
+                }, 
+                {
+                 "gid":16,
+                 "height":252.295160517489,
+                 "id":434,
+                 "name":"",
+                 "properties":
+                    {
                      "image_name":"street_light_00"
                     },
                  "propertytypes":
                     {
-                     "fade":"float",
                      "image_name":"string"
                     },
-                 "rotation":0,
+                 "rotation":-13.7349014743669,
                  "type":"",
                  "visible":true,
-                 "width":75.6721713756368,
-                 "x":698.480450085412,
-                 "y":-7.00106799226732
+                 "width":84.0983868391631,
+                 "x":535.611528387766,
+                 "y":164.664661352825
                 }, 
                 {
-                 "height":916.301,
-                 "id":160,
-                 "name":"tree",
+                 "gid":17,
+                 "height":19.4877556285723,
+                 "id":435,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":1,
-                     "image_name":"tree_11"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":179.691770843059,
-                 "type":"",
-                 "visible":true,
-                 "width":969.221,
-                 "x":799.496257892268,
-                 "y":122.988860908062
-                }, 
-                {
-                 "height":741.779217603573,
-                 "id":191,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "fade":0.3,
-                     "image_name":"truck_00"
-                    },
-                 "propertytypes":
-                    {
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":-845.158949785243,
-                 "type":"",
-                 "visible":true,
-                 "width":269.346746117431,
-                 "x":1854.08526428855,
-                 "y":166.285004343754
-                }, 
-                {
-                 "height":21.8224669658624,
-                 "id":366,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Grey_5",
-                     "tint":"0x4a3a28"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string",
-                     "tint":"string"
-                    },
-                 "rotation":179.335403786758,
-                 "type":"",
-                 "visible":true,
-                 "width":851.677294357342,
-                 "x":1598.63566583095,
-                 "y":-1990.86413976651
-                }, 
-                {
-                 "height":31.1141639316288,
-                 "id":369,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_1",
-                     "tint":"0x4a3a28"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string",
-                     "tint":"string"
-                    },
-                 "rotation":178.224790736753,
-                 "type":"",
-                 "visible":true,
-                 "width":855.26177267311,
-                 "x":1588.0087982161,
-                 "y":-1906.95728556278
-                }, 
-                {
-                 "height":19.0594807856776,
-                 "id":371,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_5",
-                     "tint":"0x4a3a28"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string",
-                     "tint":"string"
-                    },
-                 "rotation":-81.7762426987229,
-                 "type":"",
-                 "visible":true,
-                 "width":170.992487725821,
-                 "x":1124.26324639674,
-                 "y":-1861.26891905932
-                }, 
-                {
-                 "height":18.5745728828358,
-                 "id":374,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_4",
-                     "tint":"0x4a3a28"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string",
-                     "tint":"string"
-                    },
-                 "rotation":176.989779616876,
-                 "type":"",
-                 "visible":true,
-                 "width":740.546000604349,
-                 "x":1737.13768045566,
-                 "y":-1963.43652164295
-                }, 
-                {
-                 "height":19.440608378663,
-                 "id":376,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Grey_3",
-                     "tint":"0x4a3a28"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string",
-                     "tint":"string"
-                    },
-                 "rotation":177.61488465786,
-                 "type":"",
-                 "visible":true,
-                 "width":688.359323261393,
-                 "x":1665.73662826562,
-                 "y":-1978.63355200927
-                }, 
-                {
-                 "height":17.5097732994511,
-                 "id":377,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Grey_1",
-                     "tint":"0x4a3a28"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string",
-                     "tint":"string"
-                    },
-                 "rotation":-99.5910209144719,
-                 "type":"",
-                 "visible":true,
-                 "width":299.607679979619,
-                 "x":627.116821199,
-                 "y":-1384.74288784502
-                }, 
-                {
-                 "height":20.339816604604,
-                 "id":378,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
                      "image_name":"Plank-Weathered Grey_4",
                      "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
                      "image_name":"string",
                      "tint":"string"
                     },
-                 "rotation":-98.7201725494608,
+                 "rotation":-279.854807897483,
                  "type":"",
                  "visible":true,
-                 "width":380.975065200853,
-                 "x":661.909215354185,
-                 "y":-1348.86900661048
+                 "width":210.576819320822,
+                 "x":510.590893952352,
+                 "y":-989.04588009404
                 }, 
                 {
-                 "height":61.8705642053363,
-                 "id":381,
-                 "name":"tree",
+                 "gid":17,
+                 "height":12.5113099334007,
+                 "id":436,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"ladder_00"
-                    },
-                 "propertytypes":
-                    {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
-                    },
-                 "rotation":177.742033809436,
-                 "type":"",
-                 "visible":true,
-                 "width":465.078452836132,
-                 "x":1187.98469442921,
-                 "y":-1930.56542042385
-                }, 
-                {
-                 "height":19.0723156431317,
-                 "id":382,
-                 "name":"tree",
-                 "properties":
-                    {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_1",
+                     "image_name":"Plank-Weathered Grey_4",
                      "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
                      "image_name":"string",
                      "tint":"string"
                     },
-                 "rotation":519.432697820095,
+                 "rotation":-278.046879382501,
                  "type":"",
                  "visible":true,
-                 "width":499.546558218601,
-                 "x":2572.46033114855,
-                 "y":-307.314743178007
+                 "width":174.961522820708,
+                 "x":541.4926747288,
+                 "y":-976.99735908236
                 }, 
                 {
-                 "height":20.3635992227997,
-                 "id":383,
-                 "name":"tree",
+                 "gid":17,
+                 "height":19.8161729693913,
+                 "id":437,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_2",
+                     "image_name":"Plank-Weathered Grey_4",
                      "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
                      "image_name":"string",
                      "tint":"string"
                     },
-                 "rotation":241.079710185204,
+                 "rotation":-1.31097686875398,
                  "type":"",
                  "visible":true,
-                 "width":489.027863494822,
-                 "x":2332.2619173108,
-                 "y":331.739016816325
+                 "width":857.071401471084,
+                 "x":734.186394464554,
+                 "y":-1854.99008717582
                 }, 
                 {
-                 "height":16.9438668742401,
-                 "id":384,
-                 "name":"tree",
+                 "gid":18,
+                 "height":540.585167420055,
+                 "id":443,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_3",
+                     "image_name":"truck_00"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":234.067778716214,
+                 "type":"",
+                 "visible":true,
+                 "width":202.742843184491,
+                 "x":2358.47764789812,
+                 "y":-178.43533412139
+                }, 
+                {
+                 "gid":17,
+                 "height":19.8162,
+                 "id":438,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"Plank-Weathered Grey_4",
                      "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
                      "image_name":"string",
                      "tint":"string"
                     },
-                 "rotation":-120.06112883089,
+                 "rotation":-1.31098,
                  "type":"",
                  "visible":true,
-                 "width":408.892659566987,
-                 "x":2288.26895435796,
-                 "y":296.883859950641
+                 "width":857.071,
+                 "x":734.758018193893,
+                 "y":-1892.15640325111
                 }, 
                 {
-                 "height":12.0842083808959,
-                 "id":385,
-                 "name":"tree",
+                 "gid":17,
+                 "height":17.8016770211286,
+                 "id":439,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"Plank-Weathered Brown_3",
+                     "image_name":"Plank-Weathered Grey_4",
                      "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
                      "image_name":"string",
                      "tint":"string"
                     },
-                 "rotation":-123.279590511427,
+                 "rotation":145.752921731647,
                  "type":"",
                  "visible":true,
-                 "width":438.544879104736,
-                 "x":2282.66016268842,
-                 "y":311.909946336326
+                 "width":203.840054140674,
+                 "x":1577.35756766073,
+                 "y":-2001.10608245151
                 }, 
                 {
-                 "height":372.583042549669,
-                 "id":387,
-                 "name":"tree",
+                 "gid":17,
+                 "height":19.4878,
+                 "id":464,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"RuinedBridge1_dgw_tt"
+                     "image_name":"Plank-Weathered Grey_4",
+                     "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
+                     "image_name":"string",
+                     "tint":"string"
                     },
-                 "rotation":-353.873724368019,
+                 "rotation":-233.213213791509,
                  "type":"",
                  "visible":true,
-                 "width":175.281012719717,
-                 "x":464.335993411425,
-                 "y":-912.845280358425
+                 "width":210.577,
+                 "x":434.723356578175,
+                 "y":108.690396430205
                 }, 
                 {
-                 "height":61.8705642053363,
-                 "id":388,
-                 "name":"tree",
+                 "gid":17,
+                 "height":15.7378368455453,
+                 "id":440,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":0.6,
-                     "image_name":"ladder_00"
+                     "image_name":"Plank-Weathered Grey_4",
+                     "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
+                     "image_name":"string",
+                     "tint":"string"
                     },
-                 "rotation":177.742033809436,
+                 "rotation":53.526288235452,
                  "type":"",
                  "visible":true,
-                 "width":465.078452836132,
-                 "x":1187.98469442921,
-                 "y":-1930.56542042385
+                 "width":337.472762553698,
+                 "x":2052.15297346212,
+                 "y":-1.29461568169154
                 }, 
                 {
-                 "height":315.285888833615,
-                 "id":405,
-                 "name":"tree",
+                 "gid":17,
+                 "height":14.4807976118441,
+                 "id":465,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":1,
-                     "image_name":"shade_tree"
+                     "image_name":"Plank-Weathered Grey_4",
+                     "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
+                     "image_name":"string",
+                     "tint":"string"
                     },
-                 "rotation":179.692,
+                 "rotation":-233.213,
                  "type":"",
                  "visible":true,
-                 "width":329.33838239819,
-                 "x":27.9020370573934,
-                 "y":-666.547182114303
+                 "width":260.533825657867,
+                 "x":431.362060296083,
+                 "y":73.5294628045646
                 }, 
                 {
-                 "height":494.773,
-                 "id":406,
-                 "name":"tree",
+                 "gid":17,
+                 "height":13.2944736567007,
+                 "id":441,
+                 "name":"",
                  "properties":
                     {
-                     "alpha":1,
-                     "fade":1,
-                     "image_name":"medium_tree"
+                     "image_name":"Plank-Weathered Grey_4",
+                     "tint":"0x4a3a28"
                     },
                  "propertytypes":
                     {
-                     "alpha":"float",
-                     "fade":"float",
-                     "image_name":"string"
+                     "image_name":"string",
+                     "tint":"string"
                     },
-                 "rotation":179.692,
+                 "rotation":50.9272,
                  "type":"",
                  "visible":true,
-                 "width":523.348,
-                 "x":54.5701996140872,
-                 "y":-27.6488128387546
+                 "width":379.502276537217,
+                 "x":2044.5191378338,
+                 "y":-37.8449709348366
+                }, 
+                {
+                 "gid":17,
+                 "height":15.6195261669733,
+                 "id":442,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"Plank-Weathered Grey_4",
+                     "tint":"0x4a3a28"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string",
+                     "tint":"string"
+                    },
+                 "rotation":352.89124654412,
+                 "type":"",
+                 "visible":true,
+                 "width":307.437224507588,
+                 "x":2093.65278815203,
+                 "y":-160.026475135377
+                }, 
+                {
+                 "gid":5,
+                 "height":957.01410359629,
+                 "id":414,
+                 "name":"",
+                 "properties":
+                    {
+                     "image_name":"tree_11"
+                    },
+                 "propertytypes":
+                    {
+                     "image_name":"string"
+                    },
+                 "rotation":180,
+                 "type":"",
+                 "visible":true,
+                 "width":1162.36017615602,
+                 "x":737.758499496157,
+                 "y":-518.666342203396
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1665,16 +1740,1001 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":407,
+ "nextobjectid":496,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
  "tileheight":100,
- "tilesets":[],
+ "tilesets":[
+        {
+         "columns":0,
+         "firstgid":1,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"95223-tree_2_6x6",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":840,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/..\/..\/..\/Development\/assets\/trove\/thetrove.net\/Assets\/Roll 20\/David Hemenway\/Build Your Own Towns & Villages\/95223-tree_2_6x6.png",
+                 "imageheight":840,
+                 "imagewidth":840
+                }
+            },
+         "tilewidth":840
+        }, 
+        {
+         "columns":0,
+         "firstgid":2,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"medium_tree",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":420,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/outside\/medium_tree.png",
+                 "imageheight":420,
+                 "imagewidth":560
+                }
+            },
+         "tilewidth":560
+        }, 
+        {
+         "columns":0,
+         "firstgid":3,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dirt_road",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":2660,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/dirt_road.png",
+                 "imageheight":2660,
+                 "imagewidth":420
+                }
+            },
+         "tilewidth":420
+        }, 
+        {
+         "columns":0,
+         "firstgid":4,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"shade_tree",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":840,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/outside\/shade_tree.png",
+                 "imageheight":840,
+                 "imagewidth":840
+                }
+            },
+         "tilewidth":840
+        }, 
+        {
+         "columns":0,
+         "firstgid":5,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"tree_11",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":755,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/outside\/tree_11.png",
+                 "imageheight":755,
+                 "imagewidth":917
+                }
+            },
+         "tilewidth":917
+        }, 
+        {
+         "columns":0,
+         "firstgid":6,
+         "margin":0,
+         "name":"roof_city",
+         "spacing":0,
+         "tilecount":0,
+         "tileheight":1,
+         "tilewidth":1
+        }, 
+        {
+         "columns":0,
+         "firstgid":6,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"roof_city_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1680,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/roof_city_00.jpeg",
+                 "imageheight":1680,
+                 "imagewidth":1120
+                }
+            },
+         "tilewidth":1120
+        }, 
+        {
+         "columns":0,
+         "firstgid":7,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"concrete_roof",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1680,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/concrete_roof.jpeg",
+                 "imageheight":1680,
+                 "imagewidth":1680
+                }
+            },
+         "tilewidth":1680
+        }, 
+        {
+         "columns":0,
+         "firstgid":8,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"tar_roof",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1680,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/tar_roof.jpeg",
+                 "imageheight":1680,
+                 "imagewidth":1120
+                }
+            },
+         "tilewidth":1120
+        }, 
+        {
+         "columns":0,
+         "firstgid":9,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"Worn_ome",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":167,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/Worn_ome.png",
+                 "imageheight":167,
+                 "imagewidth":448
+                }
+            },
+         "tilewidth":448
+        }, 
+        {
+         "columns":0,
+         "firstgid":10,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dirt_inlet",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":700,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/dirt_inlet.png",
+                 "imageheight":700,
+                 "imagewidth":1120
+                }
+            },
+         "tilewidth":1120
+        }, 
+        {
+         "columns":0,
+         "firstgid":11,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"concrete_decal_01",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1400,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/concrete_decal_01.png",
+                 "imageheight":1400,
+                 "imagewidth":1260
+                }
+            },
+         "tilewidth":1260
+        }, 
+        {
+         "columns":0,
+         "firstgid":12,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dirt_patch",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":700,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/dirt_patch.png",
+                 "imageheight":700,
+                 "imagewidth":840
+                }
+            },
+         "tilewidth":840
+        }, 
+        {
+         "columns":0,
+         "firstgid":13,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"road_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/road_00.jpeg",
+                 "imageheight":280,
+                 "imagewidth":2800
+                }
+            },
+         "tilewidth":2800
+        }, 
+        {
+         "columns":0,
+         "firstgid":14,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"road_long",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1120,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/road_long.jpg",
+                 "imageheight":1120,
+                 "imagewidth":700
+                }
+            },
+         "tilewidth":700
+        }, 
+        {
+         "columns":0,
+         "firstgid":15,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"RuinedBridge1_dgw_tt",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":737,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/RuinedBridge1_dgw_tt.png",
+                 "imageheight":737,
+                 "imagewidth":380
+                }
+            },
+         "tilewidth":380
+        }, 
+        {
+         "columns":0,
+         "firstgid":16,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"street_light_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":420,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/furniture\/street_light_00.png",
+                 "imageheight":420,
+                 "imagewidth":140
+                }
+            },
+         "tilewidth":140
+        }, 
+        {
+         "columns":0,
+         "firstgid":17,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"Plank-Weathered Brown_4",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":40,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/Plank-Weathered Brown_4.png",
+                 "imageheight":40,
+                 "imagewidth":800
+                }
+            },
+         "tilewidth":800
+        }, 
+        {
+         "columns":0,
+         "firstgid":18,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"truck_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":560,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/cars\/truck_00.png",
+                 "imageheight":560,
+                 "imagewidth":280
+                }
+            },
+         "tilewidth":280
+        }, 
+        {
+         "columns":0,
+         "firstgid":19,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"shipping_container_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/junk\/shipping_container_00.png",
+                 "imageheight":280,
+                 "imagewidth":700
+                }
+            },
+         "tilewidth":700
+        }, 
+        {
+         "columns":0,
+         "firstgid":20,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"car_02",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":420,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/cars\/car_02.png",
+                 "imageheight":420,
+                 "imagewidth":280
+                }
+            },
+         "tilewidth":280
+        }, 
+        {
+         "columns":0,
+         "firstgid":21,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"car_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":296,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/cars\/car_00.png",
+                 "imageheight":296,
+                 "imagewidth":412
+                }
+            },
+         "tilewidth":412
+        }, 
+        {
+         "columns":0,
+         "firstgid":22,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"roof_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":860,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/roof_00.png",
+                 "imageheight":860,
+                 "imagewidth":718
+                }
+            },
+         "tilewidth":718
+        }, 
+        {
+         "columns":0,
+         "firstgid":23,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"tarp_roof_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":420,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/tarp_roof_00.jpeg",
+                 "imageheight":420,
+                 "imagewidth":700
+                }
+            },
+         "tilewidth":700
+        }, 
+        {
+         "columns":0,
+         "firstgid":24,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"car_01",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":390,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/cars\/car_01.png",
+                 "imageheight":390,
+                 "imagewidth":780
+                }
+            },
+         "tilewidth":780
+        }, 
+        {
+         "columns":0,
+         "firstgid":25,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"gravel_roof",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1120,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/gravel_roof.jpeg",
+                 "imageheight":1120,
+                 "imagewidth":2800
+                }
+            },
+         "tilewidth":2800
+        }, 
+        {
+         "columns":0,
+         "firstgid":26,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dumpster_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/junk\/dumpster_00.png",
+                 "imageheight":280,
+                 "imagewidth":560
+                }
+            },
+         "tilewidth":560
+        }, 
+        {
+         "columns":0,
+         "firstgid":27,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"tarmac_tile",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":420,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/background\/tarmac_tile.jpg",
+                 "imageheight":420,
+                 "imagewidth":420
+                }
+            },
+         "tilewidth":420
+        }, 
+        {
+         "columns":0,
+         "firstgid":28,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"grass_tile",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":550,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/background\/grass_tile.jpg",
+                 "imageheight":550,
+                 "imagewidth":550
+                }
+            },
+         "tilewidth":550
+        }, 
+        {
+         "columns":0,
+         "firstgid":29,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"road_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/road_00.jpeg",
+                 "imageheight":280,
+                 "imagewidth":2800
+                }
+            },
+         "tilewidth":2800
+        }, 
+        {
+         "columns":0,
+         "firstgid":30,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"rubble_05",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/rubble_05.png",
+                 "imageheight":280,
+                 "imagewidth":560
+                }
+            },
+         "tilewidth":560
+        }, 
+        {
+         "columns":0,
+         "firstgid":31,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"litter_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":971,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/litter_00.png",
+                 "imageheight":971,
+                 "imagewidth":1014
+                }
+            },
+         "tilewidth":1014
+        }, 
+        {
+         "columns":0,
+         "firstgid":32,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"floor_decal_03",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":375,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/floor_decal_03.png",
+                 "imageheight":375,
+                 "imagewidth":630
+                }
+            },
+         "tilewidth":630
+        }, 
+        {
+         "columns":0,
+         "firstgid":33,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"fog_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":800,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/fog_00.png",
+                 "imageheight":800,
+                 "imagewidth":800
+                }
+            },
+         "tilewidth":800
+        }, 
+        {
+         "columns":0,
+         "firstgid":34,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dots",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":15,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/dots.png",
+                 "imageheight":15,
+                 "imagewidth":200
+                }
+            },
+         "tilewidth":200
+        }, 
+        {
+         "columns":0,
+         "firstgid":35,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"arrow_00",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":30,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/arrow_00.png",
+                 "imageheight":30,
+                 "imagewidth":77
+                }
+            },
+         "tilewidth":77
+        }, 
+        {
+         "columns":0,
+         "firstgid":36,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"Scorch-d",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":599,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/Scorch-d.png",
+                 "imageheight":599,
+                 "imagewidth":369
+                }
+            },
+         "tilewidth":369
+        }, 
+        {
+         "columns":0,
+         "firstgid":37,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"Scorch-a",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":496,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/Scorch-a.png",
+                 "imageheight":496,
+                 "imagewidth":542
+                }
+            },
+         "tilewidth":542
+        }, 
+        {
+         "columns":0,
+         "firstgid":38,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"rock_7",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":169,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/outside\/rock_7.png",
+                 "imageheight":169,
+                 "imagewidth":169
+                }
+            },
+         "tilewidth":169
+        }, 
+        {
+         "columns":0,
+         "firstgid":39,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"long_broken",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":264,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/buildings\/long_broken.png",
+                 "imageheight":264,
+                 "imagewidth":1024
+                }
+            },
+         "tilewidth":1024
+        }],
  "tilewidth":100,
  "type":"map",
  "version":1,

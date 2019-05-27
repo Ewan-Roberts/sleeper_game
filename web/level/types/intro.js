@@ -26,7 +26,6 @@ class Intro {
   _set_elements() {
     const { Level_Factory } = require('./level_factory');
     Level_Factory.generate(elements);
-
     const { Trigger_Pad } = require('../elements/pad');
     const { exit_pad, click_pad, player, prey } = elements;
     const background = new Background();
@@ -54,13 +53,13 @@ class Intro {
 
     exit_pad.forEach(data => new Trigger_Pad(data, this.player));
     if(elements.dumpster_moved) {
-      const dumpster = collisions.children.find(item => item.id === 102);
+      const dumpster = collisions.children.find(item => item.id === 460);
       dumpster.x -= 45;
       dumpster.y -= 60;
       return;
     }
 
-    const dumpster = collisions.children.find(item => item.id === 102);
+    const dumpster = collisions.children.find(item => item.id === 460);
     dumpster.tint = 0xd3d3d3;
 
     click_pad.forEach(data => {

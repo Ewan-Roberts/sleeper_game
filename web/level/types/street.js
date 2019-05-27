@@ -23,6 +23,7 @@ class Street {
     const elements = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
 
+    console.log(level_data);
     const { Trigger_Pad } = require('../elements/pad');
     const { exit_pad, click_pad, player, prey } = elements;
 
@@ -43,7 +44,7 @@ class Street {
     });
     characters.forEach(({tween}) => tween.start());
 
-    const dumpster = collisions.children.find(item => item.id === 102);
+    const dumpster = collisions.children.find(item => item.id === 460);
     dumpster.tint = 0xd3d3d3;
 
     // click_pad.forEach(data => {
