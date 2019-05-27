@@ -1,5 +1,4 @@
 'use strict';
-require('pixi-layers');
 const app = require('./app');
 const world = app.stage;
 world.name = 'world';
