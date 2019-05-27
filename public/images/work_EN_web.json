@@ -1,0 +1,174 @@
+{
+    "scaleName": "web",
+    "variation": "EN",
+    "loadingStage": "work",
+    "id": "work_EN_web",
+    "resolution": 0.5,
+    "meta": {
+        "type": "pixi-packer",
+        "version": "1",
+        "app": "https://github.com/gamevy/pixi-packer"
+    },
+    "spritesheets": [
+        {
+            "image": "5273689a59d50c9acf4b54fe94db69b0fe55d829.jpeg",
+            "filesize": 1011196,
+            "sprites": [
+                {
+                    "name": "gravel_roof",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "dimension": {
+                        "w": 1400,
+                        "h": 560
+                    }
+                },
+                {
+                    "name": "road_00",
+                    "position": {
+                        "x": 0,
+                        "y": 561
+                    },
+                    "dimension": {
+                        "w": 1400,
+                        "h": 140
+                    }
+                },
+                {
+                    "name": "concrete_roof",
+                    "position": {
+                        "x": 0,
+                        "y": 702
+                    },
+                    "dimension": {
+                        "w": 840,
+                        "h": 840
+                    }
+                },
+                {
+                    "name": "roof_city_00",
+                    "position": {
+                        "x": 841,
+                        "y": 702
+                    },
+                    "dimension": {
+                        "w": 560,
+                        "h": 840
+                    }
+                },
+                {
+                    "name": "tar_roof",
+                    "position": {
+                        "x": 1402,
+                        "y": 702
+                    },
+                    "dimension": {
+                        "w": 560,
+                        "h": 840
+                    }
+                },
+                {
+                    "name": "road_long",
+                    "position": {
+                        "x": 1963,
+                        "y": 702
+                    },
+                    "dimension": {
+                        "w": 350,
+                        "h": 560
+                    }
+                },
+                {
+                    "name": "wood_planks_vertical",
+                    "position": {
+                        "x": 2314,
+                        "y": 702
+                    },
+                    "dimension": {
+                        "w": 512,
+                        "h": 512
+                    }
+                },
+                {
+                    "name": "tarp_roof_00",
+                    "position": {
+                        "x": 0,
+                        "y": 1543
+                    },
+                    "dimension": {
+                        "w": 350,
+                        "h": 210
+                    }
+                },
+                {
+                    "name": "carpet_floor",
+                    "position": {
+                        "x": 0,
+                        "y": 1754
+                    },
+                    "dimension": {
+                        "w": 280,
+                        "h": 280
+                    }
+                },
+                {
+                    "name": "grass_tile",
+                    "position": {
+                        "x": 281,
+                        "y": 1754
+                    },
+                    "dimension": {
+                        "w": 275,
+                        "h": 275
+                    }
+                },
+                {
+                    "name": "tarmac_tile",
+                    "position": {
+                        "x": 557,
+                        "y": 1754
+                    },
+                    "dimension": {
+                        "w": 210,
+                        "h": 210
+                    }
+                },
+                {
+                    "name": "seamless_concrete",
+                    "position": {
+                        "x": 768,
+                        "y": 1754
+                    },
+                    "dimension": {
+                        "w": 150,
+                        "h": 150
+                    }
+                },
+                {
+                    "name": "tile_concrete",
+                    "position": {
+                        "x": 919,
+                        "y": 1754
+                    },
+                    "dimension": {
+                        "w": 140,
+                        "h": 140
+                    }
+                },
+                {
+                    "name": "tile_floor",
+                    "position": {
+                        "x": 1060,
+                        "y": 1754
+                    },
+                    "dimension": {
+                        "w": 140,
+                        "h": 140
+                    }
+                }
+            ]
+        }
+    ]
+}

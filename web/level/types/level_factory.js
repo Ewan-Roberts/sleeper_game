@@ -52,8 +52,8 @@ class Level_Factory {
 
       shroud.forEach(data => new Shroud(data));
       background.forEach(data => new Background(data, true));
-      floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
+      floor.forEach(data => new BackgroundVisualItem(data));
       walls.forEach(data => new Wall(data));
       collision.forEach(data => new CollisionItem(data));
       item.forEach(data => new Chest(data));

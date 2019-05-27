@@ -19,6 +19,12 @@ class Background {
       this.sprite.tileScale.x = 0.6;
       this.sprite.tileScale.y = 0.6;
     }
+    if(data.name === 'wood_planks_vertical') {
+      this.sprite.tileScale.x = 0.15;
+      this.sprite.tileScale.y = 0.15;
+      this.sprite.alpha = 0.8;
+      this.sprite.tint = 0x8c7a64;
+    }
     if(data.name === 'tile_concrete') {
       this.sprite.tileScale.x = 0.1;
       this.sprite.tileScale.y = 0.1;
@@ -27,8 +33,6 @@ class Background {
       this.sprite.alpha = 1;
     }
     if(data.name === 'tarmac_tile') {
-      // this.sprite.tileScale.x = 0.1;
-      // this.sprite.tileScale.y = 0.1;
       this.sprite.alpha = 0.8;
       this.sprite.tint = 0xA9A9A9;
     }
