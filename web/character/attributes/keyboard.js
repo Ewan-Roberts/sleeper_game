@@ -53,14 +53,13 @@ function event_pad(position) {
 }
 
 class Keyboard {
-  constructor({ animation, sprite, vitals, light, inventory}) {
+  constructor({ animation, sprite, vitals, inventory}) {
     this.name          = 'keyboard';
     this.animation     = animation;
     this.sprite        = sprite;
     this.speed         = vitals.speed;
     this.buffer        = 50;
     this.can_move      = true;
-    this.light         = light;
     this.inventory     = inventory;
     this.inventory_view= new Player_Inventory();
     this.interaction   = new Interaction_Menu();
@@ -164,7 +163,6 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_up();
     this.animation.move_up_by(this.speed);
-    if(this.light) this.light.set_position(this.sprite);
 
     world.y += this.speed;
   }
@@ -181,7 +179,6 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_down();
     this.animation.move_down_by(this.speed);
-    if(this.light) this.light.set_position(this.sprite);
 
     world.y -= this.speed;
   }
@@ -198,7 +195,6 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_left();
     this.animation.move_left_by(this.speed);
-    if(this.light) this.light.set_position(this.sprite);
 
     world.x += this.speed;
   }
@@ -215,7 +211,6 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_right();
     this.animation.move_right_by(this.speed);
-    if(this.light) this.light.set_position(this.sprite);
 
     world.x -= this.speed;
   }

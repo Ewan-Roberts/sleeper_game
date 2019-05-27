@@ -34,12 +34,6 @@ class Chest extends Item {
       });
     }
 
-    if(properties.shadow) {
-      this.shadow = true;
-      this.shade.anchor.y = 1;
-      this.shade.anchor.x = 0;
-    }
-
     if(properties.equip_on_click) {
       this.click = () => {
         this.sprite.destroy();

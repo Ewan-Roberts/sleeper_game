@@ -22,7 +22,6 @@ class Level_Loader {
     // new Animations_Room();
     // new Random_Room(player);
     // new Items_Room(player);
-    // new Simple(player, { level_name: 'light' });
   }
 }
 

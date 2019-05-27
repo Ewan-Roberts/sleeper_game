@@ -6,8 +6,7 @@ const { Item } = require('./item_model');
 class BackgroundVisualItem extends Item {
   constructor(data) {
     super(data);
-    console.log(data.properties);
-    this.alpha = data.properties.opacity || 1;
+    this.alpha  = data.properties.opacity || 1;
     this.anchor = 0;
 
     backgrounds.addChild(this.sprite);

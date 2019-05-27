@@ -50,11 +50,6 @@ class Items_Room {
       }
     };
 
-    // const lamp_light = level_lights.find(elems => elems.id === 188);
-    // lamp_light.intensity = 5;
-    // await lamp_light.strike.fast();
-    console.log(elements);
-
     const button_right = areas.find(({id}) => id === 217);
     button_right.click = () => {
       // const result = this.player.inventory.take_items('blood');

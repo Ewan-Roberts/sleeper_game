@@ -69,7 +69,6 @@ class Interaction_Menu {
 
   populate(item) {
     this.clear();
-    console.log(item);
     const first_free_slot = Array.from(this.inventory_slots)
       .find(slot => slot.childElementCount === 0);
 

@@ -31,7 +31,6 @@ class Street {
     background.fade_out(500);
 
     this.player.set_position(player[0]);
-    this.player.keyboard.disable_for(1000);
 
     const characters = prey.map(npc => {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));

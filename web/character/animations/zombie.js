@@ -16,7 +16,6 @@ const frames = { move, attack, death, eat, idle };
 class Zombie {
   constructor(entity) {
     this.name = 'animation';
-    console.log(frames);
     entity.sprite = new extras.AnimatedSprite(frames.idle);
 
     this.sprite = entity.sprite;
