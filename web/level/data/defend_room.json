@@ -6,19 +6,19 @@
          "name":"grid",
          "objects":[
                 {
-                 "height":2481.86196745186,
+                 "height":2514.3538444826,
                  "id":223,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1785.75599459544,
+                 "width":3740.2673667524,
                  "x":843.608544461003,
                  "y":144
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -28,15 +28,15 @@
          "objects":[
                 {
                  "gid":1,
-                 "height":2247.35788630905,
+                 "height":2540.60724745773,
                  "id":244,
                  "name":"grass_tile",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1450.72057646117,
-                 "x":1197.34523217894,
-                 "y":2483.41889694755
+                 "width":3763.23167158473,
+                 "x":925.519200838998,
+                 "y":2735.09486506777
                 }],
          "offsetx":-95.212121212121,
          "offsety":-40.6666666666666,
@@ -68,18 +68,6 @@
                  "width":58.4148401522788,
                  "x":2176.43229282865,
                  "y":450.607142312911
-                }, 
-                {
-                 "gid":2,
-                 "height":910.600480384307,
-                 "id":245,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":143.779023218575,
-                 "x":2163.6802760033,
-                 "y":2370.50323713463
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -148,8 +136,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1660.36717062635,
-                 "y":1007.01943844492
+                 "x":3916.03289300595,
+                 "y":1860.41887187268
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -201,70 +189,64 @@
          "name":"walls",
          "objects":[
                 {
-                 "height":1180.2822016302,
-                 "id":122,
+                 "gid":3,
+                 "height":35.5077,
+                 "id":250,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6667,
-                 "x":2048.9245122288,
-                 "y":244.651759036649
+                 "width":1190.31,
+                 "x":2374.26811883348,
+                 "y":1983.83785359433
                 }, 
                 {
-                 "height":100,
-                 "id":138,
+                 "gid":3,
+                 "height":1172.25,
+                 "id":251,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":100,
-                 "x":1258.21143618818,
-                 "y":1148.81316246088
+                 "width":28.8602,
+                 "x":3534.19111883348,
+                 "y":1979.98875667803
                 }, 
                 {
-                 "height":32,
-                 "id":226,
+                 "gid":3,
+                 "height":1172.25,
+                 "id":252,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1184.52363636364,
-                 "x":899.556363636364,
-                 "y":212
+                 "width":28.8602,
+                 "x":2377.27791765874,
+                 "y":1973.41784625218
                 }, 
                 {
-                 "height":783.123946068616,
-                 "id":230,
+                 "gid":3,
+                 "height":35.5077,
+                 "id":254,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.6667,
-                 "x":2059.13510601876,
-                 "y":1614.39761863127
+                 "width":227.927,
+                 "x":1870.22324698795,
+                 "y":1414.22406164659
                 }, 
                 {
-                 "height":33.3333333333333,
-                 "id":233,
+                 "gid":3,
+                 "height":35.5077,
+                 "id":255,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":224.242424242424,
-                 "x":1825.75757575758,
-                 "y":1389.39393939394
-                }, 
-                {
-                 "height":33.3333,
-                 "id":240,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":224.242,
-                 "x":2125.25566860128,
-                 "y":351.876588537435
+                 "width":833.653872246696,
+                 "x":2397.74251684626,
+                 "y":836.713207040977
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -303,8 +285,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1652.67815458549,
-                 "y":905.561484246031
+                 "x":3106.29005260249,
+                 "y":1443.80511030835
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -315,26 +297,7 @@
         {
          "draworder":"topdown",
          "name":"floor",
-         "objects":[
-                {
-                 "height":178.714765419616,
-                 "id":215,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"litter_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":148.083276753205,
-                 "x":1760.24747977755,
-                 "y":1317.92674266936
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -361,8 +324,20 @@
                  "type":"",
                  "visible":true,
                  "width":77.2894392067246,
-                 "x":2297.85708291167,
-                 "y":1131.60867982327
+                 "x":1903.02705458306,
+                 "y":993.506696820437
+                }, 
+                {
+                 "gid":4,
+                 "height":135.862874951305,
+                 "id":256,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":271.72574990261,
+                 "x":1820.76102472421,
+                 "y":1409.48463174201
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -375,7 +350,7 @@
          "name":"door",
          "objects":[
                 {
-                 "height":53.7514795929319,
+                 "height":33.1041604116921,
                  "id":231,
                  "name":"",
                  "properties":
@@ -393,9 +368,9 @@
                  "rotation":-0.554141302071258,
                  "type":"",
                  "visible":true,
-                 "width":20.7938473026925,
-                 "x":2063.3634878,
-                 "y":1491.613230353
+                 "width":140.936409975788,
+                 "x":3304.40635760394,
+                 "y":819.26547282557
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -415,8 +390,8 @@
                  "type":"",
                  "visible":true,
                  "width":217.283450366449,
-                 "x":2128.55482828606,
-                 "y":493.600242491368
+                 "x":2758.43235424228,
+                 "y":989.007303408012
                 }, 
                 {
                  "height":182.562,
@@ -426,8 +401,8 @@
                  "type":"",
                  "visible":true,
                  "width":217.283,
-                 "x":1608.07438366377,
-                 "y":1853.92264016755
+                 "x":2973.28356894216,
+                 "y":1646.31018342015
                 }, 
                 {
                  "height":133.614373959863,
@@ -437,8 +412,8 @@
                  "type":"",
                  "visible":true,
                  "width":141.414179637787,
-                 "x":1707.31542608908,
-                 "y":1129.96226970142
+                 "x":2606.96940532783,
+                 "y":1435.08966825442
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -446,7 +421,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":246,
+ "nextobjectid":257,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -501,6 +476,56 @@
                 }
             },
          "tilewidth":420
+        }, 
+        {
+         "columns":0,
+         "firstgid":3,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"dot",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":2,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/game_images\/dot.png",
+                 "imageheight":2,
+                 "imagewidth":2
+                }
+            },
+         "tilewidth":2
+        }, 
+        {
+         "columns":0,
+         "firstgid":4,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"barricade_1",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":280,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/furniture\/barricade_1.png",
+                 "imageheight":280,
+                 "imagewidth":560
+                }
+            },
+         "tilewidth":560
         }],
  "tilewidth":100,
  "type":"map",

@@ -86,8 +86,8 @@ class Sight {
       //by the sprite's left, right, top and bottom sides
       const left = point.x > sprite.x,
         right = point.x < (sprite.x + sprite.width),
-        top = point.y > sprite.y,
-        bottom = point.y < (sprite.y + sprite.height);
+        top = point.y > sprite.y - sprite.height,
+        bottom = point.y < (sprite.y);
 
       //If all the collision conditions are met, you know the
       //point is intersecting the sprite
@@ -108,7 +108,11 @@ class Sight {
     return noObstacles;
   }
 }
-
+//for none y axis handling
+// const left = point.x > sprite.x,
+//   right = point.x < (sprite.x + sprite.width),
+//   top = point.y > sprite.y,
+//   bottom = point.y < (sprite.y + sprite.height);
 
 module.exports = {
   Sight,

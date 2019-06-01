@@ -1,6 +1,5 @@
 'use strict';
 const { Sprite } = require('pixi.js');
-const PIXI = require('pixi.js');
 
 class Item {
   constructor(data) {

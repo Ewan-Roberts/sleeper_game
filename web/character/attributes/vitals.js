@@ -28,8 +28,6 @@ class Vitals {
       if(this.alive) return this.damage(damage);
 
       if(!this.inventory.items.length) this.inventory.populate();
-
-      this.inventory.show();
       if(this.tween) this.tween.stop();
 
       this.animation.kill();

@@ -11,6 +11,8 @@ class Shroud extends Item {
     this.sprite.fade_opacity = options.properties.fade;
     this.sprite.remove_on_enter = options.properties.remove_on_enter;
     this.anchor = 0;
+    this.sprite.anchor.x = 0;
+    this.sprite.anchor.y = 1;
 
     shrouds.addChild(this.sprite);
   }

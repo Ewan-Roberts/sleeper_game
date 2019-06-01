@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "5273689a59d50c9acf4b54fe94db69b0fe55d829.jpeg",
-            "filesize": 1011196,
+            "image": "3882b645181311d78d2c344d4158a06d74b8b883.jpeg",
+            "filesize": 1249666,
             "sprites": [
                 {
                     "name": "gravel_roof",
@@ -37,9 +37,20 @@
                     }
                 },
                 {
-                    "name": "concrete_roof",
+                    "name": "BT01_ConcreteRoofGrunge_23",
                     "position": {
                         "x": 0,
+                        "y": 702
+                    },
+                    "dimension": {
+                        "w": 1330,
+                        "h": 840
+                    }
+                },
+                {
+                    "name": "concrete_roof",
+                    "position": {
+                        "x": 1331,
                         "y": 702
                     },
                     "dimension": {
@@ -50,7 +61,7 @@
                 {
                     "name": "roof_city_00",
                     "position": {
-                        "x": 841,
+                        "x": 2172,
                         "y": 702
                     },
                     "dimension": {
@@ -61,7 +72,7 @@
                 {
                     "name": "tar_roof",
                     "position": {
-                        "x": 1402,
+                        "x": 2733,
                         "y": 702
                     },
                     "dimension": {
@@ -72,7 +83,7 @@
                 {
                     "name": "road_long",
                     "position": {
-                        "x": 1963,
+                        "x": 3294,
                         "y": 702
                     },
                     "dimension": {
@@ -83,8 +94,8 @@
                 {
                     "name": "wood_planks_vertical",
                     "position": {
-                        "x": 2314,
-                        "y": 702
+                        "x": 1401,
+                        "y": 0
                     },
                     "dimension": {
                         "w": 512,
@@ -136,10 +147,21 @@
                     }
                 },
                 {
-                    "name": "seamless_concrete",
+                    "name": "40113876-work-in-progress",
                     "position": {
                         "x": 768,
                         "y": 1754
+                    },
+                    "dimension": {
+                        "w": 178,
+                        "h": 100
+                    }
+                },
+                {
+                    "name": "seamless_concrete",
+                    "position": {
+                        "x": 351,
+                        "y": 1543
                     },
                     "dimension": {
                         "w": 150,
@@ -149,8 +171,8 @@
                 {
                     "name": "tile_concrete",
                     "position": {
-                        "x": 919,
-                        "y": 1754
+                        "x": 502,
+                        "y": 1543
                     },
                     "dimension": {
                         "w": 140,
@@ -160,12 +182,23 @@
                 {
                     "name": "tile_floor",
                     "position": {
-                        "x": 1060,
-                        "y": 1754
+                        "x": 643,
+                        "y": 1543
                     },
                     "dimension": {
                         "w": 140,
                         "h": 140
+                    }
+                },
+                {
+                    "name": "shower_00",
+                    "position": {
+                        "x": 768,
+                        "y": 1855
+                    },
+                    "dimension": {
+                        "w": 140,
+                        "h": 70
                     }
                 }
             ]

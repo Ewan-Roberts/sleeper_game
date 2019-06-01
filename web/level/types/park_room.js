@@ -26,16 +26,20 @@ class Park_Room  {
     const mouse = new Rat(prey[0]);
     mouse.target(this.player);
     mouse.set_position(prey[0]);
-
-    const mouse2 = new Deer(prey[1]);
-    mouse2.set_position(prey[1]);
+    // remove first one
+    prey.shift();
+    const set_prey = prey.map(rat => {
+      const unit = new Deer(rat);
+      unit.set_position(rat);
+      return unit;
+    });
 
     const [thing] = exit_pad.map(data => {
       const pad  = new Trigger_Pad(data);
 
       if(data.id === 236) {
         pad.sprite.events.once('trigger', () => {
-          mouse2.logic_start();
+          set_prey.forEach(unit => unit.logic_start());
         });
       } else {
         pad.sprite.events.once('trigger', () => {
@@ -44,7 +48,7 @@ class Park_Room  {
       }
       return pad;
     });
-    mouse2.target(thing);
+    set_prey.forEach(unit => unit.target(thing));
 
     this.grid = pathfind.create_level_grid(grid[0]);
   }

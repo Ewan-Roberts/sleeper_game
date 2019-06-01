@@ -11,6 +11,22 @@ function draw_path(path) {
   guis.addChild(graphical_path);
 }
 
+
+function draw_line(point, point2) {
+  const myGraph = new Graphics();
+  guis.addChild(myGraph);
+
+  // Move it to the beginning of the line
+  myGraph.position.set(point.x, point.y);
+
+
+  // Draw the line (endPoint should be relative to myGraph's position)
+  myGraph.lineStyle(2, 0xffffff)
+    .moveTo(0, 0)
+    .lineTo(point2.x, point2.y);
+
+}
 module.exports = {
   draw_path,
+  draw_line,
 };

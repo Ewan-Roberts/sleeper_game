@@ -61,28 +61,28 @@ class Rat extends Character {
     damage_events.emit('damage_tile', {door_tile, damage});
 
     this.tween.path.lineTo(
-      door_path[0].x,
-      door_path[0].y
+      door_path[0].x + 50,
+      door_path[0].y + 50
     );
 
     //const random = () => random_number(30, 50);
 
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
-        door_path[i-1].x,
-        door_path[i-1].y,
-        door_path[i].x,
-        door_path[i].y,
+        door_path[i-1].x + 50,
+        door_path[i-1].y + 50,
+        door_path[i].x + 50,
+        door_path[i].y + 50,
         20);
     }
 
-    this.tween.time = door_path.length*100;
+    this.tween.time = door_path.length*500;
   }
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
     this.tween = tweenManager.createTween(this.sprite);
-    this.tween.time = 1000;
+    this.tween.time = 2000;
     this.tween.expire = true;
     this.tween.start();
 
@@ -93,7 +93,7 @@ class Rat extends Character {
       if(!this.target.vitals.alive) throw 'game over';
 
       if(!this._target_far_away) {
-        this.tween.time = 1000;
+        this.tween.time = 5000;
         this.tween.start();
 
         damage_events.emit('damage', {id: this.target.id, damage: 50});
@@ -109,7 +109,7 @@ class Rat extends Character {
       if(Sight.lineOfSight(this.sprite, this.target.sprite, collisions.children)) {
         this.tween.path.lineTo(this.target.sprite.x, this.target.sprite.y);
         this.animation.move();
-        this.tween.time = 200;
+        this.tween.time = 5000;
       } else {
         await this._pathfind();
       }
@@ -119,6 +119,7 @@ class Rat extends Character {
     });
 
     this.tween.on('update', () => {
+      if(!this.vitals.alive) this.tween.remove();
       if(!this.tween.path) return;
 
       this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint);

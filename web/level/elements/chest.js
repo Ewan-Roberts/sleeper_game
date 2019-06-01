@@ -66,6 +66,8 @@ class Chest extends Item {
       };
     }
 
+    this.sprite.anchor.x = 0;
+    this.sprite.anchor.y = 1;
     items.addChild(this.sprite);
   }
 
