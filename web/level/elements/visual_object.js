@@ -10,6 +10,7 @@ class BackgroundVisualItem extends Item {
     this.sprite.anchor.x = 0;
     this.sprite.anchor.y = 1;
     this.sprite.rotation  = data.rotation * (Math.PI/180);
+    this.sprite.tint = 0xA9A9A9;
 
     backgrounds.addChild(this.sprite);
   }

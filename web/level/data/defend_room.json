@@ -136,8 +136,88 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":3916.03289300595,
-                 "y":1860.41887187268
+                 "x":3663.6395074533,
+                 "y":501.26598530465
+                }, 
+                {
+                 "height":0,
+                 "id":257,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":3088.19263127357,
+                 "y":542.500725268349
+                }, 
+                {
+                 "height":0,
+                 "id":258,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2565.99941978532,
+                 "y":475.776037133739
+                }, 
+                {
+                 "height":0,
+                 "id":259,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1926.31273571221,
+                 "y":449.666376559327
+                }, 
+                {
+                 "height":0,
+                 "id":260,
+                 "name":"",
+                 "point":true,
+                 "properties":
+                    {
+                     "equip":"rat_teeth"
+                    },
+                 "propertytypes":
+                    {
+                     "equip":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2815.49173194082,
+                 "y":438.062082970699
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -175,8 +255,8 @@
                  "type":"",
                  "visible":true,
                  "width":80,
-                 "x":1472.48164464023,
-                 "y":906.399107782672
+                 "x":3042.20733758867,
+                 "y":1015.54746337653
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -214,7 +294,7 @@
                 }, 
                 {
                  "gid":3,
-                 "height":1172.25,
+                 "height":654.408398607485,
                  "id":252,
                  "name":"",
                  "rotation":0,
@@ -245,8 +325,8 @@
                  "type":"",
                  "visible":true,
                  "width":833.653872246696,
-                 "x":2397.74251684626,
-                 "y":836.713207040977
+                 "x":2403.54466364057,
+                 "y":1360.35695522781
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -285,8 +365,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":3106.29005260249,
-                 "y":1443.80511030835
+                 "x":2692.88709350763,
+                 "y":865.040967575539
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -324,8 +404,8 @@
                  "type":"",
                  "visible":true,
                  "width":77.2894392067246,
-                 "x":1903.02705458306,
-                 "y":993.506696820437
+                 "x":2086.85586400429,
+                 "y":950.421819612337
                 }, 
                 {
                  "gid":4,
@@ -390,8 +470,8 @@
                  "type":"",
                  "visible":true,
                  "width":217.283450366449,
-                 "x":2758.43235424228,
-                 "y":989.007303408012
+                 "x":3728.84140559128,
+                 "y":1490.89300111616
                 }, 
                 {
                  "height":182.562,
@@ -421,7 +501,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":257,
+ "nextobjectid":261,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

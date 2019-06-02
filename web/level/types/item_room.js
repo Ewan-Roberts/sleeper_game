@@ -7,25 +7,27 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
 const { Shrine        } = require('../elements/shrine');
+const { Player        } = require('../../character/archetypes/player');
 
 class Items_Room {
-  constructor(player) {
+  constructor() {
     this.name   = 'item_room';
-    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
+    const player_character = new Player();
+
     const level_data = require('../data/items_room.json');
     const elements = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
 
     const { prey, exit_pad, click_pad, player } = elements;
 
-    this.player.set_position(player[0]);
+    player_character.set_position(player[0]);
 
-    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
+    exit_pad.forEach(data => new Trigger_Pad(data, player_character));
 
     const characters = prey.map(npc => {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
@@ -43,7 +45,7 @@ class Items_Room {
 
     const furnace = new Shrine(click_pad[0]);
     furnace.click = () => {
-      const result = this.player.inventory.take_items('blood');
+      const result = player_character.inventory.take_items('blood');
       furnace.give_blood(...result);
       if(furnace.enough_blood) {
         characters.forEach(({tween}) => tween.start());

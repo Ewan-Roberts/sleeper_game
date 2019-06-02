@@ -31,6 +31,8 @@ class Player extends Character {
 
   destroy() {
     players.removeChild(this.sprite);
+    this.keyboard.destroy();
+    this.mouse.destroy();
   }
 }
 

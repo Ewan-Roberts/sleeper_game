@@ -6,25 +6,27 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Rat           } = require('../../character/archetypes/rat');
 const { Deer          } = require('../../character/archetypes/deer');
 const { Level_Factory } = require('./level_factory');
+const { Player        } = require('../../character/archetypes/player');
 
 class Park_Room  {
-  constructor(player) {
+  constructor() {
     this.name     = 'defend_room';
-    this.player   = player;
 
     this._set_elements();
   }
 
   _set_elements() {
+    const player_character= new Player();
+
     const level_data = require('../data/park_room.json');
     const elements = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
 
     const { prey, exit_pad, grid, player } = elements;
 
-    this.player.set_position(player[0]);
+    player_character.set_position(player[0]);
     const mouse = new Rat(prey[0]);
-    mouse.target(this.player);
+    mouse.target(player_character);
     mouse.set_position(prey[0]);
     // remove first one
     prey.shift();
@@ -34,7 +36,7 @@ class Park_Room  {
       return unit;
     });
 
-    const [thing] = exit_pad.map(data => {
+    const [trigger_pad] = exit_pad.map(data => {
       const pad  = new Trigger_Pad(data);
 
       if(data.id === 236) {
@@ -48,7 +50,7 @@ class Park_Room  {
       }
       return pad;
     });
-    set_prey.forEach(unit => unit.target(thing));
+    set_prey.forEach(unit => unit.target(trigger_pad));
 
     this.grid = pathfind.create_level_grid(grid[0]);
   }

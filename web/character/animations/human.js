@@ -12,7 +12,7 @@ const candle_idle  = create_texture('Armature_candle_idle_', 37);
 const candle_walk  = create_texture('Armature_candle_walk_', 49);
 const bow_walk     = create_texture('survivor-walk_bow_', 21);
 const bow_idle     = create_texture('survivor-bow-idle-', 22);
-const bow_shoot    = create_texture('survivor-bow-pull-', 39);
+const bow_shoot    = create_texture('survivor-bow-pull-', 35);
 const knife_idle   = Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i));
 const knife_move   = Array(20).fill('survivor-move_knife_').map((name, i) => Texture.fromFrame(name+i));
 const knife_attack = Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name+i));

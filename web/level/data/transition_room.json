@@ -329,25 +329,6 @@
                 }, 
                 {
                  "height":164.503,
-                 "id":172,
-                 "name":"",
-                 "properties":
-                    {
-                     "level_name":"apartment"
-                    },
-                 "propertytypes":
-                    {
-                     "level_name":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":349.627270938729,
-                 "x":2576.73217678471,
-                 "y":2562.49273833614
-                }, 
-                {
-                 "height":164.503,
                  "id":176,
                  "name":"",
                  "properties":

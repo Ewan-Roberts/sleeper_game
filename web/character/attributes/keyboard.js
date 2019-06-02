@@ -68,6 +68,11 @@ class Keyboard {
     keyboardManager.on('released', () => this.key_up());
   }
 
+  destroy() {
+    console.log(keyboardManager);
+    keyboardManager.removeAllListeners();
+  }
+
   //TODO
   save_game() {
   }

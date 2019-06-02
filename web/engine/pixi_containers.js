@@ -94,9 +94,9 @@ function clear_level_containers(expection) {
   }
 }
 
-function clear_non_players() {
-  clear_level_containers('player_container');
-}
+// function clear_non_players() {
+//   clear_level_containers('player_container');
+// }
 
 module.exports = {
   shrouds,
@@ -110,7 +110,7 @@ module.exports = {
   players,
   guis,
   pads,
-  clear_non_players,
+  clear_level_containers,
 };
 
 

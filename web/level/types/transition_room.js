@@ -4,26 +4,27 @@ const { Text          } = require('pixi.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
+const { Player        } = require('../../character/archetypes/player');
 
 class Transition_Room {
-  constructor(player) {
+  constructor() {
     this.name   = 'transition_room';
-    this.player = player;
 
     this._set_elements();
   }
 
   _set_elements() {
-    console.log('hi');
+    const player_character = new Player();
+
     const level_data = require('../data/transition_room.json');
     const elements   = new Tiled_Data(level_data);
     Level_Factory.generate(elements);
 
     const { exit_pad, player } = elements;
-    this.player.set_position(player[0]);
+    player_character.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      new Trigger_Pad(data, this.player);
+      new Trigger_Pad(data, player_character);
       const {properties, x, y, width, height} = data;
 
       const level_names = new Text(

@@ -9,21 +9,23 @@ const { Tiled_Data } = require('../attributes/parse_tiled_data');
 const { Click_Pad  } = require('../elements/click_pad');
 const { Background } = require('../../view/overlay_object');
 const { Button     } = require('../../view/button');
+const { Player     } = require('../../character/archetypes/player');
 
 const level_data = require('../data/intro_room.json');
 const elements = new Tiled_Data(level_data);
 elements.dumpster_moved = false;
 
 class Intro {
-  constructor(player, {properties}) {
+  constructor({properties}) {
     this.name         = 'intro';
     this.properties   = properties;
-    this.player       = player;
 
     this._set_elements();
   }
 
   _set_elements() {
+    const player_character = new Player();
+
     const { Level_Factory } = require('./level_factory');
     Level_Factory.generate(elements);
     const { Trigger_Pad } = require('../elements/pad');
@@ -32,11 +34,11 @@ class Intro {
 
     if(this.properties.entry_id) {
       const entry_point = player.find(point => point.id === this.properties.entry_id);
-      this.player.set_position(entry_point);
+      player_character.set_position(entry_point);
       background.set_position(entry_point);
       Camera.set_center(entry_point);
     } else {
-      this.player.set_position(player[0]);
+      player_character.set_position(player[0]);
       background.set_position(player[0]);
     }
     background.fade_out(500);
@@ -51,7 +53,7 @@ class Intro {
       return new Crow({path});
     });
 
-    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
+    exit_pad.forEach(data => new Trigger_Pad(data, player_character));
     if(elements.dumpster_moved) {
       const dumpster = collisions.children.find(item => item.id === 102);
       dumpster.x -= 45;

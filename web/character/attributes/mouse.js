@@ -95,8 +95,15 @@ class Mouse {
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
     if(event.shiftKey && this.animation.prefix === 'bow') {
+      this.animation.ready_weapon();
       this.cone.narrow();
     }
+  }
+
+  destroy() {
+    global.document.removeEventListener('mousemove', this.mouse_move);
+    global.document.removeEventListener('mousemove', this.mouse_up);
+    global.document.removeEventListener('mousedown', this.mouse_down);
   }
 
   mouse_up(event) {
@@ -112,6 +119,7 @@ class Mouse {
         y: mouse_position.y + angle_to_offset,
       });
       this.cone.finish();
+      this.animation.idle();
     }
 
     if(this.animation.prefix === 'knife') {

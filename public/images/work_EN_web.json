@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "3882b645181311d78d2c344d4158a06d74b8b883.jpeg",
-            "filesize": 1249666,
+            "image": "a5d70a60eaaaa0df97474ab7783a47da827dbf87.jpeg",
+            "filesize": 1354144,
             "sprites": [
                 {
                     "name": "gravel_roof",
@@ -50,8 +50,8 @@
                 {
                     "name": "concrete_roof",
                     "position": {
-                        "x": 1331,
-                        "y": 702
+                        "x": 0,
+                        "y": 1543
                     },
                     "dimension": {
                         "w": 840,
@@ -61,8 +61,8 @@
                 {
                     "name": "roof_city_00",
                     "position": {
-                        "x": 2172,
-                        "y": 702
+                        "x": 0,
+                        "y": 2384
                     },
                     "dimension": {
                         "w": 560,
@@ -72,8 +72,8 @@
                 {
                     "name": "tar_roof",
                     "position": {
-                        "x": 2733,
-                        "y": 702
+                        "x": 0,
+                        "y": 3225
                     },
                     "dimension": {
                         "w": 560,
@@ -83,8 +83,19 @@
                 {
                     "name": "road_long",
                     "position": {
-                        "x": 3294,
-                        "y": 702
+                        "x": 561,
+                        "y": 3225
+                    },
+                    "dimension": {
+                        "w": 350,
+                        "h": 560
+                    }
+                },
+                {
+                    "name": "RT01_TarmacGrungeDash_25x40[Modern, city, map, Map tile, street, road, asphalt, paved, 2 lane, blacktop, seamless]",
+                    "position": {
+                        "x": 912,
+                        "y": 3225
                     },
                     "dimension": {
                         "w": 350,
@@ -94,8 +105,8 @@
                 {
                     "name": "wood_planks_vertical",
                     "position": {
-                        "x": 1401,
-                        "y": 0
+                        "x": 1263,
+                        "y": 3225
                     },
                     "dimension": {
                         "w": 512,
@@ -103,10 +114,21 @@
                     }
                 },
                 {
+                    "name": "cross_walk",
+                    "position": {
+                        "x": 561,
+                        "y": 3786
+                    },
+                    "dimension": {
+                        "w": 350,
+                        "h": 70
+                    }
+                },
+                {
                     "name": "tarp_roof_00",
                     "position": {
-                        "x": 0,
-                        "y": 1543
+                        "x": 1776,
+                        "y": 3225
                     },
                     "dimension": {
                         "w": 350,
@@ -116,8 +138,8 @@
                 {
                     "name": "carpet_floor",
                     "position": {
-                        "x": 0,
-                        "y": 1754
+                        "x": 1776,
+                        "y": 3436
                     },
                     "dimension": {
                         "w": 280,
@@ -127,8 +149,8 @@
                 {
                     "name": "grass_tile",
                     "position": {
-                        "x": 281,
-                        "y": 1754
+                        "x": 2057,
+                        "y": 3436
                     },
                     "dimension": {
                         "w": 275,
@@ -138,8 +160,8 @@
                 {
                     "name": "tarmac_tile",
                     "position": {
-                        "x": 557,
-                        "y": 1754
+                        "x": 2333,
+                        "y": 3436
                     },
                     "dimension": {
                         "w": 210,
@@ -149,8 +171,8 @@
                 {
                     "name": "40113876-work-in-progress",
                     "position": {
-                        "x": 768,
-                        "y": 1754
+                        "x": 561,
+                        "y": 3857
                     },
                     "dimension": {
                         "w": 178,
@@ -160,8 +182,8 @@
                 {
                     "name": "seamless_concrete",
                     "position": {
-                        "x": 351,
-                        "y": 1543
+                        "x": 2544,
+                        "y": 3436
                     },
                     "dimension": {
                         "w": 150,
@@ -171,8 +193,8 @@
                 {
                     "name": "tile_concrete",
                     "position": {
-                        "x": 502,
-                        "y": 1543
+                        "x": 2695,
+                        "y": 3436
                     },
                     "dimension": {
                         "w": 140,
@@ -182,8 +204,8 @@
                 {
                     "name": "tile_floor",
                     "position": {
-                        "x": 643,
-                        "y": 1543
+                        "x": 2836,
+                        "y": 3436
                     },
                     "dimension": {
                         "w": 140,
@@ -193,8 +215,8 @@
                 {
                     "name": "shower_00",
                     "position": {
-                        "x": 768,
-                        "y": 1855
+                        "x": 561,
+                        "y": 3958
                     },
                     "dimension": {
                         "w": 140,

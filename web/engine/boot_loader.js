@@ -11,11 +11,8 @@ const { Player          } = require('../character/archetypes/player.js');
 
 class Level_Loader {
   static boot() {
-    const player = new Player();
-    player.set_position({x:1000, y:700});
-    player.inventory.equip('old_bow');
 
-    new Transition_Room(player);
+    new Transition_Room();
 
     // new Defend_Room(player)
     // new Intro(player);

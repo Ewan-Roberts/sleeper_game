@@ -1,5 +1,5 @@
 'use strict';
-const { clear_non_players } = require('../../engine/pixi_containers');
+const { clear_level_containers } = require('../../engine/pixi_containers');
 
 const { Intro         } = require('./intro');
 const { Camera        } = require('../../engine/camera');
@@ -15,22 +15,24 @@ const { BackgroundVisualItem } = require('../elements/visual_object');
 class Level_Factory {
   static create(data, player) {
     const {properties} = data;
+    player.destroy();
     this.clear();
-    const { Items_Room  } = require('./item_room');
-    const { Street } = require('./street');
-    const { Simple } = require('./simple');
+
+    const { Items_Room      } = require('./item_room');
+    const { Street          } = require('./street');
+    const { Simple          } = require('./simple');
     const { Transition_Room } = require('./transition_room');
-    const { Defend_Room } = require('./defend_room');
-    const { Park_Room } = require('./park_room');
+    const { Defend_Room     } = require('./defend_room');
+    const { Park_Room       } = require('./park_room');
 
     switch(properties.level_name) {
-      case 'intro'     : return new Intro(player, data);
-      case 'item'      : return new Items_Room(player);
-      case 'street'    : return new Street(player);
-      case 'transition': return new Transition_Room(player);
-      case 'defend'    : return new Defend_Room(player);
-      case 'park'      : return new Park_Room(player);
-      default          : return new Simple(player, properties);
+      case 'intro'     : return new Intro(data);
+      case 'item'      : return new Items_Room();
+      case 'street'    : return new Street();
+      case 'transition': return new Transition_Room();
+      case 'defend'    : return new Defend_Room();
+      case 'park'      : return new Park_Room();
+      default          : return new Simple(properties);
     }
   }
 
@@ -66,7 +68,7 @@ class Level_Factory {
   }
 
   static clear() {
-    clear_non_players();
+    clear_level_containers();
   }
 }
 
