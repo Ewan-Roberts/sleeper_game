@@ -41,12 +41,11 @@ class Background {
     this.sprite.height = data.height;
 
     this.set_position(data);
+    backgrounds.addChild(this.sprite);
   }
 
   set_position({x, y}) {
     this.sprite.position.set(x, y);
-
-    backgrounds.addChild(this.sprite);
   }
 }
 

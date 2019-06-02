@@ -1,9 +1,8 @@
 'use strict';
 const PIXI = require('pixi.js');
-const { ticker }  = require('./app');
 global.window.PIXI.default = PIXI;
+const { ticker }  = require('./app');
 
-require('pixi-tween');
 require('pixi-keyboard');
 
 // 60/30 for 30 fps

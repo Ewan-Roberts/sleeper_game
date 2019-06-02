@@ -1,44 +1,45 @@
 'use strict';
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
 
-const { Tween      } = require('../../engine/tween');
-const { Camera     } = require('../../engine/camera');
-const { Lurcher    } = require('../../character/archetypes/zombie');
-const { Crow       } = require('../../character/archetypes/crow');
-const { Tiled_Data } = require('../attributes/parse_tiled_data');
-const { Click_Pad  } = require('../elements/click_pad');
-const { Background } = require('../../view/overlay_object');
-const { Button     } = require('../../view/button');
-const { Player     } = require('../../character/archetypes/player');
+const { Camera        } = require('../../engine/camera');
+const { Lurcher       } = require('../../character/archetypes/zombie');
+const { Crow          } = require('../../character/archetypes/crow');
+const { Tiled_Data    } = require('../attributes/parse_tiled_data');
+const { Click_Pad     } = require('../elements/click_pad');
+const { Background    } = require('../../view/overlay_object');
+const { Button        } = require('../../view/button');
+const { Player        } = require('../../character/archetypes/player');
+const { Tween         } = require('../../engine/tween');
+const { Level_Factory } = require('./level_factory');
+const { Trigger_Pad   } = require('../elements/pad');
+const level_data        = require('../data/intro_room.json');
 
-const level_data = require('../data/intro_room.json');
-const elements = new Tiled_Data(level_data);
-elements.dumpster_moved = false;
 
 class Intro {
-  constructor({properties}) {
+  constructor(properties) {
     this.name         = 'intro';
     this.properties   = properties;
+    this.player       = new Player();
+    this.elements     = new Tiled_Data(level_data);
+    this.elements.dumpster_moved = false;
 
     this._set_elements();
   }
 
   _set_elements() {
-    const player_character = new Player();
+    Level_Factory.generate(this.elements);
+    const { exit_pad, click_pad, player, prey } = this.elements;
 
-    const { Level_Factory } = require('./level_factory');
-    Level_Factory.generate(elements);
-    const { Trigger_Pad } = require('../elements/pad');
-    const { exit_pad, click_pad, player, prey } = elements;
     const background = new Background();
 
+    //TODO this needs to move out into trigger pad
     if(this.properties.entry_id) {
       const entry_point = player.find(point => point.id === this.properties.entry_id);
-      player_character.set_position(entry_point);
+      this.player.set_position(entry_point);
       background.set_position(entry_point);
       Camera.set_center(entry_point);
     } else {
-      player_character.set_position(player[0]);
+      this.player.set_position(player[0]);
       background.set_position(player[0]);
     }
     background.fade_out(500);
@@ -53,16 +54,17 @@ class Intro {
       return new Crow({path});
     });
 
-    exit_pad.forEach(data => new Trigger_Pad(data, player_character));
-    if(elements.dumpster_moved) {
-      const dumpster = collisions.children.find(item => item.id === 102);
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
+
+    const dumpster = collisions.children.find(item => item.id === 102);
+    dumpster.tint = 0xd3d3d3;
+
+    //TODO maybe change in level data? Persist this
+    if(this.elements.dumpster_moved) {
       dumpster.x -= 45;
       dumpster.y -= 60;
       return;
     }
-
-    const dumpster = collisions.children.find(item => item.id === 102);
-    dumpster.tint = 0xd3d3d3;
 
     click_pad.forEach(data => {
       const pad = new Click_Pad(data);
@@ -86,11 +88,11 @@ class Intro {
         tween_it.time = 1000;
         tween_it.start();
         characters.forEach(({tween}) => tween.start());
+        // TODO move into Button logic
         pad.number_clicks++;
-        elements.dumpster_moved = true;
+        this.elements.dumpster_moved = true;
       };
     });
-
   }
 }
 

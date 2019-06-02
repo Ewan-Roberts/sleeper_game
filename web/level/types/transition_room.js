@@ -5,26 +5,25 @@ const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
+const level_data        = require('../data/transition_room.json');
 
 class Transition_Room {
   constructor() {
-    this.name   = 'transition_room';
+    this.name     = 'transition_room';
+    this.player   = new Player();
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const player_character = new Player();
+    Level_Factory.generate(this.elements);
 
-    const level_data = require('../data/transition_room.json');
-    const elements   = new Tiled_Data(level_data);
-    Level_Factory.generate(elements);
-
-    const { exit_pad, player } = elements;
-    player_character.set_position(player[0]);
+    const { exit_pad, player } = this.elements;
+    this.player.set_position(player[0]);
 
     exit_pad.forEach(data => {
-      new Trigger_Pad(data, player_character);
+      new Trigger_Pad(data, this.player);
       const {properties, x, y, width, height} = data;
 
       const level_names = new Text(

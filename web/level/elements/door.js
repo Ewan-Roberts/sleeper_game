@@ -4,17 +4,17 @@ const { collisions } = require('../../engine/pixi_containers');
 const { Item   } = require('./item_model');
 const { Tween  } = require('../../engine/tween');
 const { Button } = require('../../view/button');
-const { damage_events } = require('../../engine/damage_handler');
-//const { wood_thump } = require('../../engine/sound');
+
+const { damage_events        } = require('../../engine/damage_handler');
 const { BackgroundVisualItem } = require('./visual_object');
 
 class Door extends Item {
-  constructor(options) {
-    super(options);
+  constructor(data) {
+    super(data);
 
-    if(options.properties.label) {
+    if(data.properties.label) {
       this.sprite.interactive = true;
-      this.button = new Button(options.properties);
+      this.button = new Button(data.properties);
       this.button.visible = false;
       this.sprite.on('mouseover', () => {
         this.button.set_position(this.sprite);
@@ -25,7 +25,7 @@ class Door extends Item {
       });
     }
 
-    if(options.properties.clickable) {
+    if(data.properties.clickable) {
       this.sprite_tween = new Tween(this.sprite);
       this.click = () => {
         const current_rotation = this.sprite.rotation;
@@ -38,9 +38,9 @@ class Door extends Item {
       };
     }
 
-    if(options.properties.door) {
+    if(data.properties.door) {
       this.sprite.door = true;
-      this.health = options.properties.health || 50;
+      this.health = data.properties.health || 50;
 
       damage_events.on('damage_tile', ({door_tile, damage}) => {
         door_tile.alpha = 0.6;
@@ -53,9 +53,6 @@ class Door extends Item {
                 image_name: 'door_broken',
               },
             });
-            //wood_thump.volume = 0.3;
-            //wood_thump.speed = 5;
-            //wood_thump.play();
 
             broken_door.set_position(this.sprite);
           }

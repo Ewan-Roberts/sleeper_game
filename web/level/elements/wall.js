@@ -9,10 +9,7 @@ class Wall extends Item {
     };
     super(data);
 
-    this.anchor = 0;
-    if(data.options && data.options.alpha) {
-      this.alpha = 0;
-    }
+    this.alpha = data.properties.alpha || 1;
 
     this.sprite.anchor.x = 0;
     this.sprite.anchor.y = 1;

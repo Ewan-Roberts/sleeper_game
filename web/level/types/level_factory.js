@@ -1,7 +1,6 @@
 'use strict';
 const { clear_level_containers } = require('../../engine/pixi_containers');
 
-const { Intro         } = require('./intro');
 const { Camera        } = require('../../engine/camera');
 const { Wall          } = require('../elements/wall');
 const { Background    } = require('../elements/background');
@@ -14,10 +13,14 @@ const { BackgroundVisualItem } = require('../elements/visual_object');
 
 class Level_Factory {
   static create(data, player) {
-    const {properties} = data;
-    player.destroy();
-    this.clear();
+    if(player) {
+      player.destroy();
+      this.clear();
+    }
 
+    const { properties } = data;
+
+    const { Intro           } = require('./intro');
     const { Items_Room      } = require('./item_room');
     const { Street          } = require('./street');
     const { Simple          } = require('./simple');
@@ -26,7 +29,7 @@ class Level_Factory {
     const { Park_Room       } = require('./park_room');
 
     switch(properties.level_name) {
-      case 'intro'     : return new Intro(data);
+      case 'intro'     : return new Intro(properties);
       case 'item'      : return new Items_Room();
       case 'street'    : return new Street();
       case 'transition': return new Transition_Room();
@@ -53,7 +56,7 @@ class Level_Factory {
       Camera.set_center(player[0]);
 
       shroud.forEach(data => new Shroud(data));
-      background.forEach(data => new Background(data, true));
+      background.forEach(data => new Background(data));
       floor.forEach(data => new BackgroundVisualItem(data));
       decal.forEach(data => new BackgroundVisualItem(data));
       walls.forEach(data => new Wall(data));

@@ -7,7 +7,7 @@ const { Player        } = require('../../character/archetypes/player');
 class Simple {
   constructor(properties) {
     this.name = properties.level_name;
-
+    console.log('no simple maps');
     this.level_data;
     // if(properties.level_name === 'apartment') {
     //   this.level_data = require('../data/apartment.json');

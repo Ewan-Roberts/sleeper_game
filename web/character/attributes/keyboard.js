@@ -25,7 +25,7 @@ function point_contains(position) {
   const shroud = shrouds.children ;
   const shrouds_to_remove = shroud.find(child => child.containsPoint(position));
   if (shrouds_to_remove && shrouds_to_remove.remove_on_enter) {
-    Fade.out_destroy(shrouds_to_remove);
+    shrouds_to_remove.destroy();
     delete shrouds_to_remove.remove_on_enter;
   }
   return;

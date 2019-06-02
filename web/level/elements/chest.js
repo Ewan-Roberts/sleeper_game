@@ -9,10 +9,10 @@ const { Caption_Dialog } = require('../../view/caption');
 const { Item     } = require('./item_model');
 
 class Chest extends Item {
-  constructor(options) {
-    super(options);
+  constructor(data) {
+    super(data);
     this.name = 'chest';
-    const { type, properties } = options;
+    const { type, properties } = data;
 
     if(type === 'note') {
       this.click = () => new Note(properties);
@@ -20,16 +20,16 @@ class Chest extends Item {
 
     if(properties.label) {
       this.sprite.interactive = true;
-      this.sprite.tint = 0xd3d3d3;
+      this.tint = 0xd3d3d3;
       this.button = new Button(properties);
       this.button.visible = false;
       this.sprite.on('mouseover', () => {
-        this.sprite.tint = 0xffffff;
+        this.tint = 0xffffff;
         this.button.set_position(this.sprite);
         this.button.visible = true;
       });
       this.sprite.on('mouseout', () => {
-        this.sprite.tint = 0xd3d3d3;
+        this.tint = 0xd3d3d3;
         this.button.visible = false;
       });
     }
@@ -42,7 +42,6 @@ class Chest extends Item {
       };
     }
 
-    this.sprite.alpha = 1;
     if(properties.dialog_on_click) {
       this.click = () => {
         const dialog = new Caption_Dialog();

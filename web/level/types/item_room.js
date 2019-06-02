@@ -8,26 +8,24 @@ const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
 const { Shrine        } = require('../elements/shrine');
 const { Player        } = require('../../character/archetypes/player');
+const level_data        = require('../data/items_room.json');
 
 class Items_Room {
   constructor() {
-    this.name   = 'item_room';
+    this.name     = 'item_room';
+    this.player   = new Player();
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const player_character = new Player();
+    Level_Factory.generate(this.elements);
+    const { prey, exit_pad, click_pad, player } = this.elements;
 
-    const level_data = require('../data/items_room.json');
-    const elements = new Tiled_Data(level_data);
-    Level_Factory.generate(elements);
+    this.player.set_position(player[0]);
 
-    const { prey, exit_pad, click_pad, player } = elements;
-
-    player_character.set_position(player[0]);
-
-    exit_pad.forEach(data => new Trigger_Pad(data, player_character));
+    exit_pad.forEach(data => new Trigger_Pad(data, this.player));
 
     const characters = prey.map(npc => {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
@@ -45,21 +43,12 @@ class Items_Room {
 
     const furnace = new Shrine(click_pad[0]);
     furnace.click = () => {
-      const result = player_character.inventory.take_items('blood');
+      const result = this.player.inventory.take_items('blood');
       furnace.give_blood(...result);
       if(furnace.enough_blood) {
         characters.forEach(({tween}) => tween.start());
       }
     };
-
-    const button_right = areas.find(({id}) => id === 217);
-    button_right.click = () => {
-      // const result = this.player.inventory.take_items('blood');
-      // if(result.length > 1) console.log('ppoppp');
-      // console.log(this.player);
-      // console.log(result);
-    };
-
   }
 }
 

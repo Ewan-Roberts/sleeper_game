@@ -37,10 +37,9 @@ class Aiming_Cone {
     this.tween.expire   = true;
     this.tween.time     = time;
 
-    this.angle_of_cone  = 180;
+    this.angle_of_cone  = 90;
     this.sprite.visible = true;
     this.sprite.alpha   = 0;
-
 
     this.tween.from({
       width: this.original_width,
@@ -51,7 +50,7 @@ class Aiming_Cone {
     });
 
     this.tween.on('update', () => {
-      this.angle_of_cone-=2;
+      this.angle_of_cone-=1;
     });
 
     this.tween.on('end', () => {

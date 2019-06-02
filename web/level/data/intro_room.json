@@ -1441,7 +1441,7 @@
                 }, 
                 {
                  "gid":47,
-                 "height":915.864037965251,
+                 "height":587.568050471765,
                  "id":462,
                  "name":"",
                  "properties":
@@ -1501,7 +1501,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],

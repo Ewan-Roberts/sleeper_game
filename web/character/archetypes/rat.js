@@ -25,7 +25,7 @@ function break_at_door(path) {
   return path;
 }
 
-class Rat extends Character {
+class Walker extends Character {
   constructor({id, properties}) {
     super();
     this.name = 'zombie';
@@ -129,5 +129,5 @@ class Rat extends Character {
 
 
 module.exports = {
-  Rat,
+  Walker,
 };

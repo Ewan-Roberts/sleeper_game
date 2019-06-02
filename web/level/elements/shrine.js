@@ -5,8 +5,8 @@ const { Inventory  } = require('../../character/attributes/inventory');
 const { Item       } = require('./item_model');
 
 class Shrine extends Item {
-  constructor(options) {
-    super(options);
+  constructor(data) {
+    super(data);
     this.inventory = new Inventory();
 
     collisions.addChild(this.sprite);

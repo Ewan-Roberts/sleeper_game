@@ -10,7 +10,7 @@ class Trigger_Pad {
     this.sprite = new Sprite(Texture.WHITE);
     this.sprite.height = data.height;
     this.sprite.width  = data.width;
-    this.sprite.alpha  = 0.3;
+    this.sprite.alpha  = data.properties && data.properties.alpha || 0.3;
     this.sprite.anchor.set(0);
     this.sprite.position.set(data.x, data.y);
     this.sprite.events = new event({once: true});

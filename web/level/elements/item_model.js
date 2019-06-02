@@ -36,6 +36,10 @@ class Item {
     this.sprite.height = value;
   }
 
+  set tint(value) {
+    this.sprite.tint = value;
+  }
+
   set anchor(value) {
     this.sprite.anchor.set(value);
   }

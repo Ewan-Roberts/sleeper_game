@@ -3,37 +3,36 @@
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
-const { Rat           } = require('../../character/archetypes/rat');
+const { Walker        } = require('../../character/archetypes/rat');
 const { Deer          } = require('../../character/archetypes/deer');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
+const level_data        = require('../data/park_room.json');
 
 class Park_Room  {
   constructor() {
     this.name     = 'defend_room';
+    this.player   = new Player();
+    this.elements = new Tiled_Data(level_data);
 
     this._set_elements();
   }
 
   _set_elements() {
-    const player_character= new Player();
+    Level_Factory.generate(this.elements);
+    const { prey, exit_pad, grid, player } = this.elements;
 
-    const level_data = require('../data/park_room.json');
-    const elements = new Tiled_Data(level_data);
-    Level_Factory.generate(elements);
+    this.player.set_position(player[0]);
+    const zombie = new Walker(prey[0]);
+    zombie.target(this.player);
+    zombie.set_position(prey[0]);
 
-    const { prey, exit_pad, grid, player } = elements;
-
-    player_character.set_position(player[0]);
-    const mouse = new Rat(prey[0]);
-    mouse.target(player_character);
-    mouse.set_position(prey[0]);
     // remove first one
     prey.shift();
-    const set_prey = prey.map(rat => {
-      const unit = new Deer(rat);
-      unit.set_position(rat);
-      return unit;
+    const rats = prey.map(unit => {
+      const rat = new Deer(unit);
+      rat.set_position(unit);
+      return rat;
     });
 
     const [trigger_pad] = exit_pad.map(data => {
@@ -41,16 +40,16 @@ class Park_Room  {
 
       if(data.id === 236) {
         pad.sprite.events.once('trigger', () => {
-          set_prey.forEach(unit => unit.logic_start());
+          rats.forEach(unit => unit.logic_start());
         });
       } else {
         pad.sprite.events.once('trigger', () => {
-          mouse.logic_start();
+          zombie.logic_start();
         });
       }
       return pad;
     });
-    set_prey.forEach(unit => unit.target(trigger_pad));
+    rats.forEach(unit => unit.target(trigger_pad));
 
     this.grid = pathfind.create_level_grid(grid[0]);
   }
