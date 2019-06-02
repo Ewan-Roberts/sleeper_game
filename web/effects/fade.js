@@ -1,7 +1,6 @@
 'use strict';
 const { tweenManager } = require('pixi.js');
 
-//TODO this isnt really a mixin currently consider making it static
 class Fade {
   static in(sprite) {
     const movement = tweenManager.createTween(sprite);

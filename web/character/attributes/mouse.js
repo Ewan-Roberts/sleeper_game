@@ -2,8 +2,10 @@
 const { Sprite, tweenManager } = require('pixi.js');
 const { screen      } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
+const { MeleeBox    } = require('../../engine/melee');
 const { radian, random_bound } = require('../../utils/math');
 const { guis        } = require('../../engine/pixi_containers');
+const { world       } = require('../../engine/shadows');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
@@ -30,6 +32,7 @@ class Aiming_Cone {
   }
 
   narrow(time = 3000) {
+    if(this.tween) this.tween.remove();
     const tweens = tweenManager.getTweensForTarget(this.sprite);
     if(tweens) tweens.forEach(tween => tween.remove());
 
@@ -68,72 +71,74 @@ class Aiming_Cone {
 
   finish() {
     this.sprite.visible = false;
-    this.tween.remove();
+    if(this.tween) this.tween.remove();
   }
 }
 
-
-
 class Mouse {
-  constructor({ keyboard, animation, inventory, sprite }) {
+  constructor({ animation, sprite }) {
     this.name      = 'mouse';
 
-    this.keyboard  = keyboard;
     this.animation = animation;
-    this.inventory = inventory;
     this.sprite    = sprite;
     this.cone      = new Aiming_Cone();
+    this.melee     = new MeleeBox();
 
-    global.document.addEventListener('mousemove', event =>this.mouse_move(event));
-    global.document.addEventListener('mouseup', event => this.mouse_up(event));
-    global.document.addEventListener('mousedown', event => this.mouse_down(event));
+    world.interactive = true;
+    world.on('mouseup',   event => this.mouse_up(event));
+    world.on('mousemove', event => this.mouse_move(event));
+    world.on('mousedown', event => this.mouse_down(event));
   }
 
   mouse_down(event) {
-    const mouse_position = get_relative_mouse_position(this.sprite, event);
+    if(!event) return;
+    const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
     this.sprite.rotation = radian(mouse_position, this.sprite);
 
-    if(event.shiftKey && this.animation.prefix === 'bow') {
+    if(event.data.originalEvent.shiftKey && this.animation.prefix === 'bow') {
       this.animation.ready_weapon();
       this.cone.narrow();
     }
   }
 
   destroy() {
-    global.document.removeEventListener('mousemove', this.mouse_move);
-    global.document.removeEventListener('mousemove', this.mouse_up);
-    global.document.removeEventListener('mousedown', this.mouse_down);
+    world.off('mousemove', this.mouse_move());
+    world.off('mouseup',   this.mouse_up());
+    world.off('mousedown', this.mouse_down());
   }
 
   mouse_up(event) {
-    if(!event.shiftKey) return;
+    if(!event) return;
+    if(!event.data.originalEvent.shiftKey) return;
+    const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
 
-    const mouse_position = get_relative_mouse_position(this.sprite, event);
-
+    this.animation.idle();
+    // TODO Weapon manager
     if(this.animation.prefix === 'bow') {
       const { angle } = this.cone;
-      const angle_to_offset = random_bound(-angle, angle);
+      const angle_to_offset = random_bound(-angle, angle) || 29;
       shoot_arrow(200, 20, this.sprite, {
         x: mouse_position.x + angle_to_offset,
         y: mouse_position.y + angle_to_offset,
       });
-      this.cone.finish();
-      this.animation.idle();
+      return;
     }
 
     if(this.animation.prefix === 'knife') {
-      console.log('to add');
+      this.melee.slash(200, 20, this.sprite);
+      return;
     }
   }
 
   mouse_move(event) {
-    const mouse_position = get_relative_mouse_position(this.sprite, event);
+    if(!event) return;
+    const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
+
     const rotation = radian(mouse_position, this.sprite);
     this.sprite.rotation = rotation;
     this.cone.position   = this.sprite;
     this.cone.rotation   = rotation;
   }
-
 }
 
 module.exports = {

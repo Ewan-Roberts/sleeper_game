@@ -29,6 +29,7 @@ class Lurcher extends Character{
         });
       }
     }
+    this.sprite.name = 'lurcher';
 
     enemys.addChild(this.sprite);
   }

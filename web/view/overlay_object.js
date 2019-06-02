@@ -4,7 +4,7 @@ const { guis  } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 const { Fade  } = require('../effects/fade');
 const { Color_Pick  } = require('../utils/color_picker');
-const { keyboardManager } = require('pixi.js');
+const PIXI = require('pixi.js');
 
 //const { Caption_Dialog } = require('./caption');
 
@@ -54,7 +54,7 @@ class Note {
     this.background.tint = 'black';
     this.background.alpha = 0.5;
     // disable keyboard when note is up
-    keyboardManager.disable();
+    PIXI.keyboardManager.disable();
 
     const texture = Texture.fromImage(options.image_on_click);
     this.sprite = new Sprite(texture);
@@ -91,7 +91,7 @@ class Note {
       this.sprite.visible = false;
       this.text.visible = false;
       this.background.visible = false;
-      keyboardManager.enable();
+      PIXI.keyboardManager.enable();
       // if(options.post_open_dialog) {
       //   const dialog = new Caption_Dialog();
       //   dialog.show();

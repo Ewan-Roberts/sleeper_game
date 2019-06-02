@@ -4,15 +4,16 @@ const { Sprite } = require('pixi.js');
 class Item {
   constructor(data) {
     if(data.properties && data.properties.image_name) {
-      this.sprite = new Sprite.from(data.properties.image_name);
-      this.sprite.tint = data.properties.tint || 0xffffff;
+      this.sprite = new Sprite.fromFrame(data.properties.image_name);
+      console.log(data.properties.image_name);
+      //this.sprite.tint = data.properties.tint || 0xffffff;
     } else {
       this.sprite = new Sprite.fromFrame('bunny');
     }
     this.set_position(data);
-    this.width     = data.width;
-    this.height    = data.height;
-    this.rotation  = data.rotation * (Math.PI/180);
+    this.width     = data.width || 50;
+    this.height    = data.height || 50;
+    this.rotation  = data.rotation * (Math.PI/180) || 0;
     this.id        = data.id;
     this.sprite.id = data.id;
   }
@@ -56,7 +57,7 @@ class Item {
     this.sprite.rotation = value;
   }
 
-  set_position({x, y}) {
+  set_position({x = 0, y = 0}) {
     this.sprite.position.set(x, y);
   }
 }

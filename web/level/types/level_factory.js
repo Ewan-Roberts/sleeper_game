@@ -27,6 +27,7 @@ class Level_Factory {
     const { Transition_Room } = require('./transition_room');
     const { Defend_Room     } = require('./defend_room');
     const { Park_Room       } = require('./park_room');
+    const { Start_Room      } = require('./start');
 
     switch(properties.level_name) {
       case 'intro'     : return new Intro(properties);
@@ -34,6 +35,7 @@ class Level_Factory {
       case 'street'    : return new Street();
       case 'transition': return new Transition_Room();
       case 'defend'    : return new Defend_Room();
+      case 'start'     : return new Start_Room();
       case 'park'      : return new Park_Room();
       default          : return new Simple(properties);
     }

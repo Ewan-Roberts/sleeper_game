@@ -25,7 +25,6 @@ class Zombie {
     this.sprite.rotation = -0.7;
     this.sprite.animationSpeed = 0.3;
     this.sprite.loop = true;
-    // IMPORTANT FOR ARROWS MANAGER
     this.sprite.id = entity.id;
     this.sprite.play();
   }

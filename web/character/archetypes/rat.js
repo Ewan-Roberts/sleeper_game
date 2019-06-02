@@ -39,6 +39,8 @@ class Walker extends Character {
     this.add_component(new Melee(this));
 
     enemys.addChild(this.sprite);
+    this.sprite.name = 'zombie';
+    this.sprite.interactive = true;
   }
 
   get _target_far_away() {
@@ -52,8 +54,17 @@ class Walker extends Character {
 
   async _pathfind() {
     this.animation.move();
-
-    const normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.target.sprite);
+    let normal_path;
+    try{
+      normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.target.sprite);
+    } catch(err) {
+      console.log(err);
+    }
+    if(!normal_path) {
+      this.tween.time = 500;
+      return;
+    }
+    console.log(normal_path);
     const door_path   = break_at_door(normal_path);
     const door_tile   = door_path[door_path.length - 1];
 
@@ -114,7 +125,7 @@ class Walker extends Character {
         await this._pathfind();
       }
 
-      draw_path(this.tween.path);
+      //draw_path(this.tween.path);
       this.tween.start();
     });
 

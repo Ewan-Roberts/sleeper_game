@@ -41,6 +41,7 @@ class Deer extends Character {
     this.add_component(new Melee(this));
 
     enemys.addChild(this.sprite);
+    this.sprite.name = 'deer';
   }
 
   get _target_far_away() {

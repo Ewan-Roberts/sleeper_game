@@ -11,6 +11,10 @@ class Character {
     delete this[name];
   }
 
+  set tint(value) {
+    this.sprite.tint = value;
+  }
+
   set_position({x, y}) {
     this.sprite.position.set(x, y);
   }

@@ -4,8 +4,10 @@ const { pathfind      } = require('../../engine/pathfind.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Walker        } = require('../../character/archetypes/rat');
+const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
+const { players       } = require('../../engine/pixi_containers');
 const level_data        = require('../data/defend_room.json');
 
 class Defend_Room  {
@@ -18,18 +20,25 @@ class Defend_Room  {
   }
 
   _set_elements() {
+    console.log(players);
     Level_Factory.generate(this.elements);
 
     const { prey, exit_pad, grid, player } = this.elements;
 
     this.player.set_position(player[0]);
-
-    const zombies = prey.map(unit => {
+    const zombies = prey.map((unit,i) => {
       const zombie = new Walker(unit);
       zombie.target(this.player);
       zombie.set_position(unit);
+      if(i % 2) zombie.animation.eat();
       return zombie;
     });
+
+    const lurk = prey.find(unit => unit.id === 263);
+
+    const path = lurk.polyline.map(({x,y})=>({x:lurk.x+x, y:lurk.y+y}));
+    const lurker = new Lurcher({ path, time: 20000, turn: true});
+    lurker.tween.start();
 
     exit_pad.forEach(data => {
       const pad = new Trigger_Pad(data);

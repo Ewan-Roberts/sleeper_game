@@ -6,7 +6,7 @@ const { backgrounds } = require('../../engine/pixi_containers');
 class Background {
   constructor(data) {
     const texture = Texture.fromImage(data.name);
-    this.sprite = new extras.TilingSprite(texture);
+    this.sprite = new extras.TilingSprite(texture, 10,100);
     this.sprite.anchor.x = 0;
     this.sprite.anchor.y = 1;
     this.sprite.alpha = 0.4;
@@ -19,6 +19,14 @@ class Background {
       this.sprite.tileScale.x = 0.6;
       this.sprite.tileScale.y = 0.6;
     }
+
+    if(data.name === 'white_tiles') {
+      // this.sprite.tileScale.x = 0.5;
+      this.sprite.tileScale.y = 0.5;
+      this.sprite.tileScale.x = 0.5;
+      this.sprite.alpha = 0.8;
+    }
+
     if(data.name === 'wood_planks_vertical') {
       this.sprite.tileScale.x = 0.15;
       this.sprite.tileScale.y = 0.15;

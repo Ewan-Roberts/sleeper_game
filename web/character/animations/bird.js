@@ -75,7 +75,6 @@ class Bird {
     this.sprite.anchor.set(0.5);
     this.sprite.rotation = 1;
     this.sprite.animationSpeed = 0.19;
-    // IMPORTANT FOR ARROWS MANAGER
     this.sprite.id = entity.id;
     this.sprite.play();
   }

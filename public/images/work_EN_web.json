@@ -11,8 +11,8 @@
     },
     "spritesheets": [
         {
-            "image": "a5d70a60eaaaa0df97474ab7783a47da827dbf87.jpeg",
-            "filesize": 1354144,
+            "image": "4a3c1d84ca6122bd45aa215666011860a3140c49.jpeg",
+            "filesize": 1381404,
             "sprites": [
                 {
                     "name": "gravel_roof",
@@ -158,9 +158,20 @@
                     }
                 },
                 {
-                    "name": "tarmac_tile",
+                    "name": "white_tiles",
                     "position": {
                         "x": 2333,
+                        "y": 3436
+                    },
+                    "dimension": {
+                        "w": 250,
+                        "h": 250
+                    }
+                },
+                {
+                    "name": "tarmac_tile",
+                    "position": {
+                        "x": 2584,
                         "y": 3436
                     },
                     "dimension": {
@@ -182,7 +193,7 @@
                 {
                     "name": "seamless_concrete",
                     "position": {
-                        "x": 2544,
+                        "x": 2795,
                         "y": 3436
                     },
                     "dimension": {
@@ -193,7 +204,7 @@
                 {
                     "name": "tile_concrete",
                     "position": {
-                        "x": 2695,
+                        "x": 2946,
                         "y": 3436
                     },
                     "dimension": {
@@ -204,7 +215,7 @@
                 {
                     "name": "tile_floor",
                     "position": {
-                        "x": 2836,
+                        "x": 3087,
                         "y": 3436
                     },
                     "dimension": {

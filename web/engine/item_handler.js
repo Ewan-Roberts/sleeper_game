@@ -3,7 +3,7 @@ const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
 
 const player_events = new event();
-const item_events = new event();
+const item_events   = new event();
 
 player_events.on('error', err => new Error(err));
 class PlayerEvents {

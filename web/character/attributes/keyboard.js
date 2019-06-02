@@ -1,9 +1,8 @@
 'use strict';
-const { tweenManager, keyboardManager} = require('pixi.js');
+const { keyboardManager } = require('pixi.js');
 
 const {
   collisions,
-  roofs,
   pads,
   shrouds,
 } = require('../../engine/pixi_containers');
@@ -11,7 +10,6 @@ const {
 const { world    } = require('../../engine/shadows');
 const { Player_Inventory} = require('../../view/view_player_inventory');
 const { Interaction_Menu } = require('../../view/interaction_menu');
-const { Fade     } = require('../../effects/fade');
 
 function point_collides(position) {
   const { children } = collisions;
@@ -29,19 +27,6 @@ function point_contains(position) {
     delete shrouds_to_remove.remove_on_enter;
   }
   return;
-  const roof = roofs.children;
-  roof.forEach(child => {
-    const tweening = tweenManager.getTweensForTarget(child);
-    if(tweening.length>=1) return;
-    if(child.containsPoint(position)) {
-      Fade.to(child, child.fade_opacity | 0.6);
-
-      return;
-    }
-    if(child.alpha !== 1) {
-      Fade.in(child);
-    }
-  });
 }
 
 function event_pad(position) {
@@ -132,7 +117,7 @@ class Keyboard {
     this.inventory_view.wide();
     this.inventory_view.toggle();
     this.interaction.show();
-    this.interaction.image('fire_pit');
+    this.interaction.image('bunny');
     this.interaction.decription('its a fireplace');
 
     this.inventory.items.forEach(item => this.interaction.populate(item));

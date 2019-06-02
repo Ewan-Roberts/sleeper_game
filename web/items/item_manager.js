@@ -1,9 +1,10 @@
 'use strict';
 const { Sprite } = require('pixi.js');
 
-const { renderer }      = require('../engine/app');
+const { renderer      } = require('../engine/app');
 const { random_number } = require('../utils/math');
 const { items         } = require('./data/item_data');
+
 // Temp interface
 class Item_Manager {
   static get_random_items(max = 2) {
@@ -25,16 +26,10 @@ class Item_Manager {
     return found_item;
   }
 
-  static get_item_by_name(name) {
-    const found_item = items.find(item => item.name === name);
-
-    return found_item;
-  }
-
   static get_item_by_image_name(name) {
     const found_item = items.find(item => item.image_name === name);
 
-    if(!found_item) throw new Error('no item found based on image_name ' + name);
+    if(!found_item) throw new Error('No item found based on image_name ' + name);
 
     return found_item;
   }
@@ -52,8 +47,8 @@ class Item_Manager {
   }
 
   static extract_item_image_by_name(name) {
-    const item = this.get_item_by_name(name);
-    const image_name = item ? item.image_name: name;
+    const item = this.get_item(name);
+    const image_name = item.image_name || name;
 
     if(!image_name) throw new Error('Can not find ' + name);
 

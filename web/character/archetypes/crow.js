@@ -13,7 +13,7 @@ class Crow extends Character{
     this.name = 'crow';
 
     this.add_component(new Bird(this));
-    this.sprite.tint = 0x352925;
+    this.tint = 0x352925;
 
     if(path) {
       this.add_component(new Tween(this.sprite));
@@ -31,6 +31,7 @@ class Crow extends Character{
       });
     }
 
+    this.sprite.name = 'crow';
     enemys.addChild(this.sprite);
   }
 

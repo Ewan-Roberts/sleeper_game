@@ -75,7 +75,6 @@ class Rodent {
     this.sprite.height /=2;
     this.sprite.anchor.set(0.5);
     this.sprite.rotation_offset = 1.57;
-    // IMPORTANT FOR ARROWS MANAGER
     this.sprite.id = entity.id;
     this.sprite.play();
   }

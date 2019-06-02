@@ -14,7 +14,10 @@ function get_node_dimensions(div) {
 }
 
 class Slot {
-  constructor({id,image_name, category}, div_name) {
+  constructor(data, div_name) {
+    console.log(data);
+    if(!data) return;
+    const {id,image_name, category} = data;
     this.id = id;
     this.category = category;
 
