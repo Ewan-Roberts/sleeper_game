@@ -13,9 +13,6 @@ web_server.listen(port, () =>
 app.use(express.static('./public'));
 app.get('/', res => res.sendFile(`${__dirname}/public/index.html`));
 
-const { register_handler } = require('./application_layer/register.js');
-const { login_handler } = require('./application_layer/login.js');
-
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -27,7 +24,5 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.post('/register', request => register_handler(request));
-app.post('/login', request => login_handler(request));
 
 
