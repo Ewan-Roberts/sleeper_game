@@ -5,8 +5,7 @@ class Item {
   constructor(data) {
     if(data.properties && data.properties.image_name) {
       this.sprite = new Sprite.fromFrame(data.properties.image_name);
-      console.log(data.properties.image_name);
-      //this.sprite.tint = data.properties.tint || 0xffffff;
+      this.sprite.tint = data.properties.tint || 0xffffff;
     } else {
       this.sprite = new Sprite.fromFrame('bunny');
     }

@@ -7,7 +7,6 @@ const { BackgroundVisualItem } = require('../elements/visual_object');
 const { Walker        } = require('../../character/archetypes/rat');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
-const { players       } = require('../../engine/pixi_containers');
 const level_data        = require('../data/start.json');
 
 class Start_Room  {
@@ -20,7 +19,6 @@ class Start_Room  {
   }
 
   _set_elements() {
-    console.log(players);
     Level_Factory.generate(this.elements);
 
     const { prey, exit_pad, grid, player } = this.elements;
@@ -51,18 +49,16 @@ class Start_Room  {
     // ];
     const hands = [];
     setInterval(()=> {
-      zombies.forEach(unit => {
-        const name = ( i % 2 )?'left_hand':'right_hand';
+      zombies.forEach(({sprite})=> {
+        const image_name = ( i % 2 )?'left_hand':'right_hand';
         const blood_hands = new BackgroundVisualItem({
-          properties: {
-            image_name: name,
-          },
+          properties: {image_name},
           width: 20,
           height: 20,
         });
 
-        blood_hands.set_position(unit.sprite);
-        blood_hands.rotation = unit.sprite.rotation + 1.5;
+        blood_hands.set_position(sprite);
+        blood_hands.rotation = sprite.rotation + 1.5;
         hands.push(blood_hands.sprite);
         hands.forEach((hand,i) => {
           if(hand.alpha < 0.1) {
@@ -81,7 +77,6 @@ class Start_Room  {
       pad.sprite.events.once('trigger', () => {
         zombies.forEach(unit => unit.logic_start());
       });
-      return pad;
     });
 
     pathfind.create_level_grid(grid[0]);
