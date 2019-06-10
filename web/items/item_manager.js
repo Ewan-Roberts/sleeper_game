@@ -29,7 +29,7 @@ class Item_Manager {
   static get_item_by_image_name(name) {
     const found_item = items.find(item => item.image_name === name);
 
-    if(!found_item) throw new Error('No item found based on image_name ' + name);
+    if(!found_item) throw new Error('no item found based on image_name ' + name);
 
     return found_item;
   }

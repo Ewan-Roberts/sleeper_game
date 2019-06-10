@@ -6,6 +6,7 @@ function distance_between(point_1, point_2) {
 
   return Math.sqrt((dx * dx) + (dy * dy));
 }
+
 //TODO replace random number with this
 function random_bound(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -41,7 +42,6 @@ function angle(anchor, point) {
 function angle_360(anchor, point) {
   return Math.atan2(anchor.y - point.y, anchor.x - point.x) * 180 / Math.PI + 180;
 }
-
 
 module.exports = {
   angle,

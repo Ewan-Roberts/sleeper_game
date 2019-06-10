@@ -23,7 +23,7 @@ class Items_Room {
     Level_Factory.generate(this.elements);
     const { prey, exit_pad, click_pad, player } = this.elements;
 
-    this.player.set_position(player[0]);
+    this.player.position.copy(player[0]);
 
     exit_pad.forEach(data => new Trigger_Pad(data, this.player));
 
@@ -39,7 +39,14 @@ class Items_Room {
     const areas = click_pad.map(data => new Click_Pad(data));
 
     const button_left = areas.find(({id}) => id === 200);
-    button_left.click = () => characters.forEach(({tween}) => tween.start());
+    button_left.click = () => {
+
+      const crow = new Lurcher(prey[0]);
+      crow.path = prey[0].polyline.map(({x,y})=>({x:prey[0].x+x, y:prey[0].y+y}));
+      crow.turn = true;
+      crow.draw();
+      crow.start();
+    };
 
     const furnace = new Shrine(click_pad[0]);
     furnace.click = () => {

@@ -4,7 +4,7 @@ const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 
-class Simple {
+class Simple_Room {
   constructor(properties) {
     this.name = properties.level_name;
     console.log('no simple maps');
@@ -21,7 +21,7 @@ class Simple {
     const { exit_pad, player } = elements;
 
     const player_character= new Player();
-    player_character.set_position(player[0]);
+    this.player.position.copy(player[0]);
 
     exit_pad.forEach(data => new Trigger_Pad(data, player_character));
 
@@ -30,5 +30,5 @@ class Simple {
 }
 
 module.exports = {
-  Simple,
+  Simple_Room,
 };

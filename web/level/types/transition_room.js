@@ -20,7 +20,7 @@ class Transition_Room {
     Level_Factory.generate(this.elements);
 
     const { exit_pad, player } = this.elements;
-    this.player.set_position(player[0]);
+    this.player.position.copy(player[0]);
 
     exit_pad.forEach(data => {
       new Trigger_Pad(data, this.player);
@@ -53,6 +53,7 @@ class Transition_Room {
     level_text.y = player[0].y -50;
 
     visuals.addChild(level_text);
+    console.timeEnd();
   }
 }
 

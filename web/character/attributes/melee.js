@@ -21,12 +21,12 @@ class Melee {
   }
 
   create_hit_box() {
-    this.box = new Sprite.fromFrame('black_dot');
-    this.box.width = 50;
-    this.box.height= 300;
+    this.box          = new Sprite.fromFrame('black_dot');
+    this.box.width    = 50;
+    this.box.height   = 300;
     this.box.anchor.y = 1;
     this.box.anchor.x = 0.5;
-    this.box.alpha = 0.5;
+    this.box.alpha    = 0.5;
 
     visuals.addChild(this.box);
   }
@@ -40,7 +40,6 @@ class Melee {
   attack(target) {
     this.equip();
     this.animation.attack();
-
     this.animation.face_point(target.sprite);
 
     this.hit_box(target.sprite);

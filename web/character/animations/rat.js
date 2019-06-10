@@ -1,6 +1,6 @@
 'use strict';
-const { Texture, extras } = require('pixi.js');
-const { radian } = require('../../utils/math');
+const { Texture } = require('pixi.js');
+const { radian  } = require('../../utils/math');
 
 class rat_animations {
   static move_frames() {
@@ -64,19 +64,11 @@ const frames = {
 };
 
 class Rodent {
-  constructor(entity) {
+  constructor(sprite) {
     this.name = 'animation';
 
-    const texture = [Texture.fromFrame('bunny')];
-    //TODO Finish migrating animation
-    entity.sprite = new extras.AnimatedSprite(texture);
-    this.sprite = entity.sprite;
-    this.sprite.width  /=2;
-    this.sprite.height /=2;
-    this.sprite.anchor.set(0.5);
+    this.sprite = sprite;
     this.sprite.rotation_offset = 1.57;
-    this.sprite.id = entity.id;
-    this.sprite.play();
   }
 
   switch(action) {
@@ -101,6 +93,18 @@ class Rodent {
   }
 
   walk() {
+    this.switch('move');
+  }
+
+  idle() {
+    this.switch('dead');
+  }
+
+  wait() {
+    this.switch('dead');
+  }
+
+  eat() {
     this.switch('move');
   }
 

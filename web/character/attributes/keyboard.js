@@ -7,8 +7,8 @@ const {
   shrouds,
 } = require('../../engine/pixi_containers');
 
-const { world    } = require('../../engine/shadows');
-const { Player_Inventory} = require('../../view/view_player_inventory');
+const { world            } = require('../../engine/shadows');
+const { Player_Inventory } = require('../../view/view_player_inventory');
 const { Interaction_Menu } = require('../../view/interaction_menu');
 
 function point_collides(position) {
@@ -20,13 +20,16 @@ function point_collides(position) {
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
 function point_contains(position) {
-  const shroud = shrouds.children ;
-  const shrouds_to_remove = shroud.find(child => child.containsPoint(position));
-  if (shrouds_to_remove && shrouds_to_remove.remove_on_enter) {
-    shrouds_to_remove.destroy();
-    delete shrouds_to_remove.remove_on_enter;
+  const found = shrouds.children.find(child => child.containsPoint(position));
+  if (found){
+    if(found.remove_on_enter) {
+      found.destroy();
+      return;
+    }
+    if (found.alpha_on_enter) {
+      found.alpha = (found.alpha !== found.alpha_on_enter)?found.alpha_on_enter:1;
+    }
   }
-  return;
 }
 
 function event_pad(position) {
@@ -38,28 +41,23 @@ function event_pad(position) {
 }
 
 class Keyboard {
-  constructor({ animation, sprite, vitals, inventory}) {
-    this.name          = 'keyboard';
-    this.animation     = animation;
-    this.sprite        = sprite;
-    this.speed         = vitals.speed;
-    this.buffer        = 50;
-    this.can_move      = true;
-    this.inventory     = inventory;
-    this.inventory_view= new Player_Inventory();
-    this.interaction   = new Interaction_Menu();
+  constructor(sprite) {
+    const { animation, vitals, inventory} = sprite;
+    this.name           = 'keyboard';
+    this.animation      = animation;
+    this.sprite         = sprite;
+    this.speed          = vitals.speed;
+    this.buffer         = 50;
+    this.inventory      = inventory;
+    this.inventory_view = new Player_Inventory();
+    this.interaction    = new Interaction_Menu();
 
     keyboardManager.on('down', key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
   }
 
   destroy() {
-    console.log(keyboardManager);
     keyboardManager.removeAllListeners();
-  }
-
-  //TODO
-  save_game() {
   }
 
   key_down(key) {
@@ -84,6 +82,14 @@ class Keyboard {
       case 'n' : return this.save_game();
       default  : return;
     }
+  }
+
+  key_up() {
+    const w = keyboardManager.isDown(87);
+    const a = keyboardManager.isDown(65);
+    const s = keyboardManager.isDown(83);
+    const d = keyboardManager.isDown(68);
+    if(!w && !a && !s && !d) this.animation.idle();
   }
 
   small_inventory() {
@@ -123,10 +129,6 @@ class Keyboard {
     this.inventory.items.forEach(item => this.interaction.populate(item));
   }
 
-  key_up() {
-    this.animation.idle();
-    //keyboardManager.enable();
-  }
 
   disable_for(time) {
     keyboardManager.disable();
@@ -152,7 +154,7 @@ class Keyboard {
 
     this.animation.walk();
     this.animation.face_up();
-    this.animation.move_up_by(this.speed);
+    this.sprite.y -= this.speed;
 
     world.y += this.speed;
   }
@@ -168,7 +170,7 @@ class Keyboard {
 
     this.animation.walk();
     this.animation.face_down();
-    this.animation.move_down_by(this.speed);
+    this.sprite.y += this.speed;
 
     world.y -= this.speed;
   }
@@ -184,7 +186,7 @@ class Keyboard {
 
     this.animation.walk();
     this.animation.face_left();
-    this.animation.move_left_by(this.speed);
+    this.sprite.x -= this.speed;
 
     world.x += this.speed;
   }
@@ -200,9 +202,9 @@ class Keyboard {
 
     this.animation.walk();
     this.animation.face_right();
-    this.animation.move_right_by(this.speed);
 
-    world.x -= this.speed;
+    this.sprite.x += this.speed;
+    world.x       -= this.speed;
   }
 }
 

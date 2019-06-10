@@ -1,15 +1,13 @@
 'use strict';
-const { tween, tweenManager }= require('pixi.js');
+const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
-const { Character        } = require('../character_model');
 const { radian           } = require('../../utils/math');
-//const { random_number    } = require('../../utils/math');
-const { draw_path        } = require('../../utils/line');
+//const { draw_path        } = require('../../utils/line');
 const { distance_between } = require('../../utils/math');
-const { Sight            } = require('../../utils/line_of_sight');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
+const { Sight            } = require('../../utils/line_of_sight');
 const { Zombie           } = require('../animations/zombie');
 const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
@@ -25,26 +23,26 @@ function break_at_door(path) {
   return path;
 }
 
-class Walker extends Character {
-  constructor({id, properties}) {
-    super();
+const dead = [ Texture.fromFrame('bird_8') ];
+
+class Walker extends extras.AnimatedSprite {
+  constructor(data) {
+    super(dead);
     this.name = 'zombie';
-    this.id = id;
+    this.id   = data.id;
+    this.interactive = true;
+
     this.add_component(new Zombie(this));
-    this.add_component(new Inventory({
-      ...this,
-      properties,
-    }));
+    this.add_component(new Inventory(this, data.properties));
     this.add_component(new Vitals(this));
     this.add_component(new Melee(this));
+    this.position.copy(data);
 
-    enemys.addChild(this.sprite);
-    this.sprite.name = 'zombie';
-    this.sprite.interactive = true;
+    enemys.addChild(this);
   }
 
   get _target_far_away() {
-    const distance = distance_between(this.target.sprite, this.sprite);
+    const distance = distance_between(this.target, this);
     return distance > 200;
   }
 
@@ -54,9 +52,10 @@ class Walker extends Character {
 
   async _pathfind() {
     this.animation.move();
+
     let normal_path;
-    try{
-      normal_path = await pathfind.get_sprite_to_sprite_path(this.sprite, this.target.sprite);
+    try {
+      normal_path = await pathfind.get_sprite_to_sprite_path(this, this.target);
     } catch(err) {
       console.log(err);
     }
@@ -64,9 +63,8 @@ class Walker extends Character {
       this.tween.time = 500;
       return;
     }
-    console.log(normal_path);
-    const door_path   = break_at_door(normal_path);
-    const door_tile   = door_path[door_path.length - 1];
+    const door_path = break_at_door(normal_path);
+    const door_tile = door_path[door_path.length - 1];
 
     const { damage } = this.inventory.equipped;
     damage_events.emit('damage_tile', {door_tile, damage});
@@ -75,8 +73,6 @@ class Walker extends Character {
       door_path[0].x + 50,
       door_path[0].y + 50
     );
-
-    //const random = () => random_number(30, 50);
 
     for (let i = 1; i < door_path.length; i++) {
       this.tween.path.arcTo(
@@ -92,39 +88,37 @@ class Walker extends Character {
 
   // NOTE: Keep this verbose and dumb
   logic_start() {
-    this.tween = tweenManager.createTween(this.sprite);
-    this.tween.time = 2000;
+    this.tween = tweenManager.createTween(this);
+    this.tween.time = 1000;
     this.tween.expire = true;
     this.tween.start();
 
     this.tween.on('end', async () => {
+      if(this.remove_next_tick) return;
+      console.log(this.tween);
       this.tween.clear();
       this.tween.expire = true;
 
-      if(!this.target.vitals.alive) throw 'game over';
-
       if(!this._target_far_away) {
-        this.tween.time = 5000;
+        this.tween.time = 2000;
         this.tween.start();
-
-        damage_events.emit('damage', {id: this.target.id, damage: 50});
         this.animation.attack();
+        this.animation.face_point(this.target);
 
-        this.animation.face_point(this.target.sprite);
+        damage_events.emit('damage', {id: this.target.id, damage: 10});
         return;
       }
 
       this.tween.path = new tween.TweenPath();
-      this.tween.path.moveTo(this.sprite.x, this.sprite.y);
+      this.tween.path.moveTo(this.x, this.y);
 
-      if(Sight.lineOfSight(this.sprite, this.target.sprite, collisions.children)) {
-        this.tween.path.lineTo(this.target.sprite.x, this.target.sprite.y);
+      if(Sight.lineOfSight(this, this.target, collisions.children)) {
+        this.tween.path.lineTo(this.target.x, this.target.y);
         this.animation.move();
-        this.tween.time = 5000;
+        this.tween.time = 3000;
       } else {
         await this._pathfind();
       }
-
       //draw_path(this.tween.path);
       this.tween.start();
     });
@@ -133,11 +127,14 @@ class Walker extends Character {
       if(!this.vitals.alive) this.tween.remove();
       if(!this.tween.path) return;
 
-      this.sprite.rotation = radian(this.sprite, this.tween.path._tmpPoint);
+      this.rotation = radian(this, this.tween.path._tmpPoint);
     });
   }
-}
 
+  add_component(component) {
+    this[component.name] = component;
+  }
+}
 
 module.exports = {
   Walker,

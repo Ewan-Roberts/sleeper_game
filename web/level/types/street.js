@@ -26,7 +26,7 @@ class Street {
     const background = new Background(player[0]);
     background.fade_out(500);
 
-    this.player.set_position(player[0]);
+    this.player.position.copy(player[0]);
 
     const characters = prey.map(npc => {
       const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
@@ -37,7 +37,7 @@ class Street {
 
       return new Crow({path});
     });
-    characters.forEach(({tween}) => tween.start());
+    characters.forEach(unit => unit.start());
 
     exit_pad.forEach(pad => new Trigger_Pad(pad, this.player));
   }

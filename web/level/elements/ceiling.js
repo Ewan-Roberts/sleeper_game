@@ -1,17 +1,19 @@
 'use strict';
 const { roofs } = require('../../engine/pixi_containers');
-const { Item  } = require('./item_model');
+const { Sprite, Texture } = require('pixi.js');
 
-class Roof extends Item {
-  constructor(options) {
-    super(options);
-    this.sprite.fade_opacity = options.properties.fade;
-    this.alpha = options.properties.alpha || 0.9;
-    this.sprite.anchor.x = 0;
-    this.sprite.anchor.y = 1;
-    this.tint = options.properties.tint || 0xffffff;
+class Roof extends Sprite {
+  constructor(data) {
+    super(Texture.fromImage(data.image_name));
+    this.id     = data.id;
+    this.height = data.height;
+    this.width  = data.width;
+    this.rotation = data.rotation * (Math.PI/180);
+    this.alpha    = data.properties && data.properties.alpha || 1;
+    this.anchor.set(0, 1);
+    this.position.copy(data);
 
-    roofs.addChild(this.sprite);
+    roofs.addChild(this);
   }
 }
 

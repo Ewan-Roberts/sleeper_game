@@ -2,25 +2,24 @@
 const event = require('events');
 const { Item_Manager } = require('../items/item_manager');
 
-const player_events = new event();
 const item_events   = new event();
-
-player_events.on('error', err => new Error(err));
+const player_events = new event();
 class PlayerEvents {
   constructor(player) {
     this.name = 'events';
+    this.player_events = player_events;
 
-    player_events.on('give_item', item => {
+    this.player_events.on('give_item', item => {
       player.inventory.give_item(item);
     });
 
-    player_events.on('check_items', callback => {
+    this.player_events.on('check_items', callback => {
       const result = player.inventory.take_items('blood');
 
       callback(result);
     });
 
-    player_events.on('equip_weapon', item => {
+    this.player_events.on('equip_weapon', item => {
       const found_item = Item_Manager.get_item_by_image_name(item.image_name);
 
       player.inventory.equip_weapon(found_item);
@@ -57,12 +56,8 @@ class Items {
   }
 
   take_items(name) {
-    const result = this.items.map((item,i) => {
-      if(item.name === name) {
-        this.items.splice(i,1);
-        return item;
-      }
-    }).filter(n => n);
+    const index = this.items.map(item => item.name).indexOf(name);
+    const result = this.items.splice(index,1);
 
     return result;
   }
@@ -71,6 +66,6 @@ class Items {
 module.exports = {
   PlayerEvents,
   Items,
-  player_events,
   item_events,
+  player_events,
 };

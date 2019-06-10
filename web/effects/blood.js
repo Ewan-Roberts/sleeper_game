@@ -1,17 +1,17 @@
 'use strict';
-const { Sprite  } = require('pixi.js');
+const { Sprite, Texture } = require('pixi.js');
 const { visuals } = require('../engine/pixi_containers');
 
-class Blood {
-  add_at(point) {
-    const blood_splatter = new Sprite.fromFrame('round_floor_stain');
-    blood_splatter.width  /= 4;
-    blood_splatter.height /= 4;
-    blood_splatter.anchor.set(0.5);
-    blood_splatter.alpha = 0.3;
-    blood_splatter.position.set(point.x, point.y);
+class Blood extends Sprite {
+  constructor(data) {
+    super(Texture.fromImage('round_floor_stain'));
+    this.width  /= 4;
+    this.height /= 4;
+    this.alpha  = 0.3;
+    this.anchor.set(0.5);
+    this.position.copy(data);
 
-    visuals.addChild(blood_splatter);
+    visuals.addChild(this);
   }
 }
 

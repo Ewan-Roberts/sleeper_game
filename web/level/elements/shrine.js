@@ -2,14 +2,24 @@
 
 const { collisions } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
-const { Item       } = require('./item_model');
+const { Sprite, Texture } = require('pixi.js');
 
-class Shrine extends Item {
+class Shrine extends Sprite {
   constructor(data) {
-    super(data);
-    this.inventory = new Inventory();
+    super(Texture.fromImage(data.image_name || 'bunny'));
+    this.id          = data.id;
+    this.inventory   = new Inventory();
+    this.height      = data.height;
+    this.width       = data.width;
+    this.rotation    = data.rotation * (Math.PI/180);
+    this.tint        = 0xA9A9A9;
+    this.interactive = true;
+    this.buttonMode  = true;
 
-    collisions.addChild(this.sprite);
+    this.anchor.set(0, 1);
+    this.position.copy(data);
+
+    collisions.addChild(this);
   }
 
   give_blood(vial) {

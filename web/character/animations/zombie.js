@@ -1,7 +1,6 @@
 'use strict';
-const { Texture, extras } = require('pixi.js');
-
-const { radian } = require('../../utils/math');
+const { Texture } = require('pixi.js');
+const { radian  } = require('../../utils/math');
 // this makes an array of textures that and 0 before 10 in the name
 const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 
@@ -14,21 +13,11 @@ const idle   = create_texture('idle00', 32);
 const frames = { move, attack, death, eat, idle };
 
 class Zombie {
-  constructor(entity) {
+  constructor(sprite) {
     this.name = 'animation';
-    entity.sprite = new extras.AnimatedSprite(frames.idle);
 
-    this.sprite = entity.sprite;
-    this.sprite.width  /=2;
-    this.sprite.height /=2;
-    this.sprite.anchor.set(0.5);
-    this.sprite.rotation = -0.7;
-    this.sprite.animationSpeed = 0.3;
-    this.sprite.loop = true;
-    this.sprite.id = entity.id;
-    this.sprite.play();
+    this.sprite = sprite;
   }
-
 
   switch(action) {
     if (this.state === action) return;

@@ -19,47 +19,51 @@ const {
 } = zIndex_layer;
 
 const backgrounds  = new Container();
-backgrounds.name = 'background_image';
+backgrounds.name   = 'background_image';
 backgrounds.zIndex = background;
 
-const grids = new Container();
-grids.name = 'grid_container';
+const decals  = new Container();
+decals.name   = 'decals_container';
+decals.zIndex = background;
+
+const grids  = new Container();
+grids.name   = 'grid_container';
 grids.zIndex = background;
 
-const collisions = new Container();
-collisions.name = 'collision_items';
+const collisions  = new Container();
+collisions.name   = 'collision_items';
 collisions.zIndex = low;
 
-const enemys= new Container();
-enemys.name = 'enemy_container';
+const enemys  = new Container();
+enemys.name   = 'enemy_container';
 enemys.zIndex = low;
 
-const items = new Container();
-items.name = 'non_collision_items';
+const items  = new Container();
+items.name   = 'non_collision_items';
 items.zIndex = medium;
 
-const players = new Container();
-players.name = 'player_container';
+const players  = new Container();
+players.name   = 'player_container';
 players.zIndex = medium;
 
-const shrouds = new Container();
-shrouds.name = 'shroud_container';
+const shrouds  = new Container();
+shrouds.name   = 'shroud_container';
 shrouds.zIndex = close;
 
-const visuals = new Container();
-visuals.name = 'visuals';
+const visuals  = new Container();
+visuals.name   = 'visuals';
 visuals.zIndex = close;
 
-const pads = new Container();
-pads.name = 'pad_container';
+const pads  = new Container();
+pads.name   = 'pad_container';
 pads.zIndex = close;
 
-const roofs= new Container();
-roofs.name = 'roof_container';
+const roofs  = new Container();
+roofs.name   = 'roof_container';
 roofs.zIndex = close;
 
-const guis= new Container();
-guis.name = 'gui_container';
+const guis  = new Container();
+guis.name   = 'gui_container';
 guis.zIndex = very_close;
 
 world.addChild(
@@ -73,6 +77,7 @@ world.addChild(
   enemys,
   players,
   guis,
+  decals,
   pads
 );
 
@@ -84,14 +89,8 @@ function clear_container(container) {
   }
 }
 
-function clear_level_containers(expection) {
-  for (let i = world.children.length - 1; i >= 0; i--) {
-    if(expection) {
-      if(world.children[i].name === expection) continue;
-    }
-
-    clear_container(world.children[i]);
-  }
+function clear_level_containers() {
+  world.children.forEach(child => child.removeChildren());
 }
 
 // function clear_non_players() {
@@ -110,6 +109,7 @@ module.exports = {
   players,
   guis,
   pads,
+  decals,
   clear_level_containers,
 };
 

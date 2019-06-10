@@ -225,25 +225,6 @@
                  "y":1858.03247311083
                 }, 
                 {
-                 "height":57.3890493307974,
-                 "id":201,
-                 "name":"",
-                 "properties":
-                    {
-                     "image_name":"lamp_00"
-                    },
-                 "propertytypes":
-                    {
-                     "image_name":"string"
-                    },
-                 "rotation":-181.147987516506,
-                 "type":"",
-                 "visible":true,
-                 "width":46.159697734444,
-                 "x":2166.89417850611,
-                 "y":1921.84047929539
-                }, 
-                {
                  "height":300.215,
                  "id":208,
                  "name":"",

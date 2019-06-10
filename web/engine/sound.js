@@ -11,6 +11,13 @@ const Sound = sound.add({
   page_turn:      'audio/page_turn.wav',
   wood_split:     'audio/wood_split.wav',
   wood_thump:     'audio/wood_thump.wav',
+  honk:           'audio/honk.wav',
+  suspense_in:    'audio/suspense_in.wav',
+  eerie_ambient:  'audio/eerie-ambient-sound.wav',
+  start_theme:    'audio/start-theme.wav',
+  click:          'audio/click.wav',
+  static_effect:  'audio/tv-static.wav',
+  walk_normal:     'audio/walk_normal.wav',
 });
 
 module.exports = Sound;

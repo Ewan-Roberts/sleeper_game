@@ -76,7 +76,7 @@ class Grid {
       }
       grid_x++;
 
-      if(collisions.children.length < 1) throw 'must have collision objects for grid';
+      //if(collisions.children.length < 1) throw 'must have collision objects for grid';
 
       collisions.children.forEach(object => {
         if(check(tile, object)) {

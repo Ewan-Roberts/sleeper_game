@@ -35,11 +35,11 @@ class Intro {
     //TODO this needs to move out into trigger pad
     if(this.properties.entry_id) {
       const entry_point = player.find(point => point.id === this.properties.entry_id);
-      this.player.set_position(entry_point);
+      this.player.position.copy(entry_point);
       background.set_position(entry_point);
       Camera.set_center(entry_point);
     } else {
-      this.player.set_position(player[0]);
+      this.player.position.copy(player[0]);
       background.set_position(player[0]);
     }
     background.fade_out(500);
@@ -70,12 +70,12 @@ class Intro {
       const pad = new Click_Pad(data);
       const button = new Button(data.properties);
       button.visible = false;
-      button.set_position(pad.sprite);
-      pad.sprite.on('mouseover', () => {
+      button.set_position(pad);
+      pad.on('mouseover', () => {
         dumpster.tint = 0xffffff;
         button.visible = true;
       });
-      pad.sprite.on('mouseout', () => {
+      pad.on('mouseout', () => {
         dumpster.tint = 0xd3d3d3;
         button.visible = false;
       });
@@ -83,7 +83,6 @@ class Intro {
       pad.click = () => {
         if(pad.number_clicks === 3) return;
         const tween_it = new Tween(dumpster);
-        tween_it.from(dumpster);
         tween_it.to({x: dumpster.x - 15, y:dumpster.y - 20});
         tween_it.time = 1000;
         tween_it.start();

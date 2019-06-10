@@ -1,7 +1,6 @@
 'use strict';
-const { Sprite } = require('pixi.js');
-const { radian } = require('../utils/math');
-const { Tween  } = require('./tween');
+const { Sprite, Texture, tweenManager } = require('pixi.js');
+const { radian        } = require('../utils/math');
 const { damage_events } = require('./damage_handler');
 
 const { items      } = require('./pixi_containers');
@@ -13,20 +12,16 @@ const objects  = collisions.children;
 const enemies  = enemys.children;
 const players1 = players.children;
 
-class Arrow {
+class Arrow extends Sprite {
   constructor() {
-    this.name = 'arrow';
-    this.sprite = new Sprite.fromFrame('arrow');
-    this.sprite.width  /= 6;
-    this.sprite.height /= 6;
-    this.sprite.anchor.set(1);
+    super(Texture.fromImage('arrow'));
+    this.name    = 'arrow';
+    this.width  /= 6;
+    this.height /= 6;
+    this.anchor.set(1);
 
-    this.tween = new Tween(this.sprite);
-    items.addChild(this.sprite);
-  }
-
-  set rotation(value) {
-    this.sprite.rotation = value;
+    this.tween = tweenManager.createTween(this);
+    items.addChild(this);
   }
 }
 
@@ -37,8 +32,8 @@ function shoot_arrow(speed, damage, origin, point) {
   arrow.tween.to(point);
   arrow.tween.time = speed*2;
 
-  arrow.tween.movement.on('update', () => {
-    const arrow_point = arrow.sprite.getGlobalPosition();
+  arrow.tween.on('update', () => {
+    const arrow_point = arrow.getGlobalPosition();
 
     const collision_object = objects.find(object => object.containsPoint(arrow_point));
     if (collision_object) {

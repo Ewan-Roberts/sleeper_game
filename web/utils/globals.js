@@ -2,12 +2,7 @@
 const PIXI = require('pixi.js');
 
 const { visuals } = require('../engine/pixi_containers');
-
-/* ***************************************************************
- *                                                               *
- *  This file should stay very empty and disabled in production  *
- *                                                               *
- *************************************************************** */
+const world       = require('../engine/app');
 
 global.place_bunny = ({ x, y } /*light*/) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
@@ -19,10 +14,17 @@ global.place_bunny = ({ x, y } /*light*/) => {
   visuals.addChild(bunny);
   return bunny;
 };
+global.env = 'prod';
+global.dev =()=> {
+  console.log(world);
+  world.renderer.backgroundColor = 0xd3d3d3;
+  global.env = 'dev';
+};
+
 
 // AUTO-REFRESH WINDOW
 // For dev auto refesh
-// let blurred = false;
-// global.window.onblur = function() { blurred = true; };
-// global.window.onfocus = function() { blurred && (global.location.reload()); };
-// 20/ 29
+let blurred = false;
+global.window.onblur = function() { blurred = true; };
+global.window.onfocus = function() { blurred && (global.location.reload()); };
+20/ 29;

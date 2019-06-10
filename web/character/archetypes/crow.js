@@ -1,46 +1,73 @@
 'use strict';
-const { enemys } = require('../../engine/pixi_containers');
+const { Texture, tween, tweenManager, extras } = require('pixi.js');
 
-const { Tween     } = require('../../engine/tween');
+const { enemys    } = require('../../engine/pixi_containers');
 const { radian    } = require('../../utils/math');
-const { Character } = require('../character_model');
+const { draw_path } = require('../../utils/line');
 const { Bird      } = require('../animations/bird');
 
-// this should extend a character type
-class Crow extends Character{
-  constructor({ path, time, smooth, draw, turn } = {}) {
-    super();
-    this.name = 'crow';
+class Crow extends extras.AnimatedSprite {
+  constructor(data) {
+    super([Texture.fromFrame('bird_8')]);
+    this.id    = data.id;
+    this.name  = 'crow';
 
     this.add_component(new Bird(this));
-    this.tint = 0x352925;
 
-    if(path) {
-      this.add_component(new Tween(this.sprite));
-      this.tween.add_path(path);
-      this.tween.time = time || 10000;
-      this.tween.path_smoothness = smooth || 100;
-      if(draw) this.tween.draw_path();
-      if(turn) {
-        this.tween.movement.on('update', () => {
-          this.sprite.rotation = radian(this.sprite, this.tween.movement.path._tmpPoint);
-        });
-      }
-      this.tween.movement.on('end', () => {
-        this.sprite.destroy();
-      });
+    this.tint     = 0x352925;
+    this.rotation = 1.56;
+    this.width    /= 2.5;
+    this.height   /= 2.5;
+    this.anchor.set(0.5);
+    this.animationSpeed = 0.19;
+    this.tween = tweenManager.createTween(this);
+
+    enemys.addChild(this);
+  }
+
+  set path(path_array) {
+    this.tween.path = new tween.TweenPath();
+    for (let i = 1; i < path_array.length; i++) {
+      this.tween.path.arcTo(
+        path_array[i-1].x,
+        path_array[i-1].y,
+        path_array[i].x,
+        path_array[i].y,
+        50);
     }
+    this.tween.time = this.time || 10000;
 
-    this.sprite.name = 'crow';
-    enemys.addChild(this.sprite);
+    this.tween.on('end', () => {
+      this.destroy();
+      this.tween.remove();
+      this.tween = null;
+    });
   }
 
-  destroy() {
-    this.sprite.destroy();
+  start() {
+    this.tween.start();
+    this.animation.move();
+    this.play();
   }
 
+  draw() {
+    draw_path(this.tween.path);
+  }
+
+  set turn(bool) {
+    if(!bool) return;
+
+    this.tween.on('update', () => {
+      this.rotation = radian(this, this.tween.path._tmpPoint) + 1.57;
+    });
+  }
+
+  add_component(component) {
+    this[component.name] = component;
+  }
 }
 
 module.exports = {
   Crow,
 };
+

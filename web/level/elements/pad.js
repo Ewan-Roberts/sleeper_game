@@ -4,29 +4,35 @@ const { pads } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('../types/level_factory');
 const event = require('events');
 
-class Trigger_Pad {
-  constructor(data, player) {
-    this.id = data.id;
-    this.sprite = new Sprite(Texture.WHITE);
-    this.sprite.height = data.height;
-    this.sprite.width  = data.width;
-    this.sprite.alpha  = data.properties && data.properties.alpha || 0.3;
-    this.sprite.anchor.set(0);
-    this.sprite.position.set(data.x, data.y);
-    this.sprite.events = new event({once: true});
-    this.sprite.rotation = data.rotation * (Math.PI/180);
+const default_alpha = (global.env === 'dev')?0.1:0;
 
+class Trigger_Pad extends Sprite {
+  constructor(data, player) {
+    super(Texture.WHITE);
+    this.id       = data.id;
+    this.height   = data.height;
+    this.width    = data.width;
+    this.rotation = data.rotation * (Math.PI/180);
+    this.alpha    = data.properties && data.properties.alpha || default_alpha;
+    this.anchor.set(0);
+    this.position.copy(data);
+
+    this.events = new event({once: true});
     if(data.properties && data.properties.level_name) {
-      this.sprite.events.once('trigger', () => {
+      this.events.once('trigger', () => {
         Level_Factory.create(data, player);
       });
     }
 
-    pads.addChild(this.sprite);
+    pads.addChild(this);
   }
 
-  destroy() {
-    pads.removeChild(this.sprite);
+  once(name, func) {
+    console.log(global.env);
+    console.log(default_alpha);
+    this.tint  = 0xffff00;
+    this.alpha = (global.env === 'dev')?0.2:0;
+    this.events.once(name, func);
   }
 }
 

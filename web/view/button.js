@@ -4,9 +4,9 @@ const {Text,Sprite} = require('pixi.js');
 const { guis } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
-class Label {
+class Label extends Text{
   constructor(text) {
-    this.sprite = new Text(text, {
+    super(text, {
       fontSize: 20,
       fill: '#D2D8D7',
       fontVariant: 'small-caps',
@@ -14,21 +14,8 @@ class Label {
       lineJoin: 'round',
       strokeThickness: 5,
     });
-
-    this.sprite.anchor.set(0.5);
-    guis.addChild(this.sprite);
-  }
-
-  set visible(bool) {
-    this.sprite.visible = bool;
-  }
-
-  set_position({x, y}) {
-    this.sprite.position.set(x, y);
-  }
-
-  remove() {
-    guis.removeChild(this.sprite);
+    this.anchor.set(0.5);
+    guis.addChild(this);
   }
 }
 
@@ -57,10 +44,10 @@ class Button {
     this.sprite.position.set(x, y);
 
     if(this.action_label) {
-      this.action_label.set_position({x, y: y+30});
+      this.action_label.position.copy({x, y: y+30});
     }
     if(this.description_label) {
-      this.description_label.set_position({x, y: y-30});
+      this.description_label.position.copy({x, y: y-30});
     }
   }
 
@@ -74,7 +61,11 @@ class Button {
       this.description_label.visible = bool;
     }
   }
-
+  destroy() {
+    this.description_label.destroy();
+    this.action_label.destroy();
+    this.sprite.destroy();
+  }
   remove() {
     guis.removeChild(this.sprite);
 

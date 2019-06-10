@@ -25,11 +25,11 @@ class Defend_Room  {
 
     const { prey, exit_pad, grid, player } = this.elements;
 
-    this.player.set_position(player[0]);
+    this.player.position.copy(player[0]);
     const zombies = prey.map((unit,i) => {
       const zombie = new Walker(unit);
       zombie.target(this.player);
-      zombie.set_position(unit);
+      zombie.position.copy(unit);
       if(i % 2) zombie.animation.eat();
       return zombie;
     });
@@ -43,7 +43,7 @@ class Defend_Room  {
     exit_pad.forEach(data => {
       const pad = new Trigger_Pad(data);
 
-      pad.sprite.events.once('trigger', () => {
+      pad.events.once('trigger', () => {
         zombies.forEach(unit => unit.logic_start());
       });
       return pad;

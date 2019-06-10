@@ -1,5 +1,5 @@
 'use strict';
-const { Texture, extras } = require('pixi.js');
+const { Texture } = require('pixi.js');
 
 const { radian } = require('../../utils/math');
 
@@ -64,19 +64,10 @@ const dead = [ Texture.fromFrame('bird_8') ];
 const frames = { move, wait, dead };
 
 class Bird {
-  constructor(entity) {
+  constructor(sprite) {
     this.name = 'animation';
 
-    entity.sprite = new extras.AnimatedSprite(frames.move);
-
-    this.sprite = entity.sprite;
-    this.sprite.width  /=2;
-    this.sprite.height /=2;
-    this.sprite.anchor.set(0.5);
-    this.sprite.rotation = 1;
-    this.sprite.animationSpeed = 0.19;
-    this.sprite.id = entity.id;
-    this.sprite.play();
+    this.sprite = sprite;
   }
 
   switch(action) {

@@ -1,9 +1,9 @@
 'use strict';
-const { Sprite, tweenManager } = require('pixi.js');
+const { Sprite, Texture, tweenManager } = require('pixi.js');
+const { radian, random_bound } = require('../../utils/math');
 const { screen      } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
 const { MeleeBox    } = require('../../engine/melee');
-const { radian, random_bound } = require('../../utils/math');
 const { guis        } = require('../../engine/pixi_containers');
 const { world       } = require('../../engine/shadows');
 
@@ -13,36 +13,28 @@ function get_relative_mouse_position(sprite, mouse_point) {
     y: (mouse_point.y - screen.height/2) + sprite.y,
   };
 }
-class Aiming_Cone {
+class Aiming_Cone extends Sprite {
   constructor() {
-    this.sprite = new Sprite.from('yellow_triangle');
-    this.sprite.anchor.x = 0.5;
-    this.sprite.alpha = 0;
-    this.original_width = this.sprite.width;
+    super(Texture.fromImage('yellow_triangle'));
+    this.anchor.x = 0.5;
+    this.alpha    = 0;
+    this.original_width = this.width;
 
-    guis.addChild(this.sprite);
-  }
-
-  set rotation(value) {
-    this.sprite.rotation = value - 1.57;
-  }
-
-  set position({x, y}) {
-    this.sprite.position.set(x, y);
+    guis.addChild(this);
   }
 
   narrow(time = 3000) {
     if(this.tween) this.tween.remove();
-    const tweens = tweenManager.getTweensForTarget(this.sprite);
+    const tweens = tweenManager.getTweensForTarget(this);
     if(tweens) tweens.forEach(tween => tween.remove());
 
-    this.tween = tweenManager.createTween(this.sprite);
+    this.tween = tweenManager.createTween(this);
     this.tween.expire   = true;
     this.tween.time     = time;
 
     this.angle_of_cone  = 90;
-    this.sprite.visible = true;
-    this.sprite.alpha   = 0;
+    this.visible = true;
+    this.alpha   = 0;
 
     this.tween.from({
       width: this.original_width,
@@ -53,12 +45,12 @@ class Aiming_Cone {
     });
 
     this.tween.on('update', () => {
-      this.angle_of_cone-=1;
+      this.angle_of_cone -= 1;
     });
 
     this.tween.on('end', () => {
-      this.sprite.width = this.original_width;
-      this.sprite.visible = false;
+      this.width = this.original_width;
+      this.visible = false;
       this.tween.remove();
     });
 
@@ -70,16 +62,15 @@ class Aiming_Cone {
   }
 
   finish() {
-    this.sprite.visible = false;
+    this.visible = false;
     if(this.tween) this.tween.remove();
   }
 }
 
 class Mouse {
-  constructor({ animation, sprite }) {
+  constructor(sprite) {
     this.name      = 'mouse';
-
-    this.animation = animation;
+    this.animation = sprite.animation;
     this.sprite    = sprite;
     this.cone      = new Aiming_Cone();
     this.melee     = new MeleeBox();

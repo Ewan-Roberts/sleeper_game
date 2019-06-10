@@ -4,7 +4,6 @@ const { pathfind      } = require('../../engine/pathfind.js');
 const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Walker        } = require('../../character/archetypes/rat');
-const { Deer          } = require('../../character/archetypes/deer');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 const level_data        = require('../data/park_room.json');
@@ -22,34 +21,35 @@ class Park_Room  {
     Level_Factory.generate(this.elements);
     const { prey, exit_pad, grid, player } = this.elements;
 
-    this.player.set_position(player[0]);
+    this.player.position.copy(player[0]);
     const zombie = new Walker(prey[0]);
     zombie.target(this.player);
-    zombie.set_position(prey[0]);
+    zombie.position.set(prey[0]);
 
     // remove first one
     prey.shift();
-    const rats = prey.map(unit => {
-      const rat = new Deer(unit);
-      rat.set_position(unit);
-      return rat;
-    });
 
     const [trigger_pad] = exit_pad.map(data => {
       const pad  = new Trigger_Pad(data);
 
       if(data.id === 236) {
-        pad.sprite.events.once('trigger', () => {
-          rats.forEach(unit => unit.logic_start());
+        pad.events.once('trigger', () => {
+          prey.forEach((unit,i) => {
+            const zombie = new Walker(unit);
+            zombie.target(trigger_pad);
+            zombie.position.copy(unit);
+            if(i % 2) zombie.animation.eat();
+            zombie.logic_start();
+            return zombie;
+          });
         });
       } else {
-        pad.sprite.events.once('trigger', () => {
+        pad.events.once('trigger', () => {
           zombie.logic_start();
         });
       }
       return pad;
     });
-    rats.forEach(unit => unit.target(trigger_pad));
 
     this.grid = pathfind.create_level_grid(grid[0]);
   }

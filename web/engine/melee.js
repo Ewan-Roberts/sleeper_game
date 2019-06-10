@@ -1,29 +1,21 @@
 'use strict';
 const { tweenManager }= require('pixi.js');
-const { Sprite } = require('pixi.js');
-const { items  } = require('./pixi_containers');
+const { Sprite, Texture } = require('pixi.js');
+const { guis } = require('./pixi_containers');
 const { enemys } = require('./pixi_containers');
 const { damage_events } = require('./damage_handler');
 
 const enemies = enemys.children;
 
-class Box{
+class Box extends Sprite {
   constructor() {
-    this.name = 'box';
-    this.sprite = new Sprite.fromFrame('black_dot');
-    this.sprite.width  = 150;
-    this.sprite.height = 50;
-    this.sprite.anchor.x = 0;
-    this.sprite.anchor.y = 0.5;
+    super(Texture.fromImage('black_dot'));
+    this.name   = 'box';
+    this.width  = 150;
+    this.height = 50;
+    this.anchor.set(0, 0.5);
 
-    items.addChild(this.sprite);
-  }
-  set rotation(value) {
-    this.sprite.rotation = value;
-  }
-
-  set_position({x, y}) {
-    this.sprite.position.set(x, y);
+    guis.addChild(this);
   }
 }
 
@@ -43,7 +35,7 @@ class MeleeBox{
     this.tween.on('update', delta => {
       if(delta > this.tween.time) this.tween.remove();
 
-      this.box.set_position(origin);
+      this.box.position.set(origin);
       this.box.sprite.alpha = 1;
       this.box.rotation = origin.rotation;
       const found = enemies.find(enemy => this.box.sprite.containsPoint(enemy.getGlobalPosition()));

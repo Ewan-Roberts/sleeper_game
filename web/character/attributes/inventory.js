@@ -1,30 +1,23 @@
 'use strict';
 const { Item_Manager   } = require('../../items/item_manager');
 const { View_Inventory } = require('../../view/view_inventory');
-const { Button         } = require('../../view/button');
 const { Fade           } = require('../../effects/fade');
 
 class Inventory {
-  constructor({ properties, sprite } = {}) {
-    this.name = 'inventory';
-    // inventory item event handler
+  constructor(sprite, properties) {
+    this.name   = 'inventory';
     this.items  = [];
     this.equipped = null;
     this.inventory_view = new View_Inventory();
     if(properties){
-      if(properties.equip) {
-        this.equip(properties.equip);
-      }
+      if(properties.equip)  this.equip(properties.equip);
+      if(properties.random) this.populate();
       if(properties.items) {
         const item_array = JSON.parse(properties.items);
         this.items = this.populate_with(item_array);
       }
-      if(properties.random) this.populate();
     }
-    this.ranged_weapon = null;
-    this.melee_weapon  = null;
     this.sprite = sprite;
-    this.looted = false;
   }
 
   set_position({x, y}) {
@@ -41,18 +34,6 @@ class Inventory {
     this.items = items.map(name => Item_Manager.get_item(name));
 
     this.inventory_view.populate_slots(this.items);
-  }
-
-  create_icon() {
-    const prompt = new Button('bunny');
-    prompt.set_position(this.sprite);
-    prompt.sprite.on('click', () => {
-      this.sprite.buttonMode = false;
-      this.looted = true;
-      this.show();
-
-      prompt.remove();
-    });
   }
 
   equip(name) {
@@ -105,14 +86,6 @@ class Inventory {
     }).filter(n => n);
 
     return result;
-  }
-
-  add_ranged_weapon_by_name(name) {
-    this.ranged_weapon = Item_Manager.get_item(name);
-  }
-
-  add_melee_weapon_by_name(name) {
-    this.melee_weapon = Item_Manager.get_item(name);
   }
 }
 

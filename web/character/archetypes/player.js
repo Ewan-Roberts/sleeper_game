@@ -1,41 +1,49 @@
 'use strict';
 
-const { players      } = require('../../engine/pixi_containers');
-const { PlayerEvents } = require('../../engine/item_handler');
-const { Tween        } = require('../../engine/tween');
-const { Character    } = require('../character_model');
-const { Human        } = require('../animations/human');
-const { Keyboard     } = require('../attributes/keyboard');
-const { Mouse        } = require('../attributes/mouse');
-const { Inventory    } = require('../attributes/inventory');
-const { Vitals       } = require('../attributes/vitals');
+const { extras, Texture } = require('pixi.js');
+const { players         } = require('../../engine/pixi_containers');
+const { PlayerEvents    } = require('../../engine/item_handler');
+const { Keyboard        } = require('../attributes/keyboard');
+const { Mouse           } = require('../attributes/mouse');
+const { Inventory       } = require('../attributes/inventory');
+const { Vitals          } = require('../attributes/vitals');
+const { Animation       } = require('../animations/human');
 
-class Player extends Character {
+const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
+const nothing_idle = create_texture('Armature_nothing_idle_', 37);
+
+class Player extends extras.AnimatedSprite {
   constructor() {
-    super();
-    this.id = 1;
+    super(nothing_idle);
+    this.id   = 1;
     this.name = 'player';
-    this.add_component(new Human(this));
-    this.sprite.name = 'player';
 
-    this.add_component(new Tween(this.sprite));
+    this.width  /= 6;
+    this.height /= 6;
+    this.anchor.set(0.5);
+
+    this.add_component(new Animation(this));
     this.add_component(new Inventory());
     this.add_component(new Vitals(this));
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
-
-    players.addChild(this.sprite);
-
     this.add_component(new PlayerEvents(this));
+
+    players.addChild(this);
   }
 
   destroy() {
-    players.removeChild(this.sprite);
+    players.removeChild(this);
     this.keyboard.destroy();
     this.mouse.destroy();
+  }
+
+  add_component(component) {
+    this[component.name] = component;
   }
 }
 
 module.exports = {
   Player,
 };
+

@@ -1,20 +1,23 @@
 'use strict';
 const { shrouds } = require('../../engine/pixi_containers');
 
-const { Item } = require('./item_model');
+const { Sprite, Texture } = require('pixi.js');
 
-class Shroud extends Item {
-  constructor(options) {
-    super(options);
+class Shroud extends Sprite {
+  constructor(data) {
+    super(Texture.fromImage(data.image_name));
+    this.id       = data.id;
+    this.height   = data.height;
+    this.width    = data.width;
+    this.alpha    = data.properties && data.properties.alpha || 1;
+    // this.tint     = 0xA9A9A9;
+    this.rotation        = data.rotation * (Math.PI/180);
+    this.remove_on_enter = data.properties && data.properties.remove_on_enter;
+    this.alpha_on_enter  = data.properties && data.properties.alpha_on_enter;
+    this.anchor.set(0, 1);
+    this.position.copy(data);
 
-    this.sprite.interactive = true;
-    this.sprite.fade_opacity = options.properties.fade;
-    this.sprite.remove_on_enter = options.properties.remove_on_enter;
-    this.alpha = options.properties.alpha || 0.8;
-    this.sprite.anchor.x = 0;
-    this.sprite.anchor.y = 1;
-
-    shrouds.addChild(this.sprite);
+    shrouds.addChild(this);
   }
 }
 

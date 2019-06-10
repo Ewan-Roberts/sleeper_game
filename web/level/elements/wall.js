@@ -1,20 +1,21 @@
 'use strict';
-const { collisions } = require('../../engine/pixi_containers');
-const { Item       } = require('./item_model');
+const { Sprite, Texture } = require('pixi.js');
+const { collisions      } = require('../../engine/pixi_containers');
 
-class Wall extends Item {
+class Wall extends Sprite {
   constructor(data) {
-    data.properties = {
-      image_name : 'black_dot',
-    };
-    super(data);
+    super(Texture.fromImage('black_dot'));
+    this.id       = data.id;
+    this.height   = data.height;
+    this.width    = data.width;
+    this.rotation = data.rotation * (Math.PI/180);
+    this.tint     = data.properties && data.properties.tint || 0x000000;
+    this.alpha    = data.properties && data.properties.alpha || 1;
 
-    this.alpha = data.properties.alpha || 1;
+    this.anchor.set(0, 1);
+    this.position.copy(data);
 
-    this.sprite.anchor.x = 0;
-    this.sprite.anchor.y = 1;
-
-    collisions.addChild(this.sprite);
+    collisions.addChild(this);
   }
 }
 
