@@ -1,6 +1,6 @@
 'use strict';
 
-const { guis, decals    } = require('../engine/pixi_containers');
+const { visuals, decals    } = require('../engine/pixi_containers');
 const { Sprite, Texture } = require('pixi.js');
 const { tweenManager    } = require('pixi.js');
 
@@ -82,15 +82,27 @@ class FadeSprite extends Sprite {
   }
 }
 
-function flash_at(point, time = 400) {
+function fill_screen_at(point, tint) {
+  const overlay = new Sprite(Texture.fromImage('white_tiles'));
+  overlay.position.copy(point);
+  overlay.anchor.set(0.5);
+  overlay.tint   = tint;
+  overlay.width  = 4000;
+  overlay.height = 4000;
+  visuals.addChild(overlay);
+}
+
+
+function flash_at(point, time = 400, tint = 0x000000) {
   const overlay = new FadeSprite({image_name: 'white_tiles'});
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
+  overlay.tint   = tint;
   overlay.width  = 4000;
   overlay.height = 4000;
   overlay.fade_out(time);
   //this is dumb
-  guis.addChild(overlay);
+  visuals.addChild(overlay);
 }
 
 function pulse_sprites(data) {
@@ -108,5 +120,6 @@ function pulse_sprites(data) {
 module.exports = {
   FadeSprite,
   flash_at,
+  fill_screen_at,
   pulse_sprites,
 };

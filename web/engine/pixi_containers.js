@@ -83,6 +83,7 @@ world.addChild(
 
 world.updateLayersOrder();
 
+
 function clear_container(container) {
   for (let i = container.children.length - 1; i >= 0; i--) {
     container.removeChild(container.children[i]);

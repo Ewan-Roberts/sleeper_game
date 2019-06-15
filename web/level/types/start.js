@@ -3,16 +3,20 @@
 const { pathfind        } = require('../../engine/pathfind.js');
 const { Camera } = require('../../engine/camera.js');
 const { sleep            } = require('../../utils/time.js');
-const world               = require('../../engine/app.js');
+const { distance_between } = require('../../utils/math.js');
+const app = require('../../engine/app.js');
+const { world  }        = require('../../engine/shadows.js');
 const { roofs  } = require('../../engine/pixi_containers.js');
 const { decals } = require('../../engine/pixi_containers.js');
+const { visuals } = require('../../engine/pixi_containers.js');
 const { backgrounds  } = require('../../engine/pixi_containers.js');
 const { collisions  } = require('../../engine/pixi_containers.js');
 const { shrouds  } = require('../../engine/pixi_containers.js');
 
-const { sound,keyboardManager, filters} = require('pixi.js');
+const PIXI = require('pixi.js');
+const { Rectangle, Graphics, Sprite, sound,keyboardManager, filters} = require('pixi.js');
 const { FloorWord } = require('../../effects/floor_word.js');
-const { pulse_sprites, FadeSprite, flash_at } = require('../../effects/fade_sprite.js');
+const { fill_screen_at, pulse_sprites, FadeSprite, flash_at } = require('../../effects/fade_sprite.js');
 const { Tiled_Data      } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad     } = require('../elements/pad');
 const { Floor } = require('../elements/floor');
@@ -27,7 +31,15 @@ const { Crow            } = require('../../character/archetypes/crow');
 const { Level_Factory   } = require('./level_factory');
 const level_data          = require('../data/start.json');
 
-global.dev();
+const { screen      } = require('../../engine/app');
+function get_relative_mouse_position(sprite, mouse_point) {
+  return {
+    x: (mouse_point.x - screen.width/2)  + sprite.x,
+    y: (mouse_point.y - screen.height/2) + sprite.y,
+  };
+}
+
+//global.dev();
 function switch_to_nightmare() {
   const colorMatrix = new filters.ColorMatrixFilter();
   colorMatrix.autoFit = true;
@@ -35,7 +47,7 @@ function switch_to_nightmare() {
 
   decals.filters = [colorMatrix];
   roofs.children.forEach(roof => roof.tint = 0x000000);
-  world.renderer.backgroundColor = 0xff0000;
+  app.renderer.backgroundColor = 0xff0000;
 }
 
 class WASD {
@@ -92,6 +104,9 @@ class Start_Room  {
   constructor() {
     this.name     = 'defend_room';
     this.player   = new Player();
+
+    const level_data = new Tiled_Data(level_data);
+
     this.elements = new Tiled_Data(level_data);
 
     this._set_sounds();
@@ -100,8 +115,10 @@ class Start_Room  {
 
   async _eye_render() {
     this.static_effect.play();
+
+    fill_screen_at(this.player, 0x000000);
     this.eye = new Eye(this.player);
-    world.renderer.backgroundColor = 0x000000;
+    app.renderer.backgroundColor = 0x000000;
 
     await sleep(2000);
     decals.removeChildren();
@@ -129,7 +146,7 @@ class Start_Room  {
     this.static_effect.volume   = 0.001;
 
     if(global.env === 'dev') {
-      this.theme_song.volume      = 0.1;
+      this.theme_song.volume      = 0.01;
       this.eerie_ambient.volume   = 0.01;
       this.static_effect.volume   = 0.001;
 
@@ -137,6 +154,61 @@ class Start_Room  {
       this.click_effect.volume    = 0.1;
     }
   }
+
+  _set_elements() {
+    Level_Factory.generate(this.elements);
+
+    const {
+      exit_pad,
+      trigger_enemies,
+      shrine,
+      birds,
+      prey,
+      grid,
+      player,
+      flower,
+    } = this.elements;
+
+    if(global.env === 'dev') {
+      this.player.position.copy(player[0]);
+    } else {
+      this.player.position.copy(player[1]);
+      Camera.set_center(player[1]);
+    }
+
+
+
+    this.crows = birds.map(unit => {
+      const bird = new Crow(unit);
+      bird.path = unit.polyline.map(({x,y})=>({x:unit.x+x, y:unit.y+y}));
+      bird.turn = true;
+      return bird;
+    });
+
+    this.controls_prompt = new WASD();
+    this.controls_prompt.set_position(this.player);
+
+    this.exit_pads     = exit_pad.map(data => new Trigger_Pad(data));
+    this.iterator_pads = trigger_enemies.map(data => new Trigger_Pad(data));
+    this.flower        = new FadeSprite(flower[0]);
+
+    this.bed = new Chest(shrine[0]);
+
+    this.microphone_prompt = new MicrophonePopUp();
+
+    this.stalkers = prey.map(unit => {
+      const stalker = new Stalker(unit);
+      stalker.target(this.player);
+      return stalker;
+    });
+
+    pathfind.create_level_grid(grid[0]);
+
+    this.generator = this.iterate();
+    this._start();
+  }
+
+
 
   async * iterate() {
     switch_to_nightmare();
@@ -170,7 +242,7 @@ class Start_Room  {
       rotation:  15,
       fill:      'white',
       weight:    'bolder',
-      text:      'KILL',
+      text:      'KILL HIM',
     });
     four.position.copy(this.player);
     four.fade_in_wait_out();
@@ -194,55 +266,6 @@ class Start_Room  {
     yield;
   }
 
-  _set_elements() {
-    Level_Factory.generate(this.elements);
-
-    const {
-      exit_pad,
-      trigger_enemies,
-      shrine,
-      birds,
-      prey,
-      grid,
-      player,
-      flower,
-    } = this.elements;
-
-    if(global.env === 'dev') {
-      this.player.position.copy(player[0]);
-    } else {
-      this.player.position.copy(player[1]);
-      Camera.set_center(player[1]);
-    }
-
-    this.crows = birds.map(unit => {
-      const bird = new Crow(unit);
-      bird.path = unit.polyline.map(({x,y})=>({x:unit.x+x, y:unit.y+y}));
-      bird.turn = true;
-      return bird;
-    });
-
-    this.controls_prompt = new WASD();
-    this.controls_prompt.set_position(this.player);
-
-    this.exit_pads     = exit_pad.map(data => new Trigger_Pad(data));
-    this.iterator_pads = trigger_enemies.map(data => new Trigger_Pad(data));
-    this.flower        = new FadeSprite(flower[0]);
-
-    this.bed = new Chest(shrine[0]);
-    this.microphone_prompt = new MicrophonePopUp();
-
-    this.stalkers = prey.map(unit => {
-      const stalker = new Stalker(unit);
-      stalker.target(this.player);
-      return stalker;
-    });
-
-    pathfind.create_level_grid(grid[0]);
-
-    this.generator = this.iterate();
-    this._start();
-  }
 
   _start() {
     this.theme_song.play();
@@ -264,7 +287,6 @@ class Start_Room  {
       this.generator.next();
       this.bed.remove();
     });
-    console.log(this.player);
     this.player.vitals.events.on('killed', () => this.generator.next());
     this.exit_pads.forEach(pad => {
       pad.once('trigger', () => {

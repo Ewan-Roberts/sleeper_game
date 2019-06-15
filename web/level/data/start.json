@@ -364,7 +364,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -830,7 +830,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -960,7 +960,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1021,10 +1021,22 @@
                  "width":322.660337303368,
                  "x":4063.22981181628,
                  "y":2801.07048558135
+                }, 
+                {
+                 "gid":70,
+                 "height":1350.07694280585,
+                 "id":850,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1104.49151797164,
+                 "x":4446.67521132426,
+                 "y":2938.86473842957
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1973,10 +1985,30 @@
                  "width":58.8875708756123,
                  "x":4748.96423540845,
                  "y":2796.82040287353
+                }, 
+                {
+                 "gid":52,
+                 "height":93.9092285411048,
+                 "id":853,
+                 "name":"",
+                 "properties":
+                    {
+                     "tint":"0xd3d3d3"
+                    },
+                 "propertytypes":
+                    {
+                     "tint":"string"
+                    },
+                 "rotation":-360,
+                 "type":"",
+                 "visible":true,
+                 "width":187.819013927823,
+                 "x":4648.65814690689,
+                 "y":3644.06571323019
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -2134,7 +2166,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":849,
+ "nextobjectid":854,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",
@@ -3839,6 +3871,81 @@
                 }
             },
          "tilewidth":300
+        }, 
+        {
+         "columns":0,
+         "firstgid":69,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"49335-Rubble Overlay 11 ",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":420,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/49335-Rubble Overlay 11 .png",
+                 "imageheight":420,
+                 "imagewidth":420
+                }
+            },
+         "tilewidth":420
+        }, 
+        {
+         "columns":0,
+         "firstgid":70,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"hill_overlay04",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":1050,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/hill_overlay04.png",
+                 "imageheight":1050,
+                 "imagewidth":859
+                }
+            },
+         "tilewidth":859
+        }, 
+        {
+         "columns":0,
+         "firstgid":71,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"SpikeBarrier2_dgw-c",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":448,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"..\/..\/..\/assets\/images\/decal\/SpikeBarrier2_dgw-c.png",
+                 "imageheight":448,
+                 "imagewidth":855
+                }
+            },
+         "tilewidth":855
         }],
  "tilewidth":100,
  "type":"map",

@@ -75,10 +75,11 @@ class Keyboard {
       case  72 : return this.keyboard_left();    // h
       case  76 : return this.keyboard_right();   // l
 
-      case  81 : return this.speed *= 1.5;       // q for speed
-      case  73 : return this.large_inventory();  // i
-      case  80 : return this.small_inventory();  // p
-      case  79 : return this.open_interaction(); // o
+      // below are for dev only
+      case  81 : return this.increase_run_speed(); // q for speed
+      case  73 : return this.large_inventory();    // i
+      case  80 : return this.small_inventory();    // p
+      case  79 : return this.open_interaction();   // o
       case 'n' : return this.save_game();
       default  : return;
     }
@@ -92,7 +93,13 @@ class Keyboard {
     if(!w && !a && !s && !d) this.animation.idle();
   }
 
+  increase_run_speed() {
+    if(global.env !== 'dev') return;
+    this.speed *= 1.5;
+  }
+
   small_inventory() {
+    if(global.env !== 'dev') return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -103,6 +110,7 @@ class Keyboard {
   }
 
   large_inventory() {
+    if(global.env !== 'dev') return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -119,6 +127,7 @@ class Keyboard {
   }
 
   open_interaction() {
+    if(global.env !== 'dev') return;
     this.disable();
     this.inventory_view.wide();
     this.inventory_view.toggle();
@@ -155,6 +164,7 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_up();
     this.sprite.y -= this.speed;
+    if(world.mask) world.mask.y -= this.speed;
 
     world.y += this.speed;
   }
@@ -171,6 +181,7 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_down();
     this.sprite.y += this.speed;
+    if(world.mask) world.mask.y += this.speed;
 
     world.y -= this.speed;
   }
@@ -187,6 +198,7 @@ class Keyboard {
     this.animation.walk();
     this.animation.face_left();
     this.sprite.x -= this.speed;
+    if(world.mask) world.mask.x -= this.speed;
 
     world.x += this.speed;
   }
@@ -205,6 +217,7 @@ class Keyboard {
 
     this.sprite.x += this.speed;
     world.x       -= this.speed;
+    if(world.mask) world.mask.x  += this.speed;
   }
 }
 

@@ -24,7 +24,7 @@ global.dev =()=> {
 
 // AUTO-REFRESH WINDOW
 // For dev auto refesh
-let blurred = false;
-global.window.onblur = function() { blurred = true; };
-global.window.onfocus = function() { blurred && (global.location.reload()); };
-20/ 29;
+// let blurred = false;
+// global.window.onblur = function() { blurred = true; };
+// global.window.onfocus = function() { blurred && (global.location.reload()); };
+// 20/ 29;

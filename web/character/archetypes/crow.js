@@ -19,7 +19,7 @@ class Crow extends extras.AnimatedSprite {
     this.width    /= 2.5;
     this.height   /= 2.5;
     this.anchor.set(0.5);
-    this.animationSpeed = 0.19;
+    this.animationSpeed = 0.29;
     this.tween = tweenManager.createTween(this);
 
     enemys.addChild(this);

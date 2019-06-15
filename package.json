@@ -29,7 +29,8 @@
     "pixi-sound": "^2.1.0",
     "pixi-tween": "^0.2.0",
     "pixi.js": "^4.8.8",
-    "png-js": "^0.1.1"
+    "png-js": "^0.1.1",
+    "worker-timers": "^5.0.19"
   },
   "devDependencies": {
     "eslint": "^5.13.0",
