@@ -3,8 +3,8 @@ const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
-//const { draw_path        } = require('../../utils/line');
-const { distance_between } = require('../../utils/math');
+const { draw_path        } = require('../../utils/line');
+const { distance_between, random_bound} = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
@@ -43,7 +43,7 @@ class Walker extends extras.AnimatedSprite {
 
   get _target_far_away() {
     const distance = distance_between(this.target, this);
-    return distance > 200;
+    return distance > 80;
   }
 
   target(character) {
@@ -89,18 +89,17 @@ class Walker extends extras.AnimatedSprite {
   // NOTE: Keep this verbose and dumb
   logic_start() {
     this.tween = tweenManager.createTween(this);
-    this.tween.time = 1000;
+    this.tween.time = 2000;
     this.tween.expire = true;
     this.tween.start();
 
     this.tween.on('end', async () => {
       if(this.remove_next_tick) return;
-      console.log(this.tween);
       this.tween.clear();
       this.tween.expire = true;
 
       if(!this._target_far_away) {
-        this.tween.time = 2000;
+        this.tween.time = 3000;
         this.tween.start();
         this.animation.attack();
         this.animation.face_point(this.target);
@@ -115,7 +114,8 @@ class Walker extends extras.AnimatedSprite {
       if(Sight.lineOfSight(this, this.target, collisions.children)) {
         this.tween.path.lineTo(this.target.x, this.target.y);
         this.animation.move();
-        this.tween.time = 3000;
+
+        this.tween.time = random_bound(90, 500);
       } else {
         await this._pathfind();
       }

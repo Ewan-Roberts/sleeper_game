@@ -3,13 +3,15 @@
 const { Walker              } = require('./rat');
 const { random_word         } = require('../../effects/floor_word.js');
 const { FadeSprite          } = require('../../effects/fade_sprite.js');
+const { decals              } = require('../../engine/pixi_containers');
 const { sound, tweenManager } = require('pixi.js');
 
 class Stalker extends Walker {
-  constructor(data) {
+  constructor(data, target) {
     super(data);
     this.visible     = false;
     this.floor_words = false;
+    this.target      = target;
   }
 
   set floor_hands(value) {
@@ -30,6 +32,9 @@ class Stalker extends Walker {
       });
       hands.rotation = this.rotation + 1.5,
       hands.position.copy(this);
+
+      decals.addChild(hands);
+
       hands.fade_out(2000);
       hand_state = !hand_state;
 

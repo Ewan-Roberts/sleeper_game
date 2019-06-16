@@ -11,7 +11,7 @@ class Vitals {
     this.name   ='vitals';
     this.sprite = sprite;
     this.power  = 5000;
-    this.speed  = 20;
+    this.speed  = 15;
     this.health = 100;
     this.food   = 40;
     this.water  = 20;
@@ -25,11 +25,13 @@ class Vitals {
 
     this.on_damage = ({id, damage}) => {
       if(this.id !== id) return;
+      this.events.emit('hit');
       if(this.alive) return this.damage(damage);
 
       this.events.emit('killed');
       if(!this.inventory.items.length) this.inventory.populate();
       if(this.tween) this.tween.stop();
+      if(id === 1) return;
 
       this.animation.kill();
 
@@ -66,7 +68,6 @@ class Vitals {
   _kill() {
     if (this.status === 'dead') return;
     this.status = 'dead';
-    new Blood(this.sprite);
   }
 
   _dead(damage) {
@@ -78,6 +79,8 @@ class Vitals {
   damage(damage) {
     if (!damage) throw new Error('No damage being recieved');
     if(this.status === 'dead') return;
+
+    if(Math.random() >= 0.5) new Blood(this.sprite);
 
     this.health -= damage;
     if(this.health < 0) this._kill();

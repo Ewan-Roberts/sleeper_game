@@ -1,8 +1,8 @@
 'use strict';
 const PIXI = require('pixi.js');
 
-const { visuals } = require('../engine/pixi_containers');
-const world       = require('../engine/app');
+const { visuals  } = require('../engine/pixi_containers');
+const { renderer }= require('../engine/app');
 
 global.place_bunny = ({ x, y } /*light*/) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
@@ -16,8 +16,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
 };
 global.env = 'prod';
 global.dev =()=> {
-  console.log(world);
-  world.renderer.backgroundColor = 0xd3d3d3;
+  renderer.backgroundColor = 0xd3d3d3;
   global.env = 'dev';
 };
 

@@ -52,7 +52,7 @@ class Keyboard {
     this.inventory_view = new Player_Inventory();
     this.interaction    = new Interaction_Menu();
 
-    keyboardManager.on('down', key => this.key_down(key));
+    keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
   }
 
@@ -62,7 +62,7 @@ class Keyboard {
 
   key_down(key) {
     if(!keyboardManager.isEnabled) return;
-
+    this.establish_direction();
     switch(key) {
       // wasd
       case  87 : return this.keyboard_up();      // w
@@ -92,6 +92,22 @@ class Keyboard {
     const d = keyboardManager.isDown(68);
     if(!w && !a && !s && !d) this.animation.idle();
   }
+
+  establish_direction() {
+    const w = keyboardManager.isDown(87);
+    const a = keyboardManager.isDown(65);
+    const s = keyboardManager.isDown(83);
+    const d = keyboardManager.isDown(68);
+    if(w && a) return this.animation.face_up_left();
+    if(w && d) return this.animation.face_up_right();
+    if(s && a) return this.animation.face_down_left();
+    if(s && d) return this.animation.face_down_right();
+    if(w)      return this.animation.face_up();
+    if(a)      return this.animation.face_left();
+    if(s)      return this.animation.face_down();
+    if(d)      return this.animation.face_right();
+  }
+
 
   increase_run_speed() {
     if(global.env !== 'dev') return;
@@ -162,7 +178,6 @@ class Keyboard {
     event_pad(point);
 
     this.animation.walk();
-    this.animation.face_up();
     this.sprite.y -= this.speed;
     if(world.mask) world.mask.y -= this.speed;
 
@@ -179,7 +194,6 @@ class Keyboard {
     event_pad(point);
 
     this.animation.walk();
-    this.animation.face_down();
     this.sprite.y += this.speed;
     if(world.mask) world.mask.y += this.speed;
 
@@ -196,7 +210,6 @@ class Keyboard {
     event_pad(point);
 
     this.animation.walk();
-    this.animation.face_left();
     this.sprite.x -= this.speed;
     if(world.mask) world.mask.x -= this.speed;
 
@@ -213,7 +226,6 @@ class Keyboard {
     event_pad(point);
 
     this.animation.walk();
-    this.animation.face_right();
 
     this.sprite.x += this.speed;
     world.x       -= this.speed;

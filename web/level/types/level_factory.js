@@ -11,7 +11,7 @@ const { Door          } = require('../elements/door');
 const { Roof          } = require('../elements/ceiling');
 const { Shroud        } = require('../elements/shroud');
 const { Collision     } = require('../elements/collision');
-const { Floor } = require('../elements/floor');
+const { Floor         } = require('../elements/floor');
 
 class Level_Factory {
   static create(data, player) {

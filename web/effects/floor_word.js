@@ -18,11 +18,10 @@ class FloorWord extends Text {
     this.alpha    = data.alpha || 1;
     this.rotation = degrees    || 0;
     this.tint     = data.tint  || 0xA9A9A9;
-    this.anchor.set(0.2,0.5);
+    this.anchor.set(0.5);
 
     this.tween       = tweenManager.createTween(this);
     this.tween.delay = data.delay || 0;
-    backgrounds.addChild(this);
     this.position.copy(data);
   }
 
@@ -82,6 +81,7 @@ function random_word(point, size, closeness=100, fade_lower=500, fade_higher=200
   const fade_in   = bounds(fade_lower, fade_higher);
   const fade_wait = bounds(fade_lower, fade_higher);
   const fade_out  = bounds(fade_lower, fade_higher);
+  backgrounds.addChild(word);
   word.fade_in_wait_out(fade_in, fade_wait, fade_out);
 }
 
@@ -95,6 +95,7 @@ const pulse_words = array => {
       fill: 'white',
     });
     delay += 60;
+    backgrounds.addChild(word);
     word.fade_in_wait_out(delay);
   });
 };

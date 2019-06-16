@@ -1,6 +1,6 @@
 'use strict';
 
-const { visuals, decals    } = require('../engine/pixi_containers');
+const { visuals, decals } = require('../engine/pixi_containers');
 const { Sprite, Texture } = require('pixi.js');
 const { tweenManager    } = require('pixi.js');
 
@@ -13,11 +13,11 @@ class FadeSprite extends Sprite {
     this.rotation = degrees     || 0;
     this.width    = data.width  || 50;
     this.height   = data.height || 50;
-    this.anchor.set(0,1);
+    this.anchor.set(0, 1);
 
     this.tween       = tweenManager.createTween(this);
     this.tween.delay = data.delay || 0;
-    decals.addChild(this);
+
     this.position.copy(data);
   }
 
@@ -35,7 +35,9 @@ class FadeSprite extends Sprite {
     this.tween.reset();
     this.tween.time = time;
     this.alpha = 0;
-    this.tween.to({alpha: 1});
+    this.tween
+      .from({alpha: 0})
+      .to({alpha: 1});
 
     this.tween.start();
   }
@@ -43,7 +45,9 @@ class FadeSprite extends Sprite {
   fade_out(time = 700) {
     this.tween.reset();
     this.tween.time = time;
-    this.tween.to({alpha: 0});
+    this.tween
+      .from({alpha: 1})
+      .to({alpha: 0});
 
     this.tween.on('end', () => {
       this.tween.remove();
@@ -53,18 +57,18 @@ class FadeSprite extends Sprite {
     this.tween.start();
   }
 
-  _bounce_down(time = 100) {
+  _bounce_down(time = 200) {
     this.tween.reset();
     this.tween.time = time;
-    this.tween.to({y: this.y+5});
+    this.tween.to({y: this.y+3});
     this.tween.start();
   }
 
-  _bounce_up(time = 100) {
+  _bounce_up(time = 200) {
     if(this._destroyed) return;
     this.tween.reset();
     this.tween.time = time;
-    this.tween.to({y: this.y-5});
+    this.tween.to({y: this.y-3});
 
     this.tween.start();
     this.tween.on('end', () => this.fade_out());
@@ -83,13 +87,14 @@ class FadeSprite extends Sprite {
 }
 
 function fill_screen_at(point, tint) {
-  const overlay = new Sprite(Texture.fromImage('white_tiles'));
+  const overlay = new FadeSprite({image_name: 'white_tiles'});
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
   overlay.tint   = tint;
   overlay.width  = 4000;
   overlay.height = 4000;
   visuals.addChild(overlay);
+  return overlay;
 }
 
 
@@ -98,10 +103,9 @@ function flash_at(point, time = 400, tint = 0x000000) {
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
   overlay.tint   = tint;
-  overlay.width  = 4000;
-  overlay.height = 4000;
+  overlay.width  = 5000;
+  overlay.height = 5000;
   overlay.fade_out(time);
-  //this is dumb
   visuals.addChild(overlay);
 }
 
@@ -113,7 +117,8 @@ function pulse_sprites(data) {
       ...unit,
       delay,
     });
-    sprite.fade_in_wait_out(delay, 2000, 600);
+    sprite.fade_in_wait_out(delay, 2000, 1000);
+    decals.addChild(sprite);
   });
 }
 

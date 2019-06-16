@@ -16,8 +16,8 @@ class Trigger_Pad extends Sprite {
     this.alpha    = data.properties && data.properties.alpha || default_alpha;
     this.anchor.set(0);
     this.position.copy(data);
-
     this.events = new event({once: true});
+
     if(data.properties && data.properties.level_name) {
       this.events.once('trigger', () => {
         Level_Factory.create(data, player);
@@ -27,12 +27,13 @@ class Trigger_Pad extends Sprite {
     pads.addChild(this);
   }
 
-  once(name, func) {
-    console.log(global.env);
-    console.log(default_alpha);
+  once(name, callback) {
     this.tint  = 0xffff00;
     this.alpha = (global.env === 'dev')?0.2:0;
-    this.events.once(name, func);
+    this.events.once(name, () => {
+      callback();
+      this.destroy();
+    });
   }
 }
 

@@ -81,13 +81,14 @@ class Animation {
 
   get current_weapon() { return this.weapon; }
 
-  face_up() { this.sprite.rotation = -2; }
-
-  face_down() { this.sprite.rotation = 2; }
-
-  face_left() { this.sprite.rotation = -3; }
-
-  face_right() { this.sprite.rotation = 0; }
+  face_up_left()    { this.sprite.rotation = -2.5; }
+  face_up_right()   { this.sprite.rotation = -0.8; }
+  face_down_left()  { this.sprite.rotation = 2.5;  }
+  face_down_right() { this.sprite.rotation = 1;    }
+  face_down()       { this.sprite.rotation = 2;    }
+  face_up()         { this.sprite.rotation = -2;   }
+  face_left()       { this.sprite.rotation = -3;   }
+  face_right()      { this.sprite.rotation = 0;    }
 }
 
 

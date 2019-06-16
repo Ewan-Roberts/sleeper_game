@@ -22,6 +22,12 @@ class Crow extends extras.AnimatedSprite {
     this.animationSpeed = 0.29;
     this.tween = tweenManager.createTween(this);
 
+    this.position.copy(data);
+    if(data.polyline) {
+      this.path = data.polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
+    }
+    this.turn = true;
+
     enemys.addChild(this);
   }
 
