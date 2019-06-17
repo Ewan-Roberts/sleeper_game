@@ -5,7 +5,7 @@
   "scripts": {
     "watch": "watchify web/index.js -o ./public/js/bundle.js -v",
     "build": "uglifyjs ./public/js/bundle.js --output ./public/js/bundle.js --compress --mangle",
-    "start": "nodemon server --delay 1",
+    "start": "DEBUG=nodemon:watch nodemon server --delay 1 --ignore './web/level/**/**'",
     "rinse": "sh ./scripts/clean_assets.sh",
     "trim": "node ./scripts/crop2.js",
     "spritesheet": "pixi-packer  ./scripts/image_compression.js public/images/ --clean-cache",

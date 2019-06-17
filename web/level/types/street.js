@@ -1,6 +1,5 @@
 'use strict';
 
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Background    } = require('../../view/overlay_object');
 const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Crow          } = require('../../character/archetypes/crow');
@@ -13,7 +12,7 @@ class Street {
   constructor() {
     this.name     = 'home_street';
     this.player   = new Player();
-    this.elements = new Tiled_Data(level_data);
+    this.elements = level_data;
 
     this._set_elements();
   }
@@ -37,7 +36,7 @@ class Street {
 
       return new Crow({path});
     });
-    characters.forEach(unit => unit.start());
+    characters.forEach(unit => tween.start());
 
     exit_pad.forEach(pad => new Trigger_Pad(pad, this.player));
   }

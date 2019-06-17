@@ -1,5 +1,26 @@
 'use strict';
 
+
+
+const fs       = require('fs');
+const { Tiled_Data } = require('./web/level/attributes/parse_tiled_data');
+function parse_level_data () {
+  const testFolder = './assets/level_data/';
+
+  fs.readdir(testFolder, (err, files) => {
+    files.forEach(file => {
+      if(file === '.DS_Store') return;
+      const level_data_raw = require(testFolder+file);
+
+      const parsed = new Tiled_Data(level_data_raw);
+      const foo = JSON.stringify(parsed);
+      fs.writeFileSync('./web/level/data/'+file, foo);
+    });
+  });
+}
+
+parse_level_data();
+
 const port     = process.env.PORT || 3000;
 const compress = require('compression');
 const express  = require('express');
@@ -23,6 +44,4 @@ app.use(function(req, res, next) {
     'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-
-
 

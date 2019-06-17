@@ -1,7 +1,6 @@
 'use strict';
 const { visuals       } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
@@ -11,7 +10,7 @@ class Transition_Room {
   constructor() {
     this.name     = 'transition_room';
     this.player   = new Player();
-    this.elements = new Tiled_Data(level_data);
+    this.elements = level_data;
 
     this._set_elements();
   }

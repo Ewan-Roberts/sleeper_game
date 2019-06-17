@@ -1,18 +1,19 @@
 'use strict';
 
 const { pathfind      } = require('../../engine/pathfind.js');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Walker        } = require('../../character/archetypes/rat');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
-const level_data        = require('../data/park_room.json');
+
 
 class Park_Room  {
   constructor() {
     this.name     = 'defend_room';
     this.player   = new Player();
-    this.elements = new Tiled_Data(level_data);
+    this.elements = require('../data/park_room.json');
+
+
 
     this._set_elements();
   }

@@ -15,7 +15,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
   return bunny;
 };
 global.env = 'prod';
-global.dev =()=> {
+global.dev = () => {
   renderer.backgroundColor = 0xd3d3d3;
   global.env = 'dev';
 };

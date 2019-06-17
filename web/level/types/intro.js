@@ -4,7 +4,6 @@ const { collisions    } = require('../../engine/pixi_containers');
 const { Camera        } = require('../../engine/camera');
 const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Crow          } = require('../../character/archetypes/crow');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Click_Pad     } = require('../elements/click_pad');
 const { Background    } = require('../../view/overlay_object');
 const { Button        } = require('../../view/button');
@@ -12,15 +11,13 @@ const { Player        } = require('../../character/archetypes/player');
 const { Tween         } = require('../../engine/tween');
 const { Level_Factory } = require('./level_factory');
 const { Trigger_Pad   } = require('../elements/pad');
-const level_data        = require('../data/intro_room.json');
-
 
 class Intro {
   constructor(properties) {
     this.name         = 'intro';
     this.properties   = properties;
     this.player       = new Player();
-    this.elements     = new Tiled_Data(level_data);
+    this.elements     = require('../data/intro_room.json');
     this.elements.dumpster_moved = false;
 
     this._set_elements();

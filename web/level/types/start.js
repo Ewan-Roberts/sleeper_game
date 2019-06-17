@@ -11,7 +11,6 @@ const { shrouds      } = require('../../engine/pixi_containers.js');
 
 const { FloorWord       } = require('../../effects/floor_word.js');
 const { Overlay_Dialog  } = require('../../effects/overlay_dialog.js');
-const { Tiled_Data      } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad     } = require('../elements/pad');
 const { MicrophonePopUp } = require('../../view/microphone_box');
 const { WASD            } = require('../../view/wasd_keys');
@@ -43,8 +42,7 @@ global.dev();
 class Start_Room  {
   constructor() {
     this.name       = 'defend_room';
-    this.level_data = new Tiled_Data(level_data_raw);
-
+    this.level_data = level_data_raw;
     this.player        = new Player();
     this.player_spawns = this.level_data.player;
 
