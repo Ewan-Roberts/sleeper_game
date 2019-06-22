@@ -11,7 +11,7 @@ class Vitals {
     this.name   ='vitals';
     this.sprite = sprite;
     this.power  = 5000;
-    this.speed  = 15;
+    this.speed  = 10;
     this.health = 100;
     this.food   = 40;
     this.water  = 20;

@@ -2,19 +2,17 @@
 
 const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Crow          } = require('../../character/archetypes/crow');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
 const { Click_Pad     } = require('../elements/click_pad');
 const { Shrine        } = require('../elements/shrine');
 const { Player        } = require('../../character/archetypes/player');
-const level_data        = require('../data/items_room.json');
 
 class Items_Room {
   constructor() {
     this.name     = 'item_room';
     this.player   = new Player();
-    this.elements = new Tiled_Data(level_data);
+    this.elements = require('../data/items_room.json');
 
     this._set_elements();
   }

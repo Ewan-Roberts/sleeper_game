@@ -1,26 +1,22 @@
 'use strict';
 
 const { pathfind      } = require('../../engine/pathfind.js');
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Walker        } = require('../../character/archetypes/rat');
 const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
-const { players       } = require('../../engine/pixi_containers');
-const level_data        = require('../data/defend_room.json');
 
 class Defend_Room  {
   constructor() {
     this.name     = 'defend_room';
     this.player   = new Player();
-    this.elements = new Tiled_Data(level_data);
+    this.elements = require('../data/defend_room.json');
 
     this._set_elements();
   }
 
   _set_elements() {
-    console.log(players);
     Level_Factory.generate(this.elements);
 
     const { prey, exit_pad, grid, player } = this.elements;

@@ -14,32 +14,25 @@ const { Collision     } = require('../elements/collision');
 const { Floor         } = require('../elements/floor');
 
 class Level_Factory {
-  static create(data, player) {
-    if(player) {
-      player.destroy();
-      this.clear();
-    }
-
-    const { properties } = data;
+  static create(level_name) {
+    this.clear();
 
     const { Intro           } = require('./intro');
     const { Items_Room      } = require('./item_room');
     const { Street          } = require('./street');
-    const { Simple_Room     } = require('./simple');
     const { Transition_Room } = require('./transition_room');
     const { Defend_Room     } = require('./defend_room');
     const { Park_Room       } = require('./park_room');
     const { Start_Room      } = require('./start');
 
-    switch(properties.level_name) {
-      case 'intro'     : return new Intro(properties);
+    switch(level_name) {
+      case 'intro'     : return new Intro();
       case 'item'      : return new Items_Room();
       case 'street'    : return new Street();
       case 'transition': return new Transition_Room();
       case 'defend'    : return new Defend_Room();
       case 'start'     : return new Start_Room();
       case 'park'      : return new Park_Room();
-      default          : return new Simple_Room(properties);
     }
   }
 
@@ -75,6 +68,7 @@ class Level_Factory {
   }
 
   static clear() {
+    console.log('clear');
     tweenManager.tweens.forEach(tween =>{
       if(tween.target.name === 'zombie') tween.target.remove();
     });

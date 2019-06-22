@@ -1,4 +1,3 @@
-
 'use strict';
 const { KeyboardKey } = require('./key');
 
@@ -8,7 +7,7 @@ class WASD {
     this.a_letter = new KeyboardKey('A');
     this.s_letter = new KeyboardKey('S');
     this.d_letter = new KeyboardKey('D');
-    this.finished = false;
+    this._complete = false;
   }
 
   fade_in(time) {
@@ -35,22 +34,28 @@ class WASD {
   }
 
   press(key) {
-    switch (key) {
-      case 'w': this.w_letter.press(); return;
-      case 'a': this.a_letter.press(); return;
-      case 's': this.s_letter.press(); return;
-      case 'd': this.d_letter.press(); return;
+    switch(key) {
+      case 87: return this.w_letter.bounce_out();
+      case 65: return this.a_letter.bounce_out();
+      case 83: return this.s_letter.bounce_out();
+      case 68: return this.d_letter.bounce_out();
     }
+  }
+  set complete(value) {
+    this._complete = value;
   }
 
   get complete() {
-    if(this.finished) return false;
-
-    if(this.all_pressed) {
-      this.finished = true;
-      return true;
+    if(
+      this.w_letter.fired &&
+      this.a_letter.fired &&
+      this.s_letter.fired &&
+      this.d_letter.fired
+    ) {
+      this._complete = true;
     }
-    return false;
+
+    return this._complete;
   }
 
   get all_pressed() {

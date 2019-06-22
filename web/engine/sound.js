@@ -17,7 +17,21 @@ const Sound = sound.add({
   start_theme:    'audio/start-theme.wav',
   click:          'audio/click.wav',
   static_effect:  'audio/tv-static.wav',
-  walk_normal:     'audio/walk_normal.wav',
+  walk_normal:    'audio/walk_normal.wav',
+  birds_fly_away: 'audio/birds_fly_away.wav',
+  whisper_effect: 'audio/whisper_effect.wav',
+  thud_1:         'audio/thud_1.wav',
+  thud_2:         'audio/thud_2.wav',
+  thud_3:         'audio/thud_3.wav',
+  thud_4:         'audio/thud_4.wav',
+  thud_5:         'audio/thud_5.wav',
+  thud_6:         'audio/thud_6.wav',
+  thud_7:         'audio/thud_7.wav',
 });
+
+sound.random_sound_from = array => {
+  const name = array[Math.floor(Math.random()*array.length)];
+  return sound.find(name);
+};
 
 module.exports = Sound;

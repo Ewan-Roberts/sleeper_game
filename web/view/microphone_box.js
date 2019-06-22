@@ -12,6 +12,10 @@ class MicrophonePopUp {
     this.showable = true;
   }
 
+  set opacity(value) {
+    this.pop_up.opacity = value;
+  }
+
   show() {
     if(!this.showable) return;
     this.pop_up.show();

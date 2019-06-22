@@ -14,9 +14,10 @@ global.place_bunny = ({ x, y } /*light*/) => {
   visuals.addChild(bunny);
   return bunny;
 };
+
 global.env = 'prod';
-global.dev =()=> {
-  renderer.backgroundColor = 0xd3d3d3;
+global.dev = () => {
+  renderer.backgroundColor = 0x0066CC;
   global.env = 'dev';
 };
 

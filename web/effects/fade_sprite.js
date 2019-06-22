@@ -34,7 +34,6 @@ class FadeSprite extends Sprite {
   fade_in(time = 1000) {
     this.tween.reset();
     this.tween.time = time;
-    this.alpha = 0;
     this.tween
       .from({alpha: 0})
       .to({alpha: 1});
@@ -46,7 +45,7 @@ class FadeSprite extends Sprite {
     this.tween.reset();
     this.tween.time = time;
     this.tween
-      .from({alpha: 1})
+      .from({alpha: this.alpha})
       .to({alpha: 0});
 
     this.tween.on('end', () => {
@@ -71,7 +70,7 @@ class FadeSprite extends Sprite {
     this.tween.to({y: this.y-3});
 
     this.tween.start();
-    this.tween.on('end', () => this.fade_out());
+    this.tween.on('end', () => this.fade_out(500));
   }
 
   bounce() {
@@ -117,6 +116,7 @@ function pulse_sprites(data) {
       ...unit,
       delay,
     });
+    sprite.alpha = 0;
     sprite.fade_in_wait_out(delay, 2000, 1000);
     decals.addChild(sprite);
   });

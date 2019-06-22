@@ -14,8 +14,8 @@ class Crow extends extras.AnimatedSprite {
 
     this.add_component(new Bird(this));
 
-    this.tint     = 0x352925;
-    this.rotation = 1.56;
+    //this.tint     = 0x352925;
+    this.rotation = 1;
     this.width    /= 2.5;
     this.height   /= 2.5;
     this.anchor.set(0.5);
@@ -27,7 +27,7 @@ class Crow extends extras.AnimatedSprite {
       this.path = data.polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
     }
     this.turn = true;
-
+    this.animation.wait();
     enemys.addChild(this);
   }
 
@@ -41,19 +41,24 @@ class Crow extends extras.AnimatedSprite {
         path_array[i].y,
         50);
     }
-    this.tween.time = this.time || 10000;
 
+    this.tween.time = path_array.length*600;
+  }
+
+  set delay(value) {
+    this.tween.delay = value;
+  }
+
+  start() {
+    this.tween.start();
+    this.tween.expire = true;
+    this.animation.move();
+    this.play();
     this.tween.on('end', () => {
       this.destroy();
       this.tween.remove();
       this.tween = null;
     });
-  }
-
-  start() {
-    this.tween.start();
-    this.animation.move();
-    this.play();
   }
 
   draw() {

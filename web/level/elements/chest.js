@@ -21,6 +21,7 @@ class Chest extends Sprite {
     this.anchor.set(0, 1);
     this.position.copy(data);
 
+    this.interactive = true;
     if(type === 'note') {
       this.click = () => new Note(properties);
     }
@@ -31,6 +32,7 @@ class Chest extends Sprite {
       this.button = new Button(properties);
       this.button.visible = false;
       this.on('mouseover', () => {
+        console.log('22222222');
         this.tint = 0xffffff;
         this.button.set_position(this);
         this.button.visible = true;

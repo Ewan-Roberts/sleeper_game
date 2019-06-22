@@ -1,6 +1,5 @@
 'use strict';
 
-const { Tiled_Data    } = require('../attributes/parse_tiled_data');
 const { Background    } = require('../../view/overlay_object');
 const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Crow          } = require('../../character/archetypes/crow');
@@ -13,7 +12,7 @@ class Street {
   constructor() {
     this.name     = 'home_street';
     this.player   = new Player();
-    this.elements = new Tiled_Data(level_data);
+    this.elements = level_data;
 
     this._set_elements();
   }
@@ -28,16 +27,16 @@ class Street {
 
     this.player.position.copy(player[0]);
 
-    const characters = prey.map(npc => {
-      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
+    // const characters = prey.map(npc => {
+    //   const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
 
-      if(npc.name === 'zombie') {
-        return new Lurcher({ path, time: 20000, turn: true});
-      }
+    //   if(npc.name === 'zombie') {
+    //     return new Lurcher({ path, time: 20000, turn: true});
+    //   }
 
-      return new Crow({path});
-    });
-    characters.forEach(unit => unit.start());
+    //   return new Crow({path});
+    // });
+    //characters.forEach(unit => tween.start());
 
     exit_pad.forEach(pad => new Trigger_Pad(pad, this.player));
   }

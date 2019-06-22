@@ -23,7 +23,7 @@ class Animation {
     this.sprite = sprite;
     this.walk_sound = sound.find('walk_normal', {loop: true});
     this.walk_sound.loop = true;
-    this.walk_sound.volume = 0.2;
+    this.walk_sound.volume = 0.015;
     this.prefix = 'nothing';
   }
 
