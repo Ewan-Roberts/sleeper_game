@@ -6,7 +6,6 @@ const { Walker        } = require('../../character/archetypes/rat');
 const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
-const { players       } = require('../../engine/pixi_containers');
 
 class Defend_Room  {
   constructor() {
@@ -18,7 +17,6 @@ class Defend_Room  {
   }
 
   _set_elements() {
-    console.log(players);
     Level_Factory.generate(this.elements);
 
     const { prey, exit_pad, grid, player } = this.elements;

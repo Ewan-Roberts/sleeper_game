@@ -13,14 +13,17 @@ class KeyboardKey extends FadeSprite {
     text.x += 55;
     text.y -= 100;
 
+    this.fired = false;
     this.addChild(text);
     visuals.addChild(this);
   }
 
-  press() {
-    this.tint = 0x006400;
+  bounce_out() {
+    if(this.fired) return;
+    this.alpha = 0.5;
+    this.tint = 0x32cd80;
     this.bounce();
-    this.pressed = true;
+    this.fired = true;
   }
 }
 

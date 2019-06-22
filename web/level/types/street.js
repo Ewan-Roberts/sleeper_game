@@ -27,16 +27,16 @@ class Street {
 
     this.player.position.copy(player[0]);
 
-    const characters = prey.map(npc => {
-      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
+    // const characters = prey.map(npc => {
+    //   const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
 
-      if(npc.name === 'zombie') {
-        return new Lurcher({ path, time: 20000, turn: true});
-      }
+    //   if(npc.name === 'zombie') {
+    //     return new Lurcher({ path, time: 20000, turn: true});
+    //   }
 
-      return new Crow({path});
-    });
-    characters.forEach(unit => tween.start());
+    //   return new Crow({path});
+    // });
+    //characters.forEach(unit => tween.start());
 
     exit_pad.forEach(pad => new Trigger_Pad(pad, this.player));
   }

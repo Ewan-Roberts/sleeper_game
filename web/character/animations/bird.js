@@ -1,5 +1,6 @@
 'use strict';
-const { Texture } = require('pixi.js');
+const { Texture, sound } = require('pixi.js');
+const { random_bound } = require('../../utils/math.js');
 
 const { radian } = require('../../utils/math');
 
@@ -52,11 +53,25 @@ const move = [
 
 const wait = [
   Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_5'),
+  Texture.fromFrame('bird_10'),
   Texture.fromFrame('bird_6'),
   Texture.fromFrame('bird_6'),
   Texture.fromFrame('bird_6'),
   Texture.fromFrame('bird_6'),
   Texture.fromFrame('bird_7'),
+  Texture.fromFrame('bird_10'),
 ];
 
 const dead = [ Texture.fromFrame('bird_8') ];
@@ -68,6 +83,8 @@ class Bird {
     this.name = 'animation';
 
     this.sprite = sprite;
+    this.fly_sound = sound.find('birds_fly_away');
+    this.fly_sound.volume = 0.15;
   }
 
   switch(action) {
@@ -85,9 +102,15 @@ class Bird {
 
   wait() {
     this.switch('wait');
+    this.sprite.animationSpeed = 0.08;
+    const random_start_frame = random_bound(0, 15);
+    this.sprite.gotoAndPlay(random_start_frame);
+    //this.sprite.loop = false;
   }
 
   move() {
+    this.fly_sound.play();
+    this.sprite.animationSpeed = 0.30;
     this.switch('move');
   }
 

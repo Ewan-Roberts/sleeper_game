@@ -8,9 +8,11 @@ class Collision extends Sprite {
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;
-    this.alpha    = data.alpha || 1;
-    this.tint     = 0xA9A9A9;
+    if(data.properties) {
+      this.alpha    = data.properties.alpha;
+    }
     this.rotation = data.rotation * (Math.PI/180);
+    this.tint     = 0xA9A9A9;
     this.anchor.set(0, 1);
 
     collisions.addChild(this);

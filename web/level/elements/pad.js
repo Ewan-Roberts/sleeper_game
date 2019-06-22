@@ -14,17 +14,28 @@ class Trigger_Pad extends Sprite {
     this.width    = data.width;
     this.rotation = data.rotation * (Math.PI/180);
     this.alpha    = data.properties && data.properties.alpha || default_alpha;
+    this.speed    = data.properties && data.properties.speed;
     this.anchor.set(0);
     this.position.copy(data);
-    this.events = new event({once: true});
+    this.events = new event();
 
     if(data.properties && data.properties.level_name) {
+      const {level_name} = data.properties;
       this.events.once('trigger', () => {
-        Level_Factory.create(data, player);
+        player.destroy();
+        Level_Factory.create(level_name);
       });
     }
 
     pads.addChild(this);
+  }
+
+  on(name, callback) {
+    this.tint  = 0xffff00;
+    this.alpha = (global.env === 'dev')?0.2:0;
+    this.events.on(name, () => {
+      callback();
+    });
   }
 
   once(name, callback) {

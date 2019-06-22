@@ -75,7 +75,6 @@ class Mouse {
     this.cone      = new Aiming_Cone();
     this.melee     = new MeleeBox();
 
-    world.interactive = true;
     world.on('mouseup',   event => this.mouse_up(event));
     world.on('mousemove', event => this.mouse_move(event));
     world.on('mousedown', event => this.mouse_down(event));

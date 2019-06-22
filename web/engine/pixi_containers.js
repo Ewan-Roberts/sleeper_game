@@ -18,17 +18,26 @@ const {
   very_close,
 } = zIndex_layer;
 
+const borders = new Container();
+borders.name   = 'borders';
+borders.zIndex = low;
+borders.interactiveChildren = false;
+
+
 const backgrounds  = new Container();
 backgrounds.name   = 'background_image';
 backgrounds.zIndex = background;
+backgrounds.interactiveChildren = false;
 
 const decals  = new Container();
 decals.name   = 'decals_container';
 decals.zIndex = background;
+decals.interactiveChildren = false;
 
 const grids  = new Container();
 grids.name   = 'grid_container';
 grids.zIndex = background;
+grids.interactiveChildren = false;
 
 const collisions  = new Container();
 collisions.name   = 'collision_items';
@@ -36,7 +45,7 @@ collisions.zIndex = low;
 
 const enemys  = new Container();
 enemys.name   = 'enemy_container';
-enemys.zIndex = low;
+enemys.zIndex = very_close;
 
 const items  = new Container();
 items.name   = 'non_collision_items';
@@ -49,6 +58,7 @@ players.zIndex = medium;
 const shrouds  = new Container();
 shrouds.name   = 'shroud_container';
 shrouds.zIndex = close;
+shrouds.interactiveChildren = false;
 
 const visuals  = new Container();
 visuals.name   = 'visuals';
@@ -61,12 +71,14 @@ pads.zIndex = close;
 const roofs  = new Container();
 roofs.name   = 'roof_container';
 roofs.zIndex = close;
+roofs.interactiveChildren = false;
 
 const guis  = new Container();
 guis.name   = 'gui_container';
 guis.zIndex = very_close;
 
 world.addChild(
+  borders,
   shrouds,
   visuals,
   roofs,
@@ -99,6 +111,7 @@ function clear_level_containers() {
 // }
 
 module.exports = {
+  borders,
   shrouds,
   visuals,
   roofs,

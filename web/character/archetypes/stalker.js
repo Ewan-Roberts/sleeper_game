@@ -19,7 +19,7 @@ class Stalker extends Walker {
 
     this.hand_tween = tweenManager.createTween(this);
     this.hand_tween.loop = true;
-    this.hand_tween.time = 900;
+    this.hand_tween.time = 300;
     this.hand_tween.expire = true;
 
     let hand_state = true;
@@ -27,8 +27,8 @@ class Stalker extends Walker {
       const hands = new FadeSprite({
         ...this,
         image_name: hand_state?'left_hand':'right_hand',
-        width:  40,
-        height: 40,
+        width:  35,
+        height: 35,
       });
       hands.rotation = this.rotation + 1.5,
       hands.position.copy(this);

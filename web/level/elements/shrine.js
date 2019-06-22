@@ -14,7 +14,6 @@ class Shrine extends Sprite {
     this.rotation    = data.rotation * (Math.PI/180);
     this.tint        = 0xA9A9A9;
     this.interactive = true;
-    this.buttonMode  = true;
 
     this.anchor.set(0, 1);
     this.position.copy(data);
@@ -23,13 +22,10 @@ class Shrine extends Sprite {
   }
 
   give_blood(vial) {
-    console.log(vial);
     if(vial) this.inventory.give_item(vial);
   }
 
   get enough_blood() {
-    console.log('feed me blood');
-
     return (this.inventory.size > 1);
   }
 }

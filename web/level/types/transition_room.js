@@ -35,6 +35,7 @@ class Transition_Room {
       visuals.addChild(level_names);
     });
 
+    this.player.vitals.speed = 30;
     const level_text = new Text(
       'THE HUB',
       {

@@ -21,7 +21,6 @@ class Overlay_Dialog {
 
   async next_button() {
     this.button.tint = 0x383838;
-    this.enable = true;
     this.button.position.copy({
       x: this.point.x+200,
       y: this.point.y+150,
@@ -32,7 +31,7 @@ class Overlay_Dialog {
     this.button.on('mouseout', () => this.button.tint = 0x383838);
     this.button.on('mouseup', () => this.button.tint = 0xd3d3d3);
 
-    await sleep(4000);
+    await sleep(5000);
     this.button.fade_in();
     visuals.addChild(this.button);
   }
@@ -60,10 +59,8 @@ class Overlay_Dialog {
       visuals.addChild(word);
       word.fade_in();
       yield;
-      this.enable = false;
       word.fade_out();
       await sleep(1000);
-      this.enable = true;
     }
 
     keyboardManager.enable();

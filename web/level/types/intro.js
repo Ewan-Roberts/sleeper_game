@@ -13,9 +13,8 @@ const { Level_Factory } = require('./level_factory');
 const { Trigger_Pad   } = require('../elements/pad');
 
 class Intro {
-  constructor(properties) {
+  constructor() {
     this.name         = 'intro';
-    this.properties   = properties;
     this.player       = new Player();
     this.elements     = require('../data/intro_room.json');
     this.elements.dumpster_moved = false;
@@ -30,26 +29,19 @@ class Intro {
     const background = new Background();
 
     //TODO this needs to move out into trigger pad
-    if(this.properties.entry_id) {
-      const entry_point = player.find(point => point.id === this.properties.entry_id);
-      this.player.position.copy(entry_point);
-      background.set_position(entry_point);
-      Camera.set_center(entry_point);
-    } else {
-      this.player.position.copy(player[0]);
-      background.set_position(player[0]);
-    }
+    this.player.position.copy(player[0]);
+    background.set_position(player[0]);
     background.fade_out(500);
 
-    const characters = prey.map(npc => {
-      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
+    // const characters = prey.map(npc => {
+    //   const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
 
-      if(npc.name === 'zombie') {
-        return new Lurcher({ path, time: 20000, turn: true});
-      }
+    //   if(npc.name === 'zombie') {
+    //     return new Lurcher({ path, time: 20000, turn: true});
+    //   }
 
-      return new Crow({path});
-    });
+    //   return new Crow({path});
+    // });
 
     exit_pad.forEach(data => new Trigger_Pad(data, this.player));
 
@@ -76,14 +68,15 @@ class Intro {
         dumpster.tint = 0xd3d3d3;
         button.visible = false;
       });
-
+      console.log(pad);
       pad.click = () => {
+        console.log('33333333');
         if(pad.number_clicks === 3) return;
         const tween_it = new Tween(dumpster);
         tween_it.to({x: dumpster.x - 15, y:dumpster.y - 20});
         tween_it.time = 1000;
         tween_it.start();
-        characters.forEach(({tween}) => tween.start());
+        // characters.forEach(({tween}) => tween.start());
         // TODO move into Button logic
         pad.number_clicks++;
         this.elements.dumpster_moved = true;
