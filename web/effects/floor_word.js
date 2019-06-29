@@ -62,24 +62,24 @@ class FloorWord extends Text {
 
 
 //const word_poo = ['KILL','DIE','RUN!!','hahahHa','<script>','DIE',')(1ll','dIE','GO'];
-const word_poo = ['Math.random()','<h2>','</html>','function() { 4>>','if(true){...','RUN','hahahHa','</head>','<script>','<div>','i++','DIE'];
+const default_words = ['Math.random()','<h2>','</html>','function() { 4>>','if(true){...','RUN','hahahHa','</head>','<script>','<div>','i++','DIE'];
 
 const bounds = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const random_text = (array) => array[Math.floor(Math.random()*array.length)];
 
 function random_word({
   point,
-  size = 80,
-  closeness=100,
-  fade_lower=500,
-  fade_higher=2000,
-  text = word_poo,
+  size        = 80,
+  closeness   = 100,
+  fade_lower  = 500,
+  fade_higher = 2000,
+  text = default_words,
 }) {
-  const rando = random_text(text);
+  const random_word_from_array = random_text(text);
   const word = new FloorWord({
     font_size: bounds(10, size),
     rotation:  bounds(-30, 30),
-    text :     rando,
+    text :     random_word_from_array,
     fill:      Math.random() >= 0.5?'white':'black',
     delay:     bounds(500, 2000),
   });
