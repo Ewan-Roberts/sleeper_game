@@ -6,24 +6,54 @@ const { radian    } = require('../../utils/math');
 const { Zombie    } = require('../animations/zombie');
 const { Inventory } = require('../attributes/inventory');
 const { draw_path } = require('../../utils/line');
+const { Button    } = require('../../view/button');
+const { damage_events } = require('../../engine/damage_handler');
+const event = require('events');
 
 const dead = [ Texture.fromFrame('death01_0000') ];
 
 class Lurcher extends extras.AnimatedSprite {
   constructor(data) {
     super(dead);
+    console.log('data');
+    console.log(data);
+    console.log('data');
     this.id   = data.id;
-    this.name = 'crow';
+    this.name = 'zombie';
 
     this.add_component(new Zombie(this));
+    this.add_component(new Inventory());
     this.add_component(new Vitals(this));
-    this.add_component(new Inventory(this));
     this.anchor.set(0.5);
     this.animationSpeed = 0.19;
     this.tint           = 0x352925;
     this.rotation       = 1.56;
+    this.events         = new event();
 
+    this.button = new Button({
+      label_action: 'Loot',
+      label_description: 'Corpse',
+      label_image: 'eye_icon',
+    });
+
+    this.events.on('killed', ()=> {
+      this.interactive = true;
+      this.on('mouseover', () => {
+        this.button.set_position(this);
+        this.button.visible = true;
+      });
+      this.on('mouseout', () => {
+        this.button.visible = false;
+      });
+      this.click = () => {
+        this.button.visible = false;
+        this.inventory.set_position(this);
+        this.inventory.fade_in();
+      };
+    });
     this.tween = tweenManager.createTween(this);
+
+    damage_events.on('damage', this.on_damage);
     enemys.addChild(this);
   }
 
@@ -44,6 +74,23 @@ class Lurcher extends extras.AnimatedSprite {
       this.tween.remove();
       this.tween = null;
     });
+  }
+
+  on_damage({id, damage}) {
+    console.log('-----------');
+    console.log(id);
+    console.log(this.id);
+    console.log('-----------');
+    if(this.id !== id) return;
+    this.events.emit('hit');
+    if(this.vitals.alive) return this.vitals.damage(damage);
+
+    this.events.emit('killed');
+    if(!this.inventory.items.length) this.inventory.populate();
+    if(id === 1) return;
+    this.animation.kill();
+
+    damage_events.removeListener('damage', this.on_damage);
   }
 
   start() {

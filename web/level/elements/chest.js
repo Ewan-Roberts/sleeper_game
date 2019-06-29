@@ -60,11 +60,12 @@ class Chest extends Sprite {
     }
 
     if(properties && properties.container) {
-      this.inventory = new Inventory(this, properties);
-      this.on('click', () => {
+      this.inventory = new Inventory(properties);
+      this.click = () => {
         this.button.visible = false;
-        this.inventory.show();
-      });
+        this.inventory.set_position(this);
+        this.inventory.fade_in();
+      };
     }
 
     if(properties && properties.collision) {
@@ -85,7 +86,9 @@ class Chest extends Sprite {
 
   _open() {
     this.inventory.set_position(this);
-    this.inventory.show();
+    this.inventory.set_position(this);
+
+    this.inventory.fade_in();
   }
 
   _empty() {

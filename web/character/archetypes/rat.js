@@ -11,7 +11,9 @@ const { Sight            } = require('../../utils/line_of_sight');
 const { Zombie           } = require('../animations/zombie');
 const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
-const { Melee            } = require('../attributes/melee');
+const { Button           } = require('../../view/button');
+const { Blood  } = require('../../effects/blood');
+const event                = require('events');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -28,18 +30,59 @@ const dead = [ Texture.fromFrame('bird_8') ];
 class Walker extends extras.AnimatedSprite {
   constructor(data) {
     super(dead);
+    console.log(data);
     this.name = 'zombie';
     this.id   = data.id;
     this.interactive = true;
+    this.events = new event();
+    this.button = new Button({
+      label_action: 'Loot',
+      label_description: 'Corpse',
+      label_image: 'eye_icon',
+    });
 
     this.add_component(new Zombie(this));
-    this.add_component(new Inventory(this, data.properties));
+    this.add_component(new Inventory(data.properties));
     this.add_component(new Vitals(this));
-    this.add_component(new Melee(this));
+
     this.position.copy(data);
 
+    this.on_damage = ({id, damage})=> {
+      console.log('hit');
+      console.log(this.id);
+      if(this.id !== id) return;
+      this.events.emit('hit');
+      if(Math.random() >= 0.5) new Blood(this.position);
+      if(this.vitals.alive) return this.vitals.damage(damage);
+      this.events.emit('killed');
+      if(!this.inventory.items.length) this.inventory.populate();
+      if(this.tween) this.tween.stop();
+
+      this.animation.kill();
+
+      damage_events.removeListener('damage', this.on_damage);
+    };
+
+    damage_events.on('damage', this.on_damage);
+
+    this.events.on('killed', () => {
+      this.interactive = true;
+      this.on('mouseover', () => {
+        this.button.set_position(this);
+        this.button.visible = true;
+      });
+      this.on('mouseout', () => {
+        this.button.visible = false;
+      });
+      this.click = () => {
+        this.button.visible = false;
+        this.inventory.set_position(this);
+        this.inventory.fade_in();
+      };
+    });
     enemys.addChild(this);
   }
+
 
   get _target_far_away() {
     const distance = distance_between(this.target, this);

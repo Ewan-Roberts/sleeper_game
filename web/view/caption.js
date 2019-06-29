@@ -19,16 +19,20 @@ class Caption {
       this.ready = true;
     },2000);
 
-    this.timer = setInterval(() => {
+    let start = null;
+    function step (timestamp) {
+      if(!start) start = timestamp;
+      const progress = timestamp - start;
       current_text += letters[i];
       dialog_caption_holder.innerHTML = current_text;
-
       i++;
-      if (i >= sentence.length) {
-        clearInterval(this.timer);
+      if(i < sentence.length) {
+        global.window.requestAnimationFrame(step);
         wait_to_hide();
       }
-    }, 80);
+    }
+
+    global.window.requestAnimationFrame(step);
   }
 
   static clear() {

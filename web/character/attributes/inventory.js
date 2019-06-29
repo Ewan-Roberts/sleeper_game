@@ -3,12 +3,13 @@ const { Item_Manager   } = require('../../items/item_manager');
 const { View_Inventory } = require('../../view/view_inventory');
 const { Fade           } = require('../../effects/fade');
 
-class Inventory {
-  constructor(sprite, properties) {
+class Inventory extends View_Inventory {
+  constructor(properties) {
+    super();
     this.name   = 'inventory';
     this.items  = [];
     this.equipped = null;
-    this.inventory_view = new View_Inventory();
+    console.log(properties);
     if(properties){
       if(properties.equip)  this.equip(properties.equip);
       if(properties.random) this.populate();
@@ -17,23 +18,18 @@ class Inventory {
         this.items = this.populate_with(item_array);
       }
     }
-    this.sprite = sprite;
-  }
-
-  set_position({x, y}) {
-    this.inventory_view.set_position({x, y});
   }
 
   populate() {
     this.items = Item_Manager.get_random_items();
 
-    this.inventory_view.populate_slots(this.items);
+    this.populate_slots(this.items);
   }
 
   populate_with(items) {
     this.items = items.map(name => Item_Manager.get_item(name));
 
-    this.inventory_view.populate_slots(this.items);
+    this.populate_slots(this.items);
   }
 
   equip(name) {
@@ -46,18 +42,16 @@ class Inventory {
     this.items.splice(index, 1);
   }
 
-  show() {
-    this.set_position(this.sprite);
-
-    Fade.in(this.inventory_view.slot_container);
+  fade_in() {
+    Fade.in(this.slot_container);
   }
 
   hide() {
-    Fade.out(this.inventory_view.slot_container);
+    Fade.out(this.slot_container);
   }
 
   clear() {
-    this.inventory_view.clear_slots();
+    this.clear_slots();
   }
 
   empty() {

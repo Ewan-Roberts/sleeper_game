@@ -32,9 +32,9 @@ class Defend_Room  {
 
     const lurk = prey.find(unit => unit.id === 263);
 
-    const path = lurk.polyline.map(({x,y})=>({x:lurk.x+x, y:lurk.y+y}));
-    const lurker = new Lurcher({ path, time: 20000, turn: true});
-    lurker.tween.start();
+    // const path = lurk.polyline.map(({x,y})=>({x:lurk.x+x, y:lurk.y+y}));
+    // const lurker = new Lurcher({ path, time: 20000, turn: true});
+    // lurker.tween.start();
 
     exit_pad.forEach(data => {
       const pad = new Trigger_Pad(data);

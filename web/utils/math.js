@@ -28,6 +28,8 @@ function radian(anchor, point){
   return radian_value;
 }
 
+const face_point = (anchor, point) => radian(anchor, point);
+
 // 0 - 3.14 always positive
 function radian_positive(anchor, point){
   return Math.atan2(anchor.y - point.y, anchor.x - point.x) + 1.57;
@@ -45,6 +47,7 @@ function angle_360(anchor, point) {
 
 module.exports = {
   angle,
+  face_point,
   radian_positive,
   radian,
   angle_360,

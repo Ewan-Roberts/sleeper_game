@@ -49,8 +49,8 @@ class Keyboard {
   constructor(sprite) {
     const { animation, vitals, inventory} = sprite;
     this.name           = 'keyboard';
-    this.animation      = animation;
     this.sprite         = sprite;
+    this.animation      = animation;
     this.speed          = vitals.speed;
     this.vitals         = vitals;
     this.buffer         = 40;
@@ -93,14 +93,14 @@ class Keyboard {
     const a = keyboardManager.isDown(65);
     const s = keyboardManager.isDown(83);
     const d = keyboardManager.isDown(68);
-    if(w && a) return this.animation.face_up_left();
-    if(w && d) return this.animation.face_up_right();
-    if(s && a) return this.animation.face_down_left();
-    if(s && d) return this.animation.face_down_right();
-    if(w)      return this.animation.face_up();
-    if(a)      return this.animation.face_left();
-    if(s)      return this.animation.face_down();
-    if(d)      return this.animation.face_right();
+    if(w && a) return this.sprite.rotation = -2.5;
+    if(w && d) return this.sprite.rotation = -0.8;
+    if(s && a) return this.sprite.rotation = 2.5;
+    if(s && d) return this.sprite.rotation = 1;
+    if(w)      return this.sprite.rotation = -2;  // up
+    if(a)      return this.sprite.rotation = -3;  // left
+    if(s)      return this.sprite.rotation = 1.5; // down
+    if(d)      return this.sprite.rotation = 0;   // right
   }
 
 

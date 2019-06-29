@@ -6,7 +6,7 @@ const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 const level_data        = require('../data/transition_room.json');
 
-global.dev();
+//global.dev();
 class Transition_Room {
   constructor() {
     this.name     = 'transition_room';

@@ -31,34 +31,18 @@ class Zombie {
     this.sprite.rotation = radian(point, this.sprite);
   }
 
-  wait() {
-    this.switch('idle');
-  }
-
-  idle() {
-    this.switch('idle');
-  }
-
-  move() {
-    this.switch('move');
-  }
-
-  walk() {
-    this.switch('move');
-  }
+  wait() {this.switch('idle');}
+  idle() {this.switch('idle');}
+  eat()  {this.switch('eat'); }
+  move() {this.switch('move');}
+  walk() {this.switch('move');}
 
   kill() {
     this.switch('death');
     this.sprite.loop = false;
   }
 
-  attack() {
-    this.switch('attack');
-  }
-
-  eat() {
-    this.switch('eat');
-  }
+  attack() {this.switch('attack');}
 }
 
 
