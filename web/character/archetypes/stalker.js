@@ -12,6 +12,12 @@ class Stalker extends Walker {
     this.visible     = false;
     this.floor_words = false;
     this.target      = target;
+
+    this._set_sound();
+  }
+
+  _set_sound() {
+    this.honk = sound.find('honk');
   }
 
   set floor_hands(value) {
@@ -45,7 +51,7 @@ class Stalker extends Walker {
   }
 
   talk() {
-    sound.play('honk');
+    this.honk.play();
   }
 
   remove() {

@@ -173,14 +173,14 @@ class Start_Room  {
     this.controls_prompt.fade_in(8000);
 
     let volume = 0;
-    this.player.vitals.events.on('hit', () => {
+    this.player.events.on('hit', () => {
       flash_at(this.player, 300);
       volume += 0.04;
       const thud = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
       thud.volume = volume;
       thud.play();
     });
-    this.player.vitals.events.on('killed', () => this.generator.next());
+    this.player.events.on('killed', () => this.generator.next());
 
     this.bed.once('click', async () => {
       this.suspense_effect.play();

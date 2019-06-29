@@ -18,13 +18,18 @@ const animations = {
 
 class Animation {
   constructor(sprite) {
-    this.name = 'animation';
+    this.name   = 'animation';
     this.state  = 'bow';
     this.sprite = sprite;
+    this.prefix = 'nothing';
+
+    this._set_sound();
+  }
+
+  _set_sound() {
     this.walk_sound = sound.find('walk_normal', {loop: true});
     this.walk_sound.loop = true;
     this.walk_sound.volume = 0.015;
-    this.prefix = 'nothing';
   }
 
   switch(action) {
@@ -34,22 +39,6 @@ class Animation {
     this.sprite.play();
 
     this.state = action;
-  }
-
-  set rotation(amount) {
-    this.sprite.rotation = amount;
-  }
-
-  set speed(amount) {
-    this.sprite.animationSpeed = amount;
-  }
-
-  set state_to (name) {
-    this.state = name;
-  }
-
-  face_point(point) {
-    this.sprite.rotation = radian(point, this.sprite);
   }
 
   ready_weapon() {
@@ -80,15 +69,6 @@ class Animation {
   set current_weapon(weapon) { this.weapon = weapon; }
 
   get current_weapon() { return this.weapon; }
-
-  face_up_left()    { this.sprite.rotation = -2.5; }
-  face_up_right()   { this.sprite.rotation = -0.8; }
-  face_down_left()  { this.sprite.rotation = 2.5;  }
-  face_down_right() { this.sprite.rotation = 1;    }
-  face_down()       { this.sprite.rotation = 2;    }
-  face_up()         { this.sprite.rotation = -2;   }
-  face_left()       { this.sprite.rotation = -3;   }
-  face_right()      { this.sprite.rotation = 0;    }
 }
 
 

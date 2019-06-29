@@ -75,6 +75,7 @@ class Mouse {
     this.cone      = new Aiming_Cone();
     this.melee     = new MeleeBox();
 
+    world.interactive = true;
     world.on('mouseup',   event => this.mouse_up(event));
     world.on('mousemove', event => this.mouse_move(event));
     world.on('mousedown', event => this.mouse_down(event));
@@ -121,6 +122,7 @@ class Mouse {
   }
 
   mouse_move(event) {
+    console.log('move');
     if(!event) return;
     const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
 

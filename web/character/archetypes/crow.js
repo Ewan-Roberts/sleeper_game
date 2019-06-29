@@ -14,7 +14,6 @@ class Crow extends extras.AnimatedSprite {
 
     this.add_component(new Bird(this));
 
-    //this.tint     = 0x352925;
     this.rotation = 1;
     this.width    /= 2.5;
     this.height   /= 2.5;

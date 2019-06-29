@@ -83,6 +83,11 @@ class Bird {
     this.name = 'animation';
 
     this.sprite = sprite;
+
+    this._set_sound();
+  }
+
+  _set_sound() {
     this.fly_sound = sound.find('birds_fly_away');
     this.fly_sound.volume = 0.15;
   }
