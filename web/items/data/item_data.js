@@ -370,6 +370,17 @@ const items = [
     description: 'maybe it will hold a flame...',
     image_name: 'old_book',
   },
+  {
+    name: 'empty',
+    id:   28,
+    rank: 0,
+    cost: 0,
+    category: 'none',
+
+    visual_name: 'empty',
+    description: '',
+    image_name:  'empty_image',
+  },
 ];
 
 module.exports = {

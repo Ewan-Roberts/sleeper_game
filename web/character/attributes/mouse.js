@@ -122,7 +122,6 @@ class Mouse {
   }
 
   mouse_move(event) {
-    console.log('move');
     if(!event) return;
     const mouse_position = get_relative_mouse_position(this.sprite, event.data.global);
 

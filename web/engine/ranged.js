@@ -10,7 +10,7 @@ const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
-const players1 = players.children;
+const player = players.children[0];
 
 class Arrow extends Sprite {
   constructor() {
@@ -52,7 +52,7 @@ function shoot_arrow(speed, damage, origin, point) {
       }
     }
 
-    const collision_players = players1.find(player=> player.containsPoint(arrow_point));
+    const collision_players = player.containsPoint(arrow_point);
     if (collision_players) {
       if(collision_players.id === origin.id) return;
 

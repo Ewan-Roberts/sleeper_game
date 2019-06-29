@@ -3,7 +3,6 @@
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Walker        } = require('../../character/archetypes/rat');
-const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
 
@@ -25,23 +24,16 @@ class Defend_Room  {
     const zombies = prey.map((unit,i) => {
       const zombie = new Walker(unit);
       zombie.target(this.player);
-      zombie.position.copy(unit);
       if(i % 2) zombie.animation.eat();
       return zombie;
     });
 
     const lurk = prey.find(unit => unit.id === 263);
 
-    // const path = lurk.polyline.map(({x,y})=>({x:lurk.x+x, y:lurk.y+y}));
-    // const lurker = new Lurcher({ path, time: 20000, turn: true});
-    // lurker.tween.start();
-
     exit_pad.forEach(data => {
       const pad = new Trigger_Pad(data);
 
-      pad.events.once('trigger', () => {
-        zombies.forEach(unit => unit.logic_start());
-      });
+      pad.events.once('trigger', () => zombies.forEach(unit => unit.logic_start()));
       return pad;
     });
 

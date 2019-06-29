@@ -1,44 +1,90 @@
 'use strict';
 
-const { Background    } = require('../../view/overlay_object');
-const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Crow          } = require('../../character/archetypes/crow');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
-const { Trigger_Pad   } = require('../elements/pad');
-const level_data        = require('../data/home_street.json');
+const { Camera        } = require('../../engine/camera');
+const { renderer      } = require('../../engine/app.js');
+const { sound         } = require('pixi.js');
+const { flash_at      } = require('../../effects/fade_sprite.js');
+const { Fade          } = require('../../effects/fade.js');
 
+const {
+  Trigger_Pad,
+  Wall,
+  Decal,
+  Background,
+  Chest,
+  Roof,
+  Shroud,
+  Collision,
+  Floor,
+} = require('../elements');
+
+global.dev();
 class Street {
   constructor() {
-    this.name     = 'home_street';
-    this.player   = new Player();
-    this.elements = level_data;
+    this.name   = 'home_street';
+    this.data   = require('../data/home_street.json');
+    this.player = new Player();
 
+    this.walls        = this.data.walls.map(data => new Wall(data));
+    this.shrouds      = this.data.shroud.map(data => new Shroud(data));
+    this.roofs        = this.data.roof.map(data => new Roof(data));
+    this.items        = this.data.item.map(data => new Chest(data));
+    this.collisions   = this.data.collision.map(data => new Collision(data));
+    this.second_floor = this.data.second_floor.map(data => new Collision(data));
+    this.decals       = this.data.decal.map(data => new Decal(data));
+    this.floors       = this.data.floor.map(data => new Floor(data));
+    this.exit_pad     = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
+    this.backgrounds  = this.data.background.map(data => new Background(data));
+
+    this.second_floor.forEach(roof => roof.tint = 0x909090);
+    this.roofs.forEach(roof => roof.tint = 0x909090);
+
+    this.truck_exit   = new Trigger_Pad(this.data.truck_pad[0]);
+    this.truck_enter  = new Trigger_Pad(this.data.truck_pad[1]);
+    this.truck_roof   = this.roofs.find(roof => roof.id === 443);
+    this.matress_roof = this.roofs.find(roof => roof.id === 556);
+
+    renderer.backgroundColor = 0x000000;
+    this._set_sounds();
     this._set_elements();
+    this._set_cutscene();
+    if(global.env === 'dev') this._set_dev_settings();
+  }
+
+  _set_cutscene() {
+    this.intro_fade = flash_at(this.player, 2000);
+  }
+
+  _set_sounds() {
+    this.theme_song = sound.find('start_theme');
+    this.theme_song.volume = 0.01;
   }
 
   _set_elements() {
-    Level_Factory.generate(this.elements);
+    this.theme_song.play();
 
-    const { exit_pad, player, prey } = this.elements;
+    this.player.position.copy(this.data.player_spawn[0]);
+    Camera.set_center(this.data.player_spawn[0]);
+    this.truck_roof.tint = 0xffffff;
+    this.matress_roof.tint = 0xA8A8A8;
 
-    // const background = new Background(player[0]);
-    // background.fade_out(500);
+    this.truck_exit.on('trigger', () => {
+      Fade.to(this.truck_roof, 1);
+      Fade.to(this.matress_roof, 1);
+    });
 
-    this.player.position.copy(player[0]);
+    this.truck_enter.on('trigger', () => {
+      Fade.to(this.truck_roof, 0.3);
+      Fade.to(this.matress_roof, 0.4);
+    });
+  }
 
-    // const characters = prey.map(npc => {
-    //   const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
-
-    //   if(npc.name === 'zombie') {
-    //     return new Lurcher({ path, time: 20000, turn: true});
-    //   }
-
-    //   return new Crow({path});
-    // });
-    //characters.forEach(unit => tween.start());
-
-    exit_pad.forEach(pad => new Trigger_Pad(pad, this.player));
+  _set_dev_settings() {
+    this.intro_fade.visible = false;
+    this.player.vitals.speed = 30;
   }
 }
 

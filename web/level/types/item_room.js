@@ -1,6 +1,6 @@
 'use strict';
 
-const { Lurcher       } = require('../../character/archetypes/zombie');
+//const { Lurcher       } = require('../../character/archetypes/zombie');
 const { Crow          } = require('../../character/archetypes/crow');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Level_Factory } = require('./level_factory');
@@ -25,26 +25,9 @@ class Items_Room {
 
     exit_pad.forEach(data => new Trigger_Pad(data, this.player));
 
-    const characters = prey.map(npc => {
-      const path = npc.polyline.map(({x,y})=>({x:npc.x+x, y:npc.y+y}));
-
-      if(npc.name === 'zombie') {
-        return new Lurcher({ id: npc.id = 200, path, time: 20000, turn: true});
-      }
-
-      return new Crow({path});
-    });
     const areas = click_pad.map(data => new Click_Pad(data));
 
     const button_left = areas.find(({id}) => id === 200);
-    button_left.click = () => {
-
-      const crow = new Lurcher(prey[0]);
-      crow.path = prey[0].polyline.map(({x,y})=>({x:prey[0].x+x, y:prey[0].y+y}));
-      crow.turn = true;
-      crow.draw();
-      crow.start();
-    };
 
     const furnace = new Shrine(click_pad[0]);
     furnace.click = () => {

@@ -7,14 +7,15 @@ const { Keyboard        } = require('../attributes/keyboard');
 const { Mouse           } = require('../attributes/mouse');
 const { Inventory       } = require('../attributes/inventory');
 const { Vitals          } = require('../attributes/vitals');
-const { Animation       } = require('../animations/human');
+const { PlayerAnimation } = require('../animations/human');
 const { damage_events   } = require('../../engine/damage_handler');
-const { Blood  } = require('../../effects/blood');
+const { Item_Manager    } = require('../../items/item_manager');
+const { Blood           } = require('../../effects/blood');
 const event               = require('events');
 
 const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 const nothing_idle = create_texture('Armature_nothing_idle_', 37);
-// Make a singleton
+
 class Player extends extras.AnimatedSprite {
   constructor() {
     super(nothing_idle);
@@ -27,21 +28,36 @@ class Player extends extras.AnimatedSprite {
     this.anchor.set(0.5);
     this.animationSpeed = 0.70;
 
-    this.add_component(new Animation(this));
+    this.add_component(new PlayerAnimation(this));
     this.add_component(new Inventory());
-    this.add_component(new Vitals(this));
+    this.add_component(new Vitals());
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
-    // this.add_component(new PlayerEvents(this));
+    //this.add_component(new PlayerEvents(this));
+
+    this.events.on('give_item', item => this.inventory.give_item(item));
+    this.events.on('check_items', callback => {
+      const result = this.inventory.take_items('blood');
+      callback(result);
+    });
+
+    this.events.on('equip_weapon', item => {
+      const found_item = Item_Manager.get_item_by_image_name(item.image_name);
+
+      this.inventory.equip_weapon(found_item);
+
+      this.animation.prefix = found_item.animation_name;
+      this.animation.idle();
+    });
 
     this.on_damage = ({id, damage})=> {
-      console.log('hit');
-      console.log(this.id);
       if(this.id !== id) return;
       this.events.emit('hit');
       if(Math.random() >= 0.5) new Blood(this.position);
       if(this.vitals.alive) return this.vitals.damage(damage);
+
       this.events.emit('killed');
+
       if(!this.inventory.items.length) this.inventory.populate();
       if(this.tween) this.tween.stop();
 

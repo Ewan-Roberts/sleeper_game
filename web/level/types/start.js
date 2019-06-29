@@ -9,12 +9,12 @@ const { shrouds     } = require('../../engine/pixi_containers.js');
 const { sleep        } = require('../../utils/time.js');
 const { random_bound } = require('../../utils/math.js');
 
-const { FloorWord      } = require('../../effects/floor_word.js');
 const { Overlay_Dialog } = require('../../effects/overlay_dialog.js');
 const { Fade           } = require('../../effects/fade.js');
 const { Nightmare      } = require('../../effects/nightmare.js');
 const { pulse_sprites  } = require('../../effects/fade_sprite.js');
 const { flash_at       } = require('../../effects/fade_sprite.js');
+const { random_word    } = require('../../effects/floor_word.js');
 
 const { MicrophonePopUp } = require('../../view/microphone_box');
 const { WASD            } = require('../../view/wasd_keys');
@@ -57,17 +57,9 @@ class Start_Room  {
     this.border      = this.data.border.map(data => new Border(data));
     this.hill_area   = this.data.hill_area.map(data => new Trigger_Pad(data));
 
-    this.birds_pad     = new Trigger_Pad(this.data.birds_pad[0]);
-    this.roof_pad      = new Trigger_Pad(this.data.roof_pad[0]);
-    this.bed           = new Chest(this.data.shrine[0]);
-    this.kill_him_word = new FloorWord({
-      font_size: 200,
-      rotation:  15,
-      fill:      'white',
-      weight:    'bolder',
-      text:      'KILL HIM',
-    });
-    backgrounds.addChild(this.kill_him_word);
+    this.birds_pad = new Trigger_Pad(this.data.birds_pad[0]);
+    this.roof_pad  = new Trigger_Pad(this.data.roof_pad[0]);
+    this.bed       = new Chest(this.data.shrine[0]);
 
     this.controls_prompt   = new WASD();
     this.microphone_prompt = new MicrophonePopUp();
@@ -93,6 +85,8 @@ class Start_Room  {
     this.theme_song = sound.find('start_theme');
     this.theme_song.volume = 0.05;
     this.eerie_song = sound.find('eerie_ambient');
+    this.horror_song = sound.find('horror_theme');
+    this.horror_song.volume = 0.08;
 
     this.suspense_effect = sound.find('suspense_in');
     this.click_effect    = sound.find('click');
@@ -139,8 +133,12 @@ class Start_Room  {
     shrouds.removeChildren();
     backgrounds.removeChildren();
     this.thud_1_effect.play();
-    this.kill_him_word.position.copy(this.player);
-    this.kill_him_word.fade_in_wait_out();
+    Array(100).fill().forEach(()=> random_word({
+      point: this.player,
+      size: 150,
+      closeness: 700,
+      text: ['RUN!','RUN','RUN','DIE'],
+    }));
 
     let time_in = 400;
     this.stalkers.forEach(unit => {
@@ -152,12 +150,14 @@ class Start_Room  {
     });
     this.honk_effect.play();
     this.whisper_effect.play();
+    this.horror_song.play();
 
     yield;
     roofs.removeChildren();
     this.stalkers.forEach(unit => unit.remove());
     this.microphone_prompt.hide();
     this.whisper_effect.stop();
+    this.horror_song.stop();
     sound.play('thud_4');
 
     yield * this.script.generator();
@@ -170,15 +170,14 @@ class Start_Room  {
     this.controls_prompt.fade_in(8000);
 
     let volume = 0;
-    console.log(this.player);
     this.player.events.on('hit', () => {
       flash_at(this.player, 300);
-      volume += 0.04;
+      volume += 0.05;
       const thud = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
       thud.volume = volume;
       thud.play();
     });
-    this.player.events.on('killed', () => this.generator.next());
+    this.player.events.once('killed', () => this.generator.next());
 
     this.bed.once('click', async () => {
       this.suspense_effect.play();

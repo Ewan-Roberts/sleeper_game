@@ -25,7 +25,7 @@ class Stalker extends Walker {
 
     this.hand_tween = tweenManager.createTween(this);
     this.hand_tween.loop = true;
-    this.hand_tween.time = 300;
+    this.hand_tween.time = 200;
     this.hand_tween.expire = true;
 
     let hand_state = true;
@@ -44,7 +44,11 @@ class Stalker extends Walker {
       hands.fade_out(2000);
       hand_state = !hand_state;
 
-      if(this.floor_words) random_word(this,10, 40);
+      if(this.floor_words) random_word({
+        point: this,
+        size: 10,
+        closeness: 40,
+      });
     });
 
     this.hand_tween.start();

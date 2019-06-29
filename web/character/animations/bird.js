@@ -81,7 +81,6 @@ const frames = { move, wait, dead };
 class Bird {
   constructor(sprite) {
     this.name = 'animation';
-
     this.sprite = sprite;
 
     this._set_sound();
@@ -110,7 +109,6 @@ class Bird {
     this.sprite.animationSpeed = 0.08;
     const random_start_frame = random_bound(0, 15);
     this.sprite.gotoAndPlay(random_start_frame);
-    //this.sprite.loop = false;
   }
 
   move() {

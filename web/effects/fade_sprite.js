@@ -106,6 +106,7 @@ function flash_at(point, time = 400, tint = 0x000000) {
   overlay.height = 5000;
   overlay.fade_out(time);
   visuals.addChild(overlay);
+  return overlay;
 }
 
 function pulse_sprites(data) {

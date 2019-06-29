@@ -55,6 +55,7 @@ items.zIndex = medium;
 const players  = new Container();
 players.name   = 'player_container';
 players.zIndex = medium;
+players.interactiveChildren = false;
 
 const shrouds  = new Container();
 shrouds.name   = 'shroud_container';
@@ -64,6 +65,7 @@ shrouds.interactiveChildren = false;
 const visuals  = new Container();
 visuals.name   = 'visuals';
 visuals.zIndex = close;
+visuals.interactiveChildren = false;
 
 const pads  = new Container();
 pads.name   = 'pad_container';
@@ -96,7 +98,6 @@ world.addChild(
 
 world.updateLayersOrder();
 
-
 function clear_container(container) {
   for (let i = container.children.length - 1; i >= 0; i--) {
     container.removeChild(container.children[i]);
@@ -106,10 +107,6 @@ function clear_container(container) {
 function clear_level_containers() {
   world.children.forEach(child => child.removeChildren());
 }
-
-// function clear_non_players() {
-//   clear_level_containers('player_container');
-// }
 
 module.exports = {
   borders,

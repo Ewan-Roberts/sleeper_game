@@ -14,6 +14,7 @@ class Box extends Sprite {
     this.width  = 150;
     this.height = 50;
     this.anchor.set(0, 0.5);
+    this.visible = false;
 
     guis.addChild(this);
   }

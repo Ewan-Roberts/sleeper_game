@@ -1,7 +1,7 @@
 'use strict';
-const { items } = require('../../engine/pixi_containers');
-const { collisions } = require('../../engine/pixi_containers');
-const { player_events  } = require('../../engine/item_handler');
+const { items         } = require('../../engine/pixi_containers');
+const { collisions    } = require('../../engine/pixi_containers');
+const { players    } = require('../../engine/pixi_containers');
 
 const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
@@ -28,7 +28,6 @@ class Chest extends Sprite {
 
     // TODO refactor this madness
     if(properties && properties.label) {
-      this.interactive = true;
       this.tint = 0xd3d3d3;
       this.button = new Button(properties);
       this.on('mouseover', () => {
@@ -40,12 +39,16 @@ class Chest extends Sprite {
         this.tint = 0xd3d3d3;
         this.button.visible = false;
       });
+      this.on('click', () => {
+        this.tint = 0xd3d3d3;
+        this.button.visible = false;
+      });
     }
 
     if(properties && properties.equip_on_click) {
       this.on('click', () => {
         this.destroy();
-        player_events.emit('equip_weapon', properties);
+        players.children[0].events.emit('equip_weapon', properties);
       });
     }
 

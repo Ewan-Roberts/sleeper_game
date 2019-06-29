@@ -1,10 +1,9 @@
 'use strict';
-const { Button } = require('../../view/button');
-const { damage_events   } = require('../../engine/damage_handler');
-const event      = require('events');
+const { Button        } = require('../../view/button');
+const { damage_events } = require('../../engine/damage_handler');
 
 class Vitals {
-  constructor({inventory, tween, animation}) {
+  constructor() {
     this.name   ='vitals';
     this.power  = 5000;
     this.speed  = 10;
@@ -14,46 +13,6 @@ class Vitals {
     this.heat   = 90;
     this.sleep  = 100;
     this.status = 'alive';
-    this.inventory = inventory;
-    this.tween     = tween;
-    this.animation = animation;
-    this.events    = new event();
-
-    // this.on_damage = ({id, damage}) => {
-    //   if(this.id !== id) return;
-    //   this.events.emit('hit');
-    //   if(this.alive) return this.damage(damage);
-
-    //   this.events.emit('killed');
-    //   if(!this.inventory.items.length) this.inventory.populate();
-    //   if(this.tween) this.tween.stop();
-    //   if(id === 1) return;
-
-    //   this.animation.kill();
-
-    //   this.sprite.interactive = true;
-    //   this.button = new Button({
-    //     label_action: 'Loot',
-    //     label_description: name || 'Corpse',
-    //     label_image: 'eye_icon',
-    //   });
-    //   this.sprite.on('mouseover', () => {
-    //     this.button.set_position(this.sprite);
-    //     this.button.visible = true;
-    //   });
-    //   this.sprite.on('mouseout', () => {
-    //     this.button.visible = false;
-    //   });
-
-    //   this.sprite.click = () => {
-    //     this.button.visible = false;
-    //     this.inventory.show();
-    //   };
-
-    //   damage_events.removeListener('damage', this.on_damage);
-    // };
-
-    // damage_events.on('damage', this.on_damage);
   }
 
   get alive() {

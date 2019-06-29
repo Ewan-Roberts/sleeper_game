@@ -1,5 +1,6 @@
 'use strict';
 require('./ticker');
+
 const { tween, tweenManager } = require('pixi.js');
 const { random_number       } = require('../utils/math');
 const { draw_path           } = require('../utils/line');

@@ -1,6 +1,5 @@
 'use strict';
 const { Texture } = require('pixi.js');
-const { radian  } = require('../../utils/math');
 
 class rat_animations {
   static move_frames() {
@@ -56,64 +55,15 @@ class rat_animations {
   }
 }
 
-const frames = {
-  move: rat_animations.move_frames(),
-  wait: rat_animations.wait_frames(),
-  dead: rat_animations.dead_frames(),
-  eat:  rat_animations.eat_frames(),
+const rodent = {
+  move:   rat_animations.move_frames(),
+  attack: rat_animations.eat_frames(),
+  death:  rat_animations.dead_frames(),
+  eat:    rat_animations.eat_frames(),
+  idle:   rat_animations.wait_frames(),
 };
 
-class Rodent {
-  constructor(sprite) {
-    this.name = 'animation';
-
-    this.sprite = sprite;
-    this.sprite.rotation_offset = 1.57;
-  }
-
-  switch(action) {
-    if (this.state === action) return;
-
-    this.sprite.textures = frames[action];
-    this.sprite.loop = true;
-    this.sprite.play();
-    this.state = action;
-  }
-
-  face_point(point) {
-    this.sprite.rotation = radian(point, this.sprite);
-  }
-
-  attack() {
-    this.switch('eat');
-  }
-
-  move() {
-    this.switch('move');
-  }
-
-  walk() {
-    this.switch('move');
-  }
-
-  idle() {
-    this.switch('dead');
-  }
-
-  wait() {
-    this.switch('dead');
-  }
-
-  eat() {
-    this.switch('move');
-  }
-
-  kill() {
-    this.switch('dead');
-  }
-
-}
 
 module.exports = {
-  Rodent,
+  rodent,
 };

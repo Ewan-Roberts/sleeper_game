@@ -16,7 +16,7 @@ const animations = {
   knife_attack : Array(15).fill('survivor-meleeattack_knife_').map((name, i) => Texture.fromFrame(name+i)),
 };
 
-class Animation {
+class PlayerAnimation {
   constructor(sprite) {
     this.name   = 'animation';
     this.state  = 'bow';
@@ -73,7 +73,7 @@ class Animation {
 
 
 module.exports = {
-  Animation,
+  PlayerAnimation,
 };
 
 

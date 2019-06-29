@@ -9,7 +9,6 @@ class Inventory extends View_Inventory {
     this.name   = 'inventory';
     this.items  = [];
     this.equipped = null;
-    console.log(properties);
     if(properties){
       if(properties.equip)  this.equip(properties.equip);
       if(properties.random) this.populate();
@@ -43,6 +42,7 @@ class Inventory extends View_Inventory {
   }
 
   fade_in() {
+    this.slot_container.visible = true;
     Fade.in(this.slot_container);
   }
 
@@ -71,14 +71,9 @@ class Inventory extends View_Inventory {
   }
 
   take_items(name) {
-    // getIndexof splice
-    const result = this.items.map((item,i) => {
-      if(item.name === name) {
-        this.items.splice(i,1);
-        return item;
-      }
-    }).filter(n => n);
-
+    const index = this.items.getIndexof(name);
+    const result = this.items.splice(index,1);
+    console.log(result);
     return result;
   }
 }

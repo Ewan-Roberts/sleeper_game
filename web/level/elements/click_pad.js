@@ -24,7 +24,7 @@ class Click_Pad extends Sprite {
       const {level_name} = data.properties;
       this.events.once('trigger', () => Level_Factory.create(level_name));
     }
-    this.number_clicks = 0;
+
     pads.addChild(this);
   }
 

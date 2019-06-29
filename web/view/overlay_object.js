@@ -51,14 +51,14 @@ class Note {
       options.text,
       {
         fontSize: 20,
-        fill:     'grey',
+        fill:     options.text_colour || 'grey',
         align:    'center',
         wordWrap: true,
         wordWrapWidth: 200,
       }
     );
     this.text.anchor.set(0.5);
-    this.text.rotation = 0.01;
+    this.text.rotation = -0.05;
     this.text.position.copy(this.sprite);
 
     this.sprite.tint = 0xd3d3d3;

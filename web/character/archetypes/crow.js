@@ -56,7 +56,6 @@ class Crow extends extras.AnimatedSprite {
     this.tween.on('end', () => {
       this.destroy();
       this.tween.remove();
-      this.tween = null;
     });
   }
 

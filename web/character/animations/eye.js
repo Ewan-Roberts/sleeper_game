@@ -4,11 +4,9 @@ const { visuals          } = require('../../engine/pixi_containers');
 
 const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 
-const start = create_texture('moving_eye_', 91);
-
 class Eye extends extras.AnimatedSprite {
   constructor(data) {
-    start.reverse();
+    const start = create_texture('moving_eye_', 91);
     super(start);
     this.name = 'eye';
     this.position.copy(data);
@@ -18,7 +16,6 @@ class Eye extends extras.AnimatedSprite {
     visuals.addChild(this);
   }
 }
-
 
 module.exports = {
   Eye,

@@ -3,13 +3,14 @@ const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
-//const { draw_path        } = require('../../utils/line');
+const { draw_path        } = require('../../utils/line');
 const { distance_between, random_bound} = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
-const { Zombie           } = require('../animations/zombie');
+const { zombie_frames   } = require('../animations/zombie');
 const { Inventory        } = require('../attributes/inventory');
+const { Animation        } = require('../attributes/animation');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood  } = require('../../effects/blood');
@@ -30,59 +31,50 @@ const dead = [ Texture.fromFrame('bird_8') ];
 class Walker extends extras.AnimatedSprite {
   constructor(data) {
     super(dead);
-    console.log(data);
     this.name = 'zombie';
     this.id   = data.id;
-    this.interactive = true;
     this.events = new event();
+
+    this.add_component(new Animation(this, zombie_frames));
+    this.add_component(new Inventory(data.properties));
+    this.add_component(new Vitals());
+    this.rotation_offset = 0;
+    this.position.copy(data);
+
+    damage_events.on('damage', data => this.on_damage(data));
+    enemys.addChild(this);
+  }
+
+  on_damage({id, damage}) {
+    if(this.id !== id) return;
+    if(Math.random() >= 0.5) new Blood(this.position);
+    if(this.vitals.alive) return this.vitals.damage(damage);
+    this.on_death();
+    if(!this.inventory.items.length) this.inventory.populate();
+    if(this.tween) this.tween.stop();
+
+    this.animation.kill();
+
+    damage_events.removeListener('damage', this.on_damage);
+  }
+
+  on_death() {
+    this.interactive = true;
     this.button = new Button({
       label_action: 'Loot',
       label_description: 'Corpse',
       label_image: 'eye_icon',
     });
+    this.button.set_position(this);
 
-    this.add_component(new Zombie(this));
-    this.add_component(new Inventory(data.properties));
-    this.add_component(new Vitals(this));
-
-    this.position.copy(data);
-
-    this.on_damage = ({id, damage})=> {
-      console.log('hit');
-      console.log(this.id);
-      if(this.id !== id) return;
-      this.events.emit('hit');
-      if(Math.random() >= 0.5) new Blood(this.position);
-      if(this.vitals.alive) return this.vitals.damage(damage);
-      this.events.emit('killed');
-      if(!this.inventory.items.length) this.inventory.populate();
-      if(this.tween) this.tween.stop();
-
-      this.animation.kill();
-
-      damage_events.removeListener('damage', this.on_damage);
+    this.on('mouseover', () => this.button.visible = true);
+    this.on('mouseout', () => this.button.visible = false);
+    this.click = () => {
+      this.button.visible = false;
+      this.inventory.set_position(this);
+      this.inventory.fade_in();
     };
-
-    damage_events.on('damage', this.on_damage);
-
-    this.events.on('killed', () => {
-      this.interactive = true;
-      this.on('mouseover', () => {
-        this.button.set_position(this);
-        this.button.visible = true;
-      });
-      this.on('mouseout', () => {
-        this.button.visible = false;
-      });
-      this.click = () => {
-        this.button.visible = false;
-        this.inventory.set_position(this);
-        this.inventory.fade_in();
-      };
-    });
-    enemys.addChild(this);
   }
-
 
   get _target_far_away() {
     const distance = distance_between(this.target, this);
@@ -161,7 +153,7 @@ class Walker extends extras.AnimatedSprite {
         this.tween.time = random_bound(90, 500);
       } else {
         await this._pathfind();
-        this.tween.time = 1000;
+        this.tween.time = 4000;
       }
       //draw_path(this.tween.path);
       this.tween.start();
@@ -171,7 +163,7 @@ class Walker extends extras.AnimatedSprite {
       if(!this.vitals.alive) this.tween.remove();
       if(!this.tween.path) return;
 
-      this.rotation = radian(this, this.tween.path._tmpPoint);
+      this.rotation = radian(this, this.tween.path._tmpPoint) + this.rotation_offset;
     });
   }
 

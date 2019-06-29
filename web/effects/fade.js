@@ -16,6 +16,7 @@ class Fade {
     movement.expire = true;
     movement.to({alpha: value});
     movement.start();
+    movement.on('end', () => movement.remove());
   }
 
   static out_destroy(sprite, time) {

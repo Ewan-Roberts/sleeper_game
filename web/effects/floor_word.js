@@ -9,10 +9,10 @@ class FloorWord extends Text {
     super(data);
 
     const degrees = data.rotation * (Math.PI/180);
-    this.style.fontSize   = data.font_size  || 20;
-    this.style.fill       = data.fill       || 'black';
-    this.style.fontWeight = data.weight     || 50;
-    this.style.align      = data.align      || 'center';
+    this.style.fontSize   = data.font_size || 20;
+    this.style.fill       = data.fill      || 'black';
+    this.style.fontWeight = data.weight    || 'bolder';
+    this.style.align      = data.align     || 'center';
 
     this.text     = data.text  || 'Invalid Text';
     this.alpha    = data.alpha || 1;
@@ -65,13 +65,21 @@ class FloorWord extends Text {
 const word_poo = ['Math.random()','<h2>','</html>','function() { 4>>','if(true){...','RUN','hahahHa','</head>','<script>','<div>','i++','DIE'];
 
 const bounds = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const random_text = () => word_poo[Math.floor(Math.random()*word_poo.length)];
+const random_text = (array) => array[Math.floor(Math.random()*array.length)];
 
-function random_word(point, size, closeness=100, fade_lower=500, fade_higher=2000, text = random_text()) {
+function random_word({
+  point,
+  size = 80,
+  closeness=100,
+  fade_lower=500,
+  fade_higher=2000,
+  text = word_poo,
+}) {
+  const rando = random_text(text);
   const word = new FloorWord({
-    font_size: bounds(10, size || 80),
+    font_size: bounds(10, size),
     rotation:  bounds(-30, 30),
-    text,
+    text :     rando,
     fill:      Math.random() >= 0.5?'white':'black',
     delay:     bounds(500, 2000),
   });

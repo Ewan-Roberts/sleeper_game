@@ -1,21 +1,21 @@
 'use strict';
-const { collisions } = require('../../engine/pixi_containers');
+const { collisions   } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
 const { Sprite, Texture } = require('pixi.js');
-const { Button } = require('../../view/button');
+const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
-const PIXI = require('pixi.js');
+const PIXI        = require('pixi.js');
 
 const { damage_events } = require('../../engine/damage_handler');
-const { Floor } = require('./floor');
+const { Floor         } = require('./floor');
 
 class Door extends Sprite {
   constructor(data) {
     super(Texture.fromImage(data.image_name));
-    this.id     = data.id;
-    this.height = data.height;
-    this.width  = data.width;
+    this.id       = data.id;
+    this.height   = data.height;
+    this.width    = data.width;
     this.rotation = data.rotation * (Math.PI/180);
 
     this.anchor.set(0, 1);
@@ -38,15 +38,20 @@ class Door extends Sprite {
     if(properties.dialog_on_click) {
       this.on('click', () => {
         Caption.render(properties.dialog_on_click);
-        PIXI.sound.play('wood_thump');
+        this.locked_door_effect.play();
       });
     }
 
-    if(properties.label) this.button(properties);
+    if(properties.label) this.overlay(properties);
+    if(properties.door)  this.pathfind_logic();
 
-    if(properties.door) this.pathfind_logic();
+    this._set_sound();
   }
 
+  _set_sound() {
+    this.locked_door_effect = PIXI.sound.find('door_locked');
+    this.locked_door_effect.volume = 0.1;
+  }
 
   open() {
     if(this.in_motion) return;
@@ -58,6 +63,7 @@ class Door extends Sprite {
     this.tween.on('end', () => {
       this.opened = true;
       this.in_motion = false;
+      this.button.action_label.text = 'Close';
     });
   }
 
@@ -71,22 +77,24 @@ class Door extends Sprite {
     this.tween.on('end', () => {
       this.opened = false;
       this.in_motion = false;
+      this.button.action_label.text = 'Open';
     });
   }
 
-  button(value) {
-    const button = new Button(value);
+  overlay(value) {
+    this.button = new Button(value);
+    this.button.visible = false;
     this.tint = 0xd3d3d3;
     this.on('mouseover', () => {
       this.tint = 0xffffff;
-      if(button._destoyed) return;
-      button.set_position(this);
-      button.visible = true;
+      if(this.button._destoyed) return;
+      this.button.set_position(this);
+      this.button.visible = true;
     });
     this.on('mouseout', () => {
       this.tint = 0xd3d3d3;
-      if(button._destoyed) return;
-      button.visible = false;
+      if(this.button._destoyed) return;
+      this.button.visible = false;
     });
   }
 
