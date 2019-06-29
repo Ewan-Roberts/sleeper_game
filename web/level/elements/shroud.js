@@ -1,5 +1,6 @@
 'use strict';
 const { shrouds } = require('../../engine/pixi_containers');
+const { Fade    } = require('../../effects/fade');
 
 const { Sprite, Texture } = require('pixi.js');
 
@@ -18,6 +19,13 @@ class Shroud extends Sprite {
     this.position.copy(data);
 
     shrouds.addChild(this);
+  }
+
+  fade_out_destroy() {
+    if(this._destroyed) return;
+    this.remove_on_enter = false;
+
+    Fade.out_destroy(this);
   }
 }
 

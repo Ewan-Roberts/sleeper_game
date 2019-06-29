@@ -33,9 +33,11 @@ class Trigger_Pad extends Sprite {
   on(name, callback) {
     this.tint  = 0xffff00;
     this.alpha = (global.env === 'dev')?0.2:0;
-    this.events.on(name, () => {
-      callback();
-    });
+    // this.events.on(name, callback() => {
+    //   callback();
+    // });
+
+    this.events.on(name, callback);
   }
 
   once(name, callback) {

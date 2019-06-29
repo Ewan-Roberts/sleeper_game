@@ -6,7 +6,7 @@ const { player_events  } = require('../../engine/item_handler');
 const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
-const { Caption_Dialog  } = require('../../view/caption');
+const { Caption   } = require('../../view/caption');
 const { Sprite, Texture } = require('pixi.js');
 
 class Chest extends Sprite {
@@ -23,16 +23,15 @@ class Chest extends Sprite {
 
     this.interactive = true;
     if(type === 'note') {
-      this.click = () => new Note(properties);
+      this.on('click', () => new Note(properties));
     }
 
+    // TODO refactor this madness
     if(properties && properties.label) {
       this.interactive = true;
       this.tint = 0xd3d3d3;
       this.button = new Button(properties);
-      this.button.visible = false;
       this.on('mouseover', () => {
-        console.log('22222222');
         this.tint = 0xffffff;
         this.button.set_position(this);
         this.button.visible = true;
@@ -44,19 +43,16 @@ class Chest extends Sprite {
     }
 
     if(properties && properties.equip_on_click) {
-      this.click = () => {
+      this.on('click', () => {
         this.destroy();
         player_events.emit('equip_weapon', properties);
-        if(this.button) this.button.visible = false;
-      };
+      });
     }
 
     if(properties && properties.dialog_on_click) {
-      this.click = () => {
-        const dialog = new Caption_Dialog();
-        dialog.show();
-        dialog.render_text(properties.dialog_on_click);
-      };
+      this.on('click', () => {
+        Caption.render(properties.dialog_on_click);
+      });
     }
 
     if(properties && properties.remove_on_click) {
@@ -65,10 +61,10 @@ class Chest extends Sprite {
 
     if(properties && properties.container) {
       this.inventory = new Inventory(this, properties);
-      this.click = () => {
+      this.on('click', () => {
         this.button.visible = false;
         this.inventory.show();
-      };
+      });
     }
 
     if(properties && properties.collision) {

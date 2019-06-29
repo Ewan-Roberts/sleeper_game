@@ -27,7 +27,7 @@ function point_contains(position) {
   const found = shrouds.children.find(child => child.containsPoint(position));
   if (found){
     if(found.remove_on_enter) {
-      found.destroy();
+      found.fade_out_destroy();
       return;
     }
     if (found.alpha_on_enter) {
@@ -53,7 +53,7 @@ class Keyboard {
     this.sprite         = sprite;
     this.speed          = vitals.speed;
     this.vitals         = vitals;
-    this.buffer         = 50;
+    this.buffer         = 40;
     this.inventory      = inventory;
     this.inventory_view = new Player_Inventory();
     this.interaction    = new Interaction_Menu();

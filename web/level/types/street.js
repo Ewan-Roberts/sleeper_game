@@ -22,8 +22,8 @@ class Street {
 
     const { exit_pad, player, prey } = this.elements;
 
-    const background = new Background(player[0]);
-    background.fade_out(500);
+    // const background = new Background(player[0]);
+    // background.fade_out(500);
 
     this.player.position.copy(player[0]);
 

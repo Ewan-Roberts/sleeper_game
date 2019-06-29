@@ -31,7 +31,6 @@ const {
   Decal,
   Background,
   Chest,
-  Door,
   Roof,
   Shroud,
   Collision,
@@ -39,7 +38,6 @@ const {
   Border,
 } = require('../elements');
 
-global.dev();
 class Start_Room  {
   constructor() {
     this.name   = 'starter_room';
@@ -54,7 +52,6 @@ class Start_Room  {
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.collisions  = this.data.collision.map(data => new Collision(data));
     this.items       = this.data.item.map(data => new Chest(data));
-    this.door        = this.data.door.map(data => new Door(data));
     this.hands_pad   = this.data.hands_pad.map(data => new Trigger_Pad(data));
     this.pop_up_pads = this.data.pop_up_pad.map(data => new Trigger_Pad(data));
     this.border      = this.data.border.map(data => new Border(data));

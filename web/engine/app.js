@@ -12,7 +12,6 @@ console.time();
 const app = new Application({
   width           : global.window.innerWidth,
   height          : global.window.innerHeight,
-  powerPreference : 'low-performance',
   backgroundColor : 0xffffff,
   roundPixels     : true,
   forceFXAA       : true,

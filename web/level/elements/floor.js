@@ -6,6 +6,7 @@ const { Sprite, Texture } = require('pixi.js');
 class Floor extends Sprite {
   constructor(data) {
     super(Texture.fromImage(data.image_name || 'bunny'));
+    console.log(data);
     this.id       = data.id;
     this.height   = data.height || 20;
     this.width    = data.width  || 100;
@@ -14,6 +15,8 @@ class Floor extends Sprite {
     this.rotation = data.rotation * (Math.PI/180) || 0;
     this.anchor.set(0, 1);
     this.position.copy(data);
+    console.log(this);
+
 
     backgrounds.addChild(this);
   }

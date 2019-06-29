@@ -110,7 +110,7 @@ function flash_at(point, time = 400, tint = 0x000000) {
 
 function pulse_sprites(data) {
   let delay = 500;
-  data.forEach(unit => {
+  const sprites = data.map(unit => {
     delay += 120;
     const sprite = new FadeSprite({
       ...unit,
@@ -119,7 +119,9 @@ function pulse_sprites(data) {
     sprite.alpha = 0;
     sprite.fade_in_wait_out(delay, 2000, 1000);
     decals.addChild(sprite);
+    return sprite;
   });
+  return sprites;
 }
 
 module.exports = {

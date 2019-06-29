@@ -19,9 +19,8 @@ class Label extends Text{
   }
 }
 
-
 class Button {
-  constructor({label_action, label_description, label_image, visible}) {
+  constructor({label_action, label_description, label_image}) {
     this.name = 'button';
 
     if(label_action) {
@@ -36,7 +35,7 @@ class Button {
     this.sprite.height = 30;
     this.sprite.width  = 30;
 
-    this.visible = visible || true;
+    this.visible = false;
     guis.addChild(this.sprite);
   }
 
@@ -61,21 +60,11 @@ class Button {
       this.description_label.visible = bool;
     }
   }
+
   destroy() {
     this.description_label.destroy();
     this.action_label.destroy();
     this.sprite.destroy();
-  }
-  remove() {
-    guis.removeChild(this.sprite);
-
-    if(this.action_label) {
-      this.action_label.remove();
-    }
-
-    if(this.description_label) {
-      this.description_label.remove();
-    }
   }
 }
 

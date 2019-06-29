@@ -40,7 +40,6 @@ class Vitals {
         label_action: 'Loot',
         label_description: name || 'Corpse',
         label_image: 'eye_icon',
-        visible: false,
       });
       this.sprite.on('mouseover', () => {
         this.button.set_position(this.sprite);

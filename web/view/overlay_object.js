@@ -3,11 +3,8 @@ const {Texture, Sprite, Text}= require('pixi.js');
 const { guis  } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 const { Fade  } = require('../effects/fade');
-const { Color_Pick  } = require('../utils/color_picker');
 const PIXI = require('pixi.js');
 
-//const { Caption_Dialog } = require('./caption');
-// same as fade sprite
 class Background extends Sprite {
   constructor() {
     super(Texture.WHITE);
@@ -26,7 +23,7 @@ class Background extends Sprite {
     this.position.set(x, y);
   }
 
-  fade_out(time = 2000) {
+  fade_out_destroy(time = 500) {
     Fade.out_destroy(this, time);
   }
 }
@@ -42,8 +39,6 @@ class Note {
 
     const texture = Texture.fromImage(options.image_on_click);
     this.sprite = new Sprite(texture);
-    this.sprite.width = 300;
-    this.sprite.height= 200;
     this.sprite.position.copy(this.background.position);
     this.sprite.anchor.set(0.5);
     this.sprite.interactive = true;
@@ -55,7 +50,7 @@ class Note {
     this.text = new Text(
       options.text,
       {
-        fontSize: 15,
+        fontSize: 20,
         fill:     'grey',
         align:    'center',
         wordWrap: true,
@@ -67,22 +62,14 @@ class Note {
     this.text.position.copy(this.sprite);
 
     this.sprite.tint = 0xd3d3d3;
-    this.sprite.on('mouseover', () => {
-      this.sprite.tint = 0xffffff;
-    });
-    this.sprite.on('mouseout', () => {
-      this.sprite.tint = 0xd3d3d3;
-      this.sprite.visible = false;
-      this.text.visible = false;
-      this.background.visible = false;
+    this.sprite.on('mouseover', () => this.sprite.tint = 0xffffff);
+    this.sprite.on('mouseout', () => this.sprite.tint = 0xd3d3d3);
+
+    this.sprite.on('click', () => {
+      this.background.fade_out_destroy();
+      Fade.out_destroy(this.sprite);
       PIXI.keyboardManager.enable();
-      // if(options.post_open_dialog) {
-      //   const dialog = new Caption_Dialog();
-      //   dialog.show();
-      //   console.log(dialog);
-      //   console.log('111');
-      //   dialog.render_text(options.post_open_dialog);
-      // }
+      Fade.out_destroy(this.text);
     });
 
     guis.addChild(this.sprite, this.text);
@@ -92,5 +79,4 @@ class Note {
 
 module.exports = {
   Note,
-  Background,
 };

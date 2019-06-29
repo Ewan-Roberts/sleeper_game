@@ -20,6 +20,7 @@ const Sound = sound.add({
   walk_normal:    'audio/walk_normal.wav',
   birds_fly_away: 'audio/birds_fly_away.wav',
   whisper_effect: 'audio/whisper_effect.wav',
+  keys_jingle:    'audio/keys_jingle.wav',
   thud_1:         'audio/thud_1.wav',
   thud_2:         'audio/thud_2.wav',
   thud_3:         'audio/thud_3.wav',

@@ -4,6 +4,7 @@ const { world     } = require('./shadows');
 
 const zIndex_layer = {
   background: 12,
+  floor:      10,
   low:        9,
   medium:     6,
   close:      3,
@@ -12,6 +13,7 @@ const zIndex_layer = {
 
 const {
   background,
+  floor,
   low,
   medium,
   close,
@@ -23,15 +25,14 @@ borders.name   = 'borders';
 borders.zIndex = low;
 borders.interactiveChildren = false;
 
-
 const backgrounds  = new Container();
 backgrounds.name   = 'background_image';
 backgrounds.zIndex = background;
-backgrounds.interactiveChildren = false;
+//backgrounds.interactiveChildren = false;
 
 const decals  = new Container();
 decals.name   = 'decals_container';
-decals.zIndex = background;
+decals.zIndex = floor;
 decals.interactiveChildren = false;
 
 const grids  = new Container();
