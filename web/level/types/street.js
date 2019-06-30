@@ -1,7 +1,3 @@
-'use strict';
-
-const { Crow          } = require('../../character/archetypes/crow');
-const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 const { Camera        } = require('../../engine/camera');
 const { renderer      } = require('../../engine/app.js');

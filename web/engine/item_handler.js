@@ -1,8 +1,4 @@
-'use strict';
-
 const event = require('events');
-
-const { Item_Manager } = require('../items/item_manager');
 
 class Items {
   constructor(id) {

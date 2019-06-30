@@ -1,6 +1,4 @@
-'use strict';
 const { Texture, sound } = require('pixi.js');
-const { radian         } = require('../../utils/math');
 
 const create_texture = (name, i) => Array(i).fill(name).map((filler,j) => Texture.fromFrame(j<10?filler+'0'+j:filler+j));
 const animations = {

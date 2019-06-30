@@ -1,5 +1,3 @@
-'use strict';
-
 const { visuals, decals } = require('../engine/pixi_containers');
 const { Sprite, Texture } = require('pixi.js');
 const { tweenManager    } = require('pixi.js');

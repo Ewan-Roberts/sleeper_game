@@ -1,4 +1,3 @@
-'use strict';
 const { Container } = require('pixi.js');
 const { world     } = require('./shadows');
 
@@ -97,12 +96,6 @@ world.addChild(
 );
 
 world.updateLayersOrder();
-
-function clear_container(container) {
-  for (let i = container.children.length - 1; i >= 0; i--) {
-    container.removeChild(container.children[i]);
-  }
-}
 
 function clear_level_containers() {
   world.children.forEach(child => child.removeChildren());

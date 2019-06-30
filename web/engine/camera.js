@@ -1,5 +1,3 @@
-'use strict';
-
 const { world } = require('./shadows');
 
 class Camera {

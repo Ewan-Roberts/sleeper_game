@@ -1,5 +1,3 @@
-
-'use strict';
 const { Wall        } = require('../elements/wall');
 const { Decal       } = require('../elements/decals');
 const { Background  } = require('../elements/background');

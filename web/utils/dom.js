@@ -1,5 +1,3 @@
-'use strict';
-
 class Select {
   constructor(name){
     this.element = global.document.querySelector(name);

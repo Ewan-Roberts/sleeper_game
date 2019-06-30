@@ -1,5 +1,3 @@
-'use strict';
-
 // from :https://github.com/kittykatattack/gameUtilities/blob/master/src/gameUtilities.js
 class Sight {
   /* A utility that finds the center point of the sprite. If it's anchor point is the

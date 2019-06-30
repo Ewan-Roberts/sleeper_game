@@ -1,5 +1,3 @@
-'use strict';
-
 const port     = process.env.PORT || 3000;
 const compress = require('compression');
 const express  = require('express');

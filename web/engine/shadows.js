@@ -1,4 +1,3 @@
-'use strict';
 const {stage} = require('./app');
 stage.name    = 'world';
 stage.updateLayersOrder = function () {

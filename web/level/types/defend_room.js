@@ -1,5 +1,3 @@
-'use strict';
-
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
 const { Walker        } = require('../../character/archetypes/rat');
@@ -27,8 +25,6 @@ class Defend_Room  {
       if(i % 2) zombie.animation.eat();
       return zombie;
     });
-
-    const lurk = prey.find(unit => unit.id === 263);
 
     exit_pad.forEach(data => {
       const pad = new Trigger_Pad(data);

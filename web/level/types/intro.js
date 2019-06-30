@@ -1,16 +1,13 @@
-'use strict';
-const { collisions, visuals } = require('../../engine/pixi_containers');
+const { visuals } = require('../../engine/pixi_containers');
 const { sound, filters } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
 
 const { Camera        } = require('../../engine/camera');
 const { renderer      } = require('../../engine/app.js');
-const { Crow          } = require('../../character/archetypes/crow');
 const { Click_Pad     } = require('../elements/click_pad');
 const { Button        } = require('../../view/button');
 const { Player        } = require('../../character/archetypes/player');
 const { Tween         } = require('../../engine/tween');
-const { Level_Factory } = require('./level_factory');
 const { FadeSprite  } = require('../../effects/fade_sprite.js');
 const { flash_at    } = require('../../effects/fade_sprite.js');
 

@@ -1,4 +1,3 @@
-'use strict';
 const { collisions   } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 

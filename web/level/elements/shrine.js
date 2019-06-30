@@ -1,5 +1,3 @@
-'use strict';
-
 const { collisions } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
 const { Sprite, Texture } = require('pixi.js');

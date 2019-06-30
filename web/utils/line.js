@@ -1,5 +1,3 @@
-'use strict';
-
 const { Graphics } = require('pixi.js');
 const { guis     } = require('../engine/pixi_containers');
 

@@ -1,4 +1,4 @@
-'use strict';
+
 const { Texture } = require('pixi.js');
 
 class rat_animations {
@@ -55,7 +55,7 @@ class rat_animations {
   }
 }
 
-const rodent = {
+const rodent_frames = {
   move:   rat_animations.move_frames(),
   attack: rat_animations.eat_frames(),
   death:  rat_animations.dead_frames(),
@@ -65,5 +65,5 @@ const rodent = {
 
 
 module.exports = {
-  rodent,
+  rodent_frames,
 };

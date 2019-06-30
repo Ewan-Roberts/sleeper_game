@@ -1,5 +1,4 @@
-'use strict';
-const { settings, Application } = require('pixi.js');
+const { Application } = require('pixi.js');
 console.time();
 const app = new Application({
   width           : global.window.innerWidth,

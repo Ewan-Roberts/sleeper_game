@@ -1,4 +1,3 @@
-'use strict';
 const { Sprite, Texture } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
 const { Level_Factory } = require('../types/level_factory');

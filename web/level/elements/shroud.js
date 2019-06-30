@@ -1,4 +1,3 @@
-'use strict';
 const { shrouds } = require('../../engine/pixi_containers');
 const { Fade    } = require('../../effects/fade');
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const { select } = require('../utils/dom');
 const dialog_caption_holder = select('.dialog_caption_holder');
 
@@ -22,7 +20,6 @@ class Caption {
     let start = null;
     function step (timestamp) {
       if(!start) start = timestamp;
-      const progress = timestamp - start;
       current_text += letters[i];
       dialog_caption_holder.innerHTML = current_text;
       i++;

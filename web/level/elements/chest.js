@@ -1,4 +1,3 @@
-'use strict';
 const { items         } = require('../../engine/pixi_containers');
 const { collisions    } = require('../../engine/pixi_containers');
 const { players    } = require('../../engine/pixi_containers');
@@ -13,7 +12,7 @@ global.dev();
 
 class Chest extends Sprite {
   constructor(data) {
-    const { type, properties } = data;
+    const { properties } = data;
     super(Texture.fromImage(data.image_name));
     this.id       = data.id;
     this.height   = data.height;
@@ -23,13 +22,9 @@ class Chest extends Sprite {
     this.anchor.set(0, 1);
     this.position.copy(data);
     this.interactive = true;
-
-    if(!properties.collision) {
-      items.addChild(this);
-      return;
-    }
-
     if(data.type === 'note') this.on('click', () => new Note(properties));
+    if(properties.collision) collisions.addChild(this);
+    items.addChild(this);
 
     if(properties.equip_on_click) {
       this.click = () => {
@@ -47,7 +42,6 @@ class Chest extends Sprite {
       this.destroy();
     });
     if(properties.container) this.container(properties);
-    if(properties.collision) collisions.addChild(this);
   }
 
   container(properties) {

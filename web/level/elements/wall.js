@@ -1,4 +1,3 @@
-'use strict';
 const { Sprite, Texture } = require('pixi.js');
 const { collisions      } = require('../../engine/pixi_containers');
 

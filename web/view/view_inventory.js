@@ -1,21 +1,6 @@
-'use strict';
 const {Text,Sprite,Container,Texture}= require('pixi.js');
-//const { player_events } = require('../engine/item_handler');
 const { guis          } = require('../engine/pixi_containers');
 const { Fade          } = require('../effects/fade');
-
-class Value extends Text {
-  constructor() {
-    super('', {fontSize: 15, fill: 'white'});
-
-    this.x -= 40;
-    this.visible = false;
-  }
-
-  set text(value) {
-    super.text = 'Value: '+value;
-  }
-}
 
 class Slot extends Sprite {
   constructor() {

@@ -1,4 +1,3 @@
-'use strict';
 const { Sprite       } = require('pixi.js');
 const { renderer     } = require('../engine/app');
 const { Item_Manager } = require('../items/item_manager');

@@ -1,4 +1,3 @@
-'use strict';
 const PIXI = require('pixi.js');
 global.window.PIXI.default = PIXI;
 const { ticker }  = require('./app');

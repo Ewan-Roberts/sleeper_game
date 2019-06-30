@@ -1,4 +1,3 @@
-'use strict';
 const { tweenManager }= require('pixi.js');
 const { Sprite, Texture } = require('pixi.js');
 const { guis } = require('./pixi_containers');

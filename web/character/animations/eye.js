@@ -1,4 +1,4 @@
-'use strict';
+
 const { Texture, extras } = require('pixi.js');
 const { visuals          } = require('../../engine/pixi_containers');
 

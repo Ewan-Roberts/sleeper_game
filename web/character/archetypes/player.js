@@ -1,8 +1,6 @@
-'use strict';
-
 const { extras, Texture } = require('pixi.js');
 const { players         } = require('../../engine/pixi_containers');
-const { PlayerEvents    } = require('../../engine/item_handler');
+//const { PlayerEvents    } = require('../../engine/item_handler');
 const { Keyboard        } = require('../attributes/keyboard');
 const { Mouse           } = require('../attributes/mouse');
 const { Inventory       } = require('../attributes/inventory');

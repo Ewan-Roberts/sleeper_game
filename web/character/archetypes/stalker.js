@@ -1,5 +1,3 @@
-'use strict';
-
 const { Walker              } = require('./rat');
 const { random_word         } = require('../../effects/floor_word.js');
 const { FadeSprite          } = require('../../effects/fade_sprite.js');

@@ -1,4 +1,3 @@
-'use strict';
 const { pathfind    } = require('../../engine/pathfind.js');
 const { Camera      } = require('../../engine/camera.js');
 const { roofs       } = require('../../engine/pixi_containers.js');
@@ -20,7 +19,7 @@ const { MicrophonePopUp } = require('../../view/microphone_box');
 const { WASD            } = require('../../view/wasd_keys');
 const { Stalker         } = require('../../character/archetypes/stalker');
 const { Player          } = require('../../character/archetypes/player');
-const { Crow            } = require('../../character/archetypes/crow');
+const { PathCrow            } = require('../../character/archetypes/crow');
 const { keyboardManager } = require('pixi.js');
 const { sound           } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
@@ -65,7 +64,7 @@ class Start_Room  {
     this.microphone_prompt = new MicrophonePopUp();
     this.script            = new Overlay_Dialog(['...','this again...'], this.player);
 
-    this.crows     = this.data.birds.map(unit => new Crow(unit));
+    this.crows     = this.data.birds.map(unit => new PathCrow(unit));
     this.stalkers  = this.data.prey.map(unit => new Stalker(unit, this.player));
     this.generator = this.iterate();
 
@@ -200,8 +199,8 @@ class Start_Room  {
     });
 
     this.birds_pad.once('trigger', () => {
-      console.log('hi');
       this.crows.forEach(unit => {
+        unit.talk();
         unit.delay = random_bound(0, 500);
         unit.start();
       });

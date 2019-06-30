@@ -1,4 +1,3 @@
-'use strict';
 require('./ticker');
 
 const { tween, tweenManager } = require('pixi.js');

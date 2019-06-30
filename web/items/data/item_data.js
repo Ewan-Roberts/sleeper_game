@@ -1,4 +1,4 @@
-'use strict';
+
 
 //https://www.uihere.com/free-graphics/search?q=knife
 const items = [

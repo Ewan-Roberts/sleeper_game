@@ -1,4 +1,3 @@
-'use strict';
 
 const { select, select_all } = require('../utils/dom');
 const category_enum = {

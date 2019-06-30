@@ -1,5 +1,3 @@
-'use strict';
-
 function distance_between(point_1, point_2) {
   const dx = point_2.x - point_1.x;
   const dy = point_2.y - point_1.y;

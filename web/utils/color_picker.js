@@ -1,5 +1,3 @@
-'use strict';
-
 class Color_Pick {
   static get_hex_from(name) {
     switch(name) {

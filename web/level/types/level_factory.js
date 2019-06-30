@@ -1,4 +1,3 @@
-'use strict';
 const { clear_level_containers } = require('../../engine/pixi_containers');
 const { tweenManager    } = require('pixi.js');
 

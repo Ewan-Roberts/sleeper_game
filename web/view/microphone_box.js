@@ -1,5 +1,3 @@
-'use strict';
-
 const { Select, SelectAll } = require('../utils/dom.js');
 
 class MicrophonePopUp {

@@ -1,7 +1,3 @@
-'use strict';
-const { Button        } = require('../../view/button');
-const { damage_events } = require('../../engine/damage_handler');
-
 class Vitals {
   constructor() {
     this.name   ='vitals';

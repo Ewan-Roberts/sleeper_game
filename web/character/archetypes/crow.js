@@ -1,18 +1,19 @@
-'use strict';
-const { Texture, tween, tweenManager, extras } = require('pixi.js');
+
+const { Texture, tween, tweenManager, extras, sound } = require('pixi.js');
 
 const { enemys    } = require('../../engine/pixi_containers');
 const { radian    } = require('../../utils/math');
+const { random_bound } = require('../../utils/math.js');
 const { draw_path } = require('../../utils/line');
-const { Bird      } = require('../animations/bird');
+const { Animation } = require('../attributes/animation');
+const { bird_frames } = require('../animations/bird');
+const { rodent_frames     } = require('../animations/rat');
 
-class Crow extends extras.AnimatedSprite {
+class PathSprite extends extras.AnimatedSprite {
   constructor(data) {
     super([Texture.fromFrame('bird_8')]);
     this.id    = data.id;
     this.name  = 'crow';
-
-    this.add_component(new Bird(this));
 
     this.rotation = 1;
     this.width    /= 2.5;
@@ -26,7 +27,6 @@ class Crow extends extras.AnimatedSprite {
       this.path = data.polyline.map(({x,y})=>({x:this.x+x, y:this.y+y}));
     }
     this.turn = true;
-    this.animation.wait();
     enemys.addChild(this);
   }
 
@@ -76,7 +76,37 @@ class Crow extends extras.AnimatedSprite {
   }
 }
 
+class PathCrow extends PathSprite {
+  constructor(data) {
+    super(data);
+    this.add_component(new Animation(this, bird_frames));
+    this.fly_sound = sound.find('birds_fly_away');
+    this.fly_sound.volume = 0.40;
+    this.wait();
+  }
+
+  wait() {
+    this.animation.switch('wait');
+    this.animationSpeed = 0.08;
+    const random_start_frame = random_bound(0, 15);
+    this.gotoAndPlay(random_start_frame);
+  }
+
+  talk() {
+    this.fly_sound.play();
+  }
+}
+
+class PathRat extends PathSprite {
+  constructor(data) {
+    super(data);
+    this.add_component(new Animation(this, rodent_frames));
+    this.animation.wait();
+  }
+}
+
 module.exports = {
-  Crow,
+  PathCrow,
+  PathRat,
 };
 

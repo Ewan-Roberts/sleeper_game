@@ -1,4 +1,3 @@
-'use strict';
 require('pixi-sound');
 const { sound } = require('pixi.js');
 

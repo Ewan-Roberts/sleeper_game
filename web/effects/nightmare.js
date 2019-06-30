@@ -1,5 +1,3 @@
-'use strict';
-
 const { filters  } = require('pixi.js');
 const { renderer } = require('../engine/app.js');
 const { decals   } = require('../engine/pixi_containers.js');

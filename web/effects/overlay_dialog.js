@@ -1,5 +1,3 @@
-'use strict';
-
 const { fill_screen_at } = require('../effects/fade_sprite');
 const { visuals   } = require('../engine/pixi_containers');
 const { FloorWord } = require('../effects/floor_word');

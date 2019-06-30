@@ -1,15 +1,15 @@
-'use strict';
 const { radian } = require('../../utils/math');
 
 class Animation{
   constructor(sprite, frames) {
     this.name = 'animation';
 
-    this.sprite = sprite;
     this.frames = frames;
+    this.sprite = sprite;
   }
 
   switch(action) {
+    console.log('2');
     if (this.state === action) return;
 
     this.sprite.textures = this.frames[action];

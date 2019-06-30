@@ -1,5 +1,3 @@
-'use strict';
-
 require('./utils/globals');
 
 const { loader } = require('./engine/packer');
