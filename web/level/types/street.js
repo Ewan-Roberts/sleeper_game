@@ -21,7 +21,6 @@ const {
   Floor,
 } = require('../elements');
 
-//global.dev();
 class Street {
   constructor() {
     this.name   = 'home_street';

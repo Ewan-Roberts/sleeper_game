@@ -8,7 +8,9 @@ const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
 const { Sprite, Texture } = require('pixi.js');
-//global.dev();
+
+global.dev();
+
 class Chest extends Sprite {
   constructor(data) {
     const { type, properties } = data;
@@ -17,17 +19,17 @@ class Chest extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.rotation = data.rotation * (Math.PI/180);
-    this.alpha    = data.properties && data.properties.alpha || 1;
+    this.alpha    = properties && properties.alpha || 1;
     this.anchor.set(0, 1);
     this.position.copy(data);
-    console.log(this);
-    if(type === 'note') this.on('click', () => new Note(properties));
     this.interactive = true;
 
-    if(!properties) {
+    if(!properties.collision) {
       items.addChild(this);
       return;
     }
+
+    if(data.type === 'note') this.on('click', () => new Note(properties));
 
     if(properties.equip_on_click) {
       this.click = () => {
