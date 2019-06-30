@@ -1,10 +1,10 @@
-const { pathfind      } = require('../../engine/pathfind.js');
-const { Walker        } = require('../../character/archetypes/rat');
-const { Player        } = require('../../character/archetypes/player');
-const { rodent        } = require('../../character/animations/rat');
-const { Camera        } = require('../../engine/camera');
-const { renderer      } = require('../../engine/app.js');
-const { PathRat } = require('../../character/archetypes/crow');
+const { pathfind } = require('../../engine/pathfind.js');
+const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
+const { Player   } = require('../../character/archetypes/player');
+const { rodent   } = require('../../character/animations/rat');
+const { Camera   } = require('../../engine/camera');
+const { renderer } = require('../../engine/app.js');
+const { PathRat  } = require('../../character/archetypes/path_rat');
 
 const {
   Trigger_Pad,
@@ -30,12 +30,12 @@ class Park_Room  {
     this.floors      = this.data.floor.map(data => new Floor(data));
     this.decals      = this.data.decal.map(data => new Decal(data));
 
-    this.zombie      = new Walker(this.data.zombie[0]);
+    this.zombie      = new LogicZombie(this.data.zombie[0]);
     renderer.backgroundColor = 0x000000;
     this.crows         = this.data.birds.map(unit => new PathRat(unit));
     this.prey_exit_pad = this.exit_pad.find(pad => pad.id === 15);
     this.rats          = this.data.prey.map(data => {
-      const entity = new Walker(data);
+      const entity = new LogicZombie(data);
       entity.target(this.prey_exit_pad);
       entity.animation.frames = rodent;
       entity.rotation_offset = 1.57;

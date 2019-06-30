@@ -1,4 +1,3 @@
-
 const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
@@ -8,9 +7,7 @@ const { distance_between, random_bound} = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
 const { Sight            } = require('../../utils/line_of_sight');
-const { zombie_frames   } = require('../animations/zombie');
 const { Inventory        } = require('../attributes/inventory');
-const { Animation        } = require('../attributes/animation');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood  } = require('../../effects/blood');
@@ -26,16 +23,13 @@ function break_at_door(path) {
   return path;
 }
 
-const dead = [ Texture.fromFrame('bird_8') ];
-
-class Walker extends extras.AnimatedSprite {
+class LogicSprite extends extras.AnimatedSprite {
   constructor(data) {
-    super(dead);
+    super([Texture.fromFrame('bird_8')]);
     this.name = 'zombie';
     this.id   = data.id;
     this.events = new event();
 
-    this.add_component(new Animation(this, zombie_frames));
     this.add_component(new Inventory(data.properties));
     this.add_component(new Vitals());
     this.rotation_offset = 0;
@@ -173,5 +167,5 @@ class Walker extends extras.AnimatedSprite {
 }
 
 module.exports = {
-  Walker,
+  LogicSprite,
 };

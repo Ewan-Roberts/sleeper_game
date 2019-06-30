@@ -17,9 +17,9 @@ const { random_word    } = require('../../effects/floor_word.js');
 
 const { MicrophonePopUp } = require('../../view/microphone_box');
 const { WASD            } = require('../../view/wasd_keys');
-const { Stalker         } = require('../../character/archetypes/stalker');
+const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { Player          } = require('../../character/archetypes/player');
-const { PathCrow            } = require('../../character/archetypes/crow');
+const { PathCrow            } = require('../../character/archetypes/path_crow');
 const { keyboardManager } = require('pixi.js');
 const { sound           } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');

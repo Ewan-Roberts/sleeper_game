@@ -1,6 +1,6 @@
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
-const { Walker        } = require('../../character/archetypes/rat');
+const { LogicZombie        } = require('../../character/archetypes/logic_zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
 
@@ -20,7 +20,7 @@ class Defend_Room  {
 
     this.player.position.copy(player[0]);
     const zombies = prey.map((unit,i) => {
-      const zombie = new Walker(unit);
+      const zombie = new LogicZombie(unit);
       zombie.target(this.player);
       if(i % 2) zombie.animation.eat();
       return zombie;

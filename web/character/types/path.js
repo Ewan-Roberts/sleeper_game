@@ -1,13 +1,8 @@
-
-const { Texture, tween, tweenManager, extras, sound } = require('pixi.js');
+const { Texture, tween, tweenManager, extras } = require('pixi.js');
 
 const { enemys    } = require('../../engine/pixi_containers');
 const { radian    } = require('../../utils/math');
-const { random_bound } = require('../../utils/math.js');
 const { draw_path } = require('../../utils/line');
-const { Animation } = require('../attributes/animation');
-const { bird_frames } = require('../animations/bird');
-const { rodent_frames     } = require('../animations/rat');
 
 class PathSprite extends extras.AnimatedSprite {
   constructor(data) {
@@ -76,37 +71,7 @@ class PathSprite extends extras.AnimatedSprite {
   }
 }
 
-class PathCrow extends PathSprite {
-  constructor(data) {
-    super(data);
-    this.add_component(new Animation(this, bird_frames));
-    this.fly_sound = sound.find('birds_fly_away');
-    this.fly_sound.volume = 0.40;
-    this.wait();
-  }
-
-  wait() {
-    this.animation.switch('wait');
-    this.animationSpeed = 0.08;
-    const random_start_frame = random_bound(0, 15);
-    this.gotoAndPlay(random_start_frame);
-  }
-
-  talk() {
-    this.fly_sound.play();
-  }
-}
-
-class PathRat extends PathSprite {
-  constructor(data) {
-    super(data);
-    this.add_component(new Animation(this, rodent_frames));
-    this.animation.wait();
-  }
-}
-
 module.exports = {
-  PathCrow,
-  PathRat,
+  PathSprite,
 };
 

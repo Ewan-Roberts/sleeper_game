@@ -1,10 +1,10 @@
-const { Walker              } = require('./rat');
+const { LogicZombie              } = require('./logic_zombie');
 const { random_word         } = require('../../effects/floor_word.js');
 const { FadeSprite          } = require('../../effects/fade_sprite.js');
 const { decals              } = require('../../engine/pixi_containers');
 const { sound, tweenManager } = require('pixi.js');
 
-class Stalker extends Walker {
+class Stalker extends LogicZombie {
   constructor(data, target) {
     super(data);
     this.visible     = false;
