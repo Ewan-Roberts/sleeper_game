@@ -3,7 +3,7 @@ const { Sprite, Texture } = require('pixi.js');
 
 class Border extends Sprite {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
+    super(Texture.fromImage('black_dot'));
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;

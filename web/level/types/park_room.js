@@ -4,7 +4,7 @@
 const { LogicZombie } = require('../../character/archetypes/logic_zombie');
 const { Player      } = require('../../character/archetypes/player');
 const { Camera      } = require('../../engine/camera');
-const { renderer    } = require('../../engine/app.js');
+//const { renderer    } = require('../../engine/app.js');
 const { PathRat     } = require('../../character/archetypes/path_rat');
 
 const {
@@ -16,6 +16,7 @@ const {
   Collision,
   Floor,
   Chest,
+  Border,
 } = require('../elements');
 global.dev();
 class Park_Room  {
@@ -33,6 +34,7 @@ class Park_Room  {
     this.collisions  = this.data.collision.map(data => new Collision(data));
     this.decals      = this.data.decal.map(data => new Decal(data));
     this.items       = this.data.item.map(data => new Chest(data));
+    this.borders     = this.data.bounds.map(data => new Border(data));
 
     this.zombie = new LogicZombie(this.data.zombie[0]);
     this.rat_pad = this.exit_pad.find(pad => pad.id === 236);
@@ -78,6 +80,7 @@ class Park_Room  {
     Camera.set_center(this.data.player_spawn[1]);
 
     this.player.vitals.speed = 30;
+    this.borders.map(border => border.alpha = 0.4);
   }
 }
 

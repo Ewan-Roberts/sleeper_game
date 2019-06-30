@@ -62,6 +62,7 @@ shrouds.zIndex = close;
 shrouds.interactiveChildren = false;
 
 const visuals  = new Container();
+
 visuals.name   = 'visuals';
 visuals.zIndex = close;
 //visuals.interactiveChildren = false;
