@@ -18,7 +18,7 @@ const {
   Chest,
   Border,
 } = require('../elements');
-global.dev();
+//global.dev();
 class Park_Room  {
   constructor() {
     this.name   = 'defend_room';

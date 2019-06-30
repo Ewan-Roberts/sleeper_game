@@ -84,10 +84,12 @@ class Start_Room  {
     this.theme_song = sound.find('start_theme');
     this.theme_song.volume = 0.05;
     this.eerie_song = sound.find('eerie_ambient');
+    this.eerie_song.volume = 0.08;
     this.horror_song = sound.find('horror_theme');
     this.horror_song.volume = 0.08;
 
     this.suspense_effect = sound.find('suspense_in');
+    this.suspense_effect.volume = 0.05;
     this.click_effect    = sound.find('click');
     this.honk_effect     = sound.find('honk');
     this.thud_1_effect   = sound.find('thud_1');

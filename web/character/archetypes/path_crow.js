@@ -13,6 +13,7 @@ class PathCrow extends PathSprite {
     this.fly_sound = sound.find('birds_fly_away');
     this.fly_sound.volume = 0.40;
     this.wait();
+    this.animationSpeed = 0.25;
   }
 
   wait() {

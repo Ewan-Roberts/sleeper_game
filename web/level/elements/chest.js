@@ -8,7 +8,6 @@ const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
 const { Sprite, Texture } = require('pixi.js');
 
-global.dev();
 
 class Chest extends Sprite {
   constructor(data) {
