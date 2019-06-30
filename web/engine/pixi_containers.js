@@ -45,7 +45,7 @@ collisions.zIndex = low;
 
 const enemys  = new Container();
 enemys.name   = 'enemy_container';
-enemys.zIndex = very_close;
+enemys.zIndex = medium;
 
 const items  = new Container();
 items.name   = 'non_collision_items';

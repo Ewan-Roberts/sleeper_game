@@ -25,10 +25,19 @@ class rat_animations {
   static wait_frames() {
     return [
       Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_37'),
       Texture.fromFrame('rat_37'),
       Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_38'),
+      Texture.fromFrame('rat_51'),
+      Texture.fromFrame('rat_51'),
       Texture.fromFrame('rat_51'),
       Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_37'),
+      Texture.fromFrame('rat_36'),
+      Texture.fromFrame('rat_36'),
       Texture.fromFrame('rat_36'),
     ];
   }

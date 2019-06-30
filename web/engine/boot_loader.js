@@ -5,11 +5,12 @@ require('./sound.js');
 class Level_Loader {
   static boot() {
     if(global.env === 'dev') {
+      console.log('in DEV');
       const PIXI = require('pixi.js');
       PIXI.settings.ROUND_PIXELS = true;
       PIXI.settings.RENDER_OPTIONS.roundPixels = true;
-      PIXI.settings.RESOLUTION = 0.5;
-      PIXI.settings.TARGET_FPMS = 0.04;
+      PIXI.settings.RESOLUTION = 0.01;
+      PIXI.settings.TARGET_FPMS = 0.07;
       PIXI.settings.UPLOADS_PER_FRAME = 1;
     }
     const start_level = (global.env === 'dev')?'transition':'start';

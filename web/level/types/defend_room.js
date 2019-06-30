@@ -1,6 +1,6 @@
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
-const { LogicZombie        } = require('../../character/archetypes/logic_zombie');
+const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
 const { Player        } = require('../../character/archetypes/player');
 const { Level_Factory } = require('./level_factory');
 

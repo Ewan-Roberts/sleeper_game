@@ -10,6 +10,7 @@ class Wall extends Sprite {
     this.rotation = data.rotation * (Math.PI/180);
     this.tint     = data.properties && data.properties.tint || 0x000000;
     this.alpha    = data.properties && data.properties.alpha || 1;
+
     if(data.properties && data.properties.hidden) this.alpha = 0;
 
     this.anchor.set(0, 1);

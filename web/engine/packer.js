@@ -1,3 +1,4 @@
+'use strict';
 const PIXI   = require('pixi.js');
 const packer = require('pixi-packer-parser');
 require('pixi-tween');

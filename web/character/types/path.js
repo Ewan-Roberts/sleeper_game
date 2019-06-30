@@ -8,14 +8,12 @@ class PathSprite extends extras.AnimatedSprite {
   constructor(data) {
     super([Texture.fromFrame('bird_8')]);
     this.id    = data.id;
-    this.name  = 'crow';
 
     this.rotation = 1;
-    this.width    /= 2.5;
-    this.height   /= 2.5;
     this.anchor.set(0.5);
     this.animationSpeed = 0.29;
     this.tween = tweenManager.createTween(this);
+    this.speed = data.properties && data.properties.speed || 600;
 
     this.position.copy(data);
     if(data.polyline) {
@@ -36,7 +34,7 @@ class PathSprite extends extras.AnimatedSprite {
         50);
     }
 
-    this.tween.time = path_array.length*600;
+    this.tween.time = path_array.length * this.speed;
   }
 
   set delay(value) {
