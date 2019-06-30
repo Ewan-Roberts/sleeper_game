@@ -65,7 +65,7 @@ shrouds.interactiveChildren = false;
 const visuals  = new Container();
 visuals.name   = 'visuals';
 visuals.zIndex = close;
-visuals.interactiveChildren = false;
+//visuals.interactiveChildren = false;
 
 const pads  = new Container();
 pads.name   = 'pad_container';

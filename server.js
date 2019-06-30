@@ -10,11 +10,15 @@ const web_server = require('http').Server(app);
 web_server.listen(port, () =>
   console.log('server on:' + port)); // eslint-disable-line
 
-app.use(express.static('./public'));
-app.get('/', res => res.sendFile(`${__dirname}/public/index.html`));
-
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+app.use(function(req, res, next) {
+  console.log('server hit at ' + Date());
+  next();
+});
+
+app.use(express.static('./public'));
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');

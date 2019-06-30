@@ -88,7 +88,7 @@ class Bird {
 
   _set_sound() {
     this.fly_sound = sound.find('birds_fly_away');
-    this.fly_sound.volume = 0.15;
+    this.fly_sound.volume = 0.40;
   }
 
   switch(action) {

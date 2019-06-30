@@ -108,7 +108,7 @@ class Intro {
     const pad = new Click_Pad(pad_data);
     const button = new Button(pad_data.properties);
     button.set_position(pad_data);
-
+    pad.alpha = 0;
     pad.on('mouseover', () => {
       this.dumpster.tint = 0xffffff;
       button.visible = true;
