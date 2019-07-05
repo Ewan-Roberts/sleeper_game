@@ -10,7 +10,7 @@ const { Sight            } = require('../../utils/line_of_sight');
 const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
-const { Blood  } = require('../../effects/blood');
+const { Blood            } = require('../../effects/blood');
 const event                = require('events');
 
 function break_at_door(path) {
@@ -35,24 +35,23 @@ class LogicSprite extends extras.AnimatedSprite {
     this.rotation_offset = 0;
     this.position.copy(data);
 
-    damage_events.on('damage', data => this.on_damage(data));
+    damage_events.on('damage', data => this.damage(data));
     enemys.addChild(this);
   }
 
-  on_damage({id, damage}) {
+  damage({id, damage}) {
     if(this.id !== id) return;
+
+    this.vitals.damage(damage);
     if(Math.random() >= 0.5) new Blood(this.position);
-    if(this.vitals.alive) return this.vitals.damage(damage);
-    this.on_death();
-    if(!this.inventory.items.length) this.inventory.populate();
-    if(this.tween) this.tween.stop();
 
-    this.animation.kill();
-
-    damage_events.removeListener('damage', this.on_damage);
+    if(this.vitals.alive) this.kill();
   }
 
-  on_death() {
+  kill() {
+    if(this.tween) this.tween.stop();
+    this.inventory.populate();
+
     this.interactive = true;
     this.button = new Button({
       label_action: 'Loot',
@@ -68,6 +67,9 @@ class LogicSprite extends extras.AnimatedSprite {
       this.inventory.set_position(this);
       this.inventory.fade_in();
     };
+
+    this.animation.kill();
+    damage_events.removeListener('damage', this.damage);
   }
 
   get _target_far_away() {

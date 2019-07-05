@@ -1,4 +1,3 @@
-
 const { select, select_all } = require('../utils/dom');
 const category_enum = {
   food:     ['Eat',   'Cook', 'Describe'],

@@ -11,24 +11,14 @@ class Click_Pad extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.rotation = data.rotation * (Math.PI/180);
-    this.alpha    = data.properties && data.properties.alpha || 0.3;
-    this.events   = new event({once: true});
+    this.alpha    = (global.env === 'dev')?0.2:0;
     this.interactive = true;
     this.buttonMode  = true;
-
     this.anchor.set(0);
     this.position.copy(data);
-
-    if(data.properties && data.properties.level_name) {
-      const {level_name} = data.properties;
-      this.events.once('trigger', () => Level_Factory.create(level_name));
-    }
+    this.tint  = 0xffff00;
 
     pads.addChild(this);
-  }
-
-  destroy() {
-    pads.removeChild(this);
   }
 }
 

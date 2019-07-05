@@ -18,7 +18,7 @@ class Caption {
     },2000);
 
     let start = null;
-    function step (timestamp) {
+    function step(timestamp) {
       if(!start) start = timestamp;
       current_text += letters[i];
       dialog_caption_holder.innerHTML = current_text;

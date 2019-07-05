@@ -7,7 +7,7 @@ global.place_bunny = ({ x, y } /*light*/) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
   bunny.anchor.set(0.5);
-  bunny.width = 100;
+  bunny.width  = 100;
   bunny.height = 100;
 
   visuals.addChild(bunny);
@@ -19,7 +19,6 @@ global.dev = () => {
   renderer.backgroundColor = 0x0066CC;
   global.env = 'dev';
 };
-
 
 // AUTO-REFRESH WINDOW
 // For dev auto refesh

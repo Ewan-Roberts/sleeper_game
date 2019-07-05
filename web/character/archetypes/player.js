@@ -31,7 +31,6 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.add_component(new Keyboard(this));
     this.add_component(new Mouse(this));
-    //this.add_component(new PlayerEvents(this));
 
     this.events.on('give_item', item => this.inventory.give_item(item));
     this.events.on('check_items', callback => {
@@ -48,26 +47,30 @@ class Player extends extras.AnimatedSprite {
       this.animation.idle();
     });
 
-    this.on_damage = ({id, damage})=> {
+
+    players.addChild(this);
+
+    damage_events.on('damage', () => this.on_damage);
+  }
+
+    damage({id, damage}) {
       if(this.id !== id) return;
       this.events.emit('hit');
+
+      this.vitals.damage(damage);
+
       if(Math.random() >= 0.5) new Blood(this.position);
-      if(this.vitals.alive) return this.vitals.damage(damage);
+
+      if(this.vitals.alive) this.kill();
 
       this.events.emit('killed');
 
-      if(!this.inventory.items.length) this.inventory.populate();
       if(this.tween) this.tween.stop();
 
       this.animation.kill();
 
       damage_events.removeListener('damage', this.on_damage);
     };
-
-    players.addChild(this);
-
-    damage_events.on('damage', this.on_damage);
-  }
 
   destroy() {
     players.removeChild(this);

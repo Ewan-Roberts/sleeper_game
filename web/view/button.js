@@ -1,6 +1,5 @@
 const {Text,Sprite} = require('pixi.js');
-
-const { guis } = require('../engine/pixi_containers');
+const { guis      } = require('../engine/pixi_containers');
 
 //TODO move to seperate file
 class Label extends Text{

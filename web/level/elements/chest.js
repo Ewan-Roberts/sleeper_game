@@ -60,7 +60,7 @@ class Chest extends Sprite {
       this.button.visible = false;
       this.inventory.set_position(this);
       this.inventory.fade_in();
-    };
+    });
   }
 
   label(properties) {
@@ -78,7 +78,7 @@ class Chest extends Sprite {
     this.on('click', () => {
       this.tint = 0xd3d3d3;
       this.button.visible = false;
-    };
+    });
   }
 
   remove() {

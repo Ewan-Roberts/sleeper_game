@@ -1,9 +1,9 @@
-const { Player        } = require('../../character/archetypes/player');
-const { Camera        } = require('../../engine/camera');
-const { renderer      } = require('../../engine/app.js');
-const { sound         } = require('pixi.js');
-const { flash_at      } = require('../../effects/fade_sprite.js');
-const { Fade          } = require('../../effects/fade.js');
+const { Player   } = require('../../character/archetypes/player');
+const { Camera   } = require('../../engine/camera');
+const { renderer } = require('../../engine/app.js');
+const { sound    } = require('pixi.js');
+const { flash_at } = require('../../effects/fade_sprite.js');
+const { Fade     } = require('../../effects/fade.js');
 
 const {
   Trigger_Pad,
