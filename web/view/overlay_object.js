@@ -1,5 +1,6 @@
 const { Texture, Sprite, Text }= require('pixi.js');
 const { guis  } = require('../engine/pixi_containers');
+const { Camera } = require('../engine/camera');
 const { world } = require('../engine/shadows');
 const { Fade  } = require('../effects/fade');
 const PIXI = require('pixi.js');
@@ -7,17 +8,12 @@ const PIXI = require('pixi.js');
 class Background extends Sprite {
   constructor() {
     super(Texture.WHITE);
-    const screen_center = {
-      x: -world.x + global.window.innerWidth/2,
-      y: -world.y + global.window.innerHeight/2,
-    };
     this.width  = global.window.innerWidth;
     this.height = global.window.innerHeight;
     this.anchor.set(0.5);
-    this.position.set(screen_center.x, screen_center.y);
+    this.position.set(Camera.center);
     guis.addChild(this);
   }
-
   set_position({x, y}) {
     this.position.set(x, y);
   }
@@ -74,7 +70,6 @@ class Note {
     guis.addChild(this.sprite, this.text);
   }
 }
-
 
 module.exports = {
   Note,

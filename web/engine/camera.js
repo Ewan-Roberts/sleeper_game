@@ -11,6 +11,13 @@ class Camera {
       -y + global.window.innerHeight/2
     );
   }
+
+  static get center() {
+    return {
+      x: -world.x + global.window.innerWidth/2,
+      y: -world.y + global.window.innerHeight/2,
+    }
+  }
 }
 
 module.exports = {

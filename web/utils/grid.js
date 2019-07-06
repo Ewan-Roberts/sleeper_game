@@ -1,6 +1,8 @@
 const { Sprite     } = require('pixi.js');
+const { Texture    } = require('pixi.js');
 const { grids      } = require('../engine/pixi_containers');
 const { collisions } = require('../engine/pixi_containers');
+
 //this is for y axis 1
 function check(rect1, rect2) {
   if (rect1.x < rect2.x + rect2.width &&
@@ -22,14 +24,14 @@ function check(rect1, rect2) {
 //   return false;
 // }
 
-class Tile {
+class Tile extends Sprite {
   constructor() {
-    const tile = Sprite.fromFrame('black_dot');
-    tile.width  = 100;
-    tile.height = 100;
-    tile.passable = true;
-
-    return tile;
+    super(Texture.fromImage('black_dot'));
+    this.width    = 100;
+    this.height   = 100;
+    this.passable = true;
+    this.alpha    = 0.2;
+    this.anchor.set(0);
   }
 }
 
@@ -53,10 +55,7 @@ class Grid {
 
     for(let i=0; i<=this.tile_area; i++){
       const tile = new Tile();
-      tile.x = this.x;
-      tile.y = this.y;
-      tile.alpha = 0.2;
-      tile.anchor.set(0);
+      tile.position.copy(this);
 
       // This is for the pathfinder
       tile.cell_position = {
@@ -71,11 +70,10 @@ class Grid {
           grid_x = 0;
           grid_y++;
         }
+
         this.x = this.original_x;
       }
       grid_x++;
-
-      //if(collisions.children.length < 1) throw 'must have collision objects for grid';
 
       collisions.children.forEach(object => {
         if(check(tile, object)) {
@@ -113,10 +111,9 @@ class Grid {
 
       sprite_line.push(tile);
 
-      if(i % this.tile_width===0) {
+      if(i % this.tile_width === 0) {
         if(i !== 0) {
           binary_matrix.push(binary_line);
-
           sprite_matrix.push(sprite_line);
         }
 

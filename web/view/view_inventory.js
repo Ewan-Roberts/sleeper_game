@@ -63,6 +63,7 @@ class Item extends Sprite {
     this.anchor.set(0.5);
     this.interactive = true;
     this.buttonMode  = true;
+
     if(image_name === 'empty_image') {
       this.interactive = false;
       this.buttonMode  = false;

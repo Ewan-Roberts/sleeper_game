@@ -65,7 +65,7 @@ class Park_Room  {
   _set_elements() {
     //renderer.backgroundColor = 0x000000;
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    Camera.center = this.data.player_spawn[0];
 
     this.zombie.target(this.player);
     this.zombie.position.set(this.data.zombie[0]);

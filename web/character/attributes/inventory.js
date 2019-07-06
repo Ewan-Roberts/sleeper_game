@@ -18,9 +18,14 @@ class Inventory extends View_Inventory {
     }
   }
 
-  populate() {
+  populate_with_random_items() {
     this.items = Item_Manager.get_random_items();
 
+    this.populate_slots(this.items);
+  }
+
+  populate() {
+    if(this.items.length === 0) return;
     this.populate_slots(this.items);
   }
 

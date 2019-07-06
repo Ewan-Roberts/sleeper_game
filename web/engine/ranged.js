@@ -9,7 +9,7 @@ const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
-const player = players.children[0];
+const [ player ] = players.children;
 
 class Arrow extends Sprite {
   constructor() {

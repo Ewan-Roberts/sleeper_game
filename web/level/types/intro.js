@@ -1,15 +1,15 @@
-const { visuals } = require('../../engine/pixi_containers');
-const { sound, filters } = require('pixi.js');
+const { visuals         } = require('../../engine/pixi_containers');
+const { sound, filters  } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
 
-const { Camera        } = require('../../engine/camera');
-const { renderer      } = require('../../engine/app.js');
-const { Click_Pad     } = require('../elements/click_pad');
-const { Button        } = require('../../view/button');
-const { Player        } = require('../../character/archetypes/player');
-const { Tween         } = require('../../engine/tween');
-const { FadeSprite  } = require('../../effects/fade_sprite.js');
-const { flash_at    } = require('../../effects/fade_sprite.js');
+const { Camera     } = require('../../engine/camera');
+const { renderer   } = require('../../engine/app.js');
+const { Click_Pad  } = require('../elements/click_pad');
+const { Button     } = require('../../view/button');
+const { Player     } = require('../../character/archetypes/player');
+const { Tween      } = require('../../engine/tween');
+const { FadeSprite } = require('../../effects/fade_sprite.js');
+const { flash_at   } = require('../../effects/fade_sprite.js');
 
 const {
   Trigger_Pad,
@@ -33,8 +33,6 @@ class Intro {
     this.data   = require('../data/intro_room.json');
     this.player = new Player();
 
-    renderer.backgroundColor = 0x000000;
-
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
     this.roofs       = this.data.roof.map(data => new Roof(data));
@@ -45,11 +43,11 @@ class Intro {
     this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.items       = this.data.item.map(data => new Chest(data));
+
     this.study_desk  = this.items.find(item => item.id === 303);
     this.locked_door = this.doors.find(door => door.id === 528);
     this.study_door  = this.doors.find(door => door.id === 527);
     this.main_room_shroud = this.shrouds.find(shroud => shroud.id === 462);
-
     this.dumpster = this.collisions.find(item => item.id === 524);
 
     this._set_sounds();
@@ -79,33 +77,33 @@ class Intro {
   }
 
   _set_elements() {
+    renderer.backgroundColor = 0x000000;
     this.theme_song.play();
 
     this.player.position.copy(this.data.player_spawn[0]);
     Camera.set_center(this.data.player_spawn[0]);
 
-    this.study_desk.click = () => {
+    this.study_desk.on('click', () => {
       this.keys_effect.play();
       this.study_door.interactive = true;
       this.study_desk.interactive = false;
       this.study_desk.button.destroy();
-    };
+    });
 
-    this.study_door.click = () => {
+    this.study_door.on('click', () => {
       this.main_room_shroud.fade_out_destroy();
       this.locked_door.interactive = true;
-    };
+    });
 
-    this.locked_door.click = () => {
+    this.locked_door.on('click', () => {
       this.locked_door.interactive = false;
       this.locked_door.button.destroy();
-    };
+    });
 
     const pad_data = this.data.click_pad[0];
     const pad = new Click_Pad(pad_data);
     const button = new Button(pad_data.properties);
     button.set_position(pad_data);
-    pad.alpha = 0;
     pad.on('mouseover', () => {
       this.dumpster.tint = 0xffffff;
       button.visible = true;
