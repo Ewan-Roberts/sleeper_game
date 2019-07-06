@@ -4,11 +4,12 @@ const app = new Application({
   width           : global.window.innerWidth,
   height          : global.window.innerHeight,
   backgroundColor : 0xffffff,
-  roundPixels     : true,
-  forceFXAA       : true,
+  // forceFXAA       : true,
 });
 
 global.document.body.appendChild(app.view);
+
+require('./sound.js');
 
 module.exports = app;
 

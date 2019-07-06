@@ -6,7 +6,7 @@ const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
-const { Sprite, Texture } = require('pixi.js');
+const { sound, Sprite, Texture } = require('pixi.js');
 
 
 class Chest extends Sprite {
@@ -21,7 +21,11 @@ class Chest extends Sprite {
     this.anchor.set(0, 1);
     this.position.copy(data);
     this.interactive = true;
-    if(data.type === 'note') this.on('click', () => new Note(properties));
+    if(data.type === 'note') this.on('click', () => {
+      new Note(properties);
+      console.log(sound);
+      sound.play('page_turn');
+    });
     if(properties.collision) collisions.addChild(this);
     items.addChild(this);
 

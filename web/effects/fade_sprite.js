@@ -29,6 +29,10 @@ class FadeSprite extends Sprite {
     });
   }
 
+  set delay(value) {
+    this.tween.delay = value;
+  }
+
   fade_in(time = 1000) {
     this.tween.reset();
     this.tween.time = time;
@@ -84,24 +88,24 @@ class FadeSprite extends Sprite {
 }
 
 function fill_screen_at(point, tint) {
-  const overlay = new FadeSprite({image_name: 'white_tiles'});
-  overlay.position.copy(point);
-  overlay.anchor.set(0.5);
+  const overlay = new FadeSprite({image_name: 'white_square'});
+  overlay.anchor.set(0.3);
   overlay.tint   = tint;
-  overlay.width  = 4000;
-  overlay.height = 4000;
+  overlay.width  = 3000;
+  overlay.height = 2000;
+  overlay.position.copy(point);
   visuals.addChild(overlay);
   return overlay;
 }
 
 
 function flash_at(point, time = 400, tint = 0x000000) {
-  const overlay = new FadeSprite({image_name: 'white_tiles'});
+  const overlay = new FadeSprite({image_name: 'white_square'});
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
   overlay.tint   = tint;
-  overlay.width  = 5000;
-  overlay.height = 5000;
+  overlay.width  = 2000;
+  overlay.height = 2000;
   overlay.fade_out(time);
   visuals.addChild(overlay);
   return overlay;

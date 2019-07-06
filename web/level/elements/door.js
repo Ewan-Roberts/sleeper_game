@@ -1,10 +1,9 @@
 const { collisions   } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-const { Sprite, Texture } = require('pixi.js');
+const { Sprite, Texture, sound } = require('pixi.js');
 const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
-const PIXI        = require('pixi.js');
 
 const { damage_events } = require('../../engine/damage_handler');
 const { Floor         } = require('./floor');
@@ -48,7 +47,7 @@ class Door extends Sprite {
   }
 
   _set_sound() {
-    this.locked_door_effect = PIXI.sound.find('door_locked');
+    this.locked_door_effect = sound.find('door_locked');
     this.locked_door_effect.volume = 0.1;
   }
 

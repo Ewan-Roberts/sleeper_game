@@ -12,14 +12,14 @@ const { Overlay_Dialog } = require('../../effects/overlay_dialog.js');
 const { Fade           } = require('../../effects/fade.js');
 const { Nightmare      } = require('../../effects/nightmare.js');
 const { pulse_sprites  } = require('../../effects/fade_sprite.js');
-const { flash_at       } = require('../../effects/fade_sprite.js');
+const { flash_at, fill_screen_at } = require('../../effects/fade_sprite.js');
 const { random_word    } = require('../../effects/floor_word.js');
 
 const { MicrophonePopUp } = require('../../view/microphone_box');
 const { WASD            } = require('../../view/wasd_keys');
 const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { Player          } = require('../../character/archetypes/player');
-const { PathCrow            } = require('../../character/archetypes/path_crow');
+const { PathCrow        } = require('../../character/archetypes/path_crow');
 const { keyboardManager } = require('pixi.js');
 const { sound           } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
@@ -165,15 +165,22 @@ class Start_Room  {
     this._leave();
   }
 
-  _start() {
+  async _start() {
     this.theme_song.play();
-    flash_at(this.player, 4000, 0xffffff);
-    this.controls_prompt.fade_in(8000);
+    keyboardManager.disable();
+    const intro_white = fill_screen_at(this.player, 0xffffff);
+    intro_white.delay = 2000;
+    intro_white.fade_out(3000);
+
+    await sleep(5000);
+    this.controls_prompt.fade_in(2000);
+    await sleep(1000);
+    keyboardManager.enable();
 
     let volume = 0;
     this.player.events.on('hit', () => {
       flash_at(this.player, 300);
-      volume += 0.05;
+      volume += 0.06;
       const thud = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
       thud.volume = volume;
       thud.play();
@@ -226,7 +233,7 @@ class Start_Room  {
   }
 
   _set_dev_settings() {
-    this.theme_song.volume      = 0.005;
+    this.theme_song.volume      = 0.05;
     this.eerie_song.volume      = 0.01;
     this.suspense_effect.volume = 0.01;
     this.click_effect.volume    = 0.1;
@@ -235,6 +242,7 @@ class Start_Room  {
     keyboardManager.on('released', event => {
       if(event === 13) this.generator.next();
     });
+    keyboardManager.enable();
 
     this.player.position.copy(this.data.player_spawn[0]);
     this.player.vitals.speed = 30;

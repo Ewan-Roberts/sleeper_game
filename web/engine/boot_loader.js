@@ -1,7 +1,9 @@
 const { Level_Factory } = require('../level/types/level_factory');
 
 require('./tween');
-require('./sound.js');
+
+global.dev();
+
 class Level_Loader {
   static boot() {
     if(global.env === 'dev') {
@@ -10,7 +12,7 @@ class Level_Loader {
       PIXI.settings.ROUND_PIXELS = true;
       PIXI.settings.RENDER_OPTIONS.roundPixels = true;
       PIXI.settings.RESOLUTION = 0.01;
-      PIXI.settings.TARGET_FPMS = 0.07;
+      PIXI.settings.TARGET_FPMS = 0.05;
       PIXI.settings.UPLOADS_PER_FRAME = 1;
     }
     const start_level = (global.env === 'dev')?'transition':'start';

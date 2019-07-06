@@ -1,4 +1,4 @@
-const {Texture, Sprite, Text}= require('pixi.js');
+const { Texture, Sprite, Text }= require('pixi.js');
 const { guis  } = require('../engine/pixi_containers');
 const { world } = require('../engine/shadows');
 const { Fade  } = require('../effects/fade');
