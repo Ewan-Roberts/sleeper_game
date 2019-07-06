@@ -1,3 +1,6 @@
+
+
+require('../level/elements');
 const { Level_Factory } = require('../level/types/level_factory');
 
 require('./tween');

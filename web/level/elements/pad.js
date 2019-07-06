@@ -12,7 +12,12 @@ class Trigger_Pad extends Sprite {
     this.rotation = data.rotation * (Math.PI/180);
     this.alpha    = (global.env === 'dev')?0.2:0;
     this.events   = new event();
-    this.speed    = data.properties && data.properties.speed;
+    if(global.env === 'dev') {
+      this.speed = 25;
+    } else {
+      this.speed = data.properties && data.properties.speed;
+    }
+
     this.anchor.set(0);
     this.position.copy(data);
 

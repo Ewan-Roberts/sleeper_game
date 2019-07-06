@@ -26,7 +26,7 @@ function check(rect1, rect2) {
 
 class Tile extends Sprite {
   constructor() {
-    super(Texture.fromImage('black_dot'));
+    super(Texture.WHITE);
     this.width    = 100;
     this.height   = 100;
     this.passable = true;

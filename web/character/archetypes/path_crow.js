@@ -7,8 +7,9 @@ const { bird_frames   } = require('../animations/bird');
 class PathCrow extends PathSprite {
   constructor(data) {
     super(data);
-    this.width  /= 2.5;
-    this.height /= 2.5;
+    this.width  = 65;
+    this.height = 30;
+    console.table(this);
     this.add_component(new Animation(this, bird_frames));
     this.fly_sound = sound.find('birds_fly_away');
     this.fly_sound.volume = 0.40;

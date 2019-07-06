@@ -15,6 +15,9 @@ class Door extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.rotation = data.rotation * (Math.PI/180);
+    this.interactive = true;
+
+    this.rotation_on_interaction = data.open_rotation || 2;
 
     this.anchor.set(0, 1);
     this.position.copy(data);
@@ -55,7 +58,7 @@ class Door extends Sprite {
     if(this.in_motion) return;
     this.in_motion = true;
     this.tween.clear();
-    this.tween.to({ rotation: this.rotation+2 });
+    this.tween.to({ rotation: this.rotation+this.rotation_on_interaction });
     this.tween.time = 500;
     this.tween.start();
     this.tween.on('end', () => {
@@ -69,7 +72,7 @@ class Door extends Sprite {
     if(this.in_motion) return;
     this.in_motion = true;
     this.tween.clear();
-    this.tween.to({ rotation: this.rotation-2 });
+    this.tween.to({ rotation: this.rotation-this.rotation_on_interaction });
     this.tween.time = 500;
     this.tween.start();
     this.tween.on('end', () => {

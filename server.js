@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use(function(req, res, next) {
-  console.log('server hit at ' + Date());
+  //console.log('server hit at ' + Date());
   next();
 });
 

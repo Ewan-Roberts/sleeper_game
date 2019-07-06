@@ -1,15 +1,14 @@
 const { visuals       } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
-const { Trigger_Pad   } = require('../elements/pad');
+const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
-const level_data        = require('../data/transition_room.json');
 
 class Transition_Room {
   constructor() {
     this.name     = 'transition_room';
     this.player   = new Player();
-    this.elements = level_data;
+    this.elements = require('../data/transition_room.json');
 
     this._set_elements();
   }

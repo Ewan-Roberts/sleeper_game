@@ -1,28 +1,37 @@
-const { sleep } = require('../utils/time.js');
+const { fill_screen_at } = require('../effects/fade_sprite');
+const { visuals   } = require('../engine/pixi_containers');
+const { FloorWord } = require('../effects/floor_word');
+const { sleep     } = require('../utils/time.js');
+const { keyboardManager, Text } = require('pixi.js');
 
-class Generator {
-  constructor(function_array) {
+class Dialog_Script {
+  constructor(dialog_array, point) {
+    this.script = dialog_array;
+    this.point  = point;
     this.iterator = this.generator();
-    this.script   = function_array;
   }
 
-  async * generator() {
+  * generator() {
     while(this.script.length > 0) {
-      const execute = this.script.splice(0,1);
-      execute();
+      const word_to_render = this.script.splice(0,1);
+
+      const word = new Text(word_to_render, {
+        fill:   'white',
+        weight: 'bolder',
+      });
+      word.anchor.set(0.5);
+      word.alpha = 0.5;
+
+      word.position.copy(this.point);
+      word.y -= 50;
+
+      visuals.addChild(word);
       yield;
+      word.destroy();
     }
   }
-
-  next() {
-    this.iterator.next();
-  }
 }
-
-// what this will loook like
-// you have a series of consentric area squares around a charater
-// each time you touch one of these pads you nove forward in the script
 
 module.exports = {
-  Generator,
-}
+  Dialog_Script,
+};

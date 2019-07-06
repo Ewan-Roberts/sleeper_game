@@ -1,5 +1,4 @@
 const { decals } = require('../../engine/pixi_containers');
-
 const { Sprite, Texture } = require('pixi.js');
 
 class Decal extends Sprite {

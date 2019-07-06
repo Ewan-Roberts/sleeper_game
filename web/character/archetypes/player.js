@@ -21,8 +21,8 @@ class Player extends extras.AnimatedSprite {
     this.name = 'player';
     this.events = new event();
 
-    this.width  /= 6;
-    this.height /= 6;
+    this.width  = 23;
+    this.height = 35;
     this.anchor.set(0.5);
     this.animationSpeed = 0.70;
 
