@@ -1,8 +1,5 @@
-const { fill_screen_at } = require('../effects/fade_sprite');
-const { visuals   } = require('../engine/pixi_containers');
-const { FloorWord } = require('../effects/floor_word');
-const { sleep     } = require('../utils/time.js');
-const { keyboardManager, Text } = require('pixi.js');
+const { visuals } = require('../engine/pixi_containers');
+const { Text    } = require('pixi.js');
 
 class Dialog_Script {
   constructor(dialog_array, point) {

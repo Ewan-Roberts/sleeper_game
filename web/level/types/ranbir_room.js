@@ -59,12 +59,11 @@ class Ranbir_Room  {
       this.ranbir
     );
 
-
-
     // pathfind.create_level_grid(this.data.grid[0]);
 
     this._set_sounds();
     this._set_elements();
+    //this._start();
     if(global.env === 'dev') this._set_dev_settings();
   }
 
@@ -83,8 +82,6 @@ class Ranbir_Room  {
   _set_elements() {
     this.player.position.copy(this.data.player_spawn[0]);
     Camera.set_center(this.data.player_spawn[0]);
-
-    this._start();
   }
 
   *iterate() {
@@ -99,27 +96,16 @@ class Ranbir_Room  {
   }
 
   async _start() {
-    //console.log('here');
-    //console.log(this.ranbir);
+    const intro_white = fill_screen_at(this.player, 0xffffff);
+    intro_white.fade_out(1000);
 
-    //this.theme_song.play();
-    //keyboardManager.disable();
-    //const intro_white = fill_screen_at(this.player, 0xffffff);
-    //intro_white.fade_out(1000);
-
-    //this.ranbir.logic_start();
-
-    //this.player.events.once('killed', () => this.generator.next());
-
-    // this.script.button.on('mousedown', () => {
-    //   this.script.button.tint = 0xffffff;
-    //   this.generator.next();
-    // });
+    this.ranbir.logic_start();
+    this.player.events.once('killed', () => this.generator.next());
   }
 
   _set_dev_settings() {
     keyboardManager.on('released', event => {
-      if(event === 13) this.generator.next('hi');
+      if(event === 13) this.generator.next();
     });
 
     keyboardManager.enable();

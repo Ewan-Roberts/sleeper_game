@@ -71,6 +71,7 @@ class Start_Room  {
     pathfind.create_level_grid(this.data.grid[0]);
     this._set_sounds();
     this._set_elements();
+    this._start();
     if(global.env === 'dev') this._set_dev_settings();
   }
 
@@ -102,7 +103,6 @@ class Start_Room  {
     Camera.set_center(this.data.player_spawn[1]);
 
     this.controls_prompt.set_position(this.data.control_prompt[0]);
-    this._start();
   }
 
   async * iterate() {

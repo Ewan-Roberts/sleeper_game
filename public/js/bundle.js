@@ -43762,7 +43762,6 @@ class PathCrow extends PathSprite {
     super(data);
     this.width  = 65;
     this.height = 30;
-    console.table(this);
     this.add_component(new Animation(this, bird_frames));
     this.fly_sound = sound.find('birds_fly_away');
     this.fly_sound.volume = 0.40;
@@ -45651,11 +45650,8 @@ module.exports = {
 
 
 },{"../utils/math":275,"./damage_handler":221,"./pixi_containers":226,"pixi.js":149}],228:[function(require,module,exports){
-const { fill_screen_at } = require('../effects/fade_sprite');
-const { visuals   } = require('../engine/pixi_containers');
-const { FloorWord } = require('../effects/floor_word');
-const { sleep     } = require('../utils/time.js');
-const { keyboardManager, Text } = require('pixi.js');
+const { visuals } = require('../engine/pixi_containers');
+const { Text    } = require('pixi.js');
 
 class Dialog_Script {
   constructor(dialog_array, point) {
@@ -45689,7 +45685,7 @@ module.exports = {
   Dialog_Script,
 };
 
-},{"../effects/fade_sprite":214,"../effects/floor_word":215,"../engine/pixi_containers":226,"../utils/time.js":276,"pixi.js":149}],229:[function(require,module,exports){
+},{"../engine/pixi_containers":226,"pixi.js":149}],229:[function(require,module,exports){
 const {stage} = require('./app');
 stage.name    = 'world';
 stage.updateLayersOrder = function () {
@@ -46411,9 +46407,8 @@ class Background extends extras.TilingSprite {
       this.tileScale.x = 0.15;
       this.tileScale.y = 0.15;
       this.tint        = 0x8c7a64;
-      this.tint        = 0x8c7a64;
-
     }
+
     if(image_name === 'tile_concrete') {
       this.tileScale.x = 0.1;
       this.tileScale.y = 0.1;
@@ -47408,12 +47403,11 @@ class Ranbir_Room  {
       this.ranbir
     );
 
-
-
     // pathfind.create_level_grid(this.data.grid[0]);
 
     this._set_sounds();
     this._set_elements();
+    //this._start();
     if(global.env === 'dev') this._set_dev_settings();
   }
 
@@ -47432,8 +47426,6 @@ class Ranbir_Room  {
   _set_elements() {
     this.player.position.copy(this.data.player_spawn[0]);
     Camera.set_center(this.data.player_spawn[0]);
-
-    this._start();
   }
 
   *iterate() {
@@ -47448,27 +47440,16 @@ class Ranbir_Room  {
   }
 
   async _start() {
-    //console.log('here');
-    //console.log(this.ranbir);
+    const intro_white = fill_screen_at(this.player, 0xffffff);
+    intro_white.fade_out(1000);
 
-    //this.theme_song.play();
-    //keyboardManager.disable();
-    //const intro_white = fill_screen_at(this.player, 0xffffff);
-    //intro_white.fade_out(1000);
-
-    //this.ranbir.logic_start();
-
-    //this.player.events.once('killed', () => this.generator.next());
-
-    // this.script.button.on('mousedown', () => {
-    //   this.script.button.tint = 0xffffff;
-    //   this.generator.next();
-    // });
+    this.ranbir.logic_start();
+    this.player.events.once('killed', () => this.generator.next());
   }
 
   _set_dev_settings() {
     keyboardManager.on('released', event => {
-      if(event === 13) this.generator.next('hi');
+      if(event === 13) this.generator.next();
     });
 
     keyboardManager.enable();
@@ -47612,6 +47593,7 @@ class Start_Room  {
     pathfind.create_level_grid(this.data.grid[0]);
     this._set_sounds();
     this._set_elements();
+    this._start();
     if(global.env === 'dev') this._set_dev_settings();
   }
 
@@ -47643,7 +47625,6 @@ class Start_Room  {
     Camera.set_center(this.data.player_spawn[1]);
 
     this.controls_prompt.set_position(this.data.control_prompt[0]);
-    this._start();
   }
 
   async * iterate() {

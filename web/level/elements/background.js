@@ -32,9 +32,8 @@ class Background extends extras.TilingSprite {
       this.tileScale.x = 0.15;
       this.tileScale.y = 0.15;
       this.tint        = 0x8c7a64;
-      this.tint        = 0x8c7a64;
-
     }
+
     if(image_name === 'tile_concrete') {
       this.tileScale.x = 0.1;
       this.tileScale.y = 0.1;
