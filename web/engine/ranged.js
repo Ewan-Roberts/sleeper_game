@@ -9,7 +9,7 @@ const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
-const [ player ] = players.children;
+const player   = players.children[0];
 
 class Arrow extends Sprite {
   constructor() {
@@ -51,14 +51,14 @@ function shoot_arrow(speed, damage, origin, point) {
       }
     }
 
-    const collision_players = player.containsPoint(arrow_point);
-    if (collision_players) {
-      if(collision_players.id === origin.id) return;
+    // const collision_players = players.children[0].containsPoint(arrow_point);
+    // if (collision_players) {
+    //   if(collision_players.id === origin.id) return;
 
-      arrow.tween.stop();
-      collision_players.events.emit('damage', damage);
-      return;
-    }
+    //   arrow.tween.stop();
+    //   collision_players.events.emit('damage', damage);
+    //   return;
+    // }
   });
 
   arrow.tween.start();

@@ -178,6 +178,7 @@ class Start_Room  {
     keyboardManager.enable();
 
     let volume = 0;
+    console.log(this.player);
     this.player.events.on('hit', () => {
       flash_at(this.player, 300);
       volume += 0.06;

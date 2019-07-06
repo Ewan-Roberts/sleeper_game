@@ -40,37 +40,29 @@ class Player extends extras.AnimatedSprite {
 
     this.events.on('equip_weapon', item => {
       const found_item = Item_Manager.get_item_by_image_name(item.image_name);
-
       this.inventory.equip_weapon(found_item);
 
       this.animation.prefix = found_item.animation_name;
       this.animation.idle();
     });
 
-
     players.addChild(this);
 
-    damage_events.on('damage', () => this.on_damage);
+    damage_events.on('damage', data => this.damage(data));
   }
 
-    damage({id, damage}) {
-      if(this.id !== id) return;
-      this.events.emit('hit');
+  damage({id, damage}) {
+    if(this.id !== id) return;
+    this.events.emit('hit');
 
-      this.vitals.damage(damage);
+    this.vitals.damage(damage);
+    if(Math.random() >= 0.5) new Blood(this.position);
+    if(this.vitals.alive) return;
 
-      if(Math.random() >= 0.5) new Blood(this.position);
+    this.events.emit('killed');
 
-      if(this.vitals.alive) this.kill();
-
-      this.events.emit('killed');
-
-      if(this.tween) this.tween.stop();
-
-      this.animation.kill();
-
-      damage_events.removeListener('damage', this.on_damage);
-    };
+    damage_events.removeListener('damage', this.damage);
+  }
 
   destroy() {
     players.removeChild(this);

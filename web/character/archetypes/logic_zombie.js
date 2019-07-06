@@ -6,6 +6,7 @@ class LogicZombie extends LogicSprite {
   constructor(data) {
     super(data);
     this.add_component(new Animation(this, zombie_frames));
+    this.anchor.set(0.5);
   }
 }
 

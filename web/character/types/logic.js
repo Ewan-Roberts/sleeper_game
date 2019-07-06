@@ -2,7 +2,7 @@ const { Texture, tween, tweenManager, extras } = require('pixi.js');
 const { collisions       } = require('../../engine/pixi_containers');
 const { enemys           } = require('../../engine/pixi_containers');
 const { radian           } = require('../../utils/math');
-//const { draw_path        } = require('../../utils/line');
+const { draw_path        } = require('../../utils/line');
 const { distance_between, random_bound} = require('../../utils/math');
 const { damage_events    } = require('../../engine/damage_handler');
 const { pathfind         } = require('../../engine/pathfind');
@@ -151,7 +151,7 @@ class LogicSprite extends extras.AnimatedSprite {
         await this._pathfind();
         this.tween.time = 4000;
       }
-      //draw_path(this.tween.path);
+      draw_path(this.tween.path);
       this.tween.start();
     });
 

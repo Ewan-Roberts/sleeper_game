@@ -16,7 +16,14 @@ class Camera {
     return {
       x: -world.x + global.window.innerWidth/2,
       y: -world.y + global.window.innerHeight/2,
-    }
+    };
+  }
+
+  static set center(point) {
+    return {
+      x: -point.x + global.window.innerWidth/2,
+      y: -point.y + global.window.innerHeight/2,
+    };
   }
 }
 

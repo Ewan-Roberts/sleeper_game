@@ -1,5 +1,5 @@
-const { items         } = require('../../engine/pixi_containers');
-const { collisions    } = require('../../engine/pixi_containers');
+const { items      } = require('../../engine/pixi_containers');
+const { collisions } = require('../../engine/pixi_containers');
 const { players    } = require('../../engine/pixi_containers');
 
 const { Inventory } = require('../../character/attributes/inventory');

@@ -1,8 +1,7 @@
 const { Texture, Sprite, Text }= require('pixi.js');
-const { guis  } = require('../engine/pixi_containers');
+const { guis   } = require('../engine/pixi_containers');
 const { Camera } = require('../engine/camera');
-const { world } = require('../engine/shadows');
-const { Fade  } = require('../effects/fade');
+const { Fade   } = require('../effects/fade');
 const PIXI = require('pixi.js');
 
 class Background extends Sprite {
@@ -11,7 +10,6 @@ class Background extends Sprite {
     this.width  = global.window.innerWidth;
     this.height = global.window.innerHeight;
     this.anchor.set(0.5);
-    this.position.set(Camera.center);
     guis.addChild(this);
   }
   set_position({x, y}) {
@@ -29,6 +27,8 @@ class Note {
     this.background = new Background();
     this.background.tint = 'black';
     this.background.alpha = 0.5;
+    this.background.set_position(Camera.center);
+
     // disable keyboard when note is up
     PIXI.keyboardManager.disable();
 
