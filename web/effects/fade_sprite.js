@@ -1,12 +1,12 @@
 const { visuals, decals } = require('../engine/pixi_containers');
-const { Sprite, Texture } = require('pixi.js');
+const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager    } = require('pixi.js');
 
 class FadeSprite extends Sprite {
   constructor(data) {
     super(Texture.fromImage(data.image_name));
 
-    const degrees = data.rotation * (Math.PI/180);
+    const degrees = data.rotation * DEG_TO_RAD;
     this.alpha    = data.alpha  || 1;
     this.rotation = degrees     || 0;
     this.width    = data.width  || 50;

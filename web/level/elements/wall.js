@@ -1,17 +1,20 @@
-const { Sprite, Texture } = require('pixi.js');
+const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { collisions      } = require('../../engine/pixi_containers');
 
 class Wall extends Sprite {
   constructor(data) {
-    super(Texture.fromImage('tile_concrete'));
+    super(Texture.WHITE);
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;
-    this.rotation = data.rotation * (Math.PI/180);
-    this.tint     = data.properties && data.properties.tint || 0x505050;
-    this.alpha    = data.properties && data.properties.alpha || 1;
+    this.rotation = data.rotation * DEG_TO_RAD;
+    this.tint     = 0x000000;
 
-    if(data.properties && data.properties.hidden) this.alpha = 0;
+    const {properties} = data;
+    if(properties) {
+      this.tint     = properties.tint;
+      this.alpha    = (properties.hidden)?0:properties.alpha || 1;
+    }
 
     this.anchor.set(0, 1);
     this.position.copy(data);

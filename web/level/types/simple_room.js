@@ -2,6 +2,7 @@ const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 const { Camera        } = require('../../engine/camera');
 const { Trigger_Pad   } = require('../elements');
+const { Floor         } = require('../elements');
 
 class Simple_Room {
   constructor(level_name) {
@@ -42,7 +43,6 @@ class Simple_Room {
   _set_dev_settings() {
     this.player.vitals.speed = 30;
   }
-
 }
 
 module.exports = {

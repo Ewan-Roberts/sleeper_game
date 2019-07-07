@@ -1,5 +1,5 @@
 const { collisions      } = require('../../engine/pixi_containers');
-const { Sprite, Texture } = require('pixi.js');
+const { Sprite, Texture, DEG_TO_RAD} = require('pixi.js');
 
 class Collision extends Sprite {
   constructor(data) {
@@ -8,8 +8,8 @@ class Collision extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.alpha    = data.properties && data.properties.alpha || 1;
-    this.rotation = data.rotation * (Math.PI/180);
-    this.tint     = 0xA9A9A9;
+    this.rotation = data.rotation * DEG_TO_RAD;
+    this.tint     = data.properties && data.properties.tint || 0xA9A9A9;
     this.anchor.set(0, 1);
     this.position.copy(data);
 

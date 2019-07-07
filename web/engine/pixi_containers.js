@@ -42,6 +42,7 @@ grids.interactiveChildren = false;
 const collisions  = new Container();
 collisions.name   = 'collision_items';
 collisions.zIndex = low;
+collisions.interactiveChildren = false;
 
 const enemys  = new Container();
 enemys.name   = 'enemy_container';
@@ -62,7 +63,6 @@ shrouds.zIndex = close;
 shrouds.interactiveChildren = false;
 
 const visuals  = new Container();
-
 visuals.name   = 'visuals';
 visuals.zIndex = close;
 //visuals.interactiveChildren = false;

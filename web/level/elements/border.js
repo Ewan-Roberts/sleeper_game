@@ -1,5 +1,5 @@
 const { borders         } = require('../../engine/pixi_containers');
-const { Sprite, Texture } = require('pixi.js');
+const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 
 class Border extends Sprite {
   constructor(data) {
@@ -8,7 +8,7 @@ class Border extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.alpha    = 0;
-    this.rotation = data.rotation * (Math.PI/180);
+    this.rotation = data.rotation * DEG_TO_RAD;
     this.anchor.set(0, 1);
 
     borders.addChild(this);

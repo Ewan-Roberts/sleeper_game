@@ -1,12 +1,12 @@
 const { backgrounds  } = require('../engine/pixi_containers');
-const { Text         } = require('pixi.js');
+const { Text, DEG_TO_RAD         } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 class FloorWord extends Text {
   constructor(data) {
     super(data);
 
-    const degrees = data.rotation * (Math.PI/180);
+    const degrees = data.rotation * DEG_TO_RAD;
     this.style.fontSize   = data.font_size || 20;
     this.style.fill       = data.fill      || 'black';
     this.style.fontWeight = data.weight    || 'bolder';

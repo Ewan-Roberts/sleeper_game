@@ -1,11 +1,9 @@
 
 
+require('./tween');
 require('../level/elements');
 const { Level_Factory } = require('../level/types/level_factory');
 
-require('./tween');
-
-global.dev();
 
 class Level_Loader {
   static boot() {

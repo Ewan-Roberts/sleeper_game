@@ -141,8 +141,9 @@ class LogicSprite extends extras.AnimatedSprite {
 
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.x, this.y);
-
+      console.log('here');
       if(Sight.lineOfSight(this, this.target, collisions.children)) {
+        console.log('notr here');
         this.tween.path.lineTo(this.target.x, this.target.y);
         this.animation.move();
 

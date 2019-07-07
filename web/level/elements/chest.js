@@ -6,7 +6,7 @@ const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
-const { sound, Sprite, Texture } = require('pixi.js');
+const { sound, Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 
 class Chest extends Sprite {
   constructor(data) {
@@ -15,7 +15,7 @@ class Chest extends Sprite {
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;
-    this.rotation = data.rotation * (Math.PI/180);
+    this.rotation = data.rotation * DEG_TO_RAD;
     this.alpha    = properties && properties.alpha || 1;
     this.anchor.set(0, 1);
 

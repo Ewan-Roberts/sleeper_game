@@ -1,6 +1,6 @@
 const { collisions } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
-const { Sprite, Texture } = require('pixi.js');
+const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 
 class Shrine extends Sprite {
   constructor(data) {
@@ -9,7 +9,7 @@ class Shrine extends Sprite {
     this.inventory   = new Inventory();
     this.height      = data.height;
     this.width       = data.width;
-    this.rotation    = data.rotation * (Math.PI/180);
+    this.rotation    = data.rotation * DEG_TO_RAD;
     this.tint        = 0xA9A9A9;
     this.interactive = true;
 

@@ -5,6 +5,9 @@ const { ticker }  = require('./app');
 require('pixi-keyboard');
 
 // 60/30 for 30 fps
+
+global.dev();
+
 const fps_delta = (global.env === 'dev')?2:1;
 
 let elapsedTime = 0;

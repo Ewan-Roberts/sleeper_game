@@ -1,7 +1,7 @@
 const { collisions   } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-const { Sprite, Texture, sound } = require('pixi.js');
+const { Sprite, Texture, sound, DEG_TO_RAD } = require('pixi.js');
 const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
 
@@ -14,7 +14,7 @@ class Door extends Sprite {
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;
-    this.rotation = data.rotation * (Math.PI/180);
+    this.rotation = data.rotation * DEG_TO_RAD;
     this.interactive = true;
 
     this.rotation_on_interaction = data.open_rotation || 2;
@@ -29,9 +29,15 @@ class Door extends Sprite {
     this.alpha = properties.alpha || 1;
 
     if(properties.clickable) {
+      this.closable = properties.closable;
       this.tween = tweenManager.createTween(this);
       this.on('click', () => {
-        if(this.opened) return this.close();
+        if(this.opened) {
+          if(this.closable === false) {
+            return;
+          }
+          return this.close();
+        }
         this.open();
       });
     }

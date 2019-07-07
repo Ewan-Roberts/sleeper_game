@@ -4,6 +4,10 @@ const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 const { Player        } = require('../../character/archetypes/player');
 
+const {
+  Floor,
+} = require('../elements');
+
 class Transition_Room {
   constructor() {
     this.name     = 'transition_room';
@@ -15,6 +19,15 @@ class Transition_Room {
 
   _set_elements() {
     Level_Factory.generate(this.elements);
+    const lights = this.elements.christmas_lights.map(light => new Floor(light));
+
+    setInterval(() => {
+      lights.forEach(light => {light.tint = 0x0000;});
+    },1000);
+
+    setInterval(() => {
+      lights.forEach(light => {light.tint = 0xffffff;});
+    },2000);
 
     const { exit_pad, player } = this.elements;
     this.player.position.copy(player[0]);
