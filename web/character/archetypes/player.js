@@ -1,11 +1,12 @@
-const { extras, Texture } = require('pixi.js');
+const { extras, Texture, sound } = require('pixi.js');
 const { players         } = require('../../engine/pixi_containers');
 //const { PlayerEvents    } = require('../../engine/item_handler');
+const { Animation       } = require('../attributes/animation');
 const { Keyboard        } = require('../attributes/keyboard');
 const { Mouse           } = require('../attributes/mouse');
 const { Inventory       } = require('../attributes/inventory');
 const { Vitals          } = require('../attributes/vitals');
-const { PlayerAnimation } = require('../animations/human');
+const { human_frames    } = require('../animations/human');
 const { damage_events   } = require('../../engine/damage_handler');
 const { Item_Manager    } = require('../../items/item_manager');
 const { Blood           } = require('../../effects/blood');
@@ -26,7 +27,9 @@ class Player extends extras.AnimatedSprite {
     this.anchor.set(0.5);
     this.animationSpeed = 0.70;
 
-    this.add_component(new PlayerAnimation(this));
+    this.add_component(new Animation(this, human_frames));
+    this.animation.prefix = 'nothing';
+
     this.add_component(new Inventory());
     this.add_component(new Vitals());
     this.add_component(new Keyboard(this));
@@ -49,6 +52,13 @@ class Player extends extras.AnimatedSprite {
     players.addChild(this);
 
     damage_events.on('damage', data => this.damage(data));
+    this._set_sounds();
+  }
+
+  _set_sounds() {
+    this.walk_sound = sound.find('walk_normal', {loop: true});
+    this.walk_sound.loop = true;
+    this.walk_sound.volume = 0.05;
   }
 
   damage({id, damage}) {
@@ -68,6 +78,24 @@ class Player extends extras.AnimatedSprite {
     players.removeChild(this);
     this.keyboard.destroy();
     this.mouse.destroy();
+  }
+
+  // mixin sounds to animations
+  idle() {
+    this.animation.idle = () => {
+      this.walk_sound.stop();
+      this.animation.switch(this.animation.prefix + '_idle');
+    }
+  }
+
+  // mixin sounds to animations
+  walk() {
+    this.animation.walk = () => {
+      if(!this.walk_sound.isPlaying) {
+        this.walk_sound.play();
+      }
+      this.animation.switch(this.animation.prefix + '_walk');
+    }
   }
 
   add_component(component) {

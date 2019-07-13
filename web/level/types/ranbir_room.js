@@ -11,7 +11,7 @@ const { Caption   } = require('../../view/caption');
 const { Overlay_Dialog } = require('../../effects/overlay_dialog.js');
 const { Nightmare      } = require('../../effects/nightmare.js');
 const { flash_at, fill_screen_at } = require('../../effects/fade_sprite.js');
-const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
+const { LogicHuman    } = require('../../character/archetypes/logic_human');
 
 //const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { Player          } = require('../../character/archetypes/player');
@@ -89,13 +89,12 @@ class Ranbir_Room  {
     this.floors         = this.data.floor.map(data => new Floor(data));
     this.collisions     = this.data.collision.map(data => new Collision(data));
 
-    console.log(filters);
     const colourMatrix = new filters.ColorMatrixFilter();
     colourMatrix.saturate(2);
     this.lights.forEach(light => light.filters = [colourMatrix]);
 
     this.prey = this.data.prey.map(unit => {
-      const entity = new LogicZombie(unit);
+      const entity = new LogicHuman(unit);
       entity.target(this.player);
       return entity;
     });
@@ -125,6 +124,8 @@ class Ranbir_Room  {
 
   _valkerie() {
     this.valkerie        = this.prey.find(unit => unit.id === 280);
+    this.valkerie.add_script('happy', ['1happy', '2happy'])
+    this.valkerie.scripts.happy.next();
     this.valkerie_model  = this.items.find(unit => unit.id === 290);
     this.valkerie_script = new Dialog_Script(this.valkerie);
 

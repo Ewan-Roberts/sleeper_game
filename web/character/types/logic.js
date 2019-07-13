@@ -11,7 +11,6 @@ const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood            } = require('../../effects/blood');
-const event                = require('events');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -28,7 +27,6 @@ class LogicSprite extends extras.AnimatedSprite {
     super([Texture.fromFrame('bird_8')]);
     this.name = 'zombie';
     this.id   = data.id;
-    this.events = new event();
 
     this.add_component(new Inventory(data.properties));
     this.add_component(new Vitals());
@@ -166,6 +164,10 @@ class LogicSprite extends extras.AnimatedSprite {
 
   add_component(component) {
     this[component.name] = component;
+  }
+
+  render_text(text) {
+    //this.current_text = new SpeechText(text,this.point);
   }
 }
 

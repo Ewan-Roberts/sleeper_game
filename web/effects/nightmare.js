@@ -21,7 +21,6 @@ class Nightmare {
   }
 }
 
-
 module.exports = {
   Nightmare,
 };
