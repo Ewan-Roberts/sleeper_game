@@ -10,6 +10,7 @@ class KeyboardKey extends FadeSprite {
     text.style.fontSize = 50;
     text.x += 55;
     text.y -= 100;
+    this.alpha = 0;
 
     this.fired = false;
     this.addChild(text);

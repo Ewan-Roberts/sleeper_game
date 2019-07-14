@@ -52,13 +52,14 @@ class Intro {
     this.dumpster = this.collisions.find(item => item.id === 524);
 
     this._set_sounds();
-    this._set_cutscene();
     this._set_elements();
+    this._set_cutscene();
     if(env.dev) this._set_dev_settings();
   }
 
   _set_cutscene() {
     this.intro_fade = flash_at(this.player, 5000);
+    console.log(this.intro_fade);
 
     const hand = new FadeSprite(this.data.white_hands[0]);
     hand.filters = [white_filter];
@@ -113,6 +114,7 @@ class Intro {
       this.dumpster.tint = 0xd3d3d3;
       button.visible = false;
     });
+
     pad.click = () => {
       const tween_it = new Tween(this.dumpster);
       tween_it.to({x: this.dumpster.x - 45, y:this.dumpster.y - 20});

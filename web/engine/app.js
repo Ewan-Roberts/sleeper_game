@@ -1,4 +1,3 @@
-
 const { Application, settings } = require('pixi.js');
 const { env } = require('../../config');
 
@@ -8,6 +7,7 @@ const app = new Application({
   height          : global.window.innerHeight,
   backgroundColor : env.background_color,
   roundPixels     : env.round_pixels,
+  antialias       : env.anti_alias,
 });
 
 settings.ROUND_PIXELS               = env.round_pixels;
@@ -17,6 +17,7 @@ settings.TARGET_FPMS                = env.fps;
 app.renderer.roundPixels            = env.round_pixels;
 app.renderer.resolution             = env.resolution;
 app.renderer.options.roundPixels    = env.round_pixels;
+console.log(app);
 //app.ticker.speed = 1;
 
 global.document.body.appendChild(app.view);

@@ -198,7 +198,7 @@ class Start_Room  {
       thud.volume  = volume;
       thud.play();
 
-      this.whisper_effect.volume = volume;
+      this.whisper_effect.volume = volume + 0.02;
     });
 
     this.player.events.once('killed', () => {

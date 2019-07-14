@@ -6,7 +6,7 @@ const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
-const { sound, Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 
 class Chest extends Sprite {
   constructor(data) {
@@ -20,36 +20,20 @@ class Chest extends Sprite {
 
     this.position.copy(data);
     this.interactive = true;
-    if(data.type === 'note') this.on('click', () => {
-      new Note(data);
-      sound.play('page_turn');
-    });
+    // TODO handle player acquisition better
+    const [player] = players.children;
 
-    if(data.equip_on_click) {
-      this.click = () => {
-        players.children[0].events.emit('equip_weapon', data);
-        this.destroy();
-      };
-    }
+    if(data.type === 'note') this.on('click', () => new Note(data));
 
+    if(data.equip_on_click) this.on('click', () => player.events.emit('equip_weapon', data));
     if(data.label) this.label(data);
-
-    if(data.dialog_on_click) this.on('click', () => {
-      Caption.render(data.dialog_on_click);
-    });
-
-    if(data.remove_on_click) this.on('click', () => {
-      this.destroy();
-    });
-
-    if(data.container) {
-      this.container(data);
-    }
+    if(data.dialog_on_click) this.on('click', () => Caption.render(data.dialog_on_click));
+    if(data.remove_on_click) this.on('click', () => this.destroy());
+    if(data.container) this.container(data);
 
     if(data.collision) {
       collisions.addChild(this);
     }
-
     items.addChild(this);
   }
 

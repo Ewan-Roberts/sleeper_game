@@ -20,7 +20,7 @@ class EnvironmentConfig {
 const options = {
   prod: new EnvironmentConfig({
     dev:                false,
-    fps:                60,
+    fps:                0.06,
     resolution:         1,
     anti_alias:         true,
     background_color:   0xffffff, // black
@@ -96,7 +96,7 @@ function get_dev_config(name) {
   }
 }
 
-const env = get_dev_config('dev_medium');
+const env = get_dev_config('prod');
 console.log(env);
 
 module.exports = {
