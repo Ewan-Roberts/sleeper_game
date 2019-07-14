@@ -1,7 +1,9 @@
 const { keyboardManager } = require('pixi.js');
+const { env             } = require('../../../config');
 
 const {
   collisions,
+  items,
   borders,
   pads,
   shrouds,
@@ -12,11 +14,15 @@ const { Player_Inventory } = require('../../view/view_player_inventory');
 const { Interaction_Menu } = require('../../view/interaction_menu');
 
 function point_collides(position) {
+  const collision_hit = collisions.children.find(child => child.containsPoint(position));
+  if(collision_hit) return true;
+
   const border_hit = borders.children.find(child => child.containsPoint(position));
   if(border_hit) return true;
 
-  const collision_hit = collisions.children.find(child => child.containsPoint(position));
-  if(collision_hit) return true;
+  const item_hit = items.children.find(child => child.containsPoint(position));
+  if(item_hit) return true;
+
   return false;
 }
 
@@ -60,7 +66,7 @@ class Keyboard {
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
 
-    if(global.env === 'dev') this._set_dev_settings();
+    if(env.dev) this._set_dev_settings();
   }
 
   destroy() {
@@ -104,12 +110,12 @@ class Keyboard {
 
 
   increase_run_speed() {
-    if(global.env !== 'dev') return;
+    if(env.dev) return;
     this.speed *= 1.5;
   }
 
   small_inventory() {
-    if(global.env !== 'dev') return;
+    if(env.dev) return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -120,7 +126,7 @@ class Keyboard {
   }
 
   large_inventory() {
-    if(global.env !== 'dev') return;
+    if(env.dev) return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -137,7 +143,7 @@ class Keyboard {
   }
 
   open_interaction() {
-    if(global.env !== 'dev') return;
+    if(env.dev) return;
     this.disable();
     this.inventory_view.wide();
     this.inventory_view.toggle();

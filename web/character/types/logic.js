@@ -11,6 +11,7 @@ const { Inventory        } = require('../attributes/inventory');
 const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood            } = require('../../effects/blood');
+const { env              } = require('../../../config');
 const event                = require('events');
 
 function break_at_door(path) {
@@ -30,7 +31,7 @@ class LogicSprite extends extras.AnimatedSprite {
     this.id   = data.id;
     this.events = new event();
 
-    this.add_component(new Inventory(data.properties));
+    this.add_component(new Inventory(data));
     this.add_component(new Vitals());
     this.rotation_offset = 0;
     this.position.copy(data);
@@ -141,9 +142,7 @@ class LogicSprite extends extras.AnimatedSprite {
 
       this.tween.path = new tween.TweenPath();
       this.tween.path.moveTo(this.x, this.y);
-      console.log('here');
       if(Sight.lineOfSight(this, this.target, collisions.children)) {
-        console.log('notr here');
         this.tween.path.lineTo(this.target.x, this.target.y);
         this.animation.move();
 
@@ -152,7 +151,9 @@ class LogicSprite extends extras.AnimatedSprite {
         await this._pathfind();
         this.tween.time = 4000;
       }
-      draw_path(this.tween.path);
+
+      if(env.draw_paths) draw_path(this.tween.path);
+
       this.tween.start();
     });
 

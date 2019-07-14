@@ -9,11 +9,10 @@ class Shroud extends Sprite {
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;
-    this.alpha    = data.properties && data.properties.alpha || 0.75;
-    // this.tint     = 0xA9A9A9;
+    this.alpha    = data.alpha || 0.75;
     this.rotation        = data.rotation * DEG_TO_RAD;
-    this.remove_on_enter = data.properties && data.properties.remove_on_enter;
-    this.alpha_on_enter  = data.properties && data.properties.alpha_on_enter;
+    this.remove_on_enter = data.remove_on_enter;
+    this.alpha_on_enter  = data.alpha_on_enter;
     this.anchor.set(0, 1);
     this.position.copy(data);
 

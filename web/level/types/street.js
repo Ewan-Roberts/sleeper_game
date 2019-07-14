@@ -1,9 +1,9 @@
 const { Player   } = require('../../character/archetypes/player');
 const { Camera   } = require('../../engine/camera');
-const { renderer } = require('../../engine/app.js');
 const { sound    } = require('pixi.js');
 const { flash_at } = require('../../effects/fade_sprite.js');
 const { Fade     } = require('../../effects/fade.js');
+const { env      } = require('../../../config');
 
 const {
   Trigger_Pad,
@@ -42,11 +42,10 @@ class Street {
     this.truck_roof   = this.roofs.find(roof => roof.id === 443);
     this.matress_roof = this.roofs.find(roof => roof.id === 556);
 
-    renderer.backgroundColor = 0x000000;
     this._set_sounds();
     this._set_elements();
     this._set_cutscene();
-    if(global.env === 'dev') this._set_dev_settings();
+    if(env.dev) this._set_dev_settings();
   }
 
   _set_cutscene() {
@@ -79,7 +78,6 @@ class Street {
 
   _set_dev_settings() {
     this.intro_fade.visible = false;
-    this.player.vitals.speed = 30;
   }
 }
 

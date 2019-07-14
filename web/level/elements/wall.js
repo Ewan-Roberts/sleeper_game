@@ -10,11 +10,8 @@ class Wall extends Sprite {
     this.rotation = data.rotation * DEG_TO_RAD;
     this.tint     = 0x000000;
 
-    const {properties} = data;
-    if(properties) {
-      this.tint     = properties.tint;
-      this.alpha    = (properties.hidden)?0:properties.alpha || 1;
-    }
+    this.tint     = data.tint;
+    this.alpha    = (data.hidden)?0:data.alpha || 1;
 
     this.anchor.set(0, 1);
     this.position.copy(data);

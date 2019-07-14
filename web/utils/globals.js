@@ -1,7 +1,7 @@
 const PIXI = require('pixi.js');
 
 const { visuals  } = require('../engine/pixi_containers');
-const { renderer }= require('../engine/app');
+const { renderer } = require('../engine/app');
 
 global.place_bunny = ({ x, y } /*light*/) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');

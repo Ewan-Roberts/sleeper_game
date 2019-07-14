@@ -1,6 +1,7 @@
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { pads            } = require('../../engine/pixi_containers');
 const { Level_Factory   } = require('../types/level_factory');
+const { env             } = require('../../../config');
 const event = require('events');
 
 class Trigger_Pad extends Sprite {
@@ -10,19 +11,16 @@ class Trigger_Pad extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = (global.env === 'dev')?0.2:0;
+    this.alpha    = (env.visable_pads)?0.2:0;
+    this.speed    = (env.dev)?25:data.speed;
+
     this.events   = new event();
-    if(global.env === 'dev') {
-      this.speed = 25;
-    } else {
-      this.speed = data.properties && data.properties.speed;
-    }
 
     this.anchor.set(0);
     this.position.copy(data);
 
-    if(data.properties && data.properties.level_name) {
-      const {level_name} = data.properties;
+    if(data.level_name) {
+      const {level_name} = data;
       this.events.once('trigger', () => {
         player.destroy();
         Level_Factory.create(level_name);

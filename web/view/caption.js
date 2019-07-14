@@ -4,11 +4,11 @@ const dialog_caption_holder = select('.dialog_caption_holder');
 class Caption {
   static render(sentence) {
 
-    // dialog_caption_holder.style.display = 'block';
-    // dialog_caption_holder.children.innerHTML = '';
-    // dialog_caption_holder.innerHTML = sentence;
+    this.clear();
+    this.show();
+    dialog_caption_holder.innerHTML = sentence;
 
-    // setTimeout(() => dialog_caption_holder.style.display = 'none',3000);
+    setTimeout(() => this.hide(),3000);
     // if(this.ready === false) return;
     // this.ready = false;
     // this.show();

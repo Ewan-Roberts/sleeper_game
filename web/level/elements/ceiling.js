@@ -8,8 +8,9 @@ class Roof extends Sprite {
     this.height = data.height;
     this.width  = data.width;
     this.rotation = data.rotation * DEG_TO_RAD;
-    this.tint     = data.properties && data.properties.tint || 0xffffff;
-    this.alpha    = data.properties && data.properties.alpha || 1;
+    this.tint     = data.tint  || 0xffffff;
+    this.alpha    = data.alpha || 1;
+
     this.anchor.set(0, 1);
     this.position.copy(data);
 

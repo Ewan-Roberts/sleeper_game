@@ -25,6 +25,9 @@ class Level_Factory {
     const { Start_Room      } = require('./start');
     const { Simple_Room     } = require('./simple_room');
     const { Ranbir_Room     } = require('./ranbir_room');
+    const { Ranbir_Floor_0  } = require('./ranbir_flat_0');
+    const { Ranbir_Floor_1  } = require('./ranbir_flat_1');
+    const { Ranbir_Floor_2  } = require('./ranbir_flat_2');
 
     switch(level_name) {
       case 'intro'     : return new Intro();
@@ -34,7 +37,10 @@ class Level_Factory {
       case 'defend'    : return new Defend_Room();
       case 'start'     : return new Start_Room();
       case 'park'      : return new Park_Room();
-      case 'ranbir'    : return new Ranbir_Room();
+      case 'ranbir_flat'   : return new Ranbir_Room();
+      case 'ranbir_flat_0' : return new Ranbir_Floor_0();
+      case 'ranbir_flat_1' : return new Ranbir_Floor_1();
+      case 'ranbir_flat_2' : return new Ranbir_Floor_2();
       default: new Simple_Room(level_name);
     }
   }

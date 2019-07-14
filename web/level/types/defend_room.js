@@ -11,7 +11,6 @@ class Defend_Room  {
     this.elements = require('../data/defend_room.json');
 
     this._set_elements();
-    this.player.vitals.speed = 30;
   }
 
   _set_elements() {

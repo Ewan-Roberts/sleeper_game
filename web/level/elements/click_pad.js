@@ -1,5 +1,6 @@
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { pads } = require('../../engine/pixi_containers');
+const { env  } = require('../../../config');
 
 class Click_Pad extends Sprite {
   constructor(data) {
@@ -8,7 +9,7 @@ class Click_Pad extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = (global.env === 'dev')?0.2:0;
+    this.alpha    = (env.dev)?0.2:0;
     this.interactive = true;
     this.buttonMode  = true;
     this.anchor.set(0);
