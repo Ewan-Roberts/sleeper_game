@@ -13,7 +13,7 @@ class EnvironmentConfig {
     this.level_on_load      = data.level_on_load;
     this.draw_paths         = data.draw_paths;
     this.player_speed       = data.player_speed;
-    this.round_pixels       = true; //always round
+    this.round_pixels       = data.round_pixels;
   }
 }
 
@@ -31,7 +31,8 @@ const options = {
     inventory_openable: false,
     level_on_load:      'start',
     draw_paths:         false,
-    player_speed:       9,
+    player_speed:       4,
+    round_pixels:       true,
   }),
 
   dev_low: new EnvironmentConfig({
@@ -48,6 +49,7 @@ const options = {
     level_on_load:      'transition',
     draw_paths:         true,
     player_speed:       30,
+    round_pixels:       true,
   }),
 
   dev_medium: new EnvironmentConfig({
@@ -64,6 +66,7 @@ const options = {
     level_on_load:      'transition',
     draw_paths:         false,
     player_speed:       30,
+    round_pixels:       true,
   }),
 
   dev_high: new EnvironmentConfig({
@@ -80,6 +83,7 @@ const options = {
     level_on_load:      'transition',
     draw_paths:         true,
     player_speed:       30,
+    round_pixels:       true,
   }),
 };
 

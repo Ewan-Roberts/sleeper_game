@@ -63,7 +63,7 @@ class Start_Room  {
 
     this.controls_prompt   = new WASD();
     this.microphone_prompt = new MicrophonePopUp();
-    this.script            = new Overlay_Dialog(['...','this again...'], this.player);
+    this.script            = new Overlay_Dialog(['...','this again...', '...','who is it...'], this.player);
 
     this.crows     = this.data.birds.map(unit => new PathCrow(unit));
     this.stalkers  = this.data.prey.map(unit => new Stalker(unit, this.player));
@@ -86,14 +86,14 @@ class Start_Room  {
     this.theme_song = sound.find('start_theme');
     this.theme_song.volume = 0.05;
     this.eerie_song = sound.find('eerie_ambient');
-    this.eerie_song.volume = 0.08;
+    this.eerie_song.volume = 0.2;
     this.horror_song = sound.find('horror_theme');
     this.horror_song.volume = 0.08;
 
-
     this.suspense_effect = sound.find('suspense_in');
-    this.suspense_effect.volume = 0.05;
+    this.suspense_effect.volume = 0.03;
     this.click_effect    = sound.find('click');
+    this.click_effect.volume = 0.04;
     this.honk_effect     = sound.find('honk');
     this.thud_1_effect   = sound.find('thud_1');
     this.whisper_effect  = sound.find('whisper_effect');
@@ -193,7 +193,7 @@ class Start_Room  {
 
       distortion_filter.amount = distortion_amount;
 
-      const thud   = sound.random_sound_from(['thud_2','thud_3','thud_4','thud_5','thud_6','thud_7']);
+      const thud   = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
       thud.filters = [distortion_filter];
       thud.volume  = volume;
       thud.play();

@@ -1,5 +1,6 @@
 const { visuals    } = require('../engine/pixi_containers');
 const { FadeSprite } = require('../effects/fade_sprite.js');
+//const { FadeSprite } = require('../../configfade_sprite.js');
 const { Text       } = require('pixi.js');
 
 class KeyboardKey extends FadeSprite {
@@ -7,7 +8,7 @@ class KeyboardKey extends FadeSprite {
     super({image_name: 'key'});
 
     const text = new Text(letter);
-    text.style.fontSize = 50;
+    text.style.fontSize = 55;
     text.x += 55;
     text.y -= 100;
     this.alpha = 0;
