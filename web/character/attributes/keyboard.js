@@ -41,13 +41,19 @@ function point_contains(position) {
   }
 }
 
-function event_pad(position) {
+function event_pad(player) {
   const { children } = pads;
+  const pad = children.find(child => child.containsPoint(player));
 
-  const pad = children.find(child => child.containsPoint(position));
+  if(pad && pad.events) {
+    player.animationSpeed = 0.60;
+    pad.events.emit('trigger');
+    return pad.speed;
+  }
 
-  if(pad && pad.events) pad.events.emit('trigger');
-  return pad;
+  player.animation.speed = 0.70;
+  //TODO
+  return 30;
 }
 
 class Keyboard {
@@ -174,14 +180,7 @@ class Keyboard {
     if(point_collides(point)) return this.animation.idle();
 
     point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.animation.speed = 0.60;
-    } else {
-      this.animation.speed = 0.70;
-      this.speed = this.vitals.speed;
-    }
+    this.speed = event_pad(this.sprite);
 
     this.animation.walk();
     this.sprite.y -= this.speed;
@@ -196,15 +195,7 @@ class Keyboard {
     if(point_collides(point)) return this.animation.idle();
 
     point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
+    this.speed = event_pad(this.sprite);
 
     this.animation.walk();
     this.sprite.y += this.speed;
@@ -219,15 +210,7 @@ class Keyboard {
     if(point_collides(point)) return this.animation.idle();
 
     point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
+    this.speed = event_pad(this.sprite);
 
     this.animation.walk();
     this.sprite.x -= this.speed;
@@ -242,7 +225,7 @@ class Keyboard {
     if(point_collides(point)) return this.animation.idle();
 
     point_contains(point);
-    const pad = event_pad(point);
+    const pad = event_pad(this.sprite);
     if(pad && pad.speed) {
       this.speed = pad.speed;
       this.sprite.animationSpeed = 0.60;
