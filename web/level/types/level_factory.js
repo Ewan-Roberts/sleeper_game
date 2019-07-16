@@ -13,7 +13,7 @@ const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
 
 class Level_Factory {
-  static create(level_name) {
+  static create(level_name, entry_id, player) {
     this.clear();
 
     const { Intro           } = require('./intro');
@@ -37,10 +37,10 @@ class Level_Factory {
       case 'defend'    : return new Defend_Room();
       case 'start'     : return new Start_Room();
       case 'park'      : return new Park_Room();
-      case 'ranbir_flat'   : return new Ranbir_Room();
-      case 'ranbir_flat_0' : return new Ranbir_Floor_0();
-      case 'ranbir_flat_1' : return new Ranbir_Floor_1();
-      case 'ranbir_flat_2' : return new Ranbir_Floor_2();
+      case 'ranbir_flat'  : return new Ranbir_Room();
+      case 'ranbir_flat_0': return new Ranbir_Floor_0(entry_id, player);
+      case 'ranbir_flat_1': return new Ranbir_Floor_1(entry_id, player);
+      case 'ranbir_flat_2': return new Ranbir_Floor_2(entry_id, player);
       default: new Simple_Room(level_name);
     }
   }
@@ -55,14 +55,13 @@ class Level_Factory {
     decal,
     background,
     collision,
-    player,
     slow_pad,
   }
   ) {
 
     const { Trigger_Pad } = require('../elements');
     try {
-      if(player) Camera.set_center(player[0]);
+      //if(player) Camera.set_center(player[0]);
 
       background.forEach(data => new Background(data));
       decal.forEach(data => new Decal(data));

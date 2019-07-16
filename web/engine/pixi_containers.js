@@ -78,7 +78,6 @@ const pads  = new Container();
 pads.name   = 'pad_container';
 pads.zIndex = close;
 
-
 const guis  = new Container();
 guis.name   = 'gui_container';
 guis.zIndex = very_close;
@@ -102,7 +101,11 @@ world.addChild(
 world.updateLayersOrder();
 
 function clear_level_containers() {
-  world.children.forEach(child => child.removeChildren());
+  world.children.forEach(child => {
+    console.log(child.name);
+    if(child.name === 'player_container') return;
+    child.removeChildren();
+  });
 }
 
 module.exports = {
