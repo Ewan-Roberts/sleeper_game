@@ -10,6 +10,7 @@ const { Player     } = require('../../character/archetypes/player');
 const { Tween      } = require('../../engine/tween');
 const { FadeSprite } = require('../../effects/fade_sprite.js');
 const { flash_at   } = require('../../effects/fade_sprite.js');
+const { env        } = require('../../../config');
 
 const {
   Trigger_Pad,
@@ -51,13 +52,14 @@ class Intro {
     this.dumpster = this.collisions.find(item => item.id === 524);
 
     this._set_sounds();
-    this._set_cutscene();
     this._set_elements();
-    if(global.env === 'dev') this._set_dev_settings();
+    this._set_cutscene();
+    if(env.dev) this._set_dev_settings();
   }
 
   _set_cutscene() {
     this.intro_fade = flash_at(this.player, 5000);
+    console.log(this.intro_fade);
 
     const hand = new FadeSprite(this.data.white_hands[0]);
     hand.filters = [white_filter];
@@ -102,7 +104,7 @@ class Intro {
 
     const pad_data = this.data.click_pad[0];
     const pad = new Click_Pad(pad_data);
-    const button = new Button(pad_data.properties);
+    const button = new Button(pad_data);
     button.set_position(pad_data);
     pad.on('mouseover', () => {
       this.dumpster.tint = 0xffffff;
@@ -112,6 +114,7 @@ class Intro {
       this.dumpster.tint = 0xd3d3d3;
       button.visible = false;
     });
+
     pad.click = () => {
       const tween_it = new Tween(this.dumpster);
       tween_it.to({x: this.dumpster.x - 45, y:this.dumpster.y - 20});
@@ -126,9 +129,7 @@ class Intro {
     this.player.position.copy(this.data.player_spawn[1]);
     Camera.set_center(this.data.player_spawn[1]);
 
-    renderer.backgroundColor = 0x0066CC;
-    this.player.vitals.speed = 30;
-    this.theme_song.volume   = 0;
+    this.theme_song.volume = 0;
     this.theme_song.stop();
 
     this.study_door.position.x   += 30;

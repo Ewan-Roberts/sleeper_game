@@ -12,6 +12,7 @@ class Background extends Sprite {
     this.anchor.set(0.5);
     guis.addChild(this);
   }
+
   set_position({x, y}) {
     this.position.set(x, y);
   }
@@ -23,6 +24,9 @@ class Background extends Sprite {
 
 class Note {
   constructor(options) {
+    //TODO Don't imply sound on instantiation
+    PIXI.sound.play('page_turn');
+
     this.name = 'note';
     this.background = new Background();
     this.background.tint = 'black';

@@ -13,7 +13,7 @@ class PathSprite extends extras.AnimatedSprite {
     this.anchor.set(0.5);
     this.animationSpeed = 0.29;
     this.tween = tweenManager.createTween(this);
-    this.speed = data.properties && data.properties.speed || 600;
+    this.speed = data.speed || 600;
 
     this.position.copy(data);
     if(data.polyline) {

@@ -1,24 +1,21 @@
-const { pathfind } = require('../../engine/pathfind.js');
-const { renderer     } = require('../../engine/app');
-const { roofs } = require('../../engine/pixi_containers');
-const { Camera   } = require('../../engine/camera.js');
-const { SpeechText, Dialog_Script } = require('../../engine/script_generator');
-const { sleep    } = require('../../utils/time.js');
-const { random_bound } = require('../../utils/math.js');
+const { renderer      } = require('../../engine/app');
+const { Camera        } = require('../../engine/camera.js');
+const { Dialog_Script } = require('../../engine/script_generator');
+const { sleep         } = require('../../utils/time.js');
+const { random_bound  } = require('../../utils/math.js');
 
 const { Caption   } = require('../../view/caption');
 
-const { Overlay_Dialog } = require('../../effects/overlay_dialog.js');
-const { Nightmare      } = require('../../effects/nightmare.js');
 const { flash_at, fill_screen_at } = require('../../effects/fade_sprite.js');
 const { LogicHuman    } = require('../../character/archetypes/logic_human');
+const { Nightmare     } = require('../../effects/nightmare.js');
 
-//const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { Player          } = require('../../character/archetypes/player');
 const { keyboardManager } = require('pixi.js');
 const { sound           } = require('pixi.js');
-const { filters           } = require('pixi.js');
+const { filters         } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
+const { env             } = require('../../../config');
 
 async function flicker(light) {
   const randomiser = random_bound(-10, 10);
@@ -54,7 +51,6 @@ async function flicker(light) {
   await flicker(light);
 }
 
-
 const {
   Wall,
   Decal,
@@ -76,17 +72,17 @@ class Ranbir_Room  {
 
     renderer.backgroundColor = 0x000000;
 
+    this.items          = this.data.item.map(data => new Chest(data));
     this.roofs          = this.data.roof.map(data => new Roof(data));
     this.shrouds        = this.data.shroud.map(data => new Shroud(data));
     this.backgrounds    = this.data.background.map(data => new Background(data));
     this.walls          = this.data.walls.map(data => new Wall(data));
-    this.items          = this.data.item.map(data => new Chest(data));
     this.proximity_pads = this.data.proximity.map(data => new Trigger_Pad(data));
     this.doors          = this.data.door.map(data => new Door(data));
     this.exit_pad       = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
     this.lights         = this.data.lights.map(data => new Decal(data));
-    this.decals         = this.data.decal.map(data => new Decal(data));
     this.floors         = this.data.floor.map(data => new Floor(data));
+    this.decals         = this.data.decal.map(data => new Decal(data));
     this.collisions     = this.data.collision.map(data => new Collision(data));
 
     const colourMatrix = new filters.ColorMatrixFilter();
@@ -108,7 +104,7 @@ class Ranbir_Room  {
     this._set_elements();
     this._valkerie();
     //this._start();
-    if(global.env === 'dev') this._set_dev_settings();
+    if(env.dev) this._set_dev_settings();
   }
 
   _leave() {
@@ -225,8 +221,11 @@ class Ranbir_Room  {
 
     keyboardManager.enable();
     this.light_shroud.alpha =0;
+    this.doors.forEach(i => i.x += 50);
 
-    this.player.vitals.speed = 30;
+    // this.roofs.forEach(i => i.alpha = 0);
+    // this.shrouds.forEach(i => i.alpha = 0);
+    // this.prey.forEach(i => i.alpha = 0);
   }
 }
 

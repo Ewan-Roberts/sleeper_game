@@ -7,6 +7,7 @@ const zIndex_layer = {
   low:        9,
   medium:     6,
   close:      3,
+  closer:     2,
   very_close: 1,
 };
 
@@ -16,6 +17,7 @@ const {
   low,
   medium,
   close,
+  closer,
   very_close,
 } = zIndex_layer;
 
@@ -57,9 +59,14 @@ players.name   = 'player_container';
 players.zIndex = medium;
 players.interactiveChildren = false;
 
+const roofs  = new Container();
+roofs.name   = 'roof_container';
+roofs.zIndex = close;
+roofs.interactiveChildren = false;
+
 const shrouds  = new Container();
 shrouds.name   = 'shroud_container';
-shrouds.zIndex = close;
+shrouds.zIndex = closer;
 shrouds.interactiveChildren = false;
 
 const visuals  = new Container();
@@ -71,10 +78,6 @@ const pads  = new Container();
 pads.name   = 'pad_container';
 pads.zIndex = close;
 
-const roofs  = new Container();
-roofs.name   = 'roof_container';
-roofs.zIndex = close;
-roofs.interactiveChildren = false;
 
 const guis  = new Container();
 guis.name   = 'gui_container';

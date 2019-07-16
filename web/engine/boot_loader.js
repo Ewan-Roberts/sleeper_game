@@ -1,24 +1,14 @@
 require('./tween');
-require('../level/elements');
 const { Level_Factory } = require('../level/types/level_factory');
+const { env } = require('../../config');
 
 class Level_Loader {
   static boot() {
-    if(global.env === 'dev') {
-      console.log('in DEV');
-      const PIXI = require('pixi.js');
-      PIXI.settings.ROUND_PIXELS = true;
-      PIXI.settings.RENDER_OPTIONS.roundPixels = true;
-      PIXI.settings.RESOLUTION = 0.01;
-      PIXI.settings.TARGET_FPMS = 0.05;
-      PIXI.settings.UPLOADS_PER_FRAME = 1;
-    }
-    const start_level = (global.env === 'dev')?'transition':'start';
+    const { level_on_load } = env;
 
-    Level_Factory.create(start_level);
+    Level_Factory.create(level_on_load);
   }
 }
-
 
 module.exports = {
   Level_Loader,

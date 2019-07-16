@@ -23,6 +23,7 @@ const { PathCrow        } = require('../../character/archetypes/path_crow');
 const { keyboardManager } = require('pixi.js');
 const { sound           } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
+const { env             } = require('../../../config');
 
 const {
   Trigger_Pad,
@@ -62,7 +63,7 @@ class Start_Room  {
 
     this.controls_prompt   = new WASD();
     this.microphone_prompt = new MicrophonePopUp();
-    this.script            = new Overlay_Dialog(['...','this again...'], this.player);
+    this.script            = new Overlay_Dialog(['...','this again...', '...','who is it...'], this.player);
 
     this.crows     = this.data.birds.map(unit => new PathCrow(unit));
     this.stalkers  = this.data.prey.map(unit => new Stalker(unit, this.player));
@@ -72,7 +73,7 @@ class Start_Room  {
     this._set_sounds();
     this._set_elements();
     this._start();
-    if(global.env === 'dev') this._set_dev_settings();
+    if(env.dev) this._set_dev_settings();
   }
 
   _leave() {
@@ -85,13 +86,14 @@ class Start_Room  {
     this.theme_song = sound.find('start_theme');
     this.theme_song.volume = 0.05;
     this.eerie_song = sound.find('eerie_ambient');
-    this.eerie_song.volume = 0.08;
+    this.eerie_song.volume = 0.2;
     this.horror_song = sound.find('horror_theme');
     this.horror_song.volume = 0.08;
 
     this.suspense_effect = sound.find('suspense_in');
-    this.suspense_effect.volume = 0.05;
+    this.suspense_effect.volume = 0.03;
     this.click_effect    = sound.find('click');
+    this.click_effect.volume = 0.04;
     this.honk_effect     = sound.find('honk');
     this.thud_1_effect   = sound.find('thud_1');
     this.whisper_effect  = sound.find('whisper_effect');
@@ -157,9 +159,10 @@ class Start_Room  {
     roofs.removeChildren();
     this.stalkers.forEach(unit => unit.remove());
     this.microphone_prompt.hide();
-    this.whisper_effect.stop();
-    this.horror_song.stop();
-    sound.play('thud_4');
+    sound.stopAll();
+    // const final_thud = sound.find('thud_4');
+    // final_thud.filters = [new sound.filters.DistortionFilter(0.5)];
+    // final_thud.play();
 
     yield * this.script.generator();
     this._leave();
@@ -175,18 +178,32 @@ class Start_Room  {
     await sleep(5000);
     this.controls_prompt.fade_in(2000);
     await sleep(1000);
+
     keyboardManager.enable();
 
     let volume = 0;
-    console.log(this.player);
+    let distortion_amount = 0;
+    const distortion_filter = new sound.filters.DistortionFilter();
+
     this.player.events.on('hit', () => {
       flash_at(this.player, 300);
-      volume += 0.06;
-      const thud = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
-      thud.volume = volume;
+
+      volume += 0.07;
+      distortion_amount += 0.02;
+
+      distortion_filter.amount = distortion_amount;
+
+      const thud   = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
+      thud.filters = [distortion_filter];
+      thud.volume  = volume;
       thud.play();
+
+      this.whisper_effect.volume = volume + 0.02;
     });
-    this.player.events.once('killed', () => this.generator.next());
+
+    this.player.events.once('killed', () => {
+      this.generator.next();
+    });
 
     this.bed.once('click', async () => {
       this.suspense_effect.play();
@@ -246,7 +263,6 @@ class Start_Room  {
     keyboardManager.enable();
 
     this.player.position.copy(this.data.player_spawn[0]);
-    this.player.vitals.speed = 30;
     Camera.set_center(this.data.player_spawn[0]);
 
     this.controls_prompt.set_position(this.data.control_prompt[0]);

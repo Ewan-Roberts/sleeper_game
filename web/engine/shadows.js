@@ -8,6 +8,8 @@ stage.updateLayersOrder = function () {
   });
 };
 
+stage.roundPixels = true;
+
 module.exports = {
   world : stage,
 };

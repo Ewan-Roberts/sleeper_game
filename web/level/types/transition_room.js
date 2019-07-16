@@ -34,10 +34,10 @@ class Transition_Room {
 
     exit_pad.forEach(data => {
       new Trigger_Pad(data, this.player);
-      const {properties, x, y, width, height} = data;
+      const { x, y, width, height} = data;
 
       const level_names = new Text(
-        properties.level_name,{fontSize: 40, fill: 'grey'}
+        data.level_name,{fontSize: 40, fill: 'grey'}
       );
 
       level_names.x = x + width/4;
@@ -46,7 +46,6 @@ class Transition_Room {
       visuals.addChild(level_names);
     });
 
-    this.player.vitals.speed = 30;
     const level_text = new Text(
       'THE HUB',
       {

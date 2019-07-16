@@ -25,7 +25,7 @@ class Player extends extras.AnimatedSprite {
     this.width  = 23;
     this.height = 35;
     this.anchor.set(0.5);
-    this.animationSpeed = 0.70;
+    this.animationSpeed = 0.30;
 
     this.add_component(new Animation(this, human_frames));
     this.animation.prefix = 'nothing';

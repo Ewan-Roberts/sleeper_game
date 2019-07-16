@@ -6,6 +6,7 @@ const { Player      } = require('../../character/archetypes/player');
 const { Camera      } = require('../../engine/camera');
 //const { renderer    } = require('../../engine/app.js');
 const { PathRat     } = require('../../character/archetypes/path_rat');
+const { env         } = require('../../../config');
 
 const {
   Trigger_Pad,
@@ -44,7 +45,7 @@ class Park_Room  {
 
     this._set_elements();
     // this._set_prey();
-    if(global.env === 'dev') this._set_dev_settings();
+    if(env.dev) this._set_dev_settings();
   }
 
   _set_prey() {
@@ -65,7 +66,7 @@ class Park_Room  {
   _set_elements() {
     //renderer.backgroundColor = 0x000000;
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.center = this.data.player_spawn[0];
+    Camera.set_center(this.data.player_spawn[0]);
 
     this.zombie.target(this.player);
     this.zombie.position.set(this.data.zombie[0]);
@@ -73,14 +74,12 @@ class Park_Room  {
     this.zombie_pad.once('trigger', () => this.zombie.logic_start());
 
     this.rat_pad.once('trigger', () => this.rats.forEach(rat => rat.start()));
-
   }
 
   _set_dev_settings() {
     this.player.position.copy(this.data.player_spawn[1]);
     Camera.set_center(this.data.player_spawn[1]);
 
-    this.player.vitals.speed = 30;
     this.borders.map(border => border.alpha = 0.4);
   }
 }

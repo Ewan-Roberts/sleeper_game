@@ -1,4 +1,4 @@
-const { collisions   } = require('../../engine/pixi_containers');
+const { items        } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
 const { Sprite, Texture, sound, DEG_TO_RAD } = require('pixi.js');
@@ -22,14 +22,13 @@ class Door extends Sprite {
     this.anchor.set(0, 1);
     this.position.copy(data);
 
-    collisions.addChild(this);
+    items.addChild(this);
 
-    const {properties} = data;
-    if(!properties) return;
-    this.alpha = properties.alpha || 1;
+    if(!data) return;
+    this.alpha = data.alpha || 1;
 
-    if(properties.clickable) {
-      this.closable = properties.closable;
+    if(data.clickable) {
+      this.closable = data.closable;
       this.tween = tweenManager.createTween(this);
       this.on('click', () => {
         if(this.opened) {
@@ -42,15 +41,15 @@ class Door extends Sprite {
       });
     }
 
-    if(properties.dialog_on_click) {
+    if(data.dialog_on_click) {
       this.on('click', () => {
-        Caption.render(properties.dialog_on_click);
+        Caption.render(data.dialog_on_click);
         this.locked_door_effect.play();
       });
     }
 
-    if(properties.label) this.overlay(properties);
-    if(properties.door)  this.pathfind_logic();
+    if(data.label) this.overlay(data);
+    if(data.door)  this.pathfind_logic();
 
     this._set_sound();
   }
@@ -122,7 +121,6 @@ class Door extends Sprite {
         this.health -= damage;
       }
     });
-
   }
 }
 
