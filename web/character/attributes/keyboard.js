@@ -110,12 +110,12 @@ class Keyboard {
 
 
   increase_run_speed() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.speed *= 1.5;
   }
 
   small_inventory() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -126,7 +126,7 @@ class Keyboard {
   }
 
   large_inventory() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -143,7 +143,7 @@ class Keyboard {
   }
 
   open_interaction() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.disable();
     this.inventory_view.wide();
     this.inventory_view.toggle();
@@ -153,7 +153,6 @@ class Keyboard {
 
     this.inventory.items.forEach(item => this.interaction.populate(item));
   }
-
 
   disable_for(time) {
     keyboardManager.disable();
@@ -178,10 +177,9 @@ class Keyboard {
     const pad = event_pad(point);
     if(pad && pad.speed) {
       this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
+      this.animation.speed = 0.60;
+    } else {
+      this.animation.speed = 0.70;
       this.speed = this.vitals.speed;
     }
 

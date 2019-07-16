@@ -33,6 +33,7 @@ class Animation {
   move()   { this.switch('move');   }
   walk()   { this.switch('move');   }
   attack() { this.switch('attack'); }
+  speed(value) { this.sprite.animationSpeed = value; }
 
   kill() {
     this.switch('death');
