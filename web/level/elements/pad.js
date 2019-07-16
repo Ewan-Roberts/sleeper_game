@@ -5,7 +5,7 @@ const { env             } = require('../../../config');
 const event = require('events');
 
 class Trigger_Pad extends Sprite {
-  constructor(data, player) {
+  constructor(data) {
     super(Texture.WHITE);
     this.id       = data.id;
     this.height   = data.height;
@@ -19,11 +19,10 @@ class Trigger_Pad extends Sprite {
     this.anchor.set(0);
     this.position.copy(data);
 
-    if(data.level_name) {
-      const {level_name} = data;
+    const {level_name, spawn_id} = data;
+    if(level_name) {
       this.events.once('trigger', () => {
-        player.destroy();
-        Level_Factory.create(level_name);
+        Level_Factory.create(level_name, spawn_id);
       });
     }
 

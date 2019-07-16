@@ -46,7 +46,9 @@ class Player extends extras.AnimatedSprite {
       this.animation.idle();
     });
 
+    console.log('players');
     players.addChild(this);
+    console.log(players);
 
     damage_events.on('damage', data => this.damage(data));
   }

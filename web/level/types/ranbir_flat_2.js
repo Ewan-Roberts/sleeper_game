@@ -80,7 +80,7 @@ class Ranbir_Floor_2 {
   constructor() {
     this.name   = 'ranbir_flat_2';
     this.data   = require('../data/ranbir_flat_2.json');
-    this.player = new Player();
+    //this.player = new Player();
 
     this.items       = this.data.item.map(data => new Chest(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
@@ -88,7 +88,7 @@ class Ranbir_Floor_2 {
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.doors       = this.data.door.map(data => new Door(data));
-    this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
+    this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.floors      = this.data.floor.map(data => new Floor(data));
     this.decals      = this.data.decal.map(data => new Decal(data));
     this.collisions  = this.data.collision.map(data => new Collision(data));
@@ -101,8 +101,8 @@ class Ranbir_Floor_2 {
   }
 
   _set_elements() {
-    this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    // this.player.position.copy(this.data.player_spawn[0]);
+    // Camera.set_center(this.data.player_spawn[0]);
   }
 
   async _start() {

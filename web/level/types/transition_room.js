@@ -1,4 +1,5 @@
 const { visuals       } = require('../../engine/pixi_containers');
+const { players       } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
@@ -13,6 +14,8 @@ class Transition_Room {
     this.name     = 'transition_room';
     this.player   = new Player();
     this.elements = require('../data/transition_room.json');
+    players.addChild(this.player);
+    console.log(this.player);
 
     this._set_elements();
   }
@@ -33,7 +36,7 @@ class Transition_Room {
     this.player.position.copy(player[0]);
 
     exit_pad.forEach(data => {
-      new Trigger_Pad(data, this.player);
+      new Trigger_Pad(data);
       const { x, y, width, height} = data;
 
       const level_names = new Text(

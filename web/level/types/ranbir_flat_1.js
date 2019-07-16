@@ -4,6 +4,7 @@ const { Player       } = require('../../character/archetypes/player');
 const { Camera       } = require('../../engine/camera');
 const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
+const { players      } = require('../../engine/pixi_containers');
 const { env          } = require('../../../config');
 
 const {
@@ -54,10 +55,11 @@ async function flicker(light) {
 }
 
 class Ranbir_Floor_1 {
-  constructor() {
+  constructor(spawn_id) {
     this.name   = 'ranbir_flat_1';
     this.data   = require('../data/ranbir_flat_1.json');
-    this.player = new Player();
+    console.log(players);
+    this.player = players.children[0];
 
     this.items       = this.data.item.map(data => new Chest(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
@@ -65,12 +67,13 @@ class Ranbir_Floor_1 {
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.doors       = this.data.door.map(data => new Door(data));
-    this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
+    this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.floors      = this.data.floor.map(data => new Floor(data));
     this.decals      = this.data.decal.map(data => new Decal(data));
     this.collisions  = this.data.collision.map(data => new Collision(data));
 
     this.light_shroud = this.shrouds.find(roof => roof.id === 591);
+    this.entry_point = this.data.player_spawn.find(spawns => spawns.id === spawn_id);
 
     this._set_elements();
     if(env.dev) this._set_dev_settings();
@@ -78,8 +81,9 @@ class Ranbir_Floor_1 {
   }
 
   _set_elements() {
-    this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    console.log(players);
+    this.player.position.copy(this.entry_point);
+    // Camera.set_center(this.entry_point);
   }
 
   async _start() {

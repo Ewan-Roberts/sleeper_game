@@ -4,7 +4,6 @@ const { backgrounds     } = require('../../engine/pixi_containers');
 class Background extends extras.TilingSprite {
   constructor(data) {
     const { width, height, image_name } = data;
-    console.log(data);
     super(Texture.fromImage(image_name));
     this.width  = width;
     this.height = height;

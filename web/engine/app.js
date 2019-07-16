@@ -1,5 +1,6 @@
 const { Application, settings } = require('pixi.js');
 const { env } = require('../../config');
+const { Viewport } = require('pixi-viewport');
 
 console.time();
 const app = new Application({
@@ -22,7 +23,24 @@ console.log(app);
 
 global.document.body.appendChild(app.view);
 
-require('./sound.js');
+// create viewport
+const viewport = new Viewport({
+  screenWidth:  global.window.innerWidth,
+  screenHeight: global.window.innerHeight,
+  worldWidth: global.window.innerWidth,
+  worldHeight: global.window.innerHeight,
 
-module.exports = app;
+  interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+});
+
+app.stage.addChild(viewport);
+
+require('./sound.js');
+const {ticker, screen} = app;
+
+module.exports = {
+  viewport,
+  ticker,
+  screen,
+};
 

@@ -1,5 +1,6 @@
 const { keyboardManager } = require('pixi.js');
 const { env             } = require('../../../config');
+const { viewport        } = require('../../engine/app');
 
 const {
   collisions,
@@ -62,6 +63,8 @@ class Keyboard {
     this.inventory      = inventory;
     this.inventory_view = new Player_Inventory();
     this.interaction    = new Interaction_Menu();
+    //viewport.follow(this.sprite, {speed:5});
+    console.log('111');
 
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
@@ -187,8 +190,6 @@ class Keyboard {
 
     this.animation.walk();
     this.sprite.y -= this.speed;
-
-    world.y += this.speed;
   }
 
   keyboard_down() {
@@ -210,8 +211,6 @@ class Keyboard {
 
     this.animation.walk();
     this.sprite.y += this.speed;
-
-    world.y -= this.speed;
   }
 
   keyboard_left() {
@@ -225,39 +224,36 @@ class Keyboard {
     if(pad && pad.speed) {
       this.speed = pad.speed;
       this.sprite.animationSpeed = 0.60;
-    }
-    else {
+    } else {
       this.sprite.animationSpeed = 0.70;
       this.speed = this.vitals.speed;
     }
 
     this.animation.walk();
     this.sprite.x -= this.speed;
-
-    world.x += this.speed;
   }
 
   keyboard_right() {
-    const point = this.sprite.getGlobalPosition();
-    point.x += this.buffer;
+    viewport.moveCenter(this.sprite);
+    // const point = this.sprite.getGlobalPosition();
+    // point.x += this.buffer;
 
-    if(point_collides(point)) return this.animation.idle();
+    //if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
+    //point_contains(point);
+    //const pad = event_pad(point);
+    // if(pad && pad.speed) {
+    //   this.speed = pad.speed;
+    //   this.sprite.animationSpeed = 0.60;
+    // }
+    // else {
+    //   this.sprite.animationSpeed = 0.70;
+    //   this.speed = this.vitals.speed;
+    // }
 
     this.animation.walk();
 
     this.sprite.x += this.speed;
-    world.x       -= this.speed;
   }
 
   _set_dev_settings() {
