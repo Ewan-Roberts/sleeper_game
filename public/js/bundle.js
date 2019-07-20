@@ -44337,6 +44337,7 @@ class Keyboard {
 
     this.animation.walk();
     this.sprite.y -= this.speed;
+    viewport.moveCenter(this.sprite);
   }
 
   keyboard_down() {
@@ -44358,6 +44359,7 @@ class Keyboard {
 
     this.animation.walk();
     this.sprite.y += this.speed;
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_left() {
@@ -44378,29 +44380,29 @@ class Keyboard {
 
     this.animation.walk();
     this.sprite.x -= this.speed;
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_right() {
-    viewport.moveCenter(this.sprite);
-    // const point = this.sprite.getGlobalPosition();
-    // point.x += this.buffer;
+    const point = this.sprite.getGlobalPosition();
+    point.x += this.buffer;
 
-    //if(point_collides(point)) return this.animation.idle();
+    if(point_collides(point)) return this.animation.idle();
 
-    //point_contains(point);
-    //const pad = event_pad(point);
-    // if(pad && pad.speed) {
-    //   this.speed = pad.speed;
-    //   this.sprite.animationSpeed = 0.60;
-    // }
-    // else {
-    //   this.sprite.animationSpeed = 0.70;
-    //   this.speed = this.vitals.speed;
-    // }
+    point_contains(point);
+    const pad = event_pad(point);
+    if(pad && pad.speed) {
+      this.speed = pad.speed;
+      this.sprite.animationSpeed = 0.60;
+    }
+    else {
+      this.sprite.animationSpeed = 0.70;
+      this.speed = this.vitals.speed;
+    }
 
     this.animation.walk();
-
     this.sprite.x += this.speed;
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   _set_dev_settings() {
