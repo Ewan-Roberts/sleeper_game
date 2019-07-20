@@ -29,25 +29,21 @@ function point_collides(position) {
 
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
-function point_contains(position) {
-  const found = shrouds.children.find(child => child.containsPoint(position));
+function point_contains(player) {
+  const point = player.getGlobalPosition();
+  const found = shrouds.children.find(child => child.containsPoint(point));
   if (found){
     if(found.remove_on_enter) {
       found.fade_out_destroy();
-      return;
     }
     if (found.alpha_on_enter) {
       found.alpha = (found.alpha !== found.alpha_on_enter)?found.alpha_on_enter:1;
     }
   }
-}
 
-function event_pad(player) {
-  const { children } = pads;
-  const pad = children.find(child => child.containsPoint(player));
-
+  const pad = pads.children.find(child => child.containsPoint(point));
   if(pad && pad.events) {
-    player.animationSpeed = 0.60;
+    player.animation.speed = 0.60;
     pad.events.emit('trigger');
     return pad.speed;
   }
@@ -65,12 +61,9 @@ class Keyboard {
     this.animation      = animation;
     this.speed          = vitals.speed;
     this.vitals         = vitals;
-    this.buffer         = 40;
     this.inventory      = inventory;
     this.inventory_view = new Player_Inventory();
     this.interaction    = new Interaction_Menu();
-    //viewport.follow(this.sprite, {speed:5});
-    console.log('111');
 
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
@@ -178,70 +171,49 @@ class Keyboard {
 
   keyboard_up() {
     const point = this.sprite.getGlobalPosition();
-    point.y -= this.buffer;
-
+    point.y -= this.speed;
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    this.speed = event_pad(this.sprite);
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.y -= this.speed;
+    this.animation.walk();
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_down() {
     const point = this.sprite.getGlobalPosition();
-    point.y += this.buffer;
-
+    point.y += this.speed;
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    this.speed = event_pad(this.sprite);
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.y += this.speed;
+    this.animation.walk();
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_left() {
     const point = this.sprite.getGlobalPosition();
-    point.x -= this.buffer;
+    point.x -= this.speed;
 
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    this.speed = event_pad(this.sprite);
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.x -= this.speed;
+    this.animation.walk();
+
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_right() {
     const point = this.sprite.getGlobalPosition();
-    point.x += this.buffer;
+    point.x += this.speed;
 
     if(point_collides(point)) return this.animation.idle();
-
-    point_contains(point);
-    this.speed = event_pad(this.sprite);
-    viewport.moveCenter(this.sprite);
-    // const point = this.sprite.getGlobalPosition();
-    // point.x += this.buffer;
-
-    //if(point_collides(point)) return this.animation.idle();
-
-    //point_contains(point);
-    //const pad = event_pad(point);
-    // if(pad && pad.speed) {
-    //   this.speed = pad.speed;
-    //   this.sprite.animationSpeed = 0.60;
-    // }
-    // else {
-    //   this.sprite.animationSpeed = 0.70;
-    //   this.speed = this.vitals.speed;
-    // }
-    this.animation.walk();
-
+    console.log('ffffffffffff');
+    this.speed = point_contains(this.sprite);
     this.sprite.x += this.speed;
+    this.animation.walk();
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   _set_dev_settings() {
@@ -261,7 +233,6 @@ class Keyboard {
       }
     });
   }
-
 }
 
 module.exports = {

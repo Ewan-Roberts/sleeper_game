@@ -1,5 +1,5 @@
 const { renderer      } = require('../../engine/app');
-const { Camera        } = require('../../engine/camera.js');
+const { Viewport      } = require('pixi-viewport');
 const { Dialog_Script } = require('../../engine/script_generator');
 const { sleep         } = require('../../utils/time.js');
 const { random_bound  } = require('../../utils/math.js');
@@ -167,7 +167,7 @@ class Ranbir_Room  {
   async _set_elements() {
     Caption.render('Careful, lets go slow here');
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    Viewport.moveCenter(this.data.player_spawn[0]);
 
     this.player.events.on('hit', () => {
       flash_at(this.player, 300);

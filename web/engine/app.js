@@ -3,6 +3,7 @@ const { env } = require('../../config');
 const { Viewport } = require('pixi-viewport');
 
 console.time();
+
 const app = new Application({
   width           : global.window.innerWidth,
   height          : global.window.innerHeight,
@@ -18,17 +19,15 @@ settings.TARGET_FPMS                = env.fps;
 app.renderer.roundPixels            = env.round_pixels;
 app.renderer.resolution             = env.resolution;
 app.renderer.options.roundPixels    = env.round_pixels;
-console.log(app);
 //app.ticker.speed = 1;
 
 global.document.body.appendChild(app.view);
 
-// create viewport
 const viewport = new Viewport({
   screenWidth:  global.window.innerWidth,
   screenHeight: global.window.innerHeight,
-  worldWidth: global.window.innerWidth,
-  worldHeight: global.window.innerHeight,
+  worldWidth:   global.window.innerWidth,
+  worldHeight:  global.window.innerHeight,
 
   interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
 });

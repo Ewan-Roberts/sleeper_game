@@ -1,5 +1,5 @@
 const { Player   } = require('../../character/archetypes/player');
-const { Camera   } = require('../../engine/camera');
+const { Viewport } = require('pixi-viewport');
 const { sound    } = require('pixi.js');
 const { flash_at } = require('../../effects/fade_sprite.js');
 const { Fade     } = require('../../effects/fade.js');
@@ -61,7 +61,7 @@ class Street {
     this.theme_song.play();
 
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    Viewport.moveCenter(this.data.player_spawn[0]);
     this.truck_roof.tint = 0xffffff;
     this.matress_roof.tint = 0xA8A8A8;
 

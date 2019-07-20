@@ -15,7 +15,6 @@ class Transition_Room {
     this.player   = new Player();
     this.elements = require('../data/transition_room.json');
     players.addChild(this.player);
-    console.log(this.player);
 
     this._set_elements();
   }

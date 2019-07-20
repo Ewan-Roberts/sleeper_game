@@ -1,7 +1,7 @@
 //const { Level_Factory } = require('./level_factory');
 const { filters      } = require('pixi.js');
 const { Player       } = require('../../character/archetypes/player');
-const { Camera       } = require('../../engine/camera');
+const { viewport    } = require('../../engine/app');
 const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
 const { players      } = require('../../engine/pixi_containers');
@@ -58,7 +58,6 @@ class Ranbir_Floor_1 {
   constructor(spawn_id) {
     this.name   = 'ranbir_flat_1';
     this.data   = require('../data/ranbir_flat_1.json');
-    console.log(players);
     this.player = players.children[0];
 
     this.items       = this.data.item.map(data => new Chest(data));
@@ -81,9 +80,8 @@ class Ranbir_Floor_1 {
   }
 
   _set_elements() {
-    console.log(players);
-    this.player.position.copy(this.entry_point);
-    // Camera.set_center(this.entry_point);
+    // this.player.position.copy(this.entry_point);
+    // viewport.moveCenter(this.entry_point.x, this.entry_point.y);
   }
 
   async _start() {

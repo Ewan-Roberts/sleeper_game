@@ -1,6 +1,6 @@
 require('./tween');
 const { Level_Factory } = require('../level/types/level_factory');
-const { env } = require('../../config');
+const { env           } = require('../../config');
 
 class Level_Loader {
   static boot() {

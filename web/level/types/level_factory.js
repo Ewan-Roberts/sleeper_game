@@ -1,7 +1,7 @@
 const { clear_level_containers } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-const { Camera      } = require('../../engine/camera');
+const { Viewport    } = require('pixi-viewport');
 const { Wall        } = require('../elements/wall');
 const { Decal       } = require('../elements/decals');
 const { Background  } = require('../elements/background');

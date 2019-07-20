@@ -1,5 +1,5 @@
 const { pathfind    } = require('../../engine/pathfind.js');
-const { Camera      } = require('../../engine/camera.js');
+const { Viewport    } = require('pixi-viewport');
 const { roofs       } = require('../../engine/pixi_containers.js');
 const { backgrounds } = require('../../engine/pixi_containers.js');
 const { collisions  } = require('../../engine/pixi_containers.js');
@@ -102,7 +102,7 @@ class Start_Room  {
 
   _set_elements() {
     this.player.position.copy(this.data.player_spawn[1]);
-    Camera.set_center(this.data.player_spawn[1]);
+    Viewport.moveCenter(this.data.player_spawn[1]);
 
     this.controls_prompt.set_position(this.data.control_prompt[0]);
   }
@@ -263,7 +263,7 @@ class Start_Room  {
     keyboardManager.enable();
 
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    Viewport.moveCenter(this.data.player_spawn[0]);
 
     this.controls_prompt.set_position(this.data.control_prompt[0]);
   }

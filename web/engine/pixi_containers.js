@@ -29,7 +29,7 @@ borders.interactiveChildren = false;
 const backgrounds  = new Container();
 backgrounds.name   = 'background_image';
 backgrounds.zIndex = background;
-//backgrounds.interactiveChildren = false;
+backgrounds.interactiveChildren = false;
 
 const decals  = new Container();
 decals.name   = 'decals_container';
@@ -102,7 +102,6 @@ world.updateLayersOrder();
 
 function clear_level_containers() {
   world.children.forEach(child => {
-    console.log(child.name);
     if(child.name === 'player_container') return;
     child.removeChildren();
   });
@@ -124,5 +123,3 @@ module.exports = {
   decals,
   clear_level_containers,
 };
-
-

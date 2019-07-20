@@ -14,6 +14,7 @@ class EnvironmentConfig {
     this.draw_paths         = data.draw_paths;
     this.player_speed       = data.player_speed;
     this.round_pixels       = data.round_pixels;
+    this.sound_muted        = data.sound_muted;
   }
 }
 
@@ -33,6 +34,8 @@ const options = {
     draw_paths:         false,
     player_speed:       4,
     round_pixels:       true,
+    sound_muted:        false,
+    volume_multiplier:  1,
   }),
 
   dev_low: new EnvironmentConfig({
@@ -50,6 +53,8 @@ const options = {
     draw_paths:         true,
     player_speed:       30,
     round_pixels:       true,
+    sound_muted:        true,
+    volume_multiplier:  0.1,
   }),
 
   dev_medium: new EnvironmentConfig({
@@ -67,6 +72,8 @@ const options = {
     draw_paths:         true,
     player_speed:       30,
     round_pixels:       true,
+    sound_muted:        false,
+    volume_multiplier:  0.7,
   }),
 
   dev_high: new EnvironmentConfig({
@@ -84,6 +91,8 @@ const options = {
     draw_paths:         true,
     player_speed:       30,
     round_pixels:       true,
+    sound_muted:        false,
+    volume_multiplier:  0.9,
   }),
 };
 
@@ -101,7 +110,6 @@ function get_dev_config(name) {
 }
 
 const env = get_dev_config('dev_medium');
-console.log(env);
 
 module.exports = {
   env,

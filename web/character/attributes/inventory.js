@@ -3,18 +3,15 @@ const { View_Inventory } = require('../../view/view_inventory');
 const { Fade           } = require('../../effects/fade');
 
 class Inventory extends View_Inventory {
-  constructor(properties) {
+  constructor(data = {}) {
     super();
     this.name   = 'inventory';
-    this.items  = [];
-    this.equipped = null;
-    if(properties){
-      if(properties.equip)  this.equip(properties.equip);
-      if(properties.random) this.populate();
-      if(properties.items) {
-        const item_array = JSON.parse(properties.items);
-        this.items = this.populate_with(item_array);
-      }
+    this.items  =  data.random?Item_Manager.get_random_items():[];
+    this.equipped = data.equip?Item_Manager.get_item(data.equip):null;
+    if(data.items) {
+      this.items = JSON.parse(data.items).map(name =>
+        Item_Manager.get_item(name));
+      this.populate();
     }
   }
 

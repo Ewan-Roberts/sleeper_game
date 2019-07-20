@@ -1,7 +1,7 @@
 //const { Level_Factory } = require('./level_factory');
 const { filters      } = require('pixi.js');
 const { Player       } = require('../../character/archetypes/player');
-const { Camera       } = require('../../engine/camera');
+const { Viewport    } = require('pixi-viewport');
 const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
 const { env          } = require('../../../config');
@@ -102,7 +102,7 @@ class Ranbir_Floor_2 {
 
   _set_elements() {
     // this.player.position.copy(this.data.player_spawn[0]);
-    // Camera.set_center(this.data.player_spawn[0]);
+    // Viewport.moveCenter(this.data.player_spawn[0]);
   }
 
   async _start() {

@@ -2,7 +2,7 @@ const { visuals         } = require('../../engine/pixi_containers');
 const { sound, filters  } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
 
-const { Camera     } = require('../../engine/camera');
+const { viewport  } = require('../../engine/app');
 const { renderer   } = require('../../engine/app.js');
 const { Click_Pad  } = require('../elements/click_pad');
 const { Button     } = require('../../view/button');
@@ -83,7 +83,7 @@ class Intro {
     this.theme_song.play();
 
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
+    viewport.moveCenter(this.data.player_spawn[0].x, this.data.player_spawn[0].y);
 
     this.study_desk.on('click', () => {
       this.keys_effect.play();
@@ -127,7 +127,7 @@ class Intro {
 
   _set_dev_settings() {
     this.player.position.copy(this.data.player_spawn[1]);
-    Camera.set_center(this.data.player_spawn[1]);
+    Viewport.moveCenter(this.data.player_spawn[1]);
 
     this.theme_song.volume = 0;
     this.theme_song.stop();

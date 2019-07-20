@@ -1,3 +1,5 @@
+
+// TODO remove
 const { world } = require('./shadows');
 
 class Camera {
