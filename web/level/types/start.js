@@ -20,7 +20,7 @@ const { pulse_sprites, FadeSprite  } = require('../../effects/fade_sprite.js');
 const { flash_at, fill_screen_at } = require('../../effects/fade_sprite.js');
 const { random_word    } = require('../../effects/floor_word.js');
 
-//const { MicrophonePopUp } = require('../../view/microphone_box');
+const { MicrophonePrompt } = require('../../view/microphone_box');
 const { WASD            } = require('../../view/wasd_keys');
 const { Stalker         } = require('../../character/archetypes/logic_stalker');
 const { PathCrow        } = require('../../character/archetypes/path_crow');
@@ -32,86 +32,6 @@ const { Sprite } = require('pixi.js');
 const { Texture } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
 const { env             } = require('../../../config');
-
-class MicrophonePrompt {
-  constructor() {
-    this.website_text = new Text('www.google.com want to:', {fontSize: 50});
-    this.prompt_text = new Text('Use your microphone', {fontSize: 50});
-    this.microphone_icon = new Sprite.fromFrame('microphone');
-    this.allow_button = new Sprite.fromFrame('allow_button');
-    this.allow_button_2 = new Sprite.fromFrame('allow_button');
-    this.background = new Sprite(Texture.WHITE);
-
-    this._set_position();
-    //this._render();
-  }
-
-  _set_position() {
-    this.website_text.x += 20;
-    this.website_text.y += 20;
-    this.website_text.width /= 2.5;
-    this.website_text.height /= 2.5;
-
-    this.prompt_text.x += 70;
-    this.prompt_text.y += 65;
-    this.prompt_text.width /= 2.7;
-    this.prompt_text.height /= 2.7;
-
-    this.microphone_icon.x += 20;
-    this.microphone_icon.y += 60;
-    this.microphone_icon.width /= 2.7;
-    this.microphone_icon.height /= 2.7;
-
-    this.allow_button.x += 385;
-    this.allow_button.y += 150;
-    this.allow_button.width /= 2.7;
-    this.allow_button.height /= 2.7;
-    this.allow_button.interactive = true;
-    this.allow_button.on('mouseover', () => {
-      this.allow_button.tint = 0xff0000;
-    });
-
-    this.allow_button.on('mouseout', () => {
-      this.allow_button.tint = 0xffffff;
-    });
-
-    this.allow_button_2.x += 280;
-    this.allow_button_2.y += 150;
-    this.allow_button_2.width /= 2.7;
-    this.allow_button_2.height /= 2.7;
-    this.allow_button_2.interactive = true;
-    this.allow_button_2.on('mouseover', () => {
-      this.allow_button_2.tint = 0xff0000;
-    });
-
-    this.allow_button_2.on('mouseout', () => {
-      this.allow_button_2.tint = 0xffffff;
-    });
-
-    this.background.width = 500;
-    this.background.height = 200;
-  }
-
-  destroy() {
-    this.website_text.destroy();
-    this.prompt_text.destroy();
-    this.microphone_icon.destroy();
-    this.allow_button.destroy();
-    this.allow_button_2.destroy();
-    this.background.destroy();
-  }
-
-  render() {
-    stage.addChild(
-      this.background,
-      this.microphone_icon,
-      this.website_text,
-      this.prompt_text,
-      this.allow_button,
-      this.allow_button_2
-    );
-  }
-}
 
 const {
   Trigger_Pad,
@@ -130,7 +50,6 @@ class Start_Room  {
   constructor() {
     this.name   = 'starter_room';
     this.data   = require('../data/start.json');
-    console.log(players.children[0]);
     this.player = players.children[0];
 
     this.decals      = this.data.decal.map(data => new Decal(data));
@@ -177,35 +96,47 @@ class Start_Room  {
     await sleep(300);
 
     const video_textures = Texture.fromVideo('/video.mp4');
-    const video_sprite = new Sprite(video_textures);
+    const video_sprite   = new Sprite(video_textures);
+    video_sprite.width   = screen.width;
+    video_sprite.height  = screen.height;
     video_sprite.anchor.set(0.5);
     video_sprite.position.copy(this.player);
-    video_sprite.width = screen.width;
-    video_sprite.height = screen.height;
     shrouds.addChild(video_sprite);
 
     await sleep(11450);
-    const bar = new Text('DEAD SET ON LIFE', {fontSize: 200,fill: 'white'});
-    bar.width = 1300;
-    bar.height = 180;
-    bar.anchor.set(0.5);
-    bar.position.copy(this.player);
-    shrouds.addChild(bar);
-    await sleep(8000);
-    bar.destroy();
 
-    console.log(video_textures);
-    const bar2 = new Text('LORIUM IPSUM', {fontSize: 200, fill: 'white'});
-    bar2.width = 1000;
-    bar2.height = 180;
-    bar2.anchor.set(0.5);
-    bar2.position.copy(this.player);
-    shrouds.addChild(bar2);
+    const game_title  = new Text(
+      'DEAD SET ON LIFE', {
+        fontSize: 200,
+        fill: 'white',
+      });
+    game_title.width  = 1300;
+    game_title.height = 180;
+    game_title.anchor.set(0.5);
+    game_title.position.copy(this.player);
+    shrouds.addChild(game_title);
+
+    await sleep(8000);
+
+    game_title.destroy();
+    const company_name  = new Text(
+      'LORIUM IPSUM', {
+        fontSize: 200,
+        fill: 'white',
+      });
+    company_name.width  = 1000;
+    company_name.height = 180;
+    company_name.anchor.set(0.5);
+    company_name.position.copy(this.player);
+    shrouds.addChild(company_name);
 
     flash_at(this.player, 15000, 0x000000, 'in');
+
     await sleep(15000);
+
+    video_textures.destroy();
     video_sprite.destroy();
-    bar2.destroy();
+    company_name.destroy();
     Level_Factory.create('intro');
   }
 
@@ -259,6 +190,7 @@ class Start_Room  {
     cursor.width /= 10;
     cursor.height /= 10;
     stage.addChild(cursor);
+
     const tween = tweenManager.createTween(cursor);
     cursor.position.copy({
       x: this.player.x + 100,
@@ -266,12 +198,8 @@ class Start_Room  {
     });
 
     this.microphone_prompt.render();
-    this.microphone_prompt.allow_button.click = () => {
-      this.generator.next();
-      interaction.cursorStyles.pointer = 'url(), auto';
-      cursor.alpha = 0;
-      tween.remove();
-    };
+    this.microphone_prompt.allow_button.click = () => this.generator.next();
+    this.microphone_prompt.allow_button_2.click = () => this.generator.next();
 
     tween.time = 7000;
     tween.to({x: this.microphone_prompt.allow_button.x, y: this.microphone_prompt.allow_button.y});
@@ -279,21 +207,19 @@ class Start_Room  {
 
     const { interaction } = renderer.plugins;
 
-    tween.on('end', () => {
-      interaction.cursorStyles.pointer = 'url(), auto';
-      cursor.destroy();
-      this.generator.next();
-    });
+    tween.on('end', () => this.generator.next());
 
     interaction.cursorStyles.pointer = "url('/dot.png'), auto";
     world.interactive = true;
     world.cursor = 'pointer';
 
-    world.on('mousemove', event => {
-      tween.from(event.data.global);
-    });
+    world.on('mousemove', ({data}) => tween.from(data.global));
 
     yield;
+    tween.remove();
+    cursor.destroy();
+    interaction.cursorStyles.pointer = 'url(), auto';
+
     this.microphone_prompt.destroy();
 
     collisions.removeChildren();
@@ -330,9 +256,7 @@ class Start_Room  {
   async _start() {
     this.theme_song.play();
     keyboardManager.disable();
-    const intro_white = fill_screen_at(this.player, 0xffffff);
-    intro_white.delay = 2000;
-    intro_white.fade_out(3000);
+    flash_at(this.player, 2000, 0xffffff, 'out');
 
     await sleep(5000);
     this.controls_prompt.fade_in(2000);
@@ -378,7 +302,6 @@ class Start_Room  {
     });
 
     this.script.button.on('mousedown', () => {
-      this.script.button.tint = 0xffffff;
       this.generator.next();
     });
 
