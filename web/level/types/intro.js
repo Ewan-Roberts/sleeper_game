@@ -2,11 +2,11 @@ const { visuals         } = require('../../engine/pixi_containers');
 const { sound, filters  } = require('pixi.js');
 const { keyboardManager } = require('pixi.js');
 
-const { Camera     } = require('../../engine/camera');
 const { renderer   } = require('../../engine/app.js');
 const { Click_Pad  } = require('../elements/click_pad');
 const { Button     } = require('../../view/button');
 const { Player     } = require('../../character/archetypes/player');
+const { players    } = require('../../engine/pixi_containers');
 const { Tween      } = require('../../engine/tween');
 const { FadeSprite } = require('../../effects/fade_sprite.js');
 const { flash_at   } = require('../../effects/fade_sprite.js');
@@ -32,7 +32,14 @@ class Intro {
   constructor() {
     this.name   = 'intro_room';
     this.data   = require('../data/intro_room.json');
-    this.player = new Player();
+    console.log(players.children[0]);
+    if(!players.children[0]) {
+      console.log(players.children[0]);
+      this.player = new Player();
+    } else {
+
+      this.player = players.children[0];
+    }
 
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
@@ -83,7 +90,6 @@ class Intro {
     this.theme_song.play();
 
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
 
     this.study_desk.on('click', () => {
       this.keys_effect.play();
@@ -127,7 +133,6 @@ class Intro {
 
   _set_dev_settings() {
     this.player.position.copy(this.data.player_spawn[1]);
-    Camera.set_center(this.data.player_spawn[1]);
 
     this.theme_song.volume = 0;
     this.theme_song.stop();

@@ -3,7 +3,6 @@ const { players       } = require('../../engine/pixi_containers');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
-const { Player        } = require('../../character/archetypes/player');
 
 const {
   Floor,
@@ -11,28 +10,21 @@ const {
 
 class Transition_Room {
   constructor() {
-    this.name     = 'transition_room';
-    this.player   = new Player();
-    this.elements = require('../data/transition_room.json');
-    players.addChild(this.player);
-    console.log(this.player);
+    this.name   = 'transition_room';
+    this.data   = require('../data/transition_room.json');
+    this.player = players.children[0];
 
-    this._set_elements();
+    this._set_data();
   }
 
-  _set_elements() {
-    Level_Factory.generate(this.elements);
-    const lights = this.elements.christmas_lights.map(light => new Floor(light));
+  _set_data() {
+    Level_Factory.generate(this.data);
+    const lights = this.data.christmas_lights.map(light => new Floor(light));
 
-    setInterval(() => {
-      lights.forEach(light => {light.tint = 0x0000;});
-    },1000);
+    setInterval(() => lights.forEach(light => light.tint = 0x000000), 1000);
+    setInterval(() => lights.forEach(light => light.tint = 0xffffff), 2000);
 
-    setInterval(() => {
-      lights.forEach(light => {light.tint = 0xffffff;});
-    },2000);
-
-    const { exit_pad, player } = this.elements;
+    const { exit_pad, player } = this.data;
     this.player.position.copy(player[0]);
 
     exit_pad.forEach(data => {
@@ -40,7 +32,7 @@ class Transition_Room {
       const { x, y, width, height} = data;
 
       const level_names = new Text(
-        data.level_name,{fontSize: 40, fill: 'grey'}
+        data.level_name,{fontSize: 40, fill: 'black'}
       );
 
       level_names.x = x + width/4;

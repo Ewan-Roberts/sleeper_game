@@ -1,6 +1,7 @@
 const { zombie_frames } = require('../animations/zombie');
 const { Animation     } = require('../attributes/animation');
 const { LogicSprite   } = require('../types/logic');
+const { Dialog        } = require('../../engine/script_generator');
 
 class LogicZombie extends LogicSprite {
   constructor(data) {

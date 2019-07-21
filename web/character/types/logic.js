@@ -29,7 +29,6 @@ class LogicSprite extends extras.AnimatedSprite {
     super([Texture.fromFrame('bird_8')]);
     this.name = 'zombie';
     this.id   = data.id;
-    this.events = new event();
 
     this.add_component(new Inventory(data));
     this.add_component(new Vitals());
@@ -167,6 +166,10 @@ class LogicSprite extends extras.AnimatedSprite {
 
   add_component(component) {
     this[component.name] = component;
+  }
+
+  render_text(text) {
+    //this.current_text = new SpeechText(text,this.point);
   }
 }
 

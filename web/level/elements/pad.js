@@ -11,8 +11,8 @@ class Trigger_Pad extends Sprite {
     this.height   = data.height;
     this.width    = data.width;
     this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = (env.visable_pads)?0.2:0;
-    this.speed    = (env.dev)?25:data.speed;
+    this.alpha    = (env.visable_pads)?0.4:0;
+    this.speed    = 30;
 
     this.events   = new event();
 

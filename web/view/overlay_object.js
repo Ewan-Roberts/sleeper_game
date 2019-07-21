@@ -1,7 +1,7 @@
 const { Texture, Sprite, Text }= require('pixi.js');
-const { guis   } = require('../engine/pixi_containers');
-const { Camera } = require('../engine/camera');
-const { Fade   } = require('../effects/fade');
+const { guis     } = require('../engine/pixi_containers');
+const { viewport    } = require('../engine/app');
+const { Fade     } = require('../effects/fade');
 const PIXI = require('pixi.js');
 
 class Background extends Sprite {
@@ -31,7 +31,8 @@ class Note {
     this.background = new Background();
     this.background.tint = 'black';
     this.background.alpha = 0.5;
-    this.background.set_position(Camera.center);
+    //TODO is this the center?
+    this.background.set_position(viewport.center);
 
     // disable keyboard when note is up
     PIXI.keyboardManager.disable();

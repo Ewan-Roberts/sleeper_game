@@ -29,7 +29,7 @@ borders.interactiveChildren = false;
 const backgrounds  = new Container();
 backgrounds.name   = 'background_image';
 backgrounds.zIndex = background;
-//backgrounds.interactiveChildren = false;
+backgrounds.interactiveChildren = false;
 
 const decals  = new Container();
 decals.name   = 'decals_container';
@@ -64,23 +64,28 @@ roofs.name   = 'roof_container';
 roofs.zIndex = close;
 roofs.interactiveChildren = false;
 
-const shrouds  = new Container();
-shrouds.name   = 'shroud_container';
-shrouds.zIndex = closer;
-shrouds.interactiveChildren = false;
-
 const visuals  = new Container();
 visuals.name   = 'visuals';
 visuals.zIndex = close;
 //visuals.interactiveChildren = false;
 
+
 const pads  = new Container();
 pads.name   = 'pad_container';
 pads.zIndex = close;
 
+const shrouds  = new Container();
+shrouds.name   = 'shroud_container';
+shrouds.zIndex = closer;
+shrouds.interactiveChildren = false;
+
 const guis  = new Container();
 guis.name   = 'gui_container';
 guis.zIndex = very_close;
+
+const fades = new Container();
+fades.name   = 'fades_container';
+fades.zIndex = very_close;
 
 world.addChild(
   borders,
@@ -95,6 +100,7 @@ world.addChild(
   players,
   guis,
   decals,
+  fades,
   pads
 );
 
@@ -102,7 +108,6 @@ world.updateLayersOrder();
 
 function clear_level_containers() {
   world.children.forEach(child => {
-    console.log(child.name);
     if(child.name === 'player_container') return;
     child.removeChildren();
   });
@@ -122,7 +127,6 @@ module.exports = {
   guis,
   pads,
   decals,
+  fades,
   clear_level_containers,
 };
-
-

@@ -10,14 +10,36 @@ class SpeechText extends Text {
       fill:   'white',
       weight: 'bolder',
     });
-
     this.anchor.set(0.5);
     this.alpha = 0.5;
-
     this.position.copy(point);
     this.y -= 50;
 
     visuals.addChild(this);
+  }
+}
+
+// insert any nymber of scripts and have then scale
+class Dialog {
+  constructor(entity, script_array) {
+    this.name     = 'dialog';
+    this.script   = script_array;
+    this.iterator = this.generator();
+    this.entity   = entity;
+  }
+
+  * generator() {
+    while(this.script.length > 0) {
+      const sentence = this.script.splice(0, 1);
+      const current_text = new SpeechText(sentence, this.entity);
+
+      yield;
+      current_text.destroy();
+    }
+  }
+
+  next() {
+    this.iterator.next();
   }
 }
 
@@ -182,5 +204,6 @@ class Dialog_Script {
 
 module.exports = {
   Dialog_Script,
+  Dialog,
   SpeechText,
 };

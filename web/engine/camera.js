@@ -1,10 +1,12 @@
+
+// TODO remove
 const { world } = require('./shadows');
 
 class Camera {
   constructor() {
     this.name = 'camera';
   }
-
+  //TODO this could be a set no?
   static set_center({ x, y }) {
     world.position.set(
       -x + global.window.innerWidth/2,

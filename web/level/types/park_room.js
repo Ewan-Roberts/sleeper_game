@@ -3,10 +3,11 @@
 
 const { LogicZombie } = require('../../character/archetypes/logic_zombie');
 const { Player      } = require('../../character/archetypes/player');
-const { Camera      } = require('../../engine/camera');
 //const { renderer    } = require('../../engine/app.js');
 const { PathRat     } = require('../../character/archetypes/path_rat');
 const { env         } = require('../../../config');
+const { viewport    } = require('../../engine/app');
+const { players      } = require('../../engine/pixi_containers');
 
 const {
   Trigger_Pad,
@@ -25,7 +26,7 @@ class Park_Room  {
   constructor() {
     this.name   = 'defend_room';
     this.data   = require('../data/park_room.json');
-    this.player = new Player();
+    this.player = players.children[0];
 
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.rats        = this.data.rats.map(unit => new PathRat(unit));
@@ -65,8 +66,9 @@ class Park_Room  {
 
   _set_elements() {
     //renderer.backgroundColor = 0x000000;
+    console.log(players);
+    console.log(this.player);
     this.player.position.copy(this.data.player_spawn[0]);
-    Camera.set_center(this.data.player_spawn[0]);
 
     this.zombie.target(this.player);
     this.zombie.position.set(this.data.zombie[0]);
@@ -78,7 +80,6 @@ class Park_Room  {
 
   _set_dev_settings() {
     this.player.position.copy(this.data.player_spawn[1]);
-    Camera.set_center(this.data.player_spawn[1]);
 
     this.borders.map(border => border.alpha = 0.4);
   }

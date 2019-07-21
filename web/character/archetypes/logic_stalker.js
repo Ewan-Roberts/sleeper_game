@@ -57,7 +57,7 @@ class Stalker extends LogicZombie {
   }
 
   remove() {
-    this.hand_tween.remove();
+    if(this.hand_tween) this.hand_tween.remove();
     this.remove_next_tick = true;
     this.tween.remove();
   }

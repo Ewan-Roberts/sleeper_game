@@ -14,6 +14,7 @@ class EnvironmentConfig {
     this.draw_paths         = data.draw_paths;
     this.player_speed       = data.player_speed;
     this.round_pixels       = data.round_pixels;
+    this.sound_muted        = data.sound_muted;
   }
 }
 
@@ -27,63 +28,71 @@ const options = {
     keyboard_additions: false,
     visable_pads:       false,
     visable_borders:    false,
-    brightness:         'low',
+    brightness:         1,
     inventory_openable: false,
     level_on_load:      'start',
     draw_paths:         false,
     player_speed:       4,
     round_pixels:       true,
+    sound_muted:        false,
+    volume_multiplier:  1,
   }),
 
   dev_low: new EnvironmentConfig({
     dev:                true,
-    fps:                0.03,
+    fps:                0.06,
     resolution:         0.1,
-    anti_alias:         true,
+    anti_alias:         false,
     background_color:   0x0066CC, // blue
-    keyboard_additions: false,
+    keyboard_additions: true,
     visable_pads:       true,
     visable_borders:    true,
-    brightness:         'low',
+    brightness:         0.2,
     inventory_openable: false,
     level_on_load:      'transition',
     draw_paths:         true,
-    player_speed:       30,
+    player_speed:       309,
     round_pixels:       true,
+    sound_muted:        true,
+    volume_multiplier:  0.1,
   }),
 
   dev_medium: new EnvironmentConfig({
     dev:                true,
-    fps:                0.04,
+    fps:                0.06,
     resolution:         1,
-    anti_alias:         true,
+    anti_alias:         false,
     background_color:   0x0066CC, // blue
-    keyboard_additions: false,
+    keyboard_additions: true,
     visable_pads:       true,
     visable_borders:    true,
-    brightness:         'low',
+    brightness:         1,
     inventory_openable: false,
     level_on_load:      'transition',
     draw_paths:         false,
-    player_speed:       30,
+    player_speed:       309,
     round_pixels:       true,
+    sound_muted:        false,
+    volume_multiplier:  0.7,
   }),
 
   dev_high: new EnvironmentConfig({
     dev:                true,
-    fps:                60,
+    fps:                0.06,
     resolution:         1,
-    anti_alias:         true,
-    background_color:   0xffffff, // black
-    keyboard_additions: false,
+    anti_alias:         false,
+    background_color:   0x0066CC, // blue
+    keyboard_additions: true,
     visable_pads:       true,
     visable_borders:    true,
-    brightness:         'low',
+    brightness:         0.5,
     inventory_openable: false,
     level_on_load:      'transition',
     draw_paths:         true,
     player_speed:       30,
     round_pixels:       true,
+    sound_muted:        false,
+    volume_multiplier:  0.9,
   }),
 };
 
@@ -101,7 +110,6 @@ function get_dev_config(name) {
 }
 
 const env = get_dev_config('dev_medium');
-console.log(env);
 
 module.exports = {
   env,

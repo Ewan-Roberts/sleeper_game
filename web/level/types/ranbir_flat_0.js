@@ -1,6 +1,6 @@
 //const { Level_Factory } = require('./level_factory');
 const { Player       } = require('../../character/archetypes/player');
-const { Camera       } = require('../../engine/camera');
+const { viewport    } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
 const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
@@ -49,12 +49,13 @@ async function flicker(light) {
   await flicker(light);
 }
 
+let first = false;
+
 class Ranbir_Floor_0 {
   constructor(spawn_id) {
     this.name   = 'ranbir_flat_1';
     this.data   = require('../data/ranbir_flat_0.json');
     this.player = players.children[0];
-    //this.player = new Player();
 
     this.items       = this.data.item.map(data => new Chest(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
@@ -76,9 +77,10 @@ class Ranbir_Floor_0 {
   }
 
   _set_elements() {
-    console.log(this.entry_point);
-    this.player.position.copy(this.entry_point);
-    // Camera.set_center(this.entry_point);
+    if(!first) {
+      this.player.position.copy(this.entry_point);
+      first = true;
+    }
   }
 
   async _start() {

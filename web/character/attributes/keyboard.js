@@ -10,7 +10,6 @@ const {
   shrouds,
 } = require('../../engine/pixi_containers');
 
-const { world            } = require('../../engine/shadows');
 const { Player_Inventory } = require('../../view/view_player_inventory');
 const { Interaction_Menu } = require('../../view/interaction_menu');
 
@@ -29,26 +28,28 @@ function point_collides(position) {
 
 //TODO this could be more performant using proximity
 //and this logic should be split out or put in ceiling
-function point_contains(position) {
-  const found = shrouds.children.find(child => child.containsPoint(position));
+function point_contains(player) {
+  const point = player.getGlobalPosition();
+  const found = shrouds.children.find(child => child.containsPoint(point));
   if (found){
     if(found.remove_on_enter) {
       found.fade_out_destroy();
-      return;
     }
     if (found.alpha_on_enter) {
       found.alpha = (found.alpha !== found.alpha_on_enter)?found.alpha_on_enter:1;
     }
   }
-}
 
-function event_pad(position) {
-  const { children } = pads;
+  const pad = pads.children.find(child => child.containsPoint(point));
+  if(pad && pad.events) {
+    player.animation.speed = 0.60;
+    pad.events.emit('trigger');
+    return pad.speed;
+  }
 
-  const pad = children.find(child => child.containsPoint(position));
-
-  if(pad && pad.events) pad.events.emit('trigger');
-  return pad;
+  player.animation.speed = 0.70;
+  //TODO
+  return 30;
 }
 
 class Keyboard {
@@ -58,13 +59,11 @@ class Keyboard {
     this.sprite         = sprite;
     this.animation      = animation;
     this.speed          = vitals.speed;
+    this.buffer         = 30;
     this.vitals         = vitals;
-    this.buffer         = 40;
     this.inventory      = inventory;
     this.inventory_view = new Player_Inventory();
     this.interaction    = new Interaction_Menu();
-    //viewport.follow(this.sprite, {speed:5});
-    console.log('111');
 
     keyboardManager.on('down',     key => this.key_down(key));
     keyboardManager.on('released', () => this.key_up());
@@ -113,12 +112,12 @@ class Keyboard {
 
 
   increase_run_speed() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.speed *= 1.5;
   }
 
   small_inventory() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -129,7 +128,7 @@ class Keyboard {
   }
 
   large_inventory() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.disable();
     this.inventory_view.thin();
     this.inventory_view.toggle();
@@ -146,7 +145,7 @@ class Keyboard {
   }
 
   open_interaction() {
-    if(env.dev) return;
+    if(env.keyboard_additions) return;
     this.disable();
     this.inventory_view.wide();
     this.inventory_view.toggle();
@@ -156,7 +155,6 @@ class Keyboard {
 
     this.inventory.items.forEach(item => this.interaction.populate(item));
   }
-
 
   disable_for(time) {
     keyboardManager.disable();
@@ -174,44 +172,22 @@ class Keyboard {
   keyboard_up() {
     const point = this.sprite.getGlobalPosition();
     point.y -= this.buffer;
-
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.y -= this.speed;
-    viewport.moveCenter(this.sprite);
+    this.animation.walk();
+    viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_down() {
     const point = this.sprite.getGlobalPosition();
     point.y += this.buffer;
-
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.y += this.speed;
+    this.animation.walk();
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
@@ -221,40 +197,21 @@ class Keyboard {
 
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    } else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.x -= this.speed;
+    this.animation.walk();
+
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
   keyboard_right() {
     const point = this.sprite.getGlobalPosition();
     point.x += this.buffer;
-
     if(point_collides(point)) return this.animation.idle();
 
-    point_contains(point);
-    const pad = event_pad(point);
-    if(pad && pad.speed) {
-      this.speed = pad.speed;
-      this.sprite.animationSpeed = 0.60;
-    }
-    else {
-      this.sprite.animationSpeed = 0.70;
-      this.speed = this.vitals.speed;
-    }
-
-    this.animation.walk();
+    this.speed = point_contains(this.sprite);
     this.sprite.x += this.speed;
+    this.animation.walk();
     viewport.moveCenter(this.sprite.x, this.sprite.y);
   }
 
@@ -275,7 +232,6 @@ class Keyboard {
       }
     });
   }
-
 }
 
 module.exports = {

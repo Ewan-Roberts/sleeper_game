@@ -1,5 +1,6 @@
 require('pixi-sound');
 const { sound } = require('pixi.js');
+const { sound_muted, volume_multiplier } = require('../../config');
 
 const Sound = sound.add({
   arrow_hit_00:       'audio/arrow_hit_00.mp3',
@@ -33,5 +34,9 @@ sound.random_sound_from = array => {
   const name = array[Math.floor(Math.random()*array.length)];
   return sound.find(name);
 };
+
+if(volume_multiplier) {
+  sound.volumeAll *= volume_multiplier;
+}
 
 module.exports = Sound;

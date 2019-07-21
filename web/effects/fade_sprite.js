@@ -1,4 +1,4 @@
-const { visuals, decals } = require('../engine/pixi_containers');
+const { visuals, decals, fades } = require('../engine/pixi_containers');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager    } = require('pixi.js');
 
@@ -99,15 +99,22 @@ function fill_screen_at(point, tint) {
 }
 
 
-function flash_at(point, time = 400, tint = 0x000000) {
+function flash_at(point, time = 400, tint = 0x000000, direction = 'out', delay = 0) {
   const overlay = new FadeSprite({image_name: 'white_square'});
   overlay.position.copy(point);
   overlay.anchor.set(0.5);
   overlay.tint   = tint;
   overlay.width  = 2000;
   overlay.height = 2000;
-  overlay.fade_out(time);
-  visuals.addChild(overlay);
+  overlay.delay  = delay;
+  overlay.alpha = 1;
+  if(direction === 'out') {
+    overlay.fade_out(time);
+  } else {
+    overlay.alpha = 0;
+    overlay.fade_in(time);
+  }
+  fades.addChild(overlay);
   return overlay;
 }
 

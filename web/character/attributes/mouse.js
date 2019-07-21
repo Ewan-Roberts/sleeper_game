@@ -28,8 +28,8 @@ class Aiming_Cone extends Sprite {
     if(tweens) tweens.forEach(tween => tween.remove());
 
     this.tween = tweenManager.createTween(this);
-    this.tween.expire   = true;
-    this.tween.time     = time;
+    this.tween.expire = true;
+    this.tween.time   = time;
 
     this.angle_of_cone  = 90;
     this.visible = true;

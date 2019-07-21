@@ -8,8 +8,7 @@ class Border extends Sprite {
     this.id       = data.id;
     this.height   = data.height;
     this.width    = data.width;
-    this.alpha    = 0;
-    this.alpha    = (env.visable_pads)?0.2:0;
+    this.alpha    = (env.visable_borders)?0.2:0;
     this.rotation = data.rotation * DEG_TO_RAD;
     this.anchor.set(0, 1);
 

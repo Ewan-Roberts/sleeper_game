@@ -1,7 +1,7 @@
 const { clear_level_containers } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-const { Camera      } = require('../../engine/camera');
+//const { Viewport    } = require('pixi-viewport');
 const { Wall        } = require('../elements/wall');
 const { Decal       } = require('../elements/decals');
 const { Background  } = require('../elements/background');
@@ -25,6 +25,7 @@ class Level_Factory {
     const { Start_Room      } = require('./start');
     const { Simple_Room     } = require('./simple_room');
     const { Ranbir_Room     } = require('./ranbir_room');
+    const { Dev_Room        } = require('./dev_room');
     const { Ranbir_Floor_0  } = require('./ranbir_flat_0');
     const { Ranbir_Floor_1  } = require('./ranbir_flat_1');
     const { Ranbir_Floor_2  } = require('./ranbir_flat_2');
@@ -32,7 +33,7 @@ class Level_Factory {
     switch(level_name) {
       case 'intro'     : return new Intro();
       case 'item'      : return new Items_Room();
-      case 'street'    : return new Street();
+      case 'street'    : return new Street(entry_id);
       case 'transition': return new Transition_Room();
       case 'defend'    : return new Defend_Room();
       case 'start'     : return new Start_Room();
@@ -41,6 +42,7 @@ class Level_Factory {
       case 'ranbir_flat_0': return new Ranbir_Floor_0(entry_id, player);
       case 'ranbir_flat_1': return new Ranbir_Floor_1(entry_id, player);
       case 'ranbir_flat_2': return new Ranbir_Floor_2(entry_id, player);
+      case 'dev':           return new Dev_Room(entry_id, player);
       default: new Simple_Room(level_name);
     }
   }

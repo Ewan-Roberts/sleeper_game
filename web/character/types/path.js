@@ -6,7 +6,7 @@ const { draw_path } = require('../../utils/line');
 
 class PathSprite extends extras.AnimatedSprite {
   constructor(data) {
-    super([Texture.fromFrame('bird_8')]);
+    super([Texture.fromFrame(data.image_name || 'bird_8')]);
     this.id    = data.id;
 
     this.rotation = 1;
@@ -58,6 +58,7 @@ class PathSprite extends extras.AnimatedSprite {
 
   set turn(bool) {
     if(!bool) return;
+    if(!this.tween.path) return;
 
     this.tween.on('update', () => {
       this.rotation = radian(this, this.tween.path._tmpPoint) + 1.57;

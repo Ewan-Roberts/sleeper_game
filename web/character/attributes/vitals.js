@@ -5,7 +5,7 @@ class Vitals {
     this.name   ='vitals';
     this.power  = 5000;
     this.speed  = env.player_speed;
-    this.health = 130;
+    this.health = 120;
     this.food   = 40;
     this.water  = 20;
     this.heat   = 90;

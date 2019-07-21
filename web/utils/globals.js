@@ -3,7 +3,8 @@ const PIXI = require('pixi.js');
 const { visuals  } = require('../engine/pixi_containers');
 const { renderer } = require('../engine/app');
 
-global.place_bunny = ({ x, y } /*light*/) => {
+// Very loose function to just place a bunny (useful for testing)
+global.place_bunny = ({ x = 0, y = 0 } = {}) => {
   const bunny = new PIXI.Sprite.fromFrame('bunny');
   bunny.position.set(x, y);
   bunny.anchor.set(0.5);
