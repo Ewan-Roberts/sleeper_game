@@ -12,8 +12,8 @@ class Background extends extras.TilingSprite {
 
     this.alpha = data.alpha || 1;
     if(image_name === 'tile_floor') {
-      this.tileScale.x = 0.15;
-      this.tileScale.y = 0.15;
+      this.tileScale.x = 0.10;
+      this.tileScale.y = 0.10;
     }
 
     if(image_name === 'wood_floor') {

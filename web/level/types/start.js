@@ -110,8 +110,8 @@ class Start_Room  {
         fontSize: 200,
         fill: 'white',
       });
-    game_title.width  = 1300;
-    game_title.height = 180;
+    game_title.width = screen.width - 200;
+    game_title.height = game_title.width/8;
     game_title.anchor.set(0.5);
     game_title.position.copy(this.player);
     shrouds.addChild(game_title);
@@ -120,12 +120,12 @@ class Start_Room  {
 
     game_title.destroy();
     const company_name  = new Text(
-      'LORIUM IPSUM', {
+      'Lorium Studios', {
         fontSize: 200,
         fill: 'white',
       });
-    company_name.width  = 1000;
-    company_name.height = 180;
+    company_name.width = screen.width - 200;
+    company_name.height = company_name.width/8;
     company_name.anchor.set(0.5);
     company_name.position.copy(this.player);
     shrouds.addChild(company_name);
@@ -218,6 +218,7 @@ class Start_Room  {
     yield;
     tween.remove();
     cursor.destroy();
+    world.interactive = false;
     interaction.cursorStyles.pointer = 'url(), auto';
 
     this.microphone_prompt.destroy();
