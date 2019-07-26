@@ -14,7 +14,6 @@ class Label extends Text{
     });
     this.anchor.set(0.5);
     guis.addChild(this);
-    this._dest= false;
   }
 }
 

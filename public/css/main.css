@@ -16,13 +16,6 @@ html, body, canvas {
   padding: 0;
 }
 
-/* div { */
-/*   -webkit-user-select: none; /1* webkit (safari, chrome) browsers *1/ */
-/*   -moz-user-select: none; /1* mozilla browsers *1/ */
-/*   -khtml-user-select: none; /1* webkit (konqueror) browsers *1/ */
-/*   -ms-user-select: none; /1* IE10+ *1/ */
-/* } */
-
 .login_background {
   opacity: 0.8;
 }
@@ -95,6 +88,7 @@ html, body, canvas {
   right: 0;
   bottom: 0;
 }
+
 .right_accept {
   position: absolute;
   margin-right: 100px;
@@ -109,13 +103,13 @@ html, body, canvas {
 }
 
 .game_start {
-  bottom:        0;
-  margin-left:   250px;
+  bottom: 0;
+  margin-left: 250px;
   margin-bottom: 400px;
-  position:      absolute;
-  display:       black;
-  font-size:     1vw;
-  color:         white;
+  position: absolute;
+  display: black;
+  font-size: 1vw;
+  color: white;
 }
 
 .game_overlay {
@@ -757,7 +751,6 @@ html, body, canvas {
 
 .itemSlots img {
   z-index:10;
-  /* filter: blur(0px); */
 }
 
 @media only screen  and (min-width : 1224px) {
@@ -772,7 +765,7 @@ input [type="image"]:focus{
   border-style: none;
 }
 
-*:focus {
-  outline: 1px solid transparent;
-  border-style: none;
-}
+/* *:focus { */
+/*   outline: 1px solid transparent; */
+/*   border-style: none; */
+/* } */

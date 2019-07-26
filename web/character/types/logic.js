@@ -12,7 +12,6 @@ const { Vitals           } = require('../attributes/vitals');
 const { Button           } = require('../../view/button');
 const { Blood            } = require('../../effects/blood');
 const { env              } = require('../../../config');
-const event                = require('events');
 
 function break_at_door(path) {
   for (let i = 0; i < path.length; i++) {
@@ -168,9 +167,9 @@ class LogicSprite extends extras.AnimatedSprite {
     this[component.name] = component;
   }
 
-  render_text(text) {
-    //this.current_text = new SpeechText(text,this.point);
-  }
+  //render_text(text) {
+  //  //this.current_text = new SpeechText(text,this.point);
+  //}
 }
 
 module.exports = {

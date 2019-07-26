@@ -3,7 +3,6 @@ const { Caption } = require('../view/caption');
 const { Text    } = require('pixi.js');
 const { sound   } = require('pixi.js');
 
-
 class SpeechText extends Text {
   constructor(text, point) {
     super(text, {

@@ -1,6 +1,5 @@
-require('./tween');
 const { Level_Factory } = require('../level/types/level_factory');
-const { Player } = require('../character/archetypes/player');
+const { Player        } = require('../character/archetypes/player');
 const { players       } = require('./pixi_containers');
 const { env           } = require('../../config');
 
@@ -10,7 +9,7 @@ class Level_Loader {
     players.addChild(player);
     const { level_on_load } = env;
 
-    Level_Factory.create(level_on_load,player);
+    Level_Factory.create(level_on_load, player);
   }
 }
 

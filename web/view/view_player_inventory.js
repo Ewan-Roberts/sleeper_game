@@ -101,15 +101,10 @@ class Player_Inventory {
     inventory_slots.forEach(slot => {
       if(slot.firstChild) slot.firstChild.remove();
     });
-    //const hud = select('.characterInventory');
-    //hud.style.display = 'none';
   }
 
   toggle() {
-    if(this.hud.style.display === 'block') {
-      this.hide();
-      return;
-    }
+    if(this.hud.style.display === 'block') return this.hide();
 
     this.show();
   }
