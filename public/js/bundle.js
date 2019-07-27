@@ -45356,10 +45356,10 @@ settings.RENDER_OPTIONS.roundPixels = env.round_pixels;
 settings.RESOLUTION                 = env.resolution;
 settings.TARGET_FPMS                = env.fps;
 
-const { renderer, stage, ticker, screen} = app;
+const { renderer, stage, ticker, screen, view } = app;
 
 // 60/30 for 30 fps
-const fps_delta = (env.dev)?2:1;
+const fps_delta = env.dev?2:1;
 
 let elapsedTime = 0;
 ticker.add(delta => {
@@ -45371,12 +45371,11 @@ ticker.add(delta => {
   }
 });
 
-renderer.roundPixels            = env.round_pixels;
-renderer.resolution             = env.resolution;
-renderer.options.roundPixels    = env.round_pixels;
-//app.ticker.speed = 1;
+renderer.roundPixels         = env.round_pixels;
+renderer.resolution          = env.resolution;
+renderer.options.roundPixels = env.round_pixels;
 
-global.document.body.appendChild(app.view);
+global.document.body.appendChild(view);
 
 const viewport = new Viewport({
   screenWidth:  global.window.innerWidth,
@@ -45394,6 +45393,7 @@ viewport.updateLayersOrder = function () {
   });
 };
 
+stage.addChild(viewport);
 
 // Load project libraries
 require('pixi-keyboard');
@@ -45402,8 +45402,6 @@ require('./pixi_containers');
 require('./tween');
 require('./sound.js');
 require('pixi-tween');
-
-stage.addChild(viewport);
 
 module.exports = {
   viewport,
@@ -45486,7 +45484,7 @@ module.exports = {
 };
 
 },{"events":291}],225:[function(require,module,exports){
-const { tweenManager }= require('pixi.js');
+const { tweenManager } = require('pixi.js');
 const { Sprite, Texture } = require('pixi.js');
 const { guis } = require('./pixi_containers');
 const { enemys } = require('./pixi_containers');
@@ -45759,7 +45757,7 @@ const { damage_events } = require('./damage_handler');
 const { items      } = require('./pixi_containers');
 const { collisions } = require('./pixi_containers');
 const { enemys     } = require('./pixi_containers');
-const { players    } = require('./pixi_containers');
+//const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;
@@ -45844,7 +45842,6 @@ class SpeechText extends Text {
   }
 }
 
-// insert any nymber of scripts and have then scale
 class Dialog {
   constructor(entity, script_array) {
     this.name     = 'dialog';
@@ -46070,10 +46067,8 @@ sound.random_sound_from = array => {
   return sound.find(name);
 };
 
-console.log(env);
 if(volume_multiplier) {
-  console.log(volume_multiplier);
-  sound.volumeAll = volume_multiplier;
+  sound.volumeAll *= volume_multiplier;
 }
 
 if(sound_muted) {
@@ -46089,13 +46084,13 @@ const { draw_path           } = require('../utils/line');
 
 class Tween {
   constructor(sprite) {
-    this.name     = 'tween';
-    this.sprite   = sprite;
+    this.name   = 'tween';
+    this.sprite = sprite;
 
-    this.time = 2000;
+    this.time     = 2000;
     this.movement = tweenManager.createTween(this.sprite);
     this.movement.expire = true;
-    this.path = new tween.TweenPath();
+    this.path     = new tween.TweenPath();
     this.path_arc = 15;
   }
 

@@ -18,7 +18,6 @@ class SpeechText extends Text {
   }
 }
 
-// insert any nymber of scripts and have then scale
 class Dialog {
   constructor(entity, script_array) {
     this.name     = 'dialog';

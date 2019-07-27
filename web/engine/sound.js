@@ -34,10 +34,8 @@ sound.random_sound_from = array => {
   return sound.find(name);
 };
 
-console.log(env);
 if(volume_multiplier) {
-  console.log(volume_multiplier);
-  sound.volumeAll = volume_multiplier;
+  sound.volumeAll *= volume_multiplier;
 }
 
 if(sound_muted) {

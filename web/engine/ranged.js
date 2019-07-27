@@ -5,7 +5,7 @@ const { damage_events } = require('./damage_handler');
 const { items      } = require('./pixi_containers');
 const { collisions } = require('./pixi_containers');
 const { enemys     } = require('./pixi_containers');
-const { players    } = require('./pixi_containers');
+//const { players    } = require('./pixi_containers');
 
 const objects  = collisions.children;
 const enemies  = enemys.children;

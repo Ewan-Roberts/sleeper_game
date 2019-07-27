@@ -18,10 +18,10 @@ settings.RENDER_OPTIONS.roundPixels = env.round_pixels;
 settings.RESOLUTION                 = env.resolution;
 settings.TARGET_FPMS                = env.fps;
 
-const { renderer, stage, ticker, screen} = app;
+const { renderer, stage, ticker, screen, view } = app;
 
 // 60/30 for 30 fps
-const fps_delta = (env.dev)?2:1;
+const fps_delta = env.dev?2:1;
 
 let elapsedTime = 0;
 ticker.add(delta => {
@@ -33,12 +33,11 @@ ticker.add(delta => {
   }
 });
 
-renderer.roundPixels            = env.round_pixels;
-renderer.resolution             = env.resolution;
-renderer.options.roundPixels    = env.round_pixels;
-//app.ticker.speed = 1;
+renderer.roundPixels         = env.round_pixels;
+renderer.resolution          = env.resolution;
+renderer.options.roundPixels = env.round_pixels;
 
-global.document.body.appendChild(app.view);
+global.document.body.appendChild(view);
 
 const viewport = new Viewport({
   screenWidth:  global.window.innerWidth,
@@ -56,6 +55,7 @@ viewport.updateLayersOrder = function () {
   });
 };
 
+stage.addChild(viewport);
 
 // Load project libraries
 require('pixi-keyboard');
@@ -64,8 +64,6 @@ require('./pixi_containers');
 require('./tween');
 require('./sound.js');
 require('pixi-tween');
-
-stage.addChild(viewport);
 
 module.exports = {
   viewport,

@@ -4,13 +4,13 @@ const { draw_path           } = require('../utils/line');
 
 class Tween {
   constructor(sprite) {
-    this.name     = 'tween';
-    this.sprite   = sprite;
+    this.name   = 'tween';
+    this.sprite = sprite;
 
-    this.time = 2000;
+    this.time     = 2000;
     this.movement = tweenManager.createTween(this.sprite);
     this.movement.expire = true;
-    this.path = new tween.TweenPath();
+    this.path     = new tween.TweenPath();
     this.path_arc = 15;
   }
 
