@@ -47,8 +47,6 @@ class Fade {
   }
 }
 
-
-
 module.exports = {
   Fade,
 };

@@ -1,7 +1,4 @@
-
-
 const { Item_Manager } = require('../items/item_manager');
-// const { Item_Menu    } = require('./item_menu');
 const { Items        } = require('../engine/item_handler');
 const { select, select_all } = require('../utils/dom');
 
@@ -82,18 +79,6 @@ class Interaction_Menu {
     image.width  = width;
 
     first_free_slot.appendChild(image);
-
-    // const menu = new Item_Menu();
-    // image.oncontextmenu = ({clientX,clientY}) => {
-    //   menu.set_position({
-    //     x: clientX,
-    //     y: clientY,
-    //   });
-
-    //   menu.populate(item);
-    //   menu.show();
-    //   return false;
-    // };
 
     return image;
   }

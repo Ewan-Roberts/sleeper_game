@@ -1,4 +1,4 @@
-const { tweenManager }= require('pixi.js');
+const { tweenManager } = require('pixi.js');
 const { Sprite, Texture } = require('pixi.js');
 const { guis } = require('./pixi_containers');
 const { enemys } = require('./pixi_containers');

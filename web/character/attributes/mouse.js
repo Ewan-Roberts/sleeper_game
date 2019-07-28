@@ -1,10 +1,10 @@
 const { Sprite, Texture, tweenManager } = require('pixi.js');
 const { radian, random_bound } = require('../../utils/math');
 const { screen      } = require('../../engine/app');
+const { viewport    } = require('../../engine/app');
 const { shoot_arrow } = require('../../engine/ranged');
 const { MeleeBox    } = require('../../engine/melee');
 const { guis        } = require('../../engine/pixi_containers');
-const { world       } = require('../../engine/shadows');
 
 function get_relative_mouse_position(sprite, mouse_point) {
   return {
@@ -74,10 +74,10 @@ class Mouse {
     this.cone      = new Aiming_Cone();
     this.melee     = new MeleeBox();
 
-    world.interactive = true;
-    world.on('mouseup',   event => this.mouse_up(event));
-    world.on('mousemove', event => this.mouse_move(event));
-    world.on('mousedown', event => this.mouse_down(event));
+    viewport.interactive = true;
+    viewport.on('mouseup',   event => this.mouse_up(event));
+    viewport.on('mousemove', event => this.mouse_move(event));
+    viewport.on('mousedown', event => this.mouse_down(event));
   }
 
   mouse_down(event) {
@@ -92,9 +92,9 @@ class Mouse {
   }
 
   destroy() {
-    world.off('mousemove', this.mouse_move());
-    world.off('mouseup',   this.mouse_up());
-    world.off('mousedown', this.mouse_down());
+    viewport.off('mousemove', this.mouse_move());
+    viewport.off('mouseup',   this.mouse_up());
+    viewport.off('mousedown', this.mouse_down());
   }
 
   mouse_up(event) {

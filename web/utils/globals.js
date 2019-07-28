@@ -1,4 +1,5 @@
 const PIXI = require('pixi.js');
+global.window.PIXI.default = PIXI;
 
 const { visuals  } = require('../engine/pixi_containers');
 const { renderer } = require('../engine/app');

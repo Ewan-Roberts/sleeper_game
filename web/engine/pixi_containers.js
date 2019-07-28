@@ -1,5 +1,5 @@
 const { Container } = require('pixi.js');
-const { world     } = require('./shadows');
+const { viewport } = require('./app');
 
 const zIndex_layer = {
   background: 12,
@@ -87,7 +87,7 @@ const fades = new Container();
 fades.name   = 'fades_container';
 fades.zIndex = very_close;
 
-world.addChild(
+viewport.addChild(
   borders,
   shrouds,
   visuals,
@@ -104,10 +104,10 @@ world.addChild(
   pads
 );
 
-world.updateLayersOrder();
+viewport.updateLayersOrder();
 
 function clear_level_containers() {
-  world.children.forEach(child => {
+  viewport.children.forEach(child => {
     if(child.name === 'player_container') return;
     child.removeChildren();
   });

@@ -4,7 +4,7 @@ class EnvironmentConfig {
     this.fps                = data.fps;
     this.resolution         = data.resolution;
     this.anti_alias         = data.anti_alias;
-    this.background_color   = data.background_color; // black
+    this.background_color   = data.background_color;
     this.keyboard_additions = data.keyboard_additions;
     this.visable_pads       = data.visable_pads;
     this.visable_borders    = data.visable_borders;
@@ -15,6 +15,7 @@ class EnvironmentConfig {
     this.player_speed       = data.player_speed;
     this.round_pixels       = data.round_pixels;
     this.sound_muted        = data.sound_muted;
+    this.show_grid          = data.show_grid;
   }
 }
 
@@ -36,6 +37,7 @@ const options = {
     round_pixels:       true,
     sound_muted:        false,
     volume_multiplier:  1,
+    show_grid:          false,
   }),
 
   dev_low: new EnvironmentConfig({
@@ -55,6 +57,7 @@ const options = {
     round_pixels:       true,
     sound_muted:        true,
     volume_multiplier:  0.1,
+    show_grid:          true,
   }),
 
   dev_medium: new EnvironmentConfig({
@@ -74,6 +77,7 @@ const options = {
     round_pixels:       true,
     sound_muted:        false,
     volume_multiplier:  0.7,
+    show_grid:          true,
   }),
 
   dev_high: new EnvironmentConfig({
@@ -93,6 +97,7 @@ const options = {
     round_pixels:       true,
     sound_muted:        false,
     volume_multiplier:  0.9,
+    show_grid:          true,
   }),
 };
 

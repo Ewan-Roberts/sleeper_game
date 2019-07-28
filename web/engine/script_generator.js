@@ -3,7 +3,6 @@ const { Caption } = require('../view/caption');
 const { Text    } = require('pixi.js');
 const { sound   } = require('pixi.js');
 
-
 class SpeechText extends Text {
   constructor(text, point) {
     super(text, {
@@ -19,7 +18,6 @@ class SpeechText extends Text {
   }
 }
 
-// insert any nymber of scripts and have then scale
 class Dialog {
   constructor(entity, script_array) {
     this.name     = 'dialog';

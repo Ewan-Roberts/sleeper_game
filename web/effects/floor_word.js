@@ -1,5 +1,5 @@
 const { backgrounds  } = require('../engine/pixi_containers');
-const { Text, DEG_TO_RAD         } = require('pixi.js');
+const { Text, DEG_TO_RAD } = require('pixi.js');
 const { tweenManager } = require('pixi.js');
 
 class FloorWord extends Text {
@@ -111,5 +111,3 @@ module.exports = {
   random_word,
   pulse_words,
 };
-
-

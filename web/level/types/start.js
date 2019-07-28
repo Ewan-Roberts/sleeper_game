@@ -1,14 +1,12 @@
-const { pathfind    } = require('../../engine/pathfind.js');
-const { screen    } = require('../../engine/app');
-const { renderer } = require('../../engine/app');
-const { stage } = require('../../engine/app');
+const { screen      } = require('../../engine/app');
+const { renderer    } = require('../../engine/app');
+const { stage       } = require('../../engine/app');
+const { viewport    } = require('../../engine/app');
 const { roofs       } = require('../../engine/pixi_containers.js');
-const { world        } = require('../../engine/shadows');
 const { backgrounds } = require('../../engine/pixi_containers.js');
 const { collisions  } = require('../../engine/pixi_containers.js');
 const { shrouds     } = require('../../engine/pixi_containers.js');
 const { players     } = require('../../engine/pixi_containers');
-const { Player     } = require('../../character/archetypes/player');
 
 const { sleep        } = require('../../utils/time.js');
 const { random_bound } = require('../../utils/math.js');
@@ -16,8 +14,8 @@ const { random_bound } = require('../../utils/math.js');
 const { Overlay_Dialog } = require('../../effects/overlay_dialog.js');
 const { Fade           } = require('../../effects/fade.js');
 const { Nightmare      } = require('../../effects/nightmare.js');
-const { pulse_sprites, FadeSprite  } = require('../../effects/fade_sprite.js');
-const { flash_at, fill_screen_at } = require('../../effects/fade_sprite.js');
+const { pulse_sprites  } = require('../../effects/fade_sprite.js');
+const { flash_at       } = require('../../effects/fade_sprite.js');
 const { random_word    } = require('../../effects/floor_word.js');
 
 const { MicrophonePrompt } = require('../../view/microphone_box');
@@ -46,6 +44,29 @@ const {
   Border,
 } = require('../elements');
 
+class Video extends Sprite {
+  constructor(point) {
+    // TODO how to remove texture
+    super(Texture.fromVideo('/video.mp4'));
+    this.width  = screen.width;
+    this.height = screen.height;
+    this.anchor.set(0.5);
+    this.position.copy(point);
+    shrouds.addChild(this);
+  }
+}
+
+class Cursor extends Sprite {
+  constructor() {
+    super(Texture.fromImage('cursor'));
+
+    this.width  /= 10;
+    this.height /= 10;
+
+    stage.addChild(this);
+  }
+}
+
 class Start_Room  {
   constructor() {
     this.name   = 'starter_room';
@@ -65,9 +86,20 @@ class Start_Room  {
     this.border      = this.data.border.map(data => new Border(data));
     this.hill_area   = this.data.hill_area.map(data => new Trigger_Pad(data));
 
+    this.cursor = new Cursor();
+    this.cursor.visible = false;
+
+    this.gore_layer  = this.data.gore_layer.map(item => {
+      const gore_item = new Floor(item);
+      gore_item.visible = false;
+      return gore_item;
+    });
+
+    // TODO just put in collision then find
     this.birds_pad = new Trigger_Pad(this.data.birds_pad[0]);
     this.roof_pad  = new Trigger_Pad(this.data.roof_pad[0]);
     this.bed       = new Chest(this.data.shrine[0]);
+    this.hut_roof  = this.roofs.find(entities => entities.id === 663);
 
     this.controls_prompt   = new WASD();
     this.microphone_prompt = new MicrophonePrompt();
@@ -82,63 +114,13 @@ class Start_Room  {
     this.stalkers  = this.data.prey.map(unit => new Stalker(unit, this.player));
     this.generator = this.iterate();
 
-    pathfind.create_level_grid(this.data.grid[0]);
+    //pathfind.create_level_grid(this.data.grid[0]);
     this._set_sounds();
     this._set_elements();
     this._start();
     if(env.dev) this._set_dev_settings();
   }
 
-  async _leave() {
-    Nightmare.off();
-
-    this.thud_1_effect.play();
-    await sleep(300);
-
-    const video_textures = Texture.fromVideo('/video.mp4');
-    const video_sprite   = new Sprite(video_textures);
-    video_sprite.width   = screen.width;
-    video_sprite.height  = screen.height;
-    video_sprite.anchor.set(0.5);
-    video_sprite.position.copy(this.player);
-    shrouds.addChild(video_sprite);
-
-    await sleep(11450);
-
-    const game_title  = new Text(
-      'DEAD SET ON LIFE', {
-        fontSize: 200,
-        fill: 'white',
-      });
-    game_title.width = screen.width - 200;
-    game_title.height = game_title.width/8;
-    game_title.anchor.set(0.5);
-    game_title.position.copy(this.player);
-    shrouds.addChild(game_title);
-
-    await sleep(8000);
-
-    game_title.destroy();
-    const company_name  = new Text(
-      'Lorium Studios', {
-        fontSize: 200,
-        fill: 'white',
-      });
-    company_name.width = screen.width - 200;
-    company_name.height = company_name.width/8;
-    company_name.anchor.set(0.5);
-    company_name.position.copy(this.player);
-    shrouds.addChild(company_name);
-
-    flash_at(this.player, 15000, 0x000000, 'in');
-
-    await sleep(15000);
-
-    video_textures.destroy();
-    video_sprite.destroy();
-    company_name.destroy();
-    Level_Factory.create('intro');
-  }
 
   _set_sounds() {
     this.theme_song = sound.find('start_theme');
@@ -168,16 +150,13 @@ class Start_Room  {
 
   async * iterate() {
     Nightmare.on();
-    this.data.gore_layer.forEach(item => new Floor(item));
-
+    this.gore_layer.forEach(item => item.visible = true);
     this.hands_pad.forEach(pad => pad.once('trigger', () => this.generator.next()));
 
-    this.pop_up_triggered = false;
     this.pop_up_pads.forEach(pad => {
       pad.once('trigger', () => {
-        if(this.pop_up_triggered) return;
-        this.pop_up_triggered = true;
         this.generator.next();
+        this.pop_up_pads.forEach(pad => pad.destroy());
       });
     });
 
@@ -185,60 +164,50 @@ class Start_Room  {
     pulse_sprites(this.data.blood_trail);
 
     yield;
-
-    const cursor = new Sprite.fromFrame('cursor');
-    cursor.width /= 10;
-    cursor.height /= 10;
-    stage.addChild(cursor);
-
-    const tween = tweenManager.createTween(cursor);
-    cursor.position.copy({
-      x: this.player.x + 100,
-      y: this.player.y + 100,
-    });
+    this.cursor.visible = true;
+    this.cursor.position.copy(this.player);
 
     this.microphone_prompt.render();
     this.microphone_prompt.allow_button.click = () => this.generator.next();
     this.microphone_prompt.allow_button_2.click = () => this.generator.next();
 
+    const tween = tweenManager.createTween(this.cursor);
     tween.time = 7000;
-    tween.to({x: this.microphone_prompt.allow_button.x, y: this.microphone_prompt.allow_button.y});
+    tween.to({
+      x: this.microphone_prompt.allow_button.x,
+      y: this.microphone_prompt.allow_button.y,
+    });
     tween.start();
-
-    const { interaction } = renderer.plugins;
-
     tween.on('end', () => this.generator.next());
 
+    const { interaction } = renderer.plugins;
     interaction.cursorStyles.pointer = "url('/dot.png'), auto";
-    world.interactive = true;
-    world.cursor = 'pointer';
-
-    world.on('mousemove', ({data}) => tween.from(data.global));
+    viewport.interactive = true;
+    viewport.cursor = 'pointer';
+    viewport.on('mousemove', ({data}) => tween.from(data.global));
 
     yield;
     tween.remove();
-    cursor.destroy();
-    world.interactive = false;
+    this.cursor.destroy();
     interaction.cursorStyles.pointer = 'url(), auto';
-
     this.microphone_prompt.destroy();
 
     collisions.removeChildren();
     shrouds.removeChildren();
     backgrounds.removeChildren();
-    Array(100).fill().forEach(()=> random_word({
+    Array(100).fill().forEach(() => random_word({
       point: this.player,
       size: 150,
       closeness: 700,
       text: ['RUN!','RUN','RUN','DIE'],
     }));
 
-    let time_in = 400;
+    let time_in = 2400;
     this.stalkers.forEach(unit => {
       setTimeout(() => {
         unit.floor_hands = true;
         unit.logic_start();
-      },time_in);
+      }, time_in);
       time_in += 1000;
     });
     this.honk_effect.play();
@@ -274,7 +243,6 @@ class Start_Room  {
 
       volume += 0.07;
       distortion_amount += 0.02;
-
       distortion_filter.amount = distortion_amount;
 
       const thud   = sound.random_sound_from(['thud_2','thud_3','thud_5','thud_6','thud_7']);
@@ -284,7 +252,6 @@ class Start_Room  {
 
       this.whisper_effect.volume = volume + 0.02;
     });
-
     this.player.events.once('killed', () => this.generator.next());
 
     this.bed.once('click', async () => {
@@ -297,14 +264,12 @@ class Start_Room  {
       await sleep(1490);
 
       this.click_effect.play();
-
       flash_at(this.player, 200);
+
       this.generator.next();
     });
 
-    this.script.button.on('mousedown', () => {
-      this.generator.next();
-    });
+    this.script.button.on('mousedown', () => this.generator.next());
 
     this.birds_pad.once('trigger', () => {
       this.crows.forEach(unit => {
@@ -317,9 +282,7 @@ class Start_Room  {
     this.bed.interactive = false;
     this.roof_pad.once('trigger', () => {
       this.bed.interactive = true;
-      const hut_roof = this.roofs.find(entities => entities.id === 663);
-
-      Fade.out_destroy(hut_roof);
+      Fade.out_destroy(this.hut_roof);
     });
 
     keyboardManager.on('pressed', event => {
@@ -329,6 +292,49 @@ class Start_Room  {
 
       this.controls_prompt.press(event);
     });
+  }
+
+  async _leave() {
+    Nightmare.off();
+
+    this.thud_1_effect.play();
+    await sleep(300);
+    const video = new Video(this.player);
+
+    await sleep(11450);
+
+    const game_title  = new Text(
+      'DEAD SET ON LIFE', {
+        fontSize: 200,
+        fill: 'white',
+      });
+    game_title.width  = 1300;
+    game_title.height = 180;
+    game_title.anchor.set(0.5);
+    game_title.position.copy(this.player);
+    shrouds.addChild(game_title);
+
+    await sleep(8000);
+
+    game_title.destroy();
+    const company_name  = new Text(
+      'LORIUM IPSUM', {
+        fontSize: 200,
+        fill: 'white',
+      });
+    company_name.width  = 1000;
+    company_name.height = 180;
+    company_name.anchor.set(0.5);
+    company_name.position.copy(this.player);
+    shrouds.addChild(company_name);
+
+    flash_at(this.player, 15000, 0x000000, 'in');
+
+    await sleep(15000);
+
+    video.destroy();
+    company_name.destroy();
+    Level_Factory.create('intro');
   }
 
   _set_dev_settings() {

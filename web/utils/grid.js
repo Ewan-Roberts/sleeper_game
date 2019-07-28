@@ -2,6 +2,7 @@ const { Sprite     } = require('pixi.js');
 const { Texture    } = require('pixi.js');
 const { grids      } = require('../engine/pixi_containers');
 const { collisions } = require('../engine/pixi_containers');
+const { env } = require('../../config');
 
 //this is for y axis 1
 function check(rect1, rect2) {
@@ -98,10 +99,11 @@ class Grid {
 
     grids.children.forEach((tile, i) => {
       if(!tile.passable) {
-        tile.alpha = 0.3;
+        if(env.show_grid) tile.alpha = 0.3;
         if(tile.door) {
           binary_line.push(2);
-          //tile.alpha = 1;
+          if(env.show_grid) tile.alpha = 1;
+
         } else {
           binary_line.push(1);
         }
@@ -130,5 +132,3 @@ class Grid {
 module.exports = {
   Grid,
 };
-
-

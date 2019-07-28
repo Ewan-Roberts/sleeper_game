@@ -31,7 +31,6 @@ class Note {
     this.background = new Background();
     this.background.tint = 'black';
     this.background.alpha = 0.5;
-    //TODO is this the center?
     this.background.set_position(viewport.center);
 
     // disable keyboard when note is up

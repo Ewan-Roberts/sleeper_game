@@ -1,15 +1,12 @@
 //const { Level_Factory } = require('./level_factory');
 const { Player       } = require('../../character/archetypes/player');
 const { PathSprite   } = require('../../character/types/path');
-const { viewport, stage } = require('../../engine/app');
 const { players      } = require('../../engine/pixi_containers');
 const { FloorWord    } = require('../../effects/floor_word');
 const { guis         } = require('../../engine/pixi_containers');
 const { random_bound } = require('../../utils/math.js');
 const { sleep        } = require('../../utils/time.js');
 const { env          } = require('../../../config');
-const { world        } = require('../../engine/shadows');
-const { screen, renderer } = require('../../engine/app');
 const { VideoBaseTexture, tweenManager, Sprite, Texture, Text } = require('pixi.js');
 
 const {
