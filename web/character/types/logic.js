@@ -25,7 +25,7 @@ function break_at_door(path) {
 
 class LogicSprite extends extras.AnimatedSprite {
   constructor(data) {
-    super([Texture.fromFrame('bird_8')]);
+    super([Texture.fromFrame(data.image_name || 'bird_8')]);
     this.name = 'zombie';
     this.id   = data.id;
 
@@ -33,6 +33,9 @@ class LogicSprite extends extras.AnimatedSprite {
     this.add_component(new Vitals());
     this.rotation_offset = 0;
     this.position.copy(data);
+    console.log(data);
+    this.height = data.height || 100;
+    this.width = data.width || 100;
 
     damage_events.on('damage', data => this.damage(data));
     enemys.addChild(this);
@@ -76,6 +79,7 @@ class LogicSprite extends extras.AnimatedSprite {
     return distance > 80;
   }
 
+  // TODO change function name
   target(character) {
     this.target = character;
   }
@@ -132,6 +136,9 @@ class LogicSprite extends extras.AnimatedSprite {
         this.tween.time = 3000;
         this.tween.start();
         this.animation.attack();
+
+        // TODO
+        if(!this.target) throw 'set an enemy';
         this.animation.face_point(this.target);
 
         damage_events.emit('damage', {id: this.target.id, damage: 10});

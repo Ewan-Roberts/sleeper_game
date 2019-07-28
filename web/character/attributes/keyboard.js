@@ -59,7 +59,7 @@ class Keyboard {
     this.sprite         = sprite;
     this.animation      = animation;
     this.speed          = vitals.speed;
-    this.buffer         = 30;
+    this.buffer         = 15;
     this.vitals         = vitals;
     this.inventory      = inventory;
     this.inventory_view = new Player_Inventory();

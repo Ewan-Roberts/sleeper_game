@@ -13,7 +13,7 @@ const { Collision   } = require('../elements/collision');
 const { Floor       } = require('../elements/floor');
 
 class Level_Factory {
-  static create(level_name, entry_id, player) {
+  static create(level_name, spawn_id) {
     this.clear();
 
     const { Intro           } = require('./intro');
@@ -33,16 +33,16 @@ class Level_Factory {
     switch(level_name) {
       case 'intro'     : return new Intro();
       case 'item'      : return new Items_Room();
-      case 'street'    : return new Street(entry_id);
+      case 'street'    : return new Street(spawn_id);
       case 'transition': return new Transition_Room();
       case 'defend'    : return new Defend_Room();
       case 'start'     : return new Start_Room();
       case 'park'      : return new Park_Room();
       case 'ranbir_flat'  : return new Ranbir_Room();
-      case 'ranbir_flat_0': return new Ranbir_Floor_0(entry_id, player);
-      case 'ranbir_flat_1': return new Ranbir_Floor_1(entry_id, player);
-      case 'ranbir_flat_2': return new Ranbir_Floor_2(entry_id, player);
-      case 'dev':           return new Dev_Room(entry_id, player);
+      case 'ranbir_flat_0': return new Ranbir_Floor_0(spawn_id);
+      case 'ranbir_flat_1': return new Ranbir_Floor_1(spawn_id);
+      case 'ranbir_flat_2': return new Ranbir_Floor_2(spawn_id);
+      case 'dev':           return new Dev_Room(spawn_id);
       default: new Simple_Room(level_name);
     }
   }
