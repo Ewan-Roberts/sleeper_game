@@ -1,6 +1,7 @@
 const { renderer      } = require('../../engine/app');
-const { viewport      } = require('../../engine/app');
+//const { viewport      } = require('../../engine/app');
 const { Dialog_Script } = require('../../engine/script_generator');
+const { visuals       } = require('../../engine/pixi_containers');
 const { sleep         } = require('../../utils/time.js');
 const { random_bound  } = require('../../utils/math.js');
 const { players      } = require('../../engine/pixi_containers');
@@ -9,45 +10,45 @@ const { Caption } = require('../../view/caption');
 
 const { flash_at, fill_screen_at } = require('../../effects/fade_sprite.js');
 const { LogicHuman    } = require('../../character/archetypes/logic_human');
+const { Animation     } = require('../../character/attributes/animation');
+const { zombie_frames } = require('../../character/animations/zombie');
 const { Nightmare     } = require('../../effects/nightmare.js');
 
 //const { Player          } = require('../../character/archetypes/player');
 const { keyboardManager } = require('pixi.js');
 const { sound           } = require('pixi.js');
 const { filters         } = require('pixi.js');
+const { Text } = require('pixi.js');
 const { Level_Factory   } = require('./level_factory');
 const { env             } = require('../../../config');
 
 async function flicker(light) {
-  const randomiser = random_bound(-10, 10);
+  const small = random_bound(-10, 10);
+  const big = random_bound(-100, 100);
 
-  const randomiser2 = random_bound(-100, 100);
-  console.log(randomiser2);
-  console.log(randomiser);
-
-  await sleep(400+randomiser2);
+  await sleep(400+big);
   light.alpha = 0;
 
-  await sleep(30+randomiser);
+  await sleep(30+small);
   light.alpha = 1;
 
-  await sleep(20+randomiser);
+  await sleep(20+small);
   light.alpha = 0;
 
-  await sleep(15+randomiser);
+  await sleep(15+small);
   light.alpha = 1;
 
-  await sleep(180+randomiser2);
+  await sleep(180+big);
   light.alpha = 0;
 
-  await sleep(20+randomiser);
+  await sleep(20+small);
   light.alpha = 1;
 
-  await sleep(200+randomiser);
+  await sleep(200+small);
   light.alpha = 0;
 
   // cube the randomixwe
-  await sleep(9000+(randomiser2 ** 2));
+  await sleep(9000+(big ** 2));
 
   await flicker(light);
 }
@@ -65,12 +66,59 @@ const {
   Trigger_Pad,
 } = require('../elements');
 
+// TODO put test above point is
+class SpeechText extends Text {
+  constructor(text) {
+    super(text, {
+      fill:   'white',
+      weight: 'bolder',
+    });
+
+    this.anchor.set(0.5);
+    this.alpha = 0.5;
+
+    visuals.addChild(this);
+  }
+}
+
+class Christina extends LogicHuman {
+  constructor(data, target) {
+    data.image_name = 'top_down_woman_00';
+    super(data);
+    this.script = this.script_iterator();
+    this.current = new SpeechText('start');
+    this.interactive = true;
+    this.add_component(new Animation(this, zombie_frames));
+    this.target(target);
+  }
+
+  * script_iterator() {
+    this.current.text = 'one';
+    this.current.position.copy(this);
+    this.current.y -= 50;
+
+    yield;
+
+    this.current.text = 'two';
+    this.current.position.copy(this);
+    this.current.y -= 50;
+
+    yield;
+
+    this.current.text = 'three';
+    this.current.position.copy(this);
+    this.current.y -= 50;
+
+    yield;
+  }
+
+}
+
 class Ranbir_Room  {
   constructor() {
     this.name   = 'ranbir_flat';
     this.data   = require('../data/ranbir_flat.json');
     this.player = players.children[0];
-    //this.player = new Player();
 
     renderer.backgroundColor = 0x000000;
 
@@ -81,7 +129,7 @@ class Ranbir_Room  {
     this.walls          = this.data.walls.map(data => new Wall(data));
     this.proximity_pads = this.data.proximity.map(data => new Trigger_Pad(data));
     this.doors          = this.data.door.map(data => new Door(data));
-    this.exit_pad       = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
+    this.exit_pad       = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.lights         = this.data.lights.map(data => new Decal(data));
     this.floors         = this.data.floor.map(data => new Floor(data));
     this.decals         = this.data.decal.map(data => new Decal(data));
@@ -91,11 +139,8 @@ class Ranbir_Room  {
     colourMatrix.saturate(2);
     this.lights.forEach(light => light.filters = [colourMatrix]);
 
-    this.prey = this.data.prey.map(unit => {
-      const entity = new LogicHuman(unit);
-      entity.target(this.player);
-      return entity;
-    });
+    const christina_data = this.data.prey.find(data => data.id === 280);
+    this.christina = new Christina(christina_data, this.player);
 
     this.light_shroud = this.shrouds.find(roof => roof.id === 306);
     this.generator    = this.iterate('input');
@@ -121,44 +166,38 @@ class Ranbir_Room  {
   }
 
   _valkerie() {
-    this.valkerie        = this.prey.find(unit => unit.id === 280);
-    this.valkerie.add_script('happy', ['1happy', '2happy']);
-    this.valkerie.scripts.happy.next();
-    this.valkerie_model  = this.items.find(unit => unit.id === 290);
-    this.valkerie_script = new Dialog_Script(this.valkerie);
-
     this.valkerie_weeping_pad    = this.exit_pad.find(door => door.id === 236);
     this.valkerie_enter_room_pad = this.exit_pad.find(door => door.id === 285);
     this.valkerie_attack_pad     = this.exit_pad.find(door => door.id === 289);
 
     this.butcher_room_pad = this.exit_pad.find(door => door.id === 292);
     this.butcher_room_pad.once('trigger', async () => {
-      this.valkerie_model.destroy();
-      this.valkerie_script.entered_room();
+      this.christina.script.next();
     });
 
     this.valkerie_weeping_pad.once('trigger', async () => {
-      this.valkerie_script.help_iterator.next();
+      this.christina.script.next();
       await sleep(800);
-      //this.ranbir_script.happy_iterator.next();
     });
 
-    this.valkerie_model.interactive = false;
     this.valkerie_enter_room_pad.once('trigger', async () => {
-      this.valkerie_script.help_iterator.next();
+      this.christina.script.next();
+
+      this.christina.logic_start();
     });
 
-    this.valkerie_model.on('click',() => {
-      this.valkerie_script.help_iterator.next();
-      this.valkerie_model.destroy();
-
-      this.valkerie.logic_start();
-    });
 
     this.valkerie_attack_pad.once('trigger', async () => {
-      this.valkerie_model.interactive = true;
-      this.valkerie_script.help_iterator.next();
+      this.christina.interactive = true;
+
+      this.christina.script.next();
     });
+
+    this.christina.click = () => {
+      this.christina.script.next();
+
+      this.christina.logic_start();
+    };
 
     // this.bedroom_door = this.doors.find(door => door.id === 282);
     // this.bedroom_door.on('click', () => {

@@ -1,8 +1,4 @@
 const { viewport } = require('./app');
-console.log(viewport);
-
-require('./pixi_containers');
-
 viewport.name = 'world';
 
 viewport.updateLayersOrder = function () {

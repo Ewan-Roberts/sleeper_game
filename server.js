@@ -1,3 +1,5 @@
+
+const process  = require('process');
 const port     = process.env.PORT || 3000;
 const compress = require('compression');
 const express  = require('express');
@@ -13,6 +15,8 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(function(req, res, next) {
   //console.log('server hit at ' + Date());
+  const mem_usage = process.memoryUsage();
+  console.log(mem_usage);
   next();
 });
 

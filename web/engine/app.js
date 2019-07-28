@@ -1,6 +1,7 @@
 const { Application, settings } = require('pixi.js');
 const { env } = require('../../config');
 const { Viewport } = require('pixi-viewport');
+const Cull = require('pixi-cull');
 
 console.time();
 

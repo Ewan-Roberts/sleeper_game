@@ -41,6 +41,7 @@ class Intro {
       this.player = players.children[0];
     }
 
+    console.log(this.data.exit_pad);
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
     this.roofs       = this.data.roof.map(data => new Roof(data));
@@ -48,7 +49,7 @@ class Intro {
     this.floors      = this.data.floor.map(data => new Floor(data));
     this.decals      = this.data.decal.map(data => new Decal(data));
     this.doors       = this.data.door.map(data => new Door(data));
-    this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data, this.player));
+    this.exit_pad    = this.data.exit_pad.map(data => new Trigger_Pad(data));
     this.walls       = this.data.walls.map(data => new Wall(data));
     this.items       = this.data.item.map(data => new Chest(data));
 
@@ -57,6 +58,7 @@ class Intro {
     this.study_door  = this.doors.find(door => door.id === 527);
     this.main_room_shroud = this.shrouds.find(shroud => shroud.id === 462);
     this.dumpster = this.collisions.find(item => item.id === 524);
+    this.spear    = this.items.find(item => item.id === 601);
 
     this._set_sounds();
     this._set_elements();
@@ -120,6 +122,12 @@ class Intro {
       this.dumpster.tint = 0xd3d3d3;
       button.visible = false;
     });
+    pad.interactive = false;
+
+    this.spear.click = () => {
+      pad.interactive = true;
+    };
+    console.log('3333444444444444444444');
 
     pad.click = () => {
       const tween_it = new Tween(this.dumpster);
