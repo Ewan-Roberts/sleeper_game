@@ -32,7 +32,6 @@ class WASD {
     this.a_letter = new KeyboardKey('A');
     this.s_letter = new KeyboardKey('S');
     this.d_letter = new KeyboardKey('D');
-    this._complete = false;
   }
 
   fade_in(time) {
@@ -43,19 +42,16 @@ class WASD {
   }
 
   set_position(point) {
-    this.w_letter.position.copy({
-      x: point.x,
-      y: point.y-50,
-    });
-    this.a_letter.position.copy({
-      x: point.x-50,
-      y: point.y,
-    });
+    this.w_letter.position.copy(point);
+    this.w_letter.y - 50;
+
+    this.a_letter.position.copy(point);
+    this.a_letter.x - 50;
+
     this.s_letter.position.copy(point);
-    this.d_letter.position.copy({
-      x: point.x+50,
-      y: point.y,
-    });
+
+    this.d_letter.position.copy(point);
+    this.d_letter.x + 50;
   }
 
   press(key) {
@@ -66,29 +62,13 @@ class WASD {
       case 68: return this.d_letter.bounce_out();
     }
   }
-  set complete(value) {
-    this._complete = value;
-  }
 
   get complete() {
-    if(
+    return (
       this.w_letter.fired &&
       this.a_letter.fired &&
       this.s_letter.fired &&
       this.d_letter.fired
-    ) {
-      this._complete = true;
-    }
-
-    return this._complete;
-  }
-
-  get all_pressed() {
-    return (
-      this.w_letter.pressed &&
-      this.a_letter.pressed &&
-      this.s_letter.pressed &&
-      this.d_letter.pressed
     );
   }
 }

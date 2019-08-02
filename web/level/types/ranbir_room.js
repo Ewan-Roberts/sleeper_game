@@ -82,14 +82,39 @@ class SpeechText extends Text {
 }
 
 class Christina extends LogicHuman {
-  constructor(data, target) {
+  constructor(data) {
     data.image_name = 'top_down_woman_00';
     super(data);
     this.script = this.script_iterator();
     this.current = new SpeechText('start');
     this.interactive = true;
     this.add_component(new Animation(this, zombie_frames));
-    this.target(target);
+
+    this._set_sound();
+  }
+
+  _set_sound() {
+    this.weep_sound = sound.find('woman_weeping');
+    this.weep_sound.volume = 0.5;
+
+    this.attack_sound = sound.find('crazy_woman_repent');
+    this.attack_sound.volume = 0.5;
+  }
+
+  render_text(value) {
+    this.current.text = value;
+    this.current.position.copy(this);
+    this.current.y -= 50;
+  }
+
+  attack() {
+    this.attack_sound.play();
+    this.logic_start();
+    this.end_script();
+  }
+
+  weep() {
+    this.weep_sound.play();
   }
 
   * script_iterator() {
@@ -110,6 +135,10 @@ class Christina extends LogicHuman {
     this.current.y -= 50;
 
     yield;
+  }
+
+  end_script() {
+    this.script.return();
   }
 
 }
@@ -139,8 +168,12 @@ class Ranbir_Room  {
     colourMatrix.saturate(2);
     this.lights.forEach(light => light.filters = [colourMatrix]);
 
-    const christina_data = this.data.prey.find(data => data.id === 280);
-    this.christina = new Christina(christina_data, this.player);
+    const christina_data  = this.data.prey.find(data => data.id === 280);
+    this.christina        = new Christina(christina_data);
+    this.weeping_pad      = this.exit_pad.find(pad => pad.id === 236);
+    this.enter_room_pad   = this.exit_pad.find(pad => pad.id === 285);
+    this.attack_pad       = this.exit_pad.find(pad => pad.id === 289);
+    this.butcher_room_pad = this.exit_pad.find(pad => pad.id === 292);
 
     this.light_shroud = this.shrouds.find(roof => roof.id === 306);
     this.generator    = this.iterate('input');
@@ -165,44 +198,37 @@ class Ranbir_Room  {
     this.click_effect.volume = 0.1;
   }
 
-  _valkerie() {
-    this.valkerie_weeping_pad    = this.exit_pad.find(door => door.id === 236);
-    this.valkerie_enter_room_pad = this.exit_pad.find(door => door.id === 285);
-    this.valkerie_attack_pad     = this.exit_pad.find(door => door.id === 289);
-
-    this.butcher_room_pad = this.exit_pad.find(door => door.id === 292);
-    this.butcher_room_pad.once('trigger', async () => {
+  _christina() {
+    this.christina.target(this.player);
+    this.butcher_room_pad.once('trigger', () => {
       this.christina.script.next();
+      this.christina.render_text('Coming to player');
+
+      this.christina.attack();
     });
 
-    this.valkerie_weeping_pad.once('trigger', async () => {
-      this.christina.script.next();
-      await sleep(800);
-    });
+    this.weeping_pad.once('trigger', () =>
+      this.christina.script.next());
 
-    this.valkerie_enter_room_pad.once('trigger', async () => {
-      this.christina.script.next();
+    this.enter_room_pad.once('trigger', () =>
+      this.christina.script.next());
 
-      this.christina.logic_start();
-    });
-
-
-    this.valkerie_attack_pad.once('trigger', async () => {
+    this.attack_pad.once('trigger', () => {
       this.christina.interactive = true;
-
       this.christina.script.next();
+
+      // second time the pad is entered
+      const second_pad = new Trigger_Pad(this.enter_room_pad);
+      second_pad.once('trigger', () =>
+        this.christina.render_text('Coming to player'));
+
     });
 
     this.christina.click = () => {
       this.christina.script.next();
 
-      this.christina.logic_start();
+      this.christina.attack();
     };
-
-    // this.bedroom_door = this.doors.find(door => door.id === 282);
-    // this.bedroom_door.on('click', () => {
-    //   this.xtina_script.help_iterator.next();
-    // });
   }
 
   async _set_elements() {

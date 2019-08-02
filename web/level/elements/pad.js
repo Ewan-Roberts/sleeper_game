@@ -13,6 +13,9 @@ class Trigger_Pad extends Sprite {
     this.rotation = data.rotation * DEG_TO_RAD;
     this.alpha    = (env.visable_pads)?0.4:0;
     this.speed    = 30;
+    // incriment counter on player enter
+    this.entering_counter = 0;
+    this.in_pad = false;
 
     this.events   = new event();
 
@@ -31,6 +34,7 @@ class Trigger_Pad extends Sprite {
 
   on(name, callback) {
     this.tint  = 0xffff00;
+
     this.events.on(name, callback);
   }
 

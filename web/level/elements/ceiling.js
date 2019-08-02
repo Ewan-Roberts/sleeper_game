@@ -1,19 +1,10 @@
 const { roofs } = require('../../engine/pixi_containers');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-const { env } = require('../../../config');
+const { Element } = require('./model');
 
-class Roof extends Sprite {
+class Roof extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
-    this.id     = data.id;
-    this.height = data.height;
-    this.width  = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.tint     = data.tint  || 0xffffff;
-    this.alpha    = data.alpha || env.brightness;
-
+    super(data);
     this.anchor.set(0, 1);
-    this.position.copy(data);
 
     roofs.addChild(this);
   }

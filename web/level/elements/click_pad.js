@@ -13,8 +13,8 @@ class Click_Pad extends Sprite {
     this.interactive = true;
     this.buttonMode  = true;
     this.anchor.set(0);
-    this.position.copy(data);
     this.tint  = 0xffff00;
+    this.position.copy(data);
 
     pads.addChild(this);
   }
