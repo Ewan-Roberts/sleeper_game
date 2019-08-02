@@ -1,21 +1,15 @@
 const { shrouds } = require('../../engine/pixi_containers');
 const { Fade    } = require('../../effects/fade');
-const { env     } = require('../../../config');
+const { Element } = require('./model');
 
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-
-class Shroud extends Sprite {
+class Shroud extends Element {
   constructor(data) {
-    super(Texture.fromImage('black_dot'));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.alpha    = data.alpha || env.brightness;
-    this.rotation        = data.rotation * DEG_TO_RAD;
+    super({
+      ...data,
+      image_name:'black_dot',
+    });
     this.remove_on_enter = data.remove_on_enter;
     this.alpha_on_enter  = data.alpha_on_enter;
-    this.anchor.set(0, 1);
-    this.position.copy(data);
 
     shrouds.addChild(this);
   }

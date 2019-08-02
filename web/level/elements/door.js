@@ -1,31 +1,22 @@
 const { items        } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-const { Sprite, Texture, sound, DEG_TO_RAD } = require('pixi.js');
+const { Element } = require('./model');
 const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
 
 const { damage_events } = require('../../engine/damage_handler');
 const { Floor         } = require('./floor');
 
-class Door extends Sprite {
+class Door extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
+    super(data);
     this.interactive = true;
-
     this.rotation_on_interaction = data.open_rotation || 2;
-
-    this.anchor.set(0, 1);
-    this.position.copy(data);
 
     items.addChild(this);
 
     if(!data) return;
-    this.alpha = data.alpha || 1;
 
     if(data.clickable) {
       this.closable = data.closable;

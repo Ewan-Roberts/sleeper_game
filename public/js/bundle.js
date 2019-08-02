@@ -45830,7 +45830,7 @@ module.exports = {
 
 },{"../utils/math":281,"./damage_handler":223,"./pixi_containers":228,"pixi.js":151}],230:[function(require,module,exports){
 const { visuals } = require('../engine/pixi_containers');
-const { Caption } = require('../view/caption');
+//const { Caption } = require('../view/caption');
 const { Text    } = require('pixi.js');
 const { sound   } = require('pixi.js');
 
@@ -45936,7 +45936,7 @@ module.exports = {
   SpeechText,
 };
 
-},{"../engine/pixi_containers":228,"../view/caption":284,"pixi.js":151}],231:[function(require,module,exports){
+},{"../engine/pixi_containers":228,"pixi.js":151}],231:[function(require,module,exports){
 const { sound } = require('pixi.js');
 const { env   } = require('../../config');
 const { sound_muted, volume_multiplier } = env;
@@ -46645,22 +46645,19 @@ module.exports = {
 };
 
 },{"../../engine/pixi_containers":228,"pixi.js":151}],249:[function(require,module,exports){
-const { borders         } = require('../../engine/pixi_containers');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-const { env             } = require('../../../config');
+const { borders } = require('../../engine/pixi_containers');
+const { env     } = require('../../../config');
+const { Element } = require('./model');
 
-class Border extends Sprite {
+class Border extends Element {
   constructor(data) {
-    super(Texture.WHITE);
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.alpha    = (env.visable_borders)?0.2:0;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.anchor.set(0, 1);
-    this.position.copy(data);
+    super({
+      ...data,
+      image_name: 'black_dot',
+      alpha: (env.visable_borders)?0.2:0,
+    });
 
-    borders.addChild(this);
+      borders.addChild(this);
   }
 }
 
@@ -46668,14 +46665,13 @@ module.exports = {
   Border,
 };
 
-},{"../../../config":1,"../../engine/pixi_containers":228,"pixi.js":151}],250:[function(require,module,exports){
-const { roofs } = require('../../engine/pixi_containers');
+},{"../../../config":1,"../../engine/pixi_containers":228,"./model":258}],250:[function(require,module,exports){
+const { roofs   } = require('../../engine/pixi_containers');
 const { Element } = require('./model');
 
 class Roof extends Element {
   constructor(data) {
     super(data);
-    this.anchor.set(0, 1);
 
     roofs.addChild(this);
   }
@@ -46695,19 +46691,14 @@ const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { Element } = require('./model');
 
-class Chest extends Sprite {
+class Chest extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = data.alpha || 1;
+    super(data);
     this.anchor.set(0, 1);
-
-    this.position.copy(data);
     this.interactive = true;
+
     // TODO handle player acquisition better
     const [player] = players.children;
 
@@ -46762,24 +46753,21 @@ module.exports = {
   Chest,
 };
 
-},{"../../character/attributes/inventory":209,"../../engine/pixi_containers":228,"../../view/button":283,"../../view/caption":284,"../../view/overlay_object":288,"pixi.js":151}],252:[function(require,module,exports){
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-const { pads } = require('../../engine/pixi_containers');
-const { env  } = require('../../../config');
+},{"../../character/attributes/inventory":209,"../../engine/pixi_containers":228,"../../view/button":283,"../../view/caption":284,"../../view/overlay_object":288,"./model":258,"pixi.js":151}],252:[function(require,module,exports){
+const { pads    } = require('../../engine/pixi_containers');
+const { env     } = require('../../../config');
+const { Element } = require('./model');
 
-class Click_Pad extends Sprite {
+class Click_Pad extends Element {
   constructor(data) {
-    super(Texture.WHITE);
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = (env.dev)?0.2:0;
+    super({
+      ...data,
+      image_name: 'black_dot',
+      alpha: (env.dev)?0.2:0,
+    });
     this.interactive = true;
     this.buttonMode  = true;
-    this.anchor.set(0);
     this.tint  = 0xffff00;
-    this.position.copy(data);
 
     pads.addChild(this);
   }
@@ -46789,21 +46777,14 @@ module.exports = {
   Click_Pad,
 };
 
-},{"../../../config":1,"../../engine/pixi_containers":228,"pixi.js":151}],253:[function(require,module,exports){
+},{"../../../config":1,"../../engine/pixi_containers":228,"./model":258}],253:[function(require,module,exports){
 const { collisions      } = require('../../engine/pixi_containers');
-const { Sprite, Texture, DEG_TO_RAD} = require('pixi.js');
+const { Element } = require('./model');
 
-class Collision extends Sprite {
+class Collision extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.alpha    = data.alpha || 1;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.tint     = data.tint || 0xA9A9A9;
-    this.anchor.set(0, 1);
-    this.position.copy(data);
+    super(data);
+    this.tint = data.tint || 0xA9A9A9;
 
     collisions.addChild(this);
   }
@@ -46813,21 +46794,14 @@ module.exports = {
   Collision,
 };
 
-},{"../../engine/pixi_containers":228,"pixi.js":151}],254:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./model":258}],254:[function(require,module,exports){
 const { decals } = require('../../engine/pixi_containers');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { Element } = require('./model');
 
-class Decal extends Sprite {
+class Decal extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name || 'bunny'));
-    this.id       = data.id;
-    this.height   = data.height || 20;
-    this.width    = data.width  || 100;
-    this.alpha    = data.alpha || 1;
-    this.tint     = data.tint || 0xA9A9A9;
-    this.rotation = data.rotation * DEG_TO_RAD || 0;
-    this.anchor.set(0, 1);
-    this.position.copy(data);
+    super(data);
+    this.tint = data.tint || 0xA9A9A9;
 
     decals.addChild(this);
   }
@@ -46840,30 +46814,24 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":228,"pixi.js":151}],255:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./model":258}],255:[function(require,module,exports){
 const { items        } = require('../../engine/pixi_containers');
 const { tweenManager } = require('pixi.js');
 
-const { Sprite, Texture, sound, DEG_TO_RAD } = require('pixi.js');
+const { Element } = require('./model');
 const { Button  } = require('../../view/button');
 const { Caption } = require('../../view/caption');
 
 const { damage_events } = require('../../engine/damage_handler');
 const { Floor         } = require('./floor');
 
-class Door extends Sprite {
+class Door extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
+    super(data);
     this.interactive = true;
-
     this.rotation_on_interaction = data.open_rotation || 2;
 
     this.anchor.set(0, 1);
-    this.position.copy(data);
 
     items.addChild(this);
 
@@ -46971,21 +46939,13 @@ module.exports = {
   Door,
 };
 
-},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"../../view/button":283,"../../view/caption":284,"./floor":256,"pixi.js":151}],256:[function(require,module,exports){
-const { backgrounds     } = require('../../engine/pixi_containers');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+},{"../../engine/damage_handler":223,"../../engine/pixi_containers":228,"../../view/button":283,"../../view/caption":284,"./floor":256,"./model":258,"pixi.js":151}],256:[function(require,module,exports){
+const { backgrounds } = require('../../engine/pixi_containers');
+const { Element } = require('./model');
 
-class Floor extends Sprite {
+class Floor extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name || 'bunny'));
-    this.id       = data.id;
-    this.height   = data.height || 20;
-    this.width    = data.width  || 100;
-    this.alpha    = data.alpha || 1;
-    this.tint     = data.tint || 0xffffff;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.anchor.set(0, 1);
-    this.position.copy(data);
+    super(data);
 
     backgrounds.addChild(this);
   }
@@ -46995,7 +46955,7 @@ module.exports = {
   Floor,
 };
 
-},{"../../engine/pixi_containers":228,"pixi.js":151}],257:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./model":258}],257:[function(require,module,exports){
 const { Wall        } = require('../elements/wall');
 const { Decal       } = require('../elements/decals');
 const { Background  } = require('../elements/background');
@@ -47028,13 +46988,14 @@ const { env } = require('../../../config');
 
 class Element extends Sprite {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
+    super(Texture.fromImage(data.image_name || 'bunny'));
     this.id     = data.id;
     this.height = data.height;
     this.width  = data.width;
     this.rotation = data.rotation * DEG_TO_RAD;
     this.tint     = data.tint  || 0xffffff;
     this.alpha    = data.alpha || env.brightness;
+    this.visible  = !data.hidden;
 
     this.anchor.set(0, 1);
     this.position.copy(data);
@@ -47046,22 +47007,22 @@ module.exports = {
 };
 
 },{"../../../config":1,"pixi.js":151}],259:[function(require,module,exports){
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { pads            } = require('../../engine/pixi_containers');
 const { Level_Factory   } = require('../types/level_factory');
 const { env             } = require('../../../config');
+const { Element         } = require('./model');
 const event = require('events');
 
-class Trigger_Pad extends Sprite {
+class Trigger_Pad extends Element {
   constructor(data) {
-    super(Texture.WHITE);
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = (env.visable_pads)?0.4:0;
-    this.speed    = 30;
-    this.entering_counter = 0;
+    super({
+      ...data,
+      image_name: 'black_dot',
+    });
+    this.alpha = (env.visable_pads)?0.4:0;
+    this.speed = 30;
+    // incriment counter on player enter
+    this.in_pad = false;
 
     this.events   = new event();
 
@@ -47080,7 +47041,7 @@ class Trigger_Pad extends Sprite {
 
   on(name, callback) {
     this.tint  = 0xffff00;
-    this.entering_counter++;
+
     this.events.on(name, callback);
   }
 
@@ -47097,25 +47058,21 @@ module.exports = {
   Trigger_Pad,
 };
 
-},{"../../../config":1,"../../engine/pixi_containers":228,"../types/level_factory":266,"events":292,"pixi.js":151}],260:[function(require,module,exports){
+},{"../../../config":1,"../../engine/pixi_containers":228,"../types/level_factory":266,"./model":258,"events":292}],260:[function(require,module,exports){
 const { shrouds } = require('../../engine/pixi_containers');
 const { Fade    } = require('../../effects/fade');
 const { env     } = require('../../../config');
+const { Element } = require('./model');
 
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-
-class Shroud extends Sprite {
+class Shroud extends Element {
   constructor(data) {
-    super(Texture.fromImage('black_dot'));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.alpha    = data.alpha || env.brightness;
-    this.rotation        = data.rotation * DEG_TO_RAD;
+    super({
+      ...data,
+      image_name:'black_dot',
+    });
     this.remove_on_enter = data.remove_on_enter;
     this.alpha_on_enter  = data.alpha_on_enter;
     this.anchor.set(0, 1);
-    this.position.copy(data);
 
     shrouds.addChild(this);
   }
@@ -47130,24 +47087,20 @@ module.exports = {
   Shroud,
 };
 
-},{"../../../config":1,"../../effects/fade":216,"../../engine/pixi_containers":228,"pixi.js":151}],261:[function(require,module,exports){
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
-const { collisions      } = require('../../engine/pixi_containers');
+},{"../../../config":1,"../../effects/fade":216,"../../engine/pixi_containers":228,"./model":258}],261:[function(require,module,exports){
+const { collisions } = require('../../engine/pixi_containers');
+const { Element } = require('./model');
 
-class Wall extends Sprite {
+class Wall extends Element {
   constructor(data) {
-    super(Texture.WHITE);
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.tint     = 0x000000;
-
-    this.tint     = data.tint;
-    this.alpha    = (data.hidden)?0:data.alpha || 1;
+    super({
+      ...data,
+      image_name:'black_dot',
+    });
+    this.tint  = 0x000000;
+    this.alpha = (data.hidden)?0:data.alpha || 1;
 
     this.anchor.set(0, 1);
-    this.position.copy(data);
 
     collisions.addChild(this);
   }
@@ -47159,7 +47112,7 @@ module.exports = {
 
 
 
-},{"../../engine/pixi_containers":228,"pixi.js":151}],262:[function(require,module,exports){
+},{"../../engine/pixi_containers":228,"./model":258}],262:[function(require,module,exports){
 const { pathfind      } = require('../../engine/pathfind.js');
 const { Trigger_Pad   } = require('../elements/pad');
 const { LogicZombie   } = require('../../character/archetypes/logic_zombie');
@@ -48039,20 +47992,39 @@ class SpeechText extends Text {
 }
 
 class Christina extends LogicHuman {
-  constructor(data, target) {
+  constructor(data) {
     data.image_name = 'top_down_woman_00';
     super(data);
     this.script = this.script_iterator();
     this.current = new SpeechText('start');
     this.interactive = true;
     this.add_component(new Animation(this, zombie_frames));
-    this.target(target);
+
+    this._set_sound();
+  }
+
+  _set_sound() {
+    this.weep_sound = sound.find('woman_weeping');
+    this.weep_sound.volume = 0.5;
+
+    this.attack_sound = sound.find('crazy_woman_repent');
+    this.attack_sound.volume = 0.5;
   }
 
   render_text(value) {
     this.current.text = value;
     this.current.position.copy(this);
     this.current.y -= 50;
+  }
+
+  attack() {
+    this.attack_sound.play();
+    this.logic_start();
+    this.end_script();
+  }
+
+  weep() {
+    this.weep_sound.play();
   }
 
   * script_iterator() {
@@ -48075,9 +48047,7 @@ class Christina extends LogicHuman {
     yield;
   }
 
-  attack_player() {
-    this.logic_start();
-    // stop script generator
+  end_script() {
     this.script.return();
   }
 
@@ -48109,7 +48079,7 @@ class Ranbir_Room  {
     this.lights.forEach(light => light.filters = [colourMatrix]);
 
     const christina_data  = this.data.prey.find(data => data.id === 280);
-    this.christina        = new Christina(christina_data, this.player);
+    this.christina        = new Christina(christina_data);
     this.weeping_pad      = this.exit_pad.find(pad => pad.id === 236);
     this.enter_room_pad   = this.exit_pad.find(pad => pad.id === 285);
     this.attack_pad       = this.exit_pad.find(pad => pad.id === 289);
@@ -48139,44 +48109,36 @@ class Ranbir_Room  {
   }
 
   _christina() {
+    this.christina.target(this.player);
     this.butcher_room_pad.once('trigger', () => {
       this.christina.script.next();
-      this.christina.script.return();
+      this.christina.render_text('Coming to player');
 
-      this.christina.script.logic_start();
+      this.christina.attack();
     });
 
-    this.weeping_pad.once('trigger', () => {
-      this.christina.script.next();
-    });
+    this.weeping_pad.once('trigger', () =>
+      this.christina.script.next());
 
-    this.enter_room_pad.on('trigger', () => {
-      this.christina.script.next();
-
-      console.log(this.enter_room_pad);
-      if(this.enter_room_pad.counter)
-
-      console.log('here');
-      //this.christina.logic_start();
-    });
-
+    this.enter_room_pad.once('trigger', () =>
+      this.christina.script.next());
 
     this.attack_pad.once('trigger', () => {
       this.christina.interactive = true;
-
       this.christina.script.next();
+
+      // second time the pad is entered
+      const second_pad = new Trigger_Pad(this.enter_room_pad);
+      second_pad.once('trigger', () =>
+        this.christina.render_text('Coming to player'));
+
     });
 
     this.christina.click = () => {
       this.christina.script.next();
 
-      this.christina.logic_start();
+      this.christina.attack();
     };
-
-    // this.bedroom_door = this.doors.find(door => door.id === 282);
-    // this.bedroom_door.on('click', () => {
-    //   this.xtina_script.help_iterator.next();
-    // });
   }
 
   async _set_elements() {
@@ -48776,7 +48738,7 @@ const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 //const { Simple_Room   } = require('./simple_room');
 
-const { Floor } = require('../elements');
+//const { Floor } = require('../elements');
 
 class Transition_Room {
   constructor() {
@@ -49469,18 +49431,6 @@ class Interaction_Menu {
     image.width  = width;
 
     first_free_slot.appendChild(image);
-
-    // const menu = new Item_Menu();
-    // image.oncontextmenu = ({clientX,clientY}) => {
-    //   menu.set_position({
-    //     x: clientX,
-    //     y: clientY,
-    //   });
-
-    //   menu.populate(item);
-    //   menu.show();
-    //   return false;
-    // };
 
     return image;
   }

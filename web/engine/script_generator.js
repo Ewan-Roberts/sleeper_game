@@ -1,5 +1,5 @@
 const { visuals } = require('../engine/pixi_containers');
-const { Caption } = require('../view/caption');
+//const { Caption } = require('../view/caption');
 const { Text    } = require('pixi.js');
 const { sound   } = require('pixi.js');
 

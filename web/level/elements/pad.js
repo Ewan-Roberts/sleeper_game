@@ -1,26 +1,18 @@
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
 const { pads            } = require('../../engine/pixi_containers');
 const { Level_Factory   } = require('../types/level_factory');
 const { env             } = require('../../../config');
+const { Element         } = require('./model');
 const event = require('events');
 
-class Trigger_Pad extends Sprite {
+class Trigger_Pad extends Element {
   constructor(data) {
-    super(Texture.WHITE);
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = (env.visable_pads)?0.4:0;
-    this.speed    = 30;
-    // incriment counter on player enter
-    this.entering_counter = 0;
-    this.in_pad = false;
-
-    this.events   = new event();
-
-    this.anchor.set(0);
-    this.position.copy(data);
+    super({
+      ...data,
+      image_name: 'black_dot',
+      alpha: env.visable_pads?0.4:0,
+    });
+    this.speed = 30;
+    this.events = new event();
 
     const {level_name, spawn_id} = data;
     if(level_name) {

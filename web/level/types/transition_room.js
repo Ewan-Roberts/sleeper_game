@@ -5,7 +5,7 @@ const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
 //const { Simple_Room   } = require('./simple_room');
 
-const { Floor } = require('../elements');
+//const { Floor } = require('../elements');
 
 class Transition_Room {
   constructor() {

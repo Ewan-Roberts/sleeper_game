@@ -6,20 +6,13 @@ const { Inventory } = require('../../character/attributes/inventory');
 const { Button    } = require('../../view/button');
 const { Note      } = require('../../view/overlay_object');
 const { Caption   } = require('../../view/caption');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { Element   } = require('./model');
 
-class Chest extends Sprite {
+class Chest extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name));
-    this.id       = data.id;
-    this.height   = data.height;
-    this.width    = data.width;
-    this.rotation = data.rotation * DEG_TO_RAD;
-    this.alpha    = data.alpha || 1;
-    this.anchor.set(0, 1);
-
-    this.position.copy(data);
+    super(data);
     this.interactive = true;
+
     // TODO handle player acquisition better
     const [player] = players.children;
 

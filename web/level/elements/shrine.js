@@ -1,20 +1,12 @@
 const { collisions } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
-const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { Element    } = require('./model');
 
-class Shrine extends Sprite {
+class Shrine extends Element {
   constructor(data) {
-    super(Texture.fromImage(data.image_name || 'bunny'));
-    this.id          = data.id;
+    super(data);
     this.inventory   = new Inventory();
-    this.height      = data.height;
-    this.width       = data.width;
-    this.rotation    = data.rotation * DEG_TO_RAD;
-    this.tint        = 0xA9A9A9;
     this.interactive = true;
-
-    this.anchor.set(0, 1);
-    this.position.copy(data);
 
     collisions.addChild(this);
   }
