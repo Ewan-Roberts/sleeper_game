@@ -142,7 +142,7 @@ class LogicSprite extends extras.AnimatedSprite {
         if(!this.target) throw 'set an enemy';
         this.animation.face_point(this.target);
         this.melee = new MeleeBox();
-        this.melee.slash(500, 20, this);
+        this.melee.slash(50, 20, this);
 
         //damage_events.emit('damage', {id: this.target.id, damage: 10});
         return;
@@ -154,7 +154,8 @@ class LogicSprite extends extras.AnimatedSprite {
         this.tween.path.lineTo(this.target.x, this.target.y);
         this.animation.move();
 
-        this.tween.time = random_bound(2000, 3000);
+        this.tween.time = 200;
+        //this.tween.time = random_bound(2000, 3000);
       } else {
         await this._pathfind();
         //this.tween.time = this.tween.path.length * this.speed;

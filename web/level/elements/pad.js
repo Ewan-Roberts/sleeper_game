@@ -12,7 +12,11 @@ class Trigger_Pad extends Sprite {
     this.width    = data.width;
     this.rotation = data.rotation * DEG_TO_RAD;
     this.alpha    = (env.visable_pads)?0.4:0;
-    this.speed    = 30;
+    if(data.speed) {
+      this.speed    = data.speed;
+    } else {
+      this.speed    = (env.dev)?25:4;
+    }
 
     this.events   = new event();
 
@@ -38,7 +42,7 @@ class Trigger_Pad extends Sprite {
     this.tint  = 0xffff00;
     this.events.once(name, () => {
       callback();
-      this.destroy();
+      //this.destroy();
     });
   }
 }

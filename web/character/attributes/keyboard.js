@@ -49,7 +49,9 @@ function point_contains(player) {
 
   player.animation.speed = 0.70;
   //TODO
-  return 30;
+
+  if(env.dev) return 30;
+  return 5;
 }
 
 class Keyboard {

@@ -5,8 +5,8 @@ const { Texture } = require('pixi.js');
 
 class MicrophonePrompt {
   constructor() {
-    this.website_text = new Text('www.google.com want to:', {fontSize: 50});
-    this.prompt_text = new Text('Use your microphone', {fontSize: 50});
+    this.website_text = new Text('www.localhost.com want to:', {fontSize: 50});
+    this.prompt_text = new Text('Use take control of your browser', {fontSize: 50});
     this.microphone_icon = new Sprite.fromFrame('microphone');
     this.allow_button = new Sprite.fromFrame('allow_button');
     this.allow_button_2 = new Sprite.fromFrame('allow_button');

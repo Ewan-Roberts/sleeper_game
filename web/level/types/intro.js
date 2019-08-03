@@ -7,6 +7,7 @@ const { Click_Pad  } = require('../elements/click_pad');
 const { Button     } = require('../../view/button');
 const { players    } = require('../../engine/pixi_containers');
 const { Tween      } = require('../../engine/tween');
+const { viewport   } = require('../../engine/app');
 const { FadeSprite } = require('../../effects/fade_sprite.js');
 const { flash_at   } = require('../../effects/fade_sprite.js');
 const { env        } = require('../../../config');
@@ -81,7 +82,8 @@ class Intro {
     renderer.backgroundColor = 0x000000;
     this.theme_song.play();
 
-    this.player.position.copy(this.data.player_spawn[0]);
+    this.player.position.copy(this.data.player_spawn.find(spawn=>spawn.id===137));
+    viewport.moveCenter(this.player.x, this.player.y);
 
     this.study_desk.on('click', () => {
       this.keys_effect.play();
@@ -120,7 +122,6 @@ class Intro {
     };
 
     pad.on('click', () => {
-      console.log(this.dumpster);
       const tween_it = new Tween(this.dumpster);
       tween_it.to({x: this.dumpster.x - 45, y:this.dumpster.y - 20});
       tween_it.time = 1000;
@@ -132,6 +133,7 @@ class Intro {
 
   _set_dev_settings() {
     this.player.position.copy(this.data.player_spawn[1]);
+    viewport.moveCenter(this.player.x, this.player.y);
 
     this.theme_song.volume = 0;
     this.theme_song.stop();
