@@ -115,7 +115,7 @@ function get_dev_config(name) {
   }
 }
 
-const env = get_dev_config('dev_medium');
+const env = get_dev_config('prod');
 
 module.exports = {
   env,
@@ -44325,7 +44325,7 @@ function point_contains(player) {
   //TODO
 
   if(env.dev) return 30;
-  return 5;
+  return 3;
 }
 
 class Keyboard {
@@ -44834,7 +44834,6 @@ class LogicSprite extends extras.AnimatedSprite {
       this.tween.expire = true;
 
       if(!this._target_far_away) {
-        console.log('here');
         this.tween.time = 3000;
         this.tween.start();
         this.animation.attack();
@@ -47343,7 +47342,7 @@ class Trigger_Pad extends Sprite {
     this.rotation = data.rotation * DEG_TO_RAD;
     this.alpha    = (env.visable_pads)?0.4:0;
     if(data.speed) {
-      this.speed    = data.speed;
+      this.speed    = 2;
     } else {
       this.speed    = (env.dev)?25:4;
     }
@@ -48690,7 +48689,7 @@ class Start_Room  {
     this.microphone_prompt = new MicrophonePrompt();
     this.script            = new Overlay_Dialog([
       '...',
-      'Pixi.js you say...',
+      '...Pixi.js you say...',
       'lets give it a shot',
     ], this.player);
 
@@ -49991,8 +49990,6 @@ class Note {
     this.sprite.position.copy(this.background.position);
     this.sprite.anchor.set(0.5);
     this.sprite.interactive = true;
-    this.sprite.height *=2.5;
-    this.sprite.width *=2.5;
 
     if(options.remove_on_click) {
       this.click = () => this.sprite.destroy();
@@ -50343,10 +50340,8 @@ class KeyboardKey extends FadeSprite {
 
     const text = new Text(letter);
     text.style.fontSize = 55;
-    text.x += 15;
-    text.y -= 30;
-    text.width = 12;
-    text.height = 20;
+    text.x += 55;
+    text.y -= 100;
     this.alpha = 0;
 
     this.fired = false;

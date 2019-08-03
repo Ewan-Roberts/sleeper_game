@@ -51,7 +51,7 @@ function point_contains(player) {
   //TODO
 
   if(env.dev) return 30;
-  return 5;
+  return 3;
 }
 
 class Keyboard {

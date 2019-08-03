@@ -103,7 +103,7 @@ class Start_Room  {
     this.microphone_prompt = new MicrophonePrompt();
     this.script            = new Overlay_Dialog([
       '...',
-      'Pixi.js you say...',
+      '...Pixi.js you say...',
       'lets give it a shot',
     ], this.player);
 

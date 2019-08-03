@@ -114,7 +114,7 @@ function get_dev_config(name) {
   }
 }
 
-const env = get_dev_config('dev_medium');
+const env = get_dev_config('prod');
 
 module.exports = {
   env,

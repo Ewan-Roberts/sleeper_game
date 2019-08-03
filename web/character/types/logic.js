@@ -133,7 +133,6 @@ class LogicSprite extends extras.AnimatedSprite {
       this.tween.expire = true;
 
       if(!this._target_far_away) {
-        console.log('here');
         this.tween.time = 3000;
         this.tween.start();
         this.animation.attack();

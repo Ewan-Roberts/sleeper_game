@@ -8,10 +8,8 @@ class KeyboardKey extends FadeSprite {
 
     const text = new Text(letter);
     text.style.fontSize = 55;
-    text.x += 15;
-    text.y -= 30;
-    text.width = 12;
-    text.height = 20;
+    text.x += 55;
+    text.y -= 100;
     this.alpha = 0;
 
     this.fired = false;
