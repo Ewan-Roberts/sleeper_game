@@ -18,23 +18,23 @@ class MicrophonePrompt {
   _set_position() {
     this.website_text.x += 20;
     this.website_text.y += 20;
-    this.website_text.width /= 2.5;
-    this.website_text.height /= 2.5;
+    this.website_text.width = 250;
+    this.website_text.height = 25;
 
     this.prompt_text.x += 70;
     this.prompt_text.y += 65;
-    this.prompt_text.width /= 2.7;
-    this.prompt_text.height /= 2.7;
+    this.prompt_text.width = 280;
+    this.prompt_text.height = 25;
 
     this.microphone_icon.x += 20;
     this.microphone_icon.y += 60;
-    this.microphone_icon.width /= 2.7;
-    this.microphone_icon.height /= 2.7;
+    this.microphone_icon.width = 30;
+    this.microphone_icon.height = 30;
 
     this.allow_button.x += 385;
     this.allow_button.y += 150;
-    this.allow_button.width /= 2.7;
-    this.allow_button.height /= 2.7;
+    this.allow_button.height = 35;
+    this.allow_button.width = 100;
     this.allow_button.interactive = true;
     this.allow_button.on('mouseover', function() {
       this.tint = 0xff0000;
@@ -46,8 +46,8 @@ class MicrophonePrompt {
 
     this.allow_button_2.x += 280;
     this.allow_button_2.y += 150;
-    this.allow_button_2.width /= 2.7;
-    this.allow_button_2.height /= 2.7;
+    this.allow_button_2.height = 35;
+    this.allow_button_2.width = 100;
     this.allow_button_2.interactive = true;
     this.allow_button_2.on('mouseover', function() {
       this.tint = 0xff0000;

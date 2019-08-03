@@ -41,6 +41,8 @@ class Note {
     this.sprite.position.copy(this.background.position);
     this.sprite.anchor.set(0.5);
     this.sprite.interactive = true;
+    this.sprite.height *=2.5;
+    this.sprite.width *=2.5;
 
     if(options.remove_on_click) {
       this.click = () => this.sprite.destroy();

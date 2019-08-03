@@ -33,7 +33,7 @@ const options = {
     inventory_openable: false,
     level_on_load:      'start',
     draw_paths:         false,
-    player_speed:       1,
+    player_speed:       4,
     round_pixels:       true,
     sound_muted:        false,
     volume_multiplier:  1,
@@ -114,7 +114,7 @@ function get_dev_config(name) {
   }
 }
 
-const env = get_dev_config('prod');
+const env = get_dev_config('dev_medium');
 
 module.exports = {
   env,

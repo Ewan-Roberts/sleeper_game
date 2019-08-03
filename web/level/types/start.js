@@ -60,8 +60,8 @@ class Cursor extends Sprite {
   constructor() {
     super(Texture.fromImage('cursor'));
 
-    this.width  /= 10;
-    this.height /= 10;
+    this.width  = 20;
+    this.height = 23;
 
     stage.addChild(this);
   }

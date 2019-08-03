@@ -142,9 +142,9 @@ class LogicSprite extends extras.AnimatedSprite {
         if(!this.target) throw 'set an enemy';
         this.animation.face_point(this.target);
         this.melee = new MeleeBox();
-        this.melee.slash(50, 20, this);
+        //this.melee.slash(50, 20, this);
 
-        //damage_events.emit('damage', {id: this.target.id, damage: 10});
+        damage_events.emit('damage', {id: this.target.id, damage: 10});
         return;
       }
 
