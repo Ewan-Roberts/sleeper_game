@@ -307,7 +307,8 @@ class Start_Room  {
       'DEAD SET ON LIFE', {
         fontSize: 200,
         fill: 'white',
-      });
+      }
+    );
     game_title.width  = 1300;
     game_title.height = 180;
     game_title.anchor.set(0.5);
@@ -321,7 +322,8 @@ class Start_Room  {
       'LORIUM IPSUM', {
         fontSize: 200,
         fill: 'white',
-      });
+      }
+    );
     company_name.width  = 1000;
     company_name.height = 180;
     company_name.anchor.set(0.5);

@@ -60,10 +60,10 @@ stage.addChild(viewport);
 // Load project libraries
 require('pixi-keyboard');
 require('pixi-sound');
-require('./pixi_containers');
+require('pixi-tween');
 require('./tween');
 require('./sound.js');
-require('pixi-tween');
+require('./pixi_containers');
 
 module.exports = {
   viewport,

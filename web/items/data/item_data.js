@@ -19,6 +19,23 @@ const items = [
     image_name:     'rusty_knife',
   },
   {
+    name:           'rusty_knife',
+    animation_name: 'knife',
+    id:             1,
+    rank:           0,
+    cost:           50,
+    category:       'weapon',
+    range:          20,
+    damage:         20,
+    speed:          400,
+    condition:      100,
+
+    visual_name:    'rusty knife',
+    description:    'The rusty knife someone sharpened on what looks like a rock',
+    // TODO place holder
+    image_name:     'spear-png-spear-png-1600_582',
+  },
+  {
     name:           'dev_knife',
     animation_name: 'knife',
     id:             2,

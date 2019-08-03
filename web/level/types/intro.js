@@ -33,7 +33,6 @@ class Intro {
     this.data   = require('../data/intro_room.json');
     this.player = players.children[0];
 
-    console.log(this.data.exit_pad);
     this.backgrounds = this.data.background.map(data => new Background(data));
     this.shrouds     = this.data.shroud.map(data => new Shroud(data));
     this.roofs       = this.data.roof.map(data => new Roof(data));
@@ -109,6 +108,7 @@ class Intro {
       this.dumpster.tint = 0xffffff;
       button.visible = true;
     });
+
     pad.on('mouseout', () => {
       this.dumpster.tint = 0xd3d3d3;
       button.visible = false;
@@ -118,16 +118,16 @@ class Intro {
     this.spear.click = () => {
       pad.interactive = true;
     };
-    console.log('3333444444444444444444');
 
-    pad.click = () => {
+    pad.on('click', () => {
+      console.log(this.dumpster);
       const tween_it = new Tween(this.dumpster);
       tween_it.to({x: this.dumpster.x - 45, y:this.dumpster.y - 20});
       tween_it.time = 1000;
       tween_it.start();
       button.destroy();
       pad.interactive = false;
-    };
+    });
   }
 
   _set_dev_settings() {

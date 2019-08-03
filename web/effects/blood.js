@@ -2,7 +2,12 @@ const { Sprite, Texture } = require('pixi.js');
 const { decals } = require('../engine/pixi_containers');
 const { random_bound } = require('../utils/math.js');
 
-const blood_options = ['Blood splatter 5-sc','Blood splatter 18-sc','Blood splatter 20-sc', 'round_floor_stain'];
+const blood_options = [
+  'Blood splatter 5-sc',
+  'Blood splatter 18-sc',
+  'Blood splatter 20-sc',
+  'round_floor_stain',
+];
 
 const random_texture_name = () =>
   blood_options[Math.floor(Math.random()*blood_options.length)];
