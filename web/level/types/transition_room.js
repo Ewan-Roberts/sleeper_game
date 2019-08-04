@@ -48,32 +48,28 @@ class Transition_Room {
     });
 
     let item_with_fuel = 20;
+    // TODO couple the progress bar to the generator?
     const bar = new ProgressBar();
     bar.visible = false;
 
     const generator = new Generator(this.data.generator[0]);
-    generator.fuel_level = 0;
-
     generator.click = () => {
-      console.log(item_with_fuel);
-      console.log(generator);
-      if(item_with_fuel <= 0) {
-        console.log('no fuel');
+      if(generator.fuel > 0) {
+        generator.turn_on();
         return;
       }
+
       keyboardManager.disable();
       bar.visible = true;
       bar.animate_increase(item_with_fuel);
     };
 
     bar.complete(() => {
-      generator.fuel_level = item_with_fuel;
+      Caption.render('Its empty');
+      generator.fuel = item_with_fuel;
       item_with_fuel = null;
       keyboardManager.enable();
-      console.log('done');
     });
-
-    Caption.render('Hello world');
 
     keyboardManager.on('pressed', () => {
       const relative_distance = distance_between(this.player, generator);
@@ -83,11 +79,8 @@ class Transition_Room {
       } else {
         generator.tint = 0xffffff;
       }
-      console.log(relative_distance);
     });
 
-    //setTimeout(() => bar.visible = false,2000);
-    //setInterval(() => console.log(bar.percentage),200);
 
     const level_text = new Text(
       'THE HUB',

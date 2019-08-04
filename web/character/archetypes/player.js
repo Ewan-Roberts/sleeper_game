@@ -37,8 +37,6 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Mouse(this));
 
     item_events.on('give', ({id,item}) => {
-      console.log('heeeeeeeeeee');
-      console.log(id);
       if(this.id !== id) return;
       this.inventory.give_item(item);
     });

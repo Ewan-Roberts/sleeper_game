@@ -43644,7 +43644,7 @@ class PlayerAnimation {
   }
 
   _set_sound() {
-    this.walk_sound = sound.find('walk_normal', {loop: true});
+    this.walk_sound = sound.find('walk_normal');
     this.walk_sound.loop = true;
     this.walk_sound.volume = 0.05;
   }
@@ -44066,8 +44066,6 @@ class Player extends extras.AnimatedSprite {
     this.add_component(new Mouse(this));
 
     item_events.on('give', ({id,item}) => {
-      console.log('heeeeeeeeeee');
-      console.log(id);
       if(this.id !== id) return;
       this.inventory.give_item(item);
     });
@@ -46235,6 +46233,7 @@ const Sound = sound.add({
   thud_7:             'audio/thud_7.mp3',
   woman_weeping:      'audio/woman_weeping.mp3',
   crazy_woman_repent: 'audio/crazy_woman_repent.mp3',
+  generator_sound:    'audio/generator_sound.mp3',
 });
 
 sound.random_sound_from = array => {
@@ -47424,7 +47423,10 @@ const { collisions } = require('../../engine/pixi_containers');
 const { items } = require('../../engine/pixi_containers');
 const { Inventory  } = require('../../character/attributes/inventory');
 const { Sprite, Texture, DEG_TO_RAD } = require('pixi.js');
+const { sound } = require('pixi.js');
+const { tweenManager } = require('pixi.js');
 const { Button    } = require('../../view/button');
+const { Caption   } = require('../../view/caption');
 
 class Shrine extends Sprite {
   constructor(data) {
@@ -47462,14 +47464,58 @@ class Generator extends Sprite {
     this.rotation    = data.rotation * DEG_TO_RAD;
     this.tint        = 0xA9A9A9;
     this.interactive = true;
+    this._fuel = 0;
+    this.active = false;
 
     this.anchor.set(0, 1);
     this.position.copy(data);
-    this.on('click', ()=>console.log('hting'));
     this.label(data);
     this.fuel_level = 0;
 
     items.addChild(this);
+
+    this.tween = tweenManager.createTween();
+    this._set_sounds();
+
+    this.click = () => this.turn_on();
+  }
+
+
+  state_handler() {
+    // if empty allow to be filled (label update)
+    // If it has fuel turn on (label update)
+    // After the fuel runs out turn off (label update)
+    // if clicked show fuel bar (label update)
+  }
+
+  _set_sounds() {
+    this.running_sound = sound.find('generator_sound');
+    this.running_sound.volume = 0.1;
+    this.running_sound.loop = true;
+  }
+
+  get fuel() {
+    return this._fuel;
+  }
+
+  set fuel(value) {
+    this._fuel = value;
+  }
+
+  turn_on() {
+    if(this._fuel <= 0) return Caption.render('Its empty');
+    if(this.active) return;
+    this.active = true;
+
+    this.running_sound.play();
+
+    this.tween.time = 900 * this._fuel;
+    this.tween.start();
+    this.tween.on('end', () => {
+      this._fuel = 0;
+      this.active = false;
+      this.running_sound.stop();
+    });
   }
 
   label(data) {
@@ -47496,7 +47542,7 @@ module.exports = {
   Generator,
 };
 
-},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":285,"pixi.js":151}],262:[function(require,module,exports){
+},{"../../character/attributes/inventory":210,"../../engine/pixi_containers":230,"../../view/button":285,"../../view/caption":286,"pixi.js":151}],262:[function(require,module,exports){
 const { shrouds } = require('../../engine/pixi_containers');
 const { Fade    } = require('../../effects/fade');
 const { env     } = require('../../../config');
@@ -49249,32 +49295,28 @@ class Transition_Room {
     });
 
     let item_with_fuel = 20;
+    // TODO couple the progress bar to the generator?
     const bar = new ProgressBar();
     bar.visible = false;
 
     const generator = new Generator(this.data.generator[0]);
-    generator.fuel_level = 0;
-
     generator.click = () => {
-      console.log(item_with_fuel);
-      console.log(generator);
-      if(item_with_fuel <= 0) {
-        console.log('no fuel');
+      if(generator.fuel > 0) {
+        generator.turn_on();
         return;
       }
+
       keyboardManager.disable();
       bar.visible = true;
       bar.animate_increase(item_with_fuel);
     };
 
     bar.complete(() => {
-      generator.fuel_level = item_with_fuel;
+      Caption.render('Its empty');
+      generator.fuel = item_with_fuel;
       item_with_fuel = null;
       keyboardManager.enable();
-      console.log('done');
     });
-
-    Caption.render('Hello world');
 
     keyboardManager.on('pressed', () => {
       const relative_distance = distance_between(this.player, generator);
@@ -49284,11 +49326,8 @@ class Transition_Room {
       } else {
         generator.tint = 0xffffff;
       }
-      console.log(relative_distance);
     });
 
-    //setTimeout(() => bar.visible = false,2000);
-    //setInterval(() => console.log(bar.percentage),200);
 
     const level_text = new Text(
       'THE HUB',
