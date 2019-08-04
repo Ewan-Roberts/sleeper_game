@@ -25,10 +25,9 @@ class Transition_Room {
 
   _set_data() {
     Level_Factory.generate(this.data);
-    const lights = this.data.christmas_lights.map(light => new Floor(light));
 
-    setInterval(() => lights.forEach(light => light.tint = 0x000000), 1000);
-    setInterval(() => lights.forEach(light => light.tint = 0xffffff), 2000);
+    // setInterval(() => lights.forEach(light => light.tint = 0x000000), 1000);
+    // setInterval(() => lights.forEach(light => light.tint = 0xffffff), 2000);
 
     const { exit_pad, player } = this.data;
     this.player.position.copy(player[0]);
@@ -52,17 +51,39 @@ class Transition_Room {
     const bar = new ProgressBar();
     bar.visible = false;
 
-    const generator = new Generator(this.data.generator[0]);
-    generator.click = () => {
-      if(generator.fuel > 0) {
-        generator.turn_on();
-        return;
+    class Light extends Floor {
+      constructor(data) {
+        super(data);
       }
 
-      keyboardManager.disable();
-      bar.visible = true;
-      bar.animate_increase(item_with_fuel);
-    };
+      turn_on() {
+        this.tint = 0xff;
+      }
+
+      turn_off() {
+        this.tint = 0x000000;
+      }
+    }
+
+    const lights = this.data.christmas_lights.map(light => new Light(light));
+
+    const generator = new Generator(this.data.generator[0]);
+    generator.fuel = 10;
+    // generator.click = () => {
+    //   if(generator.fuel > 0) {
+    //     generator.turn_on();
+    //     lights.forEach(light => light.turn_on());
+    //     return;
+    //   }
+
+    //   keyboardManager.disable();
+    //   bar.visible = true;
+    //   bar.animate_increase(item_with_fuel);
+    // };
+
+    generator.tween.on('end', () =>
+      lights.forEach(light =>
+        light.turn_off()));
 
     bar.complete(() => {
       Caption.render('Its empty');

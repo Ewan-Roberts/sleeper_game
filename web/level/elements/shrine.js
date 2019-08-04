@@ -49,22 +49,47 @@ class Generator extends Sprite {
     this.anchor.set(0, 1);
     this.position.copy(data);
     this.label(data);
-    this.fuel_level = 0;
 
     items.addChild(this);
 
     this.tween = tweenManager.createTween();
     this._set_sounds();
+    this.make_empty();
 
-    this.click = () => this.turn_on();
+    this.on('click', () => {
+      console.log('fdssdf');
+      this.state_handler();
+    });
   }
 
+  make_empty() {
+    this.button.description_label.text = 'fill';
+    this._fuel = 0;
+    this.state = 'empty';
+    this.active = false;
+    this.running_sound.stop();
+  }
+
+  make_ready() {
+    this.running_sound.stop();
+    this.button.description_label.text = 'start';
+    this.state = 'ready';
+    this.active = false;
+  }
+
+  make_running() {
+    this.running_sound.play();
+    this.button.description_label.text = 'turn_off';
+    this.state = 'running';
+    this.active = true;
+  }
 
   state_handler() {
-    // if empty allow to be filled (label update)
-    // If it has fuel turn on (label update)
-    // After the fuel runs out turn off (label update)
-    // if clicked show fuel bar (label update)
+    switch(this.state) {
+      case 'running' : return this.make_ready();
+      case 'ready'   : return this.make_running();
+      case 'empty'   : return this.make_ready();
+    }
   }
 
   _set_sounds() {
@@ -84,16 +109,13 @@ class Generator extends Sprite {
   turn_on() {
     if(this._fuel <= 0) return Caption.render('Its empty');
     if(this.active) return;
-    this.active = true;
+    this.make_running();
 
-    this.running_sound.play();
-
-    this.tween.time = 900 * this._fuel;
+    this.tween.time = 400 * this._fuel;
+    console.log(this.tween.time);
     this.tween.start();
     this.tween.on('end', () => {
-      this._fuel = 0;
-      this.active = false;
-      this.running_sound.stop();
+      this.make_ready();
     });
   }
 
