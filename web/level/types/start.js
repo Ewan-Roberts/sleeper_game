@@ -304,7 +304,7 @@ class Start_Room  {
     await sleep(11650);
 
     const game_title  = new Text(
-      'VUNDLE GAMES', {
+      'LORIUM GAMES', {
         fontSize: 200,
         fill: 'white',
       }
@@ -319,7 +319,7 @@ class Start_Room  {
 
     game_title.destroy();
     const company_name  = new Text(
-      'CREATIVE LABS', {
+      'CREATIVE TITLE', {
         fontSize: 200,
         fill: 'white',
       }

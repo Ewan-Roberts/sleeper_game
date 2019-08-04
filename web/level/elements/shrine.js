@@ -45,16 +45,9 @@ class Generator extends Sprite {
     this.position.copy(data);
     this.on('click', ()=>console.log('hting'));
     this.label(data);
+    this.fuel_level = 0;
 
     items.addChild(this);
-  }
-
-  give_blood(vial) {
-    if(vial) this.inventory.give_item(vial);
-  }
-
-  get enough_blood() {
-    return (this.inventory.size > 1);
   }
 
   label(data) {

@@ -46897,7 +46897,7 @@ module.exports={"background":[{"gid":14,"height":1389,"id":572,"rotation":0,"typ
 },{}],248:[function(require,module,exports){
 module.exports={"grid":[{"height":1346,"id":223,"rotation":0,"type":"","width":2002,"x":6529,"y":-206}],"background":[{"gid":14,"height":667,"id":453,"rotation":0,"type":"","width":939,"x":3889,"y":3574,"image_name":"wood_floor"}],"roof":[{"gid":48,"height":1040,"id":1249,"rotation":-450,"type":"","width":242,"x":4893,"y":2947,"image_name":"shadow_line"},{"gid":48,"height":793,"id":1222,"rotation":-180,"type":"","width":232,"x":3940,"y":2851,"image_name":"shadow_line"},{"gid":48,"height":1048,"id":1223,"rotation":-270,"type":"","width":232,"x":3799,"y":3520,"image_name":"shadow_line"},{"gid":72,"height":646,"id":1224,"rotation":0,"type":"","width":912,"x":3908,"y":3556,"image_name":"shadow_square_large","alpha":0.9},{"gid":12,"height":543,"id":403,"rotation":0,"type":"","width":524,"x":4640,"y":1524,"image_name":"95224-tree_3_7x7"},{"gid":9,"height":814,"id":389,"rotation":0,"type":"","width":911,"x":3295,"y":3276,"image_name":"95225-tree_4_7x7"},{"gid":7,"height":1102,"id":663,"rotation":0,"type":"","width":1568,"x":3833,"y":3774,"image_name":"94875-building_21b_10x7","alpha_on_enter":0.1},{"gid":10,"height":748,"id":672,"rotation":0,"type":"","width":752,"x":4602,"y":3429,"image_name":"95226-tree_5_6x6"},{"gid":10,"height":748,"id":673,"rotation":0,"type":"","width":752,"x":4860,"y":2219,"image_name":"95226-tree_5_6x6"},{"gid":12,"height":958,"id":770,"rotation":0,"type":"","width":925,"x":4811,"y":3025,"image_name":"95224-tree_3_7x7"},{"gid":51,"height":490,"id":772,"rotation":0,"type":"","width":475,"x":2731,"y":1897,"image_name":"95228-tree_7_5x5"},{"gid":52,"height":774,"id":775,"rotation":0,"type":"","width":706,"x":3596,"y":4082,"image_name":"95230-tree_9_6x6"},{"gid":53,"height":512,"id":819,"rotation":0,"type":"","width":532,"x":2256,"y":2850,"image_name":"95229-tree_8_5x5"},{"gid":51,"height":320,"id":822,"rotation":0,"type":"","width":311,"x":3868,"y":1564,"image_name":"95228-tree_7_5x5"},{"gid":54,"height":394,"id":824,"rotation":90,"type":"","width":496,"x":3096,"y":-441,"image_name":"45E_DeadTree01_kpl_cryo"},{"gid":55,"height":691,"id":825,"rotation":0,"type":"","width":789,"x":3780,"y":2260,"image_name":"Tree_with_Shadow"},{"gid":53,"height":419,"id":827,"rotation":0,"type":"","width":436,"x":4123,"y":1061,"image_name":"95229-tree_8_5x5"},{"gid":53,"height":419,"id":829,"rotation":0,"type":"","width":436,"x":5556,"y":2181,"image_name":"95229-tree_8_5x5"},{"gid":52,"height":301,"id":845,"rotation":0,"type":"","width":274,"x":4426,"y":2822,"image_name":"95230-tree_9_6x6"},{"gid":52,"height":708,"id":1179,"rotation":0,"type":"","width":646,"x":1546,"y":-1272,"image_name":"95230-tree_9_6x6","tint":"0x000000"},{"gid":52,"height":708,"id":1181,"rotation":0,"type":"","width":646,"x":3081,"y":-1479,"image_name":"95230-tree_9_6x6","tint":"0x000000"},{"gid":52,"height":708,"id":1182,"rotation":0,"type":"","width":646,"x":2064,"y":-1593,"image_name":"95230-tree_9_6x6","tint":"0x000000"},{"gid":52,"height":708,"id":1183,"rotation":0,"type":"","width":646,"x":1827,"y":1500,"image_name":"95230-tree_9_6x6","tint":"0x000000"},{"gid":52,"height":708,"id":1185,"rotation":0,"type":"","width":646,"x":2227,"y":3573,"image_name":"95230-tree_9_6x6","tint":"0x000000"},{"gid":52,"height":774,"id":1219,"rotation":0,"type":"","width":706,"x":3278,"y":1259,"image_name":"95230-tree_9_6x6"}],"shrine":[{"gid":5,"height":203,"id":675,"rotation":-360,"type":"","width":125,"x":4276,"y":3330,"image_name":"88254-Cot_1_1x2","collision":true,"image_on_click":"note","label":true,"label_action":"Click","label_description":"Bed","label_image":"eye_icon"}],"shroud":[],"prey":[{"height":0,"id":140,"point":true,"rotation":0,"type":"","width":0,"x":2014,"y":4996,"equip":"rat_teeth"},{"height":0,"id":782,"point":true,"rotation":0,"type":"","width":0,"x":3593,"y":1962,"equip":"rat_teeth"},{"height":0,"id":783,"point":true,"rotation":0,"type":"","width":0,"x":4699,"y":1432,"equip":"rat_teeth"},{"height":0,"id":784,"point":true,"rotation":0,"type":"","width":0,"x":5898,"y":6711,"equip":"rat_teeth"},{"height":0,"id":786,"point":true,"rotation":0,"type":"","width":0,"x":3846,"y":1017,"equip":"rat_teeth"}],"item":[],"player_spawn":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":3412,"y":179,"equip":"rat_teeth"},{"height":0,"id":826,"point":true,"rotation":0,"type":"","width":0,"x":2893,"y":-770,"equip":"rat_teeth"}],"control_prompt":[{"height":0,"id":1143,"point":true,"rotation":0,"type":"","width":0,"x":2891,"y":-553}],"decal":[{"gid":1,"height":743,"id":635,"rotation":181,"type":"","width":117,"x":4264,"y":1950,"image_name":"dirt_road"},{"gid":8,"height":511,"id":636,"rotation":-583,"type":"","width":87,"x":3464,"y":1223,"image_name":"95012-dirt_road_14_2x12"},{"gid":11,"height":592,"id":637,"rotation":-75,"type":"","width":318,"x":4232,"y":2002,"image_name":"95027-dirt_road_28_9x17"},{"gid":8,"height":424,"id":650,"rotation":-587,"type":"","width":65,"x":3191,"y":984,"image_name":"95012-dirt_road_14_2x12","alpha":0.8},{"gid":15,"height":962,"id":1084,"rotation":-309,"type":"","width":2012,"x":3055,"y":-2398,"image_name":"black_dot"},{"gid":19,"height":320,"id":777,"rotation":-90,"type":"","width":437,"x":4349,"y":2859,"image_name":"Blood splatter 5-sc"},{"gid":15,"height":629,"id":1083,"rotation":64,"type":"","width":262,"x":1605,"y":-1964,"image_name":"black_dot"},{"gid":15,"height":990,"id":1074,"rotation":0,"type":"","width":1679,"x":1730,"y":-2006,"image_name":"black_dot"},{"gid":15,"height":4185,"id":1075,"rotation":0,"type":"","width":964,"x":802,"y":1180,"image_name":"black_dot"},{"gid":15,"height":857,"id":1095,"rotation":-340,"type":"","width":1533,"x":4286,"y":-978,"image_name":"black_dot"},{"gid":64,"height":280,"id":1079,"rotation":90,"type":"","width":1260,"x":1600,"y":-1320,"image_name":"42638-FM Cliff 1"},{"gid":63,"height":280,"id":1076,"rotation":0,"type":"","width":1260,"x":2204,"y":-1859,"image_name":"42640-FM Cliff 2"},{"gid":15,"height":675,"id":1104,"rotation":-327,"type":"","width":1057,"x":6394,"y":1650,"image_name":"black_dot"},{"gid":57,"height":700,"id":1080,"rotation":-317,"type":"","width":2380,"x":3078,"y":-1767,"image_name":"42650-FM Cliff Curved 1"},{"gid":15,"height":1098,"id":1105,"rotation":-628,"type":"","width":1705,"x":6768,"y":1828,"image_name":"black_dot"},{"gid":58,"height":560,"id":1081,"rotation":17,"type":"","width":560,"x":1680,"y":-1670,"image_name":"42635-FM Cliff 17"},{"gid":15,"height":777,"id":1096,"rotation":-302,"type":"","width":1408,"x":5217,"y":-564,"image_name":"black_dot"},{"gid":15,"height":1158,"id":1097,"rotation":-19,"type":"","width":1167,"x":1053,"y":1894,"image_name":"black_dot"},{"gid":63,"height":280,"id":1089,"rotation":-270,"type":"","width":1260,"x":6584,"y":1782,"image_name":"42640-FM Cliff 2"},{"gid":15,"height":2969,"id":1098,"rotation":-9,"type":"","width":1333,"x":1293,"y":4312,"image_name":"black_dot"},{"gid":62,"height":280,"id":1078,"rotation":-270,"type":"","width":700,"x":1652,"y":-1799,"image_name":"42641-FM Cliff 3"},{"gid":15,"height":1063,"id":1184,"rotation":-298,"type":"","width":1458,"x":5682,"y":366,"image_name":"black_dot"},{"gid":15,"height":1330,"id":1100,"rotation":-4,"type":"","width":969,"x":2254,"y":5359,"image_name":"black_dot"},{"gid":15,"height":1200,"id":1099,"rotation":-32,"type":"","width":1059,"x":2185,"y":4629,"image_name":"black_dot"},{"gid":64,"height":280,"id":1082,"rotation":79,"type":"","width":1260,"x":1579,"y":-189,"image_name":"42638-FM Cliff 1"},{"gid":15,"height":840,"id":1108,"rotation":-569,"type":"","width":1401,"x":5769,"y":3864,"image_name":"black_dot"},{"gid":15,"height":959,"id":1102,"rotation":-9,"type":"","width":371,"x":2094,"y":2391,"image_name":"black_dot"},{"gid":60,"height":2100,"id":1088,"rotation":-210,"type":"","width":560,"x":5822,"y":46,"image_name":"42656-FM Cliff Curved 7"},{"gid":15,"height":381,"id":1103,"rotation":-32,"type":"","width":775,"x":2457,"y":4440,"image_name":"black_dot"},{"gid":15,"height":882,"id":1106,"rotation":-923,"type":"","width":1595,"x":7211,"y":2774,"image_name":"black_dot"},{"gid":15,"height":974,"id":1107,"rotation":-594,"type":"","width":1247,"x":5749,"y":3420,"image_name":"black_dot"},{"gid":70,"height":1260,"id":1085,"rotation":-210,"type":"","width":280,"x":5257,"y":-790,"image_name":"42628-FM Cliff 10"},{"gid":15,"height":3038,"id":1101,"rotation":268,"type":"","width":1133,"x":5907,"y":5542,"image_name":"black_dot"},{"gid":61,"height":1728,"id":1087,"rotation":-210,"type":"","width":432,"x":2636,"y":2934,"image_name":"42655-FM Cliff Curved 6"},{"gid":67,"height":420,"id":1094,"rotation":-304,"type":"","width":280,"x":4895,"y":4186,"image_name":"42634-FM Cliff 16"},{"gid":57,"height":568,"id":1090,"rotation":-211,"type":"","width":1930,"x":6610,"y":2696,"image_name":"42650-FM Cliff Curved 1"},{"gid":65,"height":617,"id":1092,"rotation":-48,"type":"","width":617,"x":4452,"y":4893,"image_name":"42637-FM Cliff 19"},{"gid":66,"height":560,"id":1093,"rotation":98,"type":"","width":560,"x":4615,"y":4010,"image_name":"42636-FM Cliff 18"},{"gid":69,"height":700,"id":1216,"rotation":88,"type":"","width":280,"x":3147,"y":4366,"image_name":"42632-FM Cliff 14"},{"gid":68,"height":560,"id":1217,"rotation":79,"type":"","width":280,"x":3711,"y":4393,"image_name":"42633-FM Cliff 15"},{"gid":57,"height":721,"id":1221,"rotation":-454,"type":"","width":2453,"x":2730,"y":3316,"image_name":"42650-FM Cliff Curved 1"}],"border":[{"gid":2,"height":316,"id":1109,"rotation":-10,"type":"","width":1675,"x":1762,"y":-1671,"image_name":"dot","alpha":0},{"gid":2,"height":316,"id":1110,"rotation":-87,"type":"","width":1846,"x":1785,"y":55,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1111,"rotation":-95,"type":"","width":1635,"x":2546,"y":3351,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1112,"rotation":-112,"type":"","width":2054,"x":2405,"y":1765,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1113,"rotation":-121,"type":"","width":1635,"x":3442,"y":4492,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1114,"rotation":-179,"type":"","width":1219,"x":4408,"y":4446,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1115,"rotation":160,"type":"","width":1584,"x":5677,"y":3951,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1116,"rotation":128,"type":"","width":1061,"x":5873,"y":3276,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1117,"rotation":156,"type":"","width":1061,"x":6826,"y":2891,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1118,"rotation":91,"type":"","width":752,"x":6657,"y":2268,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1119,"rotation":62,"type":"","width":3519,"x":5062,"y":-620,"image_name":"dot","alpha":0},{"gid":2,"height":306,"id":1120,"rotation":50,"type":"","width":1610,"x":3118,"y":-2181,"image_name":"dot","alpha":0},{"gid":2,"height":315,"id":1121,"rotation":23,"type":"","width":1477,"x":4141,"y":-919,"image_name":"dot","alpha":0}],"floor":[{"gid":13,"height":266,"id":452,"rotation":0,"type":"","width":531,"x":4080,"y":2931,"image_name":"95156-porch_2c_4x2","alpha":0.7,"tint":"0x8c7a64"},{"gid":50,"height":226,"id":747,"rotation":0,"type":"","width":323,"x":4063,"y":2801,"image_name":"95042-fence_gate_2b_3x2"},{"gid":56,"height":901,"id":850,"rotation":-250,"type":"","width":737,"x":3831,"y":914,"image_name":"hill_overlay04","alpha":0.5},{"gid":56,"height":947,"id":1149,"rotation":-1038,"type":"","width":775,"x":4810,"y":3809,"image_name":"hill_overlay04","alpha":0.5}],"hill_area":[{"height":62,"id":1168,"rotation":31,"type":"","width":255,"x":3816,"y":1459,"speed":5},{"height":54,"id":1170,"rotation":-270,"type":"","width":217,"x":3836,"y":1298,"speed":5},{"height":53,"id":1172,"rotation":-544,"type":"","width":257,"x":4074,"y":1289,"speed":5},{"height":73,"id":1173,"rotation":-453,"type":"","width":358,"x":4432,"y":1576,"speed":5},{"height":138,"id":1174,"rotation":-179,"type":"","width":155,"x":4263,"y":2796,"speed":5},{"height":53,"id":1204,"rotation":-200,"type":"","width":186,"x":4177,"y":1578,"speed":5},{"height":53,"id":1205,"rotation":-510,"type":"","width":200,"x":4304,"y":1680,"speed":5},{"height":53,"id":1206,"rotation":-205,"type":"","width":200,"x":4491,"y":1607,"speed":5},{"height":53,"id":1207,"rotation":-528,"type":"","width":279,"x":4429,"y":1259,"speed":5},{"height":53,"id":1208,"rotation":-217,"type":"","width":186,"x":4201,"y":1187,"speed":5}],"walls":[{"gid":15,"height":666,"id":454,"rotation":0,"type":"","width":25,"x":3889,"y":3574,"image_name":"black_dot"},{"gid":15,"height":25,"id":455,"rotation":0,"type":"","width":940,"x":3890,"y":3573,"image_name":"black_dot"},{"gid":15,"height":665,"id":456,"rotation":0,"type":"","width":25,"x":4805,"y":3573,"image_name":"black_dot"},{"gid":15,"height":26,"id":457,"rotation":0,"type":"","width":322,"x":4506,"y":2933,"image_name":"black_dot"},{"gid":15,"height":26,"id":458,"rotation":0,"type":"","width":232,"x":3894,"y":2936,"image_name":"black_dot"},{"gid":15,"height":26,"id":459,"rotation":0,"type":"","width":218,"x":3908,"y":2934,"image_name":"black_dot"},{"gid":15,"height":244,"id":1013,"rotation":0,"type":"","width":21,"x":4102,"y":2935,"image_name":"black_dot","hidden":true},{"gid":15,"height":100,"id":1014,"rotation":0,"type":"","width":21,"x":4244,"y":2790,"image_name":"black_dot","hidden":true},{"gid":15,"height":32,"id":1015,"rotation":0,"type":"","width":259,"x":4259,"y":2790,"image_name":"black_dot","hidden":true},{"gid":15,"height":172,"id":1016,"rotation":0,"type":"","width":26,"x":4506,"y":2930,"image_name":"black_dot","hidden":true},{"gid":15,"height":88,"id":1065,"rotation":25,"type":"","width":15,"x":4251,"y":2690,"image_name":"black_dot","hidden":true},{"gid":15,"height":101,"id":1066,"rotation":-23,"type":"","width":17,"x":4104,"y":2700,"image_name":"black_dot","hidden":true}],"birds":[{"height":0,"id":1192,"polyline":[{"x":0,"y":0},{"x":31,"y":42},{"x":186,"y":321},{"x":317,"y":772},{"x":335,"y":1164},{"x":308,"y":1909},{"x":192,"y":2396},{"x":-203,"y":2984},{"x":-678,"y":3402}],"rotation":0,"type":"","width":0,"x":3305,"y":-314},{"height":0,"id":1194,"polyline":[{"x":0,"y":0},{"x":2,"y":0},{"x":5,"y":0},{"x":74,"y":-1},{"x":253,"y":20},{"x":403,"y":69},{"x":650,"y":198},{"x":1041,"y":473},{"x":1506,"y":772},{"x":1913,"y":1121},{"x":1853,"y":1830}],"rotation":0,"type":"","width":0,"x":3220,"y":-432},{"height":0,"id":1202,"polyline":[{"x":0,"y":0},{"x":27,"y":8},{"x":98,"y":85},{"x":218,"y":329},{"x":261,"y":739},{"x":184,"y":1276},{"x":-3,"y":1865},{"x":-441,"y":2467},{"x":-1009,"y":2778},{"x":-1119,"y":2762}],"rotation":0,"type":"","width":0,"x":3156,"y":-223}],"collision":[{"gid":6,"height":44,"id":380,"rotation":0,"type":"","width":280,"x":3834,"y":2718,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":394,"rotation":0,"type":"","width":280,"x":4248,"y":2719,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":395,"rotation":-360,"type":"","width":280,"x":3596,"y":2717,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":396,"rotation":-90,"type":"","width":280,"x":3646,"y":2958,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":397,"rotation":270,"type":"","width":280,"x":3646,"y":3434,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":398,"rotation":0,"type":"","width":280,"x":4487,"y":2720,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":399,"rotation":-90,"type":"","width":280,"x":3645,"y":3196,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":44,"id":400,"rotation":0,"type":"","width":310,"x":3595,"y":3432,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":6,"height":40,"id":402,"rotation":90,"type":"","width":257,"x":4725,"y":2676,"image_name":"FencePiece_Perspective1-R_RS"},{"gid":71,"height":91,"id":989,"rotation":-295,"type":"","width":91,"x":3172,"y":-249,"image_name":"55066-stump"},{"gid":71,"height":90,"id":992,"rotation":0,"type":"","width":90,"x":3515,"y":826,"image_name":"55066-stump"},{"gid":71,"height":62,"id":994,"rotation":0,"type":"","width":62,"x":4270,"y":828,"image_name":"55066-stump"},{"gid":71,"height":81,"id":995,"rotation":0,"type":"","width":81,"x":3934,"y":1412,"image_name":"55066-stump"},{"gid":71,"height":91,"id":996,"rotation":0,"type":"","width":91,"x":4814,"y":3014,"image_name":"55066-stump"},{"gid":71,"height":63,"id":998,"rotation":0,"type":"","width":63,"x":2871,"y":1623,"image_name":"55066-stump"},{"gid":71,"height":150,"id":999,"rotation":0,"type":"","width":150,"x":3978,"y":1953,"image_name":"55066-stump"},{"gid":71,"height":91,"id":1001,"rotation":0,"type":"","width":91,"x":5065,"y":1789,"image_name":"55066-stump"},{"gid":71,"height":91,"id":1002,"rotation":0,"type":"","width":91,"x":4777,"y":1240,"image_name":"55066-stump"},{"gid":71,"height":121,"id":1004,"rotation":0,"type":"","width":121,"x":3604,"y":2821,"image_name":"55066-stump"},{"gid":71,"height":91,"id":1005,"rotation":0,"type":"","width":91,"x":3842,"y":3649,"image_name":"55066-stump"},{"gid":71,"height":63,"id":1006,"rotation":0,"type":"","width":63,"x":2433,"y":2572,"image_name":"55066-stump"},{"gid":71,"height":91,"id":1007,"rotation":0,"type":"","width":91,"x":5128,"y":2468,"image_name":"55066-stump"},{"gid":71,"height":54,"id":1008,"rotation":0,"type":"","width":54,"x":4498,"y":2670,"image_name":"55066-stump"},{"gid":71,"height":54,"id":1009,"rotation":0,"type":"","width":54,"x":5704,"y":1961,"image_name":"55066-stump"}],"black_shroud":[],"roof_pad":[{"height":54,"id":1012,"rotation":0,"type":"","width":217,"x":4087,"y":2581}],"pop_up_pad":[{"height":80,"id":734,"rotation":0,"type":"","width":706,"x":3890,"y":1665},{"height":1263,"id":1161,"rotation":0,"type":"","width":98,"x":3791,"y":1664},{"height":1263,"id":1162,"rotation":0,"type":"","width":98,"x":4596,"y":1664}],"hands_pad":[{"height":65,"id":1163,"rotation":0,"type":"","width":390,"x":4014,"y":2669}],"birds_pad":[{"height":630,"id":1200,"rotation":0,"type":"","width":682,"x":2945,"y":-490}],"gore_layer":[{"gid":29,"height":80,"id":469,"rotation":0,"type":"","width":80,"x":4345,"y":3220,"image_name":"gore_a"},{"gid":28,"height":81,"id":470,"rotation":228,"type":"","width":81,"x":4523,"y":3082,"image_name":"gore_old_tint-a"},{"gid":27,"height":90,"id":471,"rotation":0,"type":"","width":90,"x":4312,"y":3234,"image_name":"gore_old_tint-b"},{"gid":26,"height":89,"id":472,"rotation":-197,"type":"","width":89,"x":4369,"y":3078,"image_name":"gore_old_tint-c"},{"gid":25,"height":42,"id":474,"rotation":-3,"type":"","width":42,"x":4432,"y":3190,"image_name":"gore2_old_tint-b"},{"gid":20,"height":53,"id":475,"rotation":77,"type":"","width":296,"x":4174,"y":2895,"image_name":"Blood splatter 16-sc"},{"gid":24,"height":67,"id":476,"rotation":258,"type":"","width":428,"x":4360,"y":3218,"image_name":"Blood splatter 18-sc"},{"gid":23,"height":188,"id":477,"rotation":0,"type":"","width":206,"x":4162,"y":3257,"image_name":"Blood splatter 20-sc"},{"gid":19,"height":320,"id":478,"rotation":-95,"type":"","width":437,"x":4533,"y":3288,"image_name":"Blood splatter 5-sc"},{"gid":21,"height":277,"id":479,"rotation":0,"type":"","width":551,"x":4033,"y":3127,"image_name":"Blood splatter 7-sc"},{"gid":18,"height":135,"id":480,"rotation":0,"type":"","width":372,"x":3987,"y":3099,"image_name":"Blood_splatter_15-sc"},{"gid":17,"height":91,"id":482,"rotation":90,"type":"","width":391,"x":4318,"y":2808,"image_name":"Blood_splatter_3-sc"},{"gid":22,"height":276,"id":483,"rotation":0,"type":"","width":54,"x":4274,"y":3170,"image_name":"Bloody_Trail-dried_jdale_hrc"},{"gid":33,"height":219,"id":486,"rotation":0,"type":"","width":219,"x":4587,"y":3552,"image_name":"98461-rubble_1_2x2"},{"gid":31,"height":150,"id":487,"rotation":0,"type":"","width":300,"x":4359,"y":3556,"image_name":"98473-rubble_7_2x1"},{"gid":30,"height":280,"id":488,"rotation":0,"type":"","width":140,"x":3900,"y":3397,"image_name":"98475-rubble_8_1x2"},{"gid":32,"height":140,"id":491,"rotation":90,"type":"","width":280,"x":4665,"y":2931,"image_name":"98300-blood_gore_2_2x1"},{"gid":34,"height":280,"id":664,"rotation":0,"type":"","width":280,"x":3907,"y":3205,"image_name":"98299-blood_gore_1_2x2"},{"gid":31,"height":150,"id":665,"rotation":0,"type":"","width":300,"x":3910,"y":3562,"image_name":"98473-rubble_7_2x1"},{"gid":44,"height":800,"id":666,"rotation":0,"type":"","width":800,"x":3542,"y":3353,"image_name":"fog_00"},{"gid":44,"height":800,"id":667,"rotation":0,"type":"","width":800,"x":4179,"y":3694,"image_name":"fog_00"},{"gid":46,"height":496,"id":668,"rotation":0,"type":"","width":542,"x":4056,"y":3368,"image_name":"Scorch-a"},{"gid":45,"height":755,"id":669,"rotation":0,"type":"","width":590,"x":3902,"y":3594,"image_name":"Scorch-d"},{"gid":45,"height":703,"id":670,"rotation":180,"type":"","width":567,"x":4819,"y":2892,"image_name":"Scorch-d"},{"gid":44,"height":800,"id":671,"rotation":0,"type":"","width":800,"x":3722,"y":3386,"image_name":"fog_00"},{"gid":45,"height":314,"id":735,"rotation":-90,"type":"","width":209,"x":4536,"y":2793,"image_name":"Scorch-d"},{"gid":47,"height":169,"id":743,"rotation":-270,"type":"","width":337,"x":3721,"y":3073,"image_name":"rubble_05","tint":"0xd3d3d3"},{"gid":49,"height":114,"id":744,"rotation":180,"type":"","width":59,"x":4749,"y":2797,"image_name":"wall_wood_damage_00"},{"gid":47,"height":94,"id":853,"rotation":-360,"type":"","width":188,"x":4649,"y":3644,"image_name":"rubble_05","tint":"0xd3d3d3"},{"gid":33,"height":280,"id":1210,"rotation":26,"type":"","width":280,"x":4743,"y":3640,"image_name":"98461-rubble_1_2x2"},{"gid":31,"height":140,"id":1211,"rotation":0,"type":"","width":280,"x":4578,"y":3723,"image_name":"98473-rubble_7_2x1"},{"gid":30,"height":280,"id":1212,"rotation":0,"type":"","width":140,"x":4817,"y":3598,"image_name":"98475-rubble_8_1x2"},{"gid":44,"height":800,"id":1213,"rotation":0,"type":"","width":800,"x":4447,"y":3954,"image_name":"fog_00"},{"gid":44,"height":800,"id":1214,"rotation":-240,"type":"","width":800,"x":4678,"y":2840,"image_name":"fog_00"}],"blood_trail":[{"gid":43,"height":34,"id":600,"rotation":7,"type":"","width":34,"x":3982,"y":2076,"image_name":"blood-splatter-hand-png-5"},{"gid":36,"height":33,"id":541,"rotation":2,"type":"","width":33,"x":3970,"y":2037,"image_name":"left_hand"},{"gid":38,"height":38,"id":561,"rotation":-2,"type":"","width":38,"x":3992,"y":2015,"image_name":"right_hand_drip"},{"gid":36,"height":27,"id":558,"rotation":-28,"type":"","width":27,"x":3983,"y":1982,"image_name":"left_hand"},{"gid":25,"height":47,"id":539,"rotation":0,"type":"","width":47,"x":3975,"y":1953,"image_name":"gore2_old_tint-b"},{"gid":40,"height":28,"id":597,"rotation":2,"type":"","width":17,"x":3999,"y":1908,"image_name":"bloody-hands-png"},{"gid":39,"height":21,"id":596,"rotation":-15,"type":"","width":16,"x":3978,"y":1891,"image_name":"blood_hand_11"},{"gid":37,"height":28,"id":562,"rotation":27,"type":"","width":16,"x":3990,"y":1864,"image_name":"right_hand_drip_2"},{"gid":42,"height":29,"id":599,"rotation":5,"type":"","width":29,"x":3971,"y":1850,"image_name":"52a007c485494"},{"gid":35,"height":26,"id":557,"rotation":4,"type":"","width":26,"x":3990,"y":1814,"image_name":"right_hand"},{"gid":39,"height":21,"id":601,"rotation":16,"type":"","width":16,"x":3972,"y":1790,"image_name":"blood_hand_11"},{"gid":41,"height":29,"id":598,"rotation":354,"type":"","width":29,"x":3980,"y":1766,"image_name":"ist2_3627274-bloody-nkm-1"},{"gid":43,"height":43,"id":1041,"rotation":-33,"type":"","width":43,"x":4499,"y":2333,"image_name":"blood-splatter-hand-png-5"},{"gid":36,"height":42,"id":1042,"rotation":-37,"type":"","width":42,"x":4455,"y":2304,"image_name":"left_hand"},{"gid":38,"height":48,"id":1043,"rotation":-42,"type":"","width":48,"x":4459,"y":2265,"image_name":"right_hand_drip"},{"gid":36,"height":34,"id":1044,"rotation":-67,"type":"","width":34,"x":4424,"y":2240,"image_name":"left_hand"},{"gid":25,"height":60,"id":1045,"rotation":-40,"type":"","width":60,"x":4393,"y":2219,"image_name":"gore2_old_tint-b"},{"gid":40,"height":35,"id":1046,"rotation":-37,"type":"","width":21,"x":4380,"y":2154,"image_name":"bloody-hands-png"},{"gid":39,"height":26,"id":1047,"rotation":-54,"type":"","width":21,"x":4345,"y":2154,"image_name":"blood_hand_11"},{"gid":37,"height":35,"id":1048,"rotation":-13,"type":"","width":20,"x":4335,"y":2118,"image_name":"right_hand_drip_2"},{"gid":42,"height":37,"id":1049,"rotation":-34,"type":"","width":37,"x":4305,"y":2121,"image_name":"52a007c485494"},{"gid":35,"height":33,"id":1050,"rotation":-36,"type":"","width":33,"x":4294,"y":2070,"image_name":"right_hand"},{"gid":39,"height":26,"id":1051,"rotation":-23,"type":"","width":21,"x":4257,"y":2061,"image_name":"blood_hand_11"},{"gid":41,"height":37,"id":1052,"rotation":314,"type":"","width":37,"x":4246,"y":2031,"image_name":"ist2_3627274-bloody-nkm-1"}]}
 },{}],249:[function(require,module,exports){
-module.exports={"background":[{"gid":6,"height":1291,"id":185,"rotation":0,"type":"","width":1291,"x":1919,"y":2852,"image_name":"grass_tile"}],"prey":[],"walls":[{"height":32,"id":53,"rotation":0,"type":"","width":1616,"x":1759,"y":2809},{"height":1613,"id":94,"rotation":-270,"type":"","width":31,"x":3369,"y":845},{"height":2002,"id":137,"rotation":0,"type":"","width":31,"x":3371,"y":843},{"height":283,"id":138,"rotation":0,"type":"","width":52,"x":3080,"y":1952}],"lights":[{"height":0,"id":62,"point":true,"rotation":0,"type":"","width":0,"x":2721,"y":2063}],"player":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":2500,"y":2215}],"floor":[],"collision":[{"gid":2,"height":110,"id":179,"rotation":0,"type":"","width":179,"x":2953,"y":2593,"image_name":"bale_square"},{"gid":3,"height":158,"id":180,"rotation":-51,"type":"","width":368,"x":1866,"y":2232,"image_name":"wood_table"},{"gid":4,"height":85,"id":181,"rotation":0,"type":"","width":169,"x":2052,"y":1801,"image_name":"dumpster_00"}],"roof":[{"height":745,"id":159,"rotation":0,"type":"","width":788,"x":2209,"y":1145,"alpha":1,"fade":1,"image_name":"tree_11"}],"exit_pad":[{"height":190,"id":15,"rotation":0,"type":"","width":209,"x":2012,"y":2268,"level_name":"park"},{"height":190,"id":145,"rotation":0,"type":"","width":211,"x":2871,"y":2288,"cutscene":true,"level_name":"street","spawn_id":137},{"height":187,"id":149,"rotation":0,"type":"","width":211,"x":2012,"y":2062,"level_name":"dev","spawn_id":137},{"height":235,"id":171,"rotation":0,"type":"","width":211,"x":2871,"y":2035,"cutscene":false,"level_name":"intro"},{"height":165,"id":176,"rotation":0,"type":"","width":246,"x":2092,"y":1808,"level_name":"defend"},{"height":190,"id":184,"rotation":0,"type":"","width":211,"x":2777,"y":2511,"cutscene":true,"level_name":"start"},{"height":165,"id":187,"rotation":0,"type":"","width":246,"x":2380,"y":1810,"level_name":"ranbir_flat_0","spawn_id":137},{"height":165,"id":188,"rotation":0,"type":"","width":246,"x":2488,"y":2531,"level_name":"ranbir_flat"},{"height":165,"id":189,"rotation":0,"type":"","width":246,"x":2187,"y":2518,"level_name":"ranbir_flat"},{"height":165,"id":195,"rotation":0,"type":"","width":246,"x":2670,"y":1812,"level_name":"ranbir_flat_2"}],"item":[{"height":96,"id":183,"rotation":-526,"type":"","width":80,"x":2785,"y":2222,"equip_on_click":true,"image_name":"bow_00","label":true,"label_action":"Take","label_description":"Old Bow","label_image":"take_icon"},{"gid":7,"height":52,"id":186,"rotation":-526,"type":"","width":52,"x":2691,"y":2300,"image_name":"box_06","container":true,"items":"[\"old_boots\",\"old_helmet\"]","label":true,"label_action":"Take","label_description":"Some other shit","label_image":"take_icon"}],"door":[],"shroud":[],"christmas_lights":[{"gid":8,"height":39,"id":193,"rotation":0,"type":"","width":403,"x":1538,"y":2578,"image_name":"christmas_lights"},{"gid":8,"height":39,"id":194,"rotation":0,"type":"","width":403,"x":1138,"y":2575,"image_name":"christmas_lights"}],"unique":[],"decal":[]}
+module.exports={"background":[{"gid":6,"height":1291,"id":185,"rotation":0,"type":"","width":1291,"x":1919,"y":2852,"image_name":"grass_tile"}],"prey":[],"walls":[{"height":32,"id":53,"rotation":0,"type":"","width":1616,"x":1759,"y":2809},{"height":1613,"id":94,"rotation":-270,"type":"","width":31,"x":3369,"y":845},{"height":2002,"id":137,"rotation":0,"type":"","width":31,"x":3371,"y":843},{"height":283,"id":138,"rotation":0,"type":"","width":52,"x":3080,"y":1952}],"lights":[{"height":0,"id":62,"point":true,"rotation":0,"type":"","width":0,"x":2721,"y":2063}],"player":[{"height":0,"id":144,"point":true,"rotation":0,"type":"","width":0,"x":2500,"y":2215}],"floor":[],"collision":[{"gid":2,"height":110,"id":179,"rotation":0,"type":"","width":179,"x":2953,"y":2593,"image_name":"bale_square"},{"gid":3,"height":158,"id":180,"rotation":-51,"type":"","width":368,"x":1866,"y":2232,"image_name":"wood_table"},{"gid":4,"height":85,"id":181,"rotation":0,"type":"","width":169,"x":2052,"y":1801,"image_name":"dumpster_00"}],"roof":[{"height":745,"id":159,"rotation":0,"type":"","width":788,"x":2209,"y":1145,"alpha":1,"fade":1,"image_name":"tree_11"}],"exit_pad":[{"height":190,"id":15,"rotation":0,"type":"","width":209,"x":2012,"y":2268,"level_name":"park"},{"height":190,"id":145,"rotation":0,"type":"","width":211,"x":2871,"y":2288,"cutscene":true,"level_name":"street","spawn_id":137},{"height":187,"id":149,"rotation":0,"type":"","width":211,"x":2012,"y":2062,"level_name":"dev","spawn_id":137},{"height":235,"id":171,"rotation":0,"type":"","width":211,"x":2871,"y":2035,"cutscene":false,"level_name":"intro"},{"height":165,"id":176,"rotation":0,"type":"","width":246,"x":2092,"y":1808,"level_name":"defend"},{"height":190,"id":184,"rotation":0,"type":"","width":211,"x":2777,"y":2511,"cutscene":true,"level_name":"start"},{"height":165,"id":187,"rotation":0,"type":"","width":246,"x":2380,"y":1810,"level_name":"ranbir_flat_0","spawn_id":137},{"height":165,"id":188,"rotation":0,"type":"","width":246,"x":2488,"y":2531,"level_name":"ranbir_flat"},{"height":165,"id":189,"rotation":0,"type":"","width":246,"x":2187,"y":2518,"level_name":"ranbir_flat"},{"height":165,"id":195,"rotation":0,"type":"","width":246,"x":2670,"y":1812,"level_name":"ranbir_flat_2"}],"item":[{"height":96,"id":183,"rotation":-526,"type":"","width":80,"x":2785,"y":2222,"equip_on_click":true,"image_name":"bow_00","label":true,"label_action":"Take","label_description":"Old Bow","label_image":"take_icon"},{"gid":7,"height":52,"id":186,"rotation":-526,"type":"","width":52,"x":2691,"y":2300,"image_name":"box_06","container":true,"items":"[\"old_boots\",\"old_helmet\"]","label":true,"label_action":"Take","label_description":"Some other shit","label_image":"take_icon"}],"generator":[{"gid":9,"height":131,"id":196,"rotation":0,"type":"","width":131,"x":2713,"y":2120,"image_name":"gsv190","container":true,"label":true,"label_action":"Fill","label_description":"Generator","label_image":"gear_icon"}],"door":[],"shroud":[],"christmas_lights":[{"gid":8,"height":39,"id":193,"rotation":0,"type":"","width":403,"x":1538,"y":2578,"image_name":"christmas_lights"},{"gid":8,"height":39,"id":194,"rotation":0,"type":"","width":403,"x":1138,"y":2575,"image_name":"christmas_lights"}],"unique":[],"decal":[]}
 },{}],250:[function(require,module,exports){
 const { Texture, extras } = require('pixi.js');
 const { backgrounds     } = require('../../engine/pixi_containers');
@@ -47467,16 +47467,9 @@ class Generator extends Sprite {
     this.position.copy(data);
     this.on('click', ()=>console.log('hting'));
     this.label(data);
+    this.fuel_level = 0;
 
     items.addChild(this);
-  }
-
-  give_blood(vial) {
-    if(vial) this.inventory.give_item(vial);
-  }
-
-  get enough_blood() {
-    return (this.inventory.size > 1);
   }
 
   label(data) {
@@ -49027,7 +49020,7 @@ class Start_Room  {
     await sleep(11650);
 
     const game_title  = new Text(
-      'VUNDLE GAMES', {
+      'LORIUM GAMES', {
         fontSize: 200,
         fill: 'white',
       }
@@ -49042,7 +49035,7 @@ class Start_Room  {
 
     game_title.destroy();
     const company_name  = new Text(
-      'CREATIVE LABS', {
+      'CREATIVE TITLE', {
         fontSize: 200,
         fill: 'white',
       }
@@ -49207,14 +49200,17 @@ module.exports = {
 },{"../../../config":1,"../../effects/fade.js":218,"../../effects/fade_sprite.js":219,"../../engine/pixi_containers":230,"../../utils/math.js":283,"../../utils/time.js":284,"../data/home_street.json":240,"../elements":259,"pixi.js":151}],277:[function(require,module,exports){
 const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
+const { distance_between } = require('../../utils/math');
 const { ProgressBar   } = require('../../view/progress_bar');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
+const { keyboardManager } = require('pixi.js');
 //const { Simple_Room   } = require('./simple_room');
 
 const {
   Floor,
+  Generator,
 } = require('../elements');
 
 class Transition_Room {
@@ -49250,9 +49246,56 @@ class Transition_Room {
       visuals.addChild(level_names);
     });
 
+    let item_with_fuel = 20;
     const bar = new ProgressBar();
-    bar.percentage = 10;
-    bar.animate_positive();
+    bar.visible = false;
+
+    const generator = new Generator(this.data.generator[0]);
+    generator.fuel_level = 0;
+
+    generator.click = () => {
+      console.log(item_with_fuel);
+      console.log(generator);
+      if(item_with_fuel <= 0) {
+        console.log('no fuel');
+        return;
+      }
+      keyboardManager.disable();
+      bar.visible = true;
+      bar.animate_increase(item_with_fuel);
+    };
+
+
+    bar.complete(() => {
+      generator.fuel_level = item_with_fuel;
+      item_with_fuel = null;
+      keyboardManager.enable();
+      console.log('done');
+    });
+
+
+    keyboardManager.on('pressed', () => {
+      const relative_distance = distance_between(this.player, generator);
+      if(relative_distance<200) {
+        generator.tint = 0x008b00;
+        generator.interactive = true;
+      } else {
+        generator.tint = 0xffffff;
+      }
+      console.log(relative_distance);
+      //console.log(generator.gas);
+    });
+
+
+    // console.log('time');
+    // const bar = new ProgressBar();
+    // bar.percentage = 10;
+    // bar.animate_increase();
+    // const bar = new ProgressBar();
+    // bar.percentage = 10;
+    // bar.animate_increase();
+
+    //setTimeout(() => bar.visible = false,2000);
     //setInterval(() => console.log(bar.percentage),200);
 
     const level_text = new Text(
@@ -49281,7 +49324,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":230,"../../view/progress_bar":291,"../data/transition_room.json":249,"../elements":259,"./level_factory":268,"pixi.js":151}],278:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../utils/math":283,"../../view/progress_bar":291,"../data/transition_room.json":249,"../elements":259,"./level_factory":268,"pixi.js":151}],278:[function(require,module,exports){
 (function (global){
 class Select {
   constructor(name){
@@ -50185,13 +50228,11 @@ class ProgressBar extends Container {
     super();
     this.bar = new Sprite(Texture.WHITE);
     this.background = new Sprite(Texture.WHITE);
-
-    this.x = viewport.center.x;
-    this.y = viewport.bottom;
+    this.tween_bar = tweenManager.createTween(this.bar);
 
     this.addChild(
-      this.background,
-      this.bar
+      this.bar,
+      this.background
     );
 
     stage.addChild(this);
@@ -50200,17 +50241,21 @@ class ProgressBar extends Container {
   }
 
   _set_position() {
+    console.log(viewport);
+    this.x = viewport.screenWidth/2;
+    this.y = viewport.screenHeight;
+
     this.background.width = 500;
     this.background.height = 30;
     this.background.anchor.set(0.5, 1);
-    this.background.alpha = 0.3;
+    this.background.alpha = 0.1;
 
     this.bar.width = 0;
     this.bar.height = 15;
     this.bar.x -= this.background.width/2 - 10;
     this.bar.y -= 5;
     this.bar.anchor.set(0, 1);
-    this.bar.tint = 0xd3d3d3;
+    this.bar.tint = 0x9acd3;
   }
 
   set percentage(percentage) {
@@ -50225,25 +50270,37 @@ class ProgressBar extends Container {
     return percentage;
   }
 
-  animate_positive() {
+  pause() {
+    if(this.tween_bar) this.tween_bar.stop();
+  }
+
+  complete(func) {
+    this.tween_bar.on('stop', func);
+  }
+
+  animate_increase(value) {
+    if(this.tween_bar.active) return;
+
     const maximum_width = this.background.width;
     const percentage = (this.bar.width/maximum_width);
     const total = 10000;
-
     const to_remove = total * percentage;
 
     const time = total - to_remove;
 
-    this.tween_bar = tweenManager.createTween(this.bar);
     this.tween_bar.time = time;
     this.tween_bar.to({
       width: maximum_width - 20,
     });
     this.tween_bar.start();
-    this.tween_bar.expire = true;
-  }
+    this.tween_bar.on('update', () => {
+      if(this.percentage > value) {
+        this.tween_bar.stop();
+        this.tween_bar.remove();
+      }
+    });
 
-  render() {
+    this.tween_bar.expire = true;
   }
 }
 
