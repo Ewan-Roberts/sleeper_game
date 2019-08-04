@@ -44,7 +44,6 @@ class Generator extends Sprite {
     this.tint        = 0xA9A9A9;
     this.interactive = true;
     this._fuel = 0;
-    this.active = false;
 
     this.anchor.set(0, 1);
     this.position.copy(data);
@@ -56,32 +55,30 @@ class Generator extends Sprite {
     this._set_sounds();
     this.make_empty();
 
-    this.on('click', () => {
-      console.log('fdssdf');
-      this.state_handler();
-    });
+    this.on('click', () => this.state_handler());
   }
 
   make_empty() {
-    this.button.description_label.text = 'fill';
+    this.button.action_label.text = 'Fill';
     this._fuel = 0;
     this.state = 'empty';
-    this.active = false;
     this.running_sound.stop();
   }
 
   make_ready() {
+    if(this._fuel <=0) return Caption.render('No fuel');
+    this.button.action_label.text = 'Start';
     this.running_sound.stop();
-    this.button.description_label.text = 'start';
     this.state = 'ready';
-    this.active = false;
   }
 
   make_running() {
-    this.running_sound.play();
-    this.button.description_label.text = 'turn_off';
+    this.button.action_label.text = 'Turn off';
     this.state = 'running';
-    this.active = true;
+    this.tween.time = 400 * this._fuel;
+    this.tween.start();
+    this.running_sound.play();
+    this.tween.on('end', () => this.make_empty());
   }
 
   state_handler() {
@@ -104,19 +101,6 @@ class Generator extends Sprite {
 
   set fuel(value) {
     this._fuel = value;
-  }
-
-  turn_on() {
-    if(this._fuel <= 0) return Caption.render('Its empty');
-    if(this.active) return;
-    this.make_running();
-
-    this.tween.time = 400 * this._fuel;
-    console.log(this.tween.time);
-    this.tween.start();
-    this.tween.on('end', () => {
-      this.make_ready();
-    });
   }
 
   label(data) {

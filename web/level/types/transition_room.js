@@ -14,6 +14,20 @@ const {
   Generator,
 } = require('../elements');
 
+class Light extends Floor {
+  constructor(data) {
+    super(data);
+  }
+
+  turn_on() {
+    this.tint = 0xff;
+  }
+
+  turn_off() {
+    this.tint = 0x000000;
+  }
+}
+
 class Transition_Room {
   constructor() {
     this.name   = 'transition_room';
@@ -25,9 +39,6 @@ class Transition_Room {
 
   _set_data() {
     Level_Factory.generate(this.data);
-
-    // setInterval(() => lights.forEach(light => light.tint = 0x000000), 1000);
-    // setInterval(() => lights.forEach(light => light.tint = 0xffffff), 2000);
 
     const { exit_pad, player } = this.data;
     this.player.position.copy(player[0]);
@@ -46,49 +57,40 @@ class Transition_Room {
       visuals.addChild(level_names);
     });
 
-    let item_with_fuel = 20;
     // TODO couple the progress bar to the generator?
+
     const bar = new ProgressBar();
     bar.visible = false;
 
-    class Light extends Floor {
-      constructor(data) {
-        super(data);
-      }
-
-      turn_on() {
-        this.tint = 0xff;
-      }
-
-      turn_off() {
-        this.tint = 0x000000;
-      }
-    }
 
     const lights = this.data.christmas_lights.map(light => new Light(light));
 
     const generator = new Generator(this.data.generator[0]);
-    generator.fuel = 10;
-    // generator.click = () => {
-    //   if(generator.fuel > 0) {
-    //     generator.turn_on();
-    //     lights.forEach(light => light.turn_on());
-    //     return;
-    //   }
 
-    //   keyboardManager.disable();
-    //   bar.visible = true;
-    //   bar.animate_increase(item_with_fuel);
-    // };
+    this.player.inventory.populate_with_item('gas_canister');
+
+    let fuel = 20;
+
+    generator.on('click', () => {
+      if(this.player.inventory.contains('gas_canister')) {
+        const fuel_item = this.player.inventory.take_item('gas_canister');
+        generator.inventory.give_item(fuel_item);
+        keyboardManager.disable();
+        bar.visible = true;
+        bar.animate_increase(fuel);
+        lights.forEach(light => light.turn_on());
+      }
+    });
 
     generator.tween.on('end', () =>
       lights.forEach(light =>
         light.turn_off()));
 
     bar.complete(() => {
-      Caption.render('Its empty');
-      generator.fuel = item_with_fuel;
-      item_with_fuel = null;
+      Caption.render('Its filled');
+      generator.fuel = fuel;
+      generator.make_ready();
+      fuel = null;
       keyboardManager.enable();
     });
 
@@ -101,7 +103,6 @@ class Transition_Room {
         generator.tint = 0xffffff;
       }
     });
-
 
     const level_text = new Text(
       'THE HUB',

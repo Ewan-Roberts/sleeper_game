@@ -30,8 +30,15 @@ class Inventory extends View_Inventory {
     return this.items.some(item => item.name === name);
   }
 
-  populate_with(items) {
+  populate_with_items(items) {
     this.items = items.map(name => Item_Manager.get_item(name));
+
+    this.populate_slots(this.items);
+  }
+
+  populate_with_item(name) {
+    const item = Item_Manager.get_item(name);
+    this.items.push(item);
 
     this.populate_slots(this.items);
   }
