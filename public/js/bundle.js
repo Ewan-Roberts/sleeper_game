@@ -47978,6 +47978,7 @@ class Level_Factory {
   static clear() {
     console.log('clear');
     tweenManager.tweens.forEach(tween =>{
+      if(!tween.target) return;
       if(tween.target.name === 'zombie') tween.target.remove();
     });
     clear_level_containers();
@@ -49202,6 +49203,7 @@ const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
 const { distance_between } = require('../../utils/math');
 const { ProgressBar   } = require('../../view/progress_bar');
+const { Caption   } = require('../../view/caption');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
@@ -49265,7 +49267,6 @@ class Transition_Room {
       bar.animate_increase(item_with_fuel);
     };
 
-
     bar.complete(() => {
       generator.fuel_level = item_with_fuel;
       item_with_fuel = null;
@@ -49273,6 +49274,7 @@ class Transition_Room {
       console.log('done');
     });
 
+    Caption.render('Hello world');
 
     keyboardManager.on('pressed', () => {
       const relative_distance = distance_between(this.player, generator);
@@ -49283,17 +49285,7 @@ class Transition_Room {
         generator.tint = 0xffffff;
       }
       console.log(relative_distance);
-      //console.log(generator.gas);
     });
-
-
-    // console.log('time');
-    // const bar = new ProgressBar();
-    // bar.percentage = 10;
-    // bar.animate_increase();
-    // const bar = new ProgressBar();
-    // bar.percentage = 10;
-    // bar.animate_increase();
 
     //setTimeout(() => bar.visible = false,2000);
     //setInterval(() => console.log(bar.percentage),200);
@@ -49324,7 +49316,7 @@ module.exports = {
 };
 
 
-},{"../../engine/pixi_containers":230,"../../utils/math":283,"../../view/progress_bar":291,"../data/transition_room.json":249,"../elements":259,"./level_factory":268,"pixi.js":151}],278:[function(require,module,exports){
+},{"../../engine/pixi_containers":230,"../../utils/math":283,"../../view/caption":286,"../../view/progress_bar":291,"../data/transition_room.json":249,"../elements":259,"./level_factory":268,"pixi.js":151}],278:[function(require,module,exports){
 (function (global){
 class Select {
   constructor(name){
@@ -49847,29 +49839,57 @@ module.exports = {
 };
 
 },{"../engine/pixi_containers":230,"pixi.js":151}],286:[function(require,module,exports){
-const { select } = require('../utils/dom');
-const dialog_caption_holder = select('.dialog_caption_holder');
+const { stage        } = require('../engine/app');
+const { viewport     } = require('../engine/app');
+const { Sprite       } = require('pixi.js');
+const { Texture      } = require('pixi.js');
+const { Container    } = require('pixi.js');
+const { Text    } = require('pixi.js');
+const { tweenManager } = require('pixi.js');
 
-// TODO Move this into canvas
+const container = new Container();
+container.x = viewport.screenWidth/2;
+container.y = viewport.screenHeight;
+
+const background = new Sprite(Texture.WHITE);
+background.width = viewport.screenWidth;
+background.height = 60;
+background.anchor.set(0.5, 1);
+background.alpha = 0.2;
+
+const dialog = new Text();
+dialog.position.copy(background);
+dialog.y -= 15;
+dialog.anchor.set(0.5, 1);
+
+container.addChild(
+  background,
+  dialog
+);
+stage.addChild(container);
+
+const tween = tweenManager.createTween();
+
 class Caption {
-  static render(sentence) {
-    this.clear();
+  static render(value) {
     this.show();
-    dialog_caption_holder.innerHTML = sentence;
-
-    setTimeout(() => this.hide(),3000);
+    dialog.text = value;
+    tween.reset();
+    tween.time = 5000;
+    tween.start();
+    tween.on('end', () => this.hide());
   }
 
   static clear() {
-    dialog_caption_holder.children.innerHTML = '';
+    dialog.text = '';
   }
 
   static show() {
-    dialog_caption_holder.style.display = 'block';
+    container.visible = true;
   }
 
   static hide() {
-    dialog_caption_holder.style.display = 'none';
+    container.visible = false;
   }
 }
 
@@ -49877,8 +49897,7 @@ module.exports = {
   Caption,
 };
 
-
-},{"../utils/dom":278}],287:[function(require,module,exports){
+},{"../engine/app":223,"pixi.js":151}],287:[function(require,module,exports){
 (function (global){
 const { Item_Manager } = require('../items/item_manager');
 const { Items        } = require('../engine/item_handler');
@@ -50241,7 +50260,6 @@ class ProgressBar extends Container {
   }
 
   _set_position() {
-    console.log(viewport);
     this.x = viewport.screenWidth/2;
     this.y = viewport.screenHeight;
 

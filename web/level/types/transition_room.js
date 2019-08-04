@@ -2,6 +2,7 @@ const { visuals       } = require('../../engine/pixi_containers');
 const { players       } = require('../../engine/pixi_containers');
 const { distance_between } = require('../../utils/math');
 const { ProgressBar   } = require('../../view/progress_bar');
+const { Caption   } = require('../../view/caption');
 const { Text          } = require('pixi.js');
 const { Trigger_Pad   } = require('../elements');
 const { Level_Factory } = require('./level_factory');
@@ -65,7 +66,6 @@ class Transition_Room {
       bar.animate_increase(item_with_fuel);
     };
 
-
     bar.complete(() => {
       generator.fuel_level = item_with_fuel;
       item_with_fuel = null;
@@ -73,6 +73,7 @@ class Transition_Room {
       console.log('done');
     });
 
+    Caption.render('Hello world');
 
     keyboardManager.on('pressed', () => {
       const relative_distance = distance_between(this.player, generator);
@@ -83,17 +84,7 @@ class Transition_Room {
         generator.tint = 0xffffff;
       }
       console.log(relative_distance);
-      //console.log(generator.gas);
     });
-
-
-    // console.log('time');
-    // const bar = new ProgressBar();
-    // bar.percentage = 10;
-    // bar.animate_increase();
-    // const bar = new ProgressBar();
-    // bar.percentage = 10;
-    // bar.animate_increase();
 
     //setTimeout(() => bar.visible = false,2000);
     //setInterval(() => console.log(bar.percentage),200);

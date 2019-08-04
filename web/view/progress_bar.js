@@ -23,7 +23,6 @@ class ProgressBar extends Container {
   }
 
   _set_position() {
-    console.log(viewport);
     this.x = viewport.screenWidth/2;
     this.y = viewport.screenHeight;
 

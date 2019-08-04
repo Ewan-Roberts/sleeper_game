@@ -84,6 +84,7 @@ class Level_Factory {
   static clear() {
     console.log('clear');
     tweenManager.tweens.forEach(tween =>{
+      if(!tween.target) return;
       if(tween.target.name === 'zombie') tween.target.remove();
     });
     clear_level_containers();
